@@ -1,0 +1,59 @@
+{
+  "id": 544902,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-07T07:09:10.000Z",
+  "code_updated_at": "2025-08-07T07:09:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1501502,
+      "name": "ailongtime",
+      "created_at": "2025-08-04T11:18:08.000Z",
+      "url": "https://greasyfork.org/users/1501502-ailongtime",
+      "scripts": [
+        {
+          "id": 544902,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-07T07:09:10.000Z",
+          "code_updated_at": "2025-08-07T07:09:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Flomo 快捷操作面板 (增强版)",
+          "description": "在 Flomo 笔记页面增加一个可拖动、可最小化/关闭的快捷面板，支持一键展开、复制内容(带分隔符)、下载为TXT(优化格式+中文编码)，并显示笔记数量。V2.4: 调整复制和下载的笔记顺序为最新在上。",
+          "url": "https://greasyfork.org/scripts/544902-flomo-%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C%E9%9D%A2%E6%9D%BF-%E5%A2%9E%E5%BC%BA%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/544902/Flomo%20%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C%E9%9D%A2%E6%9D%BF%20%28%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+          "code_size": 14702,
+          "license": "MIT License",
+          "version": "2.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Flomo 快捷操作面板 (增强版)",
+  "description": "在 Flomo 笔记页面增加一个可拖动、可最小化/关闭的快捷面板，支持一键展开、复制内容(带分隔符)、下载为TXT(优化格式+中文编码)，并显示笔记数量。V2.4: 调整复制和下载的笔记顺序为最新在上。",
+  "url": "https://greasyfork.org/scripts/544902-flomo-%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C%E9%9D%A2%E6%9D%BF-%E5%A2%9E%E5%BC%BA%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/544902/Flomo%20%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C%E9%9D%A2%E6%9D%BF%20%28%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+  "code_size": 14702,
+  "license": "MIT License",
+  "version": "2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

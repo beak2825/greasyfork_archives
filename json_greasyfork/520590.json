@@ -1,0 +1,34 @@
+{
+  "id": 520590,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-13T11:36:57.000Z",
+  "code_updated_at": "2024-12-13T12:44:48.000Z",
+  "namespace": "https://www.torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1410309,
+      "name": "Spiros",
+      "created_at": "2024-12-13T11:02:21.000Z",
+      "url": "https://greasyfork.org/users/1410309-spiros",
+      "scripts": []
+    }
+  ],
+  "name": "Torn City Auto Xanax",
+  "description": "Automatically uses Xanax in Torn City when the drug cooldown ends.",
+  "url": "https://greasyfork.org/scripts/520590-torn-city-auto-xanax",
+  "code_url": "https://update.greasyfork.org/scripts/520590/Torn%20City%20Auto%20Xanax.user.js",
+  "code_size": 2201,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

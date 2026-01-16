@@ -1,0 +1,68 @@
+[
+  {
+    "id": 526266,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T10:15:46.000Z",
+    "code_updated_at": "2025-02-08T10:15:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 103291,
+        "name": "Will Ting",
+        "created_at": "2017-02-17T08:46:42.000Z",
+        "url": "https://greasyfork.org/users/103291-will-ting"
+      }
+    ],
+    "name": "跳过零信任",
+    "description": "Intercept request to /startTunnel and mock response",
+    "url": "https://greasyfork.org/scripts/526266-%E8%B7%B3%E8%BF%87%E9%9B%B6%E4%BF%A1%E4%BB%BB",
+    "code_url": "https://update.greasyfork.org/scripts/526266/%E8%B7%B3%E8%BF%87%E9%9B%B6%E4%BF%A1%E4%BB%BB.user.js",
+    "code_size": 2680,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526265,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T10:13:23.000Z",
+    "code_updated_at": "2025-02-08T10:14:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 103291,
+        "name": "Will Ting",
+        "created_at": "2017-02-17T08:46:42.000Z",
+        "url": "https://greasyfork.org/users/103291-will-ting"
+      }
+    ],
+    "name": "跳过人脸",
+    "description": "拦截并修改请求中的 image 参数",
+    "url": "https://greasyfork.org/scripts/526265-%E8%B7%B3%E8%BF%87%E4%BA%BA%E8%84%B8",
+    "code_url": "https://update.greasyfork.org/scripts/526265/%E8%B7%B3%E8%BF%87%E4%BA%BA%E8%84%B8.user.js",
+    "code_size": 1730,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 536251,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T03:48:20.000Z",
+    "code_updated_at": "2025-05-17T03:48:19.000Z",
+    "namespace": "https://greasyfork.org/users/1386876",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1386876,
+        "name": "0.6cpp",
+        "created_at": "2024-10-27T01:36:22.000Z",
+        "url": "https://greasyfork.org/users/1386876-0-6cpp"
+      }
+    ],
+    "name": "Ground News Pro Max",
+    "description": "Unlocks ownership and factuality data on Ground News.",
+    "url": "https://greasyfork.org/scripts/536251-ground-news-pro-max",
+    "code_url": "https://update.greasyfork.org/scripts/536251/Ground%20News%20Pro%20Max.user.js",
+    "code_size": 6335,
+    "license": null,
+    "version": "0.0.1.20250517034819",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535930,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-14T02:52:51.000Z",
+    "code_updated_at": "2025-05-14T02:52:50.000Z",
+    "namespace": "https://greasyfork.org/users/1386876",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1386876,
+        "name": "0.6cpp",
+        "created_at": "2024-10-27T01:36:22.000Z",
+        "url": "https://greasyfork.org/users/1386876-0-6cpp"
+      }
+    ],
+    "name": "Discourse Reactions mobile hotfix",
+    "description": "Fixes reaction rendering in mobile view",
+    "url": "https://greasyfork.org/scripts/535930-discourse-reactions-mobile-hotfix",
+    "code_url": "https://update.greasyfork.org/scripts/535930/Discourse%20Reactions%20mobile%20hotfix.user.js",
+    "code_size": 1181,
+    "license": null,
+    "version": "0.0.1.20250514025250",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519374,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-30T16:01:41.000Z",
+    "code_updated_at": "2024-12-02T19:13:27.000Z",
+    "namespace": "mr06cpp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1386876,
+        "name": "0.6cpp",
+        "created_at": "2024-10-27T01:36:22.000Z",
+        "url": "https://greasyfork.org/users/1386876-0-6cpp"
+      }
+    ],
+    "name": "Pay My Way",
+    "description": "Adds the \"Pay My Way\" button to all booking pages",
+    "url": "https://greasyfork.org/scripts/519374-pay-my-way",
+    "code_url": "https://update.greasyfork.org/scripts/519374/Pay%20My%20Way.user.js",
+    "code_size": 3723,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 514282,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-27T07:10:25.000Z",
+    "code_updated_at": "2024-11-01T00:10:51.000Z",
+    "namespace": "mr06cpp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1386876,
+        "name": "0.6cpp",
+        "created_at": "2024-10-27T01:36:22.000Z",
+        "url": "https://greasyfork.org/users/1386876-0-6cpp"
+      }
+    ],
+    "name": "Always Filterable",
+    "description": "Always enable the \"filter by user\" option",
+    "url": "https://greasyfork.org/scripts/514282-always-filterable",
+    "code_url": "https://update.greasyfork.org/scripts/514282/Always%20Filterable.user.js",
+    "code_size": 877,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

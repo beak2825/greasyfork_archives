@@ -1,0 +1,33 @@
+{
+  "id": 550738,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-26T08:52:32.000Z",
+  "code_updated_at": "2025-12-17T10:09:56.000Z",
+  "namespace": "https://greasyfork.org/users/1336389",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1336389,
+      "name": "SuperTUZKI",
+      "created_at": "2024-07-19T06:32:55.000Z",
+      "url": "https://greasyfork.org/users/1336389-supertuzki"
+    }
+  ],
+  "name": "轻量级画中画扩展",
+  "description": "轻量级全局顶置画中画功能，支持大多数视频网站和直播平台",
+  "url": "https://greasyfork.org/scripts/550738-%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%94%BB%E4%B8%AD%E7%94%BB%E6%89%A9%E5%B1%95",
+  "code_url": "https://update.greasyfork.org/scripts/550738/%E8%BD%BB%E9%87%8F%E7%BA%A7%E7%94%BB%E4%B8%AD%E7%94%BB%E6%89%A9%E5%B1%95.user.js",
+  "code_size": 18350,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

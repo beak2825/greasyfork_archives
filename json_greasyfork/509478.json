@@ -1,0 +1,59 @@
+{
+  "id": 509478,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-21T05:16:29.000Z",
+  "code_updated_at": "2025-03-18T08:03:58.000Z",
+  "namespace": "宋卜宁",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1370841,
+      "name": "宋卜宁",
+      "created_at": "2024-09-21T03:08:25.000Z",
+      "url": "https://greasyfork.org/users/1370841-%E5%AE%8B%E5%8D%9C%E5%AE%81",
+      "scripts": [
+        {
+          "id": 509478,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-21T05:16:29.000Z",
+          "code_updated_at": "2025-03-18T08:03:58.000Z",
+          "namespace": "宋卜宁",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "福建师范大学协和学院学生互评",
+          "description": "福建师范大学协和学院学生工作信息管理系统中的学生互评自动评分",
+          "url": "https://greasyfork.org/scripts/509478-%E7%A6%8F%E5%BB%BA%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E5%8D%8F%E5%92%8C%E5%AD%A6%E9%99%A2%E5%AD%A6%E7%94%9F%E4%BA%92%E8%AF%84",
+          "code_url": "https://update.greasyfork.org/scripts/509478/%E7%A6%8F%E5%BB%BA%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E5%8D%8F%E5%92%8C%E5%AD%A6%E9%99%A2%E5%AD%A6%E7%94%9F%E4%BA%92%E8%AF%84.user.js",
+          "code_size": 7673,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "福建师范大学协和学院学生互评",
+  "description": "福建师范大学协和学院学生工作信息管理系统中的学生互评自动评分",
+  "url": "https://greasyfork.org/scripts/509478-%E7%A6%8F%E5%BB%BA%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E5%8D%8F%E5%92%8C%E5%AD%A6%E9%99%A2%E5%AD%A6%E7%94%9F%E4%BA%92%E8%AF%84",
+  "code_url": "https://update.greasyfork.org/scripts/509478/%E7%A6%8F%E5%BB%BA%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E5%8D%8F%E5%92%8C%E5%AD%A6%E9%99%A2%E5%AD%A6%E7%94%9F%E4%BA%92%E8%AF%84.user.js",
+  "code_size": 7673,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

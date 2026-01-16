@@ -1,0 +1,34 @@
+{
+  "id": 511823,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-08T01:45:14.000Z",
+  "code_updated_at": "2024-10-08T01:45:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 286514,
+      "name": "elements",
+      "created_at": "2019-03-26T07:08:39.000Z",
+      "url": "https://greasyfork.org/users/286514-elements",
+      "scripts": []
+    }
+  ],
+  "name": "D-2SOL Table Sorter",
+  "description": "给D-2SOL网站的表格添加排序功能，带箭头指示器和双向排序",
+  "url": "https://greasyfork.org/scripts/511823-d-2sol-table-sorter",
+  "code_url": "https://update.greasyfork.org/scripts/511823/D-2SOL%20Table%20Sorter.user.js",
+  "code_size": 2622,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 504074,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-18T07:43:12.000Z",
+  "code_updated_at": "2026-01-05T15:36:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1353836,
+      "name": "premiumsmart",
+      "created_at": "2024-08-18T07:37:43.000Z",
+      "url": "https://greasyfork.org/users/1353836-premiumsmart"
+    }
+  ],
+  "name": "Kick Stream Delay Display",
+  "description": "Displays real-time stream latency next to viewer count on Kick.com with auto speed adjustment and Mo'Kick compatibility",
+  "url": "https://greasyfork.org/scripts/504074-kick-stream-delay-display",
+  "code_url": "https://update.greasyfork.org/scripts/504074/Kick%20Stream%20Delay%20Display.user.js",
+  "code_size": 6307,
+  "license": null,
+  "version": "1.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 547315,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-26T04:10:53.000Z",
+  "code_updated_at": "2025-08-26T07:25:45.000Z",
+  "namespace": "https://www.playklavia.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508877,
+      "name": "Orieoh",
+      "created_at": "2025-08-26T04:08:40.000Z",
+      "url": "https://greasyfork.org/users/1508877-orieoh",
+      "scripts": [
+        {
+          "id": 547315,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-26T04:10:53.000Z",
+          "code_updated_at": "2025-08-26T07:25:45.000Z",
+          "namespace": "https://www.playklavia.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Klavia Page Zoom (Toggleable)",
+          "description": "Toggle page zoom on/off with Z key and show indicator",
+          "url": "https://greasyfork.org/scripts/547315-klavia-page-zoom-toggleable",
+          "code_url": "https://update.greasyfork.org/scripts/547315/Klavia%20Page%20Zoom%20%28Toggleable%29.user.js",
+          "code_size": 1702,
+          "license": null,
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Klavia Page Zoom (Toggleable)",
+  "description": "Toggle page zoom on/off with Z key and show indicator",
+  "url": "https://greasyfork.org/scripts/547315-klavia-page-zoom-toggleable",
+  "code_url": "https://update.greasyfork.org/scripts/547315/Klavia%20Page%20Zoom%20%28Toggleable%29.user.js",
+  "code_size": 1702,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

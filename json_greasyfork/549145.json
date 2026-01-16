@@ -1,0 +1,59 @@
+{
+  "id": 549145,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-11T13:35:43.000Z",
+  "code_updated_at": "2025-09-11T13:35:43.000Z",
+  "namespace": "https://greasyfork.org/users/1502537",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502537,
+      "name": "Robomonkey HQ",
+      "created_at": "2025-08-07T14:03:55.000Z",
+      "url": "https://greasyfork.org/users/1502537-robomonkey-hq",
+      "scripts": [
+        {
+          "id": 549145,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-11T13:35:43.000Z",
+          "code_updated_at": "2025-09-11T13:35:43.000Z",
+          "namespace": "https://greasyfork.org/users/1502537",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Robomonkey.io YouTube Evil Pitch Shifter",
+          "description": "Adjust video pitch and speed independently on YouTube videos",
+          "url": "https://greasyfork.org/scripts/549145-robomonkey-io-youtube-evil-pitch-shifter",
+          "code_url": "https://update.greasyfork.org/scripts/549145/Robomonkeyio%20YouTube%20Evil%20Pitch%20Shifter.user.js",
+          "code_size": 32642,
+          "license": null,
+          "version": "1.1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Robomonkey.io YouTube Evil Pitch Shifter",
+  "description": "Adjust video pitch and speed independently on YouTube videos",
+  "url": "https://greasyfork.org/scripts/549145-robomonkey-io-youtube-evil-pitch-shifter",
+  "code_url": "https://update.greasyfork.org/scripts/549145/Robomonkeyio%20YouTube%20Evil%20Pitch%20Shifter.user.js",
+  "code_size": 32642,
+  "license": null,
+  "version": "1.1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

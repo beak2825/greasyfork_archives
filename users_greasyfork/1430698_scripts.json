@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534283,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-28T13:17:03.000Z",
+    "code_updated_at": "2025-04-28T13:17:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430698,
+        "name": "juzeon",
+        "created_at": "2025-02-03T08:16:48.000Z",
+        "url": "https://greasyfork.org/users/1430698-juzeon"
+      }
+    ],
+    "name": "Bangumi Netaba.re Link",
+    "description": "Adds a link to Netaba.re for Bangumi subject pages, styled like existing tabs and opens in a new tab.",
+    "url": "https://greasyfork.org/scripts/534283-bangumi-netaba-re-link",
+    "code_url": "https://update.greasyfork.org/scripts/534283/Bangumi%20Netabare%20Link.user.js",
+    "code_size": 2977,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525716,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-03T08:20:20.000Z",
+    "code_updated_at": "2025-02-03T08:20:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430698,
+        "name": "juzeon",
+        "created_at": "2025-02-03T08:16:48.000Z",
+        "url": "https://greasyfork.org/users/1430698-juzeon"
+      }
+    ],
+    "name": "知乎重定向到 fxzhihu",
+    "description": "将知乎网址重定向到 fxzhihu.com",
+    "url": "https://greasyfork.org/scripts/525716-%E7%9F%A5%E4%B9%8E%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0-fxzhihu",
+    "code_url": "https://update.greasyfork.org/scripts/525716/%E7%9F%A5%E4%B9%8E%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%20fxzhihu.user.js",
+    "code_size": 748,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

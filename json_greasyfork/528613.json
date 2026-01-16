@@ -1,0 +1,59 @@
+{
+  "id": 528613,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-03T07:44:33.000Z",
+  "code_updated_at": "2025-03-03T07:44:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441779,
+      "name": "超级皮皮怪",
+      "created_at": "2025-03-03T07:41:09.000Z",
+      "url": "https://greasyfork.org/users/1441779-%E8%B6%85%E7%BA%A7%E7%9A%AE%E7%9A%AE%E6%80%AA",
+      "scripts": [
+        {
+          "id": 528613,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-03T07:44:33.000Z",
+          "code_updated_at": "2025-03-03T07:44:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "多功能点击器（坐标 + 文字点击）",
+          "description": "支持坐标点击和文字点击，支持隐藏/显示控制面板，性能优化",
+          "url": "https://greasyfork.org/scripts/528613-%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%82%B9%E5%87%BB%E5%99%A8-%E5%9D%90%E6%A0%87-%E6%96%87%E5%AD%97%E7%82%B9%E5%87%BB",
+          "code_url": "https://update.greasyfork.org/scripts/528613/%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%82%B9%E5%87%BB%E5%99%A8%EF%BC%88%E5%9D%90%E6%A0%87%20%2B%20%E6%96%87%E5%AD%97%E7%82%B9%E5%87%BB%EF%BC%89.user.js",
+          "code_size": 13984,
+          "license": null,
+          "version": "1.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "多功能点击器（坐标 + 文字点击）",
+  "description": "支持坐标点击和文字点击，支持隐藏/显示控制面板，性能优化",
+  "url": "https://greasyfork.org/scripts/528613-%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%82%B9%E5%87%BB%E5%99%A8-%E5%9D%90%E6%A0%87-%E6%96%87%E5%AD%97%E7%82%B9%E5%87%BB",
+  "code_url": "https://update.greasyfork.org/scripts/528613/%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%82%B9%E5%87%BB%E5%99%A8%EF%BC%88%E5%9D%90%E6%A0%87%20%2B%20%E6%96%87%E5%AD%97%E7%82%B9%E5%87%BB%EF%BC%89.user.js",
+  "code_size": 13984,
+  "license": null,
+  "version": "1.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

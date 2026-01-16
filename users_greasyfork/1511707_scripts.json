@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548323,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T07:49:25.000Z",
+    "code_updated_at": "2025-09-04T07:49:25.000Z",
+    "namespace": "https://www.xxx5217.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511707,
+        "name": "Heart丶",
+        "created_at": "2025-09-04T07:44:18.000Z",
+        "url": "https://greasyfork.org/users/1511707-heart%E4%B8%B6"
+      }
+    ],
+    "name": "我欲修仙 - 修为修改器",
+    "description": "修改我欲修仙游戏的修为值",
+    "url": "https://greasyfork.org/scripts/548323-%E6%88%91%E6%AC%B2%E4%BF%AE%E4%BB%99-%E4%BF%AE%E4%B8%BA%E4%BF%AE%E6%94%B9%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/548323/%E6%88%91%E6%AC%B2%E4%BF%AE%E4%BB%99%20-%20%E4%BF%AE%E4%B8%BA%E4%BF%AE%E6%94%B9%E5%99%A8.user.js",
+    "code_size": 3244,
+    "license": "none",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503865,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-16T15:24:25.000Z",
+    "code_updated_at": "2024-08-17T09:18:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1352746,
+        "name": "rock3r",
+        "created_at": "2024-08-16T10:01:09.000Z",
+        "url": "https://greasyfork.org/users/1352746-rock3r"
+      }
+    ],
+    "name": "Sessionize AI detector",
+    "description": "Check if a session is AI generated in Sessionize (using Winston AI)",
+    "url": "https://greasyfork.org/scripts/503865-sessionize-ai-detector",
+    "code_url": "https://update.greasyfork.org/scripts/503865/Sessionize%20AI%20detector.user.js",
+    "code_size": 4734,
+    "license": "Apache 2.0",
+    "version": "2024-08-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

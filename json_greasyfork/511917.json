@@ -1,0 +1,33 @@
+{
+  "id": 511917,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-08T19:46:00.000Z",
+  "code_updated_at": "2024-10-15T20:27:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1378376,
+      "name": "henryxrl",
+      "created_at": "2024-10-08T19:43:56.000Z",
+      "url": "https://greasyfork.org/users/1378376-henryxrl"
+    }
+  ],
+  "name": "Inoreader Enhancement",
+  "description": "Refine Inoreader article layout to be wider, increase the height of list view items, and hide the subscription button. Also fix the failed images.",
+  "url": "https://greasyfork.org/scripts/511917-inoreader-enhancement",
+  "code_url": "https://update.greasyfork.org/scripts/511917/Inoreader%20Enhancement.user.js",
+  "code_size": 4007,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

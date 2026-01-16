@@ -30,6 +30,72 @@
     "version": "1.0.0",
     "locale": "ru",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533924,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T11:21:24.000Z",
+    "code_updated_at": "2025-05-01T11:44:02.000Z",
+    "namespace": "https://forum.kingrussia.com/index.php*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431416,
+        "name": "1manjiro",
+        "created_at": "2025-02-04T15:16:50.000Z",
+        "url": "https://greasyfork.org/users/1431416-1manjiro"
+      }
+    ],
+    "name": "Сервер GREEN",
+    "description": "Версия для сервера GREEN",
+    "url": "https://greasyfork.org/scripts/533924-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80-green",
+    "code_url": "https://update.greasyfork.org/scripts/533924/%D0%A1%D0%B5%D1%80%D0%B2%D0%B5%D1%80%20GREEN.user.js",
+    "code_size": 100515,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533923,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T11:20:35.000Z",
+    "code_updated_at": "2025-05-01T11:43:07.000Z",
+    "namespace": "https://forum.kingrussia.com/index.php*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431416,
+        "name": "1manjiro",
+        "created_at": "2025-02-04T15:16:50.000Z",
+        "url": "https://greasyfork.org/users/1431416-1manjiro"
+      }
+    ],
+    "name": "Сервер RED",
+    "description": "Версия для сервера RED",
+    "url": "https://greasyfork.org/scripts/533923-%D1%81%D0%B5%D1%80%D0%B2%D0%B5%D1%80-red",
+    "code_url": "https://update.greasyfork.org/scripts/533923/%D0%A1%D0%B5%D1%80%D0%B2%D0%B5%D1%80%20RED.user.js",
+    "code_size": 101370,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "sr",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

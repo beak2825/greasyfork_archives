@@ -1,0 +1,59 @@
+{
+  "id": 535238,
+  "daily_installs": 1,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-07T12:19:46.000Z",
+  "code_updated_at": "2025-05-30T17:22:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1466849,
+      "name": "thomasthanos",
+      "created_at": "2025-05-07T12:09:32.000Z",
+      "url": "https://greasyfork.org/users/1466849-thomasthanos",
+      "scripts": [
+        {
+          "id": 535238,
+          "daily_installs": 1,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-07T12:19:46.000Z",
+          "code_updated_at": "2025-05-30T17:22:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Liker for Tinder & Boo",
+          "description": "Auto Like με neon κουμπί, counter, progress ring & smart pause για Tinder και Boo 🔥",
+          "url": "https://greasyfork.org/scripts/535238-auto-liker-for-tinder-boo",
+          "code_url": "https://update.greasyfork.org/scripts/535238/Auto%20Liker%20for%20Tinder%20%20Boo.user.js",
+          "code_size": 6700,
+          "license": "if you want to change something tell me on the mail (thomasthanos28@gmail.com)",
+          "version": "4.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Liker for Tinder & Boo",
+  "description": "Auto Like με neon κουμπί, counter, progress ring & smart pause για Tinder και Boo 🔥",
+  "url": "https://greasyfork.org/scripts/535238-auto-liker-for-tinder-boo",
+  "code_url": "https://update.greasyfork.org/scripts/535238/Auto%20Liker%20for%20Tinder%20%20Boo.user.js",
+  "code_size": 6700,
+  "license": "if you want to change something tell me on the mail (thomasthanos28@gmail.com)",
+  "version": "4.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

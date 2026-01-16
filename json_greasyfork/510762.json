@@ -1,0 +1,33 @@
+{
+  "id": 510762,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-29T15:10:46.000Z",
+  "code_updated_at": "2026-01-03T20:46:57.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1374616,
+      "name": "Dmitry_Nekrasov",
+      "created_at": "2024-09-29T15:06:00.000Z",
+      "url": "https://greasyfork.org/users/1374616-dmitry-nekrasov"
+    }
+  ],
+  "name": "Bratck [74]",
+  "description": "Kurator [F]",
+  "url": "https://greasyfork.org/scripts/510762-bratck-74",
+  "code_url": "https://update.greasyfork.org/scripts/510762/Bratck%20%5B74%5D.user.js",
+  "code_size": 237556,
+  "license": "MIT License",
+  "version": "10.1.4",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

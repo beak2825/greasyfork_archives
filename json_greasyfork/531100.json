@@ -1,0 +1,59 @@
+{
+  "id": 531100,
+  "daily_installs": 7,
+  "total_installs": 507,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-28T08:13:32.000Z",
+  "code_updated_at": "2025-03-31T03:20:19.000Z",
+  "namespace": "Akashdeep",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451187,
+      "name": "Akash Deep",
+      "created_at": "2025-03-28T07:55:44.000Z",
+      "url": "https://greasyfork.org/users/1451187-akash-deep",
+      "scripts": [
+        {
+          "id": 531100,
+          "daily_installs": 7,
+          "total_installs": 507,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-28T08:13:32.000Z",
+          "code_updated_at": "2025-03-31T03:20:19.000Z",
+          "namespace": "Akashdeep",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chess.com UltraX bot with Panel",
+          "description": "Enhances your Chess.com experience with move suggestions, UI enhancements, and customizable features.  Credits to GoodtimeswithEno for the initial move highlighting and basic chess engine implementation.",
+          "url": "https://greasyfork.org/scripts/531100-chess-com-ultrax-bot-with-panel",
+          "code_url": "https://update.greasyfork.org/scripts/531100/Chesscom%20UltraX%20bot%20with%20Panel.user.js",
+          "code_size": 56811,
+          "license": "Chess.com Enhanced Experience © 2024 by Akashdeep, © All Rights Reserved",
+          "version": "1.0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chess.com UltraX bot with Panel",
+  "description": "Enhances your Chess.com experience with move suggestions, UI enhancements, and customizable features.  Credits to GoodtimeswithEno for the initial move highlighting and basic chess engine implementation.",
+  "url": "https://greasyfork.org/scripts/531100-chess-com-ultrax-bot-with-panel",
+  "code_url": "https://update.greasyfork.org/scripts/531100/Chesscom%20UltraX%20bot%20with%20Panel.user.js",
+  "code_size": 56811,
+  "license": "Chess.com Enhanced Experience © 2024 by Akashdeep, © All Rights Reserved",
+  "version": "1.0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

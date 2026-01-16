@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503679,
+    "daily_installs": 0,
+    "total_installs": 373,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-14T22:44:34.000Z",
+    "code_updated_at": "2024-08-14T22:44:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1351896,
+        "name": "Pupa Conteh",
+        "created_at": "2024-08-14T22:40:28.000Z",
+        "url": "https://greasyfork.org/users/1351896-pupa-conteh"
+      }
+    ],
+    "name": "Agario Macros",
+    "description": "Agar.io macro: W = Auto Eject Mass, T = x16 splits, Q = Double split",
+    "url": "https://greasyfork.org/scripts/503679-agario-macros",
+    "code_url": "https://update.greasyfork.org/scripts/503679/Agario%20Macros.user.js",
+    "code_size": 6441,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

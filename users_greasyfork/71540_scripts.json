@@ -1,0 +1,101 @@
+[
+  {
+    "id": 548181,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-02T22:25:37.000Z",
+    "code_updated_at": "2025-09-02T22:25:37.000Z",
+    "namespace": "namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 71540,
+        "name": "tos",
+        "created_at": "2016-10-06T05:46:16.000Z",
+        "url": "https://greasyfork.org/users/71540-tos"
+      }
+    ],
+    "name": "TC Log Filter",
+    "description": "description",
+    "url": "https://greasyfork.org/scripts/548181-tc-log-filter",
+    "code_url": "https://update.greasyfork.org/scripts/548181/TC%20Log%20Filter.user.js",
+    "code_size": 1447,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505123,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-25T11:26:31.000Z",
+    "code_updated_at": "2024-08-25T11:26:31.000Z",
+    "namespace": "namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 71540,
+        "name": "tos",
+        "created_at": "2016-10-06T05:46:16.000Z",
+        "url": "https://greasyfork.org/users/71540-tos"
+      }
+    ],
+    "name": "TC Keyboard Warrior",
+    "description": "description",
+    "url": "https://greasyfork.org/scripts/505123-tc-keyboard-warrior",
+    "code_url": "https://update.greasyfork.org/scripts/505123/TC%20Keyboard%20Warrior.user.js",
+    "code_size": 1126,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502519,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-03T14:20:44.000Z",
+    "code_updated_at": "2024-08-03T14:20:44.000Z",
+    "namespace": "namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 71540,
+        "name": "tos",
+        "created_at": "2016-10-06T05:46:16.000Z",
+        "url": "https://greasyfork.org/users/71540-tos"
+      }
+    ],
+    "name": "TC RD Racing Guide 2.0",
+    "description": "description",
+    "url": "https://greasyfork.org/scripts/502519-tc-rd-racing-guide-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/502519/TC%20RD%20Racing%20Guide%2020.user.js",
+    "code_size": 1822,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

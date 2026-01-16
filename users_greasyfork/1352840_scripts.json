@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503855,
+    "daily_installs": 1,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-16T13:55:11.000Z",
+    "code_updated_at": "2026-01-13T12:08:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1352840,
+        "name": "Voyager Oct",
+        "created_at": "2024-08-16T13:24:21.000Z",
+        "url": "https://greasyfork.org/users/1352840-voyager-oct"
+      }
+    ],
+    "name": "闲鱼管家上货助手",
+    "description": "在商品页面复制商品信息并在闲鱼管家后台上架页面插入\"一键填充\"按钮，添加下载商品详情图片的功能。包括选品功能，可在闲鱼商详页导出猜你喜欢的数据到Excel，支持动态数据。v1.27.0: 重构接口拦截逻辑，优化性能和代码结构",
+    "url": "https://greasyfork.org/scripts/503855-%E9%97%B2%E9%B1%BC%E7%AE%A1%E5%AE%B6%E4%B8%8A%E8%B4%A7%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/503855/%E9%97%B2%E9%B1%BC%E7%AE%A1%E5%AE%B6%E4%B8%8A%E8%B4%A7%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 33469,
+    "license": "MIT License",
+    "version": "1.27.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

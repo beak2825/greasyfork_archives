@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542559,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-14T15:13:49.000Z",
+    "code_updated_at": "2025-07-14T15:13:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1082020,
+        "name": "IITII",
+        "created_at": "2023-05-20T11:40:45.000Z",
+        "url": "https://greasyfork.org/users/1082020-iitii"
+      }
+    ],
+    "name": "feedly 批量打开最近一天 feed",
+    "description": "批量打开最近一天 feed, 方便 pixiv",
+    "url": "https://greasyfork.org/scripts/542559-feedly-%E6%89%B9%E9%87%8F%E6%89%93%E5%BC%80%E6%9C%80%E8%BF%91%E4%B8%80%E5%A4%A9-feed",
+    "code_url": "https://update.greasyfork.org/scripts/542559/feedly%20%E6%89%B9%E9%87%8F%E6%89%93%E5%BC%80%E6%9C%80%E8%BF%91%E4%B8%80%E5%A4%A9%20feed.user.js",
+    "code_size": 2215,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

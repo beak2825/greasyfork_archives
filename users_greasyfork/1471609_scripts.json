@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536387,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T11:08:34.000Z",
+    "code_updated_at": "2025-05-18T14:29:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471609,
+        "name": "Cloud Guy",
+        "created_at": "2025-05-18T11:04:27.000Z",
+        "url": "https://greasyfork.org/users/1471609-cloud-guy"
+      }
+    ],
+    "name": "Roblox FACS Numbering",
+    "description": "Add numbers next to FACS names for easier reference | Discord: https://discord.gg/BE7k9Xxm5z",
+    "url": "https://greasyfork.org/scripts/536387-roblox-facs-numbering",
+    "code_url": "https://update.greasyfork.org/scripts/536387/Roblox%20FACS%20Numbering.user.js",
+    "code_size": 31432,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541372,
+    "daily_installs": 1,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T21:20:06.000Z",
+    "code_updated_at": "2025-07-01T21:20:06.000Z",
+    "namespace": "https://bypxbyp.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1300667,
+        "name": "BypXByp",
+        "created_at": "2024-05-12T18:56:18.000Z",
+        "url": "https://greasyfork.org/users/1300667-bypxbyp"
+      }
+    ],
+    "name": "Torn Life Percentage",
+    "description": "Calculates and displays the life percentage on Torn user profiles.",
+    "url": "https://greasyfork.org/scripts/541372-torn-life-percentage",
+    "code_url": "https://update.greasyfork.org/scripts/541372/Torn%20Life%20Percentage.user.js",
+    "code_size": 1997,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

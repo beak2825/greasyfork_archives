@@ -1,0 +1,33 @@
+{
+  "id": 509310,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-20T03:39:50.000Z",
+  "code_updated_at": "2024-09-20T03:39:50.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 5869,
+      "name": "迈克斯",
+      "created_at": "2014-10-06T23:33:28.000Z",
+      "url": "https://greasyfork.org/users/5869-%E8%BF%88%E5%85%8B%E6%96%AF"
+    }
+  ],
+  "name": "YouTube and Google CN",
+  "description": "googleCN",
+  "url": "https://greasyfork.org/scripts/509310-youtube-and-google-cn",
+  "code_url": "https://update.greasyfork.org/scripts/509310/YouTube%20and%20Google%20CN.user.js",
+  "code_size": 1221,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 497679,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-12T02:03:43.000Z",
+  "code_updated_at": "2025-01-16T02:56:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1313932,
+      "name": "WebRookie",
+      "created_at": "2024-06-07T11:29:04.000Z",
+      "url": "https://greasyfork.org/users/1313932-webrookie",
+      "scripts": []
+    }
+  ],
+  "name": "coze扩大输入AI输入栏",
+  "description": "修改扩大国服版本coze的输入栏",
+  "url": "https://greasyfork.org/scripts/497679-coze%E6%89%A9%E5%A4%A7%E8%BE%93%E5%85%A5ai%E8%BE%93%E5%85%A5%E6%A0%8F",
+  "code_url": "https://update.greasyfork.org/scripts/497679/coze%E6%89%A9%E5%A4%A7%E8%BE%93%E5%85%A5AI%E8%BE%93%E5%85%A5%E6%A0%8F.user.js",
+  "code_size": 1141,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

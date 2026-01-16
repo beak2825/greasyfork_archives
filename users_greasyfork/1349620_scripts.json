@@ -97,5 +97,38 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 544053,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T23:16:13.000Z",
+    "code_updated_at": "2025-07-29T23:16:13.000Z",
+    "namespace": "torokesou",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1349620,
+        "name": "torokesou",
+        "created_at": "2024-08-11T08:03:24.000Z",
+        "url": "https://greasyfork.org/users/1349620-torokesou"
+      }
+    ],
+    "name": "MAL日本語アニメタイトル翻訳",
+    "description": "My Anime Listサイト内にあるアニメのタイトルや漫画のタイトルやキャラクター名や声優名を日本語に翻訳します。",
+    "url": "https://greasyfork.org/scripts/544053-mal%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%E7%BF%BB%E8%A8%B3",
+    "code_url": "https://update.greasyfork.org/scripts/544053/MAL%E6%97%A5%E6%9C%AC%E8%AA%9E%E3%82%A2%E3%83%8B%E3%83%A1%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%E7%BF%BB%E8%A8%B3.user.js",
+    "code_size": 29831,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

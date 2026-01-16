@@ -1,0 +1,34 @@
+{
+  "id": 519388,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-30T17:57:21.000Z",
+  "code_updated_at": "2024-11-30T17:57:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291188,
+      "name": "mechanicvr62@gmail.com",
+      "created_at": "2024-04-21T07:07:45.000Z",
+      "url": "https://greasyfork.org/users/1291188-mechanicvr62-gmail-com",
+      "scripts": []
+    }
+  ],
+  "name": "Drift Boss Hack",
+  "description": "Version 2.5.7 - Pretty much done, wont be doing anything else to this script -Final version",
+  "url": "https://greasyfork.org/scripts/519388-drift-boss-hack",
+  "code_url": "https://update.greasyfork.org/scripts/519388/Drift%20Boss%20Hack.user.js",
+  "code_size": 1144,
+  "license": null,
+  "version": "2.5.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

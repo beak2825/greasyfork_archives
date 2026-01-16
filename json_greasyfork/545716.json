@@ -1,0 +1,59 @@
+{
+  "id": 545716,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-13T16:09:32.000Z",
+  "code_updated_at": "2025-12-29T07:31:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1504506,
+      "name": "RodMajors",
+      "created_at": "2025-08-13T06:22:26.000Z",
+      "url": "https://greasyfork.org/users/1504506-rodmajors",
+      "scripts": [
+        {
+          "id": 545716,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-13T16:09:32.000Z",
+          "code_updated_at": "2025-12-29T07:31:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LogCN ——esologs中文全站翻译补丁",
+          "description": "【ESOCN】为esologs全站提供中文翻译补丁 1.全站自动翻译装备名称 2.修复Unknown Item错误 3.翻译试炼、地下城、竞技场列表 4.翻译试炼BOSS列表 5.修复部分中文翻译错误",
+          "url": "https://greasyfork.org/scripts/545716-logcn-esologs%E4%B8%AD%E6%96%87%E5%85%A8%E7%AB%99%E7%BF%BB%E8%AF%91%E8%A1%A5%E4%B8%81",
+          "code_url": "https://update.greasyfork.org/scripts/545716/LogCN%20%E2%80%94%E2%80%94esologs%E4%B8%AD%E6%96%87%E5%85%A8%E7%AB%99%E7%BF%BB%E8%AF%91%E8%A1%A5%E4%B8%81.user.js",
+          "code_size": 32831,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LogCN ——esologs中文全站翻译补丁",
+  "description": "【ESOCN】为esologs全站提供中文翻译补丁 1.全站自动翻译装备名称 2.修复Unknown Item错误 3.翻译试炼、地下城、竞技场列表 4.翻译试炼BOSS列表 5.修复部分中文翻译错误",
+  "url": "https://greasyfork.org/scripts/545716-logcn-esologs%E4%B8%AD%E6%96%87%E5%85%A8%E7%AB%99%E7%BF%BB%E8%AF%91%E8%A1%A5%E4%B8%81",
+  "code_url": "https://update.greasyfork.org/scripts/545716/LogCN%20%E2%80%94%E2%80%94esologs%E4%B8%AD%E6%96%87%E5%85%A8%E7%AB%99%E7%BF%BB%E8%AF%91%E8%A1%A5%E4%B8%81.user.js",
+  "code_size": 32831,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

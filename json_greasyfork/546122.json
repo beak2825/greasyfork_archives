@@ -1,0 +1,59 @@
+{
+  "id": 546122,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-17T06:07:39.000Z",
+  "code_updated_at": "2025-09-07T18:24:30.000Z",
+  "namespace": "http://github.com/imzlh/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505855,
+      "name": "imzlh",
+      "created_at": "2025-08-17T06:07:03.000Z",
+      "url": "https://greasyfork.org/users/1505855-imzlh",
+      "scripts": [
+        {
+          "id": 546122,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-17T06:07:39.000Z",
+          "code_updated_at": "2025-09-07T18:24:30.000Z",
+          "namespace": "http://github.com/imzlh/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bing小说自动下载助手",
+          "description": "自动检测Bing搜索结果中的小说链接并支持一键下载",
+          "url": "https://greasyfork.org/scripts/546122-bing%E5%B0%8F%E8%AF%B4%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/546122/Bing%E5%B0%8F%E8%AF%B4%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 9716,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bing小说自动下载助手",
+  "description": "自动检测Bing搜索结果中的小说链接并支持一键下载",
+  "url": "https://greasyfork.org/scripts/546122-bing%E5%B0%8F%E8%AF%B4%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/546122/Bing%E5%B0%8F%E8%AF%B4%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 9716,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 534576,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-01T00:52:01.000Z",
+  "code_updated_at": "2025-05-06T14:45:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463776,
+      "name": "alcheeee",
+      "created_at": "2025-04-29T23:19:03.000Z",
+      "url": "https://greasyfork.org/users/1463776-alcheeee"
+    }
+  ],
+  "name": "Zed Live Chat",
+  "description": "Adds a live chat box to Zed City",
+  "url": "https://greasyfork.org/scripts/534576-zed-live-chat",
+  "code_url": "https://update.greasyfork.org/scripts/534576/Zed%20Live%20Chat.user.js",
+  "code_size": 15175,
+  "license": "GNU GPLv3",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

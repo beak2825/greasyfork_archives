@@ -1,0 +1,59 @@
+{
+  "id": 545943,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T08:40:12.000Z",
+  "code_updated_at": "2025-08-15T08:40:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505237,
+      "name": "b33rdy",
+      "created_at": "2025-08-15T08:37:09.000Z",
+      "url": "https://greasyfork.org/users/1505237-b33rdy",
+      "scripts": [
+        {
+          "id": 545943,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-15T08:40:12.000Z",
+          "code_updated_at": "2025-08-15T08:40:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Force Light Mode for LikeC4 Apps",
+          "description": "Force light theme on LikeC4 static web apps regardless of OS/browser theme",
+          "url": "https://greasyfork.org/scripts/545943-force-light-mode-for-likec4-apps",
+          "code_url": "https://update.greasyfork.org/scripts/545943/Force%20Light%20Mode%20for%20LikeC4%20Apps.user.js",
+          "code_size": 1447,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Force Light Mode for LikeC4 Apps",
+  "description": "Force light theme on LikeC4 static web apps regardless of OS/browser theme",
+  "url": "https://greasyfork.org/scripts/545943-force-light-mode-for-likec4-apps",
+  "code_url": "https://update.greasyfork.org/scripts/545943/Force%20Light%20Mode%20for%20LikeC4%20Apps.user.js",
+  "code_size": 1447,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

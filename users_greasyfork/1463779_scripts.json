@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534445,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-29T23:27:41.000Z",
+    "code_updated_at": "2025-05-03T15:37:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1463779,
+        "name": "StrahinjaT97",
+        "created_at": "2025-04-29T23:24:44.000Z",
+        "url": "https://greasyfork.org/users/1463779-strahinjat97"
+      }
+    ],
+    "name": "External people no more",
+    "description": "Remove information about people from external organizations and trial notification",
+    "url": "https://greasyfork.org/scripts/534445-external-people-no-more",
+    "code_url": "https://update.greasyfork.org/scripts/534445/External%20people%20no%20more.user.js",
+    "code_size": 1869,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

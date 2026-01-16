@@ -1,0 +1,167 @@
+[
+  {
+    "id": 548362,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T15:18:43.000Z",
+    "code_updated_at": "2025-09-04T15:18:43.000Z",
+    "namespace": "https://greasyfork.org/users/83290",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 83290,
+        "name": "Tom G.",
+        "created_at": "2016-11-27T13:22:17.000Z",
+        "url": "https://greasyfork.org/users/83290-tom-g"
+      }
+    ],
+    "name": "Amazon Vine - Produktprüfung mit Menü (Keywords & ASINs)",
+    "description": "Erster Tag: alle Seiten; ab Tag 2 dynamisch Abbruch bei altem Produkt. Seiten-Delay wird immer eingehalten, auch beim Abbruch. Menü für Keywords/ASIN",
+    "url": "https://greasyfork.org/scripts/548362-amazon-vine-produktpr%C3%BCfung-mit-men%C3%BC-keywords-asins",
+    "code_url": "https://update.greasyfork.org/scripts/548362/Amazon%20Vine%20-%20Produktpr%C3%BCfung%20mit%20Men%C3%BC%20%28Keywords%20%20ASINs%29.user.js",
+    "code_size": 21244,
+    "license": null,
+    "version": "3.7.4",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531514,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T14:38:00.000Z",
+    "code_updated_at": "2025-06-21T12:59:24.000Z",
+    "namespace": "https://greasyfork.org/users/83290",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 83290,
+        "name": "Tom G.",
+        "created_at": "2016-11-27T13:22:17.000Z",
+        "url": "https://greasyfork.org/users/83290-tom-g"
+      }
+    ],
+    "name": "Amazon Vine - Autocheck (ohne Benachrichtigung)",
+    "description": "Vine",
+    "url": "https://greasyfork.org/scripts/531514-amazon-vine-autocheck-ohne-benachrichtigung",
+    "code_url": "https://update.greasyfork.org/scripts/531514/Amazon%20Vine%20-%20Autocheck%20%28ohne%20Benachrichtigung%29.user.js",
+    "code_size": 7595,
+    "license": null,
+    "version": "1.5.5",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523469,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-11T15:27:58.000Z",
+    "code_updated_at": "2025-02-26T16:10:57.000Z",
+    "namespace": "https://greasyfork.org/users/83290",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 83290,
+        "name": "Tom G.",
+        "created_at": "2016-11-27T13:22:17.000Z",
+        "url": "https://greasyfork.org/users/83290-tom-g"
+      }
+    ],
+    "name": "Automatische Suche + Klick + Benachrichtigung",
+    "description": "search for words",
+    "url": "https://greasyfork.org/scripts/523469-automatische-suche-klick-benachrichtigung",
+    "code_url": "https://update.greasyfork.org/scripts/523469/Automatische%20Suche%20%2B%20Klick%20%2B%20Benachrichtigung.user.js",
+    "code_size": 18032,
+    "license": null,
+    "version": "1.8.3",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 505300,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-26T16:07:07.000Z",
+    "code_updated_at": "2024-12-19T15:57:27.000Z",
+    "namespace": "https://greasyfork.org/users/83290",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 83290,
+        "name": "Tom G.",
+        "created_at": "2016-11-27T13:22:17.000Z",
+        "url": "https://greasyfork.org/users/83290-tom-g"
+      }
+    ],
+    "name": "Autoklick + Benachrichtigungen 1.0",
+    "description": "search for words",
+    "url": "https://greasyfork.org/scripts/505300-autoklick-benachrichtigungen-1-0",
+    "code_url": "https://update.greasyfork.org/scripts/505300/Autoklick%20%2B%20Benachrichtigungen%2010.user.js",
+    "code_size": 8937,
+    "license": null,
+    "version": "1.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499903,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-07T09:35:20.000Z",
+    "code_updated_at": "2024-11-08T15:32:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 83290,
+        "name": "Tom G.",
+        "created_at": "2016-11-27T13:22:17.000Z",
+        "url": "https://greasyfork.org/users/83290-tom-g"
+      }
+    ],
+    "name": "Amazon Vine Suche",
+    "description": "Analysiere Amazon Vine Artikel und suche nach Namen oder ASINs",
+    "url": "https://greasyfork.org/scripts/499903-amazon-vine-suche",
+    "code_url": "https://update.greasyfork.org/scripts/499903/Amazon%20Vine%20Suche.user.js",
+    "code_size": 12847,
+    "license": null,
+    "version": "1.11",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

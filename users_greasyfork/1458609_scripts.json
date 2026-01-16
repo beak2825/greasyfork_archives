@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533153,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T16:22:30.000Z",
+    "code_updated_at": "2025-04-18T05:02:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1458609,
+        "name": "Raymond Duong",
+        "created_at": "2025-04-16T13:31:00.000Z",
+        "url": "https://greasyfork.org/users/1458609-raymond-duong"
+      }
+    ],
+    "name": "Audio Controls with Auto-Play and Speed Management",
+    "description": "Controls audio playback with speed adjustment and enhanced auto-play methods",
+    "url": "https://greasyfork.org/scripts/533153-audio-controls-with-auto-play-and-speed-management",
+    "code_url": "https://update.greasyfork.org/scripts/533153/Audio%20Controls%20with%20Auto-Play%20and%20Speed%20Management.user.js",
+    "code_size": 41274,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533032,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T13:37:15.000Z",
+    "code_updated_at": "2025-04-19T08:01:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1458609,
+        "name": "Raymond Duong",
+        "created_at": "2025-04-16T13:31:00.000Z",
+        "url": "https://greasyfork.org/users/1458609-raymond-duong"
+      }
+    ],
+    "name": "Auto-Next Chapter",
+    "description": "Automatically clicks the next chapter button after customizable time, continues timer after audio ends, auto-minimizes on inactivity",
+    "url": "https://greasyfork.org/scripts/533032-auto-next-chapter",
+    "code_url": "https://update.greasyfork.org/scripts/533032/Auto-Next%20Chapter.user.js",
+    "code_size": 43889,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

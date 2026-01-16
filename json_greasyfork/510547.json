@@ -1,0 +1,59 @@
+{
+  "id": 510547,
+  "daily_installs": 0,
+  "total_installs": 110,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-28T07:23:15.000Z",
+  "code_updated_at": "2024-09-28T07:23:14.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1374021,
+      "name": "Wasr Community",
+      "created_at": "2024-09-28T07:16:45.000Z",
+      "url": "https://greasyfork.org/users/1374021-wasr-community",
+      "scripts": [
+        {
+          "id": 510547,
+          "daily_installs": 0,
+          "total_installs": 110,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-28T07:23:15.000Z",
+          "code_updated_at": "2024-09-28T07:23:14.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Auto Gym",
+          "description": "This script train your lowest battle stat when your energy over 25, while you're in the gym for torn.com",
+          "url": "https://greasyfork.org/scripts/510547-torn-auto-gym",
+          "code_url": "https://update.greasyfork.org/scripts/510547/Torn%20Auto%20Gym.user.js",
+          "code_size": 3098,
+          "license": "WasrCommunity",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Auto Gym",
+  "description": "This script train your lowest battle stat when your energy over 25, while you're in the gym for torn.com",
+  "url": "https://greasyfork.org/scripts/510547-torn-auto-gym",
+  "code_url": "https://update.greasyfork.org/scripts/510547/Torn%20Auto%20Gym.user.js",
+  "code_size": 3098,
+  "license": "WasrCommunity",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

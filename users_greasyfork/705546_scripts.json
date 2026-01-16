@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553422,
+    "daily_installs": 1,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-23T01:19:16.000Z",
+    "code_updated_at": "2025-11-09T00:49:26.000Z",
+    "namespace": "yyyzzz999",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 705546,
+        "name": "yyyzzz999",
+        "created_at": "2020-11-16T06:31:37.000Z",
+        "url": "https://greasyfork.org/users/705546-yyyzzz999"
+      }
+    ],
+    "name": "MAM Named Searches",
+    "description": "Tracks and saves search URLs with custom names. Replaces the H4 \"Search\" heading with the current name and adds a list button to manage saved searches in a popup.",
+    "url": "https://greasyfork.org/scripts/553422-mam-named-searches",
+    "code_url": "https://update.greasyfork.org/scripts/553422/MAM%20Named%20Searches.user.js",
+    "code_size": 18678,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505718,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-29T06:12:03.000Z",
+    "code_updated_at": "2025-10-28T21:01:00.000Z",
+    "namespace": "yyyzzz999",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 705546,
+        "name": "yyyzzz999",
+        "created_at": "2020-11-16T06:31:37.000Z",
+        "url": "https://greasyfork.org/users/705546-yyyzzz999"
+      }
+    ],
+    "name": "Hide Unsafe Direct Download Links",
+    "description": "10/28/25 Hide Unsafe Direct Download Links",
+    "url": "https://greasyfork.org/scripts/505718-hide-unsafe-direct-download-links",
+    "code_url": "https://update.greasyfork.org/scripts/505718/Hide%20Unsafe%20Direct%20Download%20Links.user.js",
+    "code_size": 7075,
+    "license": "MIT License",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

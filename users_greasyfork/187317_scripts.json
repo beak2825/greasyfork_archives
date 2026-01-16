@@ -1,0 +1,167 @@
+[
+  {
+    "id": 544548,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T20:43:05.000Z",
+    "code_updated_at": "2025-08-04T19:05:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187317,
+        "name": "FunkyJustin",
+        "created_at": "2018-05-23T18:25:43.000Z",
+        "url": "https://greasyfork.org/users/187317-funkyjustin"
+      }
+    ],
+    "name": "9GAG Comment Upvoter/Downvoter",
+    "description": "Upvote or downvote comments from a specific user on 9GAG with a draggable GUI, username buttons, and thread tracking",
+    "url": "https://greasyfork.org/scripts/544548-9gag-comment-upvoter-downvoter",
+    "code_url": "https://update.greasyfork.org/scripts/544548/9GAG%20Comment%20UpvoterDownvoter.user.js",
+    "code_size": 65843,
+    "license": "MIT License",
+    "version": "2.3.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528697,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-04T02:37:45.000Z",
+    "code_updated_at": "2025-03-04T02:54:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187317,
+        "name": "FunkyJustin",
+        "created_at": "2018-05-23T18:25:43.000Z",
+        "url": "https://greasyfork.org/users/187317-funkyjustin"
+      }
+    ],
+    "name": "IMDb Multi-Search Buttons",
+    "description": "Add buttons on IMDb pages to search the movie/series title on different sites",
+    "url": "https://greasyfork.org/scripts/528697-imdb-multi-search-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/528697/IMDb%20Multi-Search%20Buttons.user.js",
+    "code_size": 2807,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519887,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-05T17:04:34.000Z",
+    "code_updated_at": "2024-12-05T17:04:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187317,
+        "name": "FunkyJustin",
+        "created_at": "2018-05-23T18:25:43.000Z",
+        "url": "https://greasyfork.org/users/187317-funkyjustin"
+      }
+    ],
+    "name": "9GAG Auto View Replies and User Search Menu (Find Navigation)",
+    "description": "Adds a menu to search for specific usernames in 9GAG comments and highlights their comments, with find navigation buttons for manual scrolling.",
+    "url": "https://greasyfork.org/scripts/519887-9gag-auto-view-replies-and-user-search-menu-find-navigation",
+    "code_url": "https://update.greasyfork.org/scripts/519887/9GAG%20Auto%20View%20Replies%20and%20User%20Search%20Menu%20%28Find%20Navigation%29.user.js",
+    "code_size": 7589,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512451,
+    "daily_installs": 3,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T12:37:19.000Z",
+    "code_updated_at": "2025-12-25T06:39:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187317,
+        "name": "FunkyJustin",
+        "created_at": "2018-05-23T18:25:43.000Z",
+        "url": "https://greasyfork.org/users/187317-funkyjustin"
+      }
+    ],
+    "name": "Instagram Embed Link Copier for Discord (with Reels Support)",
+    "description": "Adds five buttons (kk, ez, dd, original, fxig) to copy Instagram post/reel embed links for Discord. Original compact layout, fixed kk domain replacement bug permanently.",
+    "url": "https://greasyfork.org/scripts/512451-instagram-embed-link-copier-for-discord-with-reels-support",
+    "code_url": "https://update.greasyfork.org/scripts/512451/Instagram%20Embed%20Link%20Copier%20for%20Discord%20%28with%20Reels%20Support%29.user.js",
+    "code_size": 6737,
+    "license": "MIT License",
+    "version": "1.11.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510808,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-29T21:59:28.000Z",
+    "code_updated_at": "2024-09-29T21:59:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 187317,
+        "name": "FunkyJustin",
+        "created_at": "2018-05-23T18:25:43.000Z",
+        "url": "https://greasyfork.org/users/187317-funkyjustin"
+      }
+    ],
+    "name": "Reddit Upvote/Downvote Calculator with Formula Display",
+    "description": "A tool to calculate upvotes and downvotes based on net score and upvote rate on Reddit, displaying the formulas used for calculations.",
+    "url": "https://greasyfork.org/scripts/510808-reddit-upvote-downvote-calculator-with-formula-display",
+    "code_url": "https://update.greasyfork.org/scripts/510808/Reddit%20UpvoteDownvote%20Calculator%20with%20Formula%20Display.user.js",
+    "code_size": 4807,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

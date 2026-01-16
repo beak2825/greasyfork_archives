@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534960,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-04T22:00:06.000Z",
+    "code_updated_at": "2025-05-04T22:00:06.000Z",
+    "namespace": "Manga_DW_holoearth_com_Nyako",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922352,
+        "name": "Hell13Cat",
+        "created_at": "2022-06-05T13:38:10.000Z",
+        "url": "https://greasyfork.org/users/922352-hell13cat"
+      }
+    ],
+    "name": "Manga DW holoearth.com",
+    "description": "05.05.2025, 00:43:33",
+    "url": "https://greasyfork.org/scripts/534960-manga-dw-holoearth-com",
+    "code_url": "https://update.greasyfork.org/scripts/534960/Manga%20DW%20holoearthcom.user.js",
+    "code_size": 2129,
+    "license": "Apache License 2.0",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532197,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-08T10:22:49.000Z",
+    "code_updated_at": "2025-04-08T10:22:49.000Z",
+    "namespace": "shikimori_one_dwimg_Nyako",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922352,
+        "name": "Hell13Cat",
+        "created_at": "2022-06-05T13:38:10.000Z",
+        "url": "https://greasyfork.org/users/922352-hell13cat"
+      }
+    ],
+    "name": "Загрузчик изображений с shikimori.one",
+    "description": "08.04.2025, 12:36:52",
+    "url": "https://greasyfork.org/scripts/532197-%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D1%87%D0%B8%D0%BA-%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9-%D1%81-shikimori-one",
+    "code_url": "https://update.greasyfork.org/scripts/532197/%D0%97%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D1%87%D0%B8%D0%BA%20%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9%20%D1%81%20shikimorione.user.js",
+    "code_size": 2479,
+    "license": "Apache License 2.0",
+    "version": "0.1b",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

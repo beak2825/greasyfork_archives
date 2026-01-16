@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519365,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-30T13:24:16.000Z",
+    "code_updated_at": "2024-11-30T13:24:16.000Z",
+    "namespace": "https://greasyfork.org/users/1404589",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404589,
+        "name": "DragoOrMvevi",
+        "created_at": "2024-11-30T13:19:21.000Z",
+        "url": "https://greasyfork.org/users/1404589-dragoormvevi"
+      }
+    ],
+    "name": "Optimized Auto Feed for gota.io with Dynamic Delay After Split",
+    "description": "Faster feed with dynamic delay after split based on mass",
+    "url": "https://greasyfork.org/scripts/519365-optimized-auto-feed-for-gota-io-with-dynamic-delay-after-split",
+    "code_url": "https://update.greasyfork.org/scripts/519365/Optimized%20Auto%20Feed%20for%20gotaio%20with%20Dynamic%20Delay%20After%20Split.user.js",
+    "code_size": 3064,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

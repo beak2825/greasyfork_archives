@@ -1,0 +1,34 @@
+{
+  "id": 544263,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-01T07:11:47.000Z",
+  "code_updated_at": "2025-08-01T07:11:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1399657,
+      "name": "Vanakh Chea",
+      "created_at": "2024-11-20T13:25:12.000Z",
+      "url": "https://greasyfork.org/users/1399657-vanakh-chea",
+      "scripts": []
+    }
+  ],
+  "name": "Tabs vergrößern [GA Explorative Reports]",
+  "description": "Mithilfe dieses Add-ons werden alle Tabs in einem explorativen Report aufgeklappt.",
+  "url": "https://greasyfork.org/scripts/544263-tabs-vergr%C3%B6%C3%9Fern-ga-explorative-reports",
+  "code_url": "https://update.greasyfork.org/scripts/544263/Tabs%20vergr%C3%B6%C3%9Fern%20%5BGA%20Explorative%20Reports%5D.user.js",
+  "code_size": 1684,
+  "license": "MI",
+  "version": "2025-08-01",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

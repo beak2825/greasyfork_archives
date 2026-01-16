@@ -1,0 +1,59 @@
+{
+  "id": 502474,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-02T23:36:08.000Z",
+  "code_updated_at": "2024-08-03T07:35:40.000Z",
+  "namespace": "https://jy738.github.io/webxp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 771080,
+      "name": "Jy Productions",
+      "created_at": "2021-05-12T00:16:43.000Z",
+      "url": "https://greasyfork.org/users/771080-jy-productions",
+      "scripts": [
+        {
+          "id": 502474,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-02T23:36:08.000Z",
+          "code_updated_at": "2024-08-03T07:35:40.000Z",
+          "namespace": "https://jy738.github.io/webxp/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bluepanel 3.0 (BETA)",
+          "description": "Bluepanel 3.0 Client for BonziWORLD.org! some features will be broken cus its a beta",
+          "url": "https://greasyfork.org/scripts/502474-bluepanel-3-0-beta",
+          "code_url": "https://update.greasyfork.org/scripts/502474/Bluepanel%2030%20%28BETA%29.user.js",
+          "code_size": 5599,
+          "license": "MIT License",
+          "version": "3.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bluepanel 3.0 (BETA)",
+  "description": "Bluepanel 3.0 Client for BonziWORLD.org! some features will be broken cus its a beta",
+  "url": "https://greasyfork.org/scripts/502474-bluepanel-3-0-beta",
+  "code_url": "https://update.greasyfork.org/scripts/502474/Bluepanel%2030%20%28BETA%29.user.js",
+  "code_size": 5599,
+  "license": "MIT License",
+  "version": "3.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

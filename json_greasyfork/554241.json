@@ -1,0 +1,59 @@
+{
+  "id": 554241,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T22:53:29.000Z",
+  "code_updated_at": "2025-10-30T22:53:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532404,
+      "name": "NZPaul",
+      "created_at": "2025-10-30T22:51:06.000Z",
+      "url": "https://greasyfork.org/users/1532404-nzpaul",
+      "scripts": [
+        {
+          "id": 557483,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-01T03:32:04.000Z",
+          "code_updated_at": "2025-12-03T20:27:36.000Z",
+          "namespace": "http://tampermonkey.net/s",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BlackJackStrat",
+          "description": "Script to help with Blackjack.",
+          "url": "https://greasyfork.org/scripts/557483-blackjackstrat",
+          "code_url": "https://update.greasyfork.org/scripts/557483/BlackJackStrat.user.js",
+          "code_size": 33029,
+          "license": null,
+          "version": "2025-12-01.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Stack Protect",
+  "description": "Overlays a configurable element to prevent accidental clicks, with a persistent toggle.",
+  "url": "https://greasyfork.org/scripts/554241-stack-protect",
+  "code_url": "https://update.greasyfork.org/scripts/554241/Stack%20Protect.user.js",
+  "code_size": 7720,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

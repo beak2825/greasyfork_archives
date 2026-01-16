@@ -1,0 +1,34 @@
+{
+  "id": 497271,
+  "daily_installs": 0,
+  "total_installs": 241,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-07T07:56:18.000Z",
+  "code_updated_at": "2024-07-19T01:47:06.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265194,
+      "name": "루시퍼홍",
+      "created_at": "2024-02-22T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D",
+      "scripts": []
+    }
+  ],
+  "name": "[루시퍼홍] 카카오맵 면적재기 색상변경",
+  "description": "2024. 6. 7. 오후 17:00:00",
+  "url": "https://greasyfork.org/scripts/497271-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%A7%B5-%EB%A9%B4%EC%A0%81%EC%9E%AC%EA%B8%B0-%EC%83%89%EC%83%81%EB%B3%80%EA%B2%BD",
+  "code_url": "https://update.greasyfork.org/scripts/497271/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EC%B9%B4%EC%B9%B4%EC%98%A4%EB%A7%B5%20%EB%A9%B4%EC%A0%81%EC%9E%AC%EA%B8%B0%20%EC%83%89%EC%83%81%EB%B3%80%EA%B2%BD.user.js",
+  "code_size": 9236,
+  "license": null,
+  "version": "1.04",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499148,
+    "daily_installs": 0,
+    "total_installs": 426,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-28T16:10:13.000Z",
+    "code_updated_at": "2025-09-04T18:55:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1319075,
+        "name": "Alişan Həsənov",
+        "created_at": "2024-06-16T12:50:24.000Z",
+        "url": "https://greasyfork.org/users/1319075-ali%C5%9Fan-h%C9%99s%C9%99nov"
+      }
+    ],
+    "name": "WHOWHERE V2 GM",
+    "description": "WhoWhere V2 GM_xmlhttpRequest for Gartic.io",
+    "url": "https://greasyfork.org/scripts/499148-whowhere-v2-gm",
+    "code_url": "https://update.greasyfork.org/scripts/499148/WHOWHERE%20V2%20GM.user.js",
+    "code_size": 7725,
+    "license": null,
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

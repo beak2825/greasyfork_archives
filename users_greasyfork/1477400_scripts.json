@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537927,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-01T04:38:22.000Z",
+    "code_updated_at": "2025-06-01T05:09:43.000Z",
+    "namespace": "https://www.grundos.cafe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477400,
+        "name": "sinza",
+        "created_at": "2025-06-01T04:24:14.000Z",
+        "url": "https://greasyfork.org/users/1477400-sinza"
+      }
+    ],
+    "name": "GC - Faerieland Employment Agency Target Price Calculator",
+    "description": "Provides an amount of neopoints needed for the job to let you break even on the Grundo's Cafe version of the Faerieland Employment Agency.",
+    "url": "https://greasyfork.org/scripts/537927-gc-faerieland-employment-agency-target-price-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/537927/GC%20-%20Faerieland%20Employment%20Agency%20Target%20Price%20Calculator.user.js",
+    "code_size": 1221,
+    "license": "BSD Zero Clause License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

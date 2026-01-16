@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524454,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-21T22:51:23.000Z",
+    "code_updated_at": "2025-01-21T22:51:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 197082,
+        "name": "Maxence Alex",
+        "created_at": "2018-07-19T13:50:40.000Z",
+        "url": "https://greasyfork.org/users/197082-maxence-alex"
+      }
+    ],
+    "name": "Claude Interface Enhanced",
+    "description": "It tries to Enhanced Claude Interface",
+    "url": "https://greasyfork.org/scripts/524454-claude-interface-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/524454/Claude%20Interface%20Enhanced.user.js",
+    "code_size": 2854,
+    "license": null,
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 540112,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T09:17:31.000Z",
+  "code_updated_at": "2025-06-20T14:03:12.000Z",
+  "namespace": "net.myitian.js.mega.pwd",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 713302,
+      "name": "Myitian",
+      "created_at": "2020-12-05T14:50:44.000Z",
+      "url": "https://greasyfork.org/users/713302-myitian"
+    }
+  ],
+  "name": "MEGA Print Working Directory",
+  "description": "Show current location in title when using MEGA cloud storage.",
+  "url": "https://greasyfork.org/scripts/540112-mega-print-working-directory",
+  "code_url": "https://update.greasyfork.org/scripts/540112/MEGA%20Print%20Working%20Directory.user.js",
+  "code_size": 9778,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

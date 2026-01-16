@@ -1,0 +1,101 @@
+[
+  {
+    "id": 521795,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-25T18:57:39.000Z",
+    "code_updated_at": "2025-01-01T14:15:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1374196,
+        "name": "Neformation",
+        "created_at": "2024-09-28T14:54:07.000Z",
+        "url": "https://greasyfork.org/users/1374196-neformation"
+      }
+    ],
+    "name": "YouTube Shorts Blocker Ultra + Blocking Youtube Shorts GUI On Homepage And Videos",
+    "description": "The most advanced youtube shorts blocker on the Net! Blocks YouTube Shorts.",
+    "url": "https://greasyfork.org/scripts/521795-youtube-shorts-blocker-ultra-blocking-youtube-shorts-gui-on-homepage-and-videos",
+    "code_url": "https://update.greasyfork.org/scripts/521795/YouTube%20Shorts%20Blocker%20Ultra%20%2B%20Blocking%20Youtube%20Shorts%20GUI%20On%20Homepage%20And%20Videos.user.js",
+    "code_size": 4305,
+    "license": "All Rights Reserved",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520248,
+    "daily_installs": 2,
+    "total_installs": 448,
+    "fan_score": "2.7",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2024-12-09T14:38:56.000Z",
+    "code_updated_at": "2025-01-04T10:07:37.000Z",
+    "namespace": "https://greasyfork.org/users/1374196",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1374196,
+        "name": "Neformation",
+        "created_at": "2024-09-28T14:54:07.000Z",
+        "url": "https://greasyfork.org/users/1374196-neformation"
+      }
+    ],
+    "name": "YouTube Premium Logo  +  Youtube Downloader",
+    "description": "For downloading videos click the original \"Download\" Button On The Youtube. Developed by @neformation.",
+    "url": "https://greasyfork.org/scripts/520248-youtube-premium-logo-youtube-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/520248/YouTube%20Premium%20Logo%20%20%2B%20%20Youtube%20Downloader.user.js",
+    "code_size": 7831,
+    "license": "All rights reserved.",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513559,
+    "daily_installs": 0,
+    "total_installs": 92,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-22T18:05:19.000Z",
+    "code_updated_at": "2024-12-09T15:08:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1374196,
+        "name": "Neformation",
+        "created_at": "2024-09-28T14:54:07.000Z",
+        "url": "https://greasyfork.org/users/1374196-neformation"
+      }
+    ],
+    "name": "Starve.io Adblocker V2",
+    "description": "try to take over the starve!",
+    "url": "https://greasyfork.org/scripts/513559-starve-io-adblocker-v2",
+    "code_url": "https://update.greasyfork.org/scripts/513559/Starveio%20Adblocker%20V2.user.js",
+    "code_size": 1031,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

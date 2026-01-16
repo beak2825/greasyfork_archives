@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545154,
+    "daily_installs": 1,
+    "total_installs": 51,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-08-09T09:09:52.000Z",
+    "code_updated_at": "2025-08-09T09:09:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503112,
+        "name": "Aleava Alam",
+        "created_at": "2025-08-09T09:07:17.000Z",
+        "url": "https://greasyfork.org/users/1503112-aleava-alam"
+      }
+    ],
+    "name": "bloxd.io no hit cool down + instant break + hide gui + auto deny telport and auto respawn",
+    "description": "this is a fun experince for people no copying it u can get banned using this if u do it around players so do it someweres away from players",
+    "url": "https://greasyfork.org/scripts/545154-bloxd-io-no-hit-cool-down-instant-break-hide-gui-auto-deny-telport-and-auto-respawn",
+    "code_url": "https://update.greasyfork.org/scripts/545154/bloxdio%20no%20hit%20cool%20down%20%2B%20instant%20break%20%2B%20hide%20gui%20%2B%20auto%20deny%20telport%20and%20auto%20respawn.user.js",
+    "code_size": 16832,
+    "license": "BitTorrent Open Source License v1.0",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

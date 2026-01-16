@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514499,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-28T13:45:20.000Z",
+    "code_updated_at": "2024-10-28T13:45:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 731905,
+        "name": "pigPen6969",
+        "created_at": "2021-01-27T16:01:22.000Z",
+        "url": "https://greasyfork.org/users/731905-pigpen6969"
+      }
+    ],
+    "name": "EqPadd",
+    "description": "Add an option to remove the graph in the settings",
+    "url": "https://greasyfork.org/scripts/514499-eqpadd",
+    "code_url": "https://update.greasyfork.org/scripts/514499/EqPadd.user.js",
+    "code_size": 1843,
+    "license": "MIT License",
+    "version": "2024-10-25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

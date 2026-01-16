@@ -1,0 +1,34 @@
+{
+  "id": 530742,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-24T19:15:56.000Z",
+  "code_updated_at": "2025-04-02T20:00:00.000Z",
+  "namespace": "npm/vite-plugin-monkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1449818,
+      "name": "cn_s",
+      "created_at": "2025-03-24T19:10:44.000Z",
+      "url": "https://greasyfork.org/users/1449818-cn-s",
+      "scripts": []
+    }
+  ],
+  "name": "xiaozhangboo",
+  "description": "提供一键统计课时功能，仅需要登录即可使用",
+  "url": "https://greasyfork.org/scripts/530742-xiaozhangboo",
+  "code_url": "https://update.greasyfork.org/scripts/530742/xiaozhangboo.user.js",
+  "code_size": 36369,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

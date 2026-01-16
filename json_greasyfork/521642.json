@@ -1,0 +1,59 @@
+{
+  "id": 521642,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-24T08:13:45.000Z",
+  "code_updated_at": "2024-12-24T12:55:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1415028,
+      "name": "gn-wx",
+      "created_at": "2024-12-24T08:09:47.000Z",
+      "url": "https://greasyfork.org/users/1415028-gn-wx",
+      "scripts": [
+        {
+          "id": 521642,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-24T08:13:45.000Z",
+          "code_updated_at": "2024-12-24T12:55:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili 视频时长",
+          "description": "从Bilibili网页中提取并求和所有视频时长，并通过按钮在左下角显示结果",
+          "url": "https://greasyfork.org/scripts/521642-bilibili-%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF",
+          "code_url": "https://update.greasyfork.org/scripts/521642/Bilibili%20%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF.user.js",
+          "code_size": 9205,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili 视频时长",
+  "description": "从Bilibili网页中提取并求和所有视频时长，并通过按钮在左下角显示结果",
+  "url": "https://greasyfork.org/scripts/521642-bilibili-%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF",
+  "code_url": "https://update.greasyfork.org/scripts/521642/Bilibili%20%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF.user.js",
+  "code_size": 9205,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

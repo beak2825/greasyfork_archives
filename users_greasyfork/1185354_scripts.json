@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527750,
+    "daily_installs": 2,
+    "total_installs": 273,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-22T14:19:42.000Z",
+    "code_updated_at": "2025-02-22T14:19:41.000Z",
+    "namespace": "https://github.com/LibreScore/dl-librescore",
+    "support_url": "https://github.com/LibreScore/dl-librescore/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1185354,
+        "name": "Truurt",
+        "created_at": "2023-10-01T13:57:09.000Z",
+        "url": "https://greasyfork.org/users/1185354-truurt"
+      }
+    ],
+    "name": "dl-librescore",
+    "description": "Download sheet music",
+    "url": "https://greasyfork.org/scripts/527750-dl-librescore",
+    "code_url": "https://update.greasyfork.org/scripts/527750/dl-librescore.user.js",
+    "code_size": 1248246,
+    "license": "MIT License",
+    "version": "0.35.29",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

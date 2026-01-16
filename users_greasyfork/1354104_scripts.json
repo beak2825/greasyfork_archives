@@ -64,5 +64,137 @@
     "locale": "es",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 538954,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T01:36:12.000Z",
+    "code_updated_at": "2025-06-13T20:45:52.000Z",
+    "namespace": "https://greasyfork.org/es/users/1354104-eterve-nallo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1354104,
+        "name": "Eterve Nallo",
+        "created_at": "2024-08-18T16:56:44.000Z",
+        "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+      }
+    ],
+    "name": "Reparador universal del botones de YouTube (\"Null\")",
+    "description": "Repara varios botones si cambian a \"null\", usando el valor original detectado automáticamente (soporta todos los idiomas).",
+    "url": "https://greasyfork.org/scripts/538954-reparador-universal-del-botones-de-youtube-null",
+    "code_url": "https://update.greasyfork.org/scripts/538954/Reparador%20universal%20del%20botones%20de%20YouTube%20%28%22Null%22%29.user.js",
+    "code_size": 4831,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534700,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-02T08:46:02.000Z",
+    "code_updated_at": "2025-05-02T08:46:02.000Z",
+    "namespace": "EterveNallo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1354104,
+        "name": "Eterve Nallo",
+        "created_at": "2024-08-18T16:56:44.000Z",
+        "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+      }
+    ],
+    "name": "Perzonalizar columnas de videos y shorts en youtube.",
+    "description": "Personaliza la cantidad de elementos por fila en el feed de YouTube y los shorts.",
+    "url": "https://greasyfork.org/scripts/534700-perzonalizar-columnas-de-videos-y-shorts-en-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/534700/Perzonalizar%20columnas%20de%20videos%20y%20shorts%20en%20youtube.user.js",
+    "code_size": 8064,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526935,
+    "daily_installs": 2,
+    "total_installs": 106,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-15T00:52:02.000Z",
+    "code_updated_at": "2025-02-21T02:45:22.000Z",
+    "namespace": "https://greasyfork.org/en/users/933798",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1354104,
+        "name": "Eterve Nallo",
+        "created_at": "2024-08-18T16:56:44.000Z",
+        "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+      }
+    ],
+    "name": "YouTube - Non-Rounded Design (Fix) + Other Improvements.",
+    "description": "This script disables YouTube's new rounded corners (reverts back to the previous layout from 2021.)",
+    "url": "https://greasyfork.org/scripts/526935-youtube-non-rounded-design-fix-other-improvements",
+    "code_url": "https://update.greasyfork.org/scripts/526935/YouTube%20-%20Non-Rounded%20Design%20%28Fix%29%20%2B%20Other%20Improvements.user.js",
+    "code_size": 186629,
+    "license": "MIT License",
+    "version": "6.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504151,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-18T17:19:07.000Z",
+    "code_updated_at": "2025-10-23T05:47:35.000Z",
+    "namespace": "https://greasyfork.org/es/scripts/504151-youtube-customizable-subtitles-youtube-subtitulos-personalizables",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1354104,
+        "name": "Eterve Nallo",
+        "created_at": "2024-08-18T16:56:44.000Z",
+        "url": "https://greasyfork.org/users/1354104-eterve-nallo"
+      }
+    ],
+    "name": "YouTube Customizable Subtitles / Youtube Subtitulos Inteligentes",
+    "description": "Customizable YouTube subtitles with automatically generated outline for perfect readability / Subtítulos personalizables con contorno generado automáticamente para mejor legibilidad",
+    "url": "https://greasyfork.org/scripts/504151-youtube-customizable-subtitles-youtube-subtitulos-inteligentes",
+    "code_url": "https://update.greasyfork.org/scripts/504151/YouTube%20Customizable%20Subtitles%20%20Youtube%20Subtitulos%20Inteligentes.user.js",
+    "code_size": 11583,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

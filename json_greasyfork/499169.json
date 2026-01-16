@@ -1,0 +1,59 @@
+{
+  "id": 499169,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-28T20:47:25.000Z",
+  "code_updated_at": "2024-06-29T05:04:07.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1325423,
+      "name": "Ilya Ivankov",
+      "created_at": "2024-06-28T20:19:38.000Z",
+      "url": "https://greasyfork.org/users/1325423-ilya-ivankov",
+      "scripts": [
+        {
+          "id": 502157,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-30T08:45:05.000Z",
+          "code_updated_at": "2024-07-30T08:45:05.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TYUMEN | Скрипт для Кураторов Форума",
+          "description": "Скрипт для проверки жалоб",
+          "url": "https://greasyfork.org/scripts/502157-tyumen-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+          "code_url": "https://update.greasyfork.org/scripts/502157/TYUMEN%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+          "code_size": 32531,
+          "license": "MIT License",
+          "version": "0.02",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TYUMEN | Скрипт для Кураторов Форума",
+  "description": "Скрипт для проверки жалоб",
+  "url": "https://greasyfork.org/scripts/499169-tyumen-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/499169/TYUMEN%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 32531,
+  "license": "MIT License",
+  "version": "0.02",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

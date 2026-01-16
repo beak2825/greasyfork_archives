@@ -31,5 +31,38 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 532376,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T00:40:55.000Z",
+    "code_updated_at": "2025-06-06T13:50:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408154,
+        "name": "anonymous_7",
+        "created_at": "2024-12-08T07:36:25.000Z",
+        "url": "https://greasyfork.org/users/1408154-anonymous-7"
+      }
+    ],
+    "name": "[Niko] Hide Custom Ranking Ads",
+    "description": "2025年版ニコニコ カスタムランキングの広告行を非表示化",
+    "url": "https://greasyfork.org/scripts/532376-niko-hide-custom-ranking-ads",
+    "code_url": "https://update.greasyfork.org/scripts/532376/%5BNiko%5D%20Hide%20Custom%20Ranking%20Ads.user.js",
+    "code_size": 1393,
+    "license": "MIT License",
+    "version": "2025.06.06",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 538905,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T08:57:18.000Z",
+  "code_updated_at": "2025-06-09T08:57:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472173,
+      "name": "Naaaz",
+      "created_at": "2025-05-19T21:08:33.000Z",
+      "url": "https://greasyfork.org/users/1472173-naaaz",
+      "scripts": []
+    }
+  ],
+  "name": "Vaaaz.Dev Button - Absolute Position",
+  "description": "Adds a Vaaaz.Dev button (icon only) to the far right of the header using absolute positioning to avoid layout shifts.",
+  "url": "https://greasyfork.org/scripts/538905-vaaaz-dev-button-absolute-position",
+  "code_url": "https://update.greasyfork.org/scripts/538905/VaaazDev%20Button%20-%20Absolute%20Position.user.js",
+  "code_size": 3591,
+  "license": null,
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

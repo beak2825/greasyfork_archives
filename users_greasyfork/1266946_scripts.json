@@ -1,0 +1,134 @@
+[
+  {
+    "id": 526418,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-10T00:44:54.000Z",
+    "code_updated_at": "2025-02-10T00:45:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1266946,
+        "name": "yijiun",
+        "created_at": "2024-02-25T19:31:51.000Z",
+        "url": "https://greasyfork.org/users/1266946-yijiun"
+      }
+    ],
+    "name": "Fubon more | Home - Set 5 minutes to jump to events page",
+    "description": "Set 5 minutes to jump to events page.",
+    "url": "https://greasyfork.org/scripts/526418-fubon-more-home-set-5-minutes-to-jump-to-events-page",
+    "code_url": "https://update.greasyfork.org/scripts/526418/Fubon%20more%20%7C%20Home%20-%20Set%205%20minutes%20to%20jump%20to%20events%20page.user.js",
+    "code_size": 2553,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520064,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-07T18:03:16.000Z",
+    "code_updated_at": "2024-12-07T18:06:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1266946,
+        "name": "yijiun",
+        "created_at": "2024-02-25T19:31:51.000Z",
+        "url": "https://greasyfork.org/users/1266946-yijiun"
+      }
+    ],
+    "name": "LINE GIFT - Show 7-11 i-Gift Serial Number",
+    "description": "Reload page and the i-Gift serial number will be displayed.",
+    "url": "https://greasyfork.org/scripts/520064-line-gift-show-7-11-i-gift-serial-number",
+    "code_url": "https://update.greasyfork.org/scripts/520064/LINE%20GIFT%20-%20Show%207-11%20i-Gift%20Serial%20Number.user.js",
+    "code_size": 1064,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 514291,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-27T08:32:49.000Z",
+    "code_updated_at": "2025-02-10T00:39:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1266946,
+        "name": "yijiun",
+        "created_at": "2024-02-25T19:31:51.000Z",
+        "url": "https://greasyfork.org/users/1266946-yijiun"
+      }
+    ],
+    "name": "Fubon more | Events - Auto Refresh Page and Auto Click Button",
+    "description": "Automatic page refresh every 2 minutes and automatic check-in at 6am",
+    "url": "https://greasyfork.org/scripts/514291-fubon-more-events-auto-refresh-page-and-auto-click-button",
+    "code_url": "https://update.greasyfork.org/scripts/514291/Fubon%20more%20%7C%20Events%20-%20Auto%20Refresh%20Page%20and%20Auto%20Click%20Button.user.js",
+    "code_size": 3445,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511607,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-05T19:45:37.000Z",
+    "code_updated_at": "2024-10-05T19:56:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1266946,
+        "name": "yijiun",
+        "created_at": "2024-02-25T19:31:51.000Z",
+        "url": "https://greasyfork.org/users/1266946-yijiun"
+      }
+    ],
+    "name": "StreetVoice - Dark Mode Applies Instantly",
+    "description": "Apply dark mode to StreetVoice instantly, even when you are not logged in",
+    "url": "https://greasyfork.org/scripts/511607-streetvoice-dark-mode-applies-instantly",
+    "code_url": "https://update.greasyfork.org/scripts/511607/StreetVoice%20-%20Dark%20Mode%20Applies%20Instantly.user.js",
+    "code_size": 4276,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

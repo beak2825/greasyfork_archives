@@ -1,0 +1,59 @@
+{
+  "id": 544291,
+  "daily_installs": 0,
+  "total_installs": 59,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-01T11:55:57.000Z",
+  "code_updated_at": "2025-08-02T04:52:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1500503,
+      "name": "k2003h",
+      "created_at": "2025-08-01T11:43:56.000Z",
+      "url": "https://greasyfork.org/users/1500503-k2003h",
+      "scripts": [
+        {
+          "id": 544291,
+          "daily_installs": 0,
+          "total_installs": 59,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-01T11:55:57.000Z",
+          "code_updated_at": "2025-08-02T04:52:55.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "成电慕课自动播放-研究生入学教育",
+          "description": "自动在视频播放到指定进度时点击\"下一个\"按钮，并在新视频加载后自动播放",
+          "url": "https://greasyfork.org/scripts/544291-%E6%88%90%E7%94%B5%E6%85%95%E8%AF%BE%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E7%A0%94%E7%A9%B6%E7%94%9F%E5%85%A5%E5%AD%A6%E6%95%99%E8%82%B2",
+          "code_url": "https://update.greasyfork.org/scripts/544291/%E6%88%90%E7%94%B5%E6%85%95%E8%AF%BE%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E7%A0%94%E7%A9%B6%E7%94%9F%E5%85%A5%E5%AD%A6%E6%95%99%E8%82%B2.user.js",
+          "code_size": 5348,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "成电慕课自动播放-研究生入学教育",
+  "description": "自动在视频播放到指定进度时点击\"下一个\"按钮，并在新视频加载后自动播放",
+  "url": "https://greasyfork.org/scripts/544291-%E6%88%90%E7%94%B5%E6%85%95%E8%AF%BE%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E7%A0%94%E7%A9%B6%E7%94%9F%E5%85%A5%E5%AD%A6%E6%95%99%E8%82%B2",
+  "code_url": "https://update.greasyfork.org/scripts/544291/%E6%88%90%E7%94%B5%E6%85%95%E8%AF%BE%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E7%A0%94%E7%A9%B6%E7%94%9F%E5%85%A5%E5%AD%A6%E6%95%99%E8%82%B2.user.js",
+  "code_size": 5348,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

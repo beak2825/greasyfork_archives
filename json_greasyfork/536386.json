@@ -1,0 +1,59 @@
+{
+  "id": 536386,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-18T11:03:39.000Z",
+  "code_updated_at": "2025-05-18T11:03:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1352038,
+      "name": "Ryan Aksoy",
+      "created_at": "2024-08-15T06:00:51.000Z",
+      "url": "https://greasyfork.org/users/1352038-ryan-aksoy",
+      "scripts": [
+        {
+          "id": 536386,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-18T11:03:39.000Z",
+          "code_updated_at": "2025-05-18T11:03:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "New's Hitbox.io Key Display",
+          "description": "Show ↑ ↓ ← → C X Z V with rainbow border, fill on press, and WASD triggers arrows on hitbox.io top-left overlay 🎮🌈🔥💻✨",
+          "url": "https://greasyfork.org/scripts/536386-new-s-hitbox-io-key-display",
+          "code_url": "https://update.greasyfork.org/scripts/536386/New%27s%20Hitboxio%20Key%20Display.user.js",
+          "code_size": 3234,
+          "license": null,
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "New's Hitbox.io Key Display",
+  "description": "Show ↑ ↓ ← → C X Z V with rainbow border, fill on press, and WASD triggers arrows on hitbox.io top-left overlay 🎮🌈🔥💻✨",
+  "url": "https://greasyfork.org/scripts/536386-new-s-hitbox-io-key-display",
+  "code_url": "https://update.greasyfork.org/scripts/536386/New%27s%20Hitboxio%20Key%20Display.user.js",
+  "code_size": 3234,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

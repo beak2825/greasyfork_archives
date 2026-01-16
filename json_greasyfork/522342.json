@@ -1,0 +1,59 @@
+{
+  "id": 522342,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-31T00:04:37.000Z",
+  "code_updated_at": "2024-12-31T01:02:07.000Z",
+  "namespace": "RHA",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417728,
+      "name": "jkillas",
+      "created_at": "2024-12-30T23:41:25.000Z",
+      "url": "https://greasyfork.org/users/1417728-jkillas",
+      "scripts": [
+        {
+          "id": 527500,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-20T03:40:19.000Z",
+          "code_updated_at": "2025-07-14T15:51:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Primevideo Visual Cleanup and Volume Control",
+          "description": "Removes X-ray and black shadow from streaming, also adds mouse wheel volume control.",
+          "url": "https://greasyfork.org/scripts/527500-primevideo-visual-cleanup-and-volume-control",
+          "code_url": "https://update.greasyfork.org/scripts/527500/Primevideo%20Visual%20Cleanup%20and%20Volume%20Control.user.js",
+          "code_size": 5894,
+          "license": "MIT License",
+          "version": "1.5.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Resolution Highlighter Advanced",
+  "description": "Enhanced resolution highlighting with advanced information",
+  "url": "https://greasyfork.org/scripts/522342-resolution-highlighter-advanced",
+  "code_url": "https://update.greasyfork.org/scripts/522342/Resolution%20Highlighter%20Advanced.user.js",
+  "code_size": 23618,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

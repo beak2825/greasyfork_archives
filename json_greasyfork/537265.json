@@ -1,0 +1,33 @@
+{
+  "id": 537265,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-26T00:11:24.000Z",
+  "code_updated_at": "2025-05-26T21:10:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474456,
+      "name": "BareMetal",
+      "created_at": "2025-05-24T21:27:28.000Z",
+      "url": "https://greasyfork.org/users/1474456-baremetal"
+    }
+  ],
+  "name": "MaM SendToClient",
+  "description": "Send torrent to local client from MyAnonamouse with UI config (qBittorrent, Deluge, Transmission supported)",
+  "url": "https://greasyfork.org/scripts/537265-mam-sendtoclient",
+  "code_url": "https://update.greasyfork.org/scripts/537265/MaM%20SendToClient.user.js",
+  "code_size": 10478,
+  "license": "GPL3",
+  "version": "0.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

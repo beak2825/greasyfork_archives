@@ -1,0 +1,59 @@
+{
+  "id": 524182,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-19T03:42:34.000Z",
+  "code_updated_at": "2025-01-19T03:42:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 959228,
+      "name": "KomeijiReimu",
+      "created_at": "2022-09-14T13:58:37.000Z",
+      "url": "https://greasyfork.org/users/959228-komeijireimu",
+      "scripts": [
+        {
+          "id": 524182,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-19T03:42:34.000Z",
+          "code_updated_at": "2025-01-19T03:42:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "卡饭自动签到",
+          "description": "自动点击签到按钮",
+          "url": "https://greasyfork.org/scripts/524182-%E5%8D%A1%E9%A5%AD%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0",
+          "code_url": "https://update.greasyfork.org/scripts/524182/%E5%8D%A1%E9%A5%AD%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0.user.js",
+          "code_size": 955,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "卡饭自动签到",
+  "description": "自动点击签到按钮",
+  "url": "https://greasyfork.org/scripts/524182-%E5%8D%A1%E9%A5%AD%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0",
+  "code_url": "https://update.greasyfork.org/scripts/524182/%E5%8D%A1%E9%A5%AD%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0.user.js",
+  "code_size": 955,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

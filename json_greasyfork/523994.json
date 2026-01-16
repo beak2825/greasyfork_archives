@@ -1,0 +1,59 @@
+{
+  "id": 523994,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-17T00:34:24.000Z",
+  "code_updated_at": "2025-01-17T00:34:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1256461,
+      "name": "525448560",
+      "created_at": "2024-02-02T13:13:46.000Z",
+      "url": "https://greasyfork.org/users/1256461-525448560",
+      "scripts": [
+        {
+          "id": 523993,
+          "daily_installs": 0,
+          "total_installs": 40,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-17T00:31:27.000Z",
+          "code_updated_at": "2025-01-17T00:31:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "翻页按钮",
+          "description": "根据 URL 中的 page 参数添加“上一页”和“下一页”按钮，实现网页内容翻页",
+          "url": "https://greasyfork.org/scripts/523993-%E7%BF%BB%E9%A1%B5%E6%8C%89%E9%92%AE",
+          "code_url": "https://update.greasyfork.org/scripts/523993/%E7%BF%BB%E9%A1%B5%E6%8C%89%E9%92%AE.user.js",
+          "code_size": 2658,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "移除网址中的 \"hd\"",
+  "description": "自动移除网址中出现的 \"hd\" 并跳转到修改后的地址",
+  "url": "https://greasyfork.org/scripts/523994-%E7%A7%BB%E9%99%A4%E7%BD%91%E5%9D%80%E4%B8%AD%E7%9A%84-hd",
+  "code_url": "https://update.greasyfork.org/scripts/523994/%E7%A7%BB%E9%99%A4%E7%BD%91%E5%9D%80%E4%B8%AD%E7%9A%84%20%22hd%22.user.js",
+  "code_size": 796,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

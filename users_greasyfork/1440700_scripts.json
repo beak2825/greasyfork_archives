@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528282,
+    "daily_installs": 1,
+    "total_installs": 297,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-27T18:22:22.000Z",
+    "code_updated_at": "2025-02-28T15:28:00.000Z",
+    "namespace": "qx-vip-video",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440700,
+        "name": "xnone",
+        "created_at": "2025-02-27T17:36:27.000Z",
+        "url": "https://greasyfork.org/users/1440700-xnone"
+      }
+    ],
+    "name": "奇讯影视解析 (2025最新优化版) - 悬浮面板 - 多源同时解析",
+    "description": "优酷、爱奇艺、腾讯、B站等视频网站VIP视频解析，悬浮面板，多源解析（可选6/4/1个源），单源放大并替换",
+    "url": "https://greasyfork.org/scripts/528282-%E5%A5%87%E8%AE%AF%E5%BD%B1%E8%A7%86%E8%A7%A3%E6%9E%90-2025%E6%9C%80%E6%96%B0%E4%BC%98%E5%8C%96%E7%89%88-%E6%82%AC%E6%B5%AE%E9%9D%A2%E6%9D%BF-%E5%A4%9A%E6%BA%90%E5%90%8C%E6%97%B6%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/528282/%E5%A5%87%E8%AE%AF%E5%BD%B1%E8%A7%86%E8%A7%A3%E6%9E%90%20%282025%E6%9C%80%E6%96%B0%E4%BC%98%E5%8C%96%E7%89%88%29%20-%20%E6%82%AC%E6%B5%AE%E9%9D%A2%E6%9D%BF%20-%20%E5%A4%9A%E6%BA%90%E5%90%8C%E6%97%B6%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 26653,
+    "license": "GPLv3",
+    "version": "1.7.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

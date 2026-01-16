@@ -1,0 +1,68 @@
+[
+  {
+    "id": 500870,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-16T21:17:39.000Z",
+    "code_updated_at": "2024-07-16T21:17:38.000Z",
+    "namespace": "http://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152925,
+        "name": "hg42",
+        "created_at": "2017-09-16T20:53:32.000Z",
+        "url": "https://greasyfork.org/users/152925-hg42"
+      }
+    ],
+    "name": "site stayfriends - block gold teaser",
+    "description": "remove gold teaser shit",
+    "url": "https://greasyfork.org/scripts/500870-site-stayfriends-block-gold-teaser",
+    "code_url": "https://update.greasyfork.org/scripts/500870/site%20stayfriends%20-%20block%20gold%20teaser.user.js",
+    "code_size": 1211,
+    "license": "MIT License",
+    "version": "2024.07.16.2315",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500862,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-16T20:00:15.000Z",
+    "code_updated_at": "2024-07-23T01:43:00.000Z",
+    "namespace": "http://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 152925,
+        "name": "hg42",
+        "created_at": "2017-09-16T20:53:32.000Z",
+        "url": "https://greasyfork.org/users/152925-hg42"
+      }
+    ],
+    "name": "site nightcafe - Claim Button Clicker",
+    "description": "Automatically clicks the claim button on NightCafe",
+    "url": "https://greasyfork.org/scripts/500862-site-nightcafe-claim-button-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/500862/site%20nightcafe%20-%20Claim%20Button%20Clicker.user.js",
+    "code_size": 1344,
+    "license": "MIT License",
+    "version": "2024.07.23.0340",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

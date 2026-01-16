@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528663,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-03T18:14:26.000Z",
+    "code_updated_at": "2025-03-03T18:14:25.000Z",
+    "namespace": "https://memoryhackers.org/members/durmuk.1871708/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1158587,
+        "name": "Durmuş Karaca",
+        "created_at": "2023-08-24T20:00:01.000Z",
+        "url": "https://greasyfork.org/users/1158587-durmu%C5%9F-karaca"
+      }
+    ],
+    "name": "TrendLinkler Bypass Enhanced",
+    "description": "TrendLinkler sitesinde bekleme süresini atlayarak direkt link erişimi sağlar",
+    "url": "https://greasyfork.org/scripts/528663-trendlinkler-bypass-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/528663/TrendLinkler%20Bypass%20Enhanced.user.js",
+    "code_size": 3994,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

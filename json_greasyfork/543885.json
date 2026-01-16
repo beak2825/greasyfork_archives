@@ -1,0 +1,34 @@
+{
+  "id": 543885,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-28T14:23:20.000Z",
+  "code_updated_at": "2026-01-04T20:16:57.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1376348,
+      "name": "Orkni",
+      "created_at": "2024-10-03T18:18:37.000Z",
+      "url": "https://greasyfork.org/users/1376348-orkni",
+      "scripts": []
+    }
+  ],
+  "name": "Для Руководства | KHABAROVSK",
+  "description": "Создано для KHABAROVSK",
+  "url": "https://greasyfork.org/scripts/543885-%D0%B4%D0%BB%D1%8F-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0-khabarovsk",
+  "code_url": "https://update.greasyfork.org/scripts/543885/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%7C%20KHABAROVSK.user.js",
+  "code_size": 156523,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

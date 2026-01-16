@@ -1,0 +1,33 @@
+{
+  "id": 544899,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-07T06:28:11.000Z",
+  "code_updated_at": "2025-08-07T06:28:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1415600,
+      "name": "chenni666",
+      "created_at": "2024-12-25T12:09:19.000Z",
+      "url": "https://greasyfork.org/users/1415600-chenni666"
+    }
+  ],
+  "name": "BOSS直聘批量投递助手",
+  "description": "自动批量投递职位，处理弹窗，支持关键词跳过",
+  "url": "https://greasyfork.org/scripts/544899-boss%E7%9B%B4%E8%81%98%E6%89%B9%E9%87%8F%E6%8A%95%E9%80%92%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/544899/BOSS%E7%9B%B4%E8%81%98%E6%89%B9%E9%87%8F%E6%8A%95%E9%80%92%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 24847,
+  "license": "GNU AGPLv3",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

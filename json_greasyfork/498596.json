@@ -1,0 +1,59 @@
+{
+  "id": 498596,
+  "daily_installs": 0,
+  "total_installs": 171,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-22T14:45:20.000Z",
+  "code_updated_at": "2024-09-07T09:43:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1322234,
+      "name": "lscsczl",
+      "created_at": "2024-06-22T14:28:46.000Z",
+      "url": "https://greasyfork.org/users/1322234-lscsczl",
+      "scripts": [
+        {
+          "id": 498596,
+          "daily_installs": 0,
+          "total_installs": 171,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-22T14:45:20.000Z",
+          "code_updated_at": "2024-09-07T09:43:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili视频播放自动网页全屏",
+          "description": "B站视频播放自动网页全屏",
+          "url": "https://greasyfork.org/scripts/498596-bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E8%87%AA%E5%8A%A8%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F",
+          "code_url": "https://update.greasyfork.org/scripts/498596/Bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E8%87%AA%E5%8A%A8%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.user.js",
+          "code_size": 1339,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili视频播放自动网页全屏",
+  "description": "B站视频播放自动网页全屏",
+  "url": "https://greasyfork.org/scripts/498596-bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E8%87%AA%E5%8A%A8%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/498596/Bilibili%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E8%87%AA%E5%8A%A8%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.user.js",
+  "code_size": 1339,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

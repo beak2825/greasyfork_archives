@@ -1,0 +1,59 @@
+{
+  "id": 537181,
+  "daily_installs": 0,
+  "total_installs": 110,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-25T08:05:54.000Z",
+  "code_updated_at": "2025-07-15T08:27:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474594,
+      "name": "g0g0",
+      "created_at": "2025-05-25T07:55:49.000Z",
+      "url": "https://greasyfork.org/users/1474594-g0g0",
+      "scripts": [
+        {
+          "id": 537181,
+          "daily_installs": 0,
+          "total_installs": 110,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-25T08:05:54.000Z",
+          "code_updated_at": "2025-07-15T08:27:01.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "123FastLink",
+          "description": "基于@Bao-qing （2025-01-29）， @微風子 （1.3.1）版本的分支，补充额外功能并修复bug",
+          "url": "https://greasyfork.org/scripts/537181-123fastlink",
+          "code_url": "https://update.greasyfork.org/scripts/537181/123FastLink.user.js",
+          "code_size": 211119,
+          "license": "MIT License",
+          "version": "1.3.1-mod-1.0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "123FastLink",
+  "description": "基于@Bao-qing （2025-01-29）， @微風子 （1.3.1）版本的分支，补充额外功能并修复bug",
+  "url": "https://greasyfork.org/scripts/537181-123fastlink",
+  "code_url": "https://update.greasyfork.org/scripts/537181/123FastLink.user.js",
+  "code_size": 211119,
+  "license": "MIT License",
+  "version": "1.3.1-mod-1.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

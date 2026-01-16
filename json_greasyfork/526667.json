@@ -1,0 +1,34 @@
+{
+  "id": 526667,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-12T11:44:33.000Z",
+  "code_updated_at": "2025-02-12T11:44:33.000Z",
+  "namespace": "http://example.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434306,
+      "name": "Nizam Khan",
+      "created_at": "2025-02-12T11:41:03.000Z",
+      "url": "https://greasyfork.org/users/1434306-nizam-khan",
+      "scripts": []
+    }
+  ],
+  "name": "Reveal Hidden PE ID",
+  "description": "Reveals hidden PE IDs from emails.",
+  "url": "https://greasyfork.org/scripts/526667-reveal-hidden-pe-id",
+  "code_url": "https://update.greasyfork.org/scripts/526667/Reveal%20Hidden%20PE%20ID.user.js",
+  "code_size": 1838,
+  "license": "MIT  // Choose a license! See below for options.",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

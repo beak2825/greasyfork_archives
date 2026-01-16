@@ -1,0 +1,68 @@
+[
+  {
+    "id": 502768,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T10:28:11.000Z",
+    "code_updated_at": "2024-08-06T10:28:10.000Z",
+    "namespace": "http://forum.wh17701.web3.maze-host.ru/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1330779,
+        "name": "Imronbek Sultanov",
+        "created_at": "2024-07-09T13:26:02.000Z",
+        "url": "https://greasyfork.org/users/1330779-imronbek-sultanov"
+      }
+    ],
+    "name": "Jack Role Play  Скрипт by M.Extra",
+    "description": "Для Кураторов Форума",
+    "url": "https://greasyfork.org/scripts/502768-jack-role-play-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-by-m-extra",
+    "code_url": "https://update.greasyfork.org/scripts/502768/Jack%20Role%20Play%20%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20by%20MExtra.user.js",
+    "code_size": 143879,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500110,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-09T14:19:49.000Z",
+    "code_updated_at": "2024-07-17T07:13:20.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1330779,
+        "name": "Imronbek Sultanov",
+        "created_at": "2024-07-09T13:26:02.000Z",
+        "url": "https://greasyfork.org/users/1330779-imronbek-sultanov"
+      }
+    ],
+    "name": "Для Кураторов форума by H.Kamarikov",
+    "description": "Скрипт для Кураторов форума на ответы на Рп биографий| Black Russia по всем вопросам на счет скрипта VK - https://vk.com/mario7866",
+    "url": "https://greasyfork.org/scripts/500110-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-h-kamarikov",
+    "code_url": "https://update.greasyfork.org/scripts/500110/%D0%94%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20HKamarikov.user.js",
+    "code_size": 134646,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

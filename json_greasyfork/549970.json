@@ -1,0 +1,33 @@
+{
+  "id": 549970,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-18T14:21:01.000Z",
+  "code_updated_at": "2025-09-18T14:21:01.000Z",
+  "namespace": "https://greasyfork.org/users/1516350",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516350,
+      "name": "Liridon Lahu",
+      "created_at": "2025-09-17T18:56:09.000Z",
+      "url": "https://greasyfork.org/users/1516350-liridon-lahu"
+    }
+  ],
+  "name": "BQPanel: Wait-for-Save -> Copy IPTV Link + Optional Redirect/Click",
+  "description": "After pressing Save on /lines/create, wait for username/password to appear, build the get.php link, copy to clipboard, optionally redirect and auto-click newest-row icon.",
+  "url": "https://greasyfork.org/scripts/549970-bqpanel-wait-for-save-copy-iptv-link-optional-redirect-click",
+  "code_url": "https://update.greasyfork.org/scripts/549970/BQPanel%3A%20Wait-for-Save%20-%3E%20Copy%20IPTV%20Link%20%2B%20Optional%20RedirectClick.user.js",
+  "code_size": 12836,
+  "license": null,
+  "version": "0.0.1.20250918142101",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

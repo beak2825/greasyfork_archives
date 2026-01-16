@@ -1,0 +1,59 @@
+{
+  "id": 518753,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-25T05:28:08.000Z",
+  "code_updated_at": "2024-11-25T07:16:08.000Z",
+  "namespace": "mailto:iscyclebai@outlook.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1401962,
+      "name": "Cycle Bai",
+      "created_at": "2024-11-25T00:36:35.000Z",
+      "url": "https://greasyfork.org/users/1401962-cycle-bai",
+      "scripts": [
+        {
+          "id": 518753,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-25T05:28:08.000Z",
+          "code_updated_at": "2024-11-25T07:16:08.000Z",
+          "namespace": "mailto:iscyclebai@outlook.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "一键文本转图片",
+          "description": "按下快捷键将选中文字转为图片并复制到剪贴板，",
+          "url": "https://greasyfork.org/scripts/518753-%E4%B8%80%E9%94%AE%E6%96%87%E6%9C%AC%E8%BD%AC%E5%9B%BE%E7%89%87",
+          "code_url": "https://update.greasyfork.org/scripts/518753/%E4%B8%80%E9%94%AE%E6%96%87%E6%9C%AC%E8%BD%AC%E5%9B%BE%E7%89%87.user.js",
+          "code_size": 12893,
+          "license": "LGPL",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "一键文本转图片",
+  "description": "按下快捷键将选中文字转为图片并复制到剪贴板，",
+  "url": "https://greasyfork.org/scripts/518753-%E4%B8%80%E9%94%AE%E6%96%87%E6%9C%AC%E8%BD%AC%E5%9B%BE%E7%89%87",
+  "code_url": "https://update.greasyfork.org/scripts/518753/%E4%B8%80%E9%94%AE%E6%96%87%E6%9C%AC%E8%BD%AC%E5%9B%BE%E7%89%87.user.js",
+  "code_size": 12893,
+  "license": "LGPL",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

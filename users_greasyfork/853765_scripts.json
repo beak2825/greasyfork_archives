@@ -1,0 +1,68 @@
+[
+  {
+    "id": 541879,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-07T03:26:35.000Z",
+    "code_updated_at": "2025-07-07T03:26:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 853765,
+        "name": "hsopen",
+        "created_at": "2021-12-15T15:35:56.000Z",
+        "url": "https://greasyfork.org/users/853765-hsopen"
+      }
+    ],
+    "name": "本站审查",
+    "description": "按 Alt+3 分析首页的可见 H1、外链（排除 wordpress.org）、中文文本，并后台打开相关页面，优化弹窗排版，作者：hsopen。",
+    "url": "https://greasyfork.org/scripts/541879-%E6%9C%AC%E7%AB%99%E5%AE%A1%E6%9F%A5",
+    "code_url": "https://update.greasyfork.org/scripts/541879/%E6%9C%AC%E7%AB%99%E5%AE%A1%E6%9F%A5.user.js",
+    "code_size": 5003,
+    "license": "GPLv3",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 541497,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-03T06:29:29.000Z",
+    "code_updated_at": "2025-07-05T02:59:46.000Z",
+    "namespace": "hsopenScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 853765,
+        "name": "hsopen",
+        "created_at": "2021-12-15T15:35:56.000Z",
+        "url": "https://greasyfork.org/users/853765-hsopen"
+      }
+    ],
+    "name": "链接复制助手",
+    "description": "按 Alt+1 启用/关闭监听，点击复制 JSON 字段或提示，不弹窗，顶部心跳提示，监听开启时对特定链接加彩虹文字或边框样式。处理带撇号的内容时会删除整个包含撇号的单词。",
+    "url": "https://greasyfork.org/scripts/541497-%E9%93%BE%E6%8E%A5%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/541497/%E9%93%BE%E6%8E%A5%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 8146,
+    "license": "GPLv3",
+    "version": "2.6.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

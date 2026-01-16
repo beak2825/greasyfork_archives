@@ -1,0 +1,68 @@
+[
+  {
+    "id": 509027,
+    "daily_installs": 0,
+    "total_installs": 124,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-18T11:16:14.000Z",
+    "code_updated_at": "2024-09-23T06:36:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342883,
+        "name": "iu_yang",
+        "created_at": "2024-07-31T03:52:39.000Z",
+        "url": "https://greasyfork.org/users/1342883-iu-yang"
+      }
+    ],
+    "name": "柠檬文才学堂倍速看课(免费/无广告/无收费/无微信公众号)",
+    "description": "内置跳转修复(需自行打开播放选择中的设置)与保证失去焦点时页面的持续运行,解锁拖拉进度条(不计分),x2.5倍速以上不计分!所以建议2.5倍速挂着就行了!",
+    "url": "https://greasyfork.org/scripts/509027-%E6%9F%A0%E6%AA%AC%E6%96%87%E6%89%8D%E5%AD%A6%E5%A0%82%E5%80%8D%E9%80%9F%E7%9C%8B%E8%AF%BE-%E5%85%8D%E8%B4%B9-%E6%97%A0%E5%B9%BF%E5%91%8A-%E6%97%A0%E6%94%B6%E8%B4%B9-%E6%97%A0%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7",
+    "code_url": "https://update.greasyfork.org/scripts/509027/%E6%9F%A0%E6%AA%AC%E6%96%87%E6%89%8D%E5%AD%A6%E5%A0%82%E5%80%8D%E9%80%9F%E7%9C%8B%E8%AF%BE%28%E5%85%8D%E8%B4%B9%E6%97%A0%E5%B9%BF%E5%91%8A%E6%97%A0%E6%94%B6%E8%B4%B9%E6%97%A0%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%29.user.js",
+    "code_size": 4454,
+    "license": "MIT Festival Variant",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502236,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-31T03:58:14.000Z",
+    "code_updated_at": "2025-01-07T07:57:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342883,
+        "name": "iu_yang",
+        "created_at": "2024-07-31T03:52:39.000Z",
+        "url": "https://greasyfork.org/users/1342883-iu-yang"
+      }
+    ],
+    "name": "知产辅助脚本",
+    "description": "本简化了知产日常业务的某些繁琐步骤，如删除了商标首页的5秒协议、专利办理系统首页的常用模块补充、专利电子发文电子客户端自动查询与回文可下载等功能、河南政务服务网的密码输入框可被粘贴内容等；",
+    "url": "https://greasyfork.org/scripts/502236-%E7%9F%A5%E4%BA%A7%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/502236/%E7%9F%A5%E4%BA%A7%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 20190,
+    "license": "MIT Festival Variant",
+    "version": "2025-01-07",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

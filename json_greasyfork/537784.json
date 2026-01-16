@@ -1,0 +1,34 @@
+{
+  "id": 537784,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-30T20:21:38.000Z",
+  "code_updated_at": "2025-05-30T20:21:38.000Z",
+  "namespace": "yournamespace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476910,
+      "name": "Radthe Man",
+      "created_at": "2025-05-30T20:20:17.000Z",
+      "url": "https://greasyfork.org/users/1476910-radthe-man",
+      "scripts": []
+    }
+  ],
+  "name": "IMDb to allstream.cc",
+  "description": "Adds vertically stacked styled search buttons on IMDb using the IMDb ID",
+  "url": "https://greasyfork.org/scripts/537784-imdb-to-allstream-cc",
+  "code_url": "https://update.greasyfork.org/scripts/537784/IMDb%20to%20allstreamcc.user.js",
+  "code_size": 2503,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

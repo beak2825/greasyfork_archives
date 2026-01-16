@@ -1,0 +1,34 @@
+{
+  "id": 514067,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-25T20:03:09.000Z",
+  "code_updated_at": "2024-10-25T20:03:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354731,
+      "name": "tesnon wan",
+      "created_at": "2024-08-19T20:58:09.000Z",
+      "url": "https://greasyfork.org/users/1354731-tesnon-wan",
+      "scripts": []
+    }
+  ],
+  "name": "Delete Empty Groups From GGn Search Page",
+  "description": "Delete all empty groups in a given search result page. Only does one page at a time.",
+  "url": "https://greasyfork.org/scripts/514067-delete-empty-groups-from-ggn-search-page",
+  "code_url": "https://update.greasyfork.org/scripts/514067/Delete%20Empty%20Groups%20From%20GGn%20Search%20Page.user.js",
+  "code_size": 2591,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527950,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T14:32:16.000Z",
+    "code_updated_at": "2025-02-24T14:33:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 138495,
+        "name": "jie5143",
+        "created_at": "2017-07-05T16:30:18.000Z",
+        "url": "https://greasyfork.org/users/138495-jie5143"
+      }
+    ],
+    "name": "Telegraph to Markdown",
+    "description": "将 Telegraph 文章转换为 Markdown 格式并下载",
+    "url": "https://greasyfork.org/scripts/527950-telegraph-to-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/527950/Telegraph%20to%20Markdown.user.js",
+    "code_size": 5949,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

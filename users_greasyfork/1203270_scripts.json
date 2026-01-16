@@ -1,0 +1,233 @@
+[
+  {
+    "id": 539984,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T09:53:30.000Z",
+    "code_updated_at": "2025-06-19T09:53:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "Season start",
+    "description": "Pro season starty",
+    "url": "https://greasyfork.org/scripts/539984-season-start",
+    "code_url": "https://update.greasyfork.org/scripts/539984/Season%20start.user.js",
+    "code_size": 8061,
+    "license": "MIT License",
+    "version": "2024-10-04",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539977,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T09:14:15.000Z",
+    "code_updated_at": "2025-06-19T09:14:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "SIHF Hockey Minutaz Tracker - Vylepšená verze",
+    "description": "Sleduje hokejovou minutáž podle třetiny, možnost ruční úpravy, podporuje pauzu",
+    "url": "https://greasyfork.org/scripts/539977-sihf-hockey-minutaz-tracker-vylep%C5%A1en%C3%A1-verze",
+    "code_url": "https://update.greasyfork.org/scripts/539977/SIHF%20Hockey%20Minutaz%20Tracker%20-%20Vylep%C5%A1en%C3%A1%20verze.user.js",
+    "code_size": 5582,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539976,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T09:13:49.000Z",
+    "code_updated_at": "2025-06-19T09:13:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "Rozhodčí + popis zápasu + Soupiska + Střelci a karty",
+    "description": "Scrappování pro hanspu",
+    "url": "https://greasyfork.org/scripts/539976-rozhod%C4%8D%C3%AD-popis-z%C3%A1pasu-soupiska-st%C5%99elci-a-karty",
+    "code_url": "https://update.greasyfork.org/scripts/539976/Rozhod%C4%8D%C3%AD%20%2B%20popis%20z%C3%A1pasu%20%2B%20Soupiska%20%2B%20St%C5%99elci%20a%20karty.user.js",
+    "code_size": 7219,
+    "license": "MIT License",
+    "version": "2025-02-21",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539975,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T09:12:53.000Z",
+    "code_updated_at": "2025-06-19T09:12:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "Soupiska + Střelci",
+    "description": "Soupiska se střelca skript",
+    "url": "https://greasyfork.org/scripts/539975-soupiska-st%C5%99elci",
+    "code_url": "https://update.greasyfork.org/scripts/539975/Soupiska%20%2B%20St%C5%99elci.user.js",
+    "code_size": 5772,
+    "license": "MIT License",
+    "version": "2025-02-21",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539973,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T09:09:47.000Z",
+    "code_updated_at": "2025-06-19T09:09:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "Detail utkání",
+    "description": "Blalba",
+    "url": "https://greasyfork.org/scripts/539973-detail-utk%C3%A1n%C3%AD",
+    "code_url": "https://update.greasyfork.org/scripts/539973/Detail%20utk%C3%A1n%C3%AD.user.js",
+    "code_size": 5588,
+    "license": "MIT License",
+    "version": "2025-02-21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518223,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T15:12:47.000Z",
+    "code_updated_at": "2024-11-20T16:10:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "FIBA Live Data - Max Optimized",
+    "description": "Fetch live basketball game data from fiba.basketball with enhanced performance and error handling.",
+    "url": "https://greasyfork.org/scripts/518223-fiba-live-data-max-optimized",
+    "code_url": "https://update.greasyfork.org/scripts/518223/FIBA%20Live%20Data%20-%20Max%20Optimized.user.js",
+    "code_size": 7415,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503740,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-15T13:02:44.000Z",
+    "code_updated_at": "2024-08-15T13:02:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203270,
+        "name": "Michal Hornok",
+        "created_at": "2023-10-24T12:47:32.000Z",
+        "url": "https://greasyfork.org/users/1203270-michal-hornok"
+      }
+    ],
+    "name": "TEST - Mackolik Přegenerování Zápasů",
+    "description": "Skript, který přegeneruje názvy týmů na hlavní stránce podle detailu zápasu na Mackolik.com",
+    "url": "https://greasyfork.org/scripts/503740-test-mackolik-p%C5%99egenerov%C3%A1n%C3%AD-z%C3%A1pas%C5%AF",
+    "code_url": "https://update.greasyfork.org/scripts/503740/TEST%20-%20Mackolik%20P%C5%99egenerov%C3%A1n%C3%AD%20Z%C3%A1pas%C5%AF.user.js",
+    "code_size": 6840,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

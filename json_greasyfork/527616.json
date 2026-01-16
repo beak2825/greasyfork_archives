@@ -1,0 +1,33 @@
+{
+  "id": 527616,
+  "daily_installs": 27,
+  "total_installs": 4160,
+  "fan_score": "20.8",
+  "good_ratings": 1,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2025-02-21T06:56:37.000Z",
+  "code_updated_at": "2026-01-02T10:55:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1132291,
+      "name": "Weav3r",
+      "created_at": "2023-07-21T11:02:54.000Z",
+      "url": "https://greasyfork.org/users/1132291-weav3r"
+    }
+  ],
+  "name": "Bazaars in Item Market Powered by TornW3B",
+  "description": "Displays bazaar listings with sorting controls",
+  "url": "https://greasyfork.org/scripts/527616-bazaars-in-item-market-powered-by-tornw3b",
+  "code_url": "https://update.greasyfork.org/scripts/527616/Bazaars%20in%20Item%20Market%20Powered%20by%20TornW3B.user.js",
+  "code_size": 99777,
+  "license": null,
+  "version": "3.24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

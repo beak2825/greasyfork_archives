@@ -1,0 +1,167 @@
+[
+  {
+    "id": 543332,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-22T14:21:23.000Z",
+    "code_updated_at": "2025-07-22T14:21:23.000Z",
+    "namespace": "https://greasyfork.org/pl/users/636724-cml99",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 636724,
+        "name": "CML99",
+        "created_at": "2020-06-23T16:09:09.000Z",
+        "url": "https://greasyfork.org/users/636724-cml99"
+      }
+    ],
+    "name": "Filmweb Serial Date",
+    "description": "Wyświetla datę premiery pierwszego odcinka w głównej sekcji serialu.",
+    "url": "https://greasyfork.org/scripts/543332-filmweb-serial-date",
+    "code_url": "https://update.greasyfork.org/scripts/543332/Filmweb%20Serial%20Date.user.js",
+    "code_size": 5065,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.0.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542808,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T08:56:18.000Z",
+    "code_updated_at": "2025-10-08T08:52:19.000Z",
+    "namespace": "https://greasyfork.org/pl/users/636724-cml99",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 636724,
+        "name": "CML99",
+        "created_at": "2020-06-23T16:09:09.000Z",
+        "url": "https://greasyfork.org/users/636724-cml99"
+      }
+    ],
+    "name": "Filmweb Community Rating Redirector",
+    "description": "Otwiera opinie/oceny znajomych w nowym osobnym okienku zamiast nadpisywać stronę filmu.",
+    "url": "https://greasyfork.org/scripts/542808-filmweb-community-rating-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/542808/Filmweb%20Community%20Rating%20Redirector.user.js",
+    "code_size": 2926,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.2.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539205,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T11:54:52.000Z",
+    "code_updated_at": "2025-06-16T11:45:17.000Z",
+    "namespace": "https://greasyfork.org/users/636724-cml99",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 636724,
+        "name": "CML99",
+        "created_at": "2020-06-23T16:09:09.000Z",
+        "url": "https://greasyfork.org/users/636724-cml99"
+      }
+    ],
+    "name": "IMDb Full Gallery Redirect",
+    "description": "Clicking the photos section title or more image will open the full tiled view gallery page instead of a single photo.",
+    "url": "https://greasyfork.org/scripts/539205-imdb-full-gallery-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/539205/IMDb%20Full%20Gallery%20Redirect.user.js",
+    "code_size": 1535,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538000,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-01T17:57:16.000Z",
+    "code_updated_at": "2025-06-01T17:57:16.000Z",
+    "namespace": "https://greasyfork.org/pl/users/636724-cml99",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 636724,
+        "name": "CML99",
+        "created_at": "2020-06-23T16:09:09.000Z",
+        "url": "https://greasyfork.org/users/636724-cml99"
+      }
+    ],
+    "name": "IMDb Peekaboo",
+    "description": "Allows to hide chosen sections on subpages and show them again by mouse hover.",
+    "url": "https://greasyfork.org/scripts/538000-imdb-peekaboo",
+    "code_url": "https://update.greasyfork.org/scripts/538000/IMDb%20Peekaboo.user.css",
+    "code_size": 13843,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536072,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T10:19:49.000Z",
+    "code_updated_at": "2025-05-15T10:22:00.000Z",
+    "namespace": "https://greasyfork.org/pl/users/636724-cml99",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 636724,
+        "name": "CML99",
+        "created_at": "2020-06-23T16:09:09.000Z",
+        "url": "https://greasyfork.org/users/636724-cml99"
+      }
+    ],
+    "name": "Filmweb Filmography Buttons",
+    "description": "Dodaje bezpośrednie przyciski obejrzanych pozycji w filmografii na głównej stronie osoby.",
+    "url": "https://greasyfork.org/scripts/536072-filmweb-filmography-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/536072/Filmweb%20Filmography%20Buttons.user.js",
+    "code_size": 2953,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.0.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

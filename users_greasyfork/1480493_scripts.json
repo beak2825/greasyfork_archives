@@ -1,0 +1,134 @@
+[
+  {
+    "id": 545559,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T10:13:12.000Z",
+    "code_updated_at": "2025-08-15T14:23:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480493,
+        "name": "yun8862",
+        "created_at": "2025-06-08T03:43:27.000Z",
+        "url": "https://greasyfork.org/users/1480493-yun8862"
+      }
+    ],
+    "name": "GPTGod.online 全自动批量注册机器人 (v3.4.5-Fixed)",
+    "description": "修复手动退出登录开关bug，全自动批量注册，支持手动退出登录控制，AI识别超时重试，无操作自动刷新，支持中途暂停恢复，显示验证码截图，自动识别图形验证码，支持错误重试，通过API彻底登出，界面精简。",
+    "url": "https://greasyfork.org/scripts/545559-gptgod-online-%E5%85%A8%E8%87%AA%E5%8A%A8%E6%89%B9%E9%87%8F%E6%B3%A8%E5%86%8C%E6%9C%BA%E5%99%A8%E4%BA%BA-v3-4-5-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/545559/GPTGodonline%20%E5%85%A8%E8%87%AA%E5%8A%A8%E6%89%B9%E9%87%8F%E6%B3%A8%E5%86%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%20%28v345-Fixed%29.user.js",
+    "code_size": 76841,
+    "license": null,
+    "version": "3.4.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543610,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-25T12:17:11.000Z",
+    "code_updated_at": "2025-07-25T12:17:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480493,
+        "name": "yun8862",
+        "created_at": "2025-06-08T03:43:27.000Z",
+        "url": "https://greasyfork.org/users/1480493-yun8862"
+      }
+    ],
+    "name": "OpenRouter 注册与API密钥生成器 (v2.0 - 交互式)",
+    "description": "单次注册，等待用户输入验证链接，然后自动完成邮箱验证、API密钥创建、保存和登出。",
+    "url": "https://greasyfork.org/scripts/543610-openrouter-%E6%B3%A8%E5%86%8C%E4%B8%8Eapi%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E5%99%A8-v2-0-%E4%BA%A4%E4%BA%92%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/543610/OpenRouter%20%E6%B3%A8%E5%86%8C%E4%B8%8EAPI%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90%E5%99%A8%20%28v20%20-%20%E4%BA%A4%E4%BA%92%E5%BC%8F%29.user.js",
+    "code_size": 13160,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 541814,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-06T11:44:46.000Z",
+    "code_updated_at": "2025-07-06T11:44:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480493,
+        "name": "yun8862",
+        "created_at": "2025-06-08T03:43:27.000Z",
+        "url": "https://greasyfork.org/users/1480493-yun8862"
+      }
+    ],
+    "name": "Chimera AI for 2048 (Worker Pro Enhanced)",
+    "description": "An enhanced, highly optimized AI for 2048 with dynamic configuration, improved heuristics, and universal compatibility",
+    "url": "https://greasyfork.org/scripts/541814-chimera-ai-for-2048-worker-pro-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/541814/Chimera%20AI%20for%202048%20%28Worker%20Pro%20Enhanced%29.user.js",
+    "code_size": 40907,
+    "license": "MIT License",
+    "version": "8.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538770,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T03:46:09.000Z",
+    "code_updated_at": "2025-06-08T03:46:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480493,
+        "name": "yun8862",
+        "created_at": "2025-06-08T03:43:27.000Z",
+        "url": "https://greasyfork.org/users/1480493-yun8862"
+      }
+    ],
+    "name": "天翼云盘批量账号容量获取",
+    "description": "批量导入天翼云盘账号，自动切换到密码登录，手动登录后自动获取容量，支持刷新保留进度，美观UI与开关功能，提供一键复制账号密码，优化操作流程，移除强制弹窗，并增加错误结果清理与失败账号重试功能。",
+    "url": "https://greasyfork.org/scripts/538770-%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98%E6%89%B9%E9%87%8F%E8%B4%A6%E5%8F%B7%E5%AE%B9%E9%87%8F%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/538770/%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98%E6%89%B9%E9%87%8F%E8%B4%A6%E5%8F%B7%E5%AE%B9%E9%87%8F%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 28711,
+    "license": null,
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

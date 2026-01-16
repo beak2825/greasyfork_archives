@@ -1,0 +1,33 @@
+{
+  "id": 545182,
+  "daily_installs": 0,
+  "total_installs": 114,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-09T14:10:55.000Z",
+  "code_updated_at": "2025-08-09T14:10:55.000Z",
+  "namespace": "https://github.com/yourname/userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502037,
+      "name": "bbbing",
+      "created_at": "2025-08-06T04:33:58.000Z",
+      "url": "https://greasyfork.org/users/1502037-bbbing"
+    }
+  ],
+  "name": "2025年暑期教师研修-高等教育-自动播放",
+  "description": "在国家智慧教育（高教）课程页，视频自然播完后自动播放右侧目录的下一条未完成视频；兼容 SPA 动态切换",
+  "url": "https://greasyfork.org/scripts/545182-2025%E5%B9%B4%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+  "code_url": "https://update.greasyfork.org/scripts/545182/2025%E5%B9%B4%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE.user.js",
+  "code_size": 6431,
+  "license": null,
+  "version": "0.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

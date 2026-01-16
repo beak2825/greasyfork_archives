@@ -1,0 +1,34 @@
+{
+  "id": 534923,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-04T14:52:17.000Z",
+  "code_updated_at": "2025-05-06T17:00:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465610,
+      "name": "Tristan Pradelles",
+      "created_at": "2025-05-04T14:40:07.000Z",
+      "url": "https://greasyfork.org/users/1465610-tristan-pradelles",
+      "scripts": []
+    }
+  ],
+  "name": "Tool Box",
+  "description": "Replacer Antisonde auto & détection Discord + affichage colonies",
+  "url": "https://greasyfork.org/scripts/534923-tool-box",
+  "code_url": "https://update.greasyfork.org/scripts/534923/Tool%20Box.user.js",
+  "code_size": 14326,
+  "license": "MIT License",
+  "version": "2.0.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500112,
+    "daily_installs": 8,
+    "total_installs": 4768,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-07-09T14:27:03.000Z",
+    "code_updated_at": "2024-07-11T07:19:17.000Z",
+    "namespace": "https://greasyfork.org/users/1330796",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1330796,
+        "name": "qqingzheng",
+        "created_at": "2024-07-09T13:57:48.000Z",
+        "url": "https://greasyfork.org/users/1330796-qqingzheng"
+      }
+    ],
+    "name": "test_ece_crawl",
+    "description": "download sketchfab models",
+    "url": "https://greasyfork.org/scripts/500112-test-ece-crawl",
+    "code_url": "https://update.greasyfork.org/scripts/500112/test_ece_crawl.user.js",
+    "code_size": 57053,
+    "license": null,
+    "version": "2.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

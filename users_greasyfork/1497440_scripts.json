@@ -1,0 +1,68 @@
+[
+  {
+    "id": 550417,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-23T03:25:08.000Z",
+    "code_updated_at": "2025-09-23T03:25:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497440,
+        "name": "1robots123",
+        "created_at": "2025-07-22T22:10:57.000Z",
+        "url": "https://greasyfork.org/users/1497440-1robots123"
+      }
+    ],
+    "name": "Websim Ungrayscale Social Icons (Main Page Only)",
+    "description": "Removes grayscale filter from social icons on the main websim.com page only",
+    "url": "https://greasyfork.org/scripts/550417-websim-ungrayscale-social-icons-main-page-only",
+    "code_url": "https://update.greasyfork.org/scripts/550417/Websim%20Ungrayscale%20Social%20Icons%20%28Main%20Page%20Only%29.user.js",
+    "code_size": 900,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543368,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-22T22:12:25.000Z",
+    "code_updated_at": "2025-11-08T23:02:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://www.websim.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497440,
+        "name": "1robots123",
+        "created_at": "2025-07-22T22:10:57.000Z",
+        "url": "https://greasyfork.org/users/1497440-1robots123"
+      }
+    ],
+    "name": "Kimi K2 converted to Haiku 3.5",
+    "description": "Websim kimi k2 to haiku 3.5",
+    "url": "https://greasyfork.org/scripts/543368-kimi-k2-converted-to-haiku-3-5",
+    "code_url": "https://update.greasyfork.org/scripts/543368/Kimi%20K2%20converted%20to%20Haiku%2035.user.js",
+    "code_size": 1392,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

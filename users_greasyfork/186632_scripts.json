@@ -97,5 +97,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551569,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-04T19:00:22.000Z",
+    "code_updated_at": "2025-12-23T20:44:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 186632,
+        "name": "Steve Chambers",
+        "created_at": "2018-05-19T15:12:03.000Z",
+        "url": "https://greasyfork.org/users/186632-steve-chambers"
+      }
+    ],
+    "name": "Keep Perplexity model as Claude Sonnet 4.5 + Reasoning",
+    "description": "Enforce Claude Sonnet 4.5 + Reasoning as the model",
+    "url": "https://greasyfork.org/scripts/551569-keep-perplexity-model-as-claude-sonnet-4-5-reasoning",
+    "code_url": "https://update.greasyfork.org/scripts/551569/Keep%20Perplexity%20model%20as%20Claude%20Sonnet%2045%20%2B%20Reasoning.user.js",
+    "code_size": 3691,
+    "license": "MIT License",
+    "version": "6.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543972,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T10:59:06.000Z",
+    "code_updated_at": "2025-07-29T10:59:06.000Z",
+    "namespace": "https://autotrader.co.uk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 186632,
+        "name": "Steve Chambers",
+        "created_at": "2018-05-19T15:12:03.000Z",
+        "url": "https://greasyfork.org/users/186632-steve-chambers"
+      }
+    ],
+    "name": "Autotrader UK - Battery Lease filter",
+    "description": "Adds Battery Lease Include/Exclude filter for all car searches",
+    "url": "https://greasyfork.org/scripts/543972-autotrader-uk-battery-lease-filter",
+    "code_url": "https://update.greasyfork.org/scripts/543972/Autotrader%20UK%20-%20Battery%20Lease%20filter.user.js",
+    "code_size": 2894,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

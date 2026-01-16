@@ -31,5 +31,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 547389,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-26T17:50:59.000Z",
+    "code_updated_at": "2025-08-26T17:50:59.000Z",
+    "namespace": "https://github.com/rybak/atlassian-tweaks",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951503,
+        "name": "andrybak",
+        "created_at": "2022-08-27T23:56:27.000Z",
+        "url": "https://greasyfork.org/users/951503-andrybak"
+      }
+    ],
+    "name": "Bitbucket: fix readability of branch labels",
+    "description": "Makes underscores, as well as other descent elements below the baseline, fully visible in the branch labels on the \"Commits\" pages.",
+    "url": "https://greasyfork.org/scripts/547389-bitbucket-fix-readability-of-branch-labels",
+    "code_url": "https://update.greasyfork.org/scripts/547389/Bitbucket%3A%20fix%20readability%20of%20branch%20labels.user.css",
+    "code_size": 1845,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531348,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-30T14:16:08.000Z",
+    "code_updated_at": "2025-03-30T14:18:07.000Z",
+    "namespace": "https://andrybak.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951503,
+        "name": "andrybak",
+        "created_at": "2022-08-27T23:56:27.000Z",
+        "url": "https://greasyfork.org/users/951503-andrybak"
+      }
+    ],
+    "name": "MangaDex: more edit links",
+    "description": "Adds edit buttons/links in more places on MangaDex",
+    "url": "https://greasyfork.org/scripts/531348-mangadex-more-edit-links",
+    "code_url": "https://update.greasyfork.org/scripts/531348/MangaDex%3A%20more%20edit%20links.user.js",
+    "code_size": 3046,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527124,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T18:13:28.000Z",
+    "code_updated_at": "2025-02-16T18:13:27.000Z",
+    "namespace": "https://andrybak.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951503,
+        "name": "andrybak",
+        "created_at": "2022-08-27T23:56:27.000Z",
+        "url": "https://greasyfork.org/users/951503-andrybak"
+      }
+    ],
+    "name": "MAL: fix genres in stats",
+    "description": "Fix names of genres in stats",
+    "url": "https://greasyfork.org/scripts/527124-mal-fix-genres-in-stats",
+    "code_url": "https://update.greasyfork.org/scripts/527124/MAL%3A%20fix%20genres%20in%20stats.user.js",
+    "code_size": 2047,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 508761,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-16T22:54:17.000Z",
+    "code_updated_at": "2024-09-16T22:54:16.000Z",
+    "namespace": "https://andrybak.dev",
+    "support_url": "https://github.com/rybak/copy-commit-reference-userscript/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951503,
+        "name": "andrybak",
+        "created_at": "2022-08-27T23:56:27.000Z",
+        "url": "https://greasyfork.org/users/951503-andrybak"
+      }
+    ],
+    "name": "Phorge: copy commit reference",
+    "description": "Adds a \"Copy commit reference\" button to every commit page on Phorge.",
+    "url": "https://greasyfork.org/scripts/508761-phorge-copy-commit-reference",
+    "code_url": "https://update.greasyfork.org/scripts/508761/Phorge%3A%20copy%20commit%20reference.user.js",
+    "code_size": 6998,
+    "license": "GNU Affero General Public License v3.0 only",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498894,
+    "daily_installs": 0,
+    "total_installs": 116,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-25T19:14:16.000Z",
+    "code_updated_at": "2025-08-01T19:33:25.000Z",
+    "namespace": "andrybak.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 951503,
+        "name": "andrybak",
+        "created_at": "2022-08-27T23:56:27.000Z",
+        "url": "https://greasyfork.org/users/951503-andrybak"
+      }
+    ],
+    "name": "YouTube: thumbnail previews",
+    "description": "Shows the collection of available thumbnails in the highest possible resolution.",
+    "url": "https://greasyfork.org/scripts/498894-youtube-thumbnail-previews",
+    "code_url": "https://update.greasyfork.org/scripts/498894/YouTube%3A%20thumbnail%20previews.user.js",
+    "code_size": 3324,
+    "license": "MIT License",
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

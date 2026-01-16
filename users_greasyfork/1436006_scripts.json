@@ -1,0 +1,134 @@
+[
+  {
+    "id": 537431,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-27T13:27:52.000Z",
+    "code_updated_at": "2025-05-27T13:27:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436006,
+        "name": "Minh Dat Le",
+        "created_at": "2025-02-17T09:38:43.000Z",
+        "url": "https://greasyfork.org/users/1436006-minh-dat-le"
+      }
+    ],
+    "name": "Element Selector Inspector - Advanced (Multiple Selections & Strict Relationships)",
+    "description": "Click: Main, Alt+Click: Addition, Ctrl+Click: Excluded. Supports multiple selections per type & strict relationship rules.",
+    "url": "https://greasyfork.org/scripts/537431-element-selector-inspector-advanced-multiple-selections-strict-relationships",
+    "code_url": "https://update.greasyfork.org/scripts/537431/Element%20Selector%20Inspector%20-%20Advanced%20%28Multiple%20Selections%20%20Strict%20Relationships%29.user.js",
+    "code_size": 26252,
+    "license": null,
+    "version": "3.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528304,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-28T01:16:54.000Z",
+    "code_updated_at": "2025-02-28T01:16:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436006,
+        "name": "Minh Dat Le",
+        "created_at": "2025-02-17T09:38:43.000Z",
+        "url": "https://greasyfork.org/users/1436006-minh-dat-le"
+      }
+    ],
+    "name": "Medium Freedium Button",
+    "description": "Adds a \"Freedium\" button to Medium posts",
+    "url": "https://greasyfork.org/scripts/528304-medium-freedium-button",
+    "code_url": "https://update.greasyfork.org/scripts/528304/Medium%20Freedium%20Button.user.js",
+    "code_size": 4667,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527275,
+    "daily_installs": 1,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T02:32:08.000Z",
+    "code_updated_at": "2025-02-18T02:32:08.000Z",
+    "namespace": "https://greasyfork.org/users/1436006",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436006,
+        "name": "Minh Dat Le",
+        "created_at": "2025-02-17T09:38:43.000Z",
+        "url": "https://greasyfork.org/users/1436006-minh-dat-le"
+      }
+    ],
+    "name": "Copy YouTube Channel Video Info (Simplest)",
+    "description": "Copy video titles, dates, and views - simplest version.",
+    "url": "https://greasyfork.org/scripts/527275-copy-youtube-channel-video-info-simplest",
+    "code_url": "https://update.greasyfork.org/scripts/527275/Copy%20YouTube%20Channel%20Video%20Info%20%28Simplest%29.user.js",
+    "code_size": 5058,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527186,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-17T09:41:48.000Z",
+    "code_updated_at": "2025-02-17T09:41:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436006,
+        "name": "Minh Dat Le",
+        "created_at": "2025-02-17T09:38:43.000Z",
+        "url": "https://greasyfork.org/users/1436006-minh-dat-le"
+      }
+    ],
+    "name": "Copy YouTube Transcript 3",
+    "description": "Add a button to copy YouTube transcript to clipboard. Cần thêm điều kiện chỉ add nút ở trang phát video, thêm điều kiện đợi load transcript (nếu bấm được show thì đợi load), cần thêm điều kiện thoát khỏi lặp nếu như không tìm thấy transcript",
+    "url": "https://greasyfork.org/scripts/527186-copy-youtube-transcript-3",
+    "code_url": "https://update.greasyfork.org/scripts/527186/Copy%20YouTube%20Transcript%203.user.js",
+    "code_size": 3580,
+    "license": null,
+    "version": "3",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 534240,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-28T06:57:32.000Z",
+  "code_updated_at": "2025-06-21T07:57:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463060,
+      "name": "dev3haven",
+      "created_at": "2025-04-28T06:46:04.000Z",
+      "url": "https://greasyfork.org/users/1463060-dev3haven",
+      "scripts": [
+        {
+          "id": 534240,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-28T06:57:32.000Z",
+          "code_updated_at": "2025-06-21T07:57:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Seasonvar Download Helper",
+          "description": "Добавляет кнопки для скачивания видео и получение прямых ссылок на скачивание файлов плейлиста",
+          "url": "https://greasyfork.org/scripts/534240-seasonvar-download-helper",
+          "code_url": "https://update.greasyfork.org/scripts/534240/Seasonvar%20Download%20Helper.user.js",
+          "code_size": 6691,
+          "license": null,
+          "version": "1.11",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Seasonvar Download Helper",
+  "description": "Добавляет кнопки для скачивания видео и получение прямых ссылок на скачивание файлов плейлиста",
+  "url": "https://greasyfork.org/scripts/534240-seasonvar-download-helper",
+  "code_url": "https://update.greasyfork.org/scripts/534240/Seasonvar%20Download%20Helper.user.js",
+  "code_size": 6691,
+  "license": null,
+  "version": "1.11",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

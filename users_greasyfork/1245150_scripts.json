@@ -1,0 +1,68 @@
+[
+  {
+    "id": 502088,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T14:17:52.000Z",
+    "code_updated_at": "2024-07-29T14:17:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245150,
+        "name": "Lucas Soumon",
+        "created_at": "2024-01-08T15:28:39.000Z",
+        "url": "https://greasyfork.org/users/1245150-lucas-soumon"
+      }
+    ],
+    "name": "Cadastro no Open4School",
+    "description": "Importa os dados so sigeduca para o Open",
+    "url": "https://greasyfork.org/scripts/502088-cadastro-no-open4school",
+    "code_url": "https://update.greasyfork.org/scripts/502088/Cadastro%20no%20Open4School.user.js",
+    "code_size": 10795,
+    "license": "MIT License",
+    "version": "v1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500828,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-16T16:06:10.000Z",
+    "code_updated_at": "2024-07-16T16:06:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245150,
+        "name": "Lucas Soumon",
+        "created_at": "2024-01-08T15:28:39.000Z",
+        "url": "https://greasyfork.org/users/1245150-lucas-soumon"
+      }
+    ],
+    "name": "Ficha Individual Analítica",
+    "description": "Ferramentas para analisar a ficha individual do GPE/Sigeduca",
+    "url": "https://greasyfork.org/scripts/500828-ficha-individual-anal%C3%ADtica",
+    "code_url": "https://update.greasyfork.org/scripts/500828/Ficha%20Individual%20Anal%C3%ADtica.user.js",
+    "code_size": 18876,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

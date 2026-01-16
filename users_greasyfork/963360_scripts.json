@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502594,
+    "daily_installs": 1,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-04T12:18:21.000Z",
+    "code_updated_at": "2025-01-17T08:17:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 963360,
+        "name": "MelonFish",
+        "created_at": "2022-09-25T10:31:32.000Z",
+        "url": "https://greasyfork.org/users/963360-melonfish"
+      }
+    ],
+    "name": "GeoFSMax-破解GeoFS，免费解锁GeoFS高清地景，极限优化GeoFS建筑，替换地图使用Google Earth（geo-fs）",
+    "description": "全网第一个GeoFS（www.geo-fs.com）破解脚本，永久免费使用GeoFS付费高清地景，帮你节省近80元/年订阅费。告别GeoFS的纸盒子建筑，体验Google Earth的超细节建筑。",
+    "url": "https://greasyfork.org/scripts/502594-geofsmax-%E7%A0%B4%E8%A7%A3geofs-%E5%85%8D%E8%B4%B9%E8%A7%A3%E9%94%81geofs%E9%AB%98%E6%B8%85%E5%9C%B0%E6%99%AF-%E6%9E%81%E9%99%90%E4%BC%98%E5%8C%96geofs%E5%BB%BA%E7%AD%91-%E6%9B%BF%E6%8D%A2%E5%9C%B0%E5%9B%BE%E4%BD%BF%E7%94%A8google-earth-geo-fs",
+    "code_url": "https://update.greasyfork.org/scripts/502594/GeoFSMax-%E7%A0%B4%E8%A7%A3GeoFS%EF%BC%8C%E5%85%8D%E8%B4%B9%E8%A7%A3%E9%94%81GeoFS%E9%AB%98%E6%B8%85%E5%9C%B0%E6%99%AF%EF%BC%8C%E6%9E%81%E9%99%90%E4%BC%98%E5%8C%96GeoFS%E5%BB%BA%E7%AD%91%EF%BC%8C%E6%9B%BF%E6%8D%A2%E5%9C%B0%E5%9B%BE%E4%BD%BF%E7%94%A8Google%20Earth%EF%BC%88geo-fs%EF%BC%89.user.js",
+    "code_size": 3060,
+    "license": "GNU GPLv3",
+    "version": "0.0.2",
+    "locale": "gd",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

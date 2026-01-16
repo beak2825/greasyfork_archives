@@ -1,0 +1,33 @@
+{
+  "id": 524023,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-17T08:54:34.000Z",
+  "code_updated_at": "2025-01-17T08:54:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1424217,
+      "name": "Jarry Habsburg",
+      "created_at": "2025-01-17T08:47:15.000Z",
+      "url": "https://greasyfork.org/users/1424217-jarry-habsburg"
+    }
+  ],
+  "name": "duckduckgo增加只看中文选项",
+  "description": "在 DuckDuckGo 搜索界面添加一个 “只看中文” 的复选框功能。该功能设计直观且高效，勾选后系统将智能筛选搜索结果，仅显示中文相关内容。",
+  "url": "https://greasyfork.org/scripts/524023-duckduckgo%E5%A2%9E%E5%8A%A0%E5%8F%AA%E7%9C%8B%E4%B8%AD%E6%96%87%E9%80%89%E9%A1%B9",
+  "code_url": "https://update.greasyfork.org/scripts/524023/duckduckgo%E5%A2%9E%E5%8A%A0%E5%8F%AA%E7%9C%8B%E4%B8%AD%E6%96%87%E9%80%89%E9%A1%B9.user.js",
+  "code_size": 1715,
+  "license": "MIT License",
+  "version": "2025-01-17",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

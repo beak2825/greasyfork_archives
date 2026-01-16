@@ -1,0 +1,34 @@
+{
+  "id": 520154,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-08T16:10:57.000Z",
+  "code_updated_at": "2024-12-08T16:10:57.000Z",
+  "namespace": "NotMareks Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1408346,
+      "name": "greasytar",
+      "created_at": "2024-12-08T16:08:38.000Z",
+      "url": "https://greasyfork.org/users/1408346-greasytar",
+      "scripts": []
+    }
+  ],
+  "name": "SendToClient",
+  "description": "Painlessly send torrents to your bittorrent client.",
+  "url": "https://greasyfork.org/scripts/520154-sendtoclient",
+  "code_url": "https://update.greasyfork.org/scripts/520154/SendToClient.user.js",
+  "code_size": 34142,
+  "license": null,
+  "version": "2.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

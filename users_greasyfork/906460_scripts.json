@@ -130,5 +130,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551544,
+    "daily_installs": 1,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-04T13:47:07.000Z",
+    "code_updated_at": "2025-10-12T21:47:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906460,
+        "name": "Mai Kuraki",
+        "created_at": "2022-04-24T16:06:03.000Z",
+        "url": "https://greasyfork.org/users/906460-mai-kuraki"
+      }
+    ],
+    "name": "Sora2 - 禁止视频自动播放 (Hover to Play)",
+    "description": "禁止Sora探索页面的视频自动缓存和播放。仅当鼠标悬停在视频上时才加载并播放，移开则停止。已修复SPA页面切换导致@exclude失效的问题。",
+    "url": "https://greasyfork.org/scripts/551544-sora2-%E7%A6%81%E6%AD%A2%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-hover-to-play",
+    "code_url": "https://update.greasyfork.org/scripts/551544/Sora2%20-%20%E7%A6%81%E6%AD%A2%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%20%28Hover%20to%20Play%29.user.js",
+    "code_size": 3854,
+    "license": null,
+    "version": "1.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544994,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T03:37:29.000Z",
+    "code_updated_at": "2025-08-08T03:46:18.000Z",
+    "namespace": "http://tampermonkey.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906460,
+        "name": "Mai Kuraki",
+        "created_at": "2022-04-24T16:06:03.000Z",
+        "url": "https://greasyfork.org/users/906460-mai-kuraki"
+      }
+    ],
+    "name": "zhihu to telegraph 知乎回答和文章发送到Telegraph",
+    "description": "一键将知乎文章或回答发送到Telegraph，点击回答或者文章下面的三个点即可看到\"发送到telegraph\"按钮。",
+    "url": "https://greasyfork.org/scripts/544994-zhihu-to-telegraph-%E7%9F%A5%E4%B9%8E%E5%9B%9E%E7%AD%94%E5%92%8C%E6%96%87%E7%AB%A0%E5%8F%91%E9%80%81%E5%88%B0telegraph",
+    "code_url": "https://update.greasyfork.org/scripts/544994/zhihu%20to%20telegraph%20%E7%9F%A5%E4%B9%8E%E5%9B%9E%E7%AD%94%E5%92%8C%E6%96%87%E7%AB%A0%E5%8F%91%E9%80%81%E5%88%B0Telegraph.user.js",
+    "code_size": 22538,
+    "license": "MIT License",
+    "version": "0.9.11",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 554009,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T19:37:19.000Z",
+    "code_updated_at": "2025-10-28T19:37:19.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521407,
+        "name": "boisterous-larva",
+        "created_at": "2025-10-01T20:03:56.000Z",
+        "url": "https://greasyfork.org/users/1521407-boisterous-larva"
+      }
+    ],
+    "name": "UNIT3D Add Letterboxd rating",
+    "description": "Add Ratings from Letterboxd to the torrent page.",
+    "url": "https://greasyfork.org/scripts/554009-unit3d-add-letterboxd-rating",
+    "code_url": "https://update.greasyfork.org/scripts/554009/UNIT3D%20Add%20Letterboxd%20rating.user.js",
+    "code_size": 8509,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551277,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-01T20:09:12.000Z",
+    "code_updated_at": "2025-11-12T05:04:56.000Z",
+    "namespace": "https://www.tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521407,
+        "name": "boisterous-larva",
+        "created_at": "2025-10-01T20:03:56.000Z",
+        "url": "https://greasyfork.org/users/1521407-boisterous-larva"
+      }
+    ],
+    "name": "UNIT3D Add Letterboxd/IMDB/RT rating",
+    "description": "Add Ratings from Letterboxd/IMDB/Rotten Tomatoes to the torrent page.",
+    "url": "https://greasyfork.org/scripts/551277-unit3d-add-letterboxd-imdb-rt-rating",
+    "code_url": "https://update.greasyfork.org/scripts/551277/UNIT3D%20Add%20LetterboxdIMDBRT%20rating.user.js",
+    "code_size": 18114,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

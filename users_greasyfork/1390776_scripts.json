@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515621,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-03T19:08:36.000Z",
+    "code_updated_at": "2024-11-04T15:30:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1390776,
+        "name": "Maksi",
+        "created_at": "2024-11-03T19:05:34.000Z",
+        "url": "https://greasyfork.org/users/1390776-maksi"
+      }
+    ],
+    "name": "YouTube Simpler Homepage",
+    "description": "Only show one recommended video at a time with navigation buttons.",
+    "url": "https://greasyfork.org/scripts/515621-youtube-simpler-homepage",
+    "code_url": "https://update.greasyfork.org/scripts/515621/YouTube%20Simpler%20Homepage.user.js",
+    "code_size": 11128,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

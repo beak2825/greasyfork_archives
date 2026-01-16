@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516498,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-09T08:45:33.000Z",
+    "code_updated_at": "2026-01-01T14:07:13.000Z",
+    "namespace": "qp_tool_v2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393199,
+        "name": "teaSummer",
+        "created_at": "2024-11-09T05:19:37.000Z",
+        "url": "https://greasyfork.org/users/1393199-teasummer"
+      }
+    ],
+    "name": "QuickPatrol_v2",
+    "description": "MediaWiki巡查工具 | A patrol tool for MediaWiki",
+    "url": "https://greasyfork.org/scripts/516498-quickpatrol-v2",
+    "code_url": "https://update.greasyfork.org/scripts/516498/QuickPatrol_v2.user.js",
+    "code_size": 30225,
+    "license": "MIT License",
+    "version": "2.40",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

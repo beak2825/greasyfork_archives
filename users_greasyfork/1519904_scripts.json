@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550841,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-27T08:08:59.000Z",
+    "code_updated_at": "2025-09-27T08:08:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519904,
+        "name": "YIFEI SHI",
+        "created_at": "2025-09-27T07:53:26.000Z",
+        "url": "https://greasyfork.org/users/1519904-yifei-shi"
+      }
+    ],
+    "name": "通达OA显示完整链接文字",
+    "description": "Replaces truncated link text (...) with the full title attribute text on GUC notification pages.",
+    "url": "https://greasyfork.org/scripts/550841-%E9%80%9A%E8%BE%BEoa%E6%98%BE%E7%A4%BA%E5%AE%8C%E6%95%B4%E9%93%BE%E6%8E%A5%E6%96%87%E5%AD%97",
+    "code_url": "https://update.greasyfork.org/scripts/550841/%E9%80%9A%E8%BE%BEOA%E6%98%BE%E7%A4%BA%E5%AE%8C%E6%95%B4%E9%93%BE%E6%8E%A5%E6%96%87%E5%AD%97.user.js",
+    "code_size": 2279,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

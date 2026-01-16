@@ -1,0 +1,59 @@
+{
+  "id": 542073,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-09T02:46:07.000Z",
+  "code_updated_at": "2025-07-18T01:14:40.000Z",
+  "namespace": "https://github.com/JsBeta/cloudflare-cache-purge/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492682,
+      "name": "ink vv",
+      "created_at": "2025-07-08T03:39:24.000Z",
+      "url": "https://greasyfork.org/users/1492682-ink-vv",
+      "scripts": [
+        {
+          "id": 542073,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-09T02:46:07.000Z",
+          "code_updated_at": "2025-07-18T01:14:40.000Z",
+          "namespace": "https://github.com/JsBeta/cloudflare-cache-purge/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cloudflare 缓存清除工具",
+          "description": "一个好用的 Cloudflare 缓存清理工具，支持清除当前页面链接缓存、图片/CSS/JS 资源缓存，以及自定义多个 URL 的缓存清除。",
+          "url": "https://greasyfork.org/scripts/542073-cloudflare-%E7%BC%93%E5%AD%98%E6%B8%85%E9%99%A4%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/542073/Cloudflare%20%E7%BC%93%E5%AD%98%E6%B8%85%E9%99%A4%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 27866,
+          "license": "MIT License",
+          "version": "1.8.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cloudflare 缓存清除工具",
+  "description": "一个好用的 Cloudflare 缓存清理工具，支持清除当前页面链接缓存、图片/CSS/JS 资源缓存，以及自定义多个 URL 的缓存清除。",
+  "url": "https://greasyfork.org/scripts/542073-cloudflare-%E7%BC%93%E5%AD%98%E6%B8%85%E9%99%A4%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/542073/Cloudflare%20%E7%BC%93%E5%AD%98%E6%B8%85%E9%99%A4%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 27866,
+  "license": "MIT License",
+  "version": "1.8.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

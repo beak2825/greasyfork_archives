@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507315,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T13:41:00.000Z",
+    "code_updated_at": "2024-09-07T14:43:53.000Z",
+    "namespace": "https://mstudio45.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1106164,
+        "name": "mstudio45",
+        "created_at": "2023-06-19T13:14:19.000Z",
+        "url": "https://greasyfork.org/users/1106164-mstudio45"
+      }
+    ],
+    "name": "EasyJoin",
+    "description": "Join roblox job ids, games and private servers easily",
+    "url": "https://greasyfork.org/scripts/507315-easyjoin",
+    "code_url": "https://update.greasyfork.org/scripts/507315/EasyJoin.user.js",
+    "code_size": 26720,
+    "license": "Mozilla Public License 2.0",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

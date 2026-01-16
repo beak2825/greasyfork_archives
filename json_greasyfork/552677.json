@@ -17,7 +17,33 @@
       "id": 1527019,
       "name": "asdbsgndkjl",
       "created_at": "2025-10-15T12:39:43.000Z",
-      "url": "https://greasyfork.org/users/1527019-asdbsgndkjl"
+      "url": "https://greasyfork.org/users/1527019-asdbsgndkjl",
+      "scripts": [
+        {
+          "id": 552677,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-15T12:46:11.000Z",
+          "code_updated_at": "2025-10-15T12:46:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Roblox AutoFill Stable Typing v2",
+          "description": "Simule la vraie frappe, vérifie que les champs sont pris en compte, retry si besoin. Ne soumet pas, ne contourne pas le captcha.",
+          "url": "https://greasyfork.org/scripts/552677-roblox-autofill-stable-typing-v2",
+          "code_url": "https://update.greasyfork.org/scripts/552677/Roblox%20AutoFill%20Stable%20Typing%20v2.user.js",
+          "code_size": 13186,
+          "license": null,
+          "version": "2.0",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "Roblox AutoFill Stable Typing v2",

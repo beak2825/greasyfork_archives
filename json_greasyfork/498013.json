@@ -1,0 +1,33 @@
+{
+  "id": 498013,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-15T17:16:55.000Z",
+  "code_updated_at": "2024-06-15T17:30:37.000Z",
+  "namespace": "https://www.torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1270453,
+      "name": "KPCX",
+      "created_at": "2024-03-05T06:08:41.000Z",
+      "url": "https://greasyfork.org/users/1270453-kpcx"
+    }
+  ],
+  "name": "[KPX] Retrieve Links",
+  "description": "Retrieve all links from a webpage",
+  "url": "https://greasyfork.org/scripts/498013-kpx-retrieve-links",
+  "code_url": "https://update.greasyfork.org/scripts/498013/%5BKPX%5D%20Retrieve%20Links.user.js",
+  "code_size": 28268,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

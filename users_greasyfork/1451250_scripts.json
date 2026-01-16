@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533834,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-24T14:28:06.000Z",
+    "code_updated_at": "2025-04-24T14:28:06.000Z",
+    "namespace": "urn:assist-espi-custom-dark-theme",
+    "support_url": "https://github.com/jake-greygoose/Zoho-Assist-User-Script/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451250,
+        "name": "Jake Greygoose",
+        "created_at": "2025-03-28T10:59:35.000Z",
+        "url": "https://greasyfork.org/users/1451250-jake-greygoose"
+      }
+    ],
+    "name": "Zoho Assist Custom Dark Theme",
+    "description": "A Userscript to style Zoho Assist dark mode to match Zoho Desk dark mode",
+    "url": "https://greasyfork.org/scripts/533834-zoho-assist-custom-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/533834/Zoho%20Assist%20Custom%20Dark%20Theme.user.js",
+    "code_size": 11812,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531109,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-28T11:20:52.000Z",
+    "code_updated_at": "2025-03-28T11:20:52.000Z",
+    "namespace": "https://github.com/jake-greygoose",
+    "support_url": "https://github.com/jake-greygoose/Zoho-Desk-Userscript/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451250,
+        "name": "Jake Greygoose",
+        "created_at": "2025-03-28T10:59:35.000Z",
+        "url": "https://greasyfork.org/users/1451250-jake-greygoose"
+      }
+    ],
+    "name": "Zoho Desk - Default to Starred Views",
+    "description": "Automatically collapses \"All Views\" and opens \"Starred Views\" in Zoho Desk",
+    "url": "https://greasyfork.org/scripts/531109-zoho-desk-default-to-starred-views",
+    "code_url": "https://update.greasyfork.org/scripts/531109/Zoho%20Desk%20-%20Default%20to%20Starred%20Views.user.js",
+    "code_size": 4057,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

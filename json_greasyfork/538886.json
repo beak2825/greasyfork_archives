@@ -1,0 +1,33 @@
+{
+  "id": 538886,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T04:04:07.000Z",
+  "code_updated_at": "2025-06-09T04:04:07.000Z",
+  "namespace": "discord-link-refresher",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480871,
+      "name": "Anon39",
+      "created_at": "2025-06-09T02:32:39.000Z",
+      "url": "https://greasyfork.org/users/1480871-anon39"
+    }
+  ],
+  "name": "Discord Link Refresher",
+  "description": "A Userscript to fix broken discord attachment links",
+  "url": "https://greasyfork.org/scripts/538886-discord-link-refresher",
+  "code_url": "https://update.greasyfork.org/scripts/538886/Discord%20Link%20Refresher.user.js",
+  "code_size": 2026,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

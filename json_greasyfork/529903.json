@@ -1,0 +1,34 @@
+{
+  "id": 529903,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-15T14:10:28.000Z",
+  "code_updated_at": "2025-03-15T14:25:40.000Z",
+  "namespace": "添加 YouTube Pot Player Watch 按鈕",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1262723,
+      "name": "李天能",
+      "created_at": "2024-02-17T21:35:47.000Z",
+      "url": "https://greasyfork.org/users/1262723-%E6%9D%8E%E5%A4%A9%E8%83%BD",
+      "scripts": []
+    }
+  ],
+  "name": "添加 YouTube Pot Player Watch 按鈕",
+  "description": "添加一個按鈕以使用底池播放器打開YouTube影片。現有視頻將暫停。",
+  "url": "https://greasyfork.org/scripts/529903-%E6%B7%BB%E5%8A%A0-youtube-pot-player-watch-%E6%8C%89%E9%88%95",
+  "code_url": "https://update.greasyfork.org/scripts/529903/%E6%B7%BB%E5%8A%A0%20YouTube%20Pot%20Player%20Watch%20%E6%8C%89%E9%88%95.user.js",
+  "code_size": 2923,
+  "license": null,
+  "version": "0.7",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

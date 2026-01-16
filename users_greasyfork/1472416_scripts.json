@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536732,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-21T18:52:59.000Z",
+    "code_updated_at": "2025-05-21T18:52:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1472416,
+        "name": "p6link . ru",
+        "created_at": "2025-05-20T11:50:17.000Z",
+        "url": "https://greasyfork.org/users/1472416-p6link-ru"
+      }
+    ],
+    "name": "Aviso.bz Auto Test Clicker",
+    "description": "Automatically clicks on tests from certain users on aviso.bz",
+    "url": "https://greasyfork.org/scripts/536732-aviso-bz-auto-test-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/536732/Avisobz%20Auto%20Test%20Clicker.user.js",
+    "code_size": 1531,
+    "license": null,
+    "version": "0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

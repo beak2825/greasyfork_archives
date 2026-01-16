@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511747,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T09:32:07.000Z",
+    "code_updated_at": "2024-10-07T09:32:07.000Z",
+    "namespace": "microbes.torn.blocknewplayer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183351,
+        "name": "Microbes",
+        "created_at": "2023-09-29T04:57:56.000Z",
+        "url": "https://greasyfork.org/users/1183351-microbes"
+      }
+    ],
+    "name": "Block New Player",
+    "description": "No more s-tier post in General Discussion",
+    "url": "https://greasyfork.org/scripts/511747-block-new-player",
+    "code_url": "https://update.greasyfork.org/scripts/511747/Block%20New%20Player.user.js",
+    "code_size": 3241,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

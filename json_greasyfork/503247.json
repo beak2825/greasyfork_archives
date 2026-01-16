@@ -1,0 +1,33 @@
+{
+  "id": 503247,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-11T01:17:01.000Z",
+  "code_updated_at": "2024-08-11T01:17:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1349423,
+      "name": "doticworks",
+      "created_at": "2024-08-11T01:10:15.000Z",
+      "url": "https://greasyfork.org/users/1349423-doticworks"
+    }
+  ],
+  "name": "bili_comment_emoji2meow",
+  "description": "替换掉不喜欢的b站评论emoji.",
+  "url": "https://greasyfork.org/scripts/503247-bili-comment-emoji2meow",
+  "code_url": "https://update.greasyfork.org/scripts/503247/bili_comment_emoji2meow.user.js",
+  "code_size": 2822,
+  "license": "MIT License",
+  "version": "2024-08-11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

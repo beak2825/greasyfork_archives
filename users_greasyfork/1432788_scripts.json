@@ -1,0 +1,68 @@
+[
+  {
+    "id": 526258,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T08:21:08.000Z",
+    "code_updated_at": "2025-09-03T04:48:40.000Z",
+    "namespace": "blackcat8438",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1432788,
+        "name": "ttviet2112",
+        "created_at": "2025-02-08T03:50:07.000Z",
+        "url": "https://greasyfork.org/users/1432788-ttviet2112"
+      }
+    ],
+    "name": "Send Resources",
+    "description": "Attempts to automate all the routine tasks in ikariam, like transporting wine",
+    "url": "https://greasyfork.org/scripts/526258-send-resources",
+    "code_url": "https://update.greasyfork.org/scripts/526258/Send%20Resources.user.js",
+    "code_size": 60595,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "10.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526239,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T03:51:59.000Z",
+    "code_updated_at": "2026-01-16T06:41:37.000Z",
+    "namespace": "Beta",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1432788,
+        "name": "ttviet2112",
+        "created_at": "2025-02-08T03:50:07.000Z",
+        "url": "https://greasyfork.org/users/1432788-ttviet2112"
+      }
+    ],
+    "name": "Quản lý Ika Perseus -VN-",
+    "description": "Bản chỉnh sửa từ Empire Overview dành cho member liên minh -VN- server Perseus",
+    "url": "https://greasyfork.org/scripts/526239-qu%E1%BA%A3n-l%C3%BD-ika-perseus-vn",
+    "code_url": "https://update.greasyfork.org/scripts/526239/Qu%E1%BA%A3n%20l%C3%BD%20Ika%20Perseus%20-VN-.user.js",
+    "code_size": 481908,
+    "license": "GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

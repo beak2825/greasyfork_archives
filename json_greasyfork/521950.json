@@ -1,0 +1,59 @@
+{
+  "id": 521950,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-27T08:05:59.000Z",
+  "code_updated_at": "2024-12-27T08:05:58.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1416337,
+      "name": "red juyea",
+      "created_at": "2024-12-27T07:58:36.000Z",
+      "url": "https://greasyfork.org/users/1416337-red-juyea",
+      "scripts": [
+        {
+          "id": 521950,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-27T08:05:59.000Z",
+          "code_updated_at": "2024-12-27T08:05:58.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "强制所有B站链接在当前标签页打开（需配合Death to _blank拓展使用）",
+          "description": "强制所有链接在当前标签页打开",
+          "url": "https://greasyfork.org/scripts/521950-%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89b%E7%AB%99%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80-%E9%9C%80%E9%85%8D%E5%90%88death-to-blank%E6%8B%93%E5%B1%95%E4%BD%BF%E7%94%A8",
+          "code_url": "https://update.greasyfork.org/scripts/521950/%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89B%E7%AB%99%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80%EF%BC%88%E9%9C%80%E9%85%8D%E5%90%88Death%20to%20_blank%E6%8B%93%E5%B1%95%E4%BD%BF%E7%94%A8%EF%BC%89.user.js",
+          "code_size": 744,
+          "license": null,
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "强制所有B站链接在当前标签页打开（需配合Death to _blank拓展使用）",
+  "description": "强制所有链接在当前标签页打开",
+  "url": "https://greasyfork.org/scripts/521950-%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89b%E7%AB%99%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80-%E9%9C%80%E9%85%8D%E5%90%88death-to-blank%E6%8B%93%E5%B1%95%E4%BD%BF%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/521950/%E5%BC%BA%E5%88%B6%E6%89%80%E6%9C%89B%E7%AB%99%E9%93%BE%E6%8E%A5%E5%9C%A8%E5%BD%93%E5%89%8D%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80%EF%BC%88%E9%9C%80%E9%85%8D%E5%90%88Death%20to%20_blank%E6%8B%93%E5%B1%95%E4%BD%BF%E7%94%A8%EF%BC%89.user.js",
+  "code_size": 744,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

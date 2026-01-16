@@ -1,0 +1,59 @@
+{
+  "id": 539065,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T02:52:35.000Z",
+  "code_updated_at": "2025-06-11T02:52:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481858,
+      "name": "Leohandsome",
+      "created_at": "2025-06-11T02:48:02.000Z",
+      "url": "https://greasyfork.org/users/1481858-leohandsome",
+      "scripts": [
+        {
+          "id": 539065,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-11T02:52:35.000Z",
+          "code_updated_at": "2025-06-11T02:52:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google AI Studio Model kingfall",
+          "description": "Inject multiple custom models with themed emojis into Google AI Studio model list. Intercepts XHR/fetch, handles array-of-arrays JSON structures.",
+          "url": "https://greasyfork.org/scripts/539065-google-ai-studio-model-kingfall",
+          "code_url": "https://update.greasyfork.org/scripts/539065/Google%20AI%20Studio%20Model%20kingfall.user.js",
+          "code_size": 8156,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google AI Studio Model kingfall",
+  "description": "Inject multiple custom models with themed emojis into Google AI Studio model list. Intercepts XHR/fetch, handles array-of-arrays JSON structures.",
+  "url": "https://greasyfork.org/scripts/539065-google-ai-studio-model-kingfall",
+  "code_url": "https://update.greasyfork.org/scripts/539065/Google%20AI%20Studio%20Model%20kingfall.user.js",
+  "code_size": 8156,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

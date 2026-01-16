@@ -1,0 +1,68 @@
+[
+  {
+    "id": 548504,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-05T17:11:48.000Z",
+    "code_updated_at": "2025-09-08T17:28:22.000Z",
+    "namespace": "https://github.com/douyin-comment-collector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1415775,
+        "name": "GeRuiTe555",
+        "created_at": "2024-12-25T20:18:18.000Z",
+        "url": "https://greasyfork.org/users/1415775-geruite555"
+      }
+    ],
+    "name": "抖音评论采集助手 - 最新修复版",
+    "description": "抖音评论采集工具，基于自动化测试修复选择器问题，适配最新抖音页面结构",
+    "url": "https://greasyfork.org/scripts/548504-%E6%8A%96%E9%9F%B3%E8%AF%84%E8%AE%BA%E9%87%87%E9%9B%86%E5%8A%A9%E6%89%8B-%E6%9C%80%E6%96%B0%E4%BF%AE%E5%A4%8D%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/548504/%E6%8A%96%E9%9F%B3%E8%AF%84%E8%AE%BA%E9%87%87%E9%9B%86%E5%8A%A9%E6%89%8B%20-%20%E6%9C%80%E6%96%B0%E4%BF%AE%E5%A4%8D%E7%89%88.user.js",
+    "code_size": 126612,
+    "license": "MIT License",
+    "version": "4.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531042,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-27T16:18:38.000Z",
+    "code_updated_at": "2025-03-27T16:18:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1415775,
+        "name": "GeRuiTe555",
+        "created_at": "2024-12-25T20:18:18.000Z",
+        "url": "https://greasyfork.org/users/1415775-geruite555"
+      }
+    ],
+    "name": "飞书网页限制解除器增强版",
+    "description": "解除网页复制、右键等限制，特别针对飞书文档，无边框显示",
+    "url": "https://greasyfork.org/scripts/531042-%E9%A3%9E%E4%B9%A6%E7%BD%91%E9%A1%B5%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4%E5%99%A8%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/531042/%E9%A3%9E%E4%B9%A6%E7%BD%91%E9%A1%B5%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4%E5%99%A8%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 15822,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

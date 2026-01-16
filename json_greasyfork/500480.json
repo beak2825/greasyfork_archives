@@ -1,0 +1,33 @@
+{
+  "id": 500480,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-13T01:20:08.000Z",
+  "code_updated_at": "2024-07-13T01:20:08.000Z",
+  "namespace": "https://github.com/SOLiNARY",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1138907,
+      "name": "Ballig",
+      "created_at": "2023-07-29T13:58:12.000Z",
+      "url": "https://greasyfork.org/users/1138907-ballig"
+    }
+  ],
+  "name": "Torn Bazaar Filler (button)",
+  "description": "On \"Fill\" click autofills bazaar item price with lowest bazaar price currently minus $1 (can be customised), shows current price coefficient compared to 3rd lowest, fills max quantity for items, marks checkboxes for guns.",
+  "url": "https://greasyfork.org/scripts/500480-torn-bazaar-filler-button",
+  "code_url": "https://update.greasyfork.org/scripts/500480/Torn%20Bazaar%20Filler%20%28button%29.user.js",
+  "code_size": 25676,
+  "license": "MIT License",
+  "version": "0.9.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

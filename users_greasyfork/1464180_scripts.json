@@ -66,6 +66,39 @@
     "visibility": "public"
   },
   {
+    "id": 552962,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T05:15:44.000Z",
+    "code_updated_at": "2025-10-18T06:29:45.000Z",
+    "namespace": "https://github.com/0H4S",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464180,
+        "name": "OHAS",
+        "created_at": "2025-04-30T22:57:27.000Z",
+        "url": "https://greasyfork.org/users/1464180-ohas"
+      }
+    ],
+    "name": "BGF Metadados",
+    "description": "Script teste para demonstrar os metadados do BGF (Better Greasy Fork)",
+    "url": "https://greasyfork.org/scripts/552962-bgf-metadados",
+    "code_url": "https://update.greasyfork.org/scripts/552962/BGF%20Metadados.user.js",
+    "code_size": 1294,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 552737,
     "daily_installs": 5,
     "total_installs": 350,
@@ -97,5 +130,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548838,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T14:56:20.000Z",
+    "code_updated_at": "2025-09-08T14:56:20.000Z",
+    "namespace": "https://github.com/0H4S",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464180,
+        "name": "OHAS",
+        "created_at": "2025-04-30T22:57:27.000Z",
+        "url": "https://greasyfork.org/users/1464180-ohas"
+      }
+    ],
+    "name": "Exclusão Automática",
+    "description": "Excluí automaticamente os registros na tela de Leis e Atos, lidando com erros comuns e gerando um relatório detalhado das ações realizadas.",
+    "url": "https://greasyfork.org/scripts/548838-exclus%C3%A3o-autom%C3%A1tica",
+    "code_url": "https://update.greasyfork.org/scripts/548838/Exclus%C3%A3o%20Autom%C3%A1tica.user.js",
+    "code_size": 9507,
+    "license": "Copyright (c) 2025 OHAS - Todos os direitos reservados.",
+    "version": "1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548836,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T14:55:16.000Z",
+    "code_updated_at": "2025-09-08T14:55:16.000Z",
+    "namespace": "http://github.com/0H4S",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464180,
+        "name": "OHAS",
+        "created_at": "2025-04-30T22:57:27.000Z",
+        "url": "https://greasyfork.org/users/1464180-ohas"
+      }
+    ],
+    "name": "DAD",
+    "description": "Download Automático DeepSeek - Baixe todos os blocos de código com um clique!",
+    "url": "https://greasyfork.org/scripts/548836-dad",
+    "code_url": "https://update.greasyfork.org/scripts/548836/DAD.user.js",
+    "code_size": 32508,
+    "license": "Copyright (c) 2025 OHAS - Todos os direitos reservados.",
+    "version": "1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548834,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T14:53:31.000Z",
+    "code_updated_at": "2025-10-21T16:05:19.000Z",
+    "namespace": "https://github.com/0H4S",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464180,
+        "name": "OHAS",
+        "created_at": "2025-04-30T22:57:27.000Z",
+        "url": "https://greasyfork.org/users/1464180-ohas"
+      }
+    ],
+    "name": "Diário Tools",
+    "description": "Ferramentas que melhoram a experiência no Diário Oficial, como download em massa, auto click em links de PDF, botão de impressão e numeração dos diários.",
+    "url": "https://greasyfork.org/scripts/548834-di%C3%A1rio-tools",
+    "code_url": "https://update.greasyfork.org/scripts/548834/Di%C3%A1rio%20Tools.user.js",
+    "code_size": 18090,
+    "license": "Creative Commons Attribution Non Commercial No Derivatives 4.0 International",
+    "version": "1.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548832,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T14:50:39.000Z",
+    "code_updated_at": "2025-09-08T14:58:14.000Z",
+    "namespace": "https://github.com/0H4S",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464180,
+        "name": "OHAS",
+        "created_at": "2025-04-30T22:57:27.000Z",
+        "url": "https://greasyfork.org/users/1464180-ohas"
+      }
+    ],
+    "name": "Auto Cadastro",
+    "description": "Preenche automaticamente o formulário de cadastro de atos (Portarias, Decretos e Leis) no sistema Oxy, com suporte para anexar arquivos e histórico de registros.",
+    "url": "https://greasyfork.org/scripts/548832-auto-cadastro",
+    "code_url": "https://update.greasyfork.org/scripts/548832/Auto%20Cadastro.user.js",
+    "code_size": 82545,
+    "license": "Copyright (c) OHAS - Todos os direitos reservados.",
+    "version": "1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

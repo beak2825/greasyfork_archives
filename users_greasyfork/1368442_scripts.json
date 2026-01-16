@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508859,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T12:38:44.000Z",
+    "code_updated_at": "2024-09-17T12:38:44.000Z",
+    "namespace": "https://life.douyin.com/p/goods-list?groupid=1807616719466624&industry=common",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368442,
+        "name": "176257586",
+        "created_at": "2024-09-16T08:22:00.000Z",
+        "url": "https://greasyfork.org/users/1368442-176257586"
+      }
+    ],
+    "name": "抖音来客",
+    "description": "给商品ID添加编辑链接",
+    "url": "https://greasyfork.org/scripts/508859-%E6%8A%96%E9%9F%B3%E6%9D%A5%E5%AE%A2",
+    "code_url": "https://update.greasyfork.org/scripts/508859/%E6%8A%96%E9%9F%B3%E6%9D%A5%E5%AE%A2.user.js",
+    "code_size": 2540,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

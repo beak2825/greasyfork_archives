@@ -1,0 +1,33 @@
+{
+  "id": 539029,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-10T17:38:24.000Z",
+  "code_updated_at": "2026-01-03T15:15:54.000Z",
+  "namespace": "https://musicbrainz.org/user/chaban",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473430,
+      "name": "chaban",
+      "created_at": "2025-05-22T13:32:49.000Z",
+      "url": "https://greasyfork.org/users/1473430-chaban"
+    }
+  ],
+  "name": "Click buttons across tabs",
+  "description": "Clicks specified buttons across tabs using the Broadcast Channel API and closes tabs after successful submission.",
+  "url": "https://greasyfork.org/scripts/539029-click-buttons-across-tabs",
+  "code_url": "https://update.greasyfork.org/scripts/539029/Click%20buttons%20across%20tabs.user.js",
+  "code_size": 32022,
+  "license": "MIT License",
+  "version": "4.8.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

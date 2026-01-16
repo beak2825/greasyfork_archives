@@ -1,0 +1,33 @@
+{
+  "id": 536144,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T23:34:35.000Z",
+  "code_updated_at": "2025-11-21T22:41:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1470598,
+      "name": "athenameow",
+      "created_at": "2025-05-15T23:32:43.000Z",
+      "url": "https://greasyfork.org/users/1470598-athenameow"
+    }
+  ],
+  "name": "Roblox Friends/Followers/Following Bypass (Old/New Layout Support?)",
+  "description": "Adds Friends/Followers/Following buttons back to UK users.",
+  "url": "https://greasyfork.org/scripts/536144-roblox-friends-followers-following-bypass-old-new-layout-support",
+  "code_url": "https://update.greasyfork.org/scripts/536144/Roblox%20FriendsFollowersFollowing%20Bypass%20%28OldNew%20Layout%20Support%29.user.js",
+  "code_size": 10384,
+  "license": "MIT License",
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

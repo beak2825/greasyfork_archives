@@ -1,0 +1,34 @@
+{
+  "id": 501115,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-18T23:46:05.000Z",
+  "code_updated_at": "2024-07-19T05:49:50.000Z",
+  "namespace": "https://greasyfork.org/users/1336272",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1336272,
+      "name": "maywasbad",
+      "created_at": "2024-07-18T23:43:41.000Z",
+      "url": "https://greasyfork.org/users/1336272-maywasbad",
+      "scripts": []
+    }
+  ],
+  "name": "Fix arabic font",
+  "description": "Script that fixes arabic language",
+  "url": "https://greasyfork.org/scripts/501115-fix-arabic-font",
+  "code_url": "https://update.greasyfork.org/scripts/501115/Fix%20arabic%20font.user.js",
+  "code_size": 1341,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

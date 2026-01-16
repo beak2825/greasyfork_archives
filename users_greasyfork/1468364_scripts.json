@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544013,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T16:22:55.000Z",
+    "code_updated_at": "2025-07-29T16:22:55.000Z",
+    "namespace": "https://greasyfork.org/en/users/1468364",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468364,
+        "name": "D Duke",
+        "created_at": "2025-05-10T15:30:30.000Z",
+        "url": "https://greasyfork.org/users/1468364-d-duke"
+      }
+    ],
+    "name": "SauceNAO Compress & Downscale Image Before Uploading",
+    "description": "Compresses large images (>20KB) to WebP (max 250px) before uploading for faster uploads",
+    "url": "https://greasyfork.org/scripts/544013-saucenao-compress-downscale-image-before-uploading",
+    "code_url": "https://update.greasyfork.org/scripts/544013/SauceNAO%20Compress%20%20Downscale%20Image%20Before%20Uploading.user.js",
+    "code_size": 3005,
+    "license": "public domain",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

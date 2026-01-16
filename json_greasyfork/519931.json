@@ -1,0 +1,34 @@
+{
+  "id": 519931,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-06T06:00:12.000Z",
+  "code_updated_at": "2024-12-06T06:00:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858175,
+      "name": "yot",
+      "created_at": "2021-12-27T12:14:39.000Z",
+      "url": "https://greasyfork.org/users/858175-yot",
+      "scripts": []
+    }
+  ],
+  "name": "风纪委员投票(自用)",
+  "description": "b站风纪委员投票助手",
+  "url": "https://greasyfork.org/scripts/519931-%E9%A3%8E%E7%BA%AA%E5%A7%94%E5%91%98%E6%8A%95%E7%A5%A8-%E8%87%AA%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/519931/%E9%A3%8E%E7%BA%AA%E5%A7%94%E5%91%98%E6%8A%95%E7%A5%A8%28%E8%87%AA%E7%94%A8%29.user.js",
+  "code_size": 5669,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

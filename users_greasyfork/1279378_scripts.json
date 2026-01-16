@@ -97,5 +97,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548371,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T16:38:46.000Z",
+    "code_updated_at": "2025-09-04T16:38:46.000Z",
+    "namespace": "https://greasyfork.org/users/1279378",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279378,
+        "name": "Elvay",
+        "created_at": "2024-03-25T20:22:27.000Z",
+        "url": "https://greasyfork.org/users/1279378-elvay"
+      }
+    ],
+    "name": "Faction Bank No Loan",
+    "description": "avoid sending more money than the user has",
+    "url": "https://greasyfork.org/scripts/548371-faction-bank-no-loan",
+    "code_url": "https://update.greasyfork.org/scripts/548371/Faction%20Bank%20No%20Loan.user.js",
+    "code_size": 2084,
+    "license": null,
+    "version": "2025-09-04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510151,
+    "daily_installs": 1,
+    "total_installs": 59,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-25T16:09:20.000Z",
+    "code_updated_at": "2024-09-25T16:31:02.000Z",
+    "namespace": "https://greasyfork.org/users/1279378",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279378,
+        "name": "Elvay",
+        "created_at": "2024-03-25T20:22:27.000Z",
+        "url": "https://greasyfork.org/users/1279378-elvay"
+      }
+    ],
+    "name": "Live Stock Roi",
+    "description": "This script uses current MP for calculating ROI",
+    "url": "https://greasyfork.org/scripts/510151-live-stock-roi",
+    "code_url": "https://update.greasyfork.org/scripts/510151/Live%20Stock%20Roi.user.js",
+    "code_size": 15803,
+    "license": null,
+    "version": "2024-09-25.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504130,
+    "daily_installs": 3,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-18T15:14:39.000Z",
+    "code_updated_at": "2024-08-18T15:14:39.000Z",
+    "namespace": "seintz.torn.intercept-link",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279378,
+        "name": "Elvay",
+        "created_at": "2024-03-25T20:22:27.000Z",
+        "url": "https://greasyfork.org/users/1279378-elvay"
+      }
+    ],
+    "name": "intercept-link",
+    "description": "add link on attack page for intercept",
+    "url": "https://greasyfork.org/scripts/504130-intercept-link",
+    "code_url": "https://update.greasyfork.org/scripts/504130/intercept-link.user.js",
+    "code_size": 3282,
+    "license": "GNU GPLv3",
+    "version": "6.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

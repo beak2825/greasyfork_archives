@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501950,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-27T20:23:44.000Z",
+    "code_updated_at": "2024-07-27T20:23:43.000Z",
+    "namespace": "https://github.com/azeman/shorts-annihilator/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1341033,
+        "name": "azeman",
+        "created_at": "2024-07-27T20:22:28.000Z",
+        "url": "https://greasyfork.org/users/1341033-azeman"
+      }
+    ],
+    "name": "shorts-annihilator",
+    "description": "Better, less-toxic Youtube Shorts",
+    "url": "https://greasyfork.org/scripts/501950-shorts-annihilator",
+    "code_url": "https://update.greasyfork.org/scripts/501950/shorts-annihilator.user.js",
+    "code_size": 441,
+    "license": "GNU 3",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

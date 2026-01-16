@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 543934,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T01:09:07.000Z",
+    "code_updated_at": "2025-07-29T01:09:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495462,
+        "name": "ZephyrThePink",
+        "created_at": "2025-07-16T13:25:30.000Z",
+        "url": "https://greasyfork.org/users/1495462-zephyrthepink"
+      }
+    ],
+    "name": "Live2D Model Loader (Minimal, Unique Container)",
+    "description": "Loads a floating Live2D model in a unique container, no UI, no messages, no buttons. Inspired by JanitorAI script.",
+    "url": "https://greasyfork.org/scripts/543934-live2d-model-loader-minimal-unique-container",
+    "code_url": "https://update.greasyfork.org/scripts/543934/Live2D%20Model%20Loader%20%28Minimal%2C%20Unique%20Container%29.user.js",
+    "code_size": 8757,
+    "license": null,
+    "version": "2.3 // Updated version",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543816,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T00:44:18.000Z",
+    "code_updated_at": "2025-07-29T01:08:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495462,
+        "name": "ZephyrThePink",
+        "created_at": "2025-07-16T13:25:30.000Z",
+        "url": "https://greasyfork.org/users/1495462-zephyrthepink"
+      }
+    ],
+    "name": "JanitorAI - Text to Speech (TESTTTT)",
+    "description": "Adds Text-to-Speech to JanitorAI with customizable voices and settings, including ElevenLabs support.",
+    "url": "https://greasyfork.org/scripts/543816-janitorai-text-to-speech-testttt",
+    "code_url": "https://update.greasyfork.org/scripts/543816/JanitorAI%20-%20Text%20to%20Speech%20%28TESTTTT%29.user.js",
+    "code_size": 62709,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543457,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T21:53:21.000Z",
+    "code_updated_at": "2025-07-23T23:08:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495462,
+        "name": "ZephyrThePink",
+        "created_at": "2025-07-16T13:25:30.000Z",
+        "url": "https://greasyfork.org/users/1495462-zephyrthepink"
+      }
+    ],
+    "name": "ElevenLabs test",
+    "description": "Validate ElevenLabs API key, list voices/models, and generate speech with adjustable settings.",
+    "url": "https://greasyfork.org/scripts/543457-elevenlabs-test",
+    "code_url": "https://update.greasyfork.org/scripts/543457/ElevenLabs%20test.user.js",
+    "code_size": 15096,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542834,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T14:14:04.000Z",
+    "code_updated_at": "2025-12-21T00:48:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495462,
+        "name": "ZephyrThePink",
+        "created_at": "2025-07-16T13:25:30.000Z",
+        "url": "https://greasyfork.org/users/1495462-zephyrthepink"
+      }
+    ],
+    "name": "(NOT WORKING, PENDING UPDATE) JanitorAI - Dynamic Character Avatars",
+    "description": "Logs the last bot message and shows an emotion-based avatar. Completly customizable.",
+    "url": "https://greasyfork.org/scripts/542834-not-working-pending-update-janitorai-dynamic-character-avatars",
+    "code_url": "https://update.greasyfork.org/scripts/542834/%28NOT%20WORKING%2C%20PENDING%20UPDATE%29%20JanitorAI%20-%20Dynamic%20Character%20Avatars.user.js",
+    "code_size": 36153,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

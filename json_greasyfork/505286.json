@@ -1,0 +1,34 @@
+{
+  "id": 505286,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-26T14:49:10.000Z",
+  "code_updated_at": "2024-08-26T14:49:10.000Z",
+  "namespace": "http://orchin.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299457,
+      "name": "迷失鹿",
+      "created_at": "2024-05-10T11:52:55.000Z",
+      "url": "https://greasyfork.org/users/1299457-%E8%BF%B7%E5%A4%B1%E9%B9%BF",
+      "scripts": []
+    }
+  ],
+  "name": "日常本子-小鹿日用(飞飞修改1.0)",
+  "description": "无剑Mud辅修，由在线版移植而来，順便《略改》",
+  "url": "https://greasyfork.org/scripts/505286-%E6%97%A5%E5%B8%B8%E6%9C%AC%E5%AD%90-%E5%B0%8F%E9%B9%BF%E6%97%A5%E7%94%A8-%E9%A3%9E%E9%A3%9E%E4%BF%AE%E6%94%B91-0",
+  "code_url": "https://update.greasyfork.org/scripts/505286/%E6%97%A5%E5%B8%B8%E6%9C%AC%E5%AD%90-%E5%B0%8F%E9%B9%BF%E6%97%A5%E7%94%A8%28%E9%A3%9E%E9%A3%9E%E4%BF%AE%E6%94%B910%29.user.js",
+  "code_size": 993765,
+  "license": null,
+  "version": "01_1.24",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

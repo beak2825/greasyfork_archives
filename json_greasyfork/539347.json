@@ -1,0 +1,59 @@
+{
+  "id": 539347,
+  "daily_installs": 1,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-14T02:30:07.000Z",
+  "code_updated_at": "2025-06-15T11:44:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483465,
+      "name": "莱昂纳多休斯",
+      "created_at": "2025-06-14T02:16:23.000Z",
+      "url": "https://greasyfork.org/users/1483465-%E8%8E%B1%E6%98%82%E7%BA%B3%E5%A4%9A%E4%BC%91%E6%96%AF",
+      "scripts": [
+        {
+          "id": 539347,
+          "daily_installs": 1,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-14T02:30:07.000Z",
+          "code_updated_at": "2025-06-15T11:44:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "imdb豆瓣直达",
+          "description": "1.豆瓣可直接跳转imdb。可区分剧集与电影并显示必要按钮，imdb页显示家长引导。2.按钮分为3个，分别是imdb首页、系列第一部的首页和跳转该季评分页。3.功能依赖豆瓣信息栏与下方首个同系列作品内的的tt号",
+          "url": "https://greasyfork.org/scripts/539347-imdb%E8%B1%86%E7%93%A3%E7%9B%B4%E8%BE%BE",
+          "code_url": "https://update.greasyfork.org/scripts/539347/imdb%E8%B1%86%E7%93%A3%E7%9B%B4%E8%BE%BE.user.js",
+          "code_size": 15762,
+          "license": "MIT License",
+          "version": "2.3.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "imdb豆瓣直达",
+  "description": "1.豆瓣可直接跳转imdb。可区分剧集与电影并显示必要按钮，imdb页显示家长引导。2.按钮分为3个，分别是imdb首页、系列第一部的首页和跳转该季评分页。3.功能依赖豆瓣信息栏与下方首个同系列作品内的的tt号",
+  "url": "https://greasyfork.org/scripts/539347-imdb%E8%B1%86%E7%93%A3%E7%9B%B4%E8%BE%BE",
+  "code_url": "https://update.greasyfork.org/scripts/539347/imdb%E8%B1%86%E7%93%A3%E7%9B%B4%E8%BE%BE.user.js",
+  "code_size": 15762,
+  "license": "MIT License",
+  "version": "2.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

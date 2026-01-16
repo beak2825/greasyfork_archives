@@ -1,0 +1,59 @@
+{
+  "id": 538977,
+  "daily_installs": 1,
+  "total_installs": 83,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-10T08:21:46.000Z",
+  "code_updated_at": "2026-01-16T07:00:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481480,
+      "name": "抛物线",
+      "created_at": "2025-06-10T08:09:25.000Z",
+      "url": "https://greasyfork.org/users/1481480-%E6%8A%9B%E7%89%A9%E7%BA%BF",
+      "scripts": [
+        {
+          "id": 538977,
+          "daily_installs": 1,
+          "total_installs": 83,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-10T08:21:46.000Z",
+          "code_updated_at": "2026-01-16T07:00:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CDN & Server Info Displayer (UI Overhaul)",
+          "description": "[v7.53.0] 新增知道创宇加速乐CDN检测支持,修复Fastly误判问题。智能DNS选择: 根据用户IP所在地区自动选择最优DNS服务器(中国大陆使用阿里DNS,其他地区使用Google DNS),解决国内外CDN分流和DNS污染问题,支持VPN分流场景实时切换。",
+          "url": "https://greasyfork.org/scripts/538977-cdn-server-info-displayer-ui-overhaul",
+          "code_url": "https://update.greasyfork.org/scripts/538977/CDN%20%20Server%20Info%20Displayer%20%28UI%20Overhaul%29.user.js",
+          "code_size": 131203,
+          "license": "MIT License",
+          "version": "7.53.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CDN & Server Info Displayer (UI Overhaul)",
+  "description": "[v7.53.0] 新增知道创宇加速乐CDN检测支持,修复Fastly误判问题。智能DNS选择: 根据用户IP所在地区自动选择最优DNS服务器(中国大陆使用阿里DNS,其他地区使用Google DNS),解决国内外CDN分流和DNS污染问题,支持VPN分流场景实时切换。",
+  "url": "https://greasyfork.org/scripts/538977-cdn-server-info-displayer-ui-overhaul",
+  "code_url": "https://update.greasyfork.org/scripts/538977/CDN%20%20Server%20Info%20Displayer%20%28UI%20Overhaul%29.user.js",
+  "code_size": 131203,
+  "license": "MIT License",
+  "version": "7.53.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

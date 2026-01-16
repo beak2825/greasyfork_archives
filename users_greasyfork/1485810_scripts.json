@@ -1,0 +1,68 @@
+[
+  {
+    "id": 544628,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T15:00:46.000Z",
+    "code_updated_at": "2025-10-01T20:19:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485810,
+        "name": "r280822a",
+        "created_at": "2025-06-19T14:58:46.000Z",
+        "url": "https://greasyfork.org/users/1485810-r280822a"
+      }
+    ],
+    "name": "YouTube Highest Quality on Fullscreen",
+    "description": "Set YouTube video to highest available resolution when entering fullscreen (e.g. 4K, 1440p, 1080p, etc.)",
+    "url": "https://greasyfork.org/scripts/544628-youtube-highest-quality-on-fullscreen",
+    "code_url": "https://update.greasyfork.org/scripts/544628/YouTube%20Highest%20Quality%20on%20Fullscreen.user.js",
+    "code_size": 2994,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540028,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T15:01:03.000Z",
+    "code_updated_at": "2025-10-24T15:15:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485810,
+        "name": "r280822a",
+        "created_at": "2025-06-19T14:58:46.000Z",
+        "url": "https://greasyfork.org/users/1485810-r280822a"
+      }
+    ],
+    "name": "YouTube Time Parameter Remover",
+    "description": "Remove the &t=*s parameter from YouTube URLs",
+    "url": "https://greasyfork.org/scripts/540028-youtube-time-parameter-remover",
+    "code_url": "https://update.greasyfork.org/scripts/540028/YouTube%20Time%20Parameter%20Remover.user.js",
+    "code_size": 1380,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

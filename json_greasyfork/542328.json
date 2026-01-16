@@ -1,0 +1,33 @@
+{
+  "id": 542328,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-11T20:21:01.000Z",
+  "code_updated_at": "2025-07-11T20:21:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1234593,
+      "name": "ConnorMcLeod",
+      "created_at": "2023-12-16T05:01:03.000Z",
+      "url": "https://greasyfork.org/users/1234593-connormcleod"
+    }
+  ],
+  "name": "Corrige les synopsis",
+  "description": "Corrige les problèmes d'encodage de texte dans les synopsis",
+  "url": "https://greasyfork.org/scripts/542328-corrige-les-synopsis",
+  "code_url": "https://update.greasyfork.org/scripts/542328/Corrige%20les%20synopsis.user.js",
+  "code_size": 950,
+  "license": "MIT License",
+  "version": "2025-07-11",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

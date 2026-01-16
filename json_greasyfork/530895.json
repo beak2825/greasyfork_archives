@@ -1,0 +1,34 @@
+{
+  "id": 530895,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-26T09:02:31.000Z",
+  "code_updated_at": "2025-03-26T09:02:31.000Z",
+  "namespace": "https://greasyfork.org/users/816027",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816027,
+      "name": "koitoyuu19",
+      "created_at": "2021-09-16T12:09:22.000Z",
+      "url": "https://greasyfork.org/users/816027-koitoyuu19",
+      "scripts": []
+    }
+  ],
+  "name": "百合会添加麻将脸表情",
+  "description": "为百合会表情栏添加s1麻将脸表情选项卡",
+  "url": "https://greasyfork.org/scripts/530895-%E7%99%BE%E5%90%88%E4%BC%9A%E6%B7%BB%E5%8A%A0%E9%BA%BB%E5%B0%86%E8%84%B8%E8%A1%A8%E6%83%85",
+  "code_url": "https://update.greasyfork.org/scripts/530895/%E7%99%BE%E5%90%88%E4%BC%9A%E6%B7%BB%E5%8A%A0%E9%BA%BB%E5%B0%86%E8%84%B8%E8%A1%A8%E6%83%85.user.js",
+  "code_size": 27783,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

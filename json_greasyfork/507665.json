@@ -1,0 +1,59 @@
+{
+  "id": 507665,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-09T16:08:13.000Z",
+  "code_updated_at": "2024-09-09T16:08:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1365382,
+      "name": "EliteSoba",
+      "created_at": "2024-09-09T16:05:47.000Z",
+      "url": "https://greasyfork.org/users/1365382-elitesoba",
+      "scripts": [
+        {
+          "id": 507665,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-09T16:08:13.000Z",
+          "code_updated_at": "2024-09-09T16:08:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FirstTimeScripter",
+          "description": "Adds a button next to the channel name to run the invert script.",
+          "url": "https://greasyfork.org/scripts/507665-firsttimescripter",
+          "code_url": "https://update.greasyfork.org/scripts/507665/FirstTimeScripter.user.js",
+          "code_size": 1575,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FirstTimeScripter",
+  "description": "Adds a button next to the channel name to run the invert script.",
+  "url": "https://greasyfork.org/scripts/507665-firsttimescripter",
+  "code_url": "https://update.greasyfork.org/scripts/507665/FirstTimeScripter.user.js",
+  "code_size": 1575,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

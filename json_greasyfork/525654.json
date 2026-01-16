@@ -1,0 +1,34 @@
+{
+  "id": 525654,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-02T14:31:08.000Z",
+  "code_updated_at": "2025-02-02T14:31:08.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429092,
+      "name": "forgotten1337",
+      "created_at": "2025-01-30T15:50:12.000Z",
+      "url": "https://greasyfork.org/users/1429092-forgotten1337",
+      "scripts": []
+    }
+  ],
+  "name": "[ARKHANGELSK] | Скрипт для Кураторов Форума by J.Megakrutoy",
+  "description": "По вопросам(ВК): https://vk.com/bibizyantag",
+  "url": "https://greasyfork.org/scripts/525654-arkhangelsk-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-j-megakrutoy",
+  "code_url": "https://update.greasyfork.org/scripts/525654/%5BARKHANGELSK%5D%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20JMegakrutoy.user.js",
+  "code_size": 137476,
+  "license": "Kumiho",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544269,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T08:15:20.000Z",
+    "code_updated_at": "2025-08-01T09:48:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1064566,
+        "name": "李42",
+        "created_at": "2023-04-21T05:38:25.000Z",
+        "url": "https://greasyfork.org/users/1064566-%E6%9D%8E42"
+      }
+    ],
+    "name": "迷笛云图插件",
+    "description": "迷笛云图团队内部工具集合",
+    "url": "https://greasyfork.org/scripts/544269-%E8%BF%B7%E7%AC%9B%E4%BA%91%E5%9B%BE%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/544269/%E8%BF%B7%E7%AC%9B%E4%BA%91%E5%9B%BE%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 48800,
+    "license": "Mozilla Public License  2.0",
+    "version": "0.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

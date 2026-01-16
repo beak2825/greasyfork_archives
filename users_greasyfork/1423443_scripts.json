@@ -1,0 +1,134 @@
+[
+  {
+    "id": 523960,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-16T18:16:21.000Z",
+    "code_updated_at": "2025-01-16T18:16:20.000Z",
+    "namespace": "https://github.com/xkbkx5904",
+    "support_url": "https://github.com/xkbkx5904/dmhy-filter/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1423443,
+        "name": "xkbkx5904",
+        "created_at": "2025-01-15T05:18:00.000Z",
+        "url": "https://greasyfork.org/users/1423443-xkbkx5904"
+      }
+    ],
+    "name": "动漫花园标题过滤器",
+    "description": "为动漫花园增加标题过滤功能，支持正则表达式和复杂过滤规则",
+    "url": "https://greasyfork.org/scripts/523960-%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%A0%87%E9%A2%98%E8%BF%87%E6%BB%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/523960/%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%A0%87%E9%A2%98%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+    "code_size": 9906,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523875,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-15T22:19:26.000Z",
+    "code_updated_at": "2025-01-18T07:12:30.000Z",
+    "namespace": "https://github.com/xkbkx5904/dmhy-tree-view",
+    "support_url": "https://github.com/xkbkx5904/dmhy-tree-view/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1423443,
+        "name": "xkbkx5904",
+        "created_at": "2025-01-15T05:18:00.000Z",
+        "url": "https://greasyfork.org/users/1423443-xkbkx5904"
+      }
+    ],
+    "name": "动漫花园树状显示",
+    "description": "将动漫花园的文件列表转换为树状视图，支持搜索、智能展开等功能",
+    "url": "https://greasyfork.org/scripts/523875-%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%A0%91%E7%8A%B6%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/523875/%E5%8A%A8%E6%BC%AB%E8%8A%B1%E5%9B%AD%E6%A0%91%E7%8A%B6%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 24119,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.5.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523811,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-15T06:01:04.000Z",
+    "code_updated_at": "2025-06-06T09:16:34.000Z",
+    "namespace": "https://github.com/xkbkx5904",
+    "support_url": "https://github.com/xkbkx5904/dmhy-torrent-block/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1423443,
+        "name": "xkbkx5904",
+        "created_at": "2025-01-15T05:18:00.000Z",
+        "url": "https://greasyfork.org/users/1423443-xkbkx5904"
+      }
+    ],
+    "name": "DMHY Torrent Block",
+    "description": "Enhanced version of DMHY Block script with more features: title display management, user interface management, regex filtering, context menu, ad blocking, and GitHub sync",
+    "url": "https://greasyfork.org/scripts/523811-dmhy-torrent-block",
+    "code_url": "https://update.greasyfork.org/scripts/523811/DMHY%20Torrent%20Block.user.js",
+    "code_size": 72500,
+    "license": "MIT License",
+    "version": "1.3.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523808,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-15T05:19:45.000Z",
+    "code_updated_at": "2025-01-15T10:23:51.000Z",
+    "namespace": "https://github.com/xkbkx5904/dmhy-comment-block",
+    "support_url": "https://github.com/xkbkx5904/dmhy-comment-block/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1423443,
+        "name": "xkbkx5904",
+        "created_at": "2025-01-15T05:18:00.000Z",
+        "url": "https://greasyfork.org/users/1423443-xkbkx5904"
+      }
+    ],
+    "name": "DMHY Comment Block",
+    "description": "Block users and keywords in dmhy comment section",
+    "url": "https://greasyfork.org/scripts/523808-dmhy-comment-block",
+    "code_url": "https://update.greasyfork.org/scripts/523808/DMHY%20Comment%20Block.user.js",
+    "code_size": 18392,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 542013,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-08T11:55:31.000Z",
+    "code_updated_at": "2025-07-08T11:57:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 894812,
+        "name": "zhouyanbl",
+        "created_at": "2022-03-29T03:31:44.000Z",
+        "url": "https://greasyfork.org/users/894812-zhouyanbl"
+      }
+    ],
+    "name": "自动生成章节脚本",
+    "description": "自动点击生成正文按钮并监控状态",
+    "url": "https://greasyfork.org/scripts/542013-%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%AB%A0%E8%8A%82%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/542013/%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%E7%AB%A0%E8%8A%82%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3065,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531732,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-03T15:44:24.000Z",
+    "code_updated_at": "2025-04-03T15:44:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 894812,
+        "name": "zhouyanbl",
+        "created_at": "2022-03-29T03:31:44.000Z",
+        "url": "https://greasyfork.org/users/894812-zhouyanbl"
+      }
+    ],
+    "name": "GitHub PR Retest Button",
+    "description": "在GitHub PR页面添加一键Retest按钮",
+    "url": "https://greasyfork.org/scripts/531732-github-pr-retest-button",
+    "code_url": "https://update.greasyfork.org/scripts/531732/GitHub%20PR%20Retest%20Button.user.js",
+    "code_size": 4286,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

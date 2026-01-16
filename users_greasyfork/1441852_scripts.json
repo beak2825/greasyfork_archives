@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 537942,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-06-01T09:08:32.000Z",
+    "code_updated_at": "2025-11-13T11:42:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441852,
+        "name": "virtual___nova",
+        "created_at": "2025-03-03T11:19:03.000Z",
+        "url": "https://greasyfork.org/users/1441852-virtual-nova"
+      }
+    ],
+    "name": "维咔VikACG加密链接转换器",
+    "description": "本脚本提供了一种绕过广告页面，直接获取资源链接的方式，并提供复制功能（在原下载链接旁边可以看到）；此外，若因渲染问题未能自动解密&创建节点时，如某些资源需要评论(或其他手段)才能显示，本脚本还提供了手动的方式：右侧悬浮菜单，最下方\"解密&创建节点\"按钮，在完成前置条件后，点击该按钮，可到达相同的效果。",
+    "url": "https://greasyfork.org/scripts/537942-%E7%BB%B4%E5%92%94vikacg%E5%8A%A0%E5%AF%86%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/537942/%E7%BB%B4%E5%92%94VikACG%E5%8A%A0%E5%AF%86%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2%E5%99%A8.user.js",
+    "code_size": 1187,
+    "license": null,
+    "version": "1.2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529142,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-08T01:31:38.000Z",
+    "code_updated_at": "2025-11-13T12:48:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441852,
+        "name": "virtual___nova",
+        "created_at": "2025-03-03T11:19:03.000Z",
+        "url": "https://greasyfork.org/users/1441852-virtual-nova"
+      }
+    ],
+    "name": "少前2bbs自动兑换物品脚本",
+    "description": "一个简单的少前2论坛自动兑换物品脚本(包括签到)；当因登录凭证过期时，可根据提供的账号密码自动登录(可选)；其中，若提供账号，则需要启用油猴插件\"允许访问文件网址\"权限，这是读取文件接口GM_getResourceText()的硬性要求，具体账号配置请查看文档。以chrome为例，浏览器右上角\"更多设置(三点)\" -> \"拓展程序\" -> \"管理拓展程序\" -> \"篡改猴\" -> \"详情\" -> \"允许访问文件网址\" -> 启用。",
+    "url": "https://greasyfork.org/scripts/529142-%E5%B0%91%E5%89%8D2bbs%E8%87%AA%E5%8A%A8%E5%85%91%E6%8D%A2%E7%89%A9%E5%93%81%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/529142/%E5%B0%91%E5%89%8D2bbs%E8%87%AA%E5%8A%A8%E5%85%91%E6%8D%A2%E7%89%A9%E5%93%81%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 31644,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

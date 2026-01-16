@@ -1,0 +1,41 @@
+[
+  {
+    "id": 522425,
+    "daily_installs": 1,
+    "total_installs": 134,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-31T17:50:12.000Z",
+    "code_updated_at": "2025-10-07T08:11:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1000092,
+        "name": "yangleda",
+        "created_at": "2022-12-19T21:01:40.000Z",
+        "url": "https://greasyfork.org/users/1000092-yangleda"
+      },
+      {
+        "id": 1313707,
+        "name": "七包茶",
+        "created_at": "2024-06-07T02:49:39.000Z",
+        "url": "https://greasyfork.org/users/1313707-%E4%B8%83%E5%8C%85%E8%8C%B6"
+      }
+    ],
+    "name": "Zed汉化 & ZedTools",
+    "description": "网页游戏Zed City的汉化和工具插件。Chinese translation and tools for the web game Zed City.",
+    "url": "https://greasyfork.org/scripts/522425-zed%E6%B1%89%E5%8C%96-zedtools",
+    "code_url": "https://update.greasyfork.org/scripts/522425/Zed%E6%B1%89%E5%8C%96%20%20ZedTools.user.js",
+    "code_size": 390277,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "14.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

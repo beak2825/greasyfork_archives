@@ -1,0 +1,59 @@
+{
+  "id": 531646,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-02T23:23:45.000Z",
+  "code_updated_at": "2025-04-02T23:23:45.000Z",
+  "namespace": "TwitchColorSchemeThemeSync",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453376,
+      "name": "Gliglue",
+      "created_at": "2025-04-02T23:22:31.000Z",
+      "url": "https://greasyfork.org/users/1453376-gliglue",
+      "scripts": [
+        {
+          "id": 531646,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-02T23:23:45.000Z",
+          "code_updated_at": "2025-04-02T23:23:45.000Z",
+          "namespace": "TwitchColorSchemeThemeSync",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Dark Light ColorScheme Theme System Sync",
+          "description": "Automatically sync twitch theme with system preference, without clicking any UI button on twitch's side. Handles gracefully dynamic system's color scheme switching without reload.",
+          "url": "https://greasyfork.org/scripts/531646-twitch-dark-light-colorscheme-theme-system-sync",
+          "code_url": "https://update.greasyfork.org/scripts/531646/Twitch%20Dark%20Light%20ColorScheme%20Theme%20System%20Sync.user.js",
+          "code_size": 88778,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Dark Light ColorScheme Theme System Sync",
+  "description": "Automatically sync twitch theme with system preference, without clicking any UI button on twitch's side. Handles gracefully dynamic system's color scheme switching without reload.",
+  "url": "https://greasyfork.org/scripts/531646-twitch-dark-light-colorscheme-theme-system-sync",
+  "code_url": "https://update.greasyfork.org/scripts/531646/Twitch%20Dark%20Light%20ColorScheme%20Theme%20System%20Sync.user.js",
+  "code_size": 88778,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

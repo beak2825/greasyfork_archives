@@ -1,0 +1,59 @@
+{
+  "id": 537039,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-23T23:49:20.000Z",
+  "code_updated_at": "2025-05-31T03:32:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473547,
+      "name": "PERKRyan",
+      "created_at": "2025-05-22T20:22:55.000Z",
+      "url": "https://greasyfork.org/users/1473547-perkryan",
+      "scripts": [
+        {
+          "id": 537039,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-23T23:49:20.000Z",
+          "code_updated_at": "2025-05-31T03:32:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OC Role Display - PERK_Ryan Edition",
+          "description": "Dynamically numbers duplicate OC roles based on slot order, shows priority of roles, and stores your CPR for each crime/role",
+          "url": "https://greasyfork.org/scripts/537039-oc-role-display-perk-ryan-edition",
+          "code_url": "https://update.greasyfork.org/scripts/537039/OC%20Role%20Display%20-%20PERK_Ryan%20Edition.user.js",
+          "code_size": 18079,
+          "license": "MIT License",
+          "version": "1.5.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OC Role Display - PERK_Ryan Edition",
+  "description": "Dynamically numbers duplicate OC roles based on slot order, shows priority of roles, and stores your CPR for each crime/role",
+  "url": "https://greasyfork.org/scripts/537039-oc-role-display-perk-ryan-edition",
+  "code_url": "https://update.greasyfork.org/scripts/537039/OC%20Role%20Display%20-%20PERK_Ryan%20Edition.user.js",
+  "code_size": 18079,
+  "license": "MIT License",
+  "version": "1.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

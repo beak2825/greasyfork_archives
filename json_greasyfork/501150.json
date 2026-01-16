@@ -1,0 +1,59 @@
+{
+  "id": 501150,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-19T09:37:36.000Z",
+  "code_updated_at": "2024-07-29T03:44:52.000Z",
+  "namespace": "https://liyoung1874.github.io/",
+  "support_url": "https://github.com/liyoung1874/browser-scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1335779,
+      "name": "liyoung1874",
+      "created_at": "2024-07-18T03:50:45.000Z",
+      "url": "https://greasyfork.org/users/1335779-liyoung1874",
+      "scripts": [
+        {
+          "id": 501150,
+          "daily_installs": 0,
+          "total_installs": 61,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-19T09:37:36.000Z",
+          "code_updated_at": "2024-07-29T03:44:52.000Z",
+          "namespace": "https://liyoung1874.github.io/",
+          "support_url": "https://github.com/liyoung1874/browser-scripts/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Weibo auto sign and post.",
+          "description": "Weibo auto register and post. 微博自动签到和发帖。",
+          "url": "https://greasyfork.org/scripts/501150-weibo-auto-sign-and-post",
+          "code_url": "https://update.greasyfork.org/scripts/501150/Weibo%20auto%20sign%20and%20post.user.js",
+          "code_size": 13582,
+          "license": "MIT License",
+          "version": "0.0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Weibo auto sign and post.",
+  "description": "Weibo auto register and post. 微博自动签到和发帖。",
+  "url": "https://greasyfork.org/scripts/501150-weibo-auto-sign-and-post",
+  "code_url": "https://update.greasyfork.org/scripts/501150/Weibo%20auto%20sign%20and%20post.user.js",
+  "code_size": 13582,
+  "license": "MIT License",
+  "version": "0.0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

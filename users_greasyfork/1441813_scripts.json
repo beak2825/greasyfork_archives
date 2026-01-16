@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528626,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-03T09:26:33.000Z",
+    "code_updated_at": "2025-03-03T09:26:33.000Z",
+    "namespace": "github.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441813,
+        "name": "e4xit",
+        "created_at": "2025-03-03T09:21:52.000Z",
+        "url": "https://greasyfork.org/users/1441813-e4xit"
+      }
+    ],
+    "name": "Redacted Bandcamp Embed",
+    "description": "Adds Bandcamp embed players below Bandcamp links",
+    "url": "https://greasyfork.org/scripts/528626-redacted-bandcamp-embed",
+    "code_url": "https://update.greasyfork.org/scripts/528626/Redacted%20Bandcamp%20Embed.user.js",
+    "code_size": 5525,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

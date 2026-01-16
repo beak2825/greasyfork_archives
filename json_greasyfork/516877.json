@@ -1,0 +1,33 @@
+{
+  "id": 516877,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-11T15:59:41.000Z",
+  "code_updated_at": "2025-11-09T16:54:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 883765,
+      "name": "ZizzyZizzy",
+      "created_at": "2022-03-06T21:40:28.000Z",
+      "url": "https://greasyfork.org/users/883765-zizzyzizzy"
+    }
+  ],
+  "name": "Remove Sponsored Content on Nextdoor",
+  "description": "Remove divs with Sponsored span or a business_logo img URL on Nextdoor",
+  "url": "https://greasyfork.org/scripts/516877-remove-sponsored-content-on-nextdoor",
+  "code_url": "https://update.greasyfork.org/scripts/516877/Remove%20Sponsored%20Content%20on%20Nextdoor.user.js",
+  "code_size": 3342,
+  "license": null,
+  "version": "1.2 // Increased version number for the new logic",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

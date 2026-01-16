@@ -1,0 +1,59 @@
+{
+  "id": 538532,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-06T08:26:12.000Z",
+  "code_updated_at": "2025-08-14T00:02:29.000Z",
+  "namespace": "http://ilxdh.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 777115,
+      "name": "longxuan2000",
+      "created_at": "2021-05-28T10:04:17.000Z",
+      "url": "https://greasyfork.org/users/777115-longxuan2000",
+      "scripts": [
+        {
+          "id": 538532,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-06T08:26:12.000Z",
+          "code_updated_at": "2025-08-14T00:02:29.000Z",
+          "namespace": "http://ilxdh.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "一键DeepWiki/GitMcp",
+          "description": "自动在 GitHub 仓库页面添加快捷跳转按钮（支持DeepWiki和GitMcp），方便您在代码和知识库之间快速切换。",
+          "url": "https://greasyfork.org/scripts/538532-%E4%B8%80%E9%94%AEdeepwiki-gitmcp",
+          "code_url": "https://update.greasyfork.org/scripts/538532/%E4%B8%80%E9%94%AEDeepWikiGitMcp.user.js",
+          "code_size": 4510,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "一键DeepWiki/GitMcp",
+  "description": "自动在 GitHub 仓库页面添加快捷跳转按钮（支持DeepWiki和GitMcp），方便您在代码和知识库之间快速切换。",
+  "url": "https://greasyfork.org/scripts/538532-%E4%B8%80%E9%94%AEdeepwiki-gitmcp",
+  "code_url": "https://update.greasyfork.org/scripts/538532/%E4%B8%80%E9%94%AEDeepWikiGitMcp.user.js",
+  "code_size": 4510,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

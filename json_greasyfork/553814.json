@@ -1,0 +1,33 @@
+{
+  "id": 553814,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-27T04:28:00.000Z",
+  "code_updated_at": "2025-10-27T04:28:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 948024,
+      "name": "yeayee",
+      "created_at": "2022-08-19T03:02:53.000Z",
+      "url": "https://greasyfork.org/users/948024-yeayee"
+    }
+  ],
+  "name": "CoinGlass 涨跌幅采集器（intumu.com）",
+  "description": "自动采集 CoinGlass 各时间周期下的涨跌幅数据并保存为 TXT 文件",
+  "url": "https://greasyfork.org/scripts/553814-coinglass-%E6%B6%A8%E8%B7%8C%E5%B9%85%E9%87%87%E9%9B%86%E5%99%A8-intumu-com",
+  "code_url": "https://update.greasyfork.org/scripts/553814/CoinGlass%20%E6%B6%A8%E8%B7%8C%E5%B9%85%E9%87%87%E9%9B%86%E5%99%A8%EF%BC%88intumucom%EF%BC%89.user.js",
+  "code_size": 3142,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

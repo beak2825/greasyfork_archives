@@ -1,0 +1,33 @@
+{
+  "id": 533240,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-18T11:56:34.000Z",
+  "code_updated_at": "2025-04-18T11:57:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1161354,
+      "name": "Playrough",
+      "created_at": "2023-08-28T08:13:27.000Z",
+      "url": "https://greasyfork.org/users/1161354-playrough"
+    }
+  ],
+  "name": "Mobile View in Desktop for STV",
+  "description": "Optimize mobile layout for sangtacviet",
+  "url": "https://greasyfork.org/scripts/533240-mobile-view-in-desktop-for-stv",
+  "code_url": "https://update.greasyfork.org/scripts/533240/Mobile%20View%20in%20Desktop%20for%20STV.user.js",
+  "code_size": 989,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

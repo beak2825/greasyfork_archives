@@ -1,0 +1,35 @@
+[
+  {
+    "id": 546234,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-18T01:55:39.000Z",
+    "code_updated_at": "2025-08-18T01:55:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 192413,
+        "name": "xiefucai",
+        "created_at": "2018-06-21T12:15:30.000Z",
+        "url": "https://greasyfork.org/users/192413-xiefucai"
+      }
+    ],
+    "name": "URL定位器",
+    "description": "选中文本时自动检测URL并定位到指定行和字符位置",
+    "url": "https://greasyfork.org/scripts/546234-url%E5%AE%9A%E4%BD%8D%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/546234/URL%E5%AE%9A%E4%BD%8D%E5%99%A8.user.js",
+    "code_size": 12382,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518908,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-26T07:48:15.000Z",
+    "code_updated_at": "2024-11-26T07:52:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695811,
+        "name": "DengSihan",
+        "created_at": "2020-10-17T05:23:36.000Z",
+        "url": "https://greasyfork.org/users/695811-dengsihan"
+      }
+    ],
+    "name": "妇幼营养与健康在线培训及考核倍速播放",
+    "description": "妇幼营养与健康在线培训及考核里面培训视频的倍速播放",
+    "url": "https://greasyfork.org/scripts/518908-%E5%A6%87%E5%B9%BC%E8%90%A5%E5%85%BB%E4%B8%8E%E5%81%A5%E5%BA%B7%E5%9C%A8%E7%BA%BF%E5%9F%B9%E8%AE%AD%E5%8F%8A%E8%80%83%E6%A0%B8%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/518908/%E5%A6%87%E5%B9%BC%E8%90%A5%E5%85%BB%E4%B8%8E%E5%81%A5%E5%BA%B7%E5%9C%A8%E7%BA%BF%E5%9F%B9%E8%AE%AD%E5%8F%8A%E8%80%83%E6%A0%B8%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 1572,
+    "license": null,
+    "version": "2024-11-26",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 502004,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-07-28T15:00:15.000Z",
+  "code_updated_at": "2024-07-28T15:00:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260195,
+      "name": "Tài Trần Anh",
+      "created_at": "2024-02-12T04:20:43.000Z",
+      "url": "https://greasyfork.org/users/1260195-t%C3%A0i-tr%E1%BA%A7n-anh",
+      "scripts": []
+    }
+  ],
+  "name": "Super  Infinity duo BETA",
+  "description": "[Basic Version] Automatically get free Super Duolingo Family Link!! (Note: Currently in beta)",
+  "url": "https://greasyfork.org/scripts/502004-super-infinity-duo-beta",
+  "code_url": "https://update.greasyfork.org/scripts/502004/Super%20%20Infinity%20duo%20BETA.user.js",
+  "code_size": 11050,
+  "license": null,
+  "version": "2.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

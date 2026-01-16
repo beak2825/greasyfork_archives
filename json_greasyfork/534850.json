@@ -1,0 +1,59 @@
+{
+  "id": 534850,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-03T20:46:29.000Z",
+  "code_updated_at": "2025-05-03T21:23:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465337,
+      "name": "Stephen Wilmot-Doxey",
+      "created_at": "2025-05-03T20:39:35.000Z",
+      "url": "https://greasyfork.org/users/1465337-stephen-wilmot-doxey",
+      "scripts": [
+        {
+          "id": 534850,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-03T20:46:29.000Z",
+          "code_updated_at": "2025-05-03T21:23:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WME Segment Completer",
+          "description": "Highlights completed WME segments on a separate map layer with a toggle. Repopulates layer on map change.",
+          "url": "https://greasyfork.org/scripts/534850-wme-segment-completer",
+          "code_url": "https://update.greasyfork.org/scripts/534850/WME%20Segment%20Completer.user.js",
+          "code_size": 25596,
+          "license": null,
+          "version": "2.7.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WME Segment Completer",
+  "description": "Highlights completed WME segments on a separate map layer with a toggle. Repopulates layer on map change.",
+  "url": "https://greasyfork.org/scripts/534850-wme-segment-completer",
+  "code_url": "https://update.greasyfork.org/scripts/534850/WME%20Segment%20Completer.user.js",
+  "code_size": 25596,
+  "license": null,
+  "version": "2.7.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

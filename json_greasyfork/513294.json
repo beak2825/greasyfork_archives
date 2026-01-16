@@ -1,0 +1,59 @@
+{
+  "id": 513294,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-20T12:43:32.000Z",
+  "code_updated_at": "2024-10-20T12:43:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1367832,
+      "name": "Lemon Allen",
+      "created_at": "2024-09-15T06:48:27.000Z",
+      "url": "https://greasyfork.org/users/1367832-lemon-allen",
+      "scripts": [
+        {
+          "id": 555933,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-15T14:35:16.000Z",
+          "code_updated_at": "2025-11-15T15:34:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "全屏视频自动隐藏鼠标（通用版）",
+          "description": "在任何网站全屏播放视频时自动隐藏鼠标指针",
+          "url": "https://greasyfork.org/scripts/555933-%E5%85%A8%E5%B1%8F%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E9%9A%90%E8%97%8F%E9%BC%A0%E6%A0%87-%E9%80%9A%E7%94%A8%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/555933/%E5%85%A8%E5%B1%8F%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E9%9A%90%E8%97%8F%E9%BC%A0%E6%A0%87%EF%BC%88%E9%80%9A%E7%94%A8%E7%89%88%EF%BC%89.user.js",
+          "code_size": 2255,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Temu已抢到发货台提醒",
+  "description": "自动检测发货台内是否有商品",
+  "url": "https://greasyfork.org/scripts/513294-temu%E5%B7%B2%E6%8A%A2%E5%88%B0%E5%8F%91%E8%B4%A7%E5%8F%B0%E6%8F%90%E9%86%92",
+  "code_url": "https://update.greasyfork.org/scripts/513294/Temu%E5%B7%B2%E6%8A%A2%E5%88%B0%E5%8F%91%E8%B4%A7%E5%8F%B0%E6%8F%90%E9%86%92.user.js",
+  "code_size": 7463,
+  "license": "MIT License",
+  "version": "1.36",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

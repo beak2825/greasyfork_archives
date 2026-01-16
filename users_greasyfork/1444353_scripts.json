@@ -64,5 +64,137 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 550232,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-21T12:39:17.000Z",
+    "code_updated_at": "2025-10-03T16:03:47.000Z",
+    "namespace": "https://animestars.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1444353,
+        "name": "Sandr.",
+        "created_at": "2025-03-10T16:06:00.000Z",
+        "url": "https://greasyfork.org/users/1444353-sandr"
+      }
+    ],
+    "name": "AS Авто-плавка",
+    "description": "Плавит карты, оставляя выбранное количество дублей (0–5). Ограничивает количество авто-плавок. Увеличенные, плоские контролы.",
+    "url": "https://greasyfork.org/scripts/550232-as-%D0%B0%D0%B2%D1%82%D0%BE-%D0%BF%D0%BB%D0%B0%D0%B2%D0%BA%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/550232/AS%20%D0%90%D0%B2%D1%82%D0%BE-%D0%BF%D0%BB%D0%B0%D0%B2%D0%BA%D0%B0.user.js",
+    "code_size": 17485,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542212,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T14:47:40.000Z",
+    "code_updated_at": "2025-11-19T00:20:56.000Z",
+    "namespace": "https://animestars.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1444353,
+        "name": "Sandr.",
+        "created_at": "2025-03-10T16:06:00.000Z",
+        "url": "https://greasyfork.org/users/1444353-sandr"
+      }
+    ],
+    "name": "AS Notebook",
+    "description": "Записная книжка с группами, ссылками, поиском и встроенными кнопками. Сохраняет состояние окна, групп и скролла.",
+    "url": "https://greasyfork.org/scripts/542212-as-notebook",
+    "code_url": "https://update.greasyfork.org/scripts/542212/AS%20Notebook.user.js",
+    "code_size": 29052,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533525,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-21T12:38:09.000Z",
+    "code_updated_at": "2026-01-13T20:31:09.000Z",
+    "namespace": "https://animestars.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1444353,
+        "name": "Sandr.",
+        "created_at": "2025-03-10T16:06:00.000Z",
+        "url": "https://greasyfork.org/users/1444353-sandr"
+      }
+    ],
+    "name": "AS CardControl",
+    "description": "Множество вспомогательных функций для работы с картами",
+    "url": "https://greasyfork.org/scripts/533525-as-cardcontrol",
+    "code_url": "https://update.greasyfork.org/scripts/533525/AS%20CardControl.user.js",
+    "code_size": 193915,
+    "license": "MIT License",
+    "version": "12",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530188,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-18T13:12:38.000Z",
+    "code_updated_at": "2026-01-13T20:41:21.000Z",
+    "namespace": "http://animestars.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1444353,
+        "name": "Sandr.",
+        "created_at": "2025-03-10T16:06:00.000Z",
+        "url": "https://greasyfork.org/users/1444353-sandr"
+      }
+    ],
+    "name": "Wishlist Cards Indicator 2.0",
+    "description": "Обводка карт из списка желаемого",
+    "url": "https://greasyfork.org/scripts/530188-wishlist-cards-indicator-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/530188/Wishlist%20Cards%20Indicator%2020.user.js",
+    "code_size": 13199,
+    "license": "MIT License",
+    "version": "3.9",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

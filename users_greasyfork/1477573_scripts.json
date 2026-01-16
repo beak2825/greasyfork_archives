@@ -1,0 +1,68 @@
+[
+  {
+    "id": 543173,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T03:38:50.000Z",
+    "code_updated_at": "2025-07-21T03:38:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477573,
+        "name": "djh816",
+        "created_at": "2025-06-01T14:25:22.000Z",
+        "url": "https://greasyfork.org/users/1477573-djh816"
+      }
+    ],
+    "name": "Feedly - Always Open Source Article",
+    "description": "Make all clickable parts of a Feedly post go directly to the source article",
+    "url": "https://greasyfork.org/scripts/543173-feedly-always-open-source-article",
+    "code_url": "https://update.greasyfork.org/scripts/543173/Feedly%20-%20Always%20Open%20Source%20Article.user.js",
+    "code_size": 1508,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537979,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-01T14:29:57.000Z",
+    "code_updated_at": "2025-06-01T14:29:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477573,
+        "name": "djh816",
+        "created_at": "2025-06-01T14:25:22.000Z",
+        "url": "https://greasyfork.org/users/1477573-djh816"
+      }
+    ],
+    "name": "Reddit Full Width Posts, Hide Sidebar, Hide Banners",
+    "description": "Make Reddit posts full width, hide the right sidebar, hide red banner (banned or other) messages",
+    "url": "https://greasyfork.org/scripts/537979-reddit-full-width-posts-hide-sidebar-hide-banners",
+    "code_url": "https://update.greasyfork.org/scripts/537979/Reddit%20Full%20Width%20Posts%2C%20Hide%20Sidebar%2C%20Hide%20Banners.user.js",
+    "code_size": 2212,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

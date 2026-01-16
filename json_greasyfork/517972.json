@@ -1,0 +1,33 @@
+{
+  "id": 517972,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-19T04:48:25.000Z",
+  "code_updated_at": "2025-01-30T00:03:25.000Z",
+  "namespace": "typpi.online",
+  "support_url": "https://github.com/Nick2bad4u/UserStyles/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 872842,
+      "name": "Nick2bad4u",
+      "created_at": "2022-02-05T02:11:37.000Z",
+      "url": "https://greasyfork.org/users/872842-nick2bad4u"
+    }
+  ],
+  "name": "SteamStat.us - Miami Heat Red & Black",
+  "description": "SteamStat.us - Miami Heat Red & Black Theme with Advanced CSS",
+  "url": "https://greasyfork.org/scripts/517972-steamstat-us-miami-heat-red-black",
+  "code_url": "https://update.greasyfork.org/scripts/517972/SteamStatus%20-%20Miami%20Heat%20Red%20%20Black.user.css",
+  "code_size": 5232,
+  "license": "The Unlicense",
+  "version": "20241115.16.05",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

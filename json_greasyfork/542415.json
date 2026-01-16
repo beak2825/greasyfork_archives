@@ -1,0 +1,59 @@
+{
+  "id": 542415,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-12T19:10:09.000Z",
+  "code_updated_at": "2025-07-12T19:10:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1494251,
+      "name": "kaelan wong",
+      "created_at": "2025-07-12T19:06:42.000Z",
+      "url": "https://greasyfork.org/users/1494251-kaelan-wong",
+      "scripts": [
+        {
+          "id": 542415,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-12T19:10:09.000Z",
+          "code_updated_at": "2025-07-12T19:10:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amazon PPA Monthly Report Extractor (Parallel + Support TPH)",
+          "description": "Pull TPH data for a month by shift in parallel under 30 seconds, with Support TPH",
+          "url": "https://greasyfork.org/scripts/542415-amazon-ppa-monthly-report-extractor-parallel-support-tph",
+          "code_url": "https://update.greasyfork.org/scripts/542415/Amazon%20PPA%20Monthly%20Report%20Extractor%20%28Parallel%20%2B%20Support%20TPH%29.user.js",
+          "code_size": 10051,
+          "license": null,
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Amazon PPA Monthly Report Extractor (Parallel + Support TPH)",
+  "description": "Pull TPH data for a month by shift in parallel under 30 seconds, with Support TPH",
+  "url": "https://greasyfork.org/scripts/542415-amazon-ppa-monthly-report-extractor-parallel-support-tph",
+  "code_url": "https://update.greasyfork.org/scripts/542415/Amazon%20PPA%20Monthly%20Report%20Extractor%20%28Parallel%20%2B%20Support%20TPH%29.user.js",
+  "code_size": 10051,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

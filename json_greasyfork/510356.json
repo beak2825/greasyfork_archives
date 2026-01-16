@@ -1,0 +1,59 @@
+{
+  "id": 510356,
+  "daily_installs": 0,
+  "total_installs": 380,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-27T01:25:19.000Z",
+  "code_updated_at": "2024-09-27T01:25:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1373494,
+      "name": "Imadethisaccountforrandomstuff",
+      "created_at": "2024-09-27T00:42:25.000Z",
+      "url": "https://greasyfork.org/users/1373494-imadethisaccountforrandomstuff",
+      "scripts": [
+        {
+          "id": 510356,
+          "daily_installs": 0,
+          "total_installs": 380,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-27T01:25:19.000Z",
+          "code_updated_at": "2024-09-27T01:25:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Florr Ultras Userscript (Test)",
+          "description": "Grants some Ultras in florr",
+          "url": "https://greasyfork.org/scripts/510356-florr-ultras-userscript-test",
+          "code_url": "https://update.greasyfork.org/scripts/510356/Florr%20Ultras%20Userscript%20%28Test%29.user.js",
+          "code_size": 1533,
+          "license": "MIT License",
+          "version": "1.0 BETA",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Florr Ultras Userscript (Test)",
+  "description": "Grants some Ultras in florr",
+  "url": "https://greasyfork.org/scripts/510356-florr-ultras-userscript-test",
+  "code_url": "https://update.greasyfork.org/scripts/510356/Florr%20Ultras%20Userscript%20%28Test%29.user.js",
+  "code_size": 1533,
+  "license": "MIT License",
+  "version": "1.0 BETA",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

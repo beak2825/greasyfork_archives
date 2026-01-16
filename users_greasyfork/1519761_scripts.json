@@ -97,5 +97,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551663,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T11:03:02.000Z",
+    "code_updated_at": "2025-10-14T11:18:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519761,
+        "name": "accforfaciet",
+        "created_at": "2025-09-26T21:44:06.000Z",
+        "url": "https://greasyfork.org/users/1519761-accforfaciet"
+      }
+    ],
+    "name": "Chub AI - Automatic Message Formatting Corrector (Drag & Drop button)",
+    "description": "Formats narration, removes <think> tags, and features a draggable button that remembers its position. Adapts for PC & Mobile.",
+    "url": "https://greasyfork.org/scripts/551663-chub-ai-automatic-message-formatting-corrector-drag-drop-button",
+    "code_url": "https://update.greasyfork.org/scripts/551663/Chub%20AI%20-%20Automatic%20Message%20Formatting%20Corrector%20%28Drag%20%20Drop%20button%29.user.js",
+    "code_size": 11117,
+    "license": "MIT License",
+    "version": "7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551662,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T11:00:01.000Z",
+    "code_updated_at": "2025-10-13T12:03:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519761,
+        "name": "accforfaciet",
+        "created_at": "2025-09-26T21:44:06.000Z",
+        "url": "https://greasyfork.org/users/1519761-accforfaciet"
+      }
+    ],
+    "name": "(OUTDATED) Chub.AI - Message Formatting Corrector (PC/Desktop Version)",
+    "description": "Formats narration and dialogues, and removes <think> tags with a single click. (PC/Desktop Version)",
+    "url": "https://greasyfork.org/scripts/551662-outdated-chub-ai-message-formatting-corrector-pc-desktop-version",
+    "code_url": "https://update.greasyfork.org/scripts/551662/1676734/%28OUTDATED%29%20ChubAI%20-%20Message%20Formatting%20Corrector%20%28PCDesktop%20Version%29.js",
+    "code_size": 11223,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551459,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-03T15:05:02.000Z",
+    "code_updated_at": "2025-10-13T12:06:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519761,
+        "name": "accforfaciet",
+        "created_at": "2025-09-26T21:44:06.000Z",
+        "url": "https://greasyfork.org/users/1519761-accforfaciet"
+      }
+    ],
+    "name": "(OUTDATED) Janitor AI - Automatic Message Formatting Corrector (Drag & Drop button)",
+    "description": "Draggable button with visual feedback! Remembers its position, adapts to screen size, and can't be dragged off-screen. Formats narration/dialogues.",
+    "url": "https://greasyfork.org/scripts/551459-outdated-janitor-ai-automatic-message-formatting-corrector-drag-drop-button",
+    "code_url": "https://update.greasyfork.org/scripts/551459/1676736/%28OUTDATED%29%20Janitor%20AI%20-%20Automatic%20Message%20Formatting%20Corrector%20%28Drag%20%20Drop%20button%29.js",
+    "code_size": 594,
+    "license": "MIT License",
+    "version": "7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551458,
+    "daily_installs": 1,
+    "total_installs": 311,
+    "fan_score": "29.9",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2025-10-03T14:53:52.000Z",
+    "code_updated_at": "2026-01-05T11:40:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519761,
+        "name": "accforfaciet",
+        "created_at": "2025-09-26T21:44:06.000Z",
+        "url": "https://greasyfork.org/users/1519761-accforfaciet"
+      }
+    ],
+    "name": "Janitor AI - Automatic Message Formatting Corrector (Settings Menu)",
+    "description": "The \"One-Click\" cleanup script. Floating, Inline Top, or Inline Bottom. Select Italics/Bold/Plain text. Edge compatible.",
+    "url": "https://greasyfork.org/scripts/551458-janitor-ai-automatic-message-formatting-corrector-settings-menu",
+    "code_url": "https://update.greasyfork.org/scripts/551458/Janitor%20AI%20-%20Automatic%20Message%20Formatting%20Corrector%20%28Settings%20Menu%29.user.js",
+    "code_size": 27042,
+    "license": "MIT License",
+    "version": "10.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

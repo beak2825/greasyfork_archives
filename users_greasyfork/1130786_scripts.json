@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550393,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-22T19:04:50.000Z",
+    "code_updated_at": "2025-09-22T19:25:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1130786,
+        "name": "licat",
+        "created_at": "2023-07-19T14:25:10.000Z",
+        "url": "https://greasyfork.org/users/1130786-licat"
+      }
+    ],
+    "name": "菜鸟教程-阅读模式-licat优化",
+    "description": "菜鸟教程将页面次要内容移除，优化阅读体验，让菜鸟教程再次伟大！licat优化：1.更新样式，真正实现宽屏 2.添加侧栏折叠按钮，可完全折叠并保持状态",
+    "url": "https://greasyfork.org/scripts/550393-%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B-%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F-licat%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/550393/%E8%8F%9C%E9%B8%9F%E6%95%99%E7%A8%8B-%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F-licat%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 7938,
+    "license": null,
+    "version": "1.2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

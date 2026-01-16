@@ -1,0 +1,101 @@
+[
+  {
+    "id": 544600,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T10:33:19.000Z",
+    "code_updated_at": "2025-08-04T10:33:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417372,
+        "name": "Alx Spiker",
+        "created_at": "2024-12-29T22:48:08.000Z",
+        "url": "https://greasyfork.org/users/1417372-alx-spiker"
+      }
+    ],
+    "name": "Torn Travel Widget",
+    "description": "Travel status widget with integrated API settings for Torn.com header, with robust API key management for desktop and Torn PDA.",
+    "url": "https://greasyfork.org/scripts/544600-torn-travel-widget",
+    "code_url": "https://update.greasyfork.org/scripts/544600/Torn%20Travel%20Widget.user.js",
+    "code_size": 17389,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543182,
+    "daily_installs": 1,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T07:11:16.000Z",
+    "code_updated_at": "2025-07-21T07:11:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417372,
+        "name": "Alx Spiker",
+        "created_at": "2024-12-29T22:48:08.000Z",
+        "url": "https://greasyfork.org/users/1417372-alx-spiker"
+      }
+    ],
+    "name": "Torn Chain Payout Calculator",
+    "description": "Calculates payouts, generates reports, and manages API keys in compliance with Torn's ToS. Supports auto-config for Torn PDA.",
+    "url": "https://greasyfork.org/scripts/543182-torn-chain-payout-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/543182/Torn%20Chain%20Payout%20Calculator.user.js",
+    "code_size": 34098,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524012,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-17T05:52:02.000Z",
+    "code_updated_at": "2025-01-17T06:44:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417372,
+        "name": "Alx Spiker",
+        "created_at": "2024-12-29T22:48:08.000Z",
+        "url": "https://greasyfork.org/users/1417372-alx-spiker"
+      }
+    ],
+    "name": "Torn Transform Text to Numeric Input",
+    "description": "Transforms various text inputs to number inputs (Only useful on mobile)",
+    "url": "https://greasyfork.org/scripts/524012-torn-transform-text-to-numeric-input",
+    "code_url": "https://update.greasyfork.org/scripts/524012/Torn%20Transform%20Text%20to%20Numeric%20Input.user.js",
+    "code_size": 1634,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 527433,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-19T12:31:51.000Z",
+  "code_updated_at": "2025-12-17T16:20:09.000Z",
+  "namespace": "https://github.com/njko39/MAL-RU-Enhancements",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1361060,
+      "name": "mwehehe",
+      "created_at": "2024-08-31T20:27:40.000Z",
+      "url": "https://greasyfork.org/users/1361060-mwehehe",
+      "scripts": [
+        {
+          "id": 527433,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-19T12:31:51.000Z",
+          "code_updated_at": "2025-12-17T16:20:09.000Z",
+          "namespace": "https://github.com/njko39/MAL-RU-Enhancements",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MyAnimeList(MAL) — русское описание аниме",
+          "description": "Добавляет русское описание аниме с Шикимори или GitHub на страницу аниме на MAL",
+          "url": "https://greasyfork.org/scripts/527433-myanimelist-mal-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B5-%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-%D0%B0%D0%BD%D0%B8%D0%BC%D0%B5",
+          "code_url": "https://update.greasyfork.org/scripts/527433/MyAnimeList%28MAL%29%20%E2%80%94%20%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B5%20%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B0%D0%BD%D0%B8%D0%BC%D0%B5.user.js",
+          "code_size": 18554,
+          "license": "MIT License",
+          "version": "1.6",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MyAnimeList(MAL) — русское описание аниме",
+  "description": "Добавляет русское описание аниме с Шикимори или GitHub на страницу аниме на MAL",
+  "url": "https://greasyfork.org/scripts/527433-myanimelist-mal-%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B5-%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-%D0%B0%D0%BD%D0%B8%D0%BC%D0%B5",
+  "code_url": "https://update.greasyfork.org/scripts/527433/MyAnimeList%28MAL%29%20%E2%80%94%20%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%BE%D0%B5%20%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B0%D0%BD%D0%B8%D0%BC%D0%B5.user.js",
+  "code_size": 18554,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 504220,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-19T06:26:33.000Z",
+  "code_updated_at": "2024-08-19T06:26:33.000Z",
+  "namespace": "https://bingzi.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354339,
+      "name": "BingZi-233",
+      "created_at": "2024-08-19T06:21:25.000Z",
+      "url": "https://greasyfork.org/users/1354339-bingzi-233",
+      "scripts": [
+        {
+          "id": 504220,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-19T06:26:33.000Z",
+          "code_updated_at": "2024-08-19T06:26:33.000Z",
+          "namespace": "https://bingzi.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "物语云样式调整",
+          "description": "对物语云管理页面样式进行微调",
+          "url": "https://greasyfork.org/scripts/504220-%E7%89%A9%E8%AF%AD%E4%BA%91%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4",
+          "code_url": "https://update.greasyfork.org/scripts/504220/%E7%89%A9%E8%AF%AD%E4%BA%91%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4.user.js",
+          "code_size": 631,
+          "license": "MIT License",
+          "version": "2024-08-19",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "物语云样式调整",
+  "description": "对物语云管理页面样式进行微调",
+  "url": "https://greasyfork.org/scripts/504220-%E7%89%A9%E8%AF%AD%E4%BA%91%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4",
+  "code_url": "https://update.greasyfork.org/scripts/504220/%E7%89%A9%E8%AF%AD%E4%BA%91%E6%A0%B7%E5%BC%8F%E8%B0%83%E6%95%B4.user.js",
+  "code_size": 631,
+  "license": "MIT License",
+  "version": "2024-08-19",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

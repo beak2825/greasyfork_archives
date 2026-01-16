@@ -1,0 +1,68 @@
+[
+  {
+    "id": 520993,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-17T09:04:41.000Z",
+    "code_updated_at": "2024-12-17T09:04:41.000Z",
+    "namespace": "https://greasyfork.org/users/768235",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 768235,
+        "name": "peng “Hollow” zhang",
+        "created_at": "2021-05-04T05:30:46.000Z",
+        "url": "https://greasyfork.org/users/768235-peng-hollow-zhang"
+      }
+    ],
+    "name": "正方教务教学评价填写（改，方便用户）",
+    "description": "正方教务（默认唐职），自己学校可在代码@match 自行更改",
+    "url": "https://greasyfork.org/scripts/520993-%E6%AD%A3%E6%96%B9%E6%95%99%E5%8A%A1%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E5%A1%AB%E5%86%99-%E6%94%B9-%E6%96%B9%E4%BE%BF%E7%94%A8%E6%88%B7",
+    "code_url": "https://update.greasyfork.org/scripts/520993/%E6%AD%A3%E6%96%B9%E6%95%99%E5%8A%A1%E6%95%99%E5%AD%A6%E8%AF%84%E4%BB%B7%E5%A1%AB%E5%86%99%EF%BC%88%E6%94%B9%EF%BC%8C%E6%96%B9%E4%BE%BF%E7%94%A8%E6%88%B7%EF%BC%89.user.js",
+    "code_size": 7185,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519380,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-30T16:39:26.000Z",
+    "code_updated_at": "2024-11-30T16:39:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 768235,
+        "name": "peng “Hollow” zhang",
+        "created_at": "2021-05-04T05:30:46.000Z",
+        "url": "https://greasyfork.org/users/768235-peng-hollow-zhang"
+      }
+    ],
+    "name": "超星学习通-自动点击讨论并自动回复脚本",
+    "description": "自动点击讨论部分，自动填入其他人回复内容并提交回复内容，提交后自动关闭页面",
+    "url": "https://greasyfork.org/scripts/519380-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E8%AE%A8%E8%AE%BA%E5%B9%B6%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/519380/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E8%AE%A8%E8%AE%BA%E5%B9%B6%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3377,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

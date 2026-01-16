@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535987,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-14T14:58:11.000Z",
+    "code_updated_at": "2025-05-14T14:58:11.000Z",
+    "namespace": "https://meinebasis.de",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 571550,
+        "name": "Finomosec",
+        "created_at": "2020-05-24T09:59:44.000Z",
+        "url": "https://greasyfork.org/users/571550-finomosec"
+      }
+    ],
+    "name": "Phind.com improved printing",
+    "description": "This script adjusts the css styles for printing so every useful content is visible and readable.",
+    "url": "https://greasyfork.org/scripts/535987-phind-com-improved-printing",
+    "code_url": "https://update.greasyfork.org/scripts/535987/Phindcom%20improved%20printing.user.js",
+    "code_size": 1526,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525471,
+    "daily_installs": 98,
+    "total_installs": 14412,
+    "fan_score": "24.6",
+    "good_ratings": 4,
+    "ok_ratings": 3,
+    "bad_ratings": 4,
+    "created_at": "2025-01-31T23:32:12.000Z",
+    "code_updated_at": "2025-04-14T19:57:46.000Z",
+    "namespace": "Original: https://github.com/Neet-Nestor/Telegram-Media-Downloader",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 571550,
+        "name": "Finomosec",
+        "created_at": "2020-05-24T09:59:44.000Z",
+        "url": "https://greasyfork.org/users/571550-finomosec"
+      }
+    ],
+    "name": "Telegram Media Downloader (Improved)",
+    "description": "Download images, GIFs, videos, and voice messages on the Telegram webapp from private channels that disable downloading and restrict saving content",
+    "url": "https://greasyfork.org/scripts/525471-telegram-media-downloader-improved",
+    "code_url": "https://update.greasyfork.org/scripts/525471/Telegram%20Media%20Downloader%20%28Improved%29.user.js",
+    "code_size": 34508,
+    "license": "GNU GPLv3",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

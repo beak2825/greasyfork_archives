@@ -1,0 +1,59 @@
+{
+  "id": 534792,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-03T08:10:49.000Z",
+  "code_updated_at": "2025-05-03T08:22:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465099,
+      "name": "fiuxxed",
+      "created_at": "2025-05-03T08:04:24.000Z",
+      "url": "https://greasyfork.org/users/1465099-fiuxxed",
+      "scripts": [
+        {
+          "id": 534792,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-03T08:10:49.000Z",
+          "code_updated_at": "2025-05-03T08:22:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mega.nz Autoplay",
+          "description": "This script auto-plays the next video on Mega.nz, shows status updates like when a video plays or ends, and lets you hide or show the messages by pressing \"T\".",
+          "url": "https://greasyfork.org/scripts/534792-mega-nz-autoplay",
+          "code_url": "https://update.greasyfork.org/scripts/534792/Meganz%20Autoplay.user.js",
+          "code_size": 9007,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mega.nz Autoplay",
+  "description": "This script auto-plays the next video on Mega.nz, shows status updates like when a video plays or ends, and lets you hide or show the messages by pressing \"T\".",
+  "url": "https://greasyfork.org/scripts/534792-mega-nz-autoplay",
+  "code_url": "https://update.greasyfork.org/scripts/534792/Meganz%20Autoplay.user.js",
+  "code_size": 9007,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

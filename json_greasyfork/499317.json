@@ -1,0 +1,59 @@
+{
+  "id": 499317,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-30T20:26:46.000Z",
+  "code_updated_at": "2024-06-30T20:28:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 468827,
+      "name": "朱雀降世",
+      "created_at": "2020-03-25T10:20:18.000Z",
+      "url": "https://greasyfork.org/users/468827-%E6%9C%B1%E9%9B%80%E9%99%8D%E4%B8%96",
+      "scripts": [
+        {
+          "id": 499317,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-30T20:26:46.000Z",
+          "code_updated_at": "2024-06-30T20:28:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "快捷键搜索：Quick Search or Open URL",
+          "description": "使用百度搜索选定文本或在新选项卡中打开URL Search selected text with Baidu or open URL in a new tab",
+          "url": "https://greasyfork.org/scripts/499317-%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%90%9C%E7%B4%A2-quick-search-or-open-url",
+          "code_url": "https://update.greasyfork.org/scripts/499317/%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%90%9C%E7%B4%A2%EF%BC%9AQuick%20Search%20or%20Open%20URL.user.js",
+          "code_size": 1333,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "快捷键搜索：Quick Search or Open URL",
+  "description": "使用百度搜索选定文本或在新选项卡中打开URL Search selected text with Baidu or open URL in a new tab",
+  "url": "https://greasyfork.org/scripts/499317-%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%90%9C%E7%B4%A2-quick-search-or-open-url",
+  "code_url": "https://update.greasyfork.org/scripts/499317/%E5%BF%AB%E6%8D%B7%E9%94%AE%E6%90%9C%E7%B4%A2%EF%BC%9AQuick%20Search%20or%20Open%20URL.user.js",
+  "code_size": 1333,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

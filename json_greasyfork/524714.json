@@ -1,0 +1,33 @@
+{
+  "id": 524714,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-24T09:37:07.000Z",
+  "code_updated_at": "2025-03-05T08:40:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 733158,
+      "name": "dshs",
+      "created_at": "2021-01-31T13:18:54.000Z",
+      "url": "https://greasyfork.org/users/733158-dshs"
+    }
+  ],
+  "name": "Aicnm Enhance",
+  "description": "Generate a random token and redirect or add button with a refresh icon",
+  "url": "https://greasyfork.org/scripts/524714-aicnm-enhance",
+  "code_url": "https://update.greasyfork.org/scripts/524714/Aicnm%20Enhance.user.js",
+  "code_size": 3438,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

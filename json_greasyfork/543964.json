@@ -1,0 +1,59 @@
+{
+  "id": 543964,
+  "daily_installs": 1,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-29T10:34:19.000Z",
+  "code_updated_at": "2025-07-29T10:34:18.000Z",
+  "namespace": "https://github.com/wallandteen",
+  "support_url": "https://github.com/wallandteen/leetsession/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499447,
+      "name": "wallandteen",
+      "created_at": "2025-07-29T10:30:59.000Z",
+      "url": "https://greasyfork.org/users/1499447-wallandteen",
+      "scripts": [
+        {
+          "id": 543964,
+          "daily_installs": 1,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-29T10:34:19.000Z",
+          "code_updated_at": "2025-07-29T10:34:18.000Z",
+          "namespace": "https://github.com/wallandteen",
+          "support_url": "https://github.com/wallandteen/leetsession/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LeetSession – Code obsession",
+          "description": "Work-around for LeetCode’s removed “Session Management” feature (see issue #22883). It emulates the legacy behaviour by creating a self-updating favorite list that contains every problem and automatically syncs it.",
+          "url": "https://greasyfork.org/scripts/543964-leetsession-code-obsession",
+          "code_url": "https://update.greasyfork.org/scripts/543964/LeetSession%20%E2%80%93%20Code%20obsession.user.js",
+          "code_size": 19755,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LeetSession – Code obsession",
+  "description": "Work-around for LeetCode’s removed “Session Management” feature (see issue #22883). It emulates the legacy behaviour by creating a self-updating favorite list that contains every problem and automatically syncs it.",
+  "url": "https://greasyfork.org/scripts/543964-leetsession-code-obsession",
+  "code_url": "https://update.greasyfork.org/scripts/543964/LeetSession%20%E2%80%93%20Code%20obsession.user.js",
+  "code_size": 19755,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

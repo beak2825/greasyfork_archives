@@ -1,0 +1,59 @@
+{
+  "id": 525818,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-04T06:21:26.000Z",
+  "code_updated_at": "2025-05-31T19:40:31.000Z",
+  "namespace": "https://greasyfork.org/users/1430513",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1430513,
+      "name": "hncompact",
+      "created_at": "2025-02-02T23:03:00.000Z",
+      "url": "https://greasyfork.org/users/1430513-hncompact",
+      "scripts": [
+        {
+          "id": 525818,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-04T06:21:26.000Z",
+          "code_updated_at": "2025-05-31T19:40:31.000Z",
+          "namespace": "https://greasyfork.org/users/1430513",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HN SuperCompact UI",
+          "description": "Makes the HN UI even more compact than it is now.",
+          "url": "https://greasyfork.org/scripts/525818-hn-supercompact-ui",
+          "code_url": "https://update.greasyfork.org/scripts/525818/HN%20SuperCompact%20UI.user.js",
+          "code_size": 7080,
+          "license": "MIT License",
+          "version": "1.14",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HN SuperCompact UI",
+  "description": "Makes the HN UI even more compact than it is now.",
+  "url": "https://greasyfork.org/scripts/525818-hn-supercompact-ui",
+  "code_url": "https://update.greasyfork.org/scripts/525818/HN%20SuperCompact%20UI.user.js",
+  "code_size": 7080,
+  "license": "MIT License",
+  "version": "1.14",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

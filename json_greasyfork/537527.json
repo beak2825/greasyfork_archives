@@ -1,0 +1,33 @@
+{
+  "id": 537527,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T11:23:13.000Z",
+  "code_updated_at": "2025-05-29T07:07:47.000Z",
+  "namespace": "https://greasyfork.org/en/users/1469540-davrone",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469540,
+      "name": "halfg567",
+      "created_at": "2025-05-13T08:36:53.000Z",
+      "url": "https://greasyfork.org/users/1469540-halfg567"
+    }
+  ],
+  "name": "FF Target Finder",
+  "description": "Chain Target gatherer using FF data",
+  "url": "https://greasyfork.org/scripts/537527-ff-target-finder",
+  "code_url": "https://update.greasyfork.org/scripts/537527/FF%20Target%20Finder.user.js",
+  "code_size": 60102,
+  "license": "N/A",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

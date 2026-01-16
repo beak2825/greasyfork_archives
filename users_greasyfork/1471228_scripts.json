@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536299,
+    "daily_installs": 1,
+    "total_installs": 50,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T12:47:16.000Z",
+    "code_updated_at": "2025-05-26T09:10:14.000Z",
+    "namespace": "https://greasyfork.org/users/1471228",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471228,
+        "name": "w5x2m",
+        "created_at": "2025-05-17T12:25:09.000Z",
+        "url": "https://greasyfork.org/users/1471228-w5x2m"
+      }
+    ],
+    "name": "Pixiv Muter",
+    "description": "Mute unwanted authors or tags on Pixiv's illustration and novel tag search pages",
+    "url": "https://greasyfork.org/scripts/536299-pixiv-muter",
+    "code_url": "https://update.greasyfork.org/scripts/536299/Pixiv%20Muter.user.js",
+    "code_size": 692005,
+    "license": "MIT License",
+    "version": "2025-05-26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

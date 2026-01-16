@@ -1,0 +1,33 @@
+{
+  "id": 527555,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-20T11:45:54.000Z",
+  "code_updated_at": "2025-02-20T11:45:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Req Start Binance 4Rec Sp.suzicmile@gmail.com",
+  "description": "Insert",
+  "url": "https://greasyfork.org/scripts/527555-req-start-binance-4rec-sp-suzicmile-gmail-com",
+  "code_url": "https://update.greasyfork.org/scripts/527555/Req%20Start%20Binance%204Rec%20Spsuzicmile%40gmailcom.user.js",
+  "code_size": 12786,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

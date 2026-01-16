@@ -1,0 +1,59 @@
+{
+  "id": 540944,
+  "daily_installs": 1,
+  "total_installs": 29,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-27T14:56:16.000Z",
+  "code_updated_at": "2025-06-27T14:56:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1380600,
+      "name": "Louan Fontenele",
+      "created_at": "2024-10-14T02:56:27.000Z",
+      "url": "https://greasyfork.org/users/1380600-louan-fontenele",
+      "scripts": [
+        {
+          "id": 540944,
+          "daily_installs": 1,
+          "total_installs": 29,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-27T14:56:16.000Z",
+          "code_updated_at": "2025-06-27T14:56:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Collapse ChatGPT & User Code Blocks",
+          "description": "Collapse code blocks in ChatGPT responses and your own <pre> messages by default, with toggles and copy buttons for each type.",
+          "url": "https://greasyfork.org/scripts/540944-collapse-chatgpt-user-code-blocks",
+          "code_url": "https://update.greasyfork.org/scripts/540944/Collapse%20ChatGPT%20%20User%20Code%20Blocks.user.js",
+          "code_size": 8022,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Collapse ChatGPT & User Code Blocks",
+  "description": "Collapse code blocks in ChatGPT responses and your own <pre> messages by default, with toggles and copy buttons for each type.",
+  "url": "https://greasyfork.org/scripts/540944-collapse-chatgpt-user-code-blocks",
+  "code_url": "https://update.greasyfork.org/scripts/540944/Collapse%20ChatGPT%20%20User%20Code%20Blocks.user.js",
+  "code_size": 8022,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

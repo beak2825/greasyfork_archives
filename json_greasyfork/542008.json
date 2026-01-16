@@ -1,0 +1,59 @@
+{
+  "id": 542008,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-08T09:49:39.000Z",
+  "code_updated_at": "2025-07-11T01:21:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492780,
+      "name": "man jack2",
+      "created_at": "2025-07-08T09:31:46.000Z",
+      "url": "https://greasyfork.org/users/1492780-man-jack2",
+      "scripts": [
+        {
+          "id": 542008,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-08T09:49:39.000Z",
+          "code_updated_at": "2025-07-11T01:21:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浏览器下雪效果(可折叠/开关/配置保存)",
+          "description": "在浏览器页面添加雪花飘落动画效果，并提供一个可折叠、带总开关的UI来控制雪花的颜色、数量和大小，支持配置保存。",
+          "url": "https://greasyfork.org/scripts/542008-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E9%9B%AA%E6%95%88%E6%9E%9C-%E5%8F%AF%E6%8A%98%E5%8F%A0-%E5%BC%80%E5%85%B3-%E9%85%8D%E7%BD%AE%E4%BF%9D%E5%AD%98",
+          "code_url": "https://update.greasyfork.org/scripts/542008/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E9%9B%AA%E6%95%88%E6%9E%9C%28%E5%8F%AF%E6%8A%98%E5%8F%A0%E5%BC%80%E5%85%B3%E9%85%8D%E7%BD%AE%E4%BF%9D%E5%AD%98%29.user.js",
+          "code_size": 13511,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "浏览器下雪效果(可折叠/开关/配置保存)",
+  "description": "在浏览器页面添加雪花飘落动画效果，并提供一个可折叠、带总开关的UI来控制雪花的颜色、数量和大小，支持配置保存。",
+  "url": "https://greasyfork.org/scripts/542008-%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E9%9B%AA%E6%95%88%E6%9E%9C-%E5%8F%AF%E6%8A%98%E5%8F%A0-%E5%BC%80%E5%85%B3-%E9%85%8D%E7%BD%AE%E4%BF%9D%E5%AD%98",
+  "code_url": "https://update.greasyfork.org/scripts/542008/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E9%9B%AA%E6%95%88%E6%9E%9C%28%E5%8F%AF%E6%8A%98%E5%8F%A0%E5%BC%80%E5%85%B3%E9%85%8D%E7%BD%AE%E4%BF%9D%E5%AD%98%29.user.js",
+  "code_size": 13511,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541635,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T15:20:25.000Z",
+    "code_updated_at": "2025-12-31T15:17:58.000Z",
+    "namespace": "sage_home",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 178606,
+        "name": "w2f",
+        "created_at": "2018-04-07T07:17:38.000Z",
+        "url": "https://greasyfork.org/users/178606-w2f"
+      }
+    ],
+    "name": "onlineChat-在线网页聊天室",
+    "description": "和所有人在线交流，安全匿名，无需账号，无需客户端，保护隐私，在线网页聊天室",
+    "url": "https://greasyfork.org/scripts/541635-onlinechat-%E5%9C%A8%E7%BA%BF%E7%BD%91%E9%A1%B5%E8%81%8A%E5%A4%A9%E5%AE%A4",
+    "code_url": "https://update.greasyfork.org/scripts/541635/onlineChat-%E5%9C%A8%E7%BA%BF%E7%BD%91%E9%A1%B5%E8%81%8A%E5%A4%A9%E5%AE%A4.user.js",
+    "code_size": 34693,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

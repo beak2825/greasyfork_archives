@@ -1,0 +1,167 @@
+[
+  {
+    "id": 533083,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T03:57:55.000Z",
+    "code_updated_at": "2025-04-17T04:18:18.000Z",
+    "namespace": "Nyu@Clraik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 98713,
+        "name": "Nyu",
+        "created_at": "2017-01-30T15:10:00.000Z",
+        "url": "https://greasyfork.org/users/98713-nyu"
+      }
+    ],
+    "name": "Neopets: Redeem AC Staff Tournament first item",
+    "description": "Redeems AC Staff Tournament first item until there are no more spendable points",
+    "url": "https://greasyfork.org/scripts/533083-neopets-redeem-ac-staff-tournament-first-item",
+    "code_url": "https://update.greasyfork.org/scripts/533083/Neopets%3A%20Redeem%20AC%20Staff%20Tournament%20first%20item.user.js",
+    "code_size": 1202,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530921,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-26T14:03:24.000Z",
+    "code_updated_at": "2025-03-26T14:03:24.000Z",
+    "namespace": "Nyu@Clraik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 98713,
+        "name": "Nyu",
+        "created_at": "2017-01-30T15:10:00.000Z",
+        "url": "https://greasyfork.org/users/98713-nyu"
+      }
+    ],
+    "name": "Qasalan Expellibox Beautifier",
+    "description": "Makes the expellibox page prettier",
+    "url": "https://greasyfork.org/scripts/530921-qasalan-expellibox-beautifier",
+    "code_url": "https://update.greasyfork.org/scripts/530921/Qasalan%20Expellibox%20Beautifier.user.js",
+    "code_size": 1575,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511131,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T04:12:53.000Z",
+    "code_updated_at": "2025-10-08T01:20:44.000Z",
+    "namespace": "Nyu@Clraik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 98713,
+        "name": "Nyu",
+        "created_at": "2017-01-30T15:10:00.000Z",
+        "url": "https://greasyfork.org/users/98713-nyu"
+      }
+    ],
+    "name": "Neopets: Faerie Festival Donation Points",
+    "description": "Displays the amount of points you get for donating an item in the Faerie Festival",
+    "url": "https://greasyfork.org/scripts/511131-neopets-faerie-festival-donation-points",
+    "code_url": "https://update.greasyfork.org/scripts/511131/Neopets%3A%20Faerie%20Festival%20Donation%20Points.user.js",
+    "code_size": 5900,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 508043,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-12T03:34:52.000Z",
+    "code_updated_at": "2024-09-12T03:34:52.000Z",
+    "namespace": "Nyu@Clraik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 98713,
+        "name": "Nyu",
+        "created_at": "2017-01-30T15:10:00.000Z",
+        "url": "https://greasyfork.org/users/98713-nyu"
+      }
+    ],
+    "name": "Neopets: Inventory Pet Preference",
+    "description": "Sets your preferred pet as the first option when available",
+    "url": "https://greasyfork.org/scripts/508043-neopets-inventory-pet-preference",
+    "code_url": "https://update.greasyfork.org/scripts/508043/Neopets%3A%20Inventory%20Pet%20Preference.user.js",
+    "code_size": 1711,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500636,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-14T16:58:58.000Z",
+    "code_updated_at": "2024-07-17T23:15:39.000Z",
+    "namespace": "Nyu@Clraik",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 98713,
+        "name": "Nyu",
+        "created_at": "2017-01-30T15:10:00.000Z",
+        "url": "https://greasyfork.org/users/98713-nyu"
+      }
+    ],
+    "name": "Neopets: Neocash Gift User Validator",
+    "description": "When sending a neocash (nc) item by giftbox, you can validate the user.",
+    "url": "https://greasyfork.org/scripts/500636-neopets-neocash-gift-user-validator",
+    "code_url": "https://update.greasyfork.org/scripts/500636/Neopets%3A%20Neocash%20Gift%20User%20Validator.user.js",
+    "code_size": 4434,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

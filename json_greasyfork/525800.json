@@ -1,0 +1,59 @@
+{
+  "id": 525800,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T23:22:28.000Z",
+  "code_updated_at": "2025-02-03T23:22:28.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431070,
+      "name": "fofo snowy",
+      "created_at": "2025-02-03T23:18:58.000Z",
+      "url": "https://greasyfork.org/users/1431070-fofo-snowy",
+      "scripts": [
+        {
+          "id": 525800,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-03T23:22:28.000Z",
+          "code_updated_at": "2025-02-03T23:22:28.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "green theme",
+          "description": "2/3/2025, 4:41:38 PM",
+          "url": "https://greasyfork.org/scripts/525800-green-theme",
+          "code_url": "https://update.greasyfork.org/scripts/525800/green%20theme.user.js",
+          "code_size": 553,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "green theme",
+  "description": "2/3/2025, 4:41:38 PM",
+  "url": "https://greasyfork.org/scripts/525800-green-theme",
+  "code_url": "https://update.greasyfork.org/scripts/525800/green%20theme.user.js",
+  "code_size": 553,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

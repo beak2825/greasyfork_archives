@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496752,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-01T13:37:31.000Z",
+    "code_updated_at": "2024-07-03T20:01:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 822549,
+        "name": "igmn",
+        "created_at": "2021-10-06T18:26:31.000Z",
+        "url": "https://greasyfork.org/users/822549-igmn"
+      }
+    ],
+    "name": "Floatplane Always Captioned",
+    "description": "Automatically check if a captioned version is available and switch to it if it is",
+    "url": "https://greasyfork.org/scripts/496752-floatplane-always-captioned",
+    "code_url": "https://update.greasyfork.org/scripts/496752/Floatplane%20Always%20Captioned.user.js",
+    "code_size": 4512,
+    "license": "GPL-v3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

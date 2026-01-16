@@ -1,0 +1,33 @@
+{
+  "id": 545151,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-09T08:38:28.000Z",
+  "code_updated_at": "2025-08-09T08:54:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 908127,
+      "name": "Kiyuiro",
+      "created_at": "2022-04-28T12:52:58.000Z",
+      "url": "https://greasyfork.org/users/908127-kiyuiro"
+    }
+  ],
+  "name": "知乎专栏保存",
+  "description": "保存知乎专栏文章内容",
+  "url": "https://greasyfork.org/scripts/545151-%E7%9F%A5%E4%B9%8E%E4%B8%93%E6%A0%8F%E4%BF%9D%E5%AD%98",
+  "code_url": "https://update.greasyfork.org/scripts/545151/%E7%9F%A5%E4%B9%8E%E4%B8%93%E6%A0%8F%E4%BF%9D%E5%AD%98.user.js",
+  "code_size": 1786,
+  "license": "Apache License 2.0",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

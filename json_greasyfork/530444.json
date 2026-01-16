@@ -1,0 +1,59 @@
+{
+  "id": 530444,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-21T12:33:49.000Z",
+  "code_updated_at": "2025-03-21T13:08:59.000Z",
+  "namespace": "https://github.com/CYBERGUILD",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448495,
+      "name": "JempUnkn",
+      "created_at": "2025-03-21T12:18:12.000Z",
+      "url": "https://greasyfork.org/users/1448495-jempunkn",
+      "scripts": [
+        {
+          "id": 530444,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-21T12:33:49.000Z",
+          "code_updated_at": "2025-03-21T13:08:59.000Z",
+          "namespace": "https://github.com/CYBERGUILD",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DramaconFansubs Player Popup",
+          "description": "Carrega vídeos do Google Drive em um popup diretamente no site DramaconFansubs, evitando redirecionamentos, agora com fullscreen.",
+          "url": "https://greasyfork.org/scripts/530444-dramaconfansubs-player-popup",
+          "code_url": "https://update.greasyfork.org/scripts/530444/DramaconFansubs%20Player%20Popup.user.js",
+          "code_size": 3687,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DramaconFansubs Player Popup",
+  "description": "Carrega vídeos do Google Drive em um popup diretamente no site DramaconFansubs, evitando redirecionamentos, agora com fullscreen.",
+  "url": "https://greasyfork.org/scripts/530444-dramaconfansubs-player-popup",
+  "code_url": "https://update.greasyfork.org/scripts/530444/DramaconFansubs%20Player%20Popup.user.js",
+  "code_size": 3687,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

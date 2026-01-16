@@ -1,0 +1,233 @@
+[
+  {
+    "id": 522258,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T02:43:51.000Z",
+    "code_updated_at": "2024-12-30T02:49:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "套書冊數、裝訂、CIP自動填寫",
+    "description": "自動依次填寫各冊冊數欄位，填入 1, 2, 3 等數字，自動勾選平裝和CIP選擇\"否\"的選項，除非這些欄位已經填寫或選擇過了。",
+    "url": "https://greasyfork.org/scripts/522258-%E5%A5%97%E6%9B%B8%E5%86%8A%E6%95%B8-%E8%A3%9D%E8%A8%82-cip%E8%87%AA%E5%8B%95%E5%A1%AB%E5%AF%AB",
+    "code_url": "https://update.greasyfork.org/scripts/522258/%E5%A5%97%E6%9B%B8%E5%86%8A%E6%95%B8%E3%80%81%E8%A3%9D%E8%A8%82%E3%80%81CIP%E8%87%AA%E5%8B%95%E5%A1%AB%E5%AF%AB.user.js",
+    "code_size": 3554,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521956,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T08:50:26.000Z",
+    "code_updated_at": "2024-12-27T08:50:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "ISBN自動選擇申請書名",
+    "description": "自動將查詢欄位設置為 \"申請書名\"",
+    "url": "https://greasyfork.org/scripts/521956-isbn%E8%87%AA%E5%8B%95%E9%81%B8%E6%93%87%E7%94%B3%E8%AB%8B%E6%9B%B8%E5%90%8D",
+    "code_url": "https://update.greasyfork.org/scripts/521956/ISBN%E8%87%AA%E5%8B%95%E9%81%B8%E6%93%87%E7%94%B3%E8%AB%8B%E6%9B%B8%E5%90%8D.user.js",
+    "code_size": 1215,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521955,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T08:49:55.000Z",
+    "code_updated_at": "2025-07-31T00:34:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "ISBN步驟1:填寫申請資料(紙本書)",
+    "description": "自動填入 ISBN 申請人表單欄位並送出",
+    "url": "https://greasyfork.org/scripts/521955-isbn%E6%AD%A5%E9%A9%9F1-%E5%A1%AB%E5%AF%AB%E7%94%B3%E8%AB%8B%E8%B3%87%E6%96%99-%E7%B4%99%E6%9C%AC%E6%9B%B8",
+    "code_url": "https://update.greasyfork.org/scripts/521955/ISBN%E6%AD%A5%E9%A9%9F1%3A%E5%A1%AB%E5%AF%AB%E7%94%B3%E8%AB%8B%E8%B3%87%E6%96%99%28%E7%B4%99%E6%9C%AC%E6%9B%B8%29.user.js",
+    "code_size": 2768,
+    "license": "MIT License",
+    "version": "1.6.4",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521954,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T08:49:15.000Z",
+    "code_updated_at": "2024-12-27T08:49:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "ISBN申請時自動勾選紙本書並進入下一頁",
+    "description": "Automatically selects \"紙本書\" and clicks \"確定\"",
+    "url": "https://greasyfork.org/scripts/521954-isbn%E7%94%B3%E8%AB%8B%E6%99%82%E8%87%AA%E5%8B%95%E5%8B%BE%E9%81%B8%E7%B4%99%E6%9C%AC%E6%9B%B8%E4%B8%A6%E9%80%B2%E5%85%A5%E4%B8%8B%E4%B8%80%E9%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/521954/ISBN%E7%94%B3%E8%AB%8B%E6%99%82%E8%87%AA%E5%8B%95%E5%8B%BE%E9%81%B8%E7%B4%99%E6%9C%AC%E6%9B%B8%E4%B8%A6%E9%80%B2%E5%85%A5%E4%B8%8B%E4%B8%80%E9%A0%81.user.js",
+    "code_size": 967,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521947,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T07:47:11.000Z",
+    "code_updated_at": "2024-12-27T07:47:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "金融研訓院證照試題下載",
+    "description": "將PDF連結轉換為直接下載，並依考試種類、屆數命名檔案",
+    "url": "https://greasyfork.org/scripts/521947-%E9%87%91%E8%9E%8D%E7%A0%94%E8%A8%93%E9%99%A2%E8%AD%89%E7%85%A7%E8%A9%A6%E9%A1%8C%E4%B8%8B%E8%BC%89",
+    "code_url": "https://update.greasyfork.org/scripts/521947/%E9%87%91%E8%9E%8D%E7%A0%94%E8%A8%93%E9%99%A2%E8%AD%89%E7%85%A7%E8%A9%A6%E9%A1%8C%E4%B8%8B%E8%BC%89.user.js",
+    "code_size": 3541,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521938,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T06:09:50.000Z",
+    "code_updated_at": "2024-12-30T00:16:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "ISBN自動導航至PageSelectType",
+    "description": "登入後，自動導航至申請出版品的種類選擇頁面",
+    "url": "https://greasyfork.org/scripts/521938-isbn%E8%87%AA%E5%8B%95%E5%B0%8E%E8%88%AA%E8%87%B3pageselecttype",
+    "code_url": "https://update.greasyfork.org/scripts/521938/ISBN%E8%87%AA%E5%8B%95%E5%B0%8E%E8%88%AA%E8%87%B3PageSelectType.user.js",
+    "code_size": 551,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521937,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T06:07:44.000Z",
+    "code_updated_at": "2024-12-27T06:08:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416289,
+        "name": "Yokan Liao",
+        "created_at": "2024-12-27T06:00:48.000Z",
+        "url": "https://greasyfork.org/users/1416289-yokan-liao"
+      }
+    ],
+    "name": "考選部試題下載器",
+    "description": "按下「下載全部」按鈕，同時高亮顯示符合條件的連結並下載。",
+    "url": "https://greasyfork.org/scripts/521937-%E8%80%83%E9%81%B8%E9%83%A8%E8%A9%A6%E9%A1%8C%E4%B8%8B%E8%BC%89%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/521937/%E8%80%83%E9%81%B8%E9%83%A8%E8%A9%A6%E9%A1%8C%E4%B8%8B%E8%BC%89%E5%99%A8.user.js",
+    "code_size": 6745,
+    "license": "MIT License",
+    "version": "7.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

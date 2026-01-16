@@ -1,0 +1,34 @@
+{
+  "id": 533838,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-24T15:13:14.000Z",
+  "code_updated_at": "2025-04-24T15:13:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444380,
+      "name": "renjianjike",
+      "created_at": "2025-03-10T17:32:12.000Z",
+      "url": "https://greasyfork.org/users/1444380-renjianjike",
+      "scripts": []
+    }
+  ],
+  "name": "洋抖黑名单",
+  "description": "在TikTok搜索结果页面右键屏蔽用户",
+  "url": "https://greasyfork.org/scripts/533838-%E6%B4%8B%E6%8A%96%E9%BB%91%E5%90%8D%E5%8D%95",
+  "code_url": "https://update.greasyfork.org/scripts/533838/%E6%B4%8B%E6%8A%96%E9%BB%91%E5%90%8D%E5%8D%95.user.js",
+  "code_size": 4119,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 516819,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-11T08:05:34.000Z",
+  "code_updated_at": "2024-12-18T10:14:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1394184,
+      "name": "miao-wu",
+      "created_at": "2024-11-11T06:08:54.000Z",
+      "url": "https://greasyfork.org/users/1394184-miao-wu",
+      "scripts": [
+        {
+          "id": 516819,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-11T08:05:34.000Z",
+          "code_updated_at": "2024-12-18T10:14:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "昵图自动填充助手",
+          "description": "昵图网、昵享网一键填充信息，自动批量填充信息",
+          "url": "https://greasyfork.org/scripts/516819-%E6%98%B5%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/516819/%E6%98%B5%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 68393,
+          "license": null,
+          "version": "1.0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "昵图自动填充助手",
+  "description": "昵图网、昵享网一键填充信息，自动批量填充信息",
+  "url": "https://greasyfork.org/scripts/516819-%E6%98%B5%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/516819/%E6%98%B5%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 68393,
+  "license": null,
+  "version": "1.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

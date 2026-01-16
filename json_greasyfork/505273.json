@@ -1,0 +1,59 @@
+{
+  "id": 505273,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-08-26T13:31:08.000Z",
+  "code_updated_at": "2024-08-26T13:31:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1358136,
+      "name": "xht",
+      "created_at": "2024-08-26T13:16:22.000Z",
+      "url": "https://greasyfork.org/users/1358136-xht",
+      "scripts": [
+        {
+          "id": 505273,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-08-26T13:31:08.000Z",
+          "code_updated_at": "2024-08-26T13:31:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "洛谷用户名优化 Luogu username optimize",
+          "description": "让你的洛谷用户名变成紫色并添加管理员标签与金钩，让自己变成神仙管理员QAQ",
+          "url": "https://greasyfork.org/scripts/505273-%E6%B4%9B%E8%B0%B7%E7%94%A8%E6%88%B7%E5%90%8D%E4%BC%98%E5%8C%96-luogu-username-optimize",
+          "code_url": "https://update.greasyfork.org/scripts/505273/%E6%B4%9B%E8%B0%B7%E7%94%A8%E6%88%B7%E5%90%8D%E4%BC%98%E5%8C%96%20Luogu%20username%20optimize.user.js",
+          "code_size": 6182,
+          "license": null,
+          "version": "3.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "洛谷用户名优化 Luogu username optimize",
+  "description": "让你的洛谷用户名变成紫色并添加管理员标签与金钩，让自己变成神仙管理员QAQ",
+  "url": "https://greasyfork.org/scripts/505273-%E6%B4%9B%E8%B0%B7%E7%94%A8%E6%88%B7%E5%90%8D%E4%BC%98%E5%8C%96-luogu-username-optimize",
+  "code_url": "https://update.greasyfork.org/scripts/505273/%E6%B4%9B%E8%B0%B7%E7%94%A8%E6%88%B7%E5%90%8D%E4%BC%98%E5%8C%96%20Luogu%20username%20optimize.user.js",
+  "code_size": 6182,
+  "license": null,
+  "version": "3.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

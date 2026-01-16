@@ -1,0 +1,59 @@
+{
+  "id": 528864,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-05T10:16:58.000Z",
+  "code_updated_at": "2025-03-05T10:16:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1442522,
+      "name": "蔡凱旋",
+      "created_at": "2025-03-05T10:08:54.000Z",
+      "url": "https://greasyfork.org/users/1442522-%E8%94%A1%E5%87%B1%E6%97%8B",
+      "scripts": [
+        {
+          "id": 528979,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-06T10:43:07.000Z",
+          "code_updated_at": "2025-03-06T10:43:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "星空fps",
+          "description": "控制FPS 第18列代碼的0為FPS上限",
+          "url": "https://greasyfork.org/scripts/528979-%E6%98%9F%E7%A9%BAfps",
+          "code_url": "https://update.greasyfork.org/scripts/528979/%E6%98%9F%E7%A9%BAfps.user.js",
+          "code_size": 864,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "星空方向鍵",
+  "description": "使用方向鍵來控制視窗位置",
+  "url": "https://greasyfork.org/scripts/528864-%E6%98%9F%E7%A9%BA%E6%96%B9%E5%90%91%E9%8D%B5",
+  "code_url": "https://update.greasyfork.org/scripts/528864/%E6%98%9F%E7%A9%BA%E6%96%B9%E5%90%91%E9%8D%B5.user.js",
+  "code_size": 1474,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

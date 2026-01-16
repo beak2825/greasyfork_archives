@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532999,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T08:46:55.000Z",
+    "code_updated_at": "2025-04-16T08:46:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 755979,
+        "name": "macha kin",
+        "created_at": "2021-04-07T12:43:38.000Z",
+        "url": "https://greasyfork.org/users/755979-macha-kin"
+      }
+    ],
+    "name": "配信サイト ニコニコ風",
+    "description": "ツイキャス・Twitch・ふわっち・KICKのコメントをニコニコ風にするスクリプト",
+    "url": "https://greasyfork.org/scripts/532999-%E9%85%8D%E4%BF%A1%E3%82%B5%E3%82%A4%E3%83%88-%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E9%A2%A8",
+    "code_url": "https://update.greasyfork.org/scripts/532999/%E9%85%8D%E4%BF%A1%E3%82%B5%E3%82%A4%E3%83%88%20%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E9%A2%A8.user.js",
+    "code_size": 36272,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

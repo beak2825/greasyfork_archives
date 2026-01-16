@@ -1,0 +1,68 @@
+[
+  {
+    "id": 523164,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T04:13:24.000Z",
+    "code_updated_at": "2025-01-08T04:13:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401354,
+        "name": "SmashPhoenix272",
+        "created_at": "2024-11-23T16:54:58.000Z",
+        "url": "https://greasyfork.org/users/1401354-smashphoenix272"
+      }
+    ],
+    "name": "POE2 Seller Status Check",
+    "description": "Monitor seller status on POE trade site and get notifications when they come online",
+    "url": "https://greasyfork.org/scripts/523164-poe2-seller-status-check",
+    "code_url": "https://update.greasyfork.org/scripts/523164/POE2%20Seller%20Status%20Check.user.js",
+    "code_size": 11356,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521216,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-19T13:17:51.000Z",
+    "code_updated_at": "2025-04-29T16:54:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401354,
+        "name": "SmashPhoenix272",
+        "created_at": "2024-11-23T16:54:58.000Z",
+        "url": "https://greasyfork.org/users/1401354-smashphoenix272"
+      }
+    ],
+    "name": "Remove Popup Ads from Mobalytics",
+    "description": "Remove advertisement blocks and anti-adblock banners on Mobalytics.gg",
+    "url": "https://greasyfork.org/scripts/521216-remove-popup-ads-from-mobalytics",
+    "code_url": "https://update.greasyfork.org/scripts/521216/Remove%20Popup%20Ads%20from%20Mobalytics.user.js",
+    "code_size": 1164,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

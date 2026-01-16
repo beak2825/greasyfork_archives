@@ -1,0 +1,101 @@
+[
+  {
+    "id": 544822,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-06T12:35:02.000Z",
+    "code_updated_at": "2025-08-06T12:39:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416932,
+        "name": "Ben Roth",
+        "created_at": "2024-12-28T17:07:26.000Z",
+        "url": "https://greasyfork.org/users/1416932-ben-roth"
+      }
+    ],
+    "name": "YouTube Playlist: Remove Button",
+    "description": "Adds a button on YouTube playlist pages to remove videos directly.",
+    "url": "https://greasyfork.org/scripts/544822-youtube-playlist-remove-button",
+    "code_url": "https://update.greasyfork.org/scripts/544822/YouTube%20Playlist%3A%20Remove%20Button.user.js",
+    "code_size": 5112,
+    "license": "MIT License",
+    "version": "3.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522135,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-28T19:12:39.000Z",
+    "code_updated_at": "2024-12-28T19:12:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416932,
+        "name": "Ben Roth",
+        "created_at": "2024-12-28T17:07:26.000Z",
+        "url": "https://greasyfork.org/users/1416932-ben-roth"
+      }
+    ],
+    "name": "BGG - Clean",
+    "description": "Remove advertising from BGG",
+    "url": "https://greasyfork.org/scripts/522135-bgg-clean",
+    "code_url": "https://update.greasyfork.org/scripts/522135/BGG%20-%20Clean.user.js",
+    "code_size": 850,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522132,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-28T19:05:52.000Z",
+    "code_updated_at": "2025-01-19T11:50:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416932,
+        "name": "Ben Roth",
+        "created_at": "2024-12-28T17:07:26.000Z",
+        "url": "https://greasyfork.org/users/1416932-ben-roth"
+      }
+    ],
+    "name": "Google - Without sponsor links",
+    "description": "Remove sponsored google links from google search results",
+    "url": "https://greasyfork.org/scripts/522132-google-without-sponsor-links",
+    "code_url": "https://update.greasyfork.org/scripts/522132/Google%20-%20Without%20sponsor%20links.user.js",
+    "code_size": 11629,
+    "license": "MIT License",
+    "version": "0.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 527451,
+  "daily_installs": 0,
+  "total_installs": 87,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-19T14:55:52.000Z",
+  "code_updated_at": "2025-04-27T23:06:32.000Z",
+  "namespace": "https://github.com/cattail-mutt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1437179,
+      "name": "cattail-mutt",
+      "created_at": "2025-02-19T14:37:05.000Z",
+      "url": "https://greasyfork.org/users/1437179-cattail-mutt",
+      "scripts": [
+        {
+          "id": 527451,
+          "daily_installs": 0,
+          "total_installs": 87,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-19T14:55:52.000Z",
+          "code_updated_at": "2025-04-27T23:06:32.000Z",
+          "namespace": "https://github.com/cattail-mutt",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Illusion",
+          "description": "Illusion（幻觉）是一个跨平台 Prompts 管理工具，支持在以下平台使用：Google AI Studio, ChatGPT, Claude, Grok 和 DeepSeek",
+          "url": "https://greasyfork.org/scripts/527451-illusion",
+          "code_url": "https://update.greasyfork.org/scripts/527451/Illusion.user.js",
+          "code_size": 35030,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Illusion",
+  "description": "Illusion（幻觉）是一个跨平台 Prompts 管理工具，支持在以下平台使用：Google AI Studio, ChatGPT, Claude, Grok 和 DeepSeek",
+  "url": "https://greasyfork.org/scripts/527451-illusion",
+  "code_url": "https://update.greasyfork.org/scripts/527451/Illusion.user.js",
+  "code_size": 35030,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

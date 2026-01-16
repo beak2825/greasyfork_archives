@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 521519,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-23T02:26:39.000Z",
+    "code_updated_at": "2024-12-23T02:26:38.000Z",
+    "namespace": "net.myitian.js.HNU.PJ",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713302,
+        "name": "Myitian",
+        "created_at": "2020-12-05T14:50:44.000Z",
+        "url": "https://greasyfork.org/users/713302-myitian"
+      }
+    ],
+    "name": "河师大结课评价快速全选",
+    "description": "河南师范大学教务管理系统结课评价快速全选“优秀”（配合Fiddler的AutoResponder修改pj.js来允许提交全部相同的选项使用效果更佳）",
+    "url": "https://greasyfork.org/scripts/521519-%E6%B2%B3%E5%B8%88%E5%A4%A7%E7%BB%93%E8%AF%BE%E8%AF%84%E4%BB%B7%E5%BF%AB%E9%80%9F%E5%85%A8%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/521519/%E6%B2%B3%E5%B8%88%E5%A4%A7%E7%BB%93%E8%AF%BE%E8%AF%84%E4%BB%B7%E5%BF%AB%E9%80%9F%E5%85%A8%E9%80%89.user.js",
+    "code_size": 1594,
+    "license": "MIT License",
+    "version": "0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500212,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-10T17:13:09.000Z",
+    "code_updated_at": "2024-07-10T17:13:09.000Z",
+    "namespace": "myitian.bili.replyAutoScrollToTop",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713302,
+        "name": "Myitian",
+        "created_at": "2020-12-05T14:50:44.000Z",
+        "url": "https://greasyfork.org/users/713302-myitian"
+      }
+    ],
+    "name": "翻页时滚动 Bilibili 评论区到回复起始位置",
+    "description": "翻页时滚动 Bilibili 评论区到回复起始位置，方便看楼中楼",
+    "url": "https://greasyfork.org/scripts/500212-%E7%BF%BB%E9%A1%B5%E6%97%B6%E6%BB%9A%E5%8A%A8-bilibili-%E8%AF%84%E8%AE%BA%E5%8C%BA%E5%88%B0%E5%9B%9E%E5%A4%8D%E8%B5%B7%E5%A7%8B%E4%BD%8D%E7%BD%AE",
+    "code_url": "https://update.greasyfork.org/scripts/500212/%E7%BF%BB%E9%A1%B5%E6%97%B6%E6%BB%9A%E5%8A%A8%20Bilibili%20%E8%AF%84%E8%AE%BA%E5%8C%BA%E5%88%B0%E5%9B%9E%E5%A4%8D%E8%B5%B7%E5%A7%8B%E4%BD%8D%E7%BD%AE.user.js",
+    "code_size": 2276,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

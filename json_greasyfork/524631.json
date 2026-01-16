@@ -1,0 +1,33 @@
+{
+  "id": 524631,
+  "daily_installs": 2,
+  "total_installs": 217,
+  "fan_score": "70.1",
+  "good_ratings": 9,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-23T12:05:16.000Z",
+  "code_updated_at": "2025-12-08T09:44:44.000Z",
+  "namespace": "https://greasyfork.org/users/424058",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 424058,
+      "name": "Konf",
+      "created_at": "2019-12-19T15:16:21.000Z",
+      "url": "https://greasyfork.org/users/424058-konf"
+    }
+  ],
+  "name": "Google Images View Button",
+  "description": "At the Google Images preview pan the script adds a button that opens an image in a new tab",
+  "url": "https://greasyfork.org/scripts/524631-google-images-view-button",
+  "code_url": "https://update.greasyfork.org/scripts/524631/Google%20Images%20View%20Button.user.js",
+  "code_size": 15461,
+  "license": null,
+  "version": "2.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

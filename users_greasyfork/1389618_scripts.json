@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515314,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T01:54:30.000Z",
+    "code_updated_at": "2024-11-02T01:54:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389618,
+        "name": "endachao",
+        "created_at": "2024-11-01T13:49:19.000Z",
+        "url": "https://greasyfork.org/users/1389618-endachao"
+      }
+    ],
+    "name": "[Captured Unique AJAX Paths] 记录页面所有的 Ajax 请求",
+    "description": "[Captured Unique AJAX Paths] 记录页面所有的 Ajax 请求，并支持复制全部，自动过滤重复",
+    "url": "https://greasyfork.org/scripts/515314-captured-unique-ajax-paths-%E8%AE%B0%E5%BD%95%E9%A1%B5%E9%9D%A2%E6%89%80%E6%9C%89%E7%9A%84-ajax-%E8%AF%B7%E6%B1%82",
+    "code_url": "https://update.greasyfork.org/scripts/515314/%5BCaptured%20Unique%20AJAX%20Paths%5D%20%E8%AE%B0%E5%BD%95%E9%A1%B5%E9%9D%A2%E6%89%80%E6%9C%89%E7%9A%84%20Ajax%20%E8%AF%B7%E6%B1%82.user.js",
+    "code_size": 5022,
+    "license": "MIT License",
+    "version": "1.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

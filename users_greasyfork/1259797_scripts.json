@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499775,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T13:55:53.000Z",
+    "code_updated_at": "2024-07-05T13:55:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1259797,
+        "name": "PsychopathicKiller77",
+        "created_at": "2024-02-10T20:07:56.000Z",
+        "url": "https://greasyfork.org/users/1259797-psychopathickiller77"
+      }
+    ],
+    "name": "Bitchute video fix + better download",
+    "description": "fixes videos not playing and also makes it so download button",
+    "url": "https://greasyfork.org/scripts/499775-bitchute-video-fix-better-download",
+    "code_url": "https://update.greasyfork.org/scripts/499775/Bitchute%20video%20fix%20%2B%20better%20download.user.js",
+    "code_size": 4588,
+    "license": "MIT License",
+    "version": "2024-07-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 531287,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-30T01:23:14.000Z",
+  "code_updated_at": "2025-03-30T01:23:14.000Z",
+  "namespace": "https://beerscloud.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451825,
+      "name": "ProbablyXS",
+      "created_at": "2025-03-30T01:17:58.000Z",
+      "url": "https://greasyfork.org/users/1451825-probablyxs",
+      "scripts": [
+        {
+          "id": 531287,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-30T01:23:14.000Z",
+          "code_updated_at": "2025-03-30T01:23:14.000Z",
+          "namespace": "https://beerscloud.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Video Auto Loader & Downloader (XHR Intercept)",
+          "description": "Wait for the .ts link to be generated via XHR, retrieve the segments, and merge them into an .mp4 file",
+          "url": "https://greasyfork.org/scripts/531287-video-auto-loader-downloader-xhr-intercept",
+          "code_url": "https://update.greasyfork.org/scripts/531287/Video%20Auto%20Loader%20%20Downloader%20%28XHR%20Intercept%29.user.js",
+          "code_size": 10387,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Video Auto Loader & Downloader (XHR Intercept)",
+  "description": "Wait for the .ts link to be generated via XHR, retrieve the segments, and merge them into an .mp4 file",
+  "url": "https://greasyfork.org/scripts/531287-video-auto-loader-downloader-xhr-intercept",
+  "code_url": "https://update.greasyfork.org/scripts/531287/Video%20Auto%20Loader%20%20Downloader%20%28XHR%20Intercept%29.user.js",
+  "code_size": 10387,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

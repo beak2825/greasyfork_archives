@@ -1,0 +1,33 @@
+{
+  "id": 522568,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-02T08:15:55.000Z",
+  "code_updated_at": "2025-01-23T13:12:09.000Z",
+  "namespace": "Salesforce tools",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1418554,
+      "name": "Fabio Cangiano",
+      "created_at": "2025-01-02T08:12:20.000Z",
+      "url": "https://greasyfork.org/users/1418554-fabio-cangiano"
+    }
+  ],
+  "name": "Autofocus login salesforce",
+  "description": "02/01/2025, 08:36:39",
+  "url": "https://greasyfork.org/scripts/522568-autofocus-login-salesforce",
+  "code_url": "https://update.greasyfork.org/scripts/522568/Autofocus%20login%20salesforce.user.js",
+  "code_size": 488,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

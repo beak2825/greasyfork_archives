@@ -1,0 +1,59 @@
+{
+  "id": 520466,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-12T01:19:17.000Z",
+  "code_updated_at": "2024-12-12T01:19:17.000Z",
+  "namespace": "https://michde.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1407867,
+      "name": "ManInTheDot",
+      "created_at": "2024-12-07T14:51:07.000Z",
+      "url": "https://greasyfork.org/users/1407867-maninthedot",
+      "scripts": [
+        {
+          "id": 520073,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-07T21:03:16.000Z",
+          "code_updated_at": "2024-12-08T15:18:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BstX Notes",
+          "description": "Advanced notes system for X and Bluesky profiles and posts",
+          "url": "https://greasyfork.org/scripts/520073-bstx-notes",
+          "code_url": "https://update.greasyfork.org/scripts/520073/BstX%20Notes.user.js",
+          "code_size": 10156,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SimpDex Simple Social Dex",
+  "description": "Make manage and export/import notes across X, Threads, and BlueSky",
+  "url": "https://greasyfork.org/scripts/520466-simpdex-simple-social-dex",
+  "code_url": "https://update.greasyfork.org/scripts/520466/SimpDex%20Simple%20Social%20Dex.user.js",
+  "code_size": 13300,
+  "license": null,
+  "version": "0.0.0.419",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

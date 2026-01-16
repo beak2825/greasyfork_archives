@@ -1,0 +1,59 @@
+{
+  "id": 542652,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-15T17:39:46.000Z",
+  "code_updated_at": "2025-07-15T17:39:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/matas3535/roblox-friends-list-fix/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1495172,
+      "name": "matas3535",
+      "created_at": "2025-07-15T15:14:09.000Z",
+      "url": "https://greasyfork.org/users/1495172-matas3535",
+      "scripts": [
+        {
+          "id": 542652,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-15T17:39:46.000Z",
+          "code_updated_at": "2025-07-15T17:39:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/matas3535/roblox-friends-list-fix/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Roblox-Friends-List-Fix",
+          "description": "Fixes friends lists for users located in countries where the friends list is hidden.",
+          "url": "https://greasyfork.org/scripts/542652-roblox-friends-list-fix",
+          "code_url": "https://update.greasyfork.org/scripts/542652/Roblox-Friends-List-Fix.user.js",
+          "code_size": 3866,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Roblox-Friends-List-Fix",
+  "description": "Fixes friends lists for users located in countries where the friends list is hidden.",
+  "url": "https://greasyfork.org/scripts/542652-roblox-friends-list-fix",
+  "code_url": "https://update.greasyfork.org/scripts/542652/Roblox-Friends-List-Fix.user.js",
+  "code_size": 3866,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

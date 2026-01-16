@@ -1,0 +1,33 @@
+{
+  "id": 497610,
+  "daily_installs": 0,
+  "total_installs": 368,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-11T08:22:13.000Z",
+  "code_updated_at": "2024-07-25T09:49:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://gist.github.com/XiaofengdiZhu/6745adff8f1f6648bb6e36a67667004d",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 287148,
+      "name": "销锋镝铸",
+      "created_at": "2019-03-28T14:22:48.000Z",
+      "url": "https://greasyfork.org/users/287148-%E9%94%80%E9%94%8B%E9%95%9D%E9%93%B8"
+    }
+  ],
+  "name": "Super Turtle Idle Auto Click 超级乌龟放置自动点击",
+  "description": "for v0.4.0",
+  "url": "https://greasyfork.org/scripts/497610-super-turtle-idle-auto-click-%E8%B6%85%E7%BA%A7%E4%B9%8C%E9%BE%9F%E6%94%BE%E7%BD%AE%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB",
+  "code_url": "https://update.greasyfork.org/scripts/497610/Super%20Turtle%20Idle%20Auto%20Click%20%E8%B6%85%E7%BA%A7%E4%B9%8C%E9%BE%9F%E6%94%BE%E7%BD%AE%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB.user.js",
+  "code_size": 2703,
+  "license": "MIT License",
+  "version": "2024-07-25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

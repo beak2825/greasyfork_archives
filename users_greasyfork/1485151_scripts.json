@@ -1,0 +1,68 @@
+[
+  {
+    "id": 550819,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-27T04:06:14.000Z",
+    "code_updated_at": "2025-09-27T04:06:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485151,
+        "name": "StarsWhere",
+        "created_at": "2025-06-18T04:16:01.000Z",
+        "url": "https://greasyfork.org/users/1485151-starswhere"
+      }
+    ],
+    "name": "B站推荐过滤器",
+    "description": "Bilibili首页推荐过滤器：智能屏蔽广告、分类、直播和自定义关键词，支持自适应持续屏蔽、拖拽控制面板、暗黑模式切换，以及修复屏蔽后页面留白问题。优化UI交互，提升浏览体验。",
+    "url": "https://greasyfork.org/scripts/550819-b%E7%AB%99%E6%8E%A8%E8%8D%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/550819/B%E7%AB%99%E6%8E%A8%E8%8D%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+    "code_size": 35423,
+    "license": "MIT License",
+    "version": "7.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539827,
+    "daily_installs": 2,
+    "total_installs": 86,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T04:24:22.000Z",
+    "code_updated_at": "2025-06-18T12:45:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485151,
+        "name": "StarsWhere",
+        "created_at": "2025-06-18T04:16:01.000Z",
+        "url": "https://greasyfork.org/users/1485151-starswhere"
+      }
+    ],
+    "name": "Bilibili Video Ad Skipper",
+    "description": "本工具利用人工智能（AI）分析哔哩哔哩（Bilibili）的弹幕和评论，能够基于概率识别视频中的广告片段，并实现自动跳过。它结合了概率机制与评论分析，从而提高了广告检测的精准度。",
+    "url": "https://greasyfork.org/scripts/539827-bilibili-video-ad-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/539827/Bilibili%20Video%20Ad%20Skipper.user.js",
+    "code_size": 82235,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

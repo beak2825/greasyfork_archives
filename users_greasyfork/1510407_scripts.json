@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547899,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-31T02:18:45.000Z",
+    "code_updated_at": "2025-08-31T02:20:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/Bitodette/crunchyroll-subtitle-resizer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510407,
+        "name": "Zarpyk",
+        "created_at": "2025-08-31T02:11:16.000Z",
+        "url": "https://greasyfork.org/users/1510407-zarpyk"
+      }
+    ],
+    "name": "Crunchyroll Subtitle Resizer to 0% scale - remove subtitle",
+    "description": "Adjusts the subtitle size on Crunchyroll's",
+    "url": "https://greasyfork.org/scripts/547899-crunchyroll-subtitle-resizer-to-0-scale-remove-subtitle",
+    "code_url": "https://update.greasyfork.org/scripts/547899/Crunchyroll%20Subtitle%20Resizer%20to%200%25%20scale%20-%20remove%20subtitle.user.js",
+    "code_size": 2533,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

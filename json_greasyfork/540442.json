@@ -1,0 +1,33 @@
+{
+  "id": 540442,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-22T22:27:30.000Z",
+  "code_updated_at": "2025-06-25T20:32:16.000Z",
+  "namespace": "https://github.com/oumuamuax/7zap-reveal-img-and-codes",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1487175,
+      "name": "oumuamuax",
+      "created_at": "2025-06-22T22:23:51.000Z",
+      "url": "https://greasyfork.org/users/1487175-oumuamuax"
+    }
+  ],
+  "name": "7zap Reveal Ultra Light Clean Enhanced",
+  "description": "Reveals the part numbers on 7zap, removes image blur, and eliminates premium restriction messages.",
+  "url": "https://greasyfork.org/scripts/540442-7zap-reveal-ultra-light-clean-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/540442/7zap%20Reveal%20Ultra%20Light%20Clean%20Enhanced.user.js",
+  "code_size": 13641,
+  "license": "MIT License",
+  "version": "3.81",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 521630,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T05:14:39.000Z",
+    "code_updated_at": "2025-01-24T18:13:44.000Z",
+    "namespace": "meda.tistory.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 319515,
+        "name": "medAndro",
+        "created_at": "2019-07-21T21:43:59.000Z",
+        "url": "https://greasyfork.org/users/319515-medandro"
+      }
+    ],
+    "name": "네이버페이 브랜드 추첨 통합 스크립트",
+    "description": "브랜드 자동 클릭 및 자동 이동 통합 스크립트",
+    "url": "https://greasyfork.org/scripts/521630-%EB%84%A4%EC%9D%B4%EB%B2%84%ED%8E%98%EC%9D%B4-%EB%B8%8C%EB%9E%9C%EB%93%9C-%EC%B6%94%EC%B2%A8-%ED%86%B5%ED%95%A9-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8",
+    "code_url": "https://update.greasyfork.org/scripts/521630/%EB%84%A4%EC%9D%B4%EB%B2%84%ED%8E%98%EC%9D%B4%20%EB%B8%8C%EB%9E%9C%EB%93%9C%20%EC%B6%94%EC%B2%A8%20%ED%86%B5%ED%95%A9%20%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8.user.js",
+    "code_size": 3410,
+    "license": null,
+    "version": "0.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520558,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-13T05:06:46.000Z",
+    "code_updated_at": "2024-12-19T14:36:58.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 319515,
+        "name": "medAndro",
+        "created_at": "2019-07-21T21:43:59.000Z",
+        "url": "https://greasyfork.org/users/319515-medandro"
+      }
+    ],
+    "name": "무비싸다구",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/520558-%EB%AC%B4%EB%B9%84%EC%8B%B8%EB%8B%A4%EA%B5%AC",
+    "code_url": "https://update.greasyfork.org/scripts/520558/%EB%AC%B4%EB%B9%84%EC%8B%B8%EB%8B%A4%EA%B5%AC.user.js",
+    "code_size": 2817,
+    "license": null,
+    "version": "2024-12-19",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517691,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-16T19:58:43.000Z",
+    "code_updated_at": "2024-11-16T19:58:43.000Z",
+    "namespace": "https://meda.tistory.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 319515,
+        "name": "medAndro",
+        "created_at": "2019-07-21T21:43:59.000Z",
+        "url": "https://greasyfork.org/users/319515-medandro"
+      }
+    ],
+    "name": "키움 카드 자동맞추기",
+    "description": "키움증권 카드를 자동으로 맞춰줍니다",
+    "url": "https://greasyfork.org/scripts/517691-%ED%82%A4%EC%9B%80-%EC%B9%B4%EB%93%9C-%EC%9E%90%EB%8F%99%EB%A7%9E%EC%B6%94%EA%B8%B0",
+    "code_url": "https://update.greasyfork.org/scripts/517691/%ED%82%A4%EC%9B%80%20%EC%B9%B4%EB%93%9C%20%EC%9E%90%EB%8F%99%EB%A7%9E%EC%B6%94%EA%B8%B0.user.js",
+    "code_size": 5091,
+    "license": null,
+    "version": "0.0.1.20241116195843",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499898,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-07T08:30:01.000Z",
+    "code_updated_at": "2024-07-12T08:10:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 319515,
+        "name": "medAndro",
+        "created_at": "2019-07-21T21:43:59.000Z",
+        "url": "https://greasyfork.org/users/319515-medandro"
+      }
+    ],
+    "name": "쿠팡이츠 tampermonkey용",
+    "description": "Runs a function at 59 minutes and 55 seconds",
+    "url": "https://greasyfork.org/scripts/499898-%EC%BF%A0%ED%8C%A1%EC%9D%B4%EC%B8%A0-tampermonkey%EC%9A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/499898/%EC%BF%A0%ED%8C%A1%EC%9D%B4%EC%B8%A0%20tampermonkey%EC%9A%A9.user.js",
+    "code_size": 2009,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498923,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-26T03:11:41.000Z",
+    "code_updated_at": "2024-06-27T02:20:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 319515,
+        "name": "medAndro",
+        "created_at": "2019-07-21T21:43:59.000Z",
+        "url": "https://greasyfork.org/users/319515-medandro"
+      }
+    ],
+    "name": "자담 쿠폰 광클",
+    "description": "자담 광클",
+    "url": "https://greasyfork.org/scripts/498923-%EC%9E%90%EB%8B%B4-%EC%BF%A0%ED%8F%B0-%EA%B4%91%ED%81%B4",
+    "code_url": "https://update.greasyfork.org/scripts/498923/%EC%9E%90%EB%8B%B4%20%EC%BF%A0%ED%8F%B0%20%EA%B4%91%ED%81%B4.user.js",
+    "code_size": 3568,
+    "license": null,
+    "version": "0.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

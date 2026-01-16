@@ -1,0 +1,33 @@
+{
+  "id": 548539,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-06T03:00:05.000Z",
+  "code_updated_at": "2025-09-06T03:10:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508806,
+      "name": "tanmoumou252",
+      "created_at": "2025-08-25T19:59:40.000Z",
+      "url": "https://greasyfork.org/users/1508806-tanmoumou252"
+    }
+  ],
+  "name": "修改设备像素比dpi 调整jellyfin发送的图片分辨率",
+  "description": "修改浏览器的设备像素比以增加jellyfin图片分辨率",
+  "url": "https://greasyfork.org/scripts/548539-%E4%BF%AE%E6%94%B9%E8%AE%BE%E5%A4%87%E5%83%8F%E7%B4%A0%E6%AF%94dpi-%E8%B0%83%E6%95%B4jellyfin%E5%8F%91%E9%80%81%E7%9A%84%E5%9B%BE%E7%89%87%E5%88%86%E8%BE%A8%E7%8E%87",
+  "code_url": "https://update.greasyfork.org/scripts/548539/%E4%BF%AE%E6%94%B9%E8%AE%BE%E5%A4%87%E5%83%8F%E7%B4%A0%E6%AF%94dpi%20%E8%B0%83%E6%95%B4jellyfin%E5%8F%91%E9%80%81%E7%9A%84%E5%9B%BE%E7%89%87%E5%88%86%E8%BE%A8%E7%8E%87.user.js",
+  "code_size": 923,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

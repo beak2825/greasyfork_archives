@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534059,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-04-26T12:13:30.000Z",
+    "code_updated_at": "2025-12-29T12:50:09.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 436894,
+        "name": "gxr404",
+        "created_at": "2020-01-20T03:50:24.000Z",
+        "url": "https://greasyfork.org/users/436894-gxr404"
+      }
+    ],
+    "name": "github-go-deepwiki",
+    "description": "github仓库跳转到deepwiki",
+    "url": "https://greasyfork.org/scripts/534059-github-go-deepwiki",
+    "code_url": "https://update.greasyfork.org/scripts/534059/github-go-deepwiki.user.js",
+    "code_size": 1717,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

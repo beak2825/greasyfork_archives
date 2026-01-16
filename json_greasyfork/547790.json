@@ -1,0 +1,59 @@
+{
+  "id": 547790,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-30T02:07:59.000Z",
+  "code_updated_at": "2025-08-30T02:07:59.000Z",
+  "namespace": "https://github.com/knobthree/IMDBTorrent",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510123,
+      "name": "KnobThree",
+      "created_at": "2025-08-30T02:00:28.000Z",
+      "url": "https://greasyfork.org/users/1510123-knobthree",
+      "scripts": [
+        {
+          "id": 547790,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-30T02:07:59.000Z",
+          "code_updated_at": "2025-08-30T02:07:59.000Z",
+          "namespace": "https://github.com/knobthree/IMDBTorrent",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "IMDBTorrent (userscript)",
+          "description": "Adds a nice button to IMDB",
+          "url": "https://greasyfork.org/scripts/547790-imdbtorrent-userscript",
+          "code_url": "https://update.greasyfork.org/scripts/547790/IMDBTorrent%20%28userscript%29.user.js",
+          "code_size": 10923,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "IMDBTorrent (userscript)",
+  "description": "Adds a nice button to IMDB",
+  "url": "https://greasyfork.org/scripts/547790-imdbtorrent-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/547790/IMDBTorrent%20%28userscript%29.user.js",
+  "code_size": 10923,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

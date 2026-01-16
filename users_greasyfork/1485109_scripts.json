@@ -1,0 +1,101 @@
+[
+  {
+    "id": 544075,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-30T07:16:24.000Z",
+    "code_updated_at": "2025-07-30T07:16:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485109,
+        "name": "-Duy-",
+        "created_at": "2025-06-18T01:34:54.000Z",
+        "url": "https://greasyfork.org/users/1485109-duy"
+      }
+    ],
+    "name": "Hide Scrollbar",
+    "description": "Hides scrollbars on most webpages for a cleaner look. May not work on all complex sites.",
+    "url": "https://greasyfork.org/scripts/544075-hide-scrollbar",
+    "code_url": "https://update.greasyfork.org/scripts/544075/Hide%20Scrollbar.user.js",
+    "code_size": 2487,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540035,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T16:55:44.000Z",
+    "code_updated_at": "2025-06-19T17:30:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485109,
+        "name": "-Duy-",
+        "created_at": "2025-06-18T01:34:54.000Z",
+        "url": "https://greasyfork.org/users/1485109-duy"
+      }
+    ],
+    "name": "TikTok lite",
+    "description": "Clean tiktok",
+    "url": "https://greasyfork.org/scripts/540035-tiktok-lite",
+    "code_url": "https://update.greasyfork.org/scripts/540035/TikTok%20lite.user.js",
+    "code_size": 4629,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539989,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T10:32:56.000Z",
+    "code_updated_at": "2025-06-19T10:32:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485109,
+        "name": "-Duy-",
+        "created_at": "2025-06-18T01:34:54.000Z",
+        "url": "https://greasyfork.org/users/1485109-duy"
+      }
+    ],
+    "name": "YouTube Premium Logo",
+    "description": "Thêm logo YouTube Premium cho tài khoản YouTube",
+    "url": "https://greasyfork.org/scripts/539989-youtube-premium-logo",
+    "code_url": "https://update.greasyfork.org/scripts/539989/YouTube%20Premium%20Logo.user.js",
+    "code_size": 6176,
+    "license": null,
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

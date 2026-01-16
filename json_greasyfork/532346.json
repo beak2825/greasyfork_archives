@@ -1,0 +1,59 @@
+{
+  "id": 532346,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-09T16:19:39.000Z",
+  "code_updated_at": "2025-04-09T20:28:21.000Z",
+  "namespace": "https://github.com/larabakr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1455666,
+      "name": "larabakr",
+      "created_at": "2025-04-09T05:16:13.000Z",
+      "url": "https://greasyfork.org/users/1455666-larabakr",
+      "scripts": [
+        {
+          "id": 532346,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-09T16:19:39.000Z",
+          "code_updated_at": "2025-04-09T20:28:21.000Z",
+          "namespace": "https://github.com/larabakr",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cat Hiss GIF Replacer for Discord",
+          "description": "Replaces messages that contain a single period (\".\") with a cat hiss GIF.",
+          "url": "https://greasyfork.org/scripts/532346-cat-hiss-gif-replacer-for-discord",
+          "code_url": "https://update.greasyfork.org/scripts/532346/Cat%20Hiss%20GIF%20Replacer%20for%20Discord.user.js",
+          "code_size": 6303,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cat Hiss GIF Replacer for Discord",
+  "description": "Replaces messages that contain a single period (\".\") with a cat hiss GIF.",
+  "url": "https://greasyfork.org/scripts/532346-cat-hiss-gif-replacer-for-discord",
+  "code_url": "https://update.greasyfork.org/scripts/532346/Cat%20Hiss%20GIF%20Replacer%20for%20Discord.user.js",
+  "code_size": 6303,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 497109,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-05T11:11:41.000Z",
+  "code_updated_at": "2025-12-11T23:37:50.000Z",
+  "namespace": "https://gitlab.com/breatfr",
+  "support_url": "https://discord.gg/Q8KSHzdBxs",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257494,
+      "name": "BreatFR",
+      "created_at": "2024-02-05T00:40:38.000Z",
+      "url": "https://greasyfork.org/users/1257494-breatfr"
+    }
+  ],
+  "name": "X (twitter) responsive + customizations",
+  "description": "X (twitter) website is more suitable for wide screens.",
+  "url": "https://greasyfork.org/scripts/497109-x-twitter-responsive-customizations",
+  "code_url": "https://update.greasyfork.org/scripts/497109/X%20%28twitter%29%20responsive%20%2B%20customizations.user.css",
+  "code_size": 11377,
+  "license": "AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt",
+  "version": "1.0.16",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 509903,
+  "daily_installs": 0,
+  "total_installs": 260,
+  "fan_score": "30.1",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-09-24T01:59:12.000Z",
+  "code_updated_at": "2025-08-03T15:08:21.000Z",
+  "namespace": "bekerja pada Tampermonkey maupun Violentmonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 832067,
+      "name": "ojo ngono",
+      "created_at": "2021-11-04T11:35:34.000Z",
+      "url": "https://greasyfork.org/users/832067-ojo-ngono"
+    }
+  ],
+  "name": "Gamerlee.com Auto faucet",
+  "description": "Auto Login, Auto Claim, Auto Redirect, Anti-Batas Klaim",
+  "url": "https://greasyfork.org/scripts/509903-gamerlee-com-auto-faucet",
+  "code_url": "https://update.greasyfork.org/scripts/509903/Gamerleecom%20Auto%20faucet.user.js",
+  "code_size": 6021,
+  "license": "Copyright OjoNgono",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

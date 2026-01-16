@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526657,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T09:22:37.000Z",
+    "code_updated_at": "2025-03-21T10:50:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434254,
+        "name": "markomucnjak",
+        "created_at": "2025-02-12T08:52:45.000Z",
+        "url": "https://greasyfork.org/users/1434254-markomucnjak"
+      }
+    ],
+    "name": "[TORN] OC 2.0 Priority Helper",
+    "description": "Adds filters to show/hide crime scenario cards and disable low-success chance join buttons",
+    "url": "https://greasyfork.org/scripts/526657-torn-oc-2-0-priority-helper",
+    "code_url": "https://update.greasyfork.org/scripts/526657/%5BTORN%5D%20OC%2020%20Priority%20Helper.user.js",
+    "code_size": 32084,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539289,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T10:43:08.000Z",
+    "code_updated_at": "2025-06-13T10:43:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483188,
+        "name": "acgwzl",
+        "created_at": "2025-06-13T10:04:24.000Z",
+        "url": "https://greasyfork.org/users/1483188-acgwzl"
+      }
+    ],
+    "name": "移动设备伪装器 - Mobile Device Spoofer",
+    "description": "全面伪装移动设备，绕过PC端访问限制",
+    "url": "https://greasyfork.org/scripts/539289-%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E4%BC%AA%E8%A3%85%E5%99%A8-mobile-device-spoofer",
+    "code_url": "https://update.greasyfork.org/scripts/539289/%E7%A7%BB%E5%8A%A8%E8%AE%BE%E5%A4%87%E4%BC%AA%E8%A3%85%E5%99%A8%20-%20Mobile%20Device%20Spoofer.user.js",
+    "code_size": 23714,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

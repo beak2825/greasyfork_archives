@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535668,
+    "daily_installs": 1,
+    "total_installs": 31,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-11T14:31:17.000Z",
+    "code_updated_at": "2025-07-12T14:01:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1329237,
+        "name": "zeabin",
+        "created_at": "2024-07-06T13:56:08.000Z",
+        "url": "https://greasyfork.org/users/1329237-zeabin"
+      }
+    ],
+    "name": "VS Code Extension Download Helper",
+    "description": "Add download buttons in the VS Code Marketplace.",
+    "url": "https://greasyfork.org/scripts/535668-vs-code-extension-download-helper",
+    "code_url": "https://update.greasyfork.org/scripts/535668/VS%20Code%20Extension%20Download%20Helper.user.js",
+    "code_size": 5570,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

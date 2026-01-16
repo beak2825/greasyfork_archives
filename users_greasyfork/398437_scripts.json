@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519816,
+    "daily_installs": 0,
+    "total_installs": 143,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-05T05:00:51.000Z",
+    "code_updated_at": "2024-12-05T05:00:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 398437,
+        "name": "JoyofFire",
+        "created_at": "2019-11-16T07:18:03.000Z",
+        "url": "https://greasyfork.org/users/398437-joyoffire"
+      }
+    ],
+    "name": "GB688-DEBUG-TOOLS",
+    "description": "国标网调试工具箱 | 提供一些工具函数/能力",
+    "url": "https://greasyfork.org/scripts/519816-gb688-debug-tools",
+    "code_url": "https://update.greasyfork.org/scripts/519816/GB688-DEBUG-TOOLS.user.js",
+    "code_size": 1064,
+    "license": "MIT License",
+    "version": "2024-12-05",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

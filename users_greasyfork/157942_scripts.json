@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541555,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-03T18:14:59.000Z",
+    "code_updated_at": "2025-12-18T21:03:18.000Z",
+    "namespace": "https://github.com/Citrinate",
+    "support_url": "https://github.com/Citrinate/CS2Script/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 157942,
+        "name": "Citrinate",
+        "created_at": "2017-11-03T02:58:12.000Z",
+        "url": "https://greasyfork.org/users/157942-citrinate"
+      }
+    ],
+    "name": "Counter-Strike 2 Script",
+    "description": "Manage your CS2 storage units and inspect items",
+    "url": "https://greasyfork.org/scripts/541555-counter-strike-2-script",
+    "code_url": "https://update.greasyfork.org/scripts/541555/Counter-Strike%202%20Script.user.js",
+    "code_size": 260294,
+    "license": "Apache License 2.0",
+    "version": "1.1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 549608,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-15T10:19:32.000Z",
+  "code_updated_at": "2025-09-15T10:26:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499234,
+      "name": "dabendan123",
+      "created_at": "2025-07-28T16:35:35.000Z",
+      "url": "https://greasyfork.org/users/1499234-dabendan123",
+      "scripts": []
+    }
+  ],
+  "name": "TikTok 定邀抓取与样品回填（合并版）",
+  "description": "一体化：在 affiliate 样品页拉取+缓存定邀详情，并在样品申请页基于本地缓存自动回填定邀名称。",
+  "url": "https://greasyfork.org/scripts/549608-tiktok-%E5%AE%9A%E9%82%80%E6%8A%93%E5%8F%96%E4%B8%8E%E6%A0%B7%E5%93%81%E5%9B%9E%E5%A1%AB-%E5%90%88%E5%B9%B6%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/549608/TikTok%20%E5%AE%9A%E9%82%80%E6%8A%93%E5%8F%96%E4%B8%8E%E6%A0%B7%E5%93%81%E5%9B%9E%E5%A1%AB%EF%BC%88%E5%90%88%E5%B9%B6%E7%89%88%EF%BC%89.user.js",
+  "code_size": 26130,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

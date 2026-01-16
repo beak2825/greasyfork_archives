@@ -31,5 +31,38 @@
     "locale": "zh-TW",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 549928,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-18T07:02:58.000Z",
+    "code_updated_at": "2025-09-29T03:54:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326004,
+        "name": "czhg",
+        "created_at": "2019-08-14T04:45:16.000Z",
+        "url": "https://greasyfork.org/users/326004-czhg"
+      }
+    ],
+    "name": "YouTube 右下角放一顆複製短網址",
+    "description": "The most robust script for cleaning YouTube URLs and copying short links.",
+    "url": "https://greasyfork.org/scripts/549928-youtube-%E5%8F%B3%E4%B8%8B%E8%A7%92%E6%94%BE%E4%B8%80%E9%A1%86%E8%A4%87%E8%A3%BD%E7%9F%AD%E7%B6%B2%E5%9D%80",
+    "code_url": "https://update.greasyfork.org/scripts/549928/YouTube%20%E5%8F%B3%E4%B8%8B%E8%A7%92%E6%94%BE%E4%B8%80%E9%A1%86%E8%A4%87%E8%A3%BD%E7%9F%AD%E7%B6%B2%E5%9D%80.user.js",
+    "code_size": 5063,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 504224,
+  "daily_installs": 0,
+  "total_installs": 397,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-08-19T07:09:33.000Z",
+  "code_updated_at": "2025-11-19T06:45:11.000Z",
+  "namespace": "https://github.com/laboratorys/github-fast",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1352735,
+      "name": "laboratorys",
+      "created_at": "2024-08-16T09:49:54.000Z",
+      "url": "https://greasyfork.org/users/1352735-laboratorys",
+      "scripts": [
+        {
+          "id": 504224,
+          "daily_installs": 0,
+          "total_installs": 397,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-08-19T07:09:33.000Z",
+          "code_updated_at": "2025-11-19T06:45:11.000Z",
+          "namespace": "https://github.com/laboratorys/github-fast",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GitHub加速下载",
+          "description": "可自定义配置的GitHub加速下载脚本",
+          "url": "https://greasyfork.org/scripts/504224-github%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/504224/GitHub%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 55803,
+          "license": "MIT License",
+          "version": "1.0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GitHub加速下载",
+  "description": "可自定义配置的GitHub加速下载脚本",
+  "url": "https://greasyfork.org/scripts/504224-github%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/504224/GitHub%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 55803,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 501895,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-27T04:08:09.000Z",
+  "code_updated_at": "2024-08-02T09:45:12.000Z",
+  "namespace": "LunaSama154",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1340570,
+      "name": "LunaSama154",
+      "created_at": "2024-07-27T04:05:49.000Z",
+      "url": "https://greasyfork.org/users/1340570-lunasama154",
+      "scripts": [
+        {
+          "id": 501895,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-27T04:08:09.000Z",
+          "code_updated_at": "2024-08-02T09:45:12.000Z",
+          "namespace": "LunaSama154",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VGMdb Tracklist Copier",
+          "description": "Copies tracklist information from a VGMdb album page.(Dont work tempermonkey)",
+          "url": "https://greasyfork.org/scripts/501895-vgmdb-tracklist-copier",
+          "code_url": "https://update.greasyfork.org/scripts/501895/VGMdb%20Tracklist%20Copier.user.js",
+          "code_size": 2233,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VGMdb Tracklist Copier",
+  "description": "Copies tracklist information from a VGMdb album page.(Dont work tempermonkey)",
+  "url": "https://greasyfork.org/scripts/501895-vgmdb-tracklist-copier",
+  "code_url": "https://update.greasyfork.org/scripts/501895/VGMdb%20Tracklist%20Copier.user.js",
+  "code_size": 2233,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 521660,
+  "daily_installs": 0,
+  "total_installs": 54,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-24T10:56:43.000Z",
+  "code_updated_at": "2024-12-24T10:56:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1415104,
+      "name": "颜渊",
+      "created_at": "2024-12-24T10:53:21.000Z",
+      "url": "https://greasyfork.org/users/1415104-%E9%A2%9C%E6%B8%8A",
+      "scripts": [
+        {
+          "id": 521660,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-24T10:56:43.000Z",
+          "code_updated_at": "2024-12-24T10:56:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "拼多多采集",
+          "description": "pdd采集",
+          "url": "https://greasyfork.org/scripts/521660-%E6%8B%BC%E5%A4%9A%E5%A4%9A%E9%87%87%E9%9B%86",
+          "code_url": "https://update.greasyfork.org/scripts/521660/%E6%8B%BC%E5%A4%9A%E5%A4%9A%E9%87%87%E9%9B%86.user.js",
+          "code_size": 3448,
+          "license": "MIT License",
+          "version": "2024-12-23",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "拼多多采集",
+  "description": "pdd采集",
+  "url": "https://greasyfork.org/scripts/521660-%E6%8B%BC%E5%A4%9A%E5%A4%9A%E9%87%87%E9%9B%86",
+  "code_url": "https://update.greasyfork.org/scripts/521660/%E6%8B%BC%E5%A4%9A%E5%A4%9A%E9%87%87%E9%9B%86.user.js",
+  "code_size": 3448,
+  "license": "MIT License",
+  "version": "2024-12-23",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

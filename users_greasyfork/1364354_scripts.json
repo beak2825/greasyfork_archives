@@ -1,0 +1,68 @@
+[
+  {
+    "id": 546073,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-16T15:14:40.000Z",
+    "code_updated_at": "2025-08-30T03:29:10.000Z",
+    "namespace": "streamboost",
+    "support_url": "https://github.com/Suysker/StreamBoost",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1364354,
+        "name": "Kasper Suysker",
+        "created_at": "2024-09-07T08:49:01.000Z",
+        "url": "https://greasyfork.org/users/1364354-kasper-suysker"
+      }
+    ],
+    "name": "流媒体加速缓冲",
+    "description": "通用流媒体加速：加大缓冲、并发预取、内存命中、在途合并、按站点启停、修复部分站点自定义 Loader 导致的串行；当前覆盖 HLS.js，后续可扩展至其它播放器/协议。",
+    "url": "https://greasyfork.org/scripts/546073-%E6%B5%81%E5%AA%92%E4%BD%93%E5%8A%A0%E9%80%9F%E7%BC%93%E5%86%B2",
+    "code_url": "https://update.greasyfork.org/scripts/546073/%E6%B5%81%E5%AA%92%E4%BD%93%E5%8A%A0%E9%80%9F%E7%BC%93%E5%86%B2.user.js",
+    "code_size": 32696,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507274,
+    "daily_installs": 0,
+    "total_installs": 390,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T08:56:48.000Z",
+    "code_updated_at": "2025-06-16T03:00:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/Suysker/Golden-Left-Right",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1364354,
+        "name": "Kasper Suysker",
+        "created_at": "2024-09-07T08:49:01.000Z",
+        "url": "https://greasyfork.org/users/1364354-kasper-suysker"
+      }
+    ],
+    "name": "黄金左右键",
+    "description": "按住\"→\"键倍速播放，按住\"←\"键减速播放，松开恢复原来的倍速，轻松追剧，看视频更灵活，还能快进/跳过大部分网站的广告！~ 支持用户单独配置倍速和秒数，并可根据根域名启用或禁用脚本",
+    "url": "https://greasyfork.org/scripts/507274-%E9%BB%84%E9%87%91%E5%B7%A6%E5%8F%B3%E9%94%AE",
+    "code_url": "https://update.greasyfork.org/scripts/507274/%E9%BB%84%E9%87%91%E5%B7%A6%E5%8F%B3%E9%94%AE.user.js",
+    "code_size": 21389,
+    "license": null,
+    "version": "1.0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

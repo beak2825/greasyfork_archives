@@ -1,0 +1,33 @@
+{
+  "id": 519228,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-29T03:00:06.000Z",
+  "code_updated_at": "2024-11-29T04:48:08.000Z",
+  "namespace": "shadows",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265166,
+      "name": "david ticona",
+      "created_at": "2024-02-22T03:39:17.000Z",
+      "url": "https://greasyfork.org/users/1265166-david-ticona"
+    }
+  ],
+  "name": "Viz Manga Universal Downloader v3.2.0",
+  "description": "Descarga capítulos completos de Viz Manga y Shonen Jump, detectando dinámicamente todas las páginas cargadas y descargándolas en orden.",
+  "url": "https://greasyfork.org/scripts/519228-viz-manga-universal-downloader-v3-2-0",
+  "code_url": "https://update.greasyfork.org/scripts/519228/Viz%20Manga%20Universal%20Downloader%20v320.user.js",
+  "code_size": 5105,
+  "license": "MIT License",
+  "version": "3.2.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

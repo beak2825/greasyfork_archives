@@ -1,0 +1,34 @@
+{
+  "id": 499629,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-04T01:18:26.000Z",
+  "code_updated_at": "2024-07-04T09:46:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 401034,
+      "name": "GenesisAN",
+      "created_at": "2019-11-25T06:13:53.000Z",
+      "url": "https://greasyfork.org/users/401034-genesisan",
+      "scripts": []
+    }
+  ],
+  "name": "报销单填充",
+  "description": "更新了根据所在城市和天数自动计算对应差旅报销金额的功能",
+  "url": "https://greasyfork.org/scripts/499629-%E6%8A%A5%E9%94%80%E5%8D%95%E5%A1%AB%E5%85%85",
+  "code_url": "https://update.greasyfork.org/scripts/499629/%E6%8A%A5%E9%94%80%E5%8D%95%E5%A1%AB%E5%85%85.user.js",
+  "code_size": 11828,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

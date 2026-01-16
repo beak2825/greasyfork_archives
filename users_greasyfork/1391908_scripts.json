@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516076,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-06T14:24:24.000Z",
+    "code_updated_at": "2024-11-06T14:24:24.000Z",
+    "namespace": "https://github.com/uuhc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391908,
+        "name": "uuhc",
+        "created_at": "2024-11-06T06:41:08.000Z",
+        "url": "https://greasyfork.org/users/1391908-uuhc"
+      }
+    ],
+    "name": "屏蔽CSDN搜索结果 / Hide CSDN Search Results",
+    "description": "在百度、Bing、谷歌中屏蔽CSDN搜索结果 / Hide CSDN results on search engines (Baidu, Bing, Google)",
+    "url": "https://greasyfork.org/scripts/516076-%E5%B1%8F%E8%94%BDcsdn%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-hide-csdn-search-results",
+    "code_url": "https://update.greasyfork.org/scripts/516076/%E5%B1%8F%E8%94%BDCSDN%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%20%20Hide%20CSDN%20Search%20Results.user.js",
+    "code_size": 1677,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

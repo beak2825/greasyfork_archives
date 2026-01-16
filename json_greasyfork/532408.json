@@ -1,0 +1,34 @@
+{
+  "id": 532408,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-10T09:22:41.000Z",
+  "code_updated_at": "2025-04-18T13:20:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451445,
+      "name": "蓮ノ空好き好きクラブ",
+      "created_at": "2025-03-29T00:49:11.000Z",
+      "url": "https://greasyfork.org/users/1451445-%E8%93%AE%E3%83%8E%E7%A9%BA%E5%A5%BD%E3%81%8D%E5%A5%BD%E3%81%8D%E3%82%AF%E3%83%A9%E3%83%96",
+      "scripts": []
+    }
+  ],
+  "name": "Nolets 超速先行",
+  "description": "图形化选择商品并一次性全部加入购物车，支持库存显示、参数记忆、进度条、结果展示、更新库存,加入了保存参数重启功能",
+  "url": "https://greasyfork.org/scripts/532408-nolets-%E8%B6%85%E9%80%9F%E5%85%88%E8%A1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/532408/Nolets%20%E8%B6%85%E9%80%9F%E5%85%88%E8%A1%8C.user.js",
+  "code_size": 21718,
+  "license": null,
+  "version": "2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

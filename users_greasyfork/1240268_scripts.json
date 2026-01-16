@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 552450,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-13T09:30:42.000Z",
+    "code_updated_at": "2026-01-07T17:19:55.000Z",
+    "namespace": "https://novelai.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1240268,
+        "name": "Tako_233",
+        "created_at": "2023-12-28T09:35:11.000Z",
+        "url": "https://greasyfork.org/users/1240268-tako-233"
+      }
+    ],
+    "name": "Novelai Prompt Helper / Novelai 提示词增强",
+    "description": "Tag suggestions and weight shortcuts for NovelAI prompts. 通过Ctrl+↑/↓快速调整输入光标所在的Tag权重，Ctrl+←/→移动Tag位置。自动格式化Prompt。",
+    "url": "https://greasyfork.org/scripts/552450-novelai-prompt-helper-novelai-%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/552450/Novelai%20Prompt%20Helper%20%20Novelai%20%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 50702,
+    "license": "MIT License",
+    "version": "1.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550544,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T11:33:49.000Z",
+    "code_updated_at": "2025-10-01T03:41:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1240268,
+        "name": "Tako_233",
+        "created_at": "2023-12-28T09:35:11.000Z",
+        "url": "https://greasyfork.org/users/1240268-tako-233"
+      }
+    ],
+    "name": "NovelAI 批量Roll图助手",
+    "description": "从本地TXT文件读取提示词，全自动批量生成图像。支持顺序/随机模式，可自动记忆，生成失败自动重试。优化版：添加失焦折叠、默认折叠、性能优化",
+    "url": "https://greasyfork.org/scripts/550544-novelai-%E6%89%B9%E9%87%8Froll%E5%9B%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/550544/NovelAI%20%E6%89%B9%E9%87%8FRoll%E5%9B%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 41871,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535792,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T14:56:40.000Z",
+    "code_updated_at": "2025-05-12T14:56:39.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1316673,
+        "name": "Baiwan Wang",
+        "created_at": "2024-06-12T10:02:26.000Z",
+        "url": "https://greasyfork.org/users/1316673-baiwan-wang"
+      }
+    ],
+    "name": "自动浏览nodeloc.cc,autoBrowse-nodeloc.cc",
+    "description": "自动浏览nodeloc.cc的帖子和话题，滚动5秒后停留5秒再跳转",
+    "url": "https://greasyfork.org/scripts/535792-%E8%87%AA%E5%8A%A8%E6%B5%8F%E8%A7%88nodeloc-cc-autobrowse-nodeloc-cc",
+    "code_url": "https://update.greasyfork.org/scripts/535792/%E8%87%AA%E5%8A%A8%E6%B5%8F%E8%A7%88nodeloccc%2CautoBrowse-nodeloccc.user.js",
+    "code_size": 7672,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

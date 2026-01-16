@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523244,
+    "daily_installs": 13,
+    "total_installs": 1424,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T21:15:53.000Z",
+    "code_updated_at": "2025-01-08T21:15:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326729,
+        "name": "Dhalsim France62",
+        "created_at": "2019-08-16T12:17:39.000Z",
+        "url": "https://greasyfork.org/users/326729-dhalsim-france62"
+      }
+    ],
+    "name": "Agar.io Custom skin Uploader v2",
+    "description": "Upload your picture as custom skin on agar.io",
+    "url": "https://greasyfork.org/scripts/523244-agar-io-custom-skin-uploader-v2",
+    "code_url": "https://update.greasyfork.org/scripts/523244/Agario%20Custom%20skin%20Uploader%20v2.user.js",
+    "code_size": 7475,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

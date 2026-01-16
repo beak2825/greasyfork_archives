@@ -1,0 +1,33 @@
+{
+  "id": 523205,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-08T14:49:19.000Z",
+  "code_updated_at": "2025-01-08T14:49:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668571,
+      "name": "szllw",
+      "created_at": "2020-07-20T10:22:53.000Z",
+      "url": "https://greasyfork.org/users/668571-szllw"
+    }
+  ],
+  "name": "知乎自动关闭登录窗",
+  "description": "尝试精确地关闭知乎登录窗口",
+  "url": "https://greasyfork.org/scripts/523205-%E7%9F%A5%E4%B9%8E%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E7%99%BB%E5%BD%95%E7%AA%97",
+  "code_url": "https://update.greasyfork.org/scripts/523205/%E7%9F%A5%E4%B9%8E%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E7%99%BB%E5%BD%95%E7%AA%97.user.js",
+  "code_size": 1227,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550556,
+    "daily_installs": 1,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T13:13:55.000Z",
+    "code_updated_at": "2025-09-24T13:13:55.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1518889,
+        "name": "Mohamed Isleam",
+        "created_at": "2025-09-24T13:07:52.000Z",
+        "url": "https://greasyfork.org/users/1518889-mohamed-isleam"
+      }
+    ],
+    "name": "Extract Image Links (copy / download)",
+    "description": "Collects image links and shows them for copying or downloads a links.txt file",
+    "url": "https://greasyfork.org/scripts/550556-extract-image-links-copy-download",
+    "code_url": "https://update.greasyfork.org/scripts/550556/Extract%20Image%20Links%20%28copy%20%20download%29.user.js",
+    "code_size": 5537,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 537393,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-27T03:51:12.000Z",
+  "code_updated_at": "2025-05-27T03:51:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1475317,
+      "name": "Nathaniel Massa",
+      "created_at": "2025-05-27T03:47:54.000Z",
+      "url": "https://greasyfork.org/users/1475317-nathaniel-massa",
+      "scripts": []
+    }
+  ],
+  "name": "Internet Roadtrip Permanent Radio - KLOU",
+  "description": "Overrides Internet Roadtrip radio with KLOU and shows live song and show info. Might work, but I'm not sure. I just copied the code from someone else doing this for WBOR.",
+  "url": "https://greasyfork.org/scripts/537393-internet-roadtrip-permanent-radio-klou",
+  "code_url": "https://update.greasyfork.org/scripts/537393/Internet%20Roadtrip%20Permanent%20Radio%20-%20KLOU.user.js",
+  "code_size": 8215,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 534634,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-01T12:17:19.000Z",
+  "code_updated_at": "2025-05-01T12:38:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464402,
+      "name": "eunalice",
+      "created_at": "2025-05-01T11:57:01.000Z",
+      "url": "https://greasyfork.org/users/1464402-eunalice",
+      "scripts": [
+        {
+          "id": 534634,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-01T12:17:19.000Z",
+          "code_updated_at": "2025-05-01T12:38:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Beanfun QR Code Click-to-Copy",
+          "description": "在 beanfun! QR Code 登入頁面，點擊 QR Code 圖片時，自動複製其連結到剪貼簿。",
+          "url": "https://greasyfork.org/scripts/534634-beanfun-qr-code-click-to-copy",
+          "code_url": "https://update.greasyfork.org/scripts/534634/Beanfun%20QR%20Code%20Click-to-Copy.user.js",
+          "code_size": 4442,
+          "license": "MIT License",
+          "version": "0.7.1",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Beanfun QR Code Click-to-Copy",
+  "description": "在 beanfun! QR Code 登入頁面，點擊 QR Code 圖片時，自動複製其連結到剪貼簿。",
+  "url": "https://greasyfork.org/scripts/534634-beanfun-qr-code-click-to-copy",
+  "code_url": "https://update.greasyfork.org/scripts/534634/Beanfun%20QR%20Code%20Click-to-Copy.user.js",
+  "code_size": 4442,
+  "license": "MIT License",
+  "version": "0.7.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

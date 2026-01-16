@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529677,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-13T04:23:25.000Z",
+    "code_updated_at": "2025-03-13T04:23:24.000Z",
+    "namespace": "griffi-gh",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445141,
+        "name": "alsdkl asdljjlaj",
+        "created_at": "2025-03-13T04:22:24.000Z",
+        "url": "https://greasyfork.org/users/1445141-alsdkl-asdljjlaj"
+      }
+    ],
+    "name": "Naurok Bypass v2",
+    "description": "Fetches answers to *all* Naurok quizes",
+    "url": "https://greasyfork.org/scripts/529677-naurok-bypass-v2",
+    "code_url": "https://update.greasyfork.org/scripts/529677/Naurok%20Bypass%20v2.user.js",
+    "code_size": 11580,
+    "license": "MIT License",
+    "version": "8.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

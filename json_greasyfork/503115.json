@@ -1,0 +1,34 @@
+{
+  "id": 503115,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-09T18:38:20.000Z",
+  "code_updated_at": "2024-08-09T18:38:20.000Z",
+  "namespace": "https://passthepopcorn.me/user.php?id=125754",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 778136,
+      "name": "galahal",
+      "created_at": "2021-05-31T08:41:34.000Z",
+      "url": "https://greasyfork.org/users/778136-galahal",
+      "scripts": []
+    }
+  ],
+  "name": "BeyondHD: Extract Recruitment Info from PMs",
+  "description": "Extracts invitee information from BeyondHD messages for recruiters, including user profile link and rank.",
+  "url": "https://greasyfork.org/scripts/503115-beyondhd-extract-recruitment-info-from-pms",
+  "code_url": "https://update.greasyfork.org/scripts/503115/BeyondHD%3A%20Extract%20Recruitment%20Info%20from%20PMs.user.js",
+  "code_size": 7160,
+  "license": "BHD",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 532064,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-07T09:10:36.000Z",
+  "code_updated_at": "2025-04-10T07:56:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 576557,
+      "name": "Libohan12",
+      "created_at": "2020-06-01T05:11:08.000Z",
+      "url": "https://greasyfork.org/users/576557-libohan12",
+      "scripts": [
+        {
+          "id": 532064,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-07T09:10:36.000Z",
+          "code_updated_at": "2025-04-10T07:56:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Magnet Url",
+          "description": "复制磁力链接",
+          "url": "https://greasyfork.org/scripts/532064-magnet-url",
+          "code_url": "https://update.greasyfork.org/scripts/532064/Magnet%20Url.user.js",
+          "code_size": 7804,
+          "license": "MIT License",
+          "version": "1.0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Magnet Url",
+  "description": "复制磁力链接",
+  "url": "https://greasyfork.org/scripts/532064-magnet-url",
+  "code_url": "https://update.greasyfork.org/scripts/532064/Magnet%20Url.user.js",
+  "code_size": 7804,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

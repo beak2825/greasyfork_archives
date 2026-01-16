@@ -1,0 +1,59 @@
+{
+  "id": 526918,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-14T19:21:55.000Z",
+  "code_updated_at": "2025-02-14T19:46:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1435140,
+      "name": "k efci",
+      "created_at": "2025-02-14T19:19:02.000Z",
+      "url": "https://greasyfork.org/users/1435140-k-efci",
+      "scripts": [
+        {
+          "id": 526918,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-14T19:21:55.000Z",
+          "code_updated_at": "2025-02-14T19:46:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Disable LaTeX Rendering",
+          "description": "阻止LaTeX渲染并显示原始代码",
+          "url": "https://greasyfork.org/scripts/526918-disable-latex-rendering",
+          "code_url": "https://update.greasyfork.org/scripts/526918/Disable%20LaTeX%20Rendering.user.js",
+          "code_size": 2987,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Disable LaTeX Rendering",
+  "description": "阻止LaTeX渲染并显示原始代码",
+  "url": "https://greasyfork.org/scripts/526918-disable-latex-rendering",
+  "code_url": "https://update.greasyfork.org/scripts/526918/Disable%20LaTeX%20Rendering.user.js",
+  "code_size": 2987,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

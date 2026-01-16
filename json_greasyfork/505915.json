@@ -1,0 +1,59 @@
+{
+  "id": 505915,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-30T16:53:00.000Z",
+  "code_updated_at": "2024-08-30T16:53:00.000Z",
+  "namespace": "https://battleofthebits.com/barracks/Profile/uart/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1315783,
+      "name": "knuxify",
+      "created_at": "2024-06-10T14:37:15.000Z",
+      "url": "https://greasyfork.org/users/1315783-knuxify",
+      "scripts": [
+        {
+          "id": 505915,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-30T16:53:00.000Z",
+          "code_updated_at": "2024-08-30T16:53:00.000Z",
+          "namespace": "https://battleofthebits.com/barracks/Profile/uart/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BotB: Show full dates when hovering over countdowns",
+          "description": "Show full dates when hovering over countdowns",
+          "url": "https://greasyfork.org/scripts/505915-botb-show-full-dates-when-hovering-over-countdowns",
+          "code_url": "https://update.greasyfork.org/scripts/505915/BotB%3A%20Show%20full%20dates%20when%20hovering%20over%20countdowns.user.js",
+          "code_size": 2098,
+          "license": "CC0",
+          "version": "2024-08-30",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BotB: Show full dates when hovering over countdowns",
+  "description": "Show full dates when hovering over countdowns",
+  "url": "https://greasyfork.org/scripts/505915-botb-show-full-dates-when-hovering-over-countdowns",
+  "code_url": "https://update.greasyfork.org/scripts/505915/BotB%3A%20Show%20full%20dates%20when%20hovering%20over%20countdowns.user.js",
+  "code_size": 2098,
+  "license": "CC0",
+  "version": "2024-08-30",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

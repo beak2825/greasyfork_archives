@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553215,
+    "daily_installs": 1,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T14:29:17.000Z",
+    "code_updated_at": "2025-11-04T15:11:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1528880,
+        "name": "nonenet",
+        "created_at": "2025-10-20T13:09:19.000Z",
+        "url": "https://greasyfork.org/users/1528880-nonenet"
+      }
+    ],
+    "name": "Gemini 对照渲染公式",
+    "description": "对照渲染Gemini网页对话中未被渲染的公式，支持$, $$, begin/end环境。已排除输入框和用户提示。",
+    "url": "https://greasyfork.org/scripts/553215-gemini-%E5%AF%B9%E7%85%A7%E6%B8%B2%E6%9F%93%E5%85%AC%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/553215/Gemini%20%E5%AF%B9%E7%85%A7%E6%B8%B2%E6%9F%93%E5%85%AC%E5%BC%8F.user.js",
+    "code_size": 5009,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

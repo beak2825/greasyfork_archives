@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 525210,
+    "daily_installs": 6,
+    "total_installs": 1308,
+    "fan_score": "43.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-01-29T07:25:49.000Z",
+    "code_updated_at": "2026-01-04T11:33:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1374251,
+        "name": "Bao-qing",
+        "created_at": "2024-09-28T17:01:08.000Z",
+        "url": "https://greasyfork.org/users/1374251-bao-qing"
+      }
+    ],
+    "name": "123FastLink",
+    "description": "123云盘秒传链接脚本",
+    "url": "https://greasyfork.org/scripts/525210-123fastlink",
+    "code_url": "https://update.greasyfork.org/scripts/525210/123FastLink.user.js",
+    "code_size": 195287,
+    "license": "MIT License",
+    "version": "2026.1.01.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

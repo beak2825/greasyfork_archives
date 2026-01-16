@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550642,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-25T07:59:15.000Z",
+    "code_updated_at": "2025-09-28T11:40:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519136,
+        "name": "Ермолаев Тимофей",
+        "created_at": "2025-09-25T07:57:04.000Z",
+        "url": "https://greasyfork.org/users/1519136-%D0%B5%D1%80%D0%BC%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2-%D1%82%D0%B8%D0%BC%D0%BE%D1%84%D0%B5%D0%B9"
+      }
+    ],
+    "name": "Go away telegram-freeloader!",
+    "description": "Удаляет ссылки на телегу, вк, макс, алиэкспрес и яндекс маркет",
+    "url": "https://greasyfork.org/scripts/550642-go-away-telegram-freeloader",
+    "code_url": "https://update.greasyfork.org/scripts/550642/Go%20away%20telegram-freeloader%21.user.js",
+    "code_size": 2307,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 534547,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T18:37:34.000Z",
+  "code_updated_at": "2025-04-30T18:37:34.000Z",
+  "namespace": "knoa.jp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1426529,
+      "name": "FlyingGorae",
+      "created_at": "2025-01-23T14:46:42.000Z",
+      "url": "https://greasyfork.org/users/1426529-flyinggorae"
+    }
+  ],
+  "name": "Google Search Various Ranges",
+  "description": "Add more time ranges on Google search.",
+  "url": "https://greasyfork.org/scripts/534547-google-search-various-ranges",
+  "code_url": "https://update.greasyfork.org/scripts/534547/Google%20Search%20Various%20Ranges.user.js",
+  "code_size": 15268,
+  "license": null,
+  "version": "3.1.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

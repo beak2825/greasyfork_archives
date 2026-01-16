@@ -1,0 +1,59 @@
+{
+  "id": 532253,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-09T01:24:18.000Z",
+  "code_updated_at": "2025-04-17T08:37:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1236709,
+      "name": "longyi",
+      "created_at": "2023-12-20T07:48:24.000Z",
+      "url": "https://greasyfork.org/users/1236709-longyi",
+      "scripts": [
+        {
+          "id": 532253,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-09T01:24:18.000Z",
+          "code_updated_at": "2025-04-17T08:37:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Happy to touch fish",
+          "description": "愉快摸鱼",
+          "url": "https://greasyfork.org/scripts/532253-happy-to-touch-fish",
+          "code_url": "https://update.greasyfork.org/scripts/532253/Happy%20to%20touch%20fish.user.js",
+          "code_size": 1077,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Happy to touch fish",
+  "description": "愉快摸鱼",
+  "url": "https://greasyfork.org/scripts/532253-happy-to-touch-fish",
+  "code_url": "https://update.greasyfork.org/scripts/532253/Happy%20to%20touch%20fish.user.js",
+  "code_size": 1077,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

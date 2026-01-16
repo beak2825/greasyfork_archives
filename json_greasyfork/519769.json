@@ -1,0 +1,59 @@
+{
+  "id": 519769,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-04T13:54:17.000Z",
+  "code_updated_at": "2024-12-04T13:59:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1406528,
+      "name": "Filipe Pinto",
+      "created_at": "2024-12-04T13:50:15.000Z",
+      "url": "https://greasyfork.org/users/1406528-filipe-pinto",
+      "scripts": [
+        {
+          "id": 519769,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-04T13:54:17.000Z",
+          "code_updated_at": "2024-12-04T13:59:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Calcule moyenne générale sur pronote",
+          "description": "Permet de calculer la moyenne générale sur la vue pronote => notes => par matière",
+          "url": "https://greasyfork.org/scripts/519769-calcule-moyenne-g%C3%A9n%C3%A9rale-sur-pronote",
+          "code_url": "https://update.greasyfork.org/scripts/519769/Calcule%20moyenne%20g%C3%A9n%C3%A9rale%20sur%20pronote.user.js",
+          "code_size": 1596,
+          "license": "MIT License",
+          "version": "2024-12-04-4",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Calcule moyenne générale sur pronote",
+  "description": "Permet de calculer la moyenne générale sur la vue pronote => notes => par matière",
+  "url": "https://greasyfork.org/scripts/519769-calcule-moyenne-g%C3%A9n%C3%A9rale-sur-pronote",
+  "code_url": "https://update.greasyfork.org/scripts/519769/Calcule%20moyenne%20g%C3%A9n%C3%A9rale%20sur%20pronote.user.js",
+  "code_size": 1596,
+  "license": "MIT License",
+  "version": "2024-12-04-4",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

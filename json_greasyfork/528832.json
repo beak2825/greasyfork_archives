@@ -1,0 +1,59 @@
+{
+  "id": 528832,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-05T05:08:48.000Z",
+  "code_updated_at": "2025-05-29T22:57:30.000Z",
+  "namespace": "https://greasyfork.org/users/1414348",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1414348,
+      "name": "Ezektor",
+      "created_at": "2024-12-22T21:48:50.000Z",
+      "url": "https://greasyfork.org/users/1414348-ezektor",
+      "scripts": [
+        {
+          "id": 528832,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-05T05:08:48.000Z",
+          "code_updated_at": "2025-05-29T22:57:30.000Z",
+          "namespace": "https://greasyfork.org/users/1414348",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MAL / MyAnimeList - Enhanced Sorting And Progress On Anime List",
+          "description": "Correctly sorts your anime list by true progress, and reveals your exact progress percentage for each anime.",
+          "url": "https://greasyfork.org/scripts/528832-mal-myanimelist-enhanced-sorting-and-progress-on-anime-list",
+          "code_url": "https://update.greasyfork.org/scripts/528832/MAL%20%20MyAnimeList%20-%20Enhanced%20Sorting%20And%20Progress%20On%20Anime%20List.user.js",
+          "code_size": 5832,
+          "license": null,
+          "version": "4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MAL / MyAnimeList - Enhanced Sorting And Progress On Anime List",
+  "description": "Correctly sorts your anime list by true progress, and reveals your exact progress percentage for each anime.",
+  "url": "https://greasyfork.org/scripts/528832-mal-myanimelist-enhanced-sorting-and-progress-on-anime-list",
+  "code_url": "https://update.greasyfork.org/scripts/528832/MAL%20%20MyAnimeList%20-%20Enhanced%20Sorting%20And%20Progress%20On%20Anime%20List.user.js",
+  "code_size": 5832,
+  "license": null,
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

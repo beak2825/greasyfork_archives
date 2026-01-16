@@ -1,0 +1,59 @@
+{
+  "id": 531702,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T10:51:29.000Z",
+  "code_updated_at": "2025-04-10T07:36:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 240261,
+      "name": "wk573032546",
+      "created_at": "2019-01-17T19:21:53.000Z",
+      "url": "https://greasyfork.org/users/240261-wk573032546",
+      "scripts": [
+        {
+          "id": 376831,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2019-01-17T19:25:31.000Z",
+          "code_updated_at": "2019-01-17T19:25:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wechat Automatic Sender",
+          "description": "try to take over the world!",
+          "url": "https://greasyfork.org/scripts/376831-wechat-automatic-sender",
+          "code_url": "https://update.greasyfork.org/scripts/376831/Wechat%20Automatic%20Sender.user.js",
+          "code_size": 716,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "产品SPU/SKU/SKU货号/备货单/TEMU备货量查询-TEMU卖家中心",
+  "description": "发货单列表：支持 紧急备货建议 和 普通备货建议；在备货单号后添加按钮，点击显示对应的备货单号信息，支持快速响应，页面变化自动响应。",
+  "url": "https://greasyfork.org/scripts/531702-%E4%BA%A7%E5%93%81spu-sku-sku%E8%B4%A7%E5%8F%B7-%E5%A4%87%E8%B4%A7%E5%8D%95-temu%E5%A4%87%E8%B4%A7%E9%87%8F%E6%9F%A5%E8%AF%A2-temu%E5%8D%96%E5%AE%B6%E4%B8%AD%E5%BF%83",
+  "code_url": "https://update.greasyfork.org/scripts/531702/%E4%BA%A7%E5%93%81SPUSKUSKU%E8%B4%A7%E5%8F%B7%E5%A4%87%E8%B4%A7%E5%8D%95TEMU%E5%A4%87%E8%B4%A7%E9%87%8F%E6%9F%A5%E8%AF%A2-TEMU%E5%8D%96%E5%AE%B6%E4%B8%AD%E5%BF%83.user.js",
+  "code_size": 14167,
+  "license": "MIT License",
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

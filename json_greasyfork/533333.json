@@ -1,0 +1,34 @@
+{
+  "id": 533333,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-19T12:50:46.000Z",
+  "code_updated_at": "2025-04-22T12:17:37.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369633,
+      "name": "rafsimons",
+      "created_at": "2024-09-18T13:09:28.000Z",
+      "url": "https://greasyfork.org/users/1369633-rafsimons",
+      "scripts": []
+    }
+  ],
+  "name": "Скрипт для кураторов форума",
+  "description": "???",
+  "url": "https://greasyfork.org/scripts/533333-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/533333/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 48675,
+  "license": "none",
+  "version": "1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

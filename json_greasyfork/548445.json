@@ -1,0 +1,33 @@
+{
+  "id": 548445,
+  "daily_installs": 2,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-05T09:41:23.000Z",
+  "code_updated_at": "2025-09-06T02:52:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051751,
+      "name": "Mark Levi",
+      "created_at": "2023-04-02T04:51:50.000Z",
+      "url": "https://greasyfork.org/users/1051751-mark-levi"
+    }
+  ],
+  "name": "MEGA鏈接檢測器",
+  "description": "檢測MEGA鏈接是否可用，並在旁邊顯示狀態。當URL變化時自動重新加載頁面。",
+  "url": "https://greasyfork.org/scripts/548445-mega%E9%8F%88%E6%8E%A5%E6%AA%A2%E6%B8%AC%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/548445/MEGA%E9%8F%88%E6%8E%A5%E6%AA%A2%E6%B8%AC%E5%99%A8.user.js",
+  "code_size": 19151,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 544210,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-31T14:38:44.000Z",
+  "code_updated_at": "2025-07-31T14:38:43.000Z",
+  "namespace": "AIZenConductor",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 859328,
+      "name": "Flejta",
+      "created_at": "2021-12-30T11:04:09.000Z",
+      "url": "https://greasyfork.org/users/859328-flejta",
+      "scripts": [
+        {
+          "id": 533163,
+          "daily_installs": 6,
+          "total_installs": 1016,
+          "fan_score": "39.6",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-04-17T18:37:00.000Z",
+          "code_updated_at": "2025-04-29T13:44:06.000Z",
+          "namespace": "https://greasyfork.org/users/859328",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Premium Experience - Ad Blocker",
+          "description": "Enhances YouTube experience by blocking ads and improving video playback",
+          "url": "https://greasyfork.org/scripts/533163-youtube-premium-experience-ad-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/533163/YouTube%20Premium%20Experience%20-%20Ad%20Blocker.user.js",
+          "code_size": 38287,
+          "license": "MIT License",
+          "version": "1.0.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AIZen Mapper - Gemini",
+  "description": "Mappatura elementi UI per Gemini",
+  "url": "https://greasyfork.org/scripts/544210-aizen-mapper-gemini",
+  "code_url": "https://update.greasyfork.org/scripts/544210/AIZen%20Mapper%20-%20Gemini.user.js",
+  "code_size": 5401,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

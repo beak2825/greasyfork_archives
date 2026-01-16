@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528431,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T11:15:52.000Z",
+    "code_updated_at": "2025-03-01T23:19:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441236,
+        "name": "gunksd",
+        "created_at": "2025-03-01T10:06:12.000Z",
+        "url": "https://greasyfork.org/users/1441236-gunksd"
+      }
+    ],
+    "name": "CSDN-no-login-script",
+    "description": "A script tool that allows you to copy and paste csdn code without logging in",
+    "url": "https://greasyfork.org/scripts/528431-csdn-no-login-script",
+    "code_url": "https://update.greasyfork.org/scripts/528431/CSDN-no-login-script.user.js",
+    "code_size": 595,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

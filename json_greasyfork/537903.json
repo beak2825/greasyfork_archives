@@ -1,0 +1,34 @@
+{
+  "id": 537903,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T22:46:32.000Z",
+  "code_updated_at": "2025-06-29T14:54:06.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/529682-%E5%85%BB%E7%8C%AB%E7%9A%84%E9%B1%BC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 529682,
+      "name": "养猫的鱼",
+      "created_at": "2020-04-21T03:15:13.000Z",
+      "url": "https://greasyfork.org/users/529682-%E5%85%BB%E7%8C%AB%E7%9A%84%E9%B1%BC",
+      "scripts": []
+    }
+  ],
+  "name": "Udemy Windowed Fullscreen",
+  "description": "Press ` (backtick) key to toggle windowed fullscreen mode (maximize video window, and hide title bar & sidebar) on Udemy course page.",
+  "url": "https://greasyfork.org/scripts/537903-udemy-windowed-fullscreen",
+  "code_url": "https://update.greasyfork.org/scripts/537903/Udemy%20Windowed%20Fullscreen.user.js",
+  "code_size": 6281,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

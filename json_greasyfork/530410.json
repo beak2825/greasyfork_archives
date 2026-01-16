@@ -1,0 +1,59 @@
+{
+  "id": 530410,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-21T05:18:40.000Z",
+  "code_updated_at": "2025-05-10T06:23:35.000Z",
+  "namespace": "https://blog.helloworldchao.tech/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448347,
+      "name": "helloworldchao",
+      "created_at": "2025-03-21T05:07:08.000Z",
+      "url": "https://greasyfork.org/users/1448347-helloworldchao",
+      "scripts": [
+        {
+          "id": 530410,
+          "daily_installs": 0,
+          "total_installs": 56,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-21T05:18:40.000Z",
+          "code_updated_at": "2025-05-10T06:23:35.000Z",
+          "namespace": "https://blog.helloworldchao.tech/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Visual Studio Code Extension(vsix) Download(Cursor/Trae Install)",
+          "description": "Download history version of vscode extension(vsix) from official website https://marketplace.visualstudio.com/ easily, support Cursor/Trae install one click.",
+          "url": "https://greasyfork.org/scripts/530410-visual-studio-code-extension-vsix-download-cursor-trae-install",
+          "code_url": "https://update.greasyfork.org/scripts/530410/Visual%20Studio%20Code%20Extension%28vsix%29%20Download%28CursorTrae%20Install%29.user.js",
+          "code_size": 4699,
+          "license": "GPLv3GPLv3",
+          "version": "202505101422",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Visual Studio Code Extension(vsix) Download(Cursor/Trae Install)",
+  "description": "Download history version of vscode extension(vsix) from official website https://marketplace.visualstudio.com/ easily, support Cursor/Trae install one click.",
+  "url": "https://greasyfork.org/scripts/530410-visual-studio-code-extension-vsix-download-cursor-trae-install",
+  "code_url": "https://update.greasyfork.org/scripts/530410/Visual%20Studio%20Code%20Extension%28vsix%29%20Download%28CursorTrae%20Install%29.user.js",
+  "code_size": 4699,
+  "license": "GPLv3GPLv3",
+  "version": "202505101422",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

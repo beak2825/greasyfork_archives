@@ -1,0 +1,33 @@
+{
+  "id": 547266,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-25T16:55:41.000Z",
+  "code_updated_at": "2025-08-25T16:55:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508768,
+      "name": "Starzee",
+      "created_at": "2025-08-25T16:51:07.000Z",
+      "url": "https://greasyfork.org/users/1508768-starzee"
+    }
+  ],
+  "name": "Auto Unmute YouTube Videos",
+  "description": "Automatically unmutes YouTube videos when they load",
+  "url": "https://greasyfork.org/scripts/547266-auto-unmute-youtube-videos",
+  "code_url": "https://update.greasyfork.org/scripts/547266/Auto%20Unmute%20YouTube%20Videos.user.js",
+  "code_size": 1194,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

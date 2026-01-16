@@ -1,0 +1,59 @@
+{
+  "id": 550270,
+  "daily_installs": 1,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-21T18:56:42.000Z",
+  "code_updated_at": "2025-09-21T18:56:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1517856,
+      "name": "Çınar",
+      "created_at": "2025-09-21T18:54:19.000Z",
+      "url": "https://greasyfork.org/users/1517856-%C3%A7%C4%B1nar",
+      "scripts": [
+        {
+          "id": 550270,
+          "daily_installs": 1,
+          "total_installs": 58,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-21T18:56:42.000Z",
+          "code_updated_at": "2025-09-21T18:56:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kour.io Motion Blur (Trail)",
+          "description": "Kour.io (canvas/WebGL) için basit motion blur / frame trail overlay. press M for open, wirh +/-  change the power",
+          "url": "https://greasyfork.org/scripts/550270-kour-io-motion-blur-trail",
+          "code_url": "https://update.greasyfork.org/scripts/550270/Kourio%20Motion%20Blur%20%28Trail%29.user.js",
+          "code_size": 8367,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kour.io Motion Blur (Trail)",
+  "description": "Kour.io (canvas/WebGL) için basit motion blur / frame trail overlay. press M for open, wirh +/-  change the power",
+  "url": "https://greasyfork.org/scripts/550270-kour-io-motion-blur-trail",
+  "code_url": "https://update.greasyfork.org/scripts/550270/Kourio%20Motion%20Blur%20%28Trail%29.user.js",
+  "code_size": 8367,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

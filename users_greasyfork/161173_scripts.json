@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536274,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T08:52:40.000Z",
+    "code_updated_at": "2025-05-17T08:52:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 161173,
+        "name": "Xu Xu (TIT_EE)",
+        "created_at": "2017-11-28T18:14:22.000Z",
+        "url": "https://greasyfork.org/users/161173-xu-xu-tit-ee"
+      }
+    ],
+    "name": "自动领取星级工会奖励",
+    "description": "每周三中午12点起，登录后自动领取并关闭页面；未登录时提示；附清除按钮调试用。",
+    "url": "https://greasyfork.org/scripts/536274-%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96%E6%98%9F%E7%BA%A7%E5%B7%A5%E4%BC%9A%E5%A5%96%E5%8A%B1",
+    "code_url": "https://update.greasyfork.org/scripts/536274/%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96%E6%98%9F%E7%BA%A7%E5%B7%A5%E4%BC%9A%E5%A5%96%E5%8A%B1.user.js",
+    "code_size": 4711,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

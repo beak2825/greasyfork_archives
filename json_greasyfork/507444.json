@@ -1,0 +1,34 @@
+{
+  "id": 507444,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-08T10:27:19.000Z",
+  "code_updated_at": "2024-09-08T10:27:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 817607,
+      "name": "雅迅达网络",
+      "created_at": "2021-09-21T11:03:20.000Z",
+      "url": "https://greasyfork.org/users/817607-%E9%9B%85%E8%BF%85%E8%BE%BE%E7%BD%91%E7%BB%9C",
+      "scripts": []
+    }
+  ],
+  "name": "空间密码修改工具",
+  "description": "辅助修改初始密码工具",
+  "url": "https://greasyfork.org/scripts/507444-%E7%A9%BA%E9%97%B4%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/507444/%E7%A9%BA%E9%97%B4%E5%AF%86%E7%A0%81%E4%BF%AE%E6%94%B9%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 31301,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2023.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

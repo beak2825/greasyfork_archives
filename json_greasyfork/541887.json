@@ -1,0 +1,59 @@
+{
+  "id": 541887,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-07T05:55:06.000Z",
+  "code_updated_at": "2025-07-07T05:55:06.000Z",
+  "namespace": "https://github.com/waringer/CustomAudiblePlayer/raw/main/CustomAudiblePlayer.user.js",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492411,
+      "name": "waringer",
+      "created_at": "2025-07-07T05:49:15.000Z",
+      "url": "https://greasyfork.org/users/1492411-waringer",
+      "scripts": [
+        {
+          "id": 541887,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-07T05:55:06.000Z",
+          "code_updated_at": "2025-07-07T05:55:06.000Z",
+          "namespace": "https://github.com/waringer/CustomAudiblePlayer/raw/main/CustomAudiblePlayer.user.js",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Audible Custom WebPlayer",
+          "description": "Dark Skin and Volume Slider Audible Custom WebPlayer",
+          "url": "https://greasyfork.org/scripts/541887-audible-custom-webplayer",
+          "code_url": "https://update.greasyfork.org/scripts/541887/Audible%20Custom%20WebPlayer.user.js",
+          "code_size": 9082,
+          "license": "BSD",
+          "version": "2025.07.07.01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Audible Custom WebPlayer",
+  "description": "Dark Skin and Volume Slider Audible Custom WebPlayer",
+  "url": "https://greasyfork.org/scripts/541887-audible-custom-webplayer",
+  "code_url": "https://update.greasyfork.org/scripts/541887/Audible%20Custom%20WebPlayer.user.js",
+  "code_size": 9082,
+  "license": "BSD",
+  "version": "2025.07.07.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

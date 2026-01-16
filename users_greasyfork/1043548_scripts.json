@@ -1,0 +1,101 @@
+[
+  {
+    "id": 523258,
+    "daily_installs": 2,
+    "total_installs": 130,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-09T02:37:21.000Z",
+    "code_updated_at": "2025-01-09T02:39:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "阻止网站对F12开发者功能的限制",
+    "description": "防止被搞掉F12功能",
+    "url": "https://greasyfork.org/scripts/523258-%E9%98%BB%E6%AD%A2%E7%BD%91%E7%AB%99%E5%AF%B9f12%E5%BC%80%E5%8F%91%E8%80%85%E5%8A%9F%E8%83%BD%E7%9A%84%E9%99%90%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/523258/%E9%98%BB%E6%AD%A2%E7%BD%91%E7%AB%99%E5%AF%B9F12%E5%BC%80%E5%8F%91%E8%80%85%E5%8A%9F%E8%83%BD%E7%9A%84%E9%99%90%E5%88%B6.user.js",
+    "code_size": 531,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506738,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-04T06:43:12.000Z",
+    "code_updated_at": "2024-09-04T06:43:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "保护隐私，清空知乎所有点赞过的动态",
+    "description": "进入到PC端网页个人主页，就可以看到动态里的点赞被脚本自动取消点赞",
+    "url": "https://greasyfork.org/scripts/506738-%E4%BF%9D%E6%8A%A4%E9%9A%90%E7%A7%81-%E6%B8%85%E7%A9%BA%E7%9F%A5%E4%B9%8E%E6%89%80%E6%9C%89%E7%82%B9%E8%B5%9E%E8%BF%87%E7%9A%84%E5%8A%A8%E6%80%81",
+    "code_url": "https://update.greasyfork.org/scripts/506738/%E4%BF%9D%E6%8A%A4%E9%9A%90%E7%A7%81%EF%BC%8C%E6%B8%85%E7%A9%BA%E7%9F%A5%E4%B9%8E%E6%89%80%E6%9C%89%E7%82%B9%E8%B5%9E%E8%BF%87%E7%9A%84%E5%8A%A8%E6%80%81.user.js",
+    "code_size": 3233,
+    "license": "GPL-3.0 License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499707,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T00:50:21.000Z",
+    "code_updated_at": "2024-07-05T07:47:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1043548,
+        "name": "fxalll",
+        "created_at": "2023-03-17T09:17:00.000Z",
+        "url": "https://greasyfork.org/users/1043548-fxalll"
+      }
+    ],
+    "name": "zqy爱学习2",
+    "description": "cela课程刷视频脚本",
+    "url": "https://greasyfork.org/scripts/499707-zqy%E7%88%B1%E5%AD%A6%E4%B9%A02",
+    "code_url": "https://update.greasyfork.org/scripts/499707/zqy%E7%88%B1%E5%AD%A6%E4%B9%A02.user.js",
+    "code_size": 5631,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

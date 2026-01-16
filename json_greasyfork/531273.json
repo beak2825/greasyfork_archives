@@ -1,0 +1,33 @@
+{
+  "id": 531273,
+  "daily_installs": 3,
+  "total_installs": 367,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-29T21:40:21.000Z",
+  "code_updated_at": "2025-03-29T21:40:21.000Z",
+  "namespace": "https://greasyfork.org/users/1451793",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451793,
+      "name": "dev007",
+      "created_at": "2025-03-29T20:43:17.000Z",
+      "url": "https://greasyfork.org/users/1451793-dev007"
+    }
+  ],
+  "name": "Adblock Protector",
+  "description": "Advanced Adblock protector with invasive shit blocking",
+  "url": "https://greasyfork.org/scripts/531273-adblock-protector",
+  "code_url": "https://update.greasyfork.org/scripts/531273/Adblock%20Protector.user.js",
+  "code_size": 5674,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

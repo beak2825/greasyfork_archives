@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533040,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T14:26:09.000Z",
+    "code_updated_at": "2025-04-16T14:26:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1458555,
+        "name": "InkyFeather",
+        "created_at": "2025-04-16T10:33:27.000Z",
+        "url": "https://greasyfork.org/users/1458555-inkyfeather"
+      }
+    ],
+    "name": "Steam 文本内容翻译",
+    "description": "在 Steam 网页上的常见文本内容如简介、评论、新闻、讨论、聊天消息等文本右上角加上了翻译按钮，一键翻译外文。可通过右键点击按钮可重新翻译或切换翻译引擎。支持 WattToolkit 工具箱。",
+    "url": "https://greasyfork.org/scripts/533040-steam-%E6%96%87%E6%9C%AC%E5%86%85%E5%AE%B9%E7%BF%BB%E8%AF%91",
+    "code_url": "https://update.greasyfork.org/scripts/533040/Steam%20%E6%96%87%E6%9C%AC%E5%86%85%E5%AE%B9%E7%BF%BB%E8%AF%91.user.js",
+    "code_size": 43474,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

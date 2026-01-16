@@ -1,0 +1,59 @@
+{
+  "id": 546147,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-17T11:18:58.000Z",
+  "code_updated_at": "2025-08-17T11:18:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052375,
+      "name": "keney Me",
+      "created_at": "2023-04-03T09:35:34.000Z",
+      "url": "https://greasyfork.org/users/1052375-keney-me",
+      "scripts": [
+        {
+          "id": 537864,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-31T14:55:59.000Z",
+          "code_updated_at": "2025-05-31T14:58:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Remove Datacaciques Ad",
+          "description": "DataCaciques 广告屏蔽脚本",
+          "url": "https://greasyfork.org/scripts/537864-auto-remove-datacaciques-ad",
+          "code_url": "https://update.greasyfork.org/scripts/537864/Auto%20Remove%20Datacaciques%20Ad.user.js",
+          "code_size": 17669,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ERP近7天销售数据展示（简化版）",
+  "description": "Fetch and display sales report data as ECharts line chart in a floating window with enhanced UI/UX, fixed button, loading animation, confined tooltip, totalCount-sorted tooltip with 0 display fix, caching disabled, fullscreen toggle, fixed duplicate button issue, syntax errors, and button not displaying in Chrome",
+  "url": "https://greasyfork.org/scripts/546147-erp%E8%BF%917%E5%A4%A9%E9%94%80%E5%94%AE%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA-%E7%AE%80%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/546147/ERP%E8%BF%917%E5%A4%A9%E9%94%80%E5%94%AE%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA%EF%BC%88%E7%AE%80%E5%8C%96%E7%89%88%EF%BC%89.user.js",
+  "code_size": 42288,
+  "license": "MIT License",
+  "version": "2.1.20",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

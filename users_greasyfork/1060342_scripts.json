@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508750,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-16T21:03:02.000Z",
+    "code_updated_at": "2024-09-16T23:50:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060342,
+        "name": "Morde",
+        "created_at": "2023-04-15T00:19:50.000Z",
+        "url": "https://greasyfork.org/users/1060342-morde"
+      }
+    ],
+    "name": "LOTRO Wiki - Shortest Path Between Map Points",
+    "description": "Calculates and draws an overlay of the shortest path between points on a map page in the LOTRO Wiki (e.g. for doing explorer deeds)",
+    "url": "https://greasyfork.org/scripts/508750-lotro-wiki-shortest-path-between-map-points",
+    "code_url": "https://update.greasyfork.org/scripts/508750/LOTRO%20Wiki%20-%20Shortest%20Path%20Between%20Map%20Points.user.js",
+    "code_size": 10678,
+    "license": "MIT License",
+    "version": "2024-09-16u3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

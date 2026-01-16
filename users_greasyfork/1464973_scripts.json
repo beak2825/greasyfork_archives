@@ -1,0 +1,200 @@
+[
+  {
+    "id": 540739,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T13:32:25.000Z",
+    "code_updated_at": "2025-06-25T13:32:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464973,
+        "name": "Rocymar Júnior",
+        "created_at": "2025-05-02T23:50:06.000Z",
+        "url": "https://greasyfork.org/users/1464973-rocymar-j%C3%BAnior"
+      }
+    ],
+    "name": "MedCof - Liberar Teclado e Botão Direito nas Aulas",
+    "description": "Reativa os atalhos de teclado (setas) e o menu de contexto (botão direito) no player de vídeo de aulas.medcof.com.br. Não afeta outros sites da MedCof.",
+    "url": "https://greasyfork.org/scripts/540739-medcof-liberar-teclado-e-bot%C3%A3o-direito-nas-aulas",
+    "code_url": "https://update.greasyfork.org/scripts/540739/MedCof%20-%20Liberar%20Teclado%20e%20Bot%C3%A3o%20Direito%20nas%20Aulas.user.js",
+    "code_size": 1492,
+    "license": null,
+    "version": "1.2",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538813,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T11:58:29.000Z",
+    "code_updated_at": "2025-06-08T13:58:33.000Z",
+    "namespace": "https://greasyfork.org/users/1464973",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464973,
+        "name": "Rocymar Júnior",
+        "created_at": "2025-05-02T23:50:06.000Z",
+        "url": "https://greasyfork.org/users/1464973-rocymar-j%C3%BAnior"
+      }
+    ],
+    "name": "Brainscape - Enchancer",
+    "description": "Bloqueia CTAs de subscrição, remove o blur e esconde a janela de classificação dos flashcards no Brainscape.",
+    "url": "https://greasyfork.org/scripts/538813-brainscape-enchancer",
+    "code_url": "https://update.greasyfork.org/scripts/538813/Brainscape%20-%20Enchancer.user.js",
+    "code_size": 3736,
+    "license": null,
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538812,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T11:57:28.000Z",
+    "code_updated_at": "2025-06-25T13:33:38.000Z",
+    "namespace": "https://greasyfork.org/users/1464973",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464973,
+        "name": "Rocymar Júnior",
+        "created_at": "2025-05-02T23:50:06.000Z",
+        "url": "https://greasyfork.org/users/1464973-rocymar-j%C3%BAnior"
+      }
+    ],
+    "name": "Passei Direto - Bypass",
+    "description": "Custom modifications to Passei Direto for enhanced viewing.",
+    "url": "https://greasyfork.org/scripts/538812-passei-direto-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/538812/Passei%20Direto%20-%20Bypass.user.js",
+    "code_size": 10965,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538811,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T11:56:03.000Z",
+    "code_updated_at": "2025-06-08T11:56:03.000Z",
+    "namespace": "https://greasyfork.org/users/1464973",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464973,
+        "name": "Rocymar Júnior",
+        "created_at": "2025-05-02T23:50:06.000Z",
+        "url": "https://greasyfork.org/users/1464973-rocymar-j%C3%BAnior"
+      }
+    ],
+    "name": "Radiopaedia PT-BR to EN Medical Search",
+    "description": "Translates Portuguese medical search terms to English on Radiopaedia.org",
+    "url": "https://greasyfork.org/scripts/538811-radiopaedia-pt-br-to-en-medical-search",
+    "code_url": "https://update.greasyfork.org/scripts/538811/Radiopaedia%20PT-BR%20to%20EN%20Medical%20Search.user.js",
+    "code_size": 8528,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538810,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T11:54:43.000Z",
+    "code_updated_at": "2025-06-25T13:31:14.000Z",
+    "namespace": "https://greasyfork.org/users/1464973",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464973,
+        "name": "Rocymar Júnior",
+        "created_at": "2025-05-02T23:50:06.000Z",
+        "url": "https://greasyfork.org/users/1464973-rocymar-j%C3%BAnior"
+      }
+    ],
+    "name": "Browser - Mouse Enchancer",
+    "description": "Avança/volta página ao arrastar com botão direito. Direita->Avançar, Esquerda->Voltar. Sem menu de contexto após arrastar.",
+    "url": "https://greasyfork.org/scripts/538810-browser-mouse-enchancer",
+    "code_url": "https://update.greasyfork.org/scripts/538810/Browser%20-%20Mouse%20Enchancer.user.js",
+    "code_size": 5596,
+    "license": null,
+    "version": "1.2",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538808,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T11:47:36.000Z",
+    "code_updated_at": "2025-06-25T13:30:07.000Z",
+    "namespace": "https://greasyfork.org/users/1464973",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464973,
+        "name": "Rocymar Júnior",
+        "created_at": "2025-05-02T23:50:06.000Z",
+        "url": "https://greasyfork.org/users/1464973-rocymar-j%C3%BAnior"
+      }
+    ],
+    "name": "Universal Highlight",
+    "description": "Grifa com Alt+A. Desbloqueia Ctrl+C. Clica para copiar.",
+    "url": "https://greasyfork.org/scripts/538808-universal-highlight",
+    "code_url": "https://update.greasyfork.org/scripts/538808/Universal%20Highlight.user.js",
+    "code_size": 7593,
+    "license": null,
+    "version": "3.9",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

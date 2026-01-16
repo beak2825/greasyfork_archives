@@ -1,0 +1,33 @@
+{
+  "id": 513115,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-18T23:35:51.000Z",
+  "code_updated_at": "2024-10-18T23:35:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1263781,
+      "name": "ArthurTakase",
+      "created_at": "2024-02-19T15:16:55.000Z",
+      "url": "https://greasyfork.org/users/1263781-arthurtakase"
+    }
+  ],
+  "name": "Trakt.Tv Personnal Notes",
+  "description": "Add personnal notes to trakt.tv shows and movies",
+  "url": "https://greasyfork.org/scripts/513115-trakt-tv-personnal-notes",
+  "code_url": "https://update.greasyfork.org/scripts/513115/TraktTv%20Personnal%20Notes.user.js",
+  "code_size": 5183,
+  "license": null,
+  "version": "2024-10-18",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

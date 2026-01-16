@@ -1,0 +1,134 @@
+[
+  {
+    "id": 518737,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T23:27:36.000Z",
+    "code_updated_at": "2024-11-24T23:27:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254701,
+        "name": "Skeebadoo",
+        "created_at": "2024-01-29T10:13:29.000Z",
+        "url": "https://greasyfork.org/users/1254701-skeebadoo"
+      }
+    ],
+    "name": "Auto Load More Items on New Music Page",
+    "description": "Automatically clicks \"View More...\" after switching tabs or sort order on the new music page.",
+    "url": "https://greasyfork.org/scripts/518737-auto-load-more-items-on-new-music-page",
+    "code_url": "https://update.greasyfork.org/scripts/518737/Auto%20Load%20More%20Items%20on%20New%20Music%20Page.user.js",
+    "code_size": 10968,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518736,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T23:19:34.000Z",
+    "code_updated_at": "2025-01-04T13:09:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254701,
+        "name": "Skeebadoo",
+        "created_at": "2024-01-29T10:13:29.000Z",
+        "url": "https://greasyfork.org/users/1254701-skeebadoo"
+      }
+    ],
+    "name": "Combined Filter for New Music Releases",
+    "description": "Enhanced dropdown filters for release types and weeks, fixed issue with filtering year-only releases when selecting \"This Week\".",
+    "url": "https://greasyfork.org/scripts/518736-combined-filter-for-new-music-releases",
+    "code_url": "https://update.greasyfork.org/scripts/518736/Combined%20Filter%20for%20New%20Music%20Releases.user.js",
+    "code_size": 13830,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518723,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T19:30:02.000Z",
+    "code_updated_at": "2024-11-24T19:30:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254701,
+        "name": "Skeebadoo",
+        "created_at": "2024-01-29T10:13:29.000Z",
+        "url": "https://greasyfork.org/users/1254701-skeebadoo"
+      }
+    ],
+    "name": "Add and Format Release Types to New Music",
+    "description": "Add release type with formatting and dynamic placement; handle dynamically loaded content, support tab switching.",
+    "url": "https://greasyfork.org/scripts/518723-add-and-format-release-types-to-new-music",
+    "code_url": "https://update.greasyfork.org/scripts/518723/Add%20and%20Format%20Release%20Types%20to%20New%20Music.user.js",
+    "code_size": 4716,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518722,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T19:27:33.000Z",
+    "code_updated_at": "2024-11-24T19:27:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254701,
+        "name": "Skeebadoo",
+        "created_at": "2024-01-29T10:13:29.000Z",
+        "url": "https://greasyfork.org/users/1254701-skeebadoo"
+      }
+    ],
+    "name": "Compact Filter for New Music Release Types",
+    "description": "Add a compact dropdown filter for release types in the header of the new releases page.",
+    "url": "https://greasyfork.org/scripts/518722-compact-filter-for-new-music-release-types",
+    "code_url": "https://update.greasyfork.org/scripts/518722/Compact%20Filter%20for%20New%20Music%20Release%20Types.user.js",
+    "code_size": 6672,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

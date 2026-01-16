@@ -1,0 +1,59 @@
+{
+  "id": 533674,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-23T00:34:48.000Z",
+  "code_updated_at": "2025-04-23T00:34:47.000Z",
+  "namespace": "takenrr.torn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 762662,
+      "name": "WhiskeyJackIV",
+      "created_at": "2021-04-20T15:18:19.000Z",
+      "url": "https://greasyfork.org/users/762662-whiskeyjackiv",
+      "scripts": [
+        {
+          "id": 558249,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-07T18:22:28.000Z",
+          "code_updated_at": "2025-12-07T18:22:28.000Z",
+          "namespace": "whiskey_jack.torn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn: Block 1m & 10m Slots Bets",
+          "description": "Blocks the 1,000,000 and 10,000,000 bet buttons on the Torn slots page.",
+          "url": "https://greasyfork.org/scripts/558249-torn-block-1m-10m-slots-bets",
+          "code_url": "https://update.greasyfork.org/scripts/558249/Torn%3A%20Block%201m%20%2010m%20Slots%20Bets.user.js",
+          "code_size": 3491,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RR Taken (Debug Version with Class WebSocket Hook)",
+  "description": "Game filter + WebSocket class-based override + full logging + no feature removals",
+  "url": "https://greasyfork.org/scripts/533674-rr-taken-debug-version-with-class-websocket-hook",
+  "code_url": "https://update.greasyfork.org/scripts/533674/RR%20Taken%20%28Debug%20Version%20with%20Class%20WebSocket%20Hook%29.user.js",
+  "code_size": 7414,
+  "license": null,
+  "version": "1.6.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

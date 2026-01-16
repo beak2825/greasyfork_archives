@@ -1,0 +1,59 @@
+{
+  "id": 504289,
+  "daily_installs": 2,
+  "total_installs": 1051,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-19T17:59:11.000Z",
+  "code_updated_at": "2026-01-07T10:27:15.000Z",
+  "namespace": "https://www.yaohuo.me/",
+  "support_url": "https://www.yaohuo.me/bbs/userinfo.aspx?touserid=27894",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354690,
+      "name": "v2jun",
+      "created_at": "2024-08-19T17:43:54.000Z",
+      "url": "https://greasyfork.org/users/1354690-v2jun",
+      "scripts": [
+        {
+          "id": 504289,
+          "daily_installs": 2,
+          "total_installs": 1051,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-19T17:59:11.000Z",
+          "code_updated_at": "2026-01-07T10:27:15.000Z",
+          "namespace": "https://www.yaohuo.me/",
+          "support_url": "https://www.yaohuo.me/bbs/userinfo.aspx?touserid=27894",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "妖火网增强脚本Plus",
+          "description": "让妖火再次变得伟大(手动狗头.jpg)",
+          "url": "https://greasyfork.org/scripts/504289-%E5%A6%96%E7%81%AB%E7%BD%91%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%ACplus",
+          "code_url": "https://update.greasyfork.org/scripts/504289/%E5%A6%96%E7%81%AB%E7%BD%91%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%ACPlus.user.js",
+          "code_size": 137782,
+          "license": "MIT License",
+          "version": "1.8.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "妖火网增强脚本Plus",
+  "description": "让妖火再次变得伟大(手动狗头.jpg)",
+  "url": "https://greasyfork.org/scripts/504289-%E5%A6%96%E7%81%AB%E7%BD%91%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%ACplus",
+  "code_url": "https://update.greasyfork.org/scripts/504289/%E5%A6%96%E7%81%AB%E7%BD%91%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%ACPlus.user.js",
+  "code_size": 137782,
+  "license": "MIT License",
+  "version": "1.8.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

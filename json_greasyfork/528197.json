@@ -1,0 +1,59 @@
+{
+  "id": 528197,
+  "daily_installs": 3,
+  "total_installs": 199,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-02-27T04:13:26.000Z",
+  "code_updated_at": "2025-03-13T06:55:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/woodcoal/deepseek-chat-export",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440432,
+      "name": "木炭",
+      "created_at": "2025-02-27T03:56:15.000Z",
+      "url": "https://greasyfork.org/users/1440432-%E6%9C%A8%E7%82%AD",
+      "scripts": [
+        {
+          "id": 528197,
+          "daily_installs": 3,
+          "total_installs": 199,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-02-27T04:13:26.000Z",
+          "code_updated_at": "2025-03-13T06:55:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/woodcoal/deepseek-chat-export",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DeepSeek 对话导出",
+          "description": "将 Deepseek 对话导出与复制的工具",
+          "url": "https://greasyfork.org/scripts/528197-deepseek-%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA",
+          "code_url": "https://update.greasyfork.org/scripts/528197/DeepSeek%20%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA.user.js",
+          "code_size": 15271,
+          "license": "MIT License",
+          "version": "1.25.0313",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DeepSeek 对话导出",
+  "description": "将 Deepseek 对话导出与复制的工具",
+  "url": "https://greasyfork.org/scripts/528197-deepseek-%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/528197/DeepSeek%20%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 15271,
+  "license": "MIT License",
+  "version": "1.25.0313",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

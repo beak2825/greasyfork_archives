@@ -1,0 +1,33 @@
+{
+  "id": 548677,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-07T08:00:45.000Z",
+  "code_updated_at": "2025-09-07T11:03:17.000Z",
+  "namespace": "https://greasyfork.org/users/1480633",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480633,
+      "name": "ustar",
+      "created_at": "2025-06-08T11:05:56.000Z",
+      "url": "https://greasyfork.org/users/1480633-ustar"
+    }
+  ],
+  "name": "소미소프트 통합 자동화 스크립트",
+  "description": "kone.gg에서 base64암호화 URL 더블클릭하면 열기 + kio.ac에서 광고 제거 및 비밀번호 자동 입력",
+  "url": "https://greasyfork.org/scripts/548677-%EC%86%8C%EB%AF%B8%EC%86%8C%ED%94%84%ED%8A%B8-%ED%86%B5%ED%95%A9-%EC%9E%90%EB%8F%99%ED%99%94-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8",
+  "code_url": "https://update.greasyfork.org/scripts/548677/%EC%86%8C%EB%AF%B8%EC%86%8C%ED%94%84%ED%8A%B8%20%ED%86%B5%ED%95%A9%20%EC%9E%90%EB%8F%99%ED%99%94%20%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8.user.js",
+  "code_size": 3954,
+  "license": null,
+  "version": "2.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -196,5 +196,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 511916,
+    "daily_installs": 4,
+    "total_installs": 1018,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-08T19:40:47.000Z",
+    "code_updated_at": "2024-10-08T19:40:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1204402,
+        "name": "Sheets McGee",
+        "created_at": "2023-10-26T10:25:38.000Z",
+        "url": "https://greasyfork.org/users/1204402-sheets-mcgee"
+      }
+    ],
+    "name": "Random Target Finder",
+    "description": "Adds a button to the top of the page that opens a new tab with an easy target.",
+    "url": "https://greasyfork.org/scripts/511916-random-target-finder",
+    "code_url": "https://update.greasyfork.org/scripts/511916/Random%20Target%20Finder.user.js",
+    "code_size": 2057,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511611,
+    "daily_installs": 1,
+    "total_installs": 378,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-05T20:06:53.000Z",
+    "code_updated_at": "2025-10-26T20:01:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1204402,
+        "name": "Sheets McGee",
+        "created_at": "2023-10-26T10:25:38.000Z",
+        "url": "https://greasyfork.org/users/1204402-sheets-mcgee"
+      }
+    ],
+    "name": "Faction Target Finder",
+    "description": "Adds a button to the top of the page that opens a live raid target from the faction list.",
+    "url": "https://greasyfork.org/scripts/511611-faction-target-finder",
+    "code_url": "https://update.greasyfork.org/scripts/511611/Faction%20Target%20Finder.user.js",
+    "code_size": 32763,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

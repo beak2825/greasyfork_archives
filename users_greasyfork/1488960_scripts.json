@@ -63,6 +63,72 @@
     "version": "1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 550737,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-26T08:37:27.000Z",
+    "code_updated_at": "2025-11-07T12:03:17.000Z",
+    "namespace": "animestars",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488960,
+        "name": "Евгений Герасименко",
+        "created_at": "2025-06-26T19:55:38.000Z",
+        "url": "https://greasyfork.org/users/1488960-%D0%B5%D0%B2%D0%B3%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B3%D0%B5%D1%80%D0%B0%D1%81%D0%B8%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE"
+      }
+    ],
+    "name": "AnimeStars Clan Highlighter",
+    "description": "Shows a clan icon next to any username on the site that belongs to your clan",
+    "url": "https://greasyfork.org/scripts/550737-animestars-clan-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/550737/AnimeStars%20Clan%20Highlighter.user.js",
+    "code_size": 9000,
+    "license": "LedFox",
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540879,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-26T19:58:32.000Z",
+    "code_updated_at": "2025-06-27T19:21:30.000Z",
+    "namespace": "animestars",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488960,
+        "name": "Евгений Герасименко",
+        "created_at": "2025-06-26T19:55:38.000Z",
+        "url": "https://greasyfork.org/users/1488960-%D0%B5%D0%B2%D0%B3%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B3%D0%B5%D1%80%D0%B0%D1%81%D0%B8%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE"
+      }
+    ],
+    "name": "AnimeStars Clan Styler",
+    "description": "just comfortable style",
+    "url": "https://greasyfork.org/scripts/540879-animestars-clan-styler",
+    "code_url": "https://update.greasyfork.org/scripts/540879/AnimeStars%20Clan%20Styler.user.js",
+    "code_size": 2408,
+    "license": "LedFox",
+    "version": "6",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

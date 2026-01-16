@@ -1,0 +1,68 @@
+[
+  {
+    "id": 511258,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T22:35:26.000Z",
+    "code_updated_at": "2024-10-03T10:38:01.000Z",
+    "namespace": "Bookertie's Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986674,
+        "name": "bookertie",
+        "created_at": "2022-11-22T23:51:45.000Z",
+        "url": "https://greasyfork.org/users/986674-bookertie"
+      }
+    ],
+    "name": "UPJV Moodle Login",
+    "description": "Redirige directement sur \"Mes cours\" sans passer sur \"Accueil\" de Moodle & Redirige directement sur la page de connexion, en cas de deconnexion.",
+    "url": "https://greasyfork.org/scripts/511258-upjv-moodle-login",
+    "code_url": "https://update.greasyfork.org/scripts/511258/UPJV%20Moodle%20Login.user.js",
+    "code_size": 1533,
+    "license": "GNU GPLv3",
+    "version": "1.0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511244,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T19:11:27.000Z",
+    "code_updated_at": "2024-10-02T22:41:43.000Z",
+    "namespace": "Bookertie's Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 986674,
+        "name": "bookertie",
+        "created_at": "2022-11-22T23:51:45.000Z",
+        "url": "https://greasyfork.org/users/986674-bookertie"
+      }
+    ],
+    "name": "UPJV CELCAT-Calendar Filtre/Regex",
+    "description": "Filtre planning en fonction du groupe/partern (Regex) prédéfinis. (Make sure to change the @match statement to your CELCAT Calendar website)",
+    "url": "https://greasyfork.org/scripts/511244-upjv-celcat-calendar-filtre-regex",
+    "code_url": "https://update.greasyfork.org/scripts/511244/UPJV%20CELCAT-Calendar%20FiltreRegex.user.js",
+    "code_size": 3241,
+    "license": "GNU GPLv3",
+    "version": "1.0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

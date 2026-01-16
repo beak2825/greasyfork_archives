@@ -1,0 +1,59 @@
+{
+  "id": 545502,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-12T03:27:29.000Z",
+  "code_updated_at": "2025-08-12T03:27:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503997,
+      "name": "ronkzinho",
+      "created_at": "2025-08-12T03:26:31.000Z",
+      "url": "https://greasyfork.org/users/1503997-ronkzinho",
+      "scripts": [
+        {
+          "id": 555466,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-11T00:21:47.000Z",
+          "code_updated_at": "2025-11-11T00:21:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Autosbc keybinds",
+          "description": "Adds CSS on load, focuses button, and overrides space/enter keys",
+          "url": "https://greasyfork.org/scripts/555466-autosbc-keybinds",
+          "code_url": "https://update.greasyfork.org/scripts/555466/Autosbc%20keybinds.user.js",
+          "code_size": 11747,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Button Focus + Space Click (Clean)",
+  "description": "Adds CSS on load, focuses button, and overrides space/enter keys",
+  "url": "https://greasyfork.org/scripts/545502-button-focus-space-click-clean",
+  "code_url": "https://update.greasyfork.org/scripts/545502/Button%20Focus%20%2B%20Space%20Click%20%28Clean%29.user.js",
+  "code_size": 11765,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527126,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T19:02:38.000Z",
+    "code_updated_at": "2025-02-16T20:26:01.000Z",
+    "namespace": "https://greasyfork.org/users/1387362",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1387362,
+        "name": "Nina_",
+        "created_at": "2024-10-28T02:06:45.000Z",
+        "url": "https://greasyfork.org/users/1387362-nina"
+      }
+    ],
+    "name": "移除“坟贴勿回” for Bangumi",
+    "description": "自动隐藏包含特定关键词的垃圾回复（同时包含“坟”、“贴”、“勿”、“回”且总字数少于50）",
+    "url": "https://greasyfork.org/scripts/527126-%E7%A7%BB%E9%99%A4-%E5%9D%9F%E8%B4%B4%E5%8B%BF%E5%9B%9E-for-bangumi",
+    "code_url": "https://update.greasyfork.org/scripts/527126/%E7%A7%BB%E9%99%A4%E2%80%9C%E5%9D%9F%E8%B4%B4%E5%8B%BF%E5%9B%9E%E2%80%9D%20for%20Bangumi.user.js",
+    "code_size": 1276,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

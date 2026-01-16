@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534831,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-03T17:05:45.000Z",
+    "code_updated_at": "2025-05-03T17:05:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465292,
+        "name": "JCionx",
+        "created_at": "2025-05-03T17:03:41.000Z",
+        "url": "https://greasyfork.org/users/1465292-jcionx"
+      }
+    ],
+    "name": "kassellabs watermark/ads remover",
+    "description": "Remove watermark and ads from starwarsintrocreator.kassellabs.io and add a fullscreen button",
+    "url": "https://greasyfork.org/scripts/534831-kassellabs-watermark-ads-remover",
+    "code_url": "https://update.greasyfork.org/scripts/534831/kassellabs%20watermarkads%20remover.user.js",
+    "code_size": 2904,
+    "license": "MIT License",
+    "version": "2025-05-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

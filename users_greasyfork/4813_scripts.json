@@ -1,0 +1,68 @@
+[
+  {
+    "id": 543170,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T02:15:06.000Z",
+    "code_updated_at": "2025-09-10T04:35:05.000Z",
+    "namespace": "https://greasyfork.org/users/4813",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4813,
+        "name": "Swyter",
+        "created_at": "2014-08-28T14:29:40.000Z",
+        "url": "https://greasyfork.org/users/4813-swyter"
+      }
+    ],
+    "name": "Quick opcode filter for M&B mod wiki",
+    "description": "Add a small input box in the operations and triggers pages to easily look up, find and filter specific Mount&Blade 1.011 and Warband module system opcodes and triggers.",
+    "url": "https://greasyfork.org/scripts/543170-quick-opcode-filter-for-m-b-mod-wiki",
+    "code_url": "https://update.greasyfork.org/scripts/543170/Quick%20opcode%20filter%20for%20MB%20mod%20wiki.user.js",
+    "code_size": 8574,
+    "license": "GNU GPLv3",
+    "version": "2025.09.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531170,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T00:01:31.000Z",
+    "code_updated_at": "2025-03-29T00:15:14.000Z",
+    "namespace": "https://greasyfork.org/en/users/4813",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4813,
+        "name": "Swyter",
+        "created_at": "2014-08-28T14:29:40.000Z",
+        "url": "https://greasyfork.org/users/4813-swyter"
+      }
+    ],
+    "name": "Discord (web) - Remove top bar in the new 2025 UI refresh",
+    "description": "The bar is pretty useless and takes a ton of vertical space.",
+    "url": "https://greasyfork.org/scripts/531170-discord-web-remove-top-bar-in-the-new-2025-ui-refresh",
+    "code_url": "https://update.greasyfork.org/scripts/531170/Discord%20%28web%29%20-%20Remove%20top%20bar%20in%20the%20new%202025%20UI%20refresh.user.css",
+    "code_size": 1142,
+    "license": "CC-BY-SA 4.0",
+    "version": "2025.03.28",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

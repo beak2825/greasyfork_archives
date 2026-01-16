@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528200,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-27T05:19:27.000Z",
+    "code_updated_at": "2025-09-11T11:18:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440455,
+        "name": "wen2so",
+        "created_at": "2025-02-27T05:11:58.000Z",
+        "url": "https://greasyfork.org/users/1440455-wen2so"
+      }
+    ],
+    "name": "视频精确控制工具（优化版）",
+    "description": "为手机端视频添加可开关的悬浮精确控制工具条，完全透明背景不影响观看内容",
+    "url": "https://greasyfork.org/scripts/528200-%E8%A7%86%E9%A2%91%E7%B2%BE%E7%A1%AE%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7-%E4%BC%98%E5%8C%96%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/528200/%E8%A7%86%E9%A2%91%E7%B2%BE%E7%A1%AE%E6%8E%A7%E5%88%B6%E5%B7%A5%E5%85%B7%EF%BC%88%E4%BC%98%E5%8C%96%E7%89%88%EF%BC%89.user.js",
+    "code_size": 12444,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

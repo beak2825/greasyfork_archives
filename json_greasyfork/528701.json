@@ -1,0 +1,33 @@
+{
+  "id": 528701,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-04T03:04:05.000Z",
+  "code_updated_at": "2025-03-04T03:04:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441885,
+      "name": "amizcmi",
+      "created_at": "2025-03-03T13:01:14.000Z",
+      "url": "https://greasyfork.org/users/1441885-amizcmi"
+    }
+  ],
+  "name": "网易云音乐云盘清理工具",
+  "description": "自动清理网易云音乐云盘中的日文/韩文/百家讲坛/英文/短歌曲等内容，支持导出同名歌曲列表",
+  "url": "https://greasyfork.org/scripts/528701-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%91%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/528701/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%91%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 37305,
+  "license": "Apache License 2.0",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

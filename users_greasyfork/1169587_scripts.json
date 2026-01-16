@@ -130,5 +130,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 537555,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-28T15:05:09.000Z",
+    "code_updated_at": "2025-05-28T15:05:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1169587,
+        "name": "CNproudly",
+        "created_at": "2023-09-09T14:11:08.000Z",
+        "url": "https://greasyfork.org/users/1169587-cnproudly"
+      }
+    ],
+    "name": "超星通用题目提取器",
+    "description": "从超星“查看已批阅作业”或类似考试回顾页面提取题目。支持自动提取和手动提取，带自定义提示。",
+    "url": "https://greasyfork.org/scripts/537555-%E8%B6%85%E6%98%9F%E9%80%9A%E7%94%A8%E9%A2%98%E7%9B%AE%E6%8F%90%E5%8F%96%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/537555/%E8%B6%85%E6%98%9F%E9%80%9A%E7%94%A8%E9%A2%98%E7%9B%AE%E6%8F%90%E5%8F%96%E5%99%A8.user.js",
+    "code_size": 42604,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

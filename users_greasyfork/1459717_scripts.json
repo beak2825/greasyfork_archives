@@ -130,5 +130,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 543799,
+    "daily_installs": 5,
+    "total_installs": 109,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-27T17:51:01.000Z",
+    "code_updated_at": "2025-07-27T17:51:01.000Z",
+    "namespace": "dev.kwack.torn.imarket-auto-price",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Item Market Auto Price",
+    "description": "Automatically set the price of items relative to the current market with settings menu",
+    "url": "https://greasyfork.org/scripts/543799-item-market-auto-price",
+    "code_url": "https://update.greasyfork.org/scripts/543799/Item%20Market%20Auto%20Price.user.js",
+    "code_size": 8869,
+    "license": null,
+    "version": "1.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542865,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T21:13:01.000Z",
+    "code_updated_at": "2025-07-17T21:13:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Last Action Viewer by Mr_Awaken[3255504]",
+    "description": "Shows player's last action on long-click, with API key management",
+    "url": "https://greasyfork.org/scripts/542865-last-action-viewer-by-mr-awaken-3255504",
+    "code_url": "https://update.greasyfork.org/scripts/542865/Last%20Action%20Viewer%20by%20Mr_Awaken%5B3255504%5D.user.js",
+    "code_size": 26764,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542862,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T20:06:42.000Z",
+    "code_updated_at": "2025-08-19T06:26:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Quick Message Copier (Torn PDA)",
+    "description": "Save and copy your common messages easily with themes (non-intrusive warnings)",
+    "url": "https://greasyfork.org/scripts/542862-quick-message-copier-torn-pda",
+    "code_url": "https://update.greasyfork.org/scripts/542862/Quick%20Message%20Copier%20%28Torn%20PDA%29.user.js",
+    "code_size": 11308,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533325,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T10:39:45.000Z",
+    "code_updated_at": "2025-08-21T04:13:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459717,
+        "name": "Bhig Dreamz",
+        "created_at": "2025-04-19T09:42:10.000Z",
+        "url": "https://greasyfork.org/users/1459717-bhig-dreamz"
+      }
+    ],
+    "name": "Shadowlister(Torn Auto-Anon Toggle)",
+    "description": "Toggle all item listings anonymous ON/OFF while keeping manual control",
+    "url": "https://greasyfork.org/scripts/533325-shadowlister-torn-auto-anon-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/533325/Shadowlister%28Torn%20Auto-Anon%20Toggle%29.user.js",
+    "code_size": 5915,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

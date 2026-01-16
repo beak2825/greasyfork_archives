@@ -1,0 +1,134 @@
+[
+  {
+    "id": 518878,
+    "daily_installs": 1,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-26T01:38:17.000Z",
+    "code_updated_at": "2024-11-26T01:38:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862686,
+        "name": "leerukang",
+        "created_at": "2022-01-09T04:39:43.000Z",
+        "url": "https://greasyfork.org/users/862686-leerukang"
+      }
+    ],
+    "name": "Modify Telegram Web Elements",
+    "description": "修改特定元素样式并删除元素",
+    "url": "https://greasyfork.org/scripts/518878-modify-telegram-web-elements",
+    "code_url": "https://update.greasyfork.org/scripts/518878/Modify%20Telegram%20Web%20Elements.user.js",
+    "code_size": 2474,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517441,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T03:56:58.000Z",
+    "code_updated_at": "2024-11-15T03:56:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862686,
+        "name": "leerukang",
+        "created_at": "2022-01-09T04:39:43.000Z",
+        "url": "https://greasyfork.org/users/862686-leerukang"
+      }
+    ],
+    "name": "livecamrips优化",
+    "description": "设置 \"vjs-big-play-button\" 类按钮的 z-index 和 position，并删除所有 <script> 标签",
+    "url": "https://greasyfork.org/scripts/517441-livecamrips%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/517441/livecamrips%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 1319,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509328,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T06:10:36.000Z",
+    "code_updated_at": "2024-09-20T06:10:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862686,
+        "name": "leerukang",
+        "created_at": "2022-01-09T04:39:43.000Z",
+        "url": "https://greasyfork.org/users/862686-leerukang"
+      }
+    ],
+    "name": "Auto Submit Form",
+    "description": "Automatically submits form every 2 seconds on specified page by simulating button click on the first visible input[type=\"submit\"] button",
+    "url": "https://greasyfork.org/scripts/509328-auto-submit-form",
+    "code_url": "https://update.greasyfork.org/scripts/509328/Auto%20Submit%20Form.user.js",
+    "code_size": 1216,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 507878,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-11T01:12:00.000Z",
+    "code_updated_at": "2024-09-11T01:59:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862686,
+        "name": "leerukang",
+        "created_at": "2022-01-09T04:39:43.000Z",
+        "url": "https://greasyfork.org/users/862686-leerukang"
+      }
+    ],
+    "name": "克隆并显示游民星空的Mid2L_tit和Mid2L_con元素",
+    "description": "克隆Mid2L_tit和Mid2L_con元素，隐藏其他内容，设置背景为白色，移除背景图片，删除动态生成的ADback元素，并设置Mid2L_con宽度为100%，同时删除克隆内容中的referencecontent元素。",
+    "url": "https://greasyfork.org/scripts/507878-%E5%85%8B%E9%9A%86%E5%B9%B6%E6%98%BE%E7%A4%BA%E6%B8%B8%E6%B0%91%E6%98%9F%E7%A9%BA%E7%9A%84mid2l-tit%E5%92%8Cmid2l-con%E5%85%83%E7%B4%A0",
+    "code_url": "https://update.greasyfork.org/scripts/507878/%E5%85%8B%E9%9A%86%E5%B9%B6%E6%98%BE%E7%A4%BA%E6%B8%B8%E6%B0%91%E6%98%9F%E7%A9%BA%E7%9A%84Mid2L_tit%E5%92%8CMid2L_con%E5%85%83%E7%B4%A0.user.js",
+    "code_size": 3716,
+    "license": null,
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

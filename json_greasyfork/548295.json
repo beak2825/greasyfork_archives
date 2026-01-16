@@ -1,0 +1,33 @@
+{
+  "id": 548295,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T02:23:15.000Z",
+  "code_updated_at": "2025-09-04T02:23:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1400685,
+      "name": "张FX",
+      "created_at": "2024-11-22T11:27:38.000Z",
+      "url": "https://greasyfork.org/users/1400685-%E5%BC%A0fx"
+    }
+  ],
+  "name": "火山云存储桶文件下载选择器",
+  "description": "列出下载资源，支持复选框选择，全选/取消全选，按勾选批量下载",
+  "url": "https://greasyfork.org/scripts/548295-%E7%81%AB%E5%B1%B1%E4%BA%91%E5%AD%98%E5%82%A8%E6%A1%B6%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%89%E6%8B%A9%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/548295/%E7%81%AB%E5%B1%B1%E4%BA%91%E5%AD%98%E5%82%A8%E6%A1%B6%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%89%E6%8B%A9%E5%99%A8.user.js",
+  "code_size": 4661,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

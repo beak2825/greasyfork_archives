@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543862,
+    "daily_installs": 0,
+    "total_installs": 198,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T10:44:38.000Z",
+    "code_updated_at": "2025-12-08T02:48:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499127,
+        "name": "gxy12345",
+        "created_at": "2025-07-28T10:16:09.000Z",
+        "url": "https://greasyfork.org/users/1499127-gxy12345"
+      }
+    ],
+    "name": "MWI角色名片插件",
+    "description": "MWI角色名片插件 - 一键生成角色名片",
+    "url": "https://greasyfork.org/scripts/543862-mwi%E8%A7%92%E8%89%B2%E5%90%8D%E7%89%87%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/543862/MWI%E8%A7%92%E8%89%B2%E5%90%8D%E7%89%87%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 188371,
+    "license": "MIT License",
+    "version": "1.6.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

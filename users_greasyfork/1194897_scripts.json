@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526422,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-10T03:00:55.000Z",
+    "code_updated_at": "2025-02-10T03:00:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194897,
+        "name": "lower F",
+        "created_at": "2023-10-13T06:41:09.000Z",
+        "url": "https://greasyfork.org/users/1194897-lower-f"
+      }
+    ],
+    "name": "czB2Bauto-lmsg",
+    "description": "自动录入信息",
+    "url": "https://greasyfork.org/scripts/526422-czb2bauto-lmsg",
+    "code_url": "https://update.greasyfork.org/scripts/526422/czB2Bauto-lmsg.user.js",
+    "code_size": 2733,
+    "license": null,
+    "version": "2025-02-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

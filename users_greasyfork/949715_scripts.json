@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524802,
+    "daily_installs": 0,
+    "total_installs": 118,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-25T07:06:03.000Z",
+    "code_updated_at": "2025-07-18T07:27:54.000Z",
+    "namespace": "https://ewt.zhicheng233.top/examanswer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 949715,
+        "name": "zhicheng233",
+        "created_at": "2022-08-23T03:48:30.000Z",
+        "url": "https://greasyfork.org/users/949715-zhicheng233"
+      }
+    ],
+    "name": "升学 E 网通 (EWT360) 试题答案获取",
+    "description": "此脚本在 EWT 试题中获取试题答案喵~",
+    "url": "https://greasyfork.org/scripts/524802-%E5%8D%87%E5%AD%A6-e-%E7%BD%91%E9%80%9A-ewt360-%E8%AF%95%E9%A2%98%E7%AD%94%E6%A1%88%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/524802/%E5%8D%87%E5%AD%A6%20E%20%E7%BD%91%E9%80%9A%20%28EWT360%29%20%E8%AF%95%E9%A2%98%E7%AD%94%E6%A1%88%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 13257,
+    "license": "GNU General Public License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

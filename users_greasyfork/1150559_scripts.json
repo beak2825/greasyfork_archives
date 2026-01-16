@@ -1,0 +1,68 @@
+[
+  {
+    "id": 516813,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-11T07:10:02.000Z",
+    "code_updated_at": "2025-08-20T04:07:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1150559,
+        "name": "wwsuixin",
+        "created_at": "2023-08-13T10:47:36.000Z",
+        "url": "https://greasyfork.org/users/1150559-wwsuixin"
+      }
+    ],
+    "name": "豆包去水印图片下载",
+    "description": "2025年8月20日12:07:18",
+    "url": "https://greasyfork.org/scripts/516813-%E8%B1%86%E5%8C%85%E5%8E%BB%E6%B0%B4%E5%8D%B0%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/516813/%E8%B1%86%E5%8C%85%E5%8E%BB%E6%B0%B4%E5%8D%B0%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 7888,
+    "license": null,
+    "version": "20250820120715",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501153,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-19T10:03:16.000Z",
+    "code_updated_at": "2025-08-20T03:33:37.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1150559,
+        "name": "wwsuixin",
+        "created_at": "2023-08-13T10:47:36.000Z",
+        "url": "https://greasyfork.org/users/1150559-wwsuixin"
+      }
+    ],
+    "name": "WS一下",
+    "description": "选中IP、域名、url时弹出悬浮框，一键查询sangfor、微步情报、奇安信、ip138",
+    "url": "https://greasyfork.org/scripts/501153-ws%E4%B8%80%E4%B8%8B",
+    "code_url": "https://update.greasyfork.org/scripts/501153/WS%E4%B8%80%E4%B8%8B.user.js",
+    "code_size": 4304,
+    "license": null,
+    "version": "20250718182058",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

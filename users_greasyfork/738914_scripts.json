@@ -1,0 +1,68 @@
+[
+  {
+    "id": 538764,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T01:53:11.000Z",
+    "code_updated_at": "2025-06-08T01:53:11.000Z",
+    "namespace": "https://greasyfork.org/en/users/738914-ibreakeverything",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738914,
+        "name": "iBreakEverything",
+        "created_at": "2021-02-19T13:03:41.000Z",
+        "url": "https://greasyfork.org/users/738914-ibreakeverything"
+      }
+    ],
+    "name": "Steam Inventory Fix",
+    "description": "Fix steam inventory economy_v2.js requesting 5000 items instead of 2000.",
+    "url": "https://greasyfork.org/scripts/538764-steam-inventory-fix",
+    "code_url": "https://update.greasyfork.org/scripts/538764/Steam%20Inventory%20Fix.user.js",
+    "code_size": 809,
+    "license": null,
+    "version": "2025-06-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528642,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-03T13:05:40.000Z",
+    "code_updated_at": "2025-03-21T23:48:35.000Z",
+    "namespace": "https://greasyfork.org/users/738914",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 738914,
+        "name": "iBreakEverything",
+        "created_at": "2021-02-19T13:03:41.000Z",
+        "url": "https://greasyfork.org/users/738914-ibreakeverything"
+      }
+    ],
+    "name": "Steam Badge Cards Highlighter",
+    "description": "Highlights card quantities",
+    "url": "https://greasyfork.org/scripts/528642-steam-badge-cards-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/528642/Steam%20Badge%20Cards%20Highlighter.user.js",
+    "code_size": 1823,
+    "license": "GNU GPLv3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

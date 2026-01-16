@@ -1,0 +1,59 @@
+{
+  "id": 528831,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-05T04:54:13.000Z",
+  "code_updated_at": "2025-03-05T04:55:59.000Z",
+  "namespace": "https://github.com/kellofkindles",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 201461,
+      "name": "kellofkindles (kellofkindles)",
+      "created_at": "2018-08-06T18:36:32.000Z",
+      "url": "https://greasyfork.org/users/201461-kellofkindles-kellofkindles",
+      "scripts": [
+        {
+          "id": 528831,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-05T04:54:13.000Z",
+          "code_updated_at": "2025-03-05T04:55:59.000Z",
+          "namespace": "https://github.com/kellofkindles",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Advanced Disboard Filter",
+          "description": "Allows you to filter discord servers from Disboard by things such as: How many members there are, what tags it has, and more.",
+          "url": "https://greasyfork.org/scripts/528831-advanced-disboard-filter",
+          "code_url": "https://update.greasyfork.org/scripts/528831/Advanced%20Disboard%20Filter.user.js",
+          "code_size": 8232,
+          "license": "GNU GPLv3",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Advanced Disboard Filter",
+  "description": "Allows you to filter discord servers from Disboard by things such as: How many members there are, what tags it has, and more.",
+  "url": "https://greasyfork.org/scripts/528831-advanced-disboard-filter",
+  "code_url": "https://update.greasyfork.org/scripts/528831/Advanced%20Disboard%20Filter.user.js",
+  "code_size": 8232,
+  "license": "GNU GPLv3",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

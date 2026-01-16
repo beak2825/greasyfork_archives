@@ -1,0 +1,33 @@
+{
+  "id": 532421,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-10T11:59:09.000Z",
+  "code_updated_at": "2025-04-10T12:01:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1014354,
+      "name": "Pavel Volue'v",
+      "created_at": "2023-01-19T17:13:41.000Z",
+      "url": "https://greasyfork.org/users/1014354-pavel-volue-v"
+    }
+  ],
+  "name": "Оформление форума | VLADIMIR",
+  "description": "Владимирский централ",
+  "url": "https://greasyfork.org/scripts/532421-%D0%BE%D1%84%D0%BE%D1%80%D0%BC%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-vladimir",
+  "code_url": "https://update.greasyfork.org/scripts/532421/%D0%9E%D1%84%D0%BE%D1%80%D0%BC%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%7C%20VLADIMIR.user.js",
+  "code_size": 9500,
+  "license": "MIT License",
+  "version": "3.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

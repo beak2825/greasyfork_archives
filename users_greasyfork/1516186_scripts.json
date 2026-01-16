@@ -30,6 +30,39 @@
     "version": "1.0",
     "locale": "ko",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549822,
+    "daily_installs": 1,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-17T10:25:19.000Z",
+    "code_updated_at": "2025-10-07T14:12:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516186,
+        "name": "H3art",
+        "created_at": "2025-09-17T10:16:12.000Z",
+        "url": "https://greasyfork.org/users/1516186-h3art"
+      }
+    ],
+    "name": "SOOP 게시글 원클릭 복사 v31.0",
+    "description": "SOOP 기본 채팅 이모티콘(class=\"emtn\")이 비정상적으로 커지는 문제를 해결하여, 모든 이미지 타입을 완벽하게 지원합니다.",
+    "url": "https://greasyfork.org/scripts/549822-soop-%EA%B2%8C%EC%8B%9C%EA%B8%80-%EC%9B%90%ED%81%B4%EB%A6%AD-%EB%B3%B5%EC%82%AC-v31-0",
+    "code_url": "https://update.greasyfork.org/scripts/549822/SOOP%20%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%9B%90%ED%81%B4%EB%A6%AD%20%EB%B3%B5%EC%82%AC%20v310.user.js",
+    "code_size": 16383,
+    "license": null,
+    "version": "31.0",
+    "locale": "ko",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

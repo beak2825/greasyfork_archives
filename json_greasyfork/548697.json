@@ -1,0 +1,59 @@
+{
+  "id": 548697,
+  "daily_installs": 1,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-07T13:15:26.000Z",
+  "code_updated_at": "2025-09-07T13:15:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1512702,
+      "name": "albyp",
+      "created_at": "2025-09-07T13:12:15.000Z",
+      "url": "https://greasyfork.org/users/1512702-albyp",
+      "scripts": [
+        {
+          "id": 548697,
+          "daily_installs": 1,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-07T13:15:26.000Z",
+          "code_updated_at": "2025-09-07T13:15:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Discord server list and sidebar toggle",
+          "description": "cleanup your discord by toggling sidebar elements (servers, channels & messages)",
+          "url": "https://greasyfork.org/scripts/548697-discord-server-list-and-sidebar-toggle",
+          "code_url": "https://update.greasyfork.org/scripts/548697/Discord%20server%20list%20and%20sidebar%20toggle.user.js",
+          "code_size": 3358,
+          "license": "MIT License",
+          "version": "0.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Discord server list and sidebar toggle",
+  "description": "cleanup your discord by toggling sidebar elements (servers, channels & messages)",
+  "url": "https://greasyfork.org/scripts/548697-discord-server-list-and-sidebar-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/548697/Discord%20server%20list%20and%20sidebar%20toggle.user.js",
+  "code_size": 3358,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

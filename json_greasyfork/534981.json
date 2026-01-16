@@ -1,0 +1,33 @@
+{
+  "id": 534981,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-05T03:14:30.000Z",
+  "code_updated_at": "2025-05-05T03:14:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465781,
+      "name": "zjjiang",
+      "created_at": "2025-05-05T03:08:52.000Z",
+      "url": "https://greasyfork.org/users/1465781-zjjiang"
+    }
+  ],
+  "name": "飞猪酒店比价助手",
+  "description": "在飞猪酒店页面右侧添加浮动比价窗口，支持多价格选项比价，精确匹配房型信息",
+  "url": "https://greasyfork.org/scripts/534981-%E9%A3%9E%E7%8C%AA%E9%85%92%E5%BA%97%E6%AF%94%E4%BB%B7%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/534981/%E9%A3%9E%E7%8C%AA%E9%85%92%E5%BA%97%E6%AF%94%E4%BB%B7%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 25512,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

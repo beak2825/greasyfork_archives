@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521926,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T04:40:45.000Z",
+    "code_updated_at": "2024-12-27T04:40:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416249,
+        "name": "GZ2000COM",
+        "created_at": "2024-12-27T03:48:51.000Z",
+        "url": "https://greasyfork.org/users/1416249-gz2000com"
+      }
+    ],
+    "name": "bilibili按关注分组分类显示动态",
+    "description": "按关注分组分类显示动态",
+    "url": "https://greasyfork.org/scripts/521926-bilibili%E6%8C%89%E5%85%B3%E6%B3%A8%E5%88%86%E7%BB%84%E5%88%86%E7%B1%BB%E6%98%BE%E7%A4%BA%E5%8A%A8%E6%80%81",
+    "code_url": "https://update.greasyfork.org/scripts/521926/bilibili%E6%8C%89%E5%85%B3%E6%B3%A8%E5%88%86%E7%BB%84%E5%88%86%E7%B1%BB%E6%98%BE%E7%A4%BA%E5%8A%A8%E6%80%81.user.js",
+    "code_size": 21201,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

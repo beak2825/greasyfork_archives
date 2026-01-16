@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500263,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-11T06:24:05.000Z",
+    "code_updated_at": "2024-07-24T16:37:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1331638,
+        "name": "kangkang wu",
+        "created_at": "2024-07-11T06:17:18.000Z",
+        "url": "https://greasyfork.org/users/1331638-kangkang-wu"
+      }
+    ],
+    "name": "jenkin branch check",
+    "description": "check produce branch",
+    "url": "https://greasyfork.org/scripts/500263-jenkin-branch-check",
+    "code_url": "https://update.greasyfork.org/scripts/500263/jenkin%20branch%20check.user.js",
+    "code_size": 1395,
+    "license": "MIT License",
+    "version": "2024-07-25-2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

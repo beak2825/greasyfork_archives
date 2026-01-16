@@ -1,0 +1,59 @@
+{
+  "id": 512283,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-11T17:00:06.000Z",
+  "code_updated_at": "2024-10-14T13:04:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1379619,
+      "name": "Fernando-R",
+      "created_at": "2024-10-11T16:43:32.000Z",
+      "url": "https://greasyfork.org/users/1379619-fernando-r",
+      "scripts": [
+        {
+          "id": 512283,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-11T17:00:06.000Z",
+          "code_updated_at": "2024-10-14T13:04:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "No accidental google meeting raise hand",
+          "description": "Adds preventive measures to ensure you do not raise your hand in a meeting by mistake, now when the button to raise hand is clicked a browser popup will open to ask if you really want to do it, it also adds a checkbox on the bottom right that makes the raise hand button hidden.",
+          "url": "https://greasyfork.org/scripts/512283-no-accidental-google-meeting-raise-hand",
+          "code_url": "https://update.greasyfork.org/scripts/512283/No%20accidental%20google%20meeting%20raise%20hand.user.js",
+          "code_size": 3081,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "No accidental google meeting raise hand",
+  "description": "Adds preventive measures to ensure you do not raise your hand in a meeting by mistake, now when the button to raise hand is clicked a browser popup will open to ask if you really want to do it, it also adds a checkbox on the bottom right that makes the raise hand button hidden.",
+  "url": "https://greasyfork.org/scripts/512283-no-accidental-google-meeting-raise-hand",
+  "code_url": "https://update.greasyfork.org/scripts/512283/No%20accidental%20google%20meeting%20raise%20hand.user.js",
+  "code_size": 3081,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

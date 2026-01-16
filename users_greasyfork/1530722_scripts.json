@@ -63,6 +63,39 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553719,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T03:16:45.000Z",
+    "code_updated_at": "2025-10-26T03:16:45.000Z",
+    "namespace": "https://example.com/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530722,
+        "name": "Nicholas Mesaque Santos",
+        "created_at": "2025-10-26T03:04:30.000Z",
+        "url": "https://greasyfork.org/users/1530722-nicholas-mesaque-santos"
+      }
+    ],
+    "name": "Roblox Dev Helper (Template)",
+    "description": "Painel auxiliar para desenvolvimento em Roblox (template seguro). NÃO é um cheat. Ajuste para suas necessidades de dev / testes locais.",
+    "url": "https://greasyfork.org/scripts/553719-roblox-dev-helper-template",
+    "code_url": "https://update.greasyfork.org/scripts/553719/Roblox%20Dev%20Helper%20%28Template%29.user.js",
+    "code_size": 4156,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
   }
 ]

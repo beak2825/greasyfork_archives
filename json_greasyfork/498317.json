@@ -1,0 +1,59 @@
+{
+  "id": 498317,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-19T01:47:17.000Z",
+  "code_updated_at": "2024-06-19T13:47:56.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/498317-%E5%85%A8%E6%96%B0%E9%9D%A9%E5%91%BD%E6%80%A7%E5%B7%A5%E5%85%B7-%E7%94%A8%E7%94%A8%E6%88%B7%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8A%9B%E9%87%8F%E6%91%A7%E6%AF%81%E6%90%9C%E7%B4%A2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320316,
+      "name": "yingli",
+      "created_at": "2024-06-19T01:34:52.000Z",
+      "url": "https://greasyfork.org/users/1320316-yingli",
+      "scripts": [
+        {
+          "id": 498317,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-19T01:47:17.000Z",
+          "code_updated_at": "2024-06-19T13:47:56.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/498317-%E5%85%A8%E6%96%B0%E9%9D%A9%E5%91%BD%E6%80%A7%E5%B7%A5%E5%85%B7-%E7%94%A8%E7%94%A8%E6%88%B7%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8A%9B%E9%87%8F%E6%91%A7%E6%AF%81%E6%90%9C%E7%B4%A2",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "全新革命性工具：用用户脚本的力量摧毁搜索",
+          "description": "全新革命性工具：用用户脚本的力量摧毁搜索。",
+          "url": "https://greasyfork.org/scripts/498317-%E5%85%A8%E6%96%B0%E9%9D%A9%E5%91%BD%E6%80%A7%E5%B7%A5%E5%85%B7-%E7%94%A8%E7%94%A8%E6%88%B7%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8A%9B%E9%87%8F%E6%91%A7%E6%AF%81%E6%90%9C%E7%B4%A2",
+          "code_url": "https://update.greasyfork.org/scripts/498317/%E5%85%A8%E6%96%B0%E9%9D%A9%E5%91%BD%E6%80%A7%E5%B7%A5%E5%85%B7%EF%BC%9A%E7%94%A8%E7%94%A8%E6%88%B7%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8A%9B%E9%87%8F%E6%91%A7%E6%AF%81%E6%90%9C%E7%B4%A2.user.js",
+          "code_size": 4238,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "全新革命性工具：用用户脚本的力量摧毁搜索",
+  "description": "全新革命性工具：用用户脚本的力量摧毁搜索。",
+  "url": "https://greasyfork.org/scripts/498317-%E5%85%A8%E6%96%B0%E9%9D%A9%E5%91%BD%E6%80%A7%E5%B7%A5%E5%85%B7-%E7%94%A8%E7%94%A8%E6%88%B7%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8A%9B%E9%87%8F%E6%91%A7%E6%AF%81%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/498317/%E5%85%A8%E6%96%B0%E9%9D%A9%E5%91%BD%E6%80%A7%E5%B7%A5%E5%85%B7%EF%BC%9A%E7%94%A8%E7%94%A8%E6%88%B7%E8%84%9A%E6%9C%AC%E7%9A%84%E5%8A%9B%E9%87%8F%E6%91%A7%E6%AF%81%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 4238,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

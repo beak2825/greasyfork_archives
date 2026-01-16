@@ -96,7 +96,106 @@
     "version": "0.1.1",
     "locale": "ru",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553920,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T03:39:03.000Z",
+    "code_updated_at": "2025-10-28T09:57:34.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "ТЕСТ СКРИПТ",
+    "description": "Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров экрана телефона. Золотая версия - по истине премиальный стиль.",
+    "url": "https://greasyfork.org/scripts/553920-%D1%82%D0%B5%D1%81%D1%82-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82",
+    "code_url": "https://update.greasyfork.org/scripts/553920/%D0%A2%D0%95%D0%A1%D0%A2%20%D0%A1%D0%9A%D0%A0%D0%98%D0%9F%D0%A2.user.js",
+    "code_size": 247350,
+    "license": "MIT License",
+    "version": "1.0.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553916,
+    "daily_installs": 3,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T02:20:16.000Z",
+    "code_updated_at": "2026-01-07T17:37:27.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "[ALL SERVERS] GOLDEN VERSION | Скрипт для Кураторов Форума [Для ПК]",
+    "description": "Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров экрана ПК. Золотая версия - по истине премиальный стиль. Также в скрипт встроен счётчик слов в РПБ.",
+    "url": "https://greasyfork.org/scripts/553916-all-servers-golden-version-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%B4%D0%BB%D1%8F-%D0%BF%D0%BA",
+    "code_url": "https://update.greasyfork.org/scripts/553916/%5BALL%20SERVERS%5D%20GOLDEN%20VERSION%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%94%D0%BB%D1%8F%20%D0%9F%D0%9A%5D.user.js",
+    "code_size": 271279,
+    "license": "MIT License",
+    "version": "1.0.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 553911,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T02:01:43.000Z",
+    "code_updated_at": "2026-01-07T17:36:49.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "[ALL SERVERS] GOLDEN VERSION | Скрипт для Кураторов Форума [Для телефона]",
+    "description": "Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров экрана телефона. Золотая версия - по истине премиальный стиль. Также в скрипт встроен счётчик слов в РПБ.",
+    "url": "https://greasyfork.org/scripts/553911-all-servers-golden-version-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%B4%D0%BB%D1%8F-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/553911/%5BALL%20SERVERS%5D%20GOLDEN%20VERSION%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%94%D0%BB%D1%8F%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%D0%B0%5D.user.js",
+    "code_size": 268294,
+    "license": "MIT License",
+    "version": "1.0.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
   },
   {
     "id": 553830,
@@ -127,6 +226,39 @@
     "code_size": 227807,
     "license": "MIT License",
     "version": "1.1.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 553383,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T15:00:26.000Z",
+    "code_updated_at": "2025-10-22T15:00:26.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "TESTS | Скрипт для Кураторов Форума [Телефон]",
+    "description": "nane",
+    "url": "https://greasyfork.org/scripts/553383-tests-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD",
+    "code_url": "https://update.greasyfork.org/scripts/553383/TESTS%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%A2%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%5D.user.js",
+    "code_size": 213657,
+    "license": "MIT License",
+    "version": "1.3.9",
     "locale": "ru",
     "deleted": false,
     "visibility": "unlisted"
@@ -165,6 +297,105 @@
     "visibility": "unlisted"
   },
   {
+    "id": 552960,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T04:57:55.000Z",
+    "code_updated_at": "2025-10-18T05:08:12.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "05 ORANGE | Скрипт для Кураторов Форума [Телефон]",
+    "description": "nane",
+    "url": "https://greasyfork.org/scripts/552960-05-orange-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD",
+    "code_url": "https://update.greasyfork.org/scripts/552960/05%20ORANGE%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%A2%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%5D.user.js",
+    "code_size": 197789,
+    "license": "MIT License",
+    "version": "1.3.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552568,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-14T13:49:53.000Z",
+    "code_updated_at": "2025-10-31T09:42:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "Счетчик слов в биографиях",
+    "description": "Подсчитывает количество слов в РП-биографиях",
+    "url": "https://greasyfork.org/scripts/552568-%D1%81%D1%87%D0%B5%D1%82%D1%87%D0%B8%D0%BA-%D1%81%D0%BB%D0%BE%D0%B2-%D0%B2-%D0%B1%D0%B8%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F%D1%85",
+    "code_url": "https://update.greasyfork.org/scripts/552568/%D0%A1%D1%87%D0%B5%D1%82%D1%87%D0%B8%D0%BA%20%D1%81%D0%BB%D0%BE%D0%B2%20%D0%B2%20%D0%B1%D0%B8%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F%D1%85.user.js",
+    "code_size": 10385,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 552101,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T02:47:14.000Z",
+    "code_updated_at": "2025-10-10T03:02:13.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "NEBULA | Modern Glass Design Black Russia Forum",
+    "description": "Современный дизайн с glassmorphism эффектом и синей цветовой схемой",
+    "url": "https://greasyfork.org/scripts/552101-nebula-modern-glass-design-black-russia-forum",
+    "code_url": "https://update.greasyfork.org/scripts/552101/NEBULA%20%7C%20Modern%20Glass%20Design%20Black%20Russia%20Forum.user.js",
+    "code_size": 16117,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 552055,
     "daily_installs": 0,
     "total_installs": 3,
@@ -196,5 +427,137 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551735,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-06T08:23:36.000Z",
+    "code_updated_at": "2026-01-14T14:00:21.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "ORANGE | Skript for me",
+    "description": "Эта моё",
+    "url": "https://greasyfork.org/scripts/551735-orange-skript-for-me",
+    "code_url": "https://update.greasyfork.org/scripts/551735/ORANGE%20%7C%20Skript%20for%20me.user.js",
+    "code_size": 254695,
+    "license": "MIT License",
+    "version": "1.5.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551733,
+    "daily_installs": 1,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-06T07:51:38.000Z",
+    "code_updated_at": "2026-01-07T17:34:50.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "[ALL SERVERS] | Скрипт для Кураторов Форума [Для ПК]",
+    "description": "Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров ПК. Также в скрипт встроен счётчик слов в РПБ.",
+    "url": "https://greasyfork.org/scripts/551733-all-servers-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%B4%D0%BB%D1%8F-%D0%BF%D0%BA",
+    "code_url": "https://update.greasyfork.org/scripts/551733/%5BALL%20SERVERS%5D%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%94%D0%BB%D1%8F%20%D0%9F%D0%9A%5D.user.js",
+    "code_size": 241936,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550202,
+    "daily_installs": 1,
+    "total_installs": 93,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-21T02:28:23.000Z",
+    "code_updated_at": "2026-01-07T17:36:01.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "[ALL SERVERS] | Скрипт для Кураторов Форума [Для телефона]",
+    "description": "Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров экрана телефона. Также в скрипт встроен счётчик слов в РПБ.",
+    "url": "https://greasyfork.org/scripts/550202-all-servers-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%B4%D0%BB%D1%8F-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/550202/%5BALL%20SERVERS%5D%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%94%D0%BB%D1%8F%20%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%D0%B0%5D.user.js",
+    "code_size": 240895,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549843,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-17T14:48:44.000Z",
+    "code_updated_at": "2025-10-22T15:01:34.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "TESTS | Скрипт для Кураторов Форума [Телефон]",
+    "description": "nane",
+    "url": "https://greasyfork.org/scripts/549843-tests-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D1%82%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD",
+    "code_url": "https://update.greasyfork.org/scripts/549843/TESTS%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%A2%D0%B5%D0%BB%D0%B5%D1%84%D0%BE%D0%BD%5D.user.js",
+    "code_size": 213657,
+    "license": "MIT License",
+    "version": "1.4.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

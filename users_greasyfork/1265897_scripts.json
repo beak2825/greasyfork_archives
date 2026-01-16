@@ -1,0 +1,68 @@
+[
+  {
+    "id": 549716,
+    "daily_installs": 1,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-16T09:22:22.000Z",
+    "code_updated_at": "2025-09-16T09:35:40.000Z",
+    "namespace": "@ejfkdev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265897,
+        "name": "ejfkdev",
+        "created_at": "2024-02-23T11:52:55.000Z",
+        "url": "https://greasyfork.org/users/1265897-ejfkdev"
+      }
+    ],
+    "name": "js加密算法自动逆向",
+    "description": "拦截加解密框架函数，获取密钥、IV等关键数据",
+    "url": "https://greasyfork.org/scripts/549716-js%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E8%87%AA%E5%8A%A8%E9%80%86%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/549716/js%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E8%87%AA%E5%8A%A8%E9%80%86%E5%90%91.user.js",
+    "code_size": 9332,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535995,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-14T16:06:08.000Z",
+    "code_updated_at": "2025-05-14T16:06:08.000Z",
+    "namespace": "https://beian.miit.gov.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265897,
+        "name": "ejfkdev",
+        "created_at": "2024-02-23T11:52:55.000Z",
+        "url": "https://greasyfork.org/users/1265897-ejfkdev"
+      }
+    ],
+    "name": "工信部官网miit ICP备案批量查询小工具",
+    "description": "工业和信息化部政务服务平台，批量获取公司备案信息，手动查询一次公司名称后，批量获取该公司名下所有网站、APP、小程序、快应用备案内容，一键复制结果",
+    "url": "https://greasyfork.org/scripts/535995-%E5%B7%A5%E4%BF%A1%E9%83%A8%E5%AE%98%E7%BD%91miit-icp%E5%A4%87%E6%A1%88%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2%E5%B0%8F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/535995/%E5%B7%A5%E4%BF%A1%E9%83%A8%E5%AE%98%E7%BD%91miit%20ICP%E5%A4%87%E6%A1%88%E6%89%B9%E9%87%8F%E6%9F%A5%E8%AF%A2%E5%B0%8F%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 25172,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 509957,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-24T11:12:09.000Z",
+  "code_updated_at": "2024-09-24T11:12:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265334,
+      "name": "Lukáš Malec",
+      "created_at": "2024-02-22T10:27:03.000Z",
+      "url": "https://greasyfork.org/users/1265334-luk%C3%A1%C5%A1-malec",
+      "scripts": []
+    }
+  ],
+  "name": "ATP-Tabulka s odkazy na draws",
+  "description": "Scrape updated ATP Challenger calendar and create a table of events with specific URL format",
+  "url": "https://greasyfork.org/scripts/509957-atp-tabulka-s-odkazy-na-draws",
+  "code_url": "https://update.greasyfork.org/scripts/509957/ATP-Tabulka%20s%20odkazy%20na%20draws.user.js",
+  "code_size": 3799,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

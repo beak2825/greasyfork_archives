@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548668,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-07T05:23:26.000Z",
+    "code_updated_at": "2025-09-10T03:18:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512591,
+        "name": "Seas Soong",
+        "created_at": "2025-09-07T05:17:21.000Z",
+        "url": "https://greasyfork.org/users/1512591-seas-soong"
+      }
+    ],
+    "name": "ReyoungEcology9 RequestId 跳转按钮（高内聚版，Rect版）",
+    "description": "使用 getBoundingClientRect() 计算位置和尺寸",
+    "url": "https://greasyfork.org/scripts/548668-reyoungecology9-requestid-%E8%B7%B3%E8%BD%AC%E6%8C%89%E9%92%AE-%E9%AB%98%E5%86%85%E8%81%9A%E7%89%88-rect%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/548668/ReyoungEcology9%20RequestId%20%E8%B7%B3%E8%BD%AC%E6%8C%89%E9%92%AE%EF%BC%88%E9%AB%98%E5%86%85%E8%81%9A%E7%89%88%EF%BC%8CRect%E7%89%88%EF%BC%89.user.js",
+    "code_size": 6108,
+    "license": "GNU General Public License v2.0 only",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

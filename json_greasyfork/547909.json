@@ -1,0 +1,59 @@
+{
+  "id": 547909,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-31T05:29:51.000Z",
+  "code_updated_at": "2025-08-31T05:29:51.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051947,
+      "name": "exolocity",
+      "created_at": "2023-04-02T12:18:20.000Z",
+      "url": "https://greasyfork.org/users/1051947-exolocity",
+      "scripts": [
+        {
+          "id": 547909,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-31T05:29:51.000Z",
+          "code_updated_at": "2025-08-31T05:29:51.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bdsmlr move Previous Next Page changer to the left",
+          "description": "Changes pagination direction from LTR to RTL by setting CSS properties.",
+          "url": "https://greasyfork.org/scripts/547909-bdsmlr-move-previous-next-page-changer-to-the-left",
+          "code_url": "https://update.greasyfork.org/scripts/547909/bdsmlr%20move%20Previous%20Next%20Page%20changer%20to%20the%20left.user.js",
+          "code_size": 741,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bdsmlr move Previous Next Page changer to the left",
+  "description": "Changes pagination direction from LTR to RTL by setting CSS properties.",
+  "url": "https://greasyfork.org/scripts/547909-bdsmlr-move-previous-next-page-changer-to-the-left",
+  "code_url": "https://update.greasyfork.org/scripts/547909/bdsmlr%20move%20Previous%20Next%20Page%20changer%20to%20the%20left.user.js",
+  "code_size": 741,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

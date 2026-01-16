@@ -1,0 +1,68 @@
+[
+  {
+    "id": 506701,
+    "daily_installs": 0,
+    "total_installs": 194,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-04T02:15:55.000Z",
+    "code_updated_at": "2024-09-04T02:15:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1362753,
+        "name": "Hex Developments",
+        "created_at": "2024-09-04T00:54:43.000Z",
+        "url": "https://greasyfork.org/users/1362753-hex-developments"
+      }
+    ],
+    "name": "Hex Math Panel",
+    "description": "Calculator for math websites add ur own if urs isnt here.",
+    "url": "https://greasyfork.org/scripts/506701-hex-math-panel",
+    "code_url": "https://update.greasyfork.org/scripts/506701/Hex%20Math%20Panel.user.js",
+    "code_size": 12067,
+    "license": "MIT License",
+    "version": "1.0.0.",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506691,
+    "daily_installs": 0,
+    "total_installs": 250,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-04T00:57:27.000Z",
+    "code_updated_at": "2024-09-04T00:57:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1362753,
+        "name": "Hex Developments",
+        "created_at": "2024-09-04T00:54:43.000Z",
+        "url": "https://greasyfork.org/users/1362753-hex-developments"
+      }
+    ],
+    "name": "Hex Math Panel",
+    "description": "Calculator for math websites add ur own if urs isnt here.",
+    "url": "https://greasyfork.org/scripts/506691-hex-math-panel",
+    "code_url": "https://update.greasyfork.org/scripts/506691/Hex%20Math%20Panel.user.js",
+    "code_size": 8527,
+    "license": "MIT License",
+    "version": "1.0.0.",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

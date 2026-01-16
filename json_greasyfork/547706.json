@@ -1,0 +1,33 @@
+{
+  "id": 547706,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-29T07:48:31.000Z",
+  "code_updated_at": "2025-12-24T01:51:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1509523,
+      "name": "PARD",
+      "created_at": "2025-08-28T03:59:35.000Z",
+      "url": "https://greasyfork.org/users/1509523-pard"
+    }
+  ],
+  "name": "Sploop.io Legit Script [Reduced lag and new textures.]",
+  "description": "Show HP%, FPS, CPS, Ping, Big Shop, Transparent Shop & Clan menu. Use 75% page zoom for best results. Add Ghost mode & Hitbox. Press f2 to ON/OFF ghost mode & f4 to ON/OFF hitbox.",
+  "url": "https://greasyfork.org/scripts/547706-sploop-io-legit-script-reduced-lag-and-new-textures",
+  "code_url": "https://update.greasyfork.org/scripts/547706/Sploopio%20Legit%20Script%20%5BReduced%20lag%20and%20new%20textures%5D.user.js",
+  "code_size": 22948,
+  "license": null,
+  "version": "1.4",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

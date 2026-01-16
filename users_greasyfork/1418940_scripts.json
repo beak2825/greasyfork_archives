@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522665,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-03T05:45:00.000Z",
+    "code_updated_at": "2025-01-03T05:44:59.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1418940,
+        "name": "zeroneth",
+        "created_at": "2025-01-03T05:41:22.000Z",
+        "url": "https://greasyfork.org/users/1418940-zeroneth"
+      }
+    ],
+    "name": "下载 pdfjm.cn 里面的pdf",
+    "description": "2025/1/3 13:10:24",
+    "url": "https://greasyfork.org/scripts/522665-%E4%B8%8B%E8%BD%BD-pdfjm-cn-%E9%87%8C%E9%9D%A2%E7%9A%84pdf",
+    "code_url": "https://update.greasyfork.org/scripts/522665/%E4%B8%8B%E8%BD%BD%20pdfjmcn%20%E9%87%8C%E9%9D%A2%E7%9A%84pdf.user.js",
+    "code_size": 2334,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

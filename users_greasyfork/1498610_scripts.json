@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543882,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T14:00:30.000Z",
+    "code_updated_at": "2025-07-28T14:00:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498610,
+        "name": "memeslayer",
+        "created_at": "2025-07-26T17:48:02.000Z",
+        "url": "https://greasyfork.org/users/1498610-memeslayer"
+      }
+    ],
+    "name": "GMGN Solscan 跳转按钮",
+    "description": "为gmgn.ai网站的钱包地址添加Solscan跳转按钮，但在特定区域内不显示",
+    "url": "https://greasyfork.org/scripts/543882-gmgn-solscan-%E8%B7%B3%E8%BD%AC%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/543882/GMGN%20Solscan%20%E8%B7%B3%E8%BD%AC%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 6794,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

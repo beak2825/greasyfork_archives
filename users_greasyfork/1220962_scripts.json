@@ -1,0 +1,101 @@
+[
+  {
+    "id": 534632,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-01T12:14:02.000Z",
+    "code_updated_at": "2025-09-07T22:08:40.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "[Wallhaven] Purity Groups",
+    "description": "Organizes thumbnails into collapsible SFW, Sketchy, and NSFW sections with dynamic grid resizing and a floating button to toggle seen wallpapers with persistent state.",
+    "url": "https://greasyfork.org/scripts/534632-wallhaven-purity-groups",
+    "code_url": "https://update.greasyfork.org/scripts/534632/%5BWallhaven%5D%20Purity%20Groups.user.js",
+    "code_size": 15053,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534407,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-29T15:52:30.000Z",
+    "code_updated_at": "2025-05-01T13:05:55.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "[Wallhaven] Better Wallpaper Downloader",
+    "description": "Download Wallhaven wallpapers with customizable tag-based filenames via an intuitive, responsive popup interface.",
+    "url": "https://greasyfork.org/scripts/534407-wallhaven-better-wallpaper-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/534407/%5BWallhaven%5D%20Better%20Wallpaper%20Downloader.user.js",
+    "code_size": 12412,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534387,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-29T14:35:52.000Z",
+    "code_updated_at": "2025-05-01T12:18:23.000Z",
+    "namespace": "NooScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1220962,
+        "name": "NooScripts",
+        "created_at": "2023-11-21T04:22:59.000Z",
+        "url": "https://greasyfork.org/users/1220962-nooscripts"
+      }
+    ],
+    "name": "[Wallhaven] Subscription Tools",
+    "description": "Adds a useful \"tool box\" to the top of the side bar on the subscriptions page (Filter Subs by name, sort them by amount, toggle on/off visibility of subs with 0 new wallpapers)",
+    "url": "https://greasyfork.org/scripts/534387-wallhaven-subscription-tools",
+    "code_url": "https://update.greasyfork.org/scripts/534387/%5BWallhaven%5D%20Subscription%20Tools.user.js",
+    "code_size": 10478,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

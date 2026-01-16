@@ -1,0 +1,68 @@
+[
+  {
+    "id": 539945,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T04:39:27.000Z",
+    "code_updated_at": "2025-06-23T04:47:57.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482285,
+        "name": "Werty Skezzovich",
+        "created_at": "2025-06-11T12:12:10.000Z",
+        "url": "https://greasyfork.org/users/1482285-werty-skezzovich"
+      }
+    ],
+    "name": "KALININGRAD | Скрипт для КФ от Werty",
+    "description": "Скрипт для Кураторов форума на ответы на жалобы игроков/RP био/RP ситуация | Black Russia kaliningrad",
+    "url": "https://greasyfork.org/scripts/539945-kaliningrad-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%84-%D0%BE%D1%82-werty",
+    "code_url": "https://update.greasyfork.org/scripts/539945/KALININGRAD%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%A4%20%D0%BE%D1%82%20Werty.user.js",
+    "code_size": 162626,
+    "license": "MIT License",
+    "version": "11",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539111,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-11T12:29:04.000Z",
+    "code_updated_at": "2025-06-11T18:43:57.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482285,
+        "name": "Werty Skezzovich",
+        "created_at": "2025-06-11T12:12:10.000Z",
+        "url": "https://greasyfork.org/users/1482285-werty-skezzovich"
+      }
+    ],
+    "name": "KALININGRAD | Для кураторов форума",
+    "description": "Обновление 1.2",
+    "url": "https://greasyfork.org/scripts/539111-kaliningrad-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/539111/KALININGRAD%20%7C%20%D0%94%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 152871,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

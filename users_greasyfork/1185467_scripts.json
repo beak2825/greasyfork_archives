@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498530,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-21T12:30:33.000Z",
+    "code_updated_at": "2024-06-21T12:30:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1185467,
+        "name": "Marquez Owoline",
+        "created_at": "2023-10-01T16:21:33.000Z",
+        "url": "https://greasyfork.org/users/1185467-marquez-owoline"
+      }
+    ],
+    "name": "Скрипт Алина Свидская",
+    "description": "просто скрипт",
+    "url": "https://greasyfork.org/scripts/498530-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B0%D0%BB%D0%B8%D0%BD%D0%B0-%D1%81%D0%B2%D0%B8%D0%B4%D1%81%D0%BA%D0%B0%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/498530/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%90%D0%BB%D0%B8%D0%BD%D0%B0%20%D0%A1%D0%B2%D0%B8%D0%B4%D1%81%D0%BA%D0%B0%D1%8F.user.js",
+    "code_size": 36830,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

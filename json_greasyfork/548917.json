@@ -1,0 +1,59 @@
+{
+  "id": 548917,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-09T06:13:05.000Z",
+  "code_updated_at": "2025-09-09T06:13:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513160,
+      "name": "judypuk",
+      "created_at": "2025-09-09T03:40:58.000Z",
+      "url": "https://greasyfork.org/users/1513160-judypuk",
+      "scripts": [
+        {
+          "id": 548919,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-09T06:24:04.000Z",
+          "code_updated_at": "2025-09-09T06:24:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HLTIME",
+          "description": "计算工时",
+          "url": "https://greasyfork.org/scripts/548919-hltime",
+          "code_url": "https://update.greasyfork.org/scripts/548919/HLTIME.user.js",
+          "code_size": 15898,
+          "license": "GPL",
+          "version": "2025-09-09",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HLTIME",
+  "description": "计算工时",
+  "url": "https://greasyfork.org/scripts/548917-hltime",
+  "code_url": "https://update.greasyfork.org/scripts/548917/HLTIME.user.js",
+  "code_size": 15804,
+  "license": "GPL",
+  "version": "2025-09-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

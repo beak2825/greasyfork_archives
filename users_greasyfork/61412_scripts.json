@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507495,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-08T16:10:24.000Z",
+    "code_updated_at": "2024-09-08T19:10:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 61412,
+        "name": "oL_web",
+        "created_at": "2016-08-20T20:30:58.000Z",
+        "url": "https://greasyfork.org/users/61412-ol-web"
+      }
+    ],
+    "name": "NYFE juhas Edition",
+    "description": "stonks",
+    "url": "https://greasyfork.org/scripts/507495-nyfe-juhas-edition",
+    "code_url": "https://update.greasyfork.org/scripts/507495/NYFE%20juhas%20Edition.user.js",
+    "code_size": 4365,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

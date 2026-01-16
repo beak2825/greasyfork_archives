@@ -163,5 +163,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551035,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-29T07:31:58.000Z",
+    "code_updated_at": "2025-09-29T07:39:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505257,
+        "name": "wujinjun",
+        "created_at": "2025-08-15T10:12:09.000Z",
+        "url": "https://greasyfork.org/users/1505257-wujinjun"
+      }
+    ],
+    "name": "XJTLU xpcyjgy 自动登录",
+    "description": "XJTLU(TC)线上自助服务自动登录 (支持移动端)",
+    "url": "https://greasyfork.org/scripts/551035-xjtlu-xpcyjgy-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/551035/XJTLU%20xpcyjgy%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 13962,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550860,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-27T13:13:45.000Z",
+    "code_updated_at": "2025-09-27T13:25:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505257,
+        "name": "wujinjun",
+        "created_at": "2025-08-15T10:12:09.000Z",
+        "url": "https://greasyfork.org/users/1505257-wujinjun"
+      }
+    ],
+    "name": "XJTLU box 自动登录",
+    "description": "自动完成登录，支持手动输入账号或自动填入账号，右上角显示操作进度",
+    "url": "https://greasyfork.org/scripts/550860-xjtlu-box-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/550860/XJTLU%20box%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 13092,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550571,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T15:57:50.000Z",
+    "code_updated_at": "2025-09-24T15:57:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505257,
+        "name": "wujinjun",
+        "created_at": "2025-08-15T10:12:09.000Z",
+        "url": "https://greasyfork.org/users/1505257-wujinjun"
+      }
+    ],
+    "name": "XDF协议页面水印消除",
+    "description": "持续监控并清除新东方协议签订页面的水印",
+    "url": "https://greasyfork.org/scripts/550571-xdf%E5%8D%8F%E8%AE%AE%E9%A1%B5%E9%9D%A2%E6%B0%B4%E5%8D%B0%E6%B6%88%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/550571/XDF%E5%8D%8F%E8%AE%AE%E9%A1%B5%E9%9D%A2%E6%B0%B4%E5%8D%B0%E6%B6%88%E9%99%A4.user.js",
+    "code_size": 1725,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550518,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T03:37:26.000Z",
+    "code_updated_at": "2025-10-07T06:32:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505257,
+        "name": "wujinjun",
+        "created_at": "2025-08-15T10:12:09.000Z",
+        "url": "https://greasyfork.org/users/1505257-wujinjun"
+      }
+    ],
+    "name": "XJTLU UIM 自动登录 (请求用户名+密码+OTP)",
+    "description": "通过超前发送网络请求，完成自动登录，即使需要双重验证也能自动完成",
+    "url": "https://greasyfork.org/scripts/550518-xjtlu-uim-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95-%E8%AF%B7%E6%B1%82%E7%94%A8%E6%88%B7%E5%90%8D-%E5%AF%86%E7%A0%81-otp",
+    "code_url": "https://update.greasyfork.org/scripts/550518/XJTLU%20UIM%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%20%28%E8%AF%B7%E6%B1%82%E7%94%A8%E6%88%B7%E5%90%8D%2B%E5%AF%86%E7%A0%81%2BOTP%29.user.js",
+    "code_size": 13305,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

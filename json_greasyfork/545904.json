@@ -1,0 +1,33 @@
+{
+  "id": 545904,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T04:06:13.000Z",
+  "code_updated_at": "2025-08-15T04:06:13.000Z",
+  "namespace": "https://github.com/klingeling/",
+  "support_url": "https://github.com/klingeling/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 866495,
+      "name": "klingeling",
+      "created_at": "2022-01-18T17:05:29.000Z",
+      "url": "https://greasyfork.org/users/866495-klingeling"
+    }
+  ],
+  "name": "jinteki 矩阵潜袭中文补全优化",
+  "description": "jinteki 矩阵潜袭中文补全优化插件，包含动态内容解码功能",
+  "url": "https://greasyfork.org/scripts/545904-jinteki-%E7%9F%A9%E9%98%B5%E6%BD%9C%E8%A2%AD%E4%B8%AD%E6%96%87%E8%A1%A5%E5%85%A8%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/545904/jinteki%20%E7%9F%A9%E9%98%B5%E6%BD%9C%E8%A2%AD%E4%B8%AD%E6%96%87%E8%A1%A5%E5%85%A8%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 15323,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

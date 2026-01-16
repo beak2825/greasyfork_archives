@@ -1,0 +1,34 @@
+{
+  "id": 498012,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-15T17:16:11.000Z",
+  "code_updated_at": "2024-06-15T17:37:48.000Z",
+  "namespace": "https://www.torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1270453,
+      "name": "KPCX",
+      "created_at": "2024-03-05T06:08:41.000Z",
+      "url": "https://greasyfork.org/users/1270453-kpcx",
+      "scripts": []
+    }
+  ],
+  "name": "[KPX] Disable travel button when Flight Time detected - Torn Helper",
+  "description": "Disables the \"TRAVEL\" button if \"Flight Time\" is detected on the page.",
+  "url": "https://greasyfork.org/scripts/498012-kpx-disable-travel-button-when-flight-time-detected-torn-helper",
+  "code_url": "https://update.greasyfork.org/scripts/498012/%5BKPX%5D%20Disable%20travel%20button%20when%20Flight%20Time%20detected%20-%20Torn%20Helper.user.js",
+  "code_size": 2558,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

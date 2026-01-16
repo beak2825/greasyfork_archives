@@ -1,0 +1,59 @@
+{
+  "id": 542097,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-09T07:29:07.000Z",
+  "code_updated_at": "2025-11-26T19:45:14.000Z",
+  "namespace": "https://greasyfork.org/users/49949-ipumpkin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 49949,
+      "name": "iPumpkin",
+      "created_at": "2016-06-20T03:06:24.000Z",
+      "url": "https://greasyfork.org/users/49949-ipumpkin",
+      "scripts": [
+        {
+          "id": 542386,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-12T10:43:09.000Z",
+          "code_updated_at": "2025-11-26T19:45:14.000Z",
+          "namespace": "https://greasyfork.org/users/49949-ipumpkin",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "edewakaru-enhanced",
+          "description": "Enhances reading experience on the \"絵でわかる日本語\" site by converting kanji readings from parentheses to ruby, hiding ads and clutter, and adding text-to-speech for selected text.",
+          "url": "https://greasyfork.org/scripts/542386-edewakaru-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/542386/edewakaru-enhanced.user.js",
+          "code_size": 73667,
+          "license": "GNU General Public License v3.0 only",
+          "version": "2025.11.26",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "edewakaru-enhanced",
+  "description": "Enhances reading experience on the \"絵でわかる日本語\" site by converting kanji readings from parentheses to ruby, hiding ads and clutter, and adding text-to-speech for selected text.",
+  "url": "https://greasyfork.org/scripts/542097-edewakaru-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/542097/edewakaru-enhanced.user.js",
+  "code_size": 73667,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2025.11.26",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

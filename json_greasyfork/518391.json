@@ -1,0 +1,33 @@
+{
+  "id": 518391,
+  "daily_installs": 5,
+  "total_installs": 332,
+  "fan_score": "67.9",
+  "good_ratings": 10,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-11-21T22:44:57.000Z",
+  "code_updated_at": "2025-12-25T22:45:18.000Z",
+  "namespace": "https://greasyfork.org/users/1400386",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1400386,
+      "name": "AniPlayer",
+      "created_at": "2024-11-21T22:15:07.000Z",
+      "url": "https://greasyfork.org/users/1400386-aniplayer"
+    }
+  ],
+  "name": "Aniworld.to & S.to Autoplay",
+  "description": "Autoplay for Aniworld.to and S.to with AniSkip API integration for automatic intro detection, plus lots of functions like manual skip fallback, persistent volume, language memory, and more",
+  "url": "https://greasyfork.org/scripts/518391-aniworld-to-s-to-autoplay",
+  "code_url": "https://update.greasyfork.org/scripts/518391/Aniworldto%20%20Sto%20Autoplay.user.js",
+  "code_size": 203988,
+  "license": "GPL-3.0-or-later; https://spdx.org/licenses/GPL-3.0-or-later.html",
+  "version": "4.12.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

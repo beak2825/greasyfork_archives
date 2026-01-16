@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527553,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-20T11:40:59.000Z",
+    "code_updated_at": "2025-02-20T11:40:59.000Z",
+    "namespace": "https://greasyfork.org/users/649",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158563,
+        "name": "flowscript",
+        "created_at": "2017-11-08T21:20:16.000Z",
+        "url": "https://greasyfork.org/users/158563-flowscript"
+      }
+    ],
+    "name": "Youtube Middle Click Search (Updated)",
+    "description": "Middle clicking the YouTube search or suggestions opens results in a new tab",
+    "url": "https://greasyfork.org/scripts/527553-youtube-middle-click-search-updated",
+    "code_url": "https://update.greasyfork.org/scripts/527553/Youtube%20Middle%20Click%20Search%20%28Updated%29.user.js",
+    "code_size": 3457,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499612,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-03T20:33:08.000Z",
+    "code_updated_at": "2024-07-20T10:24:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158563,
+        "name": "flowscript",
+        "created_at": "2017-11-08T21:20:16.000Z",
+        "url": "https://greasyfork.org/users/158563-flowscript"
+      }
+    ],
+    "name": "Fullscreen Button for fishtank.live",
+    "description": "Adds a fullscreen button to the fishtank.live video player.",
+    "url": "https://greasyfork.org/scripts/499612-fullscreen-button-for-fishtank-live",
+    "code_url": "https://update.greasyfork.org/scripts/499612/Fullscreen%20Button%20for%20fishtanklive.user.js",
+    "code_size": 5430,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

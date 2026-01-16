@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509153,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T09:10:15.000Z",
+    "code_updated_at": "2024-09-19T09:10:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1370017,
+        "name": "TohruTheDragon",
+        "created_at": "2024-09-19T09:06:36.000Z",
+        "url": "https://greasyfork.org/users/1370017-tohruthedragon"
+      }
+    ],
+    "name": "Add Newest Tab and NSFW filter back to Gumroad",
+    "description": "Adds the \"Newest\" tab, and the NSFW filter option back to Gumroad",
+    "url": "https://greasyfork.org/scripts/509153-add-newest-tab-and-nsfw-filter-back-to-gumroad",
+    "code_url": "https://update.greasyfork.org/scripts/509153/Add%20Newest%20Tab%20and%20NSFW%20filter%20back%20to%20Gumroad.user.js",
+    "code_size": 2724,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

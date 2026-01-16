@@ -1,0 +1,101 @@
+[
+  {
+    "id": 532791,
+    "daily_installs": 1,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-14T06:40:32.000Z",
+    "code_updated_at": "2025-04-17T23:01:30.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1403396,
+        "name": "Jupiter Liar 2",
+        "created_at": "2024-11-28T02:03:46.000Z",
+        "url": "https://greasyfork.org/users/1403396-jupiter-liar-2"
+      }
+    ],
+    "name": "Jupiter's Tools for YouTube",
+    "description": "Speed control, precise aspect ratio control, nice 'n' accurate looper, volume booster, and more.",
+    "url": "https://greasyfork.org/scripts/532791-jupiter-s-tools-for-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/532791/Jupiter%27s%20Tools%20for%20YouTube.user.js",
+    "code_size": 196058,
+    "license": "CC BY-SA",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529032,
+    "daily_installs": 1,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-06T23:57:45.000Z",
+    "code_updated_at": "2025-10-08T05:05:42.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1403396,
+        "name": "Jupiter Liar 2",
+        "created_at": "2024-11-28T02:03:46.000Z",
+        "url": "https://greasyfork.org/users/1403396-jupiter-liar-2"
+      }
+    ],
+    "name": "Jupiter's Patreon Tools",
+    "description": "Patreon has too much clutter. Simplify it with this script. Hide sidebars and pinned posts, make posts wider, and make videos bigger.",
+    "url": "https://greasyfork.org/scripts/529032-jupiter-s-patreon-tools",
+    "code_url": "https://update.greasyfork.org/scripts/529032/Jupiter%27s%20Patreon%20Tools.user.js",
+    "code_size": 42741,
+    "license": "CC BY-SA",
+    "version": "1.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519098,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-28T02:57:52.000Z",
+    "code_updated_at": "2025-01-04T16:41:03.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1403396,
+        "name": "Jupiter Liar 2",
+        "created_at": "2024-11-28T02:03:46.000Z",
+        "url": "https://greasyfork.org/users/1403396-jupiter-liar-2"
+      }
+    ],
+    "name": "Jupiter's Discord Chat Saver",
+    "description": "A free, full-featured chat saver for Discord.",
+    "url": "https://greasyfork.org/scripts/519098-jupiter-s-discord-chat-saver",
+    "code_url": "https://update.greasyfork.org/scripts/519098/Jupiter%27s%20Discord%20Chat%20Saver.user.js",
+    "code_size": 101753,
+    "license": "CC BY-SA",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

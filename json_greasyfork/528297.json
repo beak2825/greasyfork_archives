@@ -1,0 +1,33 @@
+{
+  "id": 528297,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-27T21:29:31.000Z",
+  "code_updated_at": "2025-02-27T21:29:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257681,
+      "name": "Virág Attila",
+      "created_at": "2024-02-05T09:36:10.000Z",
+      "url": "https://greasyfork.org/users/1257681-vir%C3%A1g-attila"
+    }
+  ],
+  "name": "Startlap admin - Page lista formázása",
+  "description": "Startlap yiiadmin pages lap átformázása; inaktív sorok elrejtése, Nyitó sor kiemelése.",
+  "url": "https://greasyfork.org/scripts/528297-startlap-admin-page-lista-form%C3%A1z%C3%A1sa",
+  "code_url": "https://update.greasyfork.org/scripts/528297/Startlap%20admin%20-%20Page%20lista%20form%C3%A1z%C3%A1sa.user.js",
+  "code_size": 1909,
+  "license": "startlap.hu",
+  "version": "1.3",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

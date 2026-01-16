@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521635,
+    "daily_installs": 1,
+    "total_installs": 959,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T06:39:39.000Z",
+    "code_updated_at": "2025-01-13T08:26:49.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/521635-hua-vplayer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 756298,
+        "name": "Haniler",
+        "created_at": "2021-04-08T09:15:33.000Z",
+        "url": "https://greasyfork.org/users/756298-haniler"
+      }
+    ],
+    "name": "视频VIP助手 - VPlayer",
+    "description": "视频VIP助手: 腾讯、爱奇艺、优酷、乐视、土豆、芒果TV; 解析更方便，播放更流畅，支持多端：手机端、电脑端",
+    "url": "https://greasyfork.org/scripts/521635-%E8%A7%86%E9%A2%91vip%E5%8A%A9%E6%89%8B-vplayer",
+    "code_url": "https://update.greasyfork.org/scripts/521635/%E8%A7%86%E9%A2%91VIP%E5%8A%A9%E6%89%8B%20-%20VPlayer.user.js",
+    "code_size": 43520,
+    "license": "MIT License",
+    "version": "0.0.22.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 539744,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-17T12:18:36.000Z",
+    "code_updated_at": "2025-06-17T12:18:36.000Z",
+    "namespace": "m-youtube-com-open-links-in-new-tab",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193838,
+        "name": "hlorand",
+        "created_at": "2023-10-12T00:37:53.000Z",
+        "url": "https://greasyfork.org/users/1193838-hlorand"
+      }
+    ],
+    "name": "m.YouTube.com open video links in new tab on subscriptions page",
+    "description": "Opens youtube video links in new tab on the subscriptions page. Works on mobile or tablet only (m.youtube.com).",
+    "url": "https://greasyfork.org/scripts/539744-m-youtube-com-open-video-links-in-new-tab-on-subscriptions-page",
+    "code_url": "https://update.greasyfork.org/scripts/539744/mYouTubecom%20open%20video%20links%20in%20new%20tab%20on%20subscriptions%20page.user.js",
+    "code_size": 795,
+    "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539239,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T20:23:54.000Z",
+    "code_updated_at": "2025-06-12T20:23:54.000Z",
+    "namespace": "apple-hun-keyboard-layout-to-pc-hun-layout",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1193838,
+        "name": "hlorand",
+        "created_at": "2023-10-12T00:37:53.000Z",
+        "url": "https://greasyfork.org/users/1193838-hlorand"
+      }
+    ],
+    "name": "Apple Hungarian Keyboard Layout to Hungarian PC Layout",
+    "description": "Replaces special characters as you type with the equivalent regular 101-button Hungarian PC keyboard characters.",
+    "url": "https://greasyfork.org/scripts/539239-apple-hungarian-keyboard-layout-to-hungarian-pc-layout",
+    "code_url": "https://update.greasyfork.org/scripts/539239/Apple%20Hungarian%20Keyboard%20Layout%20to%20Hungarian%20PC%20Layout.user.js",
+    "code_size": 2444,
+    "license": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

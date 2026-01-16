@@ -1,0 +1,68 @@
+[
+  {
+    "id": 503279,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-08-11T08:23:52.000Z",
+    "code_updated_at": "2024-08-11T08:23:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297842,
+        "name": "dacec354",
+        "created_at": "2024-05-07T02:35:54.000Z",
+        "url": "https://greasyfork.org/users/1297842-dacec354"
+      }
+    ],
+    "name": "Bing屏蔽csdn",
+    "description": "block csdn when searching with bing!",
+    "url": "https://greasyfork.org/scripts/503279-bing%E5%B1%8F%E8%94%BDcsdn",
+    "code_url": "https://update.greasyfork.org/scripts/503279/Bing%E5%B1%8F%E8%94%BDcsdn.user.js",
+    "code_size": 3005,
+    "license": "MIT License",
+    "version": "2024-06-07",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498006,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-15T16:03:44.000Z",
+    "code_updated_at": "2024-07-03T07:16:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297842,
+        "name": "dacec354",
+        "created_at": "2024-05-07T02:35:54.000Z",
+        "url": "https://greasyfork.org/users/1297842-dacec354"
+      }
+    ],
+    "name": "B站动态操作栏跟随",
+    "description": "B站浏览动态优化",
+    "url": "https://greasyfork.org/scripts/498006-b%E7%AB%99%E5%8A%A8%E6%80%81%E6%93%8D%E4%BD%9C%E6%A0%8F%E8%B7%9F%E9%9A%8F",
+    "code_url": "https://update.greasyfork.org/scripts/498006/B%E7%AB%99%E5%8A%A8%E6%80%81%E6%93%8D%E4%BD%9C%E6%A0%8F%E8%B7%9F%E9%9A%8F.user.js",
+    "code_size": 13276,
+    "license": "MIT License",
+    "version": "2024-07-03-1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

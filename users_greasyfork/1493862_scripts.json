@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543659,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T02:01:36.000Z",
+    "code_updated_at": "2025-07-26T02:01:36.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493862,
+        "name": "Alejandro C L",
+        "created_at": "2025-07-11T17:27:06.000Z",
+        "url": "https://greasyfork.org/users/1493862-alejandro-c-l"
+      }
+    ],
+    "name": "Twitter system font",
+    "description": "7/25/2025, 7:56:33 PM",
+    "url": "https://greasyfork.org/scripts/543659-twitter-system-font",
+    "code_url": "https://update.greasyfork.org/scripts/543659/Twitter%20system%20font.user.js",
+    "code_size": 429,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

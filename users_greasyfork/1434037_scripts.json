@@ -1,0 +1,101 @@
+[
+  {
+    "id": 533336,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T13:15:35.000Z",
+    "code_updated_at": "2025-04-19T13:15:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434037,
+        "name": "팽뚱이",
+        "created_at": "2025-02-11T16:45:16.000Z",
+        "url": "https://greasyfork.org/users/1434037-%ED%8C%BD%EB%9A%B1%EC%9D%B4"
+      }
+    ],
+    "name": "채팅창 열혈입장, 도네 제거",
+    "description": "채팅 알림 및 도네이션 제어",
+    "url": "https://greasyfork.org/scripts/533336-%EC%B1%84%ED%8C%85%EC%B0%BD-%EC%97%B4%ED%98%88%EC%9E%85%EC%9E%A5-%EB%8F%84%EB%84%A4-%EC%A0%9C%EA%B1%B0",
+    "code_url": "https://update.greasyfork.org/scripts/533336/%EC%B1%84%ED%8C%85%EC%B0%BD%20%EC%97%B4%ED%98%88%EC%9E%85%EC%9E%A5%2C%20%EB%8F%84%EB%84%A4%20%EC%A0%9C%EA%B1%B0.user.js",
+    "code_size": 7754,
+    "license": null,
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532604,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-12T07:16:48.000Z",
+    "code_updated_at": "2025-04-13T06:41:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434037,
+        "name": "팽뚱이",
+        "created_at": "2025-02-11T16:45:16.000Z",
+        "url": "https://greasyfork.org/users/1434037-%ED%8C%BD%EB%9A%B1%EC%9D%B4"
+      }
+    ],
+    "name": "티켓링크 새로고침",
+    "description": "티켓링크 취소표 자동 새로고침",
+    "url": "https://greasyfork.org/scripts/532604-%ED%8B%B0%EC%BC%93%EB%A7%81%ED%81%AC-%EC%83%88%EB%A1%9C%EA%B3%A0%EC%B9%A8",
+    "code_url": "https://update.greasyfork.org/scripts/532604/%ED%8B%B0%EC%BC%93%EB%A7%81%ED%81%AC%20%EC%83%88%EB%A1%9C%EA%B3%A0%EC%B9%A8.user.js",
+    "code_size": 4650,
+    "license": "pangddong",
+    "version": "0.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526571,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-11T16:46:40.000Z",
+    "code_updated_at": "2025-02-11T16:47:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434037,
+        "name": "팽뚱이",
+        "created_at": "2025-02-11T16:45:16.000Z",
+        "url": "https://greasyfork.org/users/1434037-%ED%8C%BD%EB%9A%B1%EC%9D%B4"
+      }
+    ],
+    "name": "이계돌 게임 색칠 기능 (단축키)",
+    "description": "이계돌 게임에서 합이 10이 되는 셀을 #baccba 색으로 칠합니다. Ctrl+Shift+X 단축키로 기능을 제어합니다.",
+    "url": "https://greasyfork.org/scripts/526571-%EC%9D%B4%EA%B3%84%EB%8F%8C-%EA%B2%8C%EC%9E%84-%EC%83%89%EC%B9%A0-%EA%B8%B0%EB%8A%A5-%EB%8B%A8%EC%B6%95%ED%82%A4",
+    "code_url": "https://update.greasyfork.org/scripts/526571/%EC%9D%B4%EA%B3%84%EB%8F%8C%20%EA%B2%8C%EC%9E%84%20%EC%83%89%EC%B9%A0%20%EA%B8%B0%EB%8A%A5%20%28%EB%8B%A8%EC%B6%95%ED%82%A4%29.user.js",
+    "code_size": 4558,
+    "license": null,
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

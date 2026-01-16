@@ -1,0 +1,33 @@
+{
+  "id": 549885,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-17T21:35:37.000Z",
+  "code_updated_at": "2025-09-17T21:35:36.000Z",
+  "namespace": "https://github.com/dragonjpg",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510062,
+      "name": "dragonjpg",
+      "created_at": "2025-08-29T19:39:05.000Z",
+      "url": "https://greasyfork.org/users/1510062-dragonjpg"
+    }
+  ],
+  "name": "Flight Rising: AH Additional Dragon Info",
+  "description": "add labels for dragon colors, g1 status (optional), double color patterns (optional), & consecutive colors (optional). Data is sourced from the dragon tooltips that are rendered on the page. Edit script to change settings. Based on zombae's script: https://greasyfork.org/en/scripts/412508 & fully compatible with my dark mode and compact auction house userstyles",
+  "url": "https://greasyfork.org/scripts/549885-flight-rising-ah-additional-dragon-info",
+  "code_url": "https://update.greasyfork.org/scripts/549885/Flight%20Rising%3A%20AH%20Additional%20Dragon%20Info.user.js",
+  "code_size": 25859,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

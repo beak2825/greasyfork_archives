@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517918,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-18T15:28:55.000Z",
+    "code_updated_at": "2025-02-10T11:51:40.000Z",
+    "namespace": "nikitalocalhost",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1398656,
+        "name": "nikitalocalhost",
+        "created_at": "2024-11-18T15:23:47.000Z",
+        "url": "https://greasyfork.org/users/1398656-nikitalocalhost"
+      }
+    ],
+    "name": "Ozon.ru show barcode on order page",
+    "description": "Script to show order barcode on Ozon.ru",
+    "url": "https://greasyfork.org/scripts/517918-ozon-ru-show-barcode-on-order-page",
+    "code_url": "https://update.greasyfork.org/scripts/517918/Ozonru%20show%20barcode%20on%20order%20page.user.js",
+    "code_size": 1928,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 548066,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-01T19:41:52.000Z",
+  "code_updated_at": "2025-10-11T09:58:13.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510920,
+      "name": "unreal.",
+      "created_at": "2025-09-01T17:22:25.000Z",
+      "url": "https://greasyfork.org/users/1510920-unreal",
+      "scripts": []
+    }
+  ],
+  "name": "34 | by K. West",
+  "description": "Общий скрипт для сервера NOVOSIBIRSK by K. West",
+  "url": "https://greasyfork.org/scripts/548066-34-by-k-west",
+  "code_url": "https://update.greasyfork.org/scripts/548066/34%20%7C%20by%20K%20West.user.js",
+  "code_size": 276432,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

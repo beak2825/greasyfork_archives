@@ -1,0 +1,33 @@
+{
+  "id": 526075,
+  "daily_installs": 0,
+  "total_installs": 106,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-02-06T10:06:26.000Z",
+  "code_updated_at": "2025-02-06T10:06:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1362995,
+      "name": "qxun",
+      "created_at": "2024-09-04T12:39:28.000Z",
+      "url": "https://greasyfork.org/users/1362995-qxun"
+    }
+  ],
+  "name": "新标签页打开（YouTube、Twitter、Facebook、知乎、百度等动态加载网站）",
+  "description": "让所有链接都在新标签页打开，同时原页面不会变化",
+  "url": "https://greasyfork.org/scripts/526075-%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80-youtube-twitter-facebook-%E7%9F%A5%E4%B9%8E-%E7%99%BE%E5%BA%A6%E7%AD%89%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%BD%91%E7%AB%99",
+  "code_url": "https://update.greasyfork.org/scripts/526075/%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80%EF%BC%88YouTube%E3%80%81Twitter%E3%80%81Facebook%E3%80%81%E7%9F%A5%E4%B9%8E%E3%80%81%E7%99%BE%E5%BA%A6%E7%AD%89%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BD%E7%BD%91%E7%AB%99%EF%BC%89.user.js",
+  "code_size": 1059,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

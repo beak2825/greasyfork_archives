@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497441,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-06-09T12:02:45.000Z",
+    "code_updated_at": "2024-06-09T12:02:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 13149,
+        "name": "Eagleshadow",
+        "created_at": "2015-07-09T17:48:07.000Z",
+        "url": "https://greasyfork.org/users/13149-eagleshadow"
+      }
+    ],
+    "name": "Google Maps Satellite View Auto-Toggle",
+    "description": "Automatically toggle to satellite view in Google Maps",
+    "url": "https://greasyfork.org/scripts/497441-google-maps-satellite-view-auto-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/497441/Google%20Maps%20Satellite%20View%20Auto-Toggle.user.js",
+    "code_size": 1105,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

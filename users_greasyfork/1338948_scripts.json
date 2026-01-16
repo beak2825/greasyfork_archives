@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503176,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T09:17:05.000Z",
+    "code_updated_at": "2025-12-24T16:22:00.000Z",
+    "namespace": "http://hplzh.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338948,
+        "name": "HPLZH",
+        "created_at": "2024-07-24T05:30:07.000Z",
+        "url": "https://greasyfork.org/users/1338948-hplzh"
+      }
+    ],
+    "name": "Terraria wiki 自动简体中文",
+    "description": "将 Terraria wiki 的简繁转换选项自动设置为简体中文",
+    "url": "https://greasyfork.org/scripts/503176-terraria-wiki-%E8%87%AA%E5%8A%A8%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87",
+    "code_url": "https://update.greasyfork.org/scripts/503176/Terraria%20wiki%20%E8%87%AA%E5%8A%A8%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87.user.js",
+    "code_size": 813,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

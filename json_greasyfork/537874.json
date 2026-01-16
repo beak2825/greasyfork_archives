@@ -1,0 +1,59 @@
+{
+  "id": 537874,
+  "daily_installs": 1,
+  "total_installs": 307,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T16:36:07.000Z",
+  "code_updated_at": "2025-06-15T09:37:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476588,
+      "name": "realcwj",
+      "created_at": "2025-05-30T04:29:49.000Z",
+      "url": "https://greasyfork.org/users/1476588-realcwj",
+      "scripts": [
+        {
+          "id": 537874,
+          "daily_installs": 1,
+          "total_installs": 307,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-31T16:36:07.000Z",
+          "code_updated_at": "2025-06-15T09:37:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "123云盘秒传链接（with 123Pan-Unlimited-Share）",
+          "description": "相较于原版本，增加了公共资源库和资源共享计划。重要提示：由于作者不会写Tampermonkey脚本，本脚本由AI生成，作者不保证后续维护的及时性。",
+          "url": "https://greasyfork.org/scripts/537874-123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5-with-123pan-unlimited-share",
+          "code_url": "https://update.greasyfork.org/scripts/537874/123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5%EF%BC%88with%20123Pan-Unlimited-Share%EF%BC%89.user.js",
+          "code_size": 163641,
+          "license": "MIT License",
+          "version": "v1.3.1-mod-v3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "123云盘秒传链接（with 123Pan-Unlimited-Share）",
+  "description": "相较于原版本，增加了公共资源库和资源共享计划。重要提示：由于作者不会写Tampermonkey脚本，本脚本由AI生成，作者不保证后续维护的及时性。",
+  "url": "https://greasyfork.org/scripts/537874-123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5-with-123pan-unlimited-share",
+  "code_url": "https://update.greasyfork.org/scripts/537874/123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5%EF%BC%88with%20123Pan-Unlimited-Share%EF%BC%89.user.js",
+  "code_size": 163641,
+  "license": "MIT License",
+  "version": "v1.3.1-mod-v3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

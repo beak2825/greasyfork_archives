@@ -1,0 +1,68 @@
+[
+  {
+    "id": 501428,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-22T00:08:03.000Z",
+    "code_updated_at": "2024-07-22T00:09:52.000Z",
+    "namespace": "https://greasyfork.org/users/1337890",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337890,
+        "name": "jomez",
+        "created_at": "2024-07-21T23:51:31.000Z",
+        "url": "https://greasyfork.org/users/1337890-jomez"
+      }
+    ],
+    "name": "Fix wall comments \"Delete\" links",
+    "description": "Un-break the ability to delete wall comments.",
+    "url": "https://greasyfork.org/scripts/501428-fix-wall-comments-delete-links",
+    "code_url": "https://update.greasyfork.org/scripts/501428/Fix%20wall%20comments%20%22Delete%22%20links.user.js",
+    "code_size": 459,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 501427,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-21T23:56:03.000Z",
+    "code_updated_at": "2024-07-21T23:56:03.000Z",
+    "namespace": "https://greasyfork.org/users/1337890",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337890,
+        "name": "jomez",
+        "created_at": "2024-07-21T23:51:31.000Z",
+        "url": "https://greasyfork.org/users/1337890-jomez"
+      }
+    ],
+    "name": "Fix friend requests \"Ignore\" link",
+    "description": "Un-break the ability to ignore friends requests.",
+    "url": "https://greasyfork.org/scripts/501427-fix-friend-requests-ignore-link",
+    "code_url": "https://update.greasyfork.org/scripts/501427/Fix%20friend%20requests%20%22Ignore%22%20link.user.js",
+    "code_size": 473,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

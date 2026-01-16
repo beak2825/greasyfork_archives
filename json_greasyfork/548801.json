@@ -1,0 +1,59 @@
+{
+  "id": 548801,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-09-08T11:33:01.000Z",
+  "code_updated_at": "2025-09-08T11:37:37.000Z",
+  "namespace": "Courtesy of your own",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1512972,
+      "name": "spookyboi6822",
+      "created_at": "2025-09-08T11:24:39.000Z",
+      "url": "https://greasyfork.org/users/1512972-spookyboi6822",
+      "scripts": [
+        {
+          "id": 548801,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-09-08T11:33:01.000Z",
+          "code_updated_at": "2025-09-08T11:37:37.000Z",
+          "namespace": "Courtesy of your own",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SpotiUp (SpotiDown.app unlocker)",
+          "description": "Removes the bulk download paywall and removes the anti-adblocker",
+          "url": "https://greasyfork.org/scripts/548801-spotiup-spotidown-app-unlocker",
+          "code_url": "https://update.greasyfork.org/scripts/548801/SpotiUp%20%28SpotiDownapp%20unlocker%29.user.js",
+          "code_size": 3553,
+          "license": "MIT License",
+          "version": "341",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SpotiUp (SpotiDown.app unlocker)",
+  "description": "Removes the bulk download paywall and removes the anti-adblocker",
+  "url": "https://greasyfork.org/scripts/548801-spotiup-spotidown-app-unlocker",
+  "code_url": "https://update.greasyfork.org/scripts/548801/SpotiUp%20%28SpotiDownapp%20unlocker%29.user.js",
+  "code_size": 3553,
+  "license": "MIT License",
+  "version": "341",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

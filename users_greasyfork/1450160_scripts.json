@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532296,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T09:14:26.000Z",
+    "code_updated_at": "2025-04-09T09:14:26.000Z",
+    "namespace": "www.leitstellenspiel.de",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450160,
+        "name": "KastenKlaus",
+        "created_at": "2025-03-25T13:47:23.000Z",
+        "url": "https://greasyfork.org/users/1450160-kastenklaus"
+      }
+    ],
+    "name": "LSS Easter Egg Checker",
+    "description": "OSTERHASEEEEEEEEE",
+    "url": "https://greasyfork.org/scripts/532296-lss-easter-egg-checker",
+    "code_url": "https://update.greasyfork.org/scripts/532296/LSS%20Easter%20Egg%20Checker.user.js",
+    "code_size": 3945,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

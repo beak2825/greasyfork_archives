@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503459,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-12T19:23:27.000Z",
+    "code_updated_at": "2024-08-12T19:23:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1350655,
+        "name": "Kweras",
+        "created_at": "2024-08-12T19:19:55.000Z",
+        "url": "https://greasyfork.org/users/1350655-kweras"
+      }
+    ],
+    "name": "epiotrkow.pl - blokada adblocka",
+    "description": "Wyłączenie wykrywania Adblocka dla epiotrkow.pl - omijanie niesamowicie zaawanasowanego skrypu wykrywającego używanie blokera reklam XD",
+    "url": "https://greasyfork.org/scripts/503459-epiotrkow-pl-blokada-adblocka",
+    "code_url": "https://update.greasyfork.org/scripts/503459/epiotrkowpl%20-%20blokada%20adblocka.user.js",
+    "code_size": 1475,
+    "license": "MIT License",
+    "version": "2024-08-12",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

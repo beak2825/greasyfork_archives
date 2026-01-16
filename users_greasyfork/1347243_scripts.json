@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535829,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T22:29:28.000Z",
+    "code_updated_at": "2025-05-13T08:27:12.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/535829-serienstream-to-aniworld-to-stream-language-selector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1347243,
+        "name": "m0lDaViA",
+        "created_at": "2024-08-07T17:20:16.000Z",
+        "url": "https://greasyfork.org/users/1347243-m0ldavia"
+      }
+    ],
+    "name": "SerienStream.to | AniWorld.to - Stream Language Selector",
+    "description": "Selects the language of the stream on SerienStream.to and AniWorld.to to be displayed first, based on the language selection.",
+    "url": "https://greasyfork.org/scripts/535829-serienstream-to-aniworld-to-stream-language-selector",
+    "code_url": "https://update.greasyfork.org/scripts/535829/SerienStreamto%20%7C%20AniWorldto%20-%20Stream%20Language%20Selector.user.js",
+    "code_size": 3997,
+    "license": "MIT License",
+    "version": "25.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502890,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-07T17:28:48.000Z",
+    "code_updated_at": "2024-08-08T21:56:50.000Z",
+    "namespace": "https://s.to/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1347243,
+        "name": "m0lDaViA",
+        "created_at": "2024-08-07T17:20:16.000Z",
+        "url": "https://greasyfork.org/users/1347243-m0ldavia"
+      }
+    ],
+    "name": "S.TO Alternate Style | DarkMode",
+    "description": "Alternativer Stil für S.TO als Darkmode.",
+    "url": "https://greasyfork.org/scripts/502890-s-to-alternate-style-darkmode",
+    "code_url": "https://update.greasyfork.org/scripts/502890/STO%20Alternate%20Style%20%7C%20DarkMode.user.js",
+    "code_size": 10414,
+    "license": null,
+    "version": "24.8A2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

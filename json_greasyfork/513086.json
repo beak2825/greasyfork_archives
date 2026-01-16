@@ -1,0 +1,59 @@
+{
+  "id": 513086,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-18T16:52:43.000Z",
+  "code_updated_at": "2026-01-15T04:16:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1382843,
+      "name": "enzon19",
+      "created_at": "2024-10-18T16:30:11.000Z",
+      "url": "https://greasyfork.org/users/1382843-enzon19",
+      "scripts": [
+        {
+          "id": 513086,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-18T16:52:43.000Z",
+          "code_updated_at": "2026-01-15T04:16:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Old Trakt Brand",
+          "description": "RebrandTV. Return to the real logo of Trakt!",
+          "url": "https://greasyfork.org/scripts/513086-old-trakt-brand",
+          "code_url": "https://update.greasyfork.org/scripts/513086/Old%20Trakt%20Brand.user.js",
+          "code_size": 129869,
+          "license": "CC BY",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Old Trakt Brand",
+  "description": "RebrandTV. Return to the real logo of Trakt!",
+  "url": "https://greasyfork.org/scripts/513086-old-trakt-brand",
+  "code_url": "https://update.greasyfork.org/scripts/513086/Old%20Trakt%20Brand.user.js",
+  "code_size": 129869,
+  "license": "CC BY",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

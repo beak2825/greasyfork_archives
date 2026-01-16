@@ -1,0 +1,167 @@
+[
+  {
+    "id": 532176,
+    "daily_installs": 0,
+    "total_installs": 197,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-08T08:13:34.000Z",
+    "code_updated_at": "2025-04-08T08:13:34.000Z",
+    "namespace": "tsoil",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391006,
+        "name": "脚本大师ccy",
+        "created_at": "2024-11-04T08:33:38.000Z",
+        "url": "https://greasyfork.org/users/1391006-%E8%84%9A%E6%9C%AC%E5%A4%A7%E5%B8%88ccy"
+      }
+    ],
+    "name": "全平台助手，目前支持【超星学习通、知到智慧树、国家开放大学、广东开放大学、江苏开放大学、上海开放大学、云南开放大学、",
+    "description": "全网课平台招收代理",
+    "url": "https://greasyfork.org/scripts/532176-%E5%85%A8%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B-%E7%9B%AE%E5%89%8D%E6%94%AF%E6%8C%81-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E7%9F%A5%E5%88%B0%E6%99%BA%E6%85%A7%E6%A0%91-%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E5%B9%BF%E4%B8%9C%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E6%B1%9F%E8%8B%8F%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E4%B8%8A%E6%B5%B7%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E4%BA%91%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6",
+    "code_url": "https://update.greasyfork.org/scripts/532176/%E5%85%A8%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B%EF%BC%8C%E7%9B%AE%E5%89%8D%E6%94%AF%E6%8C%81%E3%80%90%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E3%80%81%E7%9F%A5%E5%88%B0%E6%99%BA%E6%85%A7%E6%A0%91%E3%80%81%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E3%80%81%E5%B9%BF%E4%B8%9C%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E3%80%81%E6%B1%9F%E8%8B%8F%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E3%80%81%E4%B8%8A%E6%B5%B7%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E3%80%81%E4%BA%91%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E3%80%81.user.js",
+    "code_size": 34412,
+    "license": "MIT License",
+    "version": "3.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532175,
+    "daily_installs": 0,
+    "total_installs": 146,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-08T08:08:23.000Z",
+    "code_updated_at": "2025-04-08T08:08:23.000Z",
+    "namespace": "tsoil",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391006,
+        "name": "脚本大师ccy",
+        "created_at": "2024-11-04T08:33:38.000Z",
+        "url": "https://greasyfork.org/users/1391006-%E8%84%9A%E6%9C%AC%E5%A4%A7%E5%B8%88ccy"
+      }
+    ],
+    "name": "超星学习通助手[最强答题][支持图片题]",
+    "description": "超星学习通自动自动挂视频、自动答题",
+    "url": "https://greasyfork.org/scripts/532175-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B-%E6%9C%80%E5%BC%BA%E7%AD%94%E9%A2%98-%E6%94%AF%E6%8C%81%E5%9B%BE%E7%89%87%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/532175/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%5B%E6%9C%80%E5%BC%BA%E7%AD%94%E9%A2%98%5D%5B%E6%94%AF%E6%8C%81%E5%9B%BE%E7%89%87%E9%A2%98%5D.user.js",
+    "code_size": 34314,
+    "license": "MIT License",
+    "version": "3.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532174,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-08T08:05:51.000Z",
+    "code_updated_at": "2025-04-08T08:05:50.000Z",
+    "namespace": "tsoil",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391006,
+        "name": "脚本大师ccy",
+        "created_at": "2024-11-04T08:33:38.000Z",
+        "url": "https://greasyfork.org/users/1391006-%E8%84%9A%E6%9C%AC%E5%A4%A7%E5%B8%88ccy"
+      }
+    ],
+    "name": "全网课平台自动刷",
+    "description": "全平台网课自助平台",
+    "url": "https://greasyfork.org/scripts/532174-%E5%85%A8%E7%BD%91%E8%AF%BE%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E5%88%B7",
+    "code_url": "https://update.greasyfork.org/scripts/532174/%E5%85%A8%E7%BD%91%E8%AF%BE%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E5%88%B7.user.js",
+    "code_size": 33853,
+    "license": "MIT License",
+    "version": "3.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532173,
+    "daily_installs": 0,
+    "total_installs": 147,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-08T08:02:43.000Z",
+    "code_updated_at": "2025-04-08T08:02:43.000Z",
+    "namespace": "noshuang",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391006,
+        "name": "脚本大师ccy",
+        "created_at": "2024-11-04T08:33:38.000Z",
+        "url": "https://greasyfork.org/users/1391006-%E8%84%9A%E6%9C%AC%E5%A4%A7%E5%B8%88ccy"
+      }
+    ],
+    "name": "🥇超星学习通｜知到智慧树--网课小助手|修复视频播放|自动跳转任务点|自动答题|超高题库覆盖率|逐渐支持更多平台",
+    "description": "🏆 目前已经支持的平台：【超星学习通「功能基本完成」】【知到智慧树「目前只支持答题」】。🚀 目前已经具有的功能包括：▶️视频自动观看，跳转下一个任务点，📄章节测试、作业自动完成，无答案自动保存，💯考试自动完成，自动切换、保存。使用脚本请进入对应平台的页面。客服qq群：607797984",
+    "url": "https://greasyfork.org/scripts/532173-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E7%9F%A5%E5%88%B0%E6%99%BA%E6%85%A7%E6%A0%91-%E7%BD%91%E8%AF%BE%E5%B0%8F%E5%8A%A9%E6%89%8B-%E4%BF%AE%E5%A4%8D%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E4%BB%BB%E5%8A%A1%E7%82%B9-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98-%E8%B6%85%E9%AB%98%E9%A2%98%E5%BA%93%E8%A6%86%E7%9B%96%E7%8E%87-%E9%80%90%E6%B8%90%E6%94%AF%E6%8C%81%E6%9B%B4%E5%A4%9A%E5%B9%B3%E5%8F%B0",
+    "code_url": "https://update.greasyfork.org/scripts/532173/%F0%9F%A5%87%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%EF%BD%9C%E7%9F%A5%E5%88%B0%E6%99%BA%E6%85%A7%E6%A0%91--%E7%BD%91%E8%AF%BE%E5%B0%8F%E5%8A%A9%E6%89%8B%7C%E4%BF%AE%E5%A4%8D%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%7C%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E4%BB%BB%E5%8A%A1%E7%82%B9%7C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%7C%E8%B6%85%E9%AB%98%E9%A2%98%E5%BA%93%E8%A6%86%E7%9B%96%E7%8E%87%7C%E9%80%90%E6%B8%90%E6%94%AF%E6%8C%81%E6%9B%B4%E5%A4%9A%E5%B9%B3%E5%8F%B0.user.js",
+    "code_size": 206119,
+    "license": "MIT License",
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515848,
+    "daily_installs": 0,
+    "total_installs": 589,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-05T02:04:35.000Z",
+    "code_updated_at": "2024-11-05T02:08:47.000Z",
+    "namespace": "tsoil",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391006,
+        "name": "脚本大师ccy",
+        "created_at": "2024-11-04T08:33:38.000Z",
+        "url": "https://greasyfork.org/users/1391006-%E8%84%9A%E6%9C%AC%E5%A4%A7%E5%B8%88ccy"
+      }
+    ],
+    "name": "青书学堂、国开、超星学习通助手支持考试2",
+    "description": "青书学堂、国开、超星学习通助手支持考试1",
+    "url": "https://greasyfork.org/scripts/515848-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82-%E5%9B%BD%E5%BC%80-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%E6%94%AF%E6%8C%81%E8%80%83%E8%AF%952",
+    "code_url": "https://update.greasyfork.org/scripts/515848/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E3%80%81%E5%9B%BD%E5%BC%80%E3%80%81%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%E6%94%AF%E6%8C%81%E8%80%83%E8%AF%952.user.js",
+    "code_size": 39899,
+    "license": "MIT License",
+    "version": "3.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

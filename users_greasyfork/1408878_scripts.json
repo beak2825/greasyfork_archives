@@ -30,6 +30,171 @@
     "version": "1.0",
     "locale": "ja",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543072,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T01:39:09.000Z",
+    "code_updated_at": "2025-07-20T01:39:09.000Z",
+    "namespace": "S2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408878,
+        "name": "k.kai",
+        "created_at": "2024-12-10T02:56:57.000Z",
+        "url": "https://greasyfork.org/users/1408878-k-kai"
+      }
+    ],
+    "name": "aucfreeMOD",
+    "description": "ja",
+    "url": "https://greasyfork.org/scripts/543072-aucfreemod",
+    "code_url": "https://update.greasyfork.org/scripts/543072/aucfreeMOD.user.js",
+    "code_size": 2681,
+    "license": "Suruga-ya",
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543071,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T01:38:44.000Z",
+    "code_updated_at": "2025-07-20T01:38:44.000Z",
+    "namespace": "S2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408878,
+        "name": "k.kai",
+        "created_at": "2024-12-10T02:56:57.000Z",
+        "url": "https://greasyfork.org/users/1408878-k-kai"
+      }
+    ],
+    "name": "AmazonMOD",
+    "description": "ja",
+    "url": "https://greasyfork.org/scripts/543071-amazonmod",
+    "code_url": "https://update.greasyfork.org/scripts/543071/AmazonMOD.user.js",
+    "code_size": 2575,
+    "license": "Suruga-ya",
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543070,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T01:37:10.000Z",
+    "code_updated_at": "2025-10-28T05:52:14.000Z",
+    "namespace": "　 S2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408878,
+        "name": "k.kai",
+        "created_at": "2024-12-10T02:56:57.000Z",
+        "url": "https://greasyfork.org/users/1408878-k-kai"
+      }
+    ],
+    "name": "査定MOD",
+    "description": "ja",
+    "url": "https://greasyfork.org/scripts/543070-%E6%9F%BB%E5%AE%9Amod",
+    "code_url": "https://update.greasyfork.org/scripts/543070/%E6%9F%BB%E5%AE%9AMOD.user.js",
+    "code_size": 10702,
+    "license": "Suruga-ya",
+    "version": "3.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543069,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T01:35:42.000Z",
+    "code_updated_at": "2025-10-28T05:53:27.000Z",
+    "namespace": "S2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408878,
+        "name": "k.kai",
+        "created_at": "2024-12-10T02:56:57.000Z",
+        "url": "https://greasyfork.org/users/1408878-k-kai"
+      }
+    ],
+    "name": "目録MOD",
+    "description": "ja",
+    "url": "https://greasyfork.org/scripts/543069-%E7%9B%AE%E9%8C%B2mod",
+    "code_url": "https://update.greasyfork.org/scripts/543069/%E7%9B%AE%E9%8C%B2MOD.user.js",
+    "code_size": 6695,
+    "license": "Suruga-ya",
+    "version": "1.1.3",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520273,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-10T03:00:21.000Z",
+    "code_updated_at": "2025-10-28T05:50:35.000Z",
+    "namespace": "S2",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408878,
+        "name": "k.kai",
+        "created_at": "2024-12-10T02:56:57.000Z",
+        "url": "https://greasyfork.org/users/1408878-k-kai"
+      }
+    ],
+    "name": "駿河屋検索改造",
+    "description": "ja",
+    "url": "https://greasyfork.org/scripts/520273-%E9%A7%BF%E6%B2%B3%E5%B1%8B%E6%A4%9C%E7%B4%A2%E6%94%B9%E9%80%A0",
+    "code_url": "https://update.greasyfork.org/scripts/520273/%E9%A7%BF%E6%B2%B3%E5%B1%8B%E6%A4%9C%E7%B4%A2%E6%94%B9%E9%80%A0.user.js",
+    "code_size": 39801,
+    "license": "Suruga-ya",
+    "version": "3.1.3",
+    "locale": "ja",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

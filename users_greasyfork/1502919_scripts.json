@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545074,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T16:52:19.000Z",
+    "code_updated_at": "2025-08-09T16:54:05.000Z",
+    "namespace": "https://github.com/cadot-eu/facebook-cleaner",
+    "support_url": "https://github.com/cadot-eu/facebook-cleaner/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502919,
+        "name": "cadot-eu",
+        "created_at": "2025-08-08T16:50:21.000Z",
+        "url": "https://greasyfork.org/users/1502919-cadot-eu"
+      }
+    ],
+    "name": "Facebook Cleaner - Block Group Invites & Spam",
+    "description": "Powerful Tampermonkey script to automatically hide Facebook group invitations, spam, and unwanted posts. Customizable, robust, and privacy-friendly.",
+    "url": "https://greasyfork.org/scripts/545074-facebook-cleaner-block-group-invites-spam",
+    "code_url": "https://update.greasyfork.org/scripts/545074/Facebook%20Cleaner%20-%20Block%20Group%20Invites%20%20Spam.user.js",
+    "code_size": 79415,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

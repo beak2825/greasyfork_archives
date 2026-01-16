@@ -1,0 +1,59 @@
+{
+  "id": 543468,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-24T03:15:49.000Z",
+  "code_updated_at": "2025-07-24T08:17:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497712,
+      "name": "lizeguet",
+      "created_at": "2025-07-23T16:52:19.000Z",
+      "url": "https://greasyfork.org/users/1497712-lizeguet",
+      "scripts": [
+        {
+          "id": 543468,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-24T03:15:49.000Z",
+          "code_updated_at": "2025-07-24T08:17:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "2025年暑期教师研修|国家智慧教育平台|自动刷课(保活+章节跳转+防挂起增强版)",
+          "description": "支持刷课跳转、防黑屏、防后台暂停、课程数量可配置，适用于  https://teacher.vocational.smartedu.cn/h/subject/summer2025/*",
+          "url": "https://greasyfork.org/scripts/543468-2025%E5%B9%B4%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE-%E4%BF%9D%E6%B4%BB-%E7%AB%A0%E8%8A%82%E8%B7%B3%E8%BD%AC-%E9%98%B2%E6%8C%82%E8%B5%B7%E5%A2%9E%E5%BC%BA%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/543468/2025%E5%B9%B4%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%28%E4%BF%9D%E6%B4%BB%2B%E7%AB%A0%E8%8A%82%E8%B7%B3%E8%BD%AC%2B%E9%98%B2%E6%8C%82%E8%B5%B7%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+          "code_size": 8793,
+          "license": "MIT License",
+          "version": "2025.07.25.Enhanced",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "2025年暑期教师研修|国家智慧教育平台|自动刷课(保活+章节跳转+防挂起增强版)",
+  "description": "支持刷课跳转、防黑屏、防后台暂停、课程数量可配置，适用于  https://teacher.vocational.smartedu.cn/h/subject/summer2025/*",
+  "url": "https://greasyfork.org/scripts/543468-2025%E5%B9%B4%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE-%E4%BF%9D%E6%B4%BB-%E7%AB%A0%E8%8A%82%E8%B7%B3%E8%BD%AC-%E9%98%B2%E6%8C%82%E8%B5%B7%E5%A2%9E%E5%BC%BA%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/543468/2025%E5%B9%B4%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%28%E4%BF%9D%E6%B4%BB%2B%E7%AB%A0%E8%8A%82%E8%B7%B3%E8%BD%AC%2B%E9%98%B2%E6%8C%82%E8%B5%B7%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+  "code_size": 8793,
+  "license": "MIT License",
+  "version": "2025.07.25.Enhanced",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

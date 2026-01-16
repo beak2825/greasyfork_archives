@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510404,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T09:02:26.000Z",
+    "code_updated_at": "2024-10-02T12:32:41.000Z",
+    "namespace": "https://aboucide.github.io/blog/note/software-use/DFX-GZT.html",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971384,
+        "name": "Greas",
+        "created_at": "2022-10-16T03:48:14.000Z",
+        "url": "https://greasyfork.org/users/971384-greas"
+      }
+    ],
+    "name": "DFX工作台助手",
+    "description": "用于高中工作台，自动发送作业。",
+    "url": "https://greasyfork.org/scripts/510404-dfx%E5%B7%A5%E4%BD%9C%E5%8F%B0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/510404/DFX%E5%B7%A5%E4%BD%9C%E5%8F%B0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 29737,
+    "license": "MIT License",
+    "version": "1.4.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

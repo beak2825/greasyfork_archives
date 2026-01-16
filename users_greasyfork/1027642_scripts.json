@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498456,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-20T14:40:39.000Z",
+    "code_updated_at": "2024-06-20T14:40:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1027642,
+        "name": "Lzlv587",
+        "created_at": "2023-02-15T15:19:19.000Z",
+        "url": "https://greasyfork.org/users/1027642-lzlv587"
+      }
+    ],
+    "name": "含羞草",
+    "description": "含羞草-解析脚本，永久导航http://www.Fi11.tv 中转地址：http://www.pmeaqve.cn    遇到播放地址为旧播放地址或者无反应，请自行多刷新几次当前页面，重新播放即可",
+    "url": "https://greasyfork.org/scripts/498456-%E5%90%AB%E7%BE%9E%E8%8D%89",
+    "code_url": "https://update.greasyfork.org/scripts/498456/%E5%90%AB%E7%BE%9E%E8%8D%89.user.js",
+    "code_size": 16553,
+    "license": null,
+    "version": "2.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

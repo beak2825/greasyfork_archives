@@ -1,0 +1,59 @@
+{
+  "id": 512427,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-13T08:05:45.000Z",
+  "code_updated_at": "2024-10-13T08:05:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1379046,
+      "name": "fjjzy",
+      "created_at": "2024-10-10T12:07:30.000Z",
+      "url": "https://greasyfork.org/users/1379046-fjjzy",
+      "scripts": [
+        {
+          "id": 512427,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-13T08:05:45.000Z",
+          "code_updated_at": "2024-10-13T08:05:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "沧交校园网自动登录(非官方",
+          "description": "在沧交校园网登录界面自动登录认证，但是请修改代码下方的上网账号与密码还有运营商",
+          "url": "https://greasyfork.org/scripts/512427-%E6%B2%A7%E4%BA%A4%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95-%E9%9D%9E%E5%AE%98%E6%96%B9",
+          "code_url": "https://update.greasyfork.org/scripts/512427/%E6%B2%A7%E4%BA%A4%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%28%E9%9D%9E%E5%AE%98%E6%96%B9.user.js",
+          "code_size": 6097,
+          "license": "MIT License",
+          "version": "0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "沧交校园网自动登录(非官方",
+  "description": "在沧交校园网登录界面自动登录认证，但是请修改代码下方的上网账号与密码还有运营商",
+  "url": "https://greasyfork.org/scripts/512427-%E6%B2%A7%E4%BA%A4%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95-%E9%9D%9E%E5%AE%98%E6%96%B9",
+  "code_url": "https://update.greasyfork.org/scripts/512427/%E6%B2%A7%E4%BA%A4%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95%28%E9%9D%9E%E5%AE%98%E6%96%B9.user.js",
+  "code_size": 6097,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

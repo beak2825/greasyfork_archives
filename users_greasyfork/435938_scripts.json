@@ -30,6 +30,171 @@
     "version": "2.3.5.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539642,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-06-16T15:31:25.000Z",
+    "code_updated_at": "2025-12-22T17:15:27.000Z",
+    "namespace": "https://github.com/Procyon-b",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435938,
+        "name": "Achernar",
+        "created_at": "2020-01-16T19:18:09.000Z",
+        "url": "https://greasyfork.org/users/435938-achernar"
+      }
+    ],
+    "name": "ebay - Mark sponsored item",
+    "description": "In search result listing, detect which items are sponsored and mark them with a red outline and opacity",
+    "url": "https://greasyfork.org/scripts/539642-ebay-mark-sponsored-item",
+    "code_url": "https://update.greasyfork.org/scripts/539642/ebay%20-%20Mark%20sponsored%20item.user.js",
+    "code_size": 4056,
+    "license": null,
+    "version": "0.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539329,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T20:17:15.000Z",
+    "code_updated_at": "2025-06-14T13:55:21.000Z",
+    "namespace": "https://github.com/Procyon-b",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435938,
+        "name": "Achernar",
+        "created_at": "2020-01-16T19:18:09.000Z",
+        "url": "https://greasyfork.org/users/435938-achernar"
+      }
+    ],
+    "name": "vungle - Prevent Auto Downloads",
+    "description": "Block automatic file downloads",
+    "url": "https://greasyfork.org/scripts/539329-vungle-prevent-auto-downloads",
+    "code_url": "https://update.greasyfork.org/scripts/539329/vungle%20-%20Prevent%20Auto%20Downloads.user.js",
+    "code_size": 721,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539035,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T19:15:46.000Z",
+    "code_updated_at": "2025-06-10T19:18:52.000Z",
+    "namespace": "https://github.com/Procyon-b",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435938,
+        "name": "Achernar",
+        "created_at": "2020-01-16T19:18:09.000Z",
+        "url": "https://greasyfork.org/users/435938-achernar"
+      }
+    ],
+    "name": "DDG - remove &ia=",
+    "description": "The &ia= parameter doesn't always appear. This removes it to streamline the history log.",
+    "url": "https://greasyfork.org/scripts/539035-ddg-remove-ia",
+    "code_url": "https://update.greasyfork.org/scripts/539035/DDG%20-%20remove%20ia%3D.user.js",
+    "code_size": 1503,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532448,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T17:22:30.000Z",
+    "code_updated_at": "2025-04-10T17:22:30.000Z",
+    "namespace": "https://github.com/Procyon-b",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435938,
+        "name": "Achernar",
+        "created_at": "2020-01-16T19:18:09.000Z",
+        "url": "https://greasyfork.org/users/435938-achernar"
+      }
+    ],
+    "name": "ReadComicOnline - Fix image",
+    "description": "Put the image url in src attribute instead of transparent placeholder. Allows right-click save",
+    "url": "https://greasyfork.org/scripts/532448-readcomiconline-fix-image",
+    "code_url": "https://update.greasyfork.org/scripts/532448/ReadComicOnline%20-%20Fix%20image.user.js",
+    "code_size": 764,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513768,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T00:20:41.000Z",
+    "code_updated_at": "2025-09-02T18:51:37.000Z",
+    "namespace": "https://github.com/Procyon-b",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 435938,
+        "name": "Achernar",
+        "created_at": "2020-01-16T19:18:09.000Z",
+        "url": "https://greasyfork.org/users/435938-achernar"
+      }
+    ],
+    "name": "YT - Restore red favicon",
+    "description": "Replace the pink icons with the real red icons",
+    "url": "https://greasyfork.org/scripts/513768-yt-restore-red-favicon",
+    "code_url": "https://update.greasyfork.org/scripts/513768/YT%20-%20Restore%20red%20favicon.user.js",
+    "code_size": 1943,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

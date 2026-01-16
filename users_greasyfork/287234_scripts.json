@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510326,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T18:22:27.000Z",
+    "code_updated_at": "2024-10-29T13:02:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287234,
+        "name": "JogoShugh",
+        "created_at": "2019-03-29T02:47:36.000Z",
+        "url": "https://greasyfork.org/users/287234-jogoshugh"
+      }
+    ],
+    "name": "Enhanced Audio Speed Controller with Time Info, Speed Highlight, Font Size Control, and Toggle",
+    "description": "Adds time information (duration, currentTime, etc.), adjusts for playback speed, highlights the active speed button, toggle for hiding/showing the control panel, and font size control.",
+    "url": "https://greasyfork.org/scripts/510326-enhanced-audio-speed-controller-with-time-info-speed-highlight-font-size-control-and-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/510326/Enhanced%20Audio%20Speed%20Controller%20with%20Time%20Info%2C%20Speed%20Highlight%2C%20Font%20Size%20Control%2C%20and%20Toggle.user.js",
+    "code_size": 14723,
+    "license": "MIT License",
+    "version": "3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524407,
+    "daily_installs": 2,
+    "total_installs": 103,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-01-21T13:27:07.000Z",
+    "code_updated_at": "2025-06-02T06:18:30.000Z",
+    "namespace": "UserScript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425764,
+        "name": "NulledKarma",
+        "created_at": "2025-01-21T12:59:52.000Z",
+        "url": "https://greasyfork.org/users/1425764-nulledkarma"
+      }
+    ],
+    "name": "Facebook Reels Enhancer",
+    "description": "Enable controls on Facebook Reels videos, auto-unmute, and prevent pausing when switching tabs.",
+    "url": "https://greasyfork.org/scripts/524407-facebook-reels-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/524407/Facebook%20Reels%20Enhancer.user.js",
+    "code_size": 9722,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

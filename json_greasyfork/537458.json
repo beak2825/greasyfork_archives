@@ -1,0 +1,33 @@
+{
+  "id": 537458,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-27T17:52:06.000Z",
+  "code_updated_at": "2026-01-03T15:16:04.000Z",
+  "namespace": "https://musicbrainz.org/user/chaban",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473430,
+      "name": "chaban",
+      "created_at": "2025-05-22T13:32:49.000Z",
+      "url": "https://greasyfork.org/users/1473430-chaban"
+    }
+  ],
+  "name": "MusicBrainz: Reports Statistics",
+  "description": "Indicates report changes since the last visit and hides reports without items.",
+  "url": "https://greasyfork.org/scripts/537458-musicbrainz-reports-statistics",
+  "code_url": "https://update.greasyfork.org/scripts/537458/MusicBrainz%3A%20Reports%20Statistics.user.js",
+  "code_size": 27516,
+  "license": "MIT License",
+  "version": "2.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

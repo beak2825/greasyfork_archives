@@ -1,0 +1,68 @@
+[
+  {
+    "id": 502204,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-30T16:03:06.000Z",
+    "code_updated_at": "2024-07-30T16:03:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342659,
+        "name": "Chris C.",
+        "created_at": "2024-07-30T15:26:54.000Z",
+        "url": "https://greasyfork.org/users/1342659-chris-c"
+      }
+    ],
+    "name": "Baidu Time Display Button",
+    "description": "Display current time on baidu.com with a big button",
+    "url": "https://greasyfork.org/scripts/502204-baidu-time-display-button",
+    "code_url": "https://update.greasyfork.org/scripts/502204/Baidu%20Time%20Display%20Button.user.js",
+    "code_size": 2535,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502202,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-30T15:47:45.000Z",
+    "code_updated_at": "2024-07-30T16:00:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342659,
+        "name": "Chris C.",
+        "created_at": "2024-07-30T15:26:54.000Z",
+        "url": "https://greasyfork.org/users/1342659-chris-c"
+      }
+    ],
+    "name": "Douban Time Display Button",
+    "description": "Display current time on douban.com with a big button",
+    "url": "https://greasyfork.org/scripts/502202-douban-time-display-button",
+    "code_url": "https://update.greasyfork.org/scripts/502202/Douban%20Time%20Display%20Button.user.js",
+    "code_size": 2673,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

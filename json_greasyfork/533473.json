@@ -1,0 +1,59 @@
+{
+  "id": 533473,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-21T03:29:06.000Z",
+  "code_updated_at": "2025-04-21T03:50:38.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 892387,
+      "name": "Xierwei",
+      "created_at": "2022-03-25T08:29:39.000Z",
+      "url": "https://greasyfork.org/users/892387-xierwei",
+      "scripts": [
+        {
+          "id": 533473,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-21T03:29:06.000Z",
+          "code_updated_at": "2025-04-21T03:50:38.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "踩蘑菇隐藏侧边栏",
+          "description": "2025/4/21 11点49分",
+          "url": "https://greasyfork.org/scripts/533473-%E8%B8%A9%E8%98%91%E8%8F%87%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F",
+          "code_url": "https://update.greasyfork.org/scripts/533473/%E8%B8%A9%E8%98%91%E8%8F%87%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F.user.js",
+          "code_size": 2333,
+          "license": "MIT License",
+          "version": "1.21",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "踩蘑菇隐藏侧边栏",
+  "description": "2025/4/21 11点49分",
+  "url": "https://greasyfork.org/scripts/533473-%E8%B8%A9%E8%98%91%E8%8F%87%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F",
+  "code_url": "https://update.greasyfork.org/scripts/533473/%E8%B8%A9%E8%98%91%E8%8F%87%E9%9A%90%E8%97%8F%E4%BE%A7%E8%BE%B9%E6%A0%8F.user.js",
+  "code_size": 2333,
+  "license": "MIT License",
+  "version": "1.21",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

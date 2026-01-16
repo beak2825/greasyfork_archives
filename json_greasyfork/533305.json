@@ -1,0 +1,59 @@
+{
+  "id": 533305,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-19T06:48:10.000Z",
+  "code_updated_at": "2025-04-19T06:48:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1459638,
+      "name": "berry peng",
+      "created_at": "2025-04-19T06:44:56.000Z",
+      "url": "https://greasyfork.org/users/1459638-berry-peng",
+      "scripts": [
+        {
+          "id": 533305,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-19T06:48:10.000Z",
+          "code_updated_at": "2025-04-19T06:48:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🚀VSCode插件极速下载 | VSCode Extension VSIX Fast Downloader ⬇️ 一键直链/多版本/Marketplace/Extension",
+          "description": "blocked download link for VS Code plugin? let'me do this!!",
+          "url": "https://greasyfork.org/scripts/533305-vscode%E6%8F%92%E4%BB%B6%E6%9E%81%E9%80%9F%E4%B8%8B%E8%BD%BD-vscode-extension-vsix-fast-downloader-%E4%B8%80%E9%94%AE%E7%9B%B4%E9%93%BE-%E5%A4%9A%E7%89%88%E6%9C%AC-marketplace-extension",
+          "code_url": "https://update.greasyfork.org/scripts/533305/%F0%9F%9A%80VSCode%E6%8F%92%E4%BB%B6%E6%9E%81%E9%80%9F%E4%B8%8B%E8%BD%BD%20%7C%20VSCode%20Extension%20VSIX%20Fast%20Downloader%20%E2%AC%87%EF%B8%8F%20%E4%B8%80%E9%94%AE%E7%9B%B4%E9%93%BE%E5%A4%9A%E7%89%88%E6%9C%ACMarketplaceExtension.user.js",
+          "code_size": 3327,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🚀VSCode插件极速下载 | VSCode Extension VSIX Fast Downloader ⬇️ 一键直链/多版本/Marketplace/Extension",
+  "description": "blocked download link for VS Code plugin? let'me do this!!",
+  "url": "https://greasyfork.org/scripts/533305-vscode%E6%8F%92%E4%BB%B6%E6%9E%81%E9%80%9F%E4%B8%8B%E8%BD%BD-vscode-extension-vsix-fast-downloader-%E4%B8%80%E9%94%AE%E7%9B%B4%E9%93%BE-%E5%A4%9A%E7%89%88%E6%9C%AC-marketplace-extension",
+  "code_url": "https://update.greasyfork.org/scripts/533305/%F0%9F%9A%80VSCode%E6%8F%92%E4%BB%B6%E6%9E%81%E9%80%9F%E4%B8%8B%E8%BD%BD%20%7C%20VSCode%20Extension%20VSIX%20Fast%20Downloader%20%E2%AC%87%EF%B8%8F%20%E4%B8%80%E9%94%AE%E7%9B%B4%E9%93%BE%E5%A4%9A%E7%89%88%E6%9C%ACMarketplaceExtension.user.js",
+  "code_size": 3327,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

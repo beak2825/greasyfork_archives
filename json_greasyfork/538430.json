@@ -1,0 +1,33 @@
+{
+  "id": 538430,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-05T12:31:15.000Z",
+  "code_updated_at": "2025-06-05T12:31:15.000Z",
+  "namespace": "https://github.com/wetcork",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479270,
+      "name": "WetCork",
+      "created_at": "2025-06-05T11:00:46.000Z",
+      "url": "https://greasyfork.org/users/1479270-wetcork"
+    }
+  ],
+  "name": "RaiPlay Downloader",
+  "description": "Sostituisce la funzione del tasto \"Condividi\" con un downloder per il video.",
+  "url": "https://greasyfork.org/scripts/538430-raiplay-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/538430/RaiPlay%20Downloader.user.js",
+  "code_size": 13618,
+  "license": "GPL",
+  "version": "1.0",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

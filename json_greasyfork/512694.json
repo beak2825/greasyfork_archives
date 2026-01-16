@@ -1,0 +1,59 @@
+{
+  "id": 512694,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-15T06:19:19.000Z",
+  "code_updated_at": "2024-10-16T23:08:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1252362,
+      "name": "hoangnam87bt",
+      "created_at": "2024-01-24T01:56:04.000Z",
+      "url": "https://greasyfork.org/users/1252362-hoangnam87bt",
+      "scripts": [
+        {
+          "id": 512694,
+          "daily_installs": 0,
+          "total_installs": 22,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-15T06:19:19.000Z",
+          "code_updated_at": "2024-10-16T23:08:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mousewheel and keyboard control video HTML5",
+          "description": "Add mousewheel & keyboard control to html5 video player.",
+          "url": "https://greasyfork.org/scripts/512694-mousewheel-and-keyboard-control-video-html5",
+          "code_url": "https://update.greasyfork.org/scripts/512694/Mousewheel%20and%20keyboard%20control%20video%20HTML5.user.js",
+          "code_size": 3121,
+          "license": "MIT2",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mousewheel and keyboard control video HTML5",
+  "description": "Add mousewheel & keyboard control to html5 video player.",
+  "url": "https://greasyfork.org/scripts/512694-mousewheel-and-keyboard-control-video-html5",
+  "code_url": "https://update.greasyfork.org/scripts/512694/Mousewheel%20and%20keyboard%20control%20video%20HTML5.user.js",
+  "code_size": 3121,
+  "license": "MIT2",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551604,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T00:56:00.000Z",
+    "code_updated_at": "2026-01-11T02:26:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1522317,
+        "name": "Joseph Tran",
+        "created_at": "2025-10-05T00:40:37.000Z",
+        "url": "https://greasyfork.org/users/1522317-joseph-tran"
+      }
+    ],
+    "name": "pokespy",
+    "description": "Help with eBay listings with TCGdex integration and PriceCharting data extraction",
+    "url": "https://greasyfork.org/scripts/551604-pokespy",
+    "code_url": "https://update.greasyfork.org/scripts/551604/pokespy.user.js",
+    "code_size": 359059,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

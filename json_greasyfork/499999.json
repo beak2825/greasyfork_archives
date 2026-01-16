@@ -1,0 +1,59 @@
+{
+  "id": 499999,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-08T10:31:30.000Z",
+  "code_updated_at": "2024-07-08T11:16:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330157,
+      "name": "games-access.net",
+      "created_at": "2024-07-08T10:19:24.000Z",
+      "url": "https://greasyfork.org/users/1330157-games-access-net",
+      "scripts": [
+        {
+          "id": 499999,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-08T10:31:30.000Z",
+          "code_updated_at": "2024-07-08T11:16:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chat Youtube - Alerte Sonore et Lecteur d'Écran avec Réglages",
+          "description": "Ajoute une alerte sonore et informe les lecteurs d'écran lorsqu'un nouveau message est publié sur le chat de YouTube, avec des options pour désactiver les notifications sonores, la lecture automatique des messages par le lecteur d'écran, et ajuster le volume des notifications sonores. Ce script est dédié aux non-voyants, utilisant des cases à cocher pour désactiver les notifications et la lecture automatique, ainsi qu'un menu déroulant pour ajuster le volume sonore.",
+          "url": "https://greasyfork.org/scripts/499999-chat-youtube-alerte-sonore-et-lecteur-d-%C3%A9cran-avec-r%C3%A9glages",
+          "code_url": "https://update.greasyfork.org/scripts/499999/Chat%20Youtube%20-%20Alerte%20Sonore%20et%20Lecteur%20d%27%C3%89cran%20avec%20R%C3%A9glages.user.js",
+          "code_size": 6495,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chat Youtube - Alerte Sonore et Lecteur d'Écran avec Réglages",
+  "description": "Ajoute une alerte sonore et informe les lecteurs d'écran lorsqu'un nouveau message est publié sur le chat de YouTube, avec des options pour désactiver les notifications sonores, la lecture automatique des messages par le lecteur d'écran, et ajuster le volume des notifications sonores. Ce script est dédié aux non-voyants, utilisant des cases à cocher pour désactiver les notifications et la lecture automatique, ainsi qu'un menu déroulant pour ajuster le volume sonore.",
+  "url": "https://greasyfork.org/scripts/499999-chat-youtube-alerte-sonore-et-lecteur-d-%C3%A9cran-avec-r%C3%A9glages",
+  "code_url": "https://update.greasyfork.org/scripts/499999/Chat%20Youtube%20-%20Alerte%20Sonore%20et%20Lecteur%20d%27%C3%89cran%20avec%20R%C3%A9glages.user.js",
+  "code_size": 6495,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

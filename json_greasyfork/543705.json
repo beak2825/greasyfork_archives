@@ -1,0 +1,59 @@
+{
+  "id": 543705,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-26T13:26:28.000Z",
+  "code_updated_at": "2025-07-26T13:26:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1498536,
+      "name": "hubcap-hug-liking",
+      "created_at": "2025-07-26T13:20:13.000Z",
+      "url": "https://greasyfork.org/users/1498536-hubcap-hug-liking",
+      "scripts": [
+        {
+          "id": 543705,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-26T13:26:28.000Z",
+          "code_updated_at": "2025-07-26T13:26:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RoyalRoad AI Rewriter Enhanced",
+          "description": "Advanced RoyalRoad chapter rewriter with Gemini AI - improved reliability and features",
+          "url": "https://greasyfork.org/scripts/543705-royalroad-ai-rewriter-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/543705/RoyalRoad%20AI%20Rewriter%20Enhanced.user.js",
+          "code_size": 44576,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RoyalRoad AI Rewriter Enhanced",
+  "description": "Advanced RoyalRoad chapter rewriter with Gemini AI - improved reliability and features",
+  "url": "https://greasyfork.org/scripts/543705-royalroad-ai-rewriter-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/543705/RoyalRoad%20AI%20Rewriter%20Enhanced.user.js",
+  "code_size": 44576,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

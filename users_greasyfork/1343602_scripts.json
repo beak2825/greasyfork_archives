@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542984,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T06:16:20.000Z",
+    "code_updated_at": "2025-07-25T06:22:00.000Z",
+    "namespace": "http://start.fengbohan.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1343602,
+        "name": "han bo",
+        "created_at": "2024-08-01T09:26:39.000Z",
+        "url": "https://greasyfork.org/users/1343602-han-bo"
+      }
+    ],
+    "name": "复旦微加班时间统计",
+    "description": "统计加班总时间， 修复了周末加班时间统计的BUG",
+    "url": "https://greasyfork.org/scripts/542984-%E5%A4%8D%E6%97%A6%E5%BE%AE%E5%8A%A0%E7%8F%AD%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/542984/%E5%A4%8D%E6%97%A6%E5%BE%AE%E5%8A%A0%E7%8F%AD%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1.user.js",
+    "code_size": 484428,
+    "license": "MI",
+    "version": "2025-07-25",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535132,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-06T13:54:08.000Z",
+    "code_updated_at": "2025-05-06T13:54:08.000Z",
+    "namespace": "https://mathemaniac.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4769,
+        "name": "Eckankar",
+        "created_at": "2014-08-27T00:29:45.000Z",
+        "url": "https://greasyfork.org/users/4769-eckankar"
+      }
+    ],
+    "name": "New York Times Crossword - Keyboard shortcut for pencil",
+    "description": "Lets you press the shift key to toggle the pencil tool on the crossword.",
+    "url": "https://greasyfork.org/scripts/535132-new-york-times-crossword-keyboard-shortcut-for-pencil",
+    "code_url": "https://update.greasyfork.org/scripts/535132/New%20York%20Times%20Crossword%20-%20Keyboard%20shortcut%20for%20pencil.user.js",
+    "code_size": 599,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530020,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-16T21:57:02.000Z",
+    "code_updated_at": "2025-05-02T10:12:23.000Z",
+    "namespace": "http://mathemaniac.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 4769,
+        "name": "Eckankar",
+        "created_at": "2014-08-27T00:29:45.000Z",
+        "url": "https://greasyfork.org/users/4769-eckankar"
+      }
+    ],
+    "name": "DR Live Translate",
+    "description": "Live-translates subtitles on DR.dk using a LLM.",
+    "url": "https://greasyfork.org/scripts/530020-dr-live-translate",
+    "code_url": "https://update.greasyfork.org/scripts/530020/DR%20Live%20Translate.user.js",
+    "code_size": 7469,
+    "license": "MIT License",
+    "version": "1.3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502370,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-01T16:00:52.000Z",
+    "code_updated_at": "2024-08-01T16:00:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 826334,
+        "name": "LikeToAccess",
+        "created_at": "2021-10-18T08:07:08.000Z",
+        "url": "https://greasyfork.org/users/826334-liketoaccess"
+      }
+    ],
+    "name": "Count Thumbtack costs",
+    "description": "Count total costs on Thumbtack on the payments screen",
+    "url": "https://greasyfork.org/scripts/502370-count-thumbtack-costs",
+    "code_url": "https://update.greasyfork.org/scripts/502370/Count%20Thumbtack%20costs.user.js",
+    "code_size": 1735,
+    "license": "MIT License",
+    "version": "2024-08-01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

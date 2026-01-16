@@ -1,0 +1,34 @@
+{
+  "id": 550298,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-22T03:27:14.000Z",
+  "code_updated_at": "2025-09-22T03:27:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1517932,
+      "name": "isaac hoffman",
+      "created_at": "2025-09-22T03:25:37.000Z",
+      "url": "https://greasyfork.org/users/1517932-isaac-hoffman",
+      "scripts": []
+    }
+  ],
+  "name": "remove checked mudae suggests",
+  "description": "remove checked suggests (for sos/helper)",
+  "url": "https://greasyfork.org/scripts/550298-remove-checked-mudae-suggests",
+  "code_url": "https://update.greasyfork.org/scripts/550298/remove%20checked%20mudae%20suggests.user.js",
+  "code_size": 3111,
+  "license": null,
+  "version": "2025-09-22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

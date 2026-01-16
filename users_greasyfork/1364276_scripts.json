@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507249,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T06:19:53.000Z",
+    "code_updated_at": "2024-09-07T06:31:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1364276,
+        "name": "conan76",
+        "created_at": "2024-09-07T05:52:05.000Z",
+        "url": "https://greasyfork.org/users/1364276-conan76"
+      }
+    ],
+    "name": "Modijiurl Auto Skip",
+    "description": "Auto Skip and get link without doing anything",
+    "url": "https://greasyfork.org/scripts/507249-modijiurl-auto-skip",
+    "code_url": "https://update.greasyfork.org/scripts/507249/Modijiurl%20Auto%20Skip.user.js",
+    "code_size": 2750,
+    "license": "MIT License",
+    "version": "v1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

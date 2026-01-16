@@ -1,0 +1,33 @@
+{
+  "id": 548899,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-09T03:28:16.000Z",
+  "code_updated_at": "2025-09-09T03:28:16.000Z",
+  "namespace": "TripeTrouble",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434586,
+      "name": "Triple Trouble",
+      "created_at": "2025-02-13T08:27:50.000Z",
+      "url": "https://greasyfork.org/users/1434586-triple-trouble"
+    }
+  ],
+  "name": "PoE Wiki redirect",
+  "description": "Adds a floating button to go from the PoE 1 wiki to its PoE 2 sister site for the current search/page",
+  "url": "https://greasyfork.org/scripts/548899-poe-wiki-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/548899/PoE%20Wiki%20redirect.user.js",
+  "code_size": 2400,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

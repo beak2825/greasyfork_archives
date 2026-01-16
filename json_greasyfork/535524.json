@@ -1,0 +1,34 @@
+{
+  "id": 535524,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-10T03:58:28.000Z",
+  "code_updated_at": "2025-05-10T03:58:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1154608,
+      "name": "SethSolutions",
+      "created_at": "2023-08-19T04:24:09.000Z",
+      "url": "https://greasyfork.org/users/1154608-sethsolutions",
+      "scripts": []
+    }
+  ],
+  "name": "Move attack..",
+  "description": "Move attack button on torn..",
+  "url": "https://greasyfork.org/scripts/535524-move-attack",
+  "code_url": "https://update.greasyfork.org/scripts/535524/Move%20attack.user.js",
+  "code_size": 4436,
+  "license": "personal usage",
+  "version": "1.33",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

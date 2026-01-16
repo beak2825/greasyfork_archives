@@ -1,0 +1,33 @@
+{
+  "id": 536158,
+  "daily_installs": 2,
+  "total_installs": 343,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-16T03:08:47.000Z",
+  "code_updated_at": "2025-05-16T03:08:47.000Z",
+  "namespace": "123pan-download-xiaoyu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 841905,
+      "name": "陈鱼宴",
+      "created_at": "2021-11-21T03:55:49.000Z",
+      "url": "https://greasyfork.org/users/841905-%E9%99%88%E9%B1%BC%E5%AE%B4"
+    }
+  ],
+  "name": "123云盘浏览器不限速下载 + 去广告",
+  "description": "登录123云盘后自动提取真实下载地址实现不限速下载，并自动隐藏广告轮播图和提示弹窗。",
+  "url": "https://greasyfork.org/scripts/536158-123%E4%BA%91%E7%9B%98%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD-%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/536158/123%E4%BA%91%E7%9B%98%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8D%E9%99%90%E9%80%9F%E4%B8%8B%E8%BD%BD%20%2B%20%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 4041,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

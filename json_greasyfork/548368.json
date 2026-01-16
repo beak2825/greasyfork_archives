@@ -1,0 +1,34 @@
+{
+  "id": 548368,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T15:44:02.000Z",
+  "code_updated_at": "2025-09-18T14:14:37.000Z",
+  "namespace": "https://markg.dev/userscripts/lazada-drive",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326401,
+      "name": "Mark Gallardo",
+      "created_at": "2024-07-01T00:49:34.000Z",
+      "url": "https://greasyfork.org/users/1326401-mark-gallardo",
+      "scripts": []
+    }
+  ],
+  "name": "LAZADA REPORT 2025",
+  "description": "Lazada: pick dates → fetch conversions → build CSV → upload to Drive (replace if exists). GAS logs status to DAILY2025!E1.",
+  "url": "https://greasyfork.org/scripts/548368-lazada-report-2025",
+  "code_url": "https://update.greasyfork.org/scripts/548368/LAZADA%20REPORT%202025.user.js",
+  "code_size": 11597,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

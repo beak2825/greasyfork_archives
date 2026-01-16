@@ -1,0 +1,34 @@
+{
+  "id": 543584,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-25T07:54:41.000Z",
+  "code_updated_at": "2025-07-25T07:54:41.000Z",
+  "namespace": "http://tampermonkey.net/zzzzzzys_国家中小学",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 473672,
+      "name": "hello w",
+      "created_at": "2020-04-02T11:45:27.000Z",
+      "url": "https://greasyfork.org/users/473672-hello-w",
+      "scripts": []
+    }
+  ],
+  "name": "2025国家智慧中小学-暑期研修(免费，秒刷)，各类继续教育/定制【山东山西广东河北湖南四川吉林继教重庆赤峰宁夏包头梅河口青岛、现代远程教育、双融双创、超星，好医生教育干部智慧普法等，文档查看更多",
+  "description": "适用2025国家智慧教育平台、山东教师教育、河北继续教育等.【河北继续教育(师学通、奥鹏、电视台、高教社等)】【吉林继教(中盛佳源|)】【中小学D校】【国家开发大学】【四川继教、四川创联】【重庆、内蒙古、赤峰、宁夏、包头、梅河口、桦甸教育、中山专技(chinahrt、chinamde)等软件】【广东双融双创、继续教育】【人教社义教】【云继教】【沃希学苑(山东中小学人工智能研修包含考试)】【名师学堂】【中山教师研修】【河北专业技术人员继续教育、湖南师范大学专业技术人员继续教育网】【广西广东干部网络学院、山东灯塔网络学院、凉山专技继续教育】【湖南人社】，凉山、河南专技、鸡西教师平台、民用无人驾驶航空器管理平台，好医生，中国教育干部、法宣在线、吉林高邦等自动化挂机/刷课 更多请前往：https://zzzzzzys.lovestoblog.com/,还有软件支持更加便捷的学习课程！注意：禁止二次发布！加QQ群获取更新",
+  "url": "https://greasyfork.org/scripts/543584-2025%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E4%B8%AD%E5%B0%8F%E5%AD%A6-%E6%9A%91%E6%9C%9F%E7%A0%94%E4%BF%AE-%E5%85%8D%E8%B4%B9-%E7%A7%92%E5%88%B7-%E5%90%84%E7%B1%BB%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E5%AE%9A%E5%88%B6-%E5%B1%B1%E4%B8%9C%E5%B1%B1%E8%A5%BF%E5%B9%BF%E4%B8%9C%E6%B2%B3%E5%8C%97%E6%B9%96%E5%8D%97%E5%9B%9B%E5%B7%9D%E5%90%89%E6%9E%97%E7%BB%A7%E6%95%99%E9%87%8D%E5%BA%86%E8%B5%A4%E5%B3%B0%E5%AE%81%E5%A4%8F%E5%8C%85%E5%A4%B4%E6%A2%85%E6%B2%B3%E5%8F%A3%E9%9D%92%E5%B2%9B-%E7%8E%B0%E4%BB%A3%E8%BF%9C%E7%A8%8B%E6%95%99%E8%82%B2-%E5%8F%8C%E8%9E%8D%E5%8F%8C%E5%88%9B-%E8%B6%85%E6%98%9F-%E5%A5%BD%E5%8C%BB%E7%94%9F%E6%95%99%E8%82%B2%E5%B9%B2%E9%83%A8%E6%99%BA%E6%85%A7%E6%99%AE%E6%B3%95%E7%AD%89-%E6%96%87%E6%A1%A3%E6%9F%A5%E7%9C%8B%E6%9B%B4%E5%A4%9A",
+  "code_url": "https://update.greasyfork.org/scripts/543584/2025%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E4%B8%AD%E5%B0%8F%E5%AD%A6-%E6%9A%91%E6%9C%9F%E7%A0%94%E4%BF%AE%28%E5%85%8D%E8%B4%B9%EF%BC%8C%E7%A7%92%E5%88%B7%29%EF%BC%8C%E5%90%84%E7%B1%BB%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%AE%9A%E5%88%B6%E3%80%90%E5%B1%B1%E4%B8%9C%E5%B1%B1%E8%A5%BF%E5%B9%BF%E4%B8%9C%E6%B2%B3%E5%8C%97%E6%B9%96%E5%8D%97%E5%9B%9B%E5%B7%9D%E5%90%89%E6%9E%97%E7%BB%A7%E6%95%99%E9%87%8D%E5%BA%86%E8%B5%A4%E5%B3%B0%E5%AE%81%E5%A4%8F%E5%8C%85%E5%A4%B4%E6%A2%85%E6%B2%B3%E5%8F%A3%E9%9D%92%E5%B2%9B%E3%80%81%E7%8E%B0%E4%BB%A3%E8%BF%9C%E7%A8%8B%E6%95%99%E8%82%B2%E3%80%81%E5%8F%8C%E8%9E%8D%E5%8F%8C%E5%88%9B%E3%80%81%E8%B6%85%E6%98%9F%EF%BC%8C%E5%A5%BD%E5%8C%BB%E7%94%9F%E6%95%99%E8%82%B2%E5%B9%B2%E9%83%A8%E6%99%BA%E6%85%A7.user.js",
+  "code_size": 700314,
+  "license": null,
+  "version": "2.8.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

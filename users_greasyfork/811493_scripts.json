@@ -1,0 +1,200 @@
+[
+  {
+    "id": 532453,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T18:25:53.000Z",
+    "code_updated_at": "2025-05-11T16:35:02.000Z",
+    "namespace": "com.sherryyue.TrafficFineReportAssist",
+    "support_url": "https://github.com/sherryyuechiu/GreasyMonkeyScripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811493,
+        "name": "SherryYueChiu",
+        "created_at": "2021-09-02T13:38:50.000Z",
+        "url": "https://greasyfork.org/users/811493-sherryyuechiu"
+      }
+    ],
+    "name": "Taiwan Traffic Violation Auto-Filler",
+    "description": "This script automatically fills in the reporter's personal information on various traffic violation reporting websites in Taiwan. After downloading, simply complete the data in the profile section of the script, and it will auto-fill your information on each website you visit.",
+    "url": "https://greasyfork.org/scripts/532453-taiwan-traffic-violation-auto-filler",
+    "code_url": "https://update.greasyfork.org/scripts/532453/Taiwan%20Traffic%20Violation%20Auto-Filler.user.js",
+    "code_size": 52155,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513048,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T09:20:29.000Z",
+    "code_updated_at": "2025-02-06T17:14:40.000Z",
+    "namespace": "com.sherryyue.lulagitlabciloginfo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811493,
+        "name": "SherryYueChiu",
+        "created_at": "2021-09-02T13:38:50.000Z",
+        "url": "https://greasyfork.org/users/811493-sherryyuechiu"
+      }
+    ],
+    "name": "Embeded OMG Game Environment Identifier",
+    "description": "Identify the embeded OMG game environment",
+    "url": "https://greasyfork.org/scripts/513048-embeded-omg-game-environment-identifier",
+    "code_url": "https://update.greasyfork.org/scripts/513048/Embeded%20OMG%20Game%20Environment%20Identifier.user.js",
+    "code_size": 2575,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 507753,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-10T07:29:06.000Z",
+    "code_updated_at": "2024-11-27T07:21:49.000Z",
+    "namespace": "com.sherryyue.omgnasdefaultfolderchanger",
+    "support_url": null,
+    "contribution_url": "https://sherryyuechiu.github.io/card",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811493,
+        "name": "SherryYueChiu",
+        "created_at": "2021-09-02T13:38:50.000Z",
+        "url": "https://greasyfork.org/users/811493-sherryyuechiu"
+      }
+    ],
+    "name": "OMG NAS Auto open default folder",
+    "description": "Automatically open the folder \"對內共用區\" after opening the NAS",
+    "url": "https://greasyfork.org/scripts/507753-omg-nas-auto-open-default-folder",
+    "code_url": "https://update.greasyfork.org/scripts/507753/OMG%20NAS%20Auto%20open%20default%20folder.user.js",
+    "code_size": 2550,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 507004,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-05T17:35:30.000Z",
+    "code_updated_at": "2025-02-06T17:14:47.000Z",
+    "namespace": "com.sherryyue.omggamespeedcontroller",
+    "support_url": null,
+    "contribution_url": "https://sherryyuechiu.github.io/card",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811493,
+        "name": "SherryYueChiu",
+        "created_at": "2021-09-02T13:38:50.000Z",
+        "url": "https://greasyfork.org/users/811493-sherryyuechiu"
+      }
+    ],
+    "name": "OMG Game Speed Controller",
+    "description": "Adjust game speed with a slider, reset button, and pause button, update window.forceSpeed",
+    "url": "https://greasyfork.org/scripts/507004-omg-game-speed-controller",
+    "code_url": "https://update.greasyfork.org/scripts/507004/OMG%20Game%20Speed%20Controller.user.js",
+    "code_size": 7363,
+    "license": "MIT License",
+    "version": "0.12",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504864,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-23T18:55:22.000Z",
+    "code_updated_at": "2024-09-10T07:37:51.000Z",
+    "namespace": "com.sherryyue.omggametokenautofetcher",
+    "support_url": null,
+    "contribution_url": "https://sherryyuechiu.github.io/card",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811493,
+        "name": "SherryYueChiu",
+        "created_at": "2021-09-02T13:38:50.000Z",
+        "url": "https://greasyfork.org/users/811493-sherryyuechiu"
+      }
+    ],
+    "name": "OMG Game Dev-Token Auto Fetcher",
+    "description": "OMG Game Dev-Token Auto Fetcher.",
+    "url": "https://greasyfork.org/scripts/504864-omg-game-dev-token-auto-fetcher",
+    "code_url": "https://update.greasyfork.org/scripts/504864/OMG%20Game%20Dev-Token%20Auto%20Fetcher.user.js",
+    "code_size": 1337,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503085,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-09T12:31:32.000Z",
+    "code_updated_at": "2025-05-08T15:38:08.000Z",
+    "namespace": "com.sherryyue.healthbankmtfhormonebeautifier",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 811493,
+        "name": "SherryYueChiu",
+        "created_at": "2021-09-02T13:38:50.000Z",
+        "url": "https://greasyfork.org/users/811493-sherryyuechiu"
+      }
+    ],
+    "name": "HealthBank Hormone Corrector - for MtF",
+    "description": "This script corrects the display of hormone test results (such as androgens and estrogens) in the HealthBank app to use female standards for color coding, regardless of the gender on the ID. This ensures that transgender women who have not updated their ID gender see accurate and fair representation of their hormone levels.",
+    "url": "https://greasyfork.org/scripts/503085-healthbank-hormone-corrector-for-mtf",
+    "code_url": "https://update.greasyfork.org/scripts/503085/HealthBank%20Hormone%20Corrector%20-%20for%20MtF.user.js",
+    "code_size": 4968,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

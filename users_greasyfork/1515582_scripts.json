@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549670,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-15T21:29:33.000Z",
+    "code_updated_at": "2025-09-15T21:29:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515582,
+        "name": "ChickChuck2",
+        "created_at": "2025-09-15T21:23:18.000Z",
+        "url": "https://greasyfork.org/users/1515582-chickchuck2"
+      }
+    ],
+    "name": "SkinRave Rain Notify with Worker",
+    "description": "Toca beep quando o botão \"Join\" aparece na página, mesmo minimizado",
+    "url": "https://greasyfork.org/scripts/549670-skinrave-rain-notify-with-worker",
+    "code_url": "https://update.greasyfork.org/scripts/549670/SkinRave%20Rain%20Notify%20with%20Worker.user.js",
+    "code_size": 2683,
+    "license": "GNU",
+    "version": "2025-09-15",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

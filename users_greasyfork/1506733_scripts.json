@@ -1,0 +1,35 @@
+[
+  {
+    "id": 546412,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-19T17:17:20.000Z",
+    "code_updated_at": "2025-08-19T17:17:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1506733,
+        "name": "Tibit",
+        "created_at": "2025-08-19T17:09:47.000Z",
+        "url": "https://greasyfork.org/users/1506733-tibit"
+      }
+    ],
+    "name": "Torn OC Requirement Tracker",
+    "description": "Track crime requirements for your slots in Torn",
+    "url": "https://greasyfork.org/scripts/546412-torn-oc-requirement-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/546412/Torn%20OC%20Requirement%20Tracker.user.js",
+    "code_size": 8694,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

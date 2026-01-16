@@ -1,0 +1,68 @@
+[
+  {
+    "id": 512764,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T22:36:11.000Z",
+    "code_updated_at": "2024-10-15T22:36:11.000Z",
+    "namespace": "mikarific.com",
+    "support_url": "https://discord.gg/NSMut3Wx3Y",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1372526,
+        "name": "Ragged",
+        "created_at": "2024-09-24T16:24:53.000Z",
+        "url": "https://greasyfork.org/users/1372526-ragged"
+      }
+    ],
+    "name": "Infinite Craft Helper - No Text Challenge",
+    "description": "Infinite craft No Text Challenge using Infinite Craft Helper",
+    "url": "https://greasyfork.org/scripts/512764-infinite-craft-helper-no-text-challenge",
+    "code_url": "https://update.greasyfork.org/scripts/512764/Infinite%20Craft%20Helper%20-%20No%20Text%20Challenge.user.js",
+    "code_size": 109086,
+    "license": "MIT License",
+    "version": "2.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510013,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-24T16:28:55.000Z",
+    "code_updated_at": "2024-09-24T16:28:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1372526,
+        "name": "Ragged",
+        "created_at": "2024-09-24T16:24:53.000Z",
+        "url": "https://greasyfork.org/users/1372526-ragged"
+      }
+    ],
+    "name": "Right-Click Dotted Outline",
+    "description": "Adds a blue dotted outline around the element you right-click on, and updates the outline as you move the cursor while right-clicking",
+    "url": "https://greasyfork.org/scripts/510013-right-click-dotted-outline",
+    "code_url": "https://update.greasyfork.org/scripts/510013/Right-Click%20Dotted%20Outline.user.js",
+    "code_size": 1593,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

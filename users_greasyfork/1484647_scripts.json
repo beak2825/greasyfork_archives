@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539656,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-16T18:23:42.000Z",
+    "code_updated_at": "2025-06-16T18:23:42.000Z",
+    "namespace": "lgeln10_UESTC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484647,
+        "name": "lgeln10",
+        "created_at": "2025-06-16T18:22:14.000Z",
+        "url": "https://greasyfork.org/users/1484647-lgeln10"
+      }
+    ],
+    "name": "UESTC评教2025年版",
+    "description": "在BlingCc前辈的基础上修改。用法：导入油猴。进入评教页，点击右上角按钮。记得在edge里开启开发者模式，如果不显示一键评教按钮，参考视频https://www.bilibili.com/video/BV1j3A7egExf/?spm_id_from=333.337.search-card.all.click&vd_source=c5199837b8b1d025134d2e305f53d40e",
+    "url": "https://greasyfork.org/scripts/539656-uestc%E8%AF%84%E6%95%992025%E5%B9%B4%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/539656/UESTC%E8%AF%84%E6%95%992025%E5%B9%B4%E7%89%88.user.js",
+    "code_size": 8806,
+    "license": "Anti 996 License v1.0 or later",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

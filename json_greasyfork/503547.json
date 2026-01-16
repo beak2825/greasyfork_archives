@@ -1,0 +1,34 @@
+{
+  "id": 503547,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-13T14:56:25.000Z",
+  "code_updated_at": "2024-08-20T09:51:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed Start 4 Rec Sp schuetze.hh@gmail.com",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/503547-ed-start-4-rec-sp-schuetze-hh-gmail-com",
+  "code_url": "https://update.greasyfork.org/scripts/503547/Ed%20Start%204%20Rec%20Sp%20schuetzehh%40gmailcom.user.js",
+  "code_size": 46811,
+  "license": null,
+  "version": "7.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

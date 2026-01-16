@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509632,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T05:48:40.000Z",
+    "code_updated_at": "2024-09-25T15:34:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 789434,
+        "name": "Summer-Tail",
+        "created_at": "2021-07-02T02:51:20.000Z",
+        "url": "https://greasyfork.org/users/789434-summer-tail"
+      }
+    ],
+    "name": "zmpt-Torrent-Assistant",
+    "description": "织梦种审助手",
+    "url": "https://greasyfork.org/scripts/509632-zmpt-torrent-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/509632/zmpt-Torrent-Assistant.user.js",
+    "code_size": 26879,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

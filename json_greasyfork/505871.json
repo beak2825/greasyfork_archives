@@ -1,0 +1,33 @@
+{
+  "id": 505871,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-30T09:22:05.000Z",
+  "code_updated_at": "2025-10-21T16:51:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1360265,
+      "name": "吕泽耿",
+      "created_at": "2024-08-30T07:13:53.000Z",
+      "url": "https://greasyfork.org/users/1360265-%E5%90%95%E6%B3%BD%E8%80%BF"
+    }
+  ],
+  "name": "蓝湖替换CSS变量",
+  "description": "支持 Css、Less、Sass 变量；不区分大小写；多个相同值的变量会打印在控制台",
+  "url": "https://greasyfork.org/scripts/505871-%E8%93%9D%E6%B9%96%E6%9B%BF%E6%8D%A2css%E5%8F%98%E9%87%8F",
+  "code_url": "https://update.greasyfork.org/scripts/505871/%E8%93%9D%E6%B9%96%E6%9B%BF%E6%8D%A2CSS%E5%8F%98%E9%87%8F.user.js",
+  "code_size": 8128,
+  "license": null,
+  "version": "0.0.10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

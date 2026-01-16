@@ -1,0 +1,33 @@
+{
+  "id": 503937,
+  "daily_installs": 0,
+  "total_installs": 156,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-17T09:21:06.000Z",
+  "code_updated_at": "2024-08-17T09:21:06.000Z",
+  "namespace": "https://greasyfork.org/users/1350640",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1350640,
+      "name": "s4yto",
+      "created_at": "2024-08-12T18:34:32.000Z",
+      "url": "https://greasyfork.org/users/1350640-s4yto"
+    }
+  ],
+  "name": "arca.live Auto Base64 Decoder",
+  "description": "Automatically decodes Base64 content in mod pages and converts valid URLs into clickable links on arca.live.",
+  "url": "https://greasyfork.org/scripts/503937-arca-live-auto-base64-decoder",
+  "code_url": "https://update.greasyfork.org/scripts/503937/arcalive%20Auto%20Base64%20Decoder.user.js",
+  "code_size": 2763,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

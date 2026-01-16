@@ -1,0 +1,59 @@
+{
+  "id": 504768,
+  "daily_installs": 0,
+  "total_installs": 680,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-23T06:37:22.000Z",
+  "code_updated_at": "2024-08-25T01:52:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1355926,
+      "name": "yunend",
+      "created_at": "2024-08-22T08:05:31.000Z",
+      "url": "https://greasyfork.org/users/1355926-yunend",
+      "scripts": [
+        {
+          "id": 504768,
+          "daily_installs": 0,
+          "total_installs": 680,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-23T06:37:22.000Z",
+          "code_updated_at": "2024-08-25T01:52:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "视频self学习|2024暑假教师研修|国家中小学智慧教育平台",
+          "description": "自动刷视频",
+          "url": "https://greasyfork.org/scripts/504768-%E8%A7%86%E9%A2%91self%E5%AD%A6%E4%B9%A0-2024%E6%9A%91%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0",
+          "code_url": "https://update.greasyfork.org/scripts/504768/%E8%A7%86%E9%A2%91self%E5%AD%A6%E4%B9%A0%7C2024%E6%9A%91%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0.user.js",
+          "code_size": 1486,
+          "license": "GNU GPLv3",
+          "version": "2024-08-25",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "视频self学习|2024暑假教师研修|国家中小学智慧教育平台",
+  "description": "自动刷视频",
+  "url": "https://greasyfork.org/scripts/504768-%E8%A7%86%E9%A2%91self%E5%AD%A6%E4%B9%A0-2024%E6%9A%91%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0",
+  "code_url": "https://update.greasyfork.org/scripts/504768/%E8%A7%86%E9%A2%91self%E5%AD%A6%E4%B9%A0%7C2024%E6%9A%91%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0.user.js",
+  "code_size": 1486,
+  "license": "GNU GPLv3",
+  "version": "2024-08-25",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

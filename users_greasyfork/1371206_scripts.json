@@ -1,0 +1,101 @@
+[
+  {
+    "id": 509728,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T20:43:44.000Z",
+    "code_updated_at": "2024-11-22T20:54:46.000Z",
+    "namespace": "https://github.com/hiroki-miya",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371206,
+        "name": "hiroki-miya",
+        "created_at": "2024-09-21T18:55:07.000Z",
+        "url": "https://greasyfork.org/users/1371206-hiroki-miya"
+      }
+    ],
+    "name": "FreshRSS Keyword Highlight",
+    "description": "Highlight articles in FreshRSS that match the rule. Rules are described by regular expressions.",
+    "url": "https://greasyfork.org/scripts/509728-freshrss-keyword-highlight",
+    "code_url": "https://update.greasyfork.org/scripts/509728/FreshRSS%20Keyword%20Highlight.user.js",
+    "code_size": 15913,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509727,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T20:21:55.000Z",
+    "code_updated_at": "2024-11-22T20:53:30.000Z",
+    "namespace": "https://github.com/hiroki-miya",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371206,
+        "name": "hiroki-miya",
+        "created_at": "2024-09-21T18:55:07.000Z",
+        "url": "https://greasyfork.org/users/1371206-hiroki-miya"
+      }
+    ],
+    "name": "FreshRSS NG Filter",
+    "description": "Mark as read and hide articles matching the rule in FreshRSS. Rules are described by regular expressions.",
+    "url": "https://greasyfork.org/scripts/509727-freshrss-ng-filter",
+    "code_url": "https://update.greasyfork.org/scripts/509727/FreshRSS%20NG%20Filter.user.js",
+    "code_size": 16999,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509575,
+    "daily_installs": 1,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-21T19:36:58.000Z",
+    "code_updated_at": "2025-10-27T15:45:07.000Z",
+    "namespace": "https://github.com/hiroki-miya",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371206,
+        "name": "hiroki-miya",
+        "created_at": "2024-09-21T18:55:07.000Z",
+        "url": "https://greasyfork.org/users/1371206-hiroki-miya"
+      }
+    ],
+    "name": "FreshRSS Duplicate Filter",
+    "description": "Mark as read and hide older articles in the FreshRSS feed list that have the same title, URL and content within a category or feed.",
+    "url": "https://greasyfork.org/scripts/509575-freshrss-duplicate-filter",
+    "code_url": "https://update.greasyfork.org/scripts/509575/FreshRSS%20Duplicate%20Filter.user.js",
+    "code_size": 12075,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

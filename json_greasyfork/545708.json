@@ -1,0 +1,59 @@
+{
+  "id": 545708,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-13T14:47:25.000Z",
+  "code_updated_at": "2025-08-13T14:47:25.000Z",
+  "namespace": "https://forum-widerussia.hgweb.ru",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503721,
+      "name": "floxin",
+      "created_at": "2025-08-11T07:30:17.000Z",
+      "url": "https://greasyfork.org/users/1503721-floxin",
+      "scripts": [
+        {
+          "id": 546832,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-22T19:08:09.000Z",
+          "code_updated_at": "2025-12-25T14:31:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Скрипт для руководства адм.",
+          "description": "Скрипт для автоматического ответа на жалобы на форуме Widerussia",
+          "url": "https://greasyfork.org/scripts/546832-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0-%D0%B0%D0%B4%D0%BC",
+          "code_url": "https://update.greasyfork.org/scripts/546832/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%D0%B0%D0%B4%D0%BC.user.js",
+          "code_size": 10615,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "test",
+  "description": "test123",
+  "url": "https://greasyfork.org/scripts/545708-test",
+  "code_url": "https://update.greasyfork.org/scripts/545708/test.user.js",
+  "code_size": 32807,
+  "license": "MIT License",
+  "version": "0.90",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 549870,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-17T18:57:12.000Z",
+  "code_updated_at": "2025-09-17T18:57:12.000Z",
+  "namespace": "https://example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516350,
+      "name": "Liridon Lahu",
+      "created_at": "2025-09-17T18:56:09.000Z",
+      "url": "https://greasyfork.org/users/1516350-liridon-lahu"
+    }
+  ],
+  "name": "bqpanel - replace line.l-ion.xyz -> line.kanale-shqip.com (iOS Safari compatible)",
+  "description": "Replace generated links so http://line.l-ion.xyz/... becomes http://line.kanale-shqip.com/... (optimized for Userscripts iOS Safari extension).",
+  "url": "https://greasyfork.org/scripts/549870-bqpanel-replace-line-l-ion-xyz-line-kanale-shqip-com-ios-safari-compatible",
+  "code_url": "https://update.greasyfork.org/scripts/549870/bqpanel%20-%20replace%20linel-ionxyz%20-%3E%20linekanale-shqipcom%20%28iOS%20Safari%20compatible%29.user.js",
+  "code_size": 7653,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

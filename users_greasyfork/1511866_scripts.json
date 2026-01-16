@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548373,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T16:55:41.000Z",
+    "code_updated_at": "2025-09-04T16:56:48.000Z",
+    "namespace": "https://github.com/CommandLime",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511866,
+        "name": "CommandLime",
+        "created_at": "2025-09-04T16:36:39.000Z",
+        "url": "https://greasyfork.org/users/1511866-commandlime"
+      }
+    ],
+    "name": "NowWatching2Top",
+    "description": "to hell with your carousels, netflix",
+    "url": "https://greasyfork.org/scripts/548373-nowwatching2top",
+    "code_url": "https://update.greasyfork.org/scripts/548373/NowWatching2Top.user.js",
+    "code_size": 3048,
+    "license": "GNU GPLv3",
+    "version": "2025-09-04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 537556,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T15:12:55.000Z",
+  "code_updated_at": "2025-05-28T16:03:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1475992,
+      "name": "mathewafk",
+      "created_at": "2025-05-28T15:08:33.000Z",
+      "url": "https://greasyfork.org/users/1475992-mathewafk"
+    }
+  ],
+  "name": "Wiktionary Greek 5K Navigator",
+  "description": "Adds navigation buttons to Wiktionary Greek 5K word pages",
+  "url": "https://greasyfork.org/scripts/537556-wiktionary-greek-5k-navigator",
+  "code_url": "https://update.greasyfork.org/scripts/537556/Wiktionary%20Greek%205K%20Navigator.user.js",
+  "code_size": 86706,
+  "license": "none",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

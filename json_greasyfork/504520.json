@@ -1,0 +1,33 @@
+{
+  "id": 504520,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-21T17:10:40.000Z",
+  "code_updated_at": "2024-08-22T18:03:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1355668,
+      "name": "SkaosDev",
+      "created_at": "2024-08-21T17:07:00.000Z",
+      "url": "https://greasyfork.org/users/1355668-skaosdev"
+    }
+  ],
+  "name": "AutoDuo",
+  "description": "AutoDuo est un script qui vise à booster les utilisateurs sur Duolingo.",
+  "url": "https://greasyfork.org/scripts/504520-autoduo",
+  "code_url": "https://update.greasyfork.org/scripts/504520/AutoDuo.user.js",
+  "code_size": 22200,
+  "license": "MIT License",
+  "version": "BETA2.0.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

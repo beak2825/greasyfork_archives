@@ -1,0 +1,33 @@
+{
+  "id": 500176,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-10T06:41:21.000Z",
+  "code_updated_at": "2025-07-03T07:50:44.000Z",
+  "namespace": "user7777",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1331125,
+      "name": "user7777",
+      "created_at": "2024-07-10T06:17:54.000Z",
+      "url": "https://greasyfork.org/users/1331125-user7777"
+    }
+  ],
+  "name": "Bilibili直播-隐藏黑名单用户直播间",
+  "description": "方便用户在B站直播列表中隐藏掉黑名单列表中的用户直播间",
+  "url": "https://greasyfork.org/scripts/500176-bilibili%E7%9B%B4%E6%92%AD-%E9%9A%90%E8%97%8F%E9%BB%91%E5%90%8D%E5%8D%95%E7%94%A8%E6%88%B7%E7%9B%B4%E6%92%AD%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/500176/Bilibili%E7%9B%B4%E6%92%AD-%E9%9A%90%E8%97%8F%E9%BB%91%E5%90%8D%E5%8D%95%E7%94%A8%E6%88%B7%E7%9B%B4%E6%92%AD%E9%97%B4.user.js",
+  "code_size": 3193,
+  "license": "MIT License",
+  "version": "0.86",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

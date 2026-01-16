@@ -1,0 +1,101 @@
+[
+  {
+    "id": 548979,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-10T00:59:19.000Z",
+    "code_updated_at": "2025-09-10T01:39:10.000Z",
+    "namespace": "https://www.bianwenbo.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 36570,
+        "name": "bianwenbo",
+        "created_at": "2016-04-01T15:46:59.000Z",
+        "url": "https://greasyfork.org/users/36570-bianwenbo"
+      }
+    ],
+    "name": "Font Rendering Lite (Core + Stroke/Shadow + Site Policy)",
+    "description": "字体美化：中文优先字体栈；字体平滑；根字号可选缩放；描边(含粗体修正)+多向阴影；站点三态策略；默认排除清单；轻量面板；不改外链CSS。",
+    "url": "https://greasyfork.org/scripts/548979-font-rendering-lite-core-stroke-shadow-site-policy",
+    "code_url": "https://update.greasyfork.org/scripts/548979/Font%20Rendering%20Lite%20%28Core%20%2B%20StrokeShadow%20%2B%20Site%20Policy%29.user.js",
+    "code_size": 18386,
+    "license": "MIT License",
+    "version": "0.8.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 548644,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T22:04:18.000Z",
+    "code_updated_at": "2025-09-06T22:17:46.000Z",
+    "namespace": "tm-copy-unlock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 36570,
+        "name": "bianwenbo",
+        "created_at": "2016-04-01T15:46:59.000Z",
+        "url": "https://greasyfork.org/users/36570-bianwenbo"
+      }
+    ],
+    "name": "Enable Select & Copy — Multi-Level (L1–L6)",
+    "description": "多等级解锁复制：默认最保守(等级1)，可逐级增强到等级6；为每站点记忆；菜单与快捷键快速升降；尽量降低被风控检测的概率",
+    "url": "https://greasyfork.org/scripts/548644-enable-select-copy-multi-level-l1-l6",
+    "code_url": "https://update.greasyfork.org/scripts/548644/Enable%20Select%20%20Copy%20%E2%80%94%20Multi-Level%20%28L1%E2%80%93L6%29.user.js",
+    "code_size": 14670,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 547914,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-31T07:48:34.000Z",
+    "code_updated_at": "2025-09-01T12:08:37.000Z",
+    "namespace": "https://www.bianwenbo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 36570,
+        "name": "bianwenbo",
+        "created_at": "2016-04-01T15:46:59.000Z",
+        "url": "https://greasyfork.org/users/36570-bianwenbo"
+      }
+    ],
+    "name": "Vim Style Navigation (with Settings + Enhanced)",
+    "description": "Vim-style scrolling + hint(f/F), find(/ n/N), history(H/L), page ops(r t x*), misc(yy p o ?). UserScript-safe fallbacks.",
+    "url": "https://greasyfork.org/scripts/547914-vim-style-navigation-with-settings-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/547914/Vim%20Style%20Navigation%20%28with%20Settings%20%2B%20Enhanced%29.user.js",
+    "code_size": 21104,
+    "license": "MIT License",
+    "version": "2.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

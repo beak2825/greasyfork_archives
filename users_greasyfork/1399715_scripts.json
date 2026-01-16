@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525235,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-29T15:03:13.000Z",
+    "code_updated_at": "2025-05-02T09:38:23.000Z",
+    "namespace": "https://example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399715,
+        "name": "MrSuNMaX",
+        "created_at": "2024-11-20T14:43:50.000Z",
+        "url": "https://greasyfork.org/users/1399715-mrsunmax"
+      }
+    ],
+    "name": "B站搜索框推荐词屏蔽 Bilibili Replace Search Placeholder",
+    "description": "只在 www.bilibili.com 域名及其子路径生效",
+    "url": "https://greasyfork.org/scripts/525235-b%E7%AB%99%E6%90%9C%E7%B4%A2%E6%A1%86%E6%8E%A8%E8%8D%90%E8%AF%8D%E5%B1%8F%E8%94%BD-bilibili-replace-search-placeholder",
+    "code_url": "https://update.greasyfork.org/scripts/525235/B%E7%AB%99%E6%90%9C%E7%B4%A2%E6%A1%86%E6%8E%A8%E8%8D%90%E8%AF%8D%E5%B1%8F%E8%94%BD%20Bilibili%20Replace%20Search%20Placeholder.user.js",
+    "code_size": 780,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

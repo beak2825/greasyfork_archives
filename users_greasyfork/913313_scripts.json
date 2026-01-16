@@ -1,0 +1,101 @@
+[
+  {
+    "id": 512065,
+    "daily_installs": 3,
+    "total_installs": 351,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-10T04:50:48.000Z",
+    "code_updated_at": "2024-10-10T05:03:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913313,
+        "name": "sdozxm0618",
+        "created_at": "2022-05-12T04:07:25.000Z",
+        "url": "https://greasyfork.org/users/913313-sdozxm0618"
+      }
+    ],
+    "name": "gooboo自动做题",
+    "description": "gooboo自动做题!自用",
+    "url": "https://greasyfork.org/scripts/512065-gooboo%E8%87%AA%E5%8A%A8%E5%81%9A%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/512065/gooboo%E8%87%AA%E5%8A%A8%E5%81%9A%E9%A2%98.user.js",
+    "code_size": 3690,
+    "license": "MIT License",
+    "version": "202410100002",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505560,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T08:19:55.000Z",
+    "code_updated_at": "2024-08-28T08:48:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913313,
+        "name": "sdozxm0618",
+        "created_at": "2022-05-12T04:07:25.000Z",
+        "url": "https://greasyfork.org/users/913313-sdozxm0618"
+      }
+    ],
+    "name": "theresmore Timer Control",
+    "description": "在g8hh游戏theresmore中添加计时器控制以自动点击",
+    "url": "https://greasyfork.org/scripts/505560-theresmore-timer-control",
+    "code_url": "https://update.greasyfork.org/scripts/505560/theresmore%20Timer%20Control.user.js",
+    "code_size": 3613,
+    "license": "MIT License",
+    "version": "202408280002",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500381,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-12T03:35:43.000Z",
+    "code_updated_at": "2024-07-12T03:35:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913313,
+        "name": "sdozxm0618",
+        "created_at": "2022-05-12T04:07:25.000Z",
+        "url": "https://greasyfork.org/users/913313-sdozxm0618"
+      }
+    ],
+    "name": "G8HH:matter-of-scale",
+    "description": "没得介绍!",
+    "url": "https://greasyfork.org/scripts/500381-g8hh-matter-of-scale",
+    "code_url": "https://update.greasyfork.org/scripts/500381/G8HH%3Amatter-of-scale.user.js",
+    "code_size": 1269,
+    "license": "MIT License",
+    "version": "20240712",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

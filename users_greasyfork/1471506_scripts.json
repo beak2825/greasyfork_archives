@@ -31,5 +31,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 542375,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T07:29:46.000Z",
+    "code_updated_at": "2025-07-12T07:29:46.000Z",
+    "namespace": "https://github.com/fixicelo/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471506,
+        "name": "task288",
+        "created_at": "2025-05-18T06:17:35.000Z",
+        "url": "https://greasyfork.org/users/1471506-task288"
+      }
+    ],
+    "name": "Douban Movie Quick Search Links",
+    "description": "Add quick search links for IMDb, YouTube, Netflix, Google, bilibili, Rotten Tomatoes on Douban movie pages. | 在豆瓣电影页面添加 IMDb、YouTube、Netflix、Google、bilibili、烂番茄的快捷搜索链接。 | 在豆瓣電影頁面添加 IMDb、YouTube、Netflix、Google、bilibili、爛番茄的快捷搜尋連結。",
+    "url": "https://greasyfork.org/scripts/542375-douban-movie-quick-search-links",
+    "code_url": "https://update.greasyfork.org/scripts/542375/Douban%20Movie%20Quick%20Search%20Links.user.js",
+    "code_size": 2760,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542167,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T05:40:05.000Z",
+    "code_updated_at": "2025-07-10T05:40:04.000Z",
+    "namespace": "https://github.com/fixicelo/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471506,
+        "name": "task288",
+        "created_at": "2025-05-18T06:17:35.000Z",
+        "url": "https://greasyfork.org/users/1471506-task288"
+      }
+    ],
+    "name": "Douban Stop Verification Page Redirect",
+    "description": "This script prevents redirection to the verification page on Douban. | 防止豆瓣跳转到手机号码验证页。 | 防止豆瓣跳轉到手機號碼驗證頁。",
+    "url": "https://greasyfork.org/scripts/542167-douban-stop-verification-page-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/542167/Douban%20Stop%20Verification%20Page%20Redirect.user.js",
+    "code_size": 1295,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539005,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T12:48:53.000Z",
+    "code_updated_at": "2025-06-10T12:48:53.000Z",
+    "namespace": "https://github.com/fixicelo/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471506,
+        "name": "task288",
+        "created_at": "2025-05-18T06:17:35.000Z",
+        "url": "https://greasyfork.org/users/1471506-task288"
+      }
+    ],
+    "name": "Fix Double-Encoded Characters in URLs",
+    "description": "Fixes a Microsoft Edge bug where URLs with Chinese characters (漢字/中文字) become double-encoded. Resolves Wikipedia errors like `請求的頁面標題包含無效的字元` that can occur after clicking links from Google search results.",
+    "url": "https://greasyfork.org/scripts/539005-fix-double-encoded-characters-in-urls",
+    "code_url": "https://update.greasyfork.org/scripts/539005/Fix%20Double-Encoded%20Characters%20in%20URLs.user.js",
+    "code_size": 2569,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536374,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T07:21:59.000Z",
+    "code_updated_at": "2025-05-19T19:22:18.000Z",
+    "namespace": "https://github.com/fixicelo/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471506,
+        "name": "task288",
+        "created_at": "2025-05-18T06:17:35.000Z",
+        "url": "https://greasyfork.org/users/1471506-task288"
+      }
+    ],
+    "name": "Neopets Shop Stock: Price Reference",
+    "description": "Check and compare your Neopets shop stock prices with Jellyneo's, apply JN prices in bulk or per item.",
+    "url": "https://greasyfork.org/scripts/536374-neopets-shop-stock-price-reference",
+    "code_url": "https://update.greasyfork.org/scripts/536374/Neopets%20Shop%20Stock%3A%20Price%20Reference.user.js",
+    "code_size": 15580,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

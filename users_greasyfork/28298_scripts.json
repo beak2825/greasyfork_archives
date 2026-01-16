@@ -229,5 +229,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550204,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-21T02:54:50.000Z",
+    "code_updated_at": "2025-10-30T22:19:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "AI Navigation Bar",
+    "description": "Automatically clicks the \"Try GPT-5\" button and adds navigation buttons to AI chat services",
+    "url": "https://greasyfork.org/scripts/550204-ai-navigation-bar",
+    "code_url": "https://update.greasyfork.org/scripts/550204/AI%20Navigation%20Bar.user.js",
+    "code_size": 11284,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525912,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-04T18:49:37.000Z",
+    "code_updated_at": "2025-03-11T05:08:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "RSS: FreshRSS Gestures and Auto-Scroll",
+    "description": "Gesture controls (swipe/double-tap) for FreshRSS: double-tap top half to close articles; double-tap bottom half and edge swipe to jump to article end",
+    "url": "https://greasyfork.org/scripts/525912-rss-freshrss-gestures-and-auto-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/525912/RSS%3A%20FreshRSS%20Gestures%20and%20Auto-Scroll.user.js",
+    "code_size": 9098,
+    "license": null,
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525817,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-04T05:49:03.000Z",
+    "code_updated_at": "2025-02-17T21:06:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "Tap to Scroll (Ignore Links)",
+    "description": "Tap the top or bottom of the screen to scroll the page up or down, while ignoring taps on links and interactive elements.",
+    "url": "https://greasyfork.org/scripts/525817-tap-to-scroll-ignore-links",
+    "code_url": "https://update.greasyfork.org/scripts/525817/Tap%20to%20Scroll%20%28Ignore%20Links%29.user.js",
+    "code_size": 1612,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525303,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-30T05:05:45.000Z",
+    "code_updated_at": "2025-02-16T18:57:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "RSS: TLDR/Bloomberg Date Cycler",
+    "description": "Filter sponsored articles, remove margin classes, and add date navigation on tldr.tech",
+    "url": "https://greasyfork.org/scripts/525303-rss-tldr-bloomberg-date-cycler",
+    "code_url": "https://update.greasyfork.org/scripts/525303/RSS%3A%20TLDRBloomberg%20Date%20Cycler.user.js",
+    "code_size": 6178,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523690,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T20:21:15.000Z",
+    "code_updated_at": "2025-11-24T04:24:55.000Z",
+    "namespace": "https://greasyfork.org/en/users/28298",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 28298,
+        "name": "JerryT",
+        "created_at": "2016-01-25T03:33:48.000Z",
+        "url": "https://greasyfork.org/users/28298-jerryt"
+      }
+    ],
+    "name": "Dark Mode Auto Toggle",
+    "description": "Enable eye-friendly dark mode with a toggle button and automatically based on location",
+    "url": "https://greasyfork.org/scripts/523690-dark-mode-auto-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/523690/Dark%20Mode%20Auto%20Toggle.user.js",
+    "code_size": 7568,
+    "license": "MIT License",
+    "version": "0.2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

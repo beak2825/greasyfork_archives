@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536614,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-20T14:42:25.000Z",
+    "code_updated_at": "2025-05-20T14:42:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034157,
+        "name": "WIIII",
+        "created_at": "2023-02-28T07:54:02.000Z",
+        "url": "https://greasyfork.org/users/1034157-wiiii"
+      }
+    ],
+    "name": "审种删种辅助脚本",
+    "description": null,
+    "url": "https://greasyfork.org/scripts/536614-%E5%AE%A1%E7%A7%8D%E5%88%A0%E7%A7%8D%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/536614/%E5%AE%A1%E7%A7%8D%E5%88%A0%E7%A7%8D%E8%BE%85%E5%8A%A9%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 11152,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523073,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-07T02:30:33.000Z",
+    "code_updated_at": "2025-02-16T14:14:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1034157,
+        "name": "WIIII",
+        "created_at": "2023-02-28T07:54:02.000Z",
+        "url": "https://greasyfork.org/users/1034157-wiiii"
+      }
+    ],
+    "name": "auto-say-hello-plus",
+    "description": "Transform into the Western Hello Brother Arthur Morgan and automatically send thanks on every torrent page! If it fails to match successfully, please contact me: 960487551@qq.com",
+    "url": "https://greasyfork.org/scripts/523073-auto-say-hello-plus",
+    "code_url": "https://update.greasyfork.org/scripts/523073/auto-say-hello-plus.user.js",
+    "code_size": 5406,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

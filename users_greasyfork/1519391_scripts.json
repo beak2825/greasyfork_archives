@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551194,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T23:46:14.000Z",
+    "code_updated_at": "2025-10-01T00:44:35.000Z",
+    "namespace": "Skillful",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519391,
+        "name": "Skillful",
+        "created_at": "2025-09-25T22:48:32.000Z",
+        "url": "https://greasyfork.org/users/1519391-skillful"
+      }
+    ],
+    "name": "Agar.io BR Macro (Maconhasplit) - Otimizado com Party",
+    "description": "Macros básicos para agar.io hotkeys/Agariobr com otimizações de performance + Respawn + Seleção de Mouse + Party System",
+    "url": "https://greasyfork.org/scripts/551194-agar-io-br-macro-maconhasplit-otimizado-com-party",
+    "code_url": "https://update.greasyfork.org/scripts/551194/Agario%20BR%20Macro%20%28Maconhasplit%29%20-%20Otimizado%20com%20Party.user.js",
+    "code_size": 43885,
+    "license": "MIT License",
+    "version": "2.5",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 550815,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-27T02:42:28.000Z",
+    "code_updated_at": "2025-10-14T00:18:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519391,
+        "name": "Skillful",
+        "created_at": "2025-09-25T22:48:32.000Z",
+        "url": "https://greasyfork.org/users/1519391-skillful"
+      }
+    ],
+    "name": "AgarBR - Linha Vertical com tecla S",
+    "description": "Ao pressionar 'S' alterna um modo que simula cliques ao longo de uma linha vertical no canvas de agariobr.com.br",
+    "url": "https://greasyfork.org/scripts/550815-agarbr-linha-vertical-com-tecla-s",
+    "code_url": "https://update.greasyfork.org/scripts/550815/AgarBR%20-%20Linha%20Vertical%20com%20tecla%20S.user.js",
+    "code_size": 5777,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

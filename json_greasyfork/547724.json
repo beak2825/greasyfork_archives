@@ -1,0 +1,59 @@
+{
+  "id": 547724,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-29T13:05:34.000Z",
+  "code_updated_at": "2025-08-29T13:05:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1509969,
+      "name": "R KRP",
+      "created_at": "2025-08-29T12:34:00.000Z",
+      "url": "https://greasyfork.org/users/1509969-r-krp",
+      "scripts": [
+        {
+          "id": 547724,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-29T13:05:34.000Z",
+          "code_updated_at": "2025-08-29T13:05:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fix til Klimafoderdatabase.dk",
+          "description": "Viser klimaaftryk på Klimafoderdatabase.dk",
+          "url": "https://greasyfork.org/scripts/547724-fix-til-klimafoderdatabase-dk",
+          "code_url": "https://update.greasyfork.org/scripts/547724/Fix%20til%20Klimafoderdatabasedk.user.js",
+          "code_size": 776,
+          "license": null,
+          "version": "1.1",
+          "locale": "da",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fix til Klimafoderdatabase.dk",
+  "description": "Viser klimaaftryk på Klimafoderdatabase.dk",
+  "url": "https://greasyfork.org/scripts/547724-fix-til-klimafoderdatabase-dk",
+  "code_url": "https://update.greasyfork.org/scripts/547724/Fix%20til%20Klimafoderdatabasedk.user.js",
+  "code_size": 776,
+  "license": null,
+  "version": "1.1",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 517715,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-17T03:12:26.000Z",
+  "code_updated_at": "2024-11-17T03:12:26.000Z",
+  "namespace": "eLibrarian-userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1389234,
+      "name": "NoobScripter",
+      "created_at": "2024-10-31T17:11:33.000Z",
+      "url": "https://greasyfork.org/users/1389234-noobscripter",
+      "scripts": []
+    }
+  ],
+  "name": "TorrentBD: JoySender - Spread Happiness on Torrents",
+  "description": "Spread joy on TorrentBD by effortlessly sending thanks, reputation, and gifting seedbonuses within few clicks!",
+  "url": "https://greasyfork.org/scripts/517715-torrentbd-joysender-spread-happiness-on-torrents",
+  "code_url": "https://update.greasyfork.org/scripts/517715/TorrentBD%3A%20JoySender%20-%20Spread%20Happiness%20on%20Torrents.user.js",
+  "code_size": 26108,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

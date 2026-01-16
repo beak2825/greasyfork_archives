@@ -1,0 +1,33 @@
+{
+  "id": 510416,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-27T10:09:16.000Z",
+  "code_updated_at": "2024-09-30T09:17:10.000Z",
+  "namespace": "http://www.example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1346323,
+      "name": "静美书斋",
+      "created_at": "2024-08-06T07:03:56.000Z",
+      "url": "https://greasyfork.org/users/1346323-%E9%9D%99%E7%BE%8E%E4%B9%A6%E6%96%8B"
+    }
+  ],
+  "name": "简书沉浸式阅读",
+  "description": "为简书PC网站上的文章添加沉浸阅读按钮，进入沉浸后将文章主体扩展至100%，便于阅读和采集",
+  "url": "https://greasyfork.org/scripts/510416-%E7%AE%80%E4%B9%A6%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB",
+  "code_url": "https://update.greasyfork.org/scripts/510416/%E7%AE%80%E4%B9%A6%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB.user.js",
+  "code_size": 14178,
+  "license": "MIT Licensed",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

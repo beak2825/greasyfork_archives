@@ -1,0 +1,33 @@
+{
+  "id": 534510,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T11:34:14.000Z",
+  "code_updated_at": "2025-04-30T12:21:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1314295,
+      "name": "safesummer",
+      "created_at": "2024-06-08T04:43:14.000Z",
+      "url": "https://greasyfork.org/users/1314295-safesummer"
+    }
+  ],
+  "name": "聚合搜索引擎切换(自用-改图标)",
+  "description": "在页面底部显示一个聚合搜索引擎切换导航",
+  "url": "https://greasyfork.org/scripts/534510-%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%88%87%E6%8D%A2-%E8%87%AA%E7%94%A8-%E6%94%B9%E5%9B%BE%E6%A0%87",
+  "code_url": "https://update.greasyfork.org/scripts/534510/%E8%81%9A%E5%90%88%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%88%87%E6%8D%A2%28%E8%87%AA%E7%94%A8-%E6%94%B9%E5%9B%BE%E6%A0%87%29.user.js",
+  "code_size": 34570,
+  "license": "MIT License",
+  "version": "v1.11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

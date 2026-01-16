@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533405,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T09:13:23.000Z",
+    "code_updated_at": "2025-04-20T09:32:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460073,
+        "name": "fangcaocao",
+        "created_at": "2025-04-20T09:02:00.000Z",
+        "url": "https://greasyfork.org/users/1460073-fangcaocao"
+      }
+    ],
+    "name": "方草大侠学习平台视频监测器增强版",
+    "description": "专门针对study.gdip.edu.cn的视频任务点自动切换脚本",
+    "url": "https://greasyfork.org/scripts/533405-%E6%96%B9%E8%8D%89%E5%A4%A7%E4%BE%A0%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0%E8%A7%86%E9%A2%91%E7%9B%91%E6%B5%8B%E5%99%A8%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/533405/%E6%96%B9%E8%8D%89%E5%A4%A7%E4%BE%A0%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0%E8%A7%86%E9%A2%91%E7%9B%91%E6%B5%8B%E5%99%A8%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 16317,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

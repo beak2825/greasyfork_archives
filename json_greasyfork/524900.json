@@ -1,0 +1,33 @@
+{
+  "id": 524900,
+  "daily_installs": 0,
+  "total_installs": 2038,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 2,
+  "created_at": "2025-01-26T06:13:16.000Z",
+  "code_updated_at": "2025-01-28T08:29:30.000Z",
+  "namespace": "http://tampermonkey.net/zzzzzzys_国家中小学",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1408035,
+      "name": "beferf",
+      "created_at": "2024-12-08T02:30:51.000Z",
+      "url": "https://greasyfork.org/users/1408035-beferf"
+    }
+  ],
+  "name": "寒假教师研修秒过",
+  "description": "寒假研修秒过|寒假教师研修|国家智慧教育公共服务平台|国家中小学智慧教育平台秒过",
+  "url": "https://greasyfork.org/scripts/524900-%E5%AF%92%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E7%A7%92%E8%BF%87",
+  "code_url": "https://update.greasyfork.org/scripts/524900/%E5%AF%92%E5%81%87%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E7%A7%92%E8%BF%87.user.js",
+  "code_size": 26236,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

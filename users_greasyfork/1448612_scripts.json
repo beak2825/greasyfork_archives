@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530466,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-21T18:02:07.000Z",
+    "code_updated_at": "2025-03-22T14:23:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1448612,
+        "name": "Dum Dum",
+        "created_at": "2025-03-21T17:37:26.000Z",
+        "url": "https://greasyfork.org/users/1448612-dum-dum"
+      }
+    ],
+    "name": "Bypass per saltare video DIDASKO",
+    "description": "Salta i video di DIDASKO. Premi spazio per saltare istantaneamente e usa le frecce per andare avanti/indietro di 5 secondi nel video.",
+    "url": "https://greasyfork.org/scripts/530466-bypass-per-saltare-video-didasko",
+    "code_url": "https://update.greasyfork.org/scripts/530466/Bypass%20per%20saltare%20video%20DIDASKO.user.js",
+    "code_size": 1475,
+    "license": "GPL v2.0",
+    "version": "1.0",
+    "locale": "it",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

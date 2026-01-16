@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541335,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T11:00:11.000Z",
+    "code_updated_at": "2025-07-02T10:51:10.000Z",
+    "namespace": "https://arsonwarehouse.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 306164,
+        "name": "Sulsay",
+        "created_at": "2019-05-31T13:11:59.000Z",
+        "url": "https://greasyfork.org/users/306164-sulsay"
+      }
+    ],
+    "name": "ArsonWarehouse",
+    "description": "Auto-calculates trade value (replaces deprecated chrome extension)",
+    "url": "https://greasyfork.org/scripts/541335-arsonwarehouse",
+    "code_url": "https://update.greasyfork.org/scripts/541335/ArsonWarehouse.user.js",
+    "code_size": 10852,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

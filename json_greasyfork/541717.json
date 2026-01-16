@@ -1,0 +1,59 @@
+{
+  "id": 541717,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-05T11:29:30.000Z",
+  "code_updated_at": "2025-07-05T11:29:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1491870,
+      "name": "TheChuan1503",
+      "created_at": "2025-07-05T11:15:48.000Z",
+      "url": "https://greasyfork.org/users/1491870-thechuan1503",
+      "scripts": [
+        {
+          "id": 541717,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-05T11:29:30.000Z",
+          "code_updated_at": "2025-07-05T11:29:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "移除bilibili直播间的马赛克",
+          "description": "自动移除bilibili直播间网页版左下角和右下角的马赛克",
+          "url": "https://greasyfork.org/scripts/541717-%E7%A7%BB%E9%99%A4bilibili%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E9%A9%AC%E8%B5%9B%E5%85%8B",
+          "code_url": "https://update.greasyfork.org/scripts/541717/%E7%A7%BB%E9%99%A4bilibili%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E9%A9%AC%E8%B5%9B%E5%85%8B.user.js",
+          "code_size": 976,
+          "license": "MIT License",
+          "version": "2025-07-05",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "移除bilibili直播间的马赛克",
+  "description": "自动移除bilibili直播间网页版左下角和右下角的马赛克",
+  "url": "https://greasyfork.org/scripts/541717-%E7%A7%BB%E9%99%A4bilibili%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E9%A9%AC%E8%B5%9B%E5%85%8B",
+  "code_url": "https://update.greasyfork.org/scripts/541717/%E7%A7%BB%E9%99%A4bilibili%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E9%A9%AC%E8%B5%9B%E5%85%8B.user.js",
+  "code_size": 976,
+  "license": "MIT License",
+  "version": "2025-07-05",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

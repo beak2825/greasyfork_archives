@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530714,
+    "daily_installs": 0,
+    "total_installs": 568,
+    "fan_score": "48.7",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-24T14:54:26.000Z",
+    "code_updated_at": "2025-11-07T05:18:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1151692,
+        "name": "ROA",
+        "created_at": "2023-08-15T03:01:05.000Z",
+        "url": "https://greasyfork.org/users/1151692-roa"
+      }
+    ],
+    "name": "【ROA-2025年最新】💯💯💯网课自动化工具-✅自动连播-🚀高速播放-🔍Ai精准自动搜题 💥万人安装使用",
+    "description": "河南教师网络学院|法宣在线|成都职业培训网络学院|广西干部网络学院|丝路数字学堂|河南教师网络学院|中华医学|蕴瑜课堂|全国高校教师网络培训中心|中国教育电视台|北京市继续医学教育必修课培训｜法宣在线|重庆经贸职业学院｜贵州省级专业技术|平凉市教育培训|甘肃省专业技术人员|河南专技培训|广东医科大学|中国干部网络学院浦东分院|和学在线|安徽继续教育在线|新疆职业健康培训系统|河北药师网|贵州省专业技术人员继续教育平台|湖南开放大学|西南交通大学|新疆继续教育|梦想在线|贵州黔南经济学院|思想天下|石家庄铁道大学继续教育|建投学堂|山东青年政治学院|北华大学党校教育培训系统|吉林省专业技术人员|河南科技职业大学|湖北师范大学|湖北师范大学|湖北第二师范学院|成都市中小学教师继续教育网|高等学历继续教育|广东学习网|电子科技大学继续教育学院|夏邑县小学教师岗位培训平台|贵州地矿专技学时在线|甘肃干部网络学院|企安全|贵州省党员干部网络学院|湖南师范大学|广州市事业单位工作人员|河南教师培训网",
+    "url": "https://greasyfork.org/scripts/530714-roa-2025%E5%B9%B4%E6%9C%80%E6%96%B0-%E7%BD%91%E8%AF%BE%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD-%E9%AB%98%E9%80%9F%E6%92%AD%E6%94%BE-ai%E7%B2%BE%E5%87%86%E8%87%AA%E5%8A%A8%E6%90%9C%E9%A2%98-%E4%B8%87%E4%BA%BA%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/530714/%E3%80%90ROA-2025%E5%B9%B4%E6%9C%80%E6%96%B0%E3%80%91%F0%9F%92%AF%F0%9F%92%AF%F0%9F%92%AF%E7%BD%91%E8%AF%BE%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7-%E2%9C%85%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD-%F0%9F%9A%80%E9%AB%98%E9%80%9F%E6%92%AD%E6%94%BE-%F0%9F%94%8DAi%E7%B2%BE%E5%87%86%E8%87%AA%E5%8A%A8%E6%90%9C%E9%A2%98%20%F0%9F%92%A5%E4%B8%87%E4%BA%BA%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8.user.js",
+    "code_size": 77678,
+    "license": "MIT License",
+    "version": "2.3.9.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

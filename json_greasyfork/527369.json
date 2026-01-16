@@ -1,0 +1,59 @@
+{
+  "id": 527369,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-18T19:08:52.000Z",
+  "code_updated_at": "2026-01-09T18:02:52.000Z",
+  "namespace": "https://github.com/sinancetinkaya/Telegram-WebK-Message-Hider",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1436724,
+      "name": "Sinan Çetinkaya",
+      "created_at": "2025-02-18T19:03:28.000Z",
+      "url": "https://greasyfork.org/users/1436724-sinan-%C3%A7etinkaya",
+      "scripts": [
+        {
+          "id": 527369,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-18T19:08:52.000Z",
+          "code_updated_at": "2026-01-09T18:02:52.000Z",
+          "namespace": "https://github.com/sinancetinkaya/Telegram-WebK-Message-Hider",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Telegram WebK Message Hider",
+          "description": "Hides messages from unwanted users in Telegram groups",
+          "url": "https://greasyfork.org/scripts/527369-telegram-webk-message-hider",
+          "code_url": "https://update.greasyfork.org/scripts/527369/Telegram%20WebK%20Message%20Hider.user.js",
+          "code_size": 2711,
+          "license": "MIT License",
+          "version": "2026-01-09",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Telegram WebK Message Hider",
+  "description": "Hides messages from unwanted users in Telegram groups",
+  "url": "https://greasyfork.org/scripts/527369-telegram-webk-message-hider",
+  "code_url": "https://update.greasyfork.org/scripts/527369/Telegram%20WebK%20Message%20Hider.user.js",
+  "code_size": 2711,
+  "license": "MIT License",
+  "version": "2026-01-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

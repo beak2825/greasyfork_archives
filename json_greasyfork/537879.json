@@ -1,0 +1,33 @@
+{
+  "id": 537879,
+  "daily_installs": 2,
+  "total_installs": 436,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T18:35:39.000Z",
+  "code_updated_at": "2025-05-31T18:35:39.000Z",
+  "namespace": "https://greasyfork.org/users/1476481",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476481,
+      "name": "Partypixelparty7",
+      "created_at": "2025-05-29T18:49:37.000Z",
+      "url": "https://greasyfork.org/users/1476481-partypixelparty7"
+    }
+  ],
+  "name": "Kour.io Instakill 2025",
+  "description": "Enables an Instakill feature for Kour.io. Toggle menu with Right-Shift.",
+  "url": "https://greasyfork.org/scripts/537879-kour-io-instakill-2025",
+  "code_url": "https://update.greasyfork.org/scripts/537879/Kourio%20Instakill%202025.user.js",
+  "code_size": 8716,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

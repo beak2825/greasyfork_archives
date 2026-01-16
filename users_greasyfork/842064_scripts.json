@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543658,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T01:26:27.000Z",
+    "code_updated_at": "2025-08-02T08:57:44.000Z",
+    "namespace": "https://greasyfork.org/users/842064",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 842064,
+        "name": "psychosisspy",
+        "created_at": "2021-11-21T09:44:13.000Z",
+        "url": "https://greasyfork.org/users/842064-psychosisspy"
+      }
+    ],
+    "name": "百度谷歌自动翻页",
+    "description": "手机版，移动版，简单搜索，谷歌搜索结果页面自动加载更多内容，自动点击\"加载更多\"按钮",
+    "url": "https://greasyfork.org/scripts/543658-%E7%99%BE%E5%BA%A6%E8%B0%B7%E6%AD%8C%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/543658/%E7%99%BE%E5%BA%A6%E8%B0%B7%E6%AD%8C%E8%87%AA%E5%8A%A8%E7%BF%BB%E9%A1%B5.user.js",
+    "code_size": 1684,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

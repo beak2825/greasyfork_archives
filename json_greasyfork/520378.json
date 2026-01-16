@@ -1,0 +1,34 @@
+{
+  "id": 520378,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-11T03:59:00.000Z",
+  "code_updated_at": "2024-12-13T02:11:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1396130,
+      "name": "DanstyRO",
+      "created_at": "2024-11-14T08:49:00.000Z",
+      "url": "https://greasyfork.org/users/1396130-danstyro",
+      "scripts": []
+    }
+  ],
+  "name": "拓元 step3 自動同意並選擇表單 新寫法",
+  "description": "攔截特定 CAPTCHA 圖片請求",
+  "url": "https://greasyfork.org/scripts/520378-%E6%8B%93%E5%85%83-step3-%E8%87%AA%E5%8B%95%E5%90%8C%E6%84%8F%E4%B8%A6%E9%81%B8%E6%93%87%E8%A1%A8%E5%96%AE-%E6%96%B0%E5%AF%AB%E6%B3%95",
+  "code_url": "https://update.greasyfork.org/scripts/520378/%E6%8B%93%E5%85%83%20step3%20%E8%87%AA%E5%8B%95%E5%90%8C%E6%84%8F%E4%B8%A6%E9%81%B8%E6%93%87%E8%A1%A8%E5%96%AE%20%E6%96%B0%E5%AF%AB%E6%B3%95.user.js",
+  "code_size": 5292,
+  "license": "MIT License",
+  "version": "2.7",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

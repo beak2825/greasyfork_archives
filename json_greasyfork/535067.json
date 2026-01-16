@@ -1,0 +1,33 @@
+{
+  "id": 535067,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-05T23:00:05.000Z",
+  "code_updated_at": "2025-08-29T03:25:28.000Z",
+  "namespace": "https://github.com/sinazadeh/userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448269,
+      "name": "TheSina",
+      "created_at": "2025-03-21T00:50:17.000Z",
+      "url": "https://greasyfork.org/users/1448269-thesina"
+    }
+  ],
+  "name": "Google Search: Stremio Links",
+  "description": "Adds \"Open in Stremio\" buttons to Google search results and knowledge panels for IMDb titles.",
+  "url": "https://greasyfork.org/scripts/535067-google-search-stremio-links",
+  "code_url": "https://update.greasyfork.org/scripts/535067/Google%20Search%3A%20Stremio%20Links.user.js",
+  "code_size": 8111,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

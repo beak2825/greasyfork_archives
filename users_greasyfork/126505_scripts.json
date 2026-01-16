@@ -1,0 +1,167 @@
+[
+  {
+    "id": 547358,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-26T12:56:57.000Z",
+    "code_updated_at": "2025-08-26T12:56:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 126505,
+        "name": "Алексей Кузменков",
+        "created_at": "2017-05-23T17:31:05.000Z",
+        "url": "https://greasyfork.org/users/126505-%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%BA%D1%83%D0%B7%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%D0%B2"
+      }
+    ],
+    "name": "HeroesWM - Replace the chat button on the inventory",
+    "description": "Заменяет кнопку чата на кнопку инвентаря в шапке HeroesWM",
+    "url": "https://greasyfork.org/scripts/547358-heroeswm-replace-the-chat-button-on-the-inventory",
+    "code_url": "https://update.greasyfork.org/scripts/547358/HeroesWM%20-%20Replace%20the%20chat%20button%20on%20the%20inventory.user.js",
+    "code_size": 1967,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524416,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-21T14:41:17.000Z",
+    "code_updated_at": "2025-01-21T14:42:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 126505,
+        "name": "Алексей Кузменков",
+        "created_at": "2017-05-23T17:31:05.000Z",
+        "url": "https://greasyfork.org/users/126505-%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%BA%D1%83%D0%B7%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%D0%B2"
+      }
+    ],
+    "name": "tj creature search",
+    "description": "lalala portal",
+    "url": "https://greasyfork.org/scripts/524416-tj-creature-search",
+    "code_url": "https://update.greasyfork.org/scripts/524416/tj%20creature%20search.user.js",
+    "code_size": 1707,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "sv",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521496,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-22T21:00:39.000Z",
+    "code_updated_at": "2024-12-22T21:00:39.000Z",
+    "namespace": "omni",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 126505,
+        "name": "Алексей Кузменков",
+        "created_at": "2017-05-23T17:31:05.000Z",
+        "url": "https://greasyfork.org/users/126505-%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%BA%D1%83%D0%B7%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%D0%B2"
+      }
+    ],
+    "name": "sweetSend",
+    "description": "Отправка конфет из почты",
+    "url": "https://greasyfork.org/scripts/521496-sweetsend",
+    "code_url": "https://update.greasyfork.org/scripts/521496/sweetSend.user.js",
+    "code_size": 2900,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508993,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-18T07:01:37.000Z",
+    "code_updated_at": "2024-09-18T07:01:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 126505,
+        "name": "Алексей Кузменков",
+        "created_at": "2017-05-23T17:31:05.000Z",
+        "url": "https://greasyfork.org/users/126505-%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%BA%D1%83%D0%B7%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%D0%B2"
+      }
+    ],
+    "name": "glBattleSearch",
+    "description": "gl helper",
+    "url": "https://greasyfork.org/scripts/508993-glbattlesearch",
+    "code_url": "https://update.greasyfork.org/scripts/508993/glBattleSearch.user.js",
+    "code_size": 10915,
+    "license": null,
+    "version": "2024-01-16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502019,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-28T19:06:31.000Z",
+    "code_updated_at": "2024-07-28T19:06:31.000Z",
+    "namespace": "omne",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 126505,
+        "name": "Алексей Кузменков",
+        "created_at": "2017-05-23T17:31:05.000Z",
+        "url": "https://greasyfork.org/users/126505-%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%BA%D1%83%D0%B7%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%D0%B2"
+      }
+    ],
+    "name": "hwm_ban_hammer",
+    "description": "ban hammer",
+    "url": "https://greasyfork.org/scripts/502019-hwm-ban-hammer",
+    "code_url": "https://update.greasyfork.org/scripts/502019/hwm_ban_hammer.user.js",
+    "code_size": 1426,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

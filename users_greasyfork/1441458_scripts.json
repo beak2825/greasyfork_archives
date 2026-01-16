@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528499,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-02T04:55:43.000Z",
+    "code_updated_at": "2025-03-02T04:55:43.000Z",
+    "namespace": "http://slorum.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441458,
+        "name": "trashfire potus",
+        "created_at": "2025-03-02T04:48:57.000Z",
+        "url": "https://greasyfork.org/users/1441458-trashfire-potus"
+      }
+    ],
+    "name": "Slorum DingDong Checker",
+    "description": "Hide posts and quotes from specific users for sanity protection, customize username/content in quoted posts to your hearts desire.",
+    "url": "https://greasyfork.org/scripts/528499-slorum-dingdong-checker",
+    "code_url": "https://update.greasyfork.org/scripts/528499/Slorum%20DingDong%20Checker.user.js",
+    "code_size": 1698,
+    "license": "MIT License",
+    "version": "0000-00-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

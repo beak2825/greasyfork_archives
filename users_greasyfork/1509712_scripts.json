@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547626,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-28T15:10:37.000Z",
+    "code_updated_at": "2025-08-28T15:25:28.000Z",
+    "namespace": "greasyfork",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1509712,
+        "name": "Sam Shiftman",
+        "created_at": "2025-08-28T14:58:02.000Z",
+        "url": "https://greasyfork.org/users/1509712-sam-shiftman"
+      }
+    ],
+    "name": "slixkly",
+    "description": "fix the slix from stop working",
+    "url": "https://greasyfork.org/scripts/547626-slixkly",
+    "code_url": "https://update.greasyfork.org/scripts/547626/1650973/slixkly.js",
+    "code_size": 397,
+    "license": "MIT License",
+    "version": "0.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

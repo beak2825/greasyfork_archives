@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533160,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T17:21:51.000Z",
+    "code_updated_at": "2025-05-09T07:33:03.000Z",
+    "namespace": "https://yaohuo.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1292605,
+        "name": "dont_reply",
+        "created_at": "2024-04-24T13:35:29.000Z",
+        "url": "https://greasyfork.org/users/1292605-dont-reply"
+      }
+    ],
+    "name": "妖火帖子列表IFrame打开展示(自适应兼容非全屏版)",
+    "description": "在妖火论坛列表页面左侧显示列表，右侧iframe中打开帖子，各占一半屏幕宽度",
+    "url": "https://greasyfork.org/scripts/533160-%E5%A6%96%E7%81%AB%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8iframe%E6%89%93%E5%BC%80%E5%B1%95%E7%A4%BA-%E8%87%AA%E9%80%82%E5%BA%94%E5%85%BC%E5%AE%B9%E9%9D%9E%E5%85%A8%E5%B1%8F%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/533160/%E5%A6%96%E7%81%AB%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8IFrame%E6%89%93%E5%BC%80%E5%B1%95%E7%A4%BA%28%E8%87%AA%E9%80%82%E5%BA%94%E5%85%BC%E5%AE%B9%E9%9D%9E%E5%85%A8%E5%B1%8F%E7%89%88%29.user.js",
+    "code_size": 4398,
+    "license": "MIT License",
+    "version": "0.21",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533117,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T10:56:20.000Z",
+    "code_updated_at": "2025-04-17T10:56:19.000Z",
+    "namespace": "http://yaohuo.me/",
+    "support_url": "http://yaohuo.me/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1292605,
+        "name": "dont_reply",
+        "created_at": "2024-04-24T13:35:29.000Z",
+        "url": "https://greasyfork.org/users/1292605-dont-reply"
+      }
+    ],
+    "name": "妖火复读机(兼容分屏)",
+    "description": "妖火论坛每个回复后面加个复读按钮。",
+    "url": "https://greasyfork.org/scripts/533117-%E5%A6%96%E7%81%AB%E5%A4%8D%E8%AF%BB%E6%9C%BA-%E5%85%BC%E5%AE%B9%E5%88%86%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/533117/%E5%A6%96%E7%81%AB%E5%A4%8D%E8%AF%BB%E6%9C%BA%28%E5%85%BC%E5%AE%B9%E5%88%86%E5%B1%8F%29.user.js",
+    "code_size": 5784,
+    "license": "MIT License",
+    "version": "20250225.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

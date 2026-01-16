@@ -1,0 +1,59 @@
+{
+  "id": 549385,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-13T09:14:38.000Z",
+  "code_updated_at": "2025-10-16T06:52:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514517,
+      "name": "xgp46ginpo",
+      "created_at": "2025-09-13T08:32:21.000Z",
+      "url": "https://greasyfork.org/users/1514517-xgp46ginpo",
+      "scripts": [
+        {
+          "id": 549385,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-13T09:14:38.000Z",
+          "code_updated_at": "2025-10-16T06:52:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Coupang 评论助手",
+          "description": "在Coupang商品详情页提供几个美观的浮动按钮，用于定位评论、显示ID列表和查找Top评论",
+          "url": "https://greasyfork.org/scripts/549385-coupang-%E8%AF%84%E8%AE%BA%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/549385/Coupang%20%E8%AF%84%E8%AE%BA%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 21859,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Coupang 评论助手",
+  "description": "在Coupang商品详情页提供几个美观的浮动按钮，用于定位评论、显示ID列表和查找Top评论",
+  "url": "https://greasyfork.org/scripts/549385-coupang-%E8%AF%84%E8%AE%BA%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/549385/Coupang%20%E8%AF%84%E8%AE%BA%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 21859,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

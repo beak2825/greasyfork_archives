@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534866,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-04T02:33:33.000Z",
+    "code_updated_at": "2025-05-04T13:42:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465380,
+        "name": "loadenro",
+        "created_at": "2025-05-04T02:27:13.000Z",
+        "url": "https://greasyfork.org/users/1465380-loadenro"
+      }
+    ],
+    "name": "Market Auto-Yes",
+    "description": "Auto yes after market buy",
+    "url": "https://greasyfork.org/scripts/534866-market-auto-yes",
+    "code_url": "https://update.greasyfork.org/scripts/534866/Market%20Auto-Yes.user.js",
+    "code_size": 564,
+    "license": "MIT License",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

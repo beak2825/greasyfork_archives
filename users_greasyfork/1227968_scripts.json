@@ -1,0 +1,68 @@
+[
+  {
+    "id": 530872,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-25T23:37:42.000Z",
+    "code_updated_at": "2025-03-26T00:14:21.000Z",
+    "namespace": "https://cytu.be/r/m4c",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1227968,
+        "name": "king dindu",
+        "created_at": "2023-12-04T10:38:11.000Z",
+        "url": "https://greasyfork.org/users/1227968-king-dindu"
+      }
+    ],
+    "name": "geezerModeform4c",
+    "description": "makes chatbox bigger",
+    "url": "https://greasyfork.org/scripts/530872-geezermodeform4c",
+    "code_url": "https://update.greasyfork.org/scripts/530872/geezerModeform4c.user.js",
+    "code_size": 1041,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527928,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T08:47:34.000Z",
+    "code_updated_at": "2025-02-24T08:57:56.000Z",
+    "namespace": "http://v4c.fun/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1227968,
+        "name": "king dindu",
+        "created_at": "2023-12-04T10:38:11.000Z",
+        "url": "https://greasyfork.org/users/1227968-king-dindu"
+      }
+    ],
+    "name": "backToBluev4c",
+    "description": "makes mods bluenames again",
+    "url": "https://greasyfork.org/scripts/527928-backtobluev4c",
+    "code_url": "https://update.greasyfork.org/scripts/527928/backToBluev4c.user.js",
+    "code_size": 953,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

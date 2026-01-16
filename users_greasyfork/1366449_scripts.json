@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508082,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-12T07:40:07.000Z",
+    "code_updated_at": "2024-09-12T07:40:07.000Z",
+    "namespace": "http://githubstar.com",
+    "support_url": "http://githubstar.com?utm_source=greasyfork",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366449,
+        "name": "Nigel Brewster",
+        "created_at": "2024-09-12T07:25:06.000Z",
+        "url": "https://greasyfork.org/users/1366449-nigel-brewster"
+      }
+    ],
+    "name": "GITHUBSTAR: GitHub互赞互粉互Star,快速积累Star、Watch与Fork,助力开源项目成功",
+    "description": "GitHub互赞、互粉、互Star工具,帮助开发者快速积累Star、Watch和Fork。支持GitHub刷赞、刷Star、刷星功能,提升项目知名度。打造引人注目的开源作品,助力项目成功!",
+    "url": "https://greasyfork.org/scripts/508082-githubstar-github%E4%BA%92%E8%B5%9E%E4%BA%92%E7%B2%89%E4%BA%92star-%E5%BF%AB%E9%80%9F%E7%A7%AF%E7%B4%AFstar-watch%E4%B8%8Efork-%E5%8A%A9%E5%8A%9B%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E6%88%90%E5%8A%9F",
+    "code_url": "https://update.greasyfork.org/scripts/508082/GITHUBSTAR%3A%20GitHub%E4%BA%92%E8%B5%9E%E4%BA%92%E7%B2%89%E4%BA%92Star%2C%E5%BF%AB%E9%80%9F%E7%A7%AF%E7%B4%AFStar%E3%80%81Watch%E4%B8%8EFork%2C%E5%8A%A9%E5%8A%9B%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E6%88%90%E5%8A%9F.user.js",
+    "code_size": 37613,
+    "license": "Apache License 2.0",
+    "version": "2.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

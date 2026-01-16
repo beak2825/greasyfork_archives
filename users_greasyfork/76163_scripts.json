@@ -1,0 +1,68 @@
+[
+  {
+    "id": 512152,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-10T18:14:38.000Z",
+    "code_updated_at": "2024-10-10T18:14:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76163,
+        "name": "奥里给大菠萝",
+        "created_at": "2016-10-27T09:23:03.000Z",
+        "url": "https://greasyfork.org/users/76163-%E5%A5%A5%E9%87%8C%E7%BB%99%E5%A4%A7%E8%8F%A0%E8%90%9D"
+      }
+    ],
+    "name": "Google Scholar BibTeX Integration",
+    "description": "Add BibTeX results directly to each Google Scholar search result entry with a copy button",
+    "url": "https://greasyfork.org/scripts/512152-google-scholar-bibtex-integration",
+    "code_url": "https://update.greasyfork.org/scripts/512152/Google%20Scholar%20BibTeX%20Integration.user.js",
+    "code_size": 3897,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503765,
+    "daily_installs": 0,
+    "total_installs": 515,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-15T18:36:38.000Z",
+    "code_updated_at": "2024-08-15T18:36:38.000Z",
+    "namespace": "github.com/hmjz100",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 76163,
+        "name": "奥里给大菠萝",
+        "created_at": "2016-10-27T09:23:03.000Z",
+        "url": "https://greasyfork.org/users/76163-%E5%A5%A5%E9%87%8C%E7%BB%99%E5%A4%A7%E8%8F%A0%E8%90%9D"
+      }
+    ],
+    "name": "（改）B站成分检测器（键政贵物DLC）",
+    "description": "B站评论区自动标注成分，支持动态、发言历史、收藏、稿件和关注识别，默认标注包括原神、崩坏3、崩坏星穹铁道、明日方舟、碧蓝航线、Vtuber、Asoul、王者荣耀、三国杀、我的世界、迷你世界、初生科技。",
+    "url": "https://greasyfork.org/scripts/503765-%E6%94%B9-b%E7%AB%99%E6%88%90%E5%88%86%E6%A3%80%E6%B5%8B%E5%99%A8-%E9%94%AE%E6%94%BF%E8%B4%B5%E7%89%A9dlc",
+    "code_url": "https://update.greasyfork.org/scripts/503765/%EF%BC%88%E6%94%B9%EF%BC%89B%E7%AB%99%E6%88%90%E5%88%86%E6%A3%80%E6%B5%8B%E5%99%A8%EF%BC%88%E9%94%AE%E6%94%BF%E8%B4%B5%E7%89%A9DLC%EF%BC%89.user.js",
+    "code_size": 39095,
+    "license": "GPLv3",
+    "version": "1.35.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

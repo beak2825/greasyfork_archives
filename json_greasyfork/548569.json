@@ -1,0 +1,33 @@
+{
+  "id": 548569,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-06T10:21:16.000Z",
+  "code_updated_at": "2026-01-15T02:42:51.000Z",
+  "namespace": "https://lit.link/toracatman",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1172783,
+      "name": "トラネコマン",
+      "created_at": "2023-09-14T08:54:57.000Z",
+      "url": "https://greasyfork.org/users/1172783-%E3%83%88%E3%83%A9%E3%83%8D%E3%82%B3%E3%83%9E%E3%83%B3"
+    }
+  ],
+  "name": "国立アイヌ民族博物館アイヌ語アーカイブの辞書の強化",
+  "description": "国立アイヌ民族博物館アイヌ語アーカイブの 辞書の 機能を 強化します。",
+  "url": "https://greasyfork.org/scripts/548569-%E5%9B%BD%E7%AB%8B%E3%82%A2%E3%82%A4%E3%83%8C%E6%B0%91%E6%97%8F%E5%8D%9A%E7%89%A9%E9%A4%A8%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%E3%81%AE%E8%BE%9E%E6%9B%B8%E3%81%AE%E5%BC%B7%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/548569/%E5%9B%BD%E7%AB%8B%E3%82%A2%E3%82%A4%E3%83%8C%E6%B0%91%E6%97%8F%E5%8D%9A%E7%89%A9%E9%A4%A8%E3%82%A2%E3%82%A4%E3%83%8C%E8%AA%9E%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%E3%81%AE%E8%BE%9E%E6%9B%B8%E3%81%AE%E5%BC%B7%E5%8C%96.user.js",
+  "code_size": 36209,
+  "license": "MIT License",
+  "version": "2026-01-15",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

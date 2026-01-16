@@ -1,0 +1,59 @@
+{
+  "id": 534713,
+  "daily_installs": 0,
+  "total_installs": 53,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-02T12:16:12.000Z",
+  "code_updated_at": "2025-08-18T19:33:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464793,
+      "name": "Chris-Cross",
+      "created_at": "2025-05-02T12:07:16.000Z",
+      "url": "https://greasyfork.org/users/1464793-chris-cross",
+      "scripts": [
+        {
+          "id": 534713,
+          "daily_installs": 0,
+          "total_installs": 53,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-02T12:16:12.000Z",
+          "code_updated_at": "2025-08-18T19:33:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Russian Roulette Martingale Betting Buttons (Dynamic Base + Multiplier + Persistent Settings)",
+          "description": "Torn RR 1–10 Martingale buttons with configurable starting bet and multiplier (2x/2.5x/3x/etc.), plus persistent settings and inline Settings UI.",
+          "url": "https://greasyfork.org/scripts/534713-torn-russian-roulette-martingale-betting-buttons-dynamic-base-multiplier-persistent-settings",
+          "code_url": "https://update.greasyfork.org/scripts/534713/Torn%20Russian%20Roulette%20Martingale%20Betting%20Buttons%20%28Dynamic%20Base%20%2B%20Multiplier%20%2B%20Persistent%20Settings%29.user.js",
+          "code_size": 10115,
+          "license": "MIT License",
+          "version": "4.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Russian Roulette Martingale Betting Buttons (Dynamic Base + Multiplier + Persistent Settings)",
+  "description": "Torn RR 1–10 Martingale buttons with configurable starting bet and multiplier (2x/2.5x/3x/etc.), plus persistent settings and inline Settings UI.",
+  "url": "https://greasyfork.org/scripts/534713-torn-russian-roulette-martingale-betting-buttons-dynamic-base-multiplier-persistent-settings",
+  "code_url": "https://update.greasyfork.org/scripts/534713/Torn%20Russian%20Roulette%20Martingale%20Betting%20Buttons%20%28Dynamic%20Base%20%2B%20Multiplier%20%2B%20Persistent%20Settings%29.user.js",
+  "code_size": 10115,
+  "license": "MIT License",
+  "version": "4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

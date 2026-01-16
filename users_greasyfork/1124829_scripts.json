@@ -64,5 +64,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 549281,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T15:38:16.000Z",
+    "code_updated_at": "2025-09-14T13:50:42.000Z",
+    "namespace": "https://subtitlecat.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124829,
+        "name": "sexjpg",
+        "created_at": "2023-07-12T12:10:51.000Z",
+        "url": "https://greasyfork.org/users/1124829-sexjpg"
+      }
+    ],
+    "name": "SubtiTleCat字幕搜索",
+    "description": "获取subtitlecat字幕结果",
+    "url": "https://greasyfork.org/scripts/549281-subtitlecat%E5%AD%97%E5%B9%95%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/549281/SubtiTleCat%E5%AD%97%E5%B9%95%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 31601,
+    "license": null,
+    "version": "0.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549241,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T09:46:24.000Z",
+    "code_updated_at": "2025-09-12T09:46:24.000Z",
+    "namespace": "https://subtitlecat.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124829,
+        "name": "sexjpg",
+        "created_at": "2023-07-12T12:10:51.000Z",
+        "url": "https://greasyfork.org/users/1124829-sexjpg"
+      }
+    ],
+    "name": "SubTitleCat结果筛选",
+    "description": "精准筛选结果,隐藏需要翻译的字幕和不含搜索关键字的结果",
+    "url": "https://greasyfork.org/scripts/549241-subtitlecat%E7%BB%93%E6%9E%9C%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/549241/SubTitleCat%E7%BB%93%E6%9E%9C%E7%AD%9B%E9%80%89.user.js",
+    "code_size": 1515,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545834,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-14T14:59:27.000Z",
+    "code_updated_at": "2025-12-17T09:15:08.000Z",
+    "namespace": "ccicclaim",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124829,
+        "name": "sexjpg",
+        "created_at": "2023-07-12T12:10:51.000Z",
+        "url": "https://greasyfork.org/users/1124829-sexjpg"
+      }
+    ],
+    "name": "大地融合精友定损",
+    "description": "用于2015版大地理赔页面,融合精友查询",
+    "url": "https://greasyfork.org/scripts/545834-%E5%A4%A7%E5%9C%B0%E8%9E%8D%E5%90%88%E7%B2%BE%E5%8F%8B%E5%AE%9A%E6%8D%9F",
+    "code_url": "https://update.greasyfork.org/scripts/545834/%E5%A4%A7%E5%9C%B0%E8%9E%8D%E5%90%88%E7%B2%BE%E5%8F%8B%E5%AE%9A%E6%8D%9F.user.js",
+    "code_size": 45416,
+    "license": null,
+    "version": "0.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 544637,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T15:56:10.000Z",
+    "code_updated_at": "2025-09-10T07:54:46.000Z",
+    "namespace": "http://whatslink.info/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124829,
+        "name": "sexjpg",
+        "created_at": "2023-07-12T12:10:51.000Z",
+        "url": "https://greasyfork.org/users/1124829-sexjpg"
+      }
+    ],
+    "name": "Whatslink磁力预览",
+    "description": "在磁力链接后添加标识符号，通过点击或悬停显示完整链接信息,如果选中的文本中包含磁力链接或磁力链接特征码,在附近添加悬浮标志,悬停预览链接内容",
+    "url": "https://greasyfork.org/scripts/544637-whatslink%E7%A3%81%E5%8A%9B%E9%A2%84%E8%A7%88",
+    "code_url": "https://update.greasyfork.org/scripts/544637/Whatslink%E7%A3%81%E5%8A%9B%E9%A2%84%E8%A7%88.user.js",
+    "code_size": 23323,
+    "license": "MIT License",
+    "version": "2.9.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533378,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T05:29:22.000Z",
+    "code_updated_at": "2025-12-25T09:02:53.000Z",
+    "namespace": "https://claim.ccic-net.com.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1124829,
+        "name": "sexjpg",
+        "created_at": "2023-07-12T12:10:51.000Z",
+        "url": "https://greasyfork.org/users/1124829-sexjpg"
+      }
+    ],
+    "name": "大帝理赔页面优化",
+    "description": "用于2015版大帝理赔页面",
+    "url": "https://greasyfork.org/scripts/533378-%E5%A4%A7%E5%B8%9D%E7%90%86%E8%B5%94%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/533378/%E5%A4%A7%E5%B8%9D%E7%90%86%E8%B5%94%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 231511,
+    "license": null,
+    "version": "0.8.6.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

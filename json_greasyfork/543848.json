@@ -1,0 +1,34 @@
+{
+  "id": 543848,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-28T08:50:22.000Z",
+  "code_updated_at": "2025-07-30T14:24:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed 4Rec  post.hjbeckercoswig@web.de",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/543848-ed-4rec-post-hjbeckercoswig-web-de",
+  "code_url": "https://update.greasyfork.org/scripts/543848/Ed%204Rec%20%20posthjbeckercoswig%40webde.user.js",
+  "code_size": 99936,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

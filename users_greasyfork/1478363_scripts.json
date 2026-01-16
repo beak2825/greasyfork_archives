@@ -1,0 +1,134 @@
+[
+  {
+    "id": 541804,
+    "daily_installs": 2,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-06T10:15:40.000Z",
+    "code_updated_at": "2025-07-07T08:24:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478363,
+        "name": "CYR2077",
+        "created_at": "2025-06-03T11:30:56.000Z",
+        "url": "https://greasyfork.org/users/1478363-cyr2077"
+      }
+    ],
+    "name": "[银河奶牛] 怪物娘化 / MWI-MonsterFeminization",
+    "description": "怪物娘化",
+    "url": "https://greasyfork.org/scripts/541804-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E6%80%AA%E7%89%A9%E5%A8%98%E5%8C%96-mwi-monsterfeminization",
+    "code_url": "https://update.greasyfork.org/scripts/541804/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%20%E6%80%AA%E7%89%A9%E5%A8%98%E5%8C%96%20%20MWI-MonsterFeminization.user.js",
+    "code_size": 4894,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538937,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-09T18:43:08.000Z",
+    "code_updated_at": "2025-06-14T11:28:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478363,
+        "name": "CYR2077",
+        "created_at": "2025-06-03T11:30:56.000Z",
+        "url": "https://greasyfork.org/users/1478363-cyr2077"
+      }
+    ],
+    "name": "[MWI] WebSocket 调试工具",
+    "description": "显示 WebSocket 收发的 JSON 数据，并支持手动发包和屏蔽指定类型",
+    "url": "https://greasyfork.org/scripts/538937-mwi-websocket-%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/538937/%5BMWI%5D%20WebSocket%20%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 6381,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538797,
+    "daily_installs": 10,
+    "total_installs": 1017,
+    "fan_score": "85.0",
+    "good_ratings": 27,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T09:00:47.000Z",
+    "code_updated_at": "2025-12-16T10:33:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478363,
+        "name": "CYR2077",
+        "created_at": "2025-06-03T11:30:56.000Z",
+        "url": "https://greasyfork.org/users/1478363-cyr2077"
+      }
+    ],
+    "name": "[银河奶牛] 生产采集增强 / MWI Production & Gathering Enhanced",
+    "description": "计算生产、强化、房屋所需材料并一键购买；显示今日资产增量，统计30天总资产生成走势图；计算生产与炼金实时利润；按照目标材料数量进行采集；快速切换角色；自动收集市场订单；功能支持自定义开关。",
+    "url": "https://greasyfork.org/scripts/538797-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E7%94%9F%E4%BA%A7%E9%87%87%E9%9B%86%E5%A2%9E%E5%BC%BA-mwi-production-gathering-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/538797/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%20%E7%94%9F%E4%BA%A7%E9%87%87%E9%9B%86%E5%A2%9E%E5%BC%BA%20%20MWI%20Production%20%20Gathering%20Enhanced.user.js",
+    "code_size": 368830,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "3.6.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538205,
+    "daily_installs": 1,
+    "total_installs": 38,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T12:36:19.000Z",
+    "code_updated_at": "2025-06-13T04:43:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478363,
+        "name": "CYR2077",
+        "created_at": "2025-06-03T11:30:56.000Z",
+        "url": "https://greasyfork.org/users/1478363-cyr2077"
+      }
+    ],
+    "name": "MWI-AutoCombat",
+    "description": "Auto-manage game queue(自动9战)",
+    "url": "https://greasyfork.org/scripts/538205-mwi-autocombat",
+    "code_url": "https://update.greasyfork.org/scripts/538205/MWI-AutoCombat.user.js",
+    "code_size": 38498,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

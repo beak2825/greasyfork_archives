@@ -1,0 +1,33 @@
+{
+  "id": 542023,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-08T15:23:12.000Z",
+  "code_updated_at": "2025-07-08T16:24:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492885,
+      "name": "Tron Gamer yt",
+      "created_at": "2025-07-08T15:09:22.000Z",
+      "url": "https://greasyfork.org/users/1492885-tron-gamer-yt"
+    }
+  ],
+  "name": "Grow a Garden Website Modifier Hider",
+  "description": "Hide Extra Modifier Buttons for a Cleaner View On The Grow a Garden Calculator Website!",
+  "url": "https://greasyfork.org/scripts/542023-grow-a-garden-website-modifier-hider",
+  "code_url": "https://update.greasyfork.org/scripts/542023/Grow%20a%20Garden%20Website%20Modifier%20Hider.user.js",
+  "code_size": 4197,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

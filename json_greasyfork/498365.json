@@ -1,0 +1,59 @@
+{
+  "id": 498365,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-19T15:24:01.000Z",
+  "code_updated_at": "2024-06-21T08:50:08.000Z",
+  "namespace": "https://github.com/ShiroMaple",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320467,
+      "name": "ShiroMaple",
+      "created_at": "2024-06-19T07:56:53.000Z",
+      "url": "https://greasyfork.org/users/1320467-shiromaple",
+      "scripts": [
+        {
+          "id": 498365,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-19T15:24:01.000Z",
+          "code_updated_at": "2024-06-21T08:50:08.000Z",
+          "namespace": "https://github.com/ShiroMaple",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "东鼎学院助手",
+          "description": "用于基于知学云平台的东鼎学院学习助手，专题和课程页面点击右侧边栏的自动播放按钮，可以实现无人值守挂课；在考试页面提供复制功能，但不能替你考试。",
+          "url": "https://greasyfork.org/scripts/498365-%E4%B8%9C%E9%BC%8E%E5%AD%A6%E9%99%A2%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/498365/%E4%B8%9C%E9%BC%8E%E5%AD%A6%E9%99%A2%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 19957,
+          "license": "GPL",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "东鼎学院助手",
+  "description": "用于基于知学云平台的东鼎学院学习助手，专题和课程页面点击右侧边栏的自动播放按钮，可以实现无人值守挂课；在考试页面提供复制功能，但不能替你考试。",
+  "url": "https://greasyfork.org/scripts/498365-%E4%B8%9C%E9%BC%8E%E5%AD%A6%E9%99%A2%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/498365/%E4%B8%9C%E9%BC%8E%E5%AD%A6%E9%99%A2%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 19957,
+  "license": "GPL",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

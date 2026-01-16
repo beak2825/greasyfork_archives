@@ -1,0 +1,34 @@
+{
+  "id": 501743,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-25T06:48:08.000Z",
+  "code_updated_at": "2024-07-25T06:48:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1339500,
+      "name": "devgavrilov",
+      "created_at": "2024-07-25T06:27:27.000Z",
+      "url": "https://greasyfork.org/users/1339500-devgavrilov",
+      "scripts": []
+    }
+  ],
+  "name": "Skepdal Board Plans's Timings",
+  "description": "https://skedpal-workspace.slack.com/archives/C016P88SUS1/p1721855661565389",
+  "url": "https://greasyfork.org/scripts/501743-skepdal-board-plans-s-timings",
+  "code_url": "https://update.greasyfork.org/scripts/501743/Skepdal%20Board%20Plans%27s%20Timings.user.js",
+  "code_size": 2269,
+  "license": "MIT License",
+  "version": "2024-07-24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

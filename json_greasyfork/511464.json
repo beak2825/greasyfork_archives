@@ -1,0 +1,59 @@
+{
+  "id": 511464,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-04T11:05:32.000Z",
+  "code_updated_at": "2024-12-11T14:50:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 432401,
+      "name": "Michał K",
+      "created_at": "2020-01-05T00:31:18.000Z",
+      "url": "https://greasyfork.org/users/432401-micha%C5%82-k",
+      "scripts": [
+        {
+          "id": 472812,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-09T23:02:24.000Z",
+          "code_updated_at": "2025-03-26T14:42:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ylMzBetterChat",
+          "description": "creates clickable links for urls and players IDs",
+          "url": "https://greasyfork.org/scripts/472812-ylmzbetterchat",
+          "code_url": "https://update.greasyfork.org/scripts/472812/ylMzBetterChat.user.js",
+          "code_size": 6770,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ylFriendliesPlayedCheckerAI",
+  "description": "Check played friendlies and league matches on ManagerZone matches page",
+  "url": "https://greasyfork.org/scripts/511464-ylfriendliesplayedcheckerai",
+  "code_url": "https://update.greasyfork.org/scripts/511464/ylFriendliesPlayedCheckerAI.user.js",
+  "code_size": 19463,
+  "license": "MIT License",
+  "version": "0.2.4.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

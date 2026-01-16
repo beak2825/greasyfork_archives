@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534291,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-28T16:45:02.000Z",
+    "code_updated_at": "2025-04-28T16:45:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1463291,
+        "name": "Leoles Cheung",
+        "created_at": "2025-04-28T16:41:45.000Z",
+        "url": "https://greasyfork.org/users/1463291-leoles-cheung"
+      }
+    ],
+    "name": "Twitter/X Search Filter (Simple)",
+    "description": "Filter Twitter/X search results by keywords or accounts",
+    "url": "https://greasyfork.org/scripts/534291-twitter-x-search-filter-simple",
+    "code_url": "https://update.greasyfork.org/scripts/534291/TwitterX%20Search%20Filter%20%28Simple%29.user.js",
+    "code_size": 3084,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

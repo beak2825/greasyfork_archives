@@ -1,0 +1,33 @@
+{
+  "id": 534489,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T08:56:57.000Z",
+  "code_updated_at": "2025-04-30T10:00:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1314295,
+      "name": "safesummer",
+      "created_at": "2024-06-08T04:43:14.000Z",
+      "url": "https://greasyfork.org/users/1314295-safesummer"
+    }
+  ],
+  "name": "聚合索引",
+  "description": "支持位置切换的聚合搜索引擎导航栏",
+  "url": "https://greasyfork.org/scripts/534489-%E8%81%9A%E5%90%88%E7%B4%A2%E5%BC%95",
+  "code_url": "https://update.greasyfork.org/scripts/534489/%E8%81%9A%E5%90%88%E7%B4%A2%E5%BC%95.user.js",
+  "code_size": 4216,
+  "license": "MIT License",
+  "version": "v1.08",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

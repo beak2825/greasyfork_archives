@@ -1,0 +1,101 @@
+[
+  {
+    "id": 512698,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T06:33:59.000Z",
+    "code_updated_at": "2024-10-25T19:33:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1379204,
+        "name": "1 shunshun",
+        "created_at": "2024-10-10T19:50:20.000Z",
+        "url": "https://greasyfork.org/users/1379204-1-shunshun"
+      }
+    ],
+    "name": "Dead Frontier Mini Window(MAP)",
+    "description": "Dead Frontier-Adds a button to the Dead Frontier page that when clicked shows or hides a mini-window with multiple buttons opening images in an iframe",
+    "url": "https://greasyfork.org/scripts/512698-dead-frontier-mini-window-map",
+    "code_url": "https://update.greasyfork.org/scripts/512698/Dead%20Frontier%20Mini%20Window%28MAP%29.user.js",
+    "code_size": 4060,
+    "license": "LGPL License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512386,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-12T22:02:53.000Z",
+    "code_updated_at": "2024-11-08T20:20:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1379204,
+        "name": "1 shunshun",
+        "created_at": "2024-10-10T19:50:20.000Z",
+        "url": "https://greasyfork.org/users/1379204-1-shunshun"
+      }
+    ],
+    "name": "Quick link",
+    "description": "deadfrontier-This is a convenience button script",
+    "url": "https://greasyfork.org/scripts/512386-quick-link",
+    "code_url": "https://update.greasyfork.org/scripts/512386/Quick%20link.user.js",
+    "code_size": 6198,
+    "license": "LGPL License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512156,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-10T19:56:31.000Z",
+    "code_updated_at": "2024-11-10T11:55:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1379204,
+        "name": "1 shunshun",
+        "created_at": "2024-10-10T19:50:20.000Z",
+        "url": "https://greasyfork.org/users/1379204-1-shunshun"
+      }
+    ],
+    "name": "Searchable Bookmarks",
+    "description": "Allows you to save, edit, and quickly search for frequently used items with a movable frame and hover effects",
+    "url": "https://greasyfork.org/scripts/512156-searchable-bookmarks",
+    "code_url": "https://update.greasyfork.org/scripts/512156/Searchable%20Bookmarks.user.js",
+    "code_size": 10188,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

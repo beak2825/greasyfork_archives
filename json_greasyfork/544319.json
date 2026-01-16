@@ -1,0 +1,59 @@
+{
+  "id": 544319,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-01T16:13:17.000Z",
+  "code_updated_at": "2025-08-01T16:13:16.000Z",
+  "namespace": "https://roblox.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1500590,
+      "name": "DrCoolZomboi",
+      "created_at": "2025-08-01T16:05:51.000Z",
+      "url": "https://greasyfork.org/users/1500590-drcoolzomboi",
+      "scripts": [
+        {
+          "id": 544319,
+          "daily_installs": 0,
+          "total_installs": 32,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-01T16:13:17.000Z",
+          "code_updated_at": "2025-08-01T16:13:16.000Z",
+          "namespace": "https://roblox.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Old ROBLOX Topbar Names",
+          "description": "Changes Roblox topbar text to old-school names from 2016. Can be used with other old ROBLOX Themes, like Legacy Old Theme and others.",
+          "url": "https://greasyfork.org/scripts/544319-old-roblox-topbar-names",
+          "code_url": "https://update.greasyfork.org/scripts/544319/Old%20ROBLOX%20Topbar%20Names.user.js",
+          "code_size": 1540,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Old ROBLOX Topbar Names",
+  "description": "Changes Roblox topbar text to old-school names from 2016. Can be used with other old ROBLOX Themes, like Legacy Old Theme and others.",
+  "url": "https://greasyfork.org/scripts/544319-old-roblox-topbar-names",
+  "code_url": "https://update.greasyfork.org/scripts/544319/Old%20ROBLOX%20Topbar%20Names.user.js",
+  "code_size": 1540,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 533604,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-22T07:23:02.000Z",
+  "code_updated_at": "2025-04-22T07:23:02.000Z",
+  "namespace": "http://veo.bypass",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1460840,
+      "name": "glemtrial glem",
+      "created_at": "2025-04-22T07:21:31.000Z",
+      "url": "https://greasyfork.org/users/1460840-glemtrial-glem",
+      "scripts": []
+    }
+  ],
+  "name": "Google AI Studio Pure Video Bypass (Adaptive Overhaul)",
+  "description": "Adaptive, live-cloning bypass for Google AI Studio video generation. Session template engine, dynamic mutation, and auto-refresh. No legacy hacks.",
+  "url": "https://greasyfork.org/scripts/533604-google-ai-studio-pure-video-bypass-adaptive-overhaul",
+  "code_url": "https://update.greasyfork.org/scripts/533604/Google%20AI%20Studio%20Pure%20Video%20Bypass%20%28Adaptive%20Overhaul%29.user.js",
+  "code_size": 21277,
+  "license": null,
+  "version": "7.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

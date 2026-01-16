@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511357,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-03T15:33:21.000Z",
+    "code_updated_at": "2024-10-03T15:33:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088639,
+        "name": "raculus",
+        "created_at": "2023-06-01T14:49:12.000Z",
+        "url": "https://greasyfork.org/users/1088639-raculus"
+      }
+    ],
+    "name": "Select to decode base64",
+    "description": "Automatically decodes Base64 encoded text",
+    "url": "https://greasyfork.org/scripts/511357-select-to-decode-base64",
+    "code_url": "https://update.greasyfork.org/scripts/511357/Select%20to%20decode%20base64.user.js",
+    "code_size": 2276,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

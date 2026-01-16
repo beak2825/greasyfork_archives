@@ -1,0 +1,33 @@
+{
+  "id": 524349,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-21T01:39:22.000Z",
+  "code_updated_at": "2025-03-17T00:57:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1039660,
+      "name": "systemmin",
+      "created_at": "2023-03-10T08:26:43.000Z",
+      "url": "https://greasyfork.org/users/1039660-systemmin"
+    }
+  ],
+  "name": "百度翻译美化",
+  "description": "新版不好用，不顺手，优化成精简版，哈哈哈",
+  "url": "https://greasyfork.org/scripts/524349-%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/524349/%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%E7%BE%8E%E5%8C%96.user.js",
+  "code_size": 1217,
+  "license": "Apache License 2.0",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

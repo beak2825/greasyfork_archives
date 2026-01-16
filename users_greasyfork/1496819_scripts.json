@@ -1,0 +1,101 @@
+[
+  {
+    "id": 548541,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T04:34:54.000Z",
+    "code_updated_at": "2025-09-06T04:46:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496819,
+        "name": "Gravity0000",
+        "created_at": "2025-07-21T04:16:31.000Z",
+        "url": "https://greasyfork.org/users/1496819-gravity0000"
+      }
+    ],
+    "name": "MarketToShops",
+    "description": "Show NPC shop price compared to market value",
+    "url": "https://greasyfork.org/scripts/548541-markettoshops",
+    "code_url": "https://update.greasyfork.org/scripts/548541/MarketToShops.user.js",
+    "code_size": 3085,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543281,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-22T05:30:11.000Z",
+    "code_updated_at": "2025-07-22T05:36:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496819,
+        "name": "Gravity0000",
+        "created_at": "2025-07-21T04:16:31.000Z",
+        "url": "https://greasyfork.org/users/1496819-gravity0000"
+      }
+    ],
+    "name": "Disable Sell Stock",
+    "description": "Stock sell button disable",
+    "url": "https://greasyfork.org/scripts/543281-disable-sell-stock",
+    "code_url": "https://update.greasyfork.org/scripts/543281/Disable%20Sell%20Stock.user.js",
+    "code_size": 1294,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543175,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T05:38:50.000Z",
+    "code_updated_at": "2025-08-26T02:26:45.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": "https://www.torn.com/profiles.php?XID=2131364",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496819,
+        "name": "Gravity0000",
+        "created_at": "2025-07-21T04:16:31.000Z",
+        "url": "https://greasyfork.org/users/1496819-gravity0000"
+      }
+    ],
+    "name": "War End",
+    "description": "Adds a toggle-able side bar to estimate War End for a given faction.",
+    "url": "https://greasyfork.org/scripts/543175-war-end",
+    "code_url": "https://update.greasyfork.org/scripts/543175/War%20End.user.js",
+    "code_size": 8630,
+    "license": "MIT License",
+    "version": "Beta1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

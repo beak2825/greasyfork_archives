@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553078,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-19T08:22:57.000Z",
+    "code_updated_at": "2025-10-19T11:56:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519308,
+        "name": "goodstudy",
+        "created_at": "2025-09-25T15:20:44.000Z",
+        "url": "https://greasyfork.org/users/1519308-goodstudy"
+      }
+    ],
+    "name": "通用Discuz论坛快速回复工具",
+    "description": "通用Discuz论坛快速复制回复内容，支持随机生成回复",
+    "url": "https://greasyfork.org/scripts/553078-%E9%80%9A%E7%94%A8discuz%E8%AE%BA%E5%9D%9B%E5%BF%AB%E9%80%9F%E5%9B%9E%E5%A4%8D%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/553078/%E9%80%9A%E7%94%A8Discuz%E8%AE%BA%E5%9D%9B%E5%BF%AB%E9%80%9F%E5%9B%9E%E5%A4%8D%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 13267,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

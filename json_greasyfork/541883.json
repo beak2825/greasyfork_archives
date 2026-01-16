@@ -1,0 +1,59 @@
+{
+  "id": 541883,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-07T04:09:38.000Z",
+  "code_updated_at": "2025-07-07T04:21:37.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/541883-microsoft-teams-anti-afk-keepalive-mouse",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1053669,
+      "name": "LokeYourC3PH",
+      "created_at": "2023-04-05T12:19:15.000Z",
+      "url": "https://greasyfork.org/users/1053669-lokeyourc3ph",
+      "scripts": [
+        {
+          "id": 541883,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-07T04:09:38.000Z",
+          "code_updated_at": "2025-07-07T04:21:37.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/541883-microsoft-teams-anti-afk-keepalive-mouse",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Microsoft Teams Anti-AFK (Keepalive Mouse)",
+          "description": "Simulates mouse movement to prevent AFK status in Microsoft Teams for Web.",
+          "url": "https://greasyfork.org/scripts/541883-microsoft-teams-anti-afk-keepalive-mouse",
+          "code_url": "https://update.greasyfork.org/scripts/541883/Microsoft%20Teams%20Anti-AFK%20%28Keepalive%20Mouse%29.user.js",
+          "code_size": 1225,
+          "license": "GPLv3",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Microsoft Teams Anti-AFK (Keepalive Mouse)",
+  "description": "Simulates mouse movement to prevent AFK status in Microsoft Teams for Web.",
+  "url": "https://greasyfork.org/scripts/541883-microsoft-teams-anti-afk-keepalive-mouse",
+  "code_url": "https://update.greasyfork.org/scripts/541883/Microsoft%20Teams%20Anti-AFK%20%28Keepalive%20Mouse%29.user.js",
+  "code_size": 1225,
+  "license": "GPLv3",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

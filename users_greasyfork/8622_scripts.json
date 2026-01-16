@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539178,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T05:35:00.000Z",
+    "code_updated_at": "2025-06-12T22:10:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 8622,
+        "name": "Shikaku",
+        "created_at": "2015-01-25T02:36:02.000Z",
+        "url": "https://greasyfork.org/users/8622-shikaku"
+      }
+    ],
+    "name": "Remove Em Dashes from span and div (Smart Focus)",
+    "description": "Recursively remove em dashes and their escape forms from spans and divs. Watches DOM, cleans on page load, and runs every 2 seconds — but only when window is focused. Efficiency, baby.",
+    "url": "https://greasyfork.org/scripts/539178-remove-em-dashes-from-span-and-div-smart-focus",
+    "code_url": "https://update.greasyfork.org/scripts/539178/Remove%20Em%20Dashes%20from%20span%20and%20div%20%28Smart%20Focus%29.user.js",
+    "code_size": 2724,
+    "license": "BSD 4-Clause \"Original\" or \"Old\" License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

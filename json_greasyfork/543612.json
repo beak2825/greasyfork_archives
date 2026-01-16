@@ -1,0 +1,33 @@
+{
+  "id": 543612,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-25T14:33:39.000Z",
+  "code_updated_at": "2025-07-29T16:04:16.000Z",
+  "namespace": "https://forum.blessrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1423239,
+      "name": "Илья Маркелов",
+      "created_at": "2025-01-14T13:54:45.000Z",
+      "url": "https://greasyfork.org/users/1423239-%D0%B8%D0%BB%D1%8C%D1%8F-%D0%BC%D0%B0%D1%80%D0%BA%D0%B5%D0%BB%D0%BE%D0%B2"
+    }
+  ],
+  "name": "KF_script",
+  "description": "Suggestions for improving the script write here",
+  "url": "https://greasyfork.org/scripts/543612-kf-script",
+  "code_url": "https://update.greasyfork.org/scripts/543612/KF_script.user.js",
+  "code_size": 93807,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531262,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T19:30:33.000Z",
+    "code_updated_at": "2025-04-06T07:20:28.000Z",
+    "namespace": "https://github.com/Simyon264",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451781,
+        "name": "Simyon264",
+        "created_at": "2025-03-29T19:24:12.000Z",
+        "url": "https://greasyfork.org/users/1451781-simyon264"
+      }
+    ],
+    "name": "Remove Trollface Emoji from GitHub",
+    "description": "Remove trollface emoji from GitHub pages",
+    "url": "https://greasyfork.org/scripts/531262-remove-trollface-emoji-from-github",
+    "code_url": "https://update.greasyfork.org/scripts/531262/Remove%20Trollface%20Emoji%20from%20GitHub.user.js",
+    "code_size": 6034,
+    "license": "MIT License",
+    "version": "2025-04-06-6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

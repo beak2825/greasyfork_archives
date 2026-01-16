@@ -1,0 +1,40 @@
+{
+  "id": 543201,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-21T11:11:56.000Z",
+  "code_updated_at": "2026-01-14T09:43:52.000Z",
+  "namespace": "https://greasyfork.org/users/408872",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 408872,
+      "name": "龚敏",
+      "created_at": "2019-11-29T07:41:38.000Z",
+      "url": "https://greasyfork.org/users/408872-%E9%BE%9A%E6%95%8F",
+      "scripts": []
+    },
+    {
+      "id": 895875,
+      "name": "Charles Sun",
+      "created_at": "2022-03-31T13:46:20.000Z",
+      "url": "https://greasyfork.org/users/895875-charles-sun"
+    }
+  ],
+  "name": "jojoWork功能增强器",
+  "description": "支持多网站的功能增强脚本，包括 Redmine、日志网站等项目管理系统的功能扩展",
+  "url": "https://greasyfork.org/scripts/543201-jojowork%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/543201/jojoWork%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA%E5%99%A8.user.js",
+  "code_size": 463394,
+  "license": null,
+  "version": "3.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

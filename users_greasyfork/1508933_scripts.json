@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547324,
+    "daily_installs": 0,
+    "total_installs": 231,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-26T07:55:22.000Z",
+    "code_updated_at": "2025-08-26T07:55:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1508933,
+        "name": "Koray.io",
+        "created_at": "2025-08-26T07:45:17.000Z",
+        "url": "https://greasyfork.org/users/1508933-koray-io"
+      }
+    ],
+    "name": "Koray.io Skin Mod",
+    "description": "Custom Skins for Koray.io - Direct Skin Editor Integration",
+    "url": "https://greasyfork.org/scripts/547324-koray-io-skin-mod",
+    "code_url": "https://update.greasyfork.org/scripts/547324/Korayio%20Skin%20Mod.user.js",
+    "code_size": 18256,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 531599,
+  "daily_installs": 0,
+  "total_installs": 113,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-02T15:54:58.000Z",
+  "code_updated_at": "2025-04-02T17:12:33.000Z",
+  "namespace": "natsuki",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453303,
+      "name": "natsuki but now redeemed",
+      "created_at": "2025-04-02T15:51:00.000Z",
+      "url": "https://greasyfork.org/users/1453303-natsuki-but-now-redeemed",
+      "scripts": [
+        {
+          "id": 531599,
+          "daily_installs": 0,
+          "total_installs": 113,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-02T15:54:58.000Z",
+          "code_updated_at": "2025-04-02T17:12:33.000Z",
+          "namespace": "natsuki",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "mtgbrr - Monkeytype Speeder 2025",
+          "description": "just press slash and start typing.",
+          "url": "https://greasyfork.org/scripts/531599-mtgbrr-monkeytype-speeder-2025",
+          "code_url": "https://update.greasyfork.org/scripts/531599/mtgbrr%20-%20Monkeytype%20Speeder%202025.user.js",
+          "code_size": 10646,
+          "license": "idk",
+          "version": "42.01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "mtgbrr - Monkeytype Speeder 2025",
+  "description": "just press slash and start typing.",
+  "url": "https://greasyfork.org/scripts/531599-mtgbrr-monkeytype-speeder-2025",
+  "code_url": "https://update.greasyfork.org/scripts/531599/mtgbrr%20-%20Monkeytype%20Speeder%202025.user.js",
+  "code_size": 10646,
+  "license": "idk",
+  "version": "42.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

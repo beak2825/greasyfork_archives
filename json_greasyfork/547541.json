@@ -1,0 +1,33 @@
+{
+  "id": 547541,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T03:13:42.000Z",
+  "code_updated_at": "2026-01-01T07:37:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260536,
+      "name": "jamesbond448",
+      "created_at": "2024-02-12T22:33:51.000Z",
+      "url": "https://greasyfork.org/users/1260536-jamesbond448"
+    }
+  ],
+  "name": "janitorai reroll",
+  "description": "Simply reroll result automatically since all free service are completed shit",
+  "url": "https://greasyfork.org/scripts/547541-janitorai-reroll",
+  "code_url": "https://update.greasyfork.org/scripts/547541/janitorai%20reroll.user.js",
+  "code_size": 14762,
+  "license": "MIT License",
+  "version": "1.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

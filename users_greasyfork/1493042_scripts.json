@@ -1,0 +1,233 @@
+[
+  {
+    "id": 543022,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T14:26:23.000Z",
+    "code_updated_at": "2025-07-19T14:26:23.000Z",
+    "namespace": "https://deepco.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Recursion",
+    "description": "(for dev analysis only) Auto recurse",
+    "url": "https://greasyfork.org/scripts/543022-deepco-recursion",
+    "code_url": "https://update.greasyfork.org/scripts/543022/DeepCo%20Recursion.user.js",
+    "code_size": 2904,
+    "license": "MIT License",
+    "version": "2025-07-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543021,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T14:23:25.000Z",
+    "code_updated_at": "2025-07-19T14:24:03.000Z",
+    "namespace": "https://deepco.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Department Switcher",
+    "description": "(for dev analysis only) Switches departments upwards if proc power is too high.",
+    "url": "https://greasyfork.org/scripts/543021-deepco-department-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/543021/DeepCo%20Department%20Switcher.user.js",
+    "code_size": 5536,
+    "license": "MIT License",
+    "version": "2025-07-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543020,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T14:22:53.000Z",
+    "code_updated_at": "2025-07-19T14:24:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Achievements",
+    "description": "(for dev analysis only) Auto claim achievements",
+    "url": "https://greasyfork.org/scripts/543020-deepco-achievements",
+    "code_url": "https://update.greasyfork.org/scripts/543020/DeepCo%20Achievements.user.js",
+    "code_size": 2792,
+    "license": "MIT License",
+    "version": "2025-07-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543019,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T14:22:16.000Z",
+    "code_updated_at": "2025-07-19T14:24:30.000Z",
+    "namespace": "https://deepco.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Upgrades",
+    "description": "(for dev analysis only) Auto purchase DC and RC upgrades",
+    "url": "https://greasyfork.org/scripts/543019-deepco-upgrades",
+    "code_url": "https://update.greasyfork.org/scripts/543019/DeepCo%20Upgrades.user.js",
+    "code_size": 10248,
+    "license": "MIT License",
+    "version": "2025-07-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543018,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T14:19:55.000Z",
+    "code_updated_at": "2025-07-19T14:20:58.000Z",
+    "namespace": "https://deepco.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Dig",
+    "description": "(for dev analysis only) Auto dig and navigate to other pages as necessary.",
+    "url": "https://greasyfork.org/scripts/543018-deepco-dig",
+    "code_url": "https://update.greasyfork.org/scripts/543018/DeepCo%20Dig.user.js",
+    "code_size": 11216,
+    "license": "MIT License",
+    "version": "2025-07-20v2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542937,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-18T18:21:38.000Z",
+    "code_updated_at": "2025-07-18T18:21:38.000Z",
+    "namespace": "https://deepco.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Upgrades Helper",
+    "description": "Show details about DC and RC upgrades",
+    "url": "https://greasyfork.org/scripts/542937-deepco-upgrades-helper",
+    "code_url": "https://update.greasyfork.org/scripts/542937/DeepCo%20Upgrades%20Helper.user.js",
+    "code_size": 6982,
+    "license": "MIT License",
+    "version": "2025-07-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542086,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-09T05:48:26.000Z",
+    "code_updated_at": "2025-08-07T18:08:40.000Z",
+    "namespace": "https://deepco.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493042,
+        "name": "Corns McGowan",
+        "created_at": "2025-07-09T05:18:18.000Z",
+        "url": "https://greasyfork.org/users/1493042-corns-mcgowan"
+      }
+    ],
+    "name": "DeepCo Statistics",
+    "description": "Track RC rate and chart it.",
+    "url": "https://greasyfork.org/scripts/542086-deepco-statistics",
+    "code_url": "https://update.greasyfork.org/scripts/542086/DeepCo%20Statistics.user.js",
+    "code_size": 19478,
+    "license": "MIT License",
+    "version": "2025-08-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

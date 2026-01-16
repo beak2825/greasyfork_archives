@@ -1,0 +1,59 @@
+{
+  "id": 528666,
+  "daily_installs": 0,
+  "total_installs": 112,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-03T18:54:37.000Z",
+  "code_updated_at": "2025-03-03T18:59:32.000Z",
+  "namespace": "https://www.sooplive.co.kr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441985,
+      "name": "풍사과",
+      "created_at": "2025-03-03T18:48:23.000Z",
+      "url": "https://greasyfork.org/users/1441985-%ED%92%8D%EC%82%AC%EA%B3%BC",
+      "scripts": [
+        {
+          "id": 528666,
+          "daily_installs": 0,
+          "total_installs": 112,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-03T18:54:37.000Z",
+          "code_updated_at": "2025-03-03T18:59:32.000Z",
+          "namespace": "https://www.sooplive.co.kr",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CopyPaste - Soop 복붙 허용",
+          "description": "Soop 라이브 채팅창 복사/붙여넣기 허용",
+          "url": "https://greasyfork.org/scripts/528666-copypaste-soop-%EB%B3%B5%EB%B6%99-%ED%97%88%EC%9A%A9",
+          "code_url": "https://update.greasyfork.org/scripts/528666/CopyPaste%20-%20Soop%20%EB%B3%B5%EB%B6%99%20%ED%97%88%EC%9A%A9.user.js",
+          "code_size": 1085,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CopyPaste - Soop 복붙 허용",
+  "description": "Soop 라이브 채팅창 복사/붙여넣기 허용",
+  "url": "https://greasyfork.org/scripts/528666-copypaste-soop-%EB%B3%B5%EB%B6%99-%ED%97%88%EC%9A%A9",
+  "code_url": "https://update.greasyfork.org/scripts/528666/CopyPaste%20-%20Soop%20%EB%B3%B5%EB%B6%99%20%ED%97%88%EC%9A%A9.user.js",
+  "code_size": 1085,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

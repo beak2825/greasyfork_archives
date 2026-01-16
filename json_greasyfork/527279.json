@@ -1,0 +1,33 @@
+{
+  "id": 527279,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-18T03:11:21.000Z",
+  "code_updated_at": "2025-02-19T03:54:53.000Z",
+  "namespace": "ynjn-downloader",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265166,
+      "name": "david ticona",
+      "created_at": "2024-02-22T03:39:17.000Z",
+      "url": "https://greasyfork.org/users/1265166-david-ticona"
+    }
+  ],
+  "name": "YNJN Híbrido (IMG + Canvas) Downloader",
+  "description": "Descarga más imágenes: <img> y <canvas> grandes de capítulos YNJN en un ZIP",
+  "url": "https://greasyfork.org/scripts/527279-ynjn-h%C3%ADbrido-img-canvas-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/527279/YNJN%20H%C3%ADbrido%20%28IMG%20%2B%20Canvas%29%20Downloader.user.js",
+  "code_size": 6476,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

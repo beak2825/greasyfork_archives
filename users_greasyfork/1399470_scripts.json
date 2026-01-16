@@ -1,0 +1,68 @@
+[
+  {
+    "id": 523735,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-14T07:17:06.000Z",
+    "code_updated_at": "2025-02-21T09:47:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399470,
+        "name": "gu5ang",
+        "created_at": "2024-11-20T08:13:12.000Z",
+        "url": "https://greasyfork.org/users/1399470-gu5ang"
+      }
+    ],
+    "name": "豆包宽屏气泡美化",
+    "description": "此脚本由豆包辅助编写",
+    "url": "https://greasyfork.org/scripts/523735-%E8%B1%86%E5%8C%85%E5%AE%BD%E5%B1%8F%E6%B0%94%E6%B3%A1%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/523735/%E8%B1%86%E5%8C%85%E5%AE%BD%E5%B1%8F%E6%B0%94%E6%B3%A1%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 2092,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518176,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T09:02:23.000Z",
+    "code_updated_at": "2024-11-20T09:02:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399470,
+        "name": "gu5ang",
+        "created_at": "2024-11-20T08:13:12.000Z",
+        "url": "https://greasyfork.org/users/1399470-gu5ang"
+      }
+    ],
+    "name": "立臻一键答题",
+    "description": "解决你的烦恼",
+    "url": "https://greasyfork.org/scripts/518176-%E7%AB%8B%E8%87%BB%E4%B8%80%E9%94%AE%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/518176/%E7%AB%8B%E8%87%BB%E4%B8%80%E9%94%AE%E7%AD%94%E9%A2%98.user.js",
+    "code_size": 3191,
+    "license": null,
+    "version": "2024-11-20",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

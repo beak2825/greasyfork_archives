@@ -1,0 +1,68 @@
+[
+  {
+    "id": 519496,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-01T21:52:24.000Z",
+    "code_updated_at": "2025-11-30T17:23:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401934,
+        "name": "Liliana Waterbug",
+        "created_at": "2024-11-24T21:37:12.000Z",
+        "url": "https://greasyfork.org/users/1401934-liliana-waterbug"
+      }
+    ],
+    "name": "Nomad's Quick Revive",
+    "description": "The fastest way to request a revive from Nomad Medical: with a button on your main page, you're just a click away from being in the hands of our great revivers.",
+    "url": "https://greasyfork.org/scripts/519496-nomad-s-quick-revive",
+    "code_url": "https://update.greasyfork.org/scripts/519496/Nomad%27s%20Quick%20Revive.user.js",
+    "code_size": 20622,
+    "license": "MIT License",
+    "version": "1.3.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518729,
+    "daily_installs": 2,
+    "total_installs": 153,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T21:54:52.000Z",
+    "code_updated_at": "2025-12-05T22:28:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401934,
+        "name": "Liliana Waterbug",
+        "created_at": "2024-11-24T21:37:12.000Z",
+        "url": "https://greasyfork.org/users/1401934-liliana-waterbug"
+      }
+    ],
+    "name": "Torn City Reviver's Tool",
+    "description": "A tool to make it easier to revive people while in the Hospital page. Now mobile-responsive with row filtering!",
+    "url": "https://greasyfork.org/scripts/518729-torn-city-reviver-s-tool",
+    "code_url": "https://update.greasyfork.org/scripts/518729/Torn%20City%20Reviver%27s%20Tool.user.js",
+    "code_size": 42794,
+    "license": "MIT License",
+    "version": "4.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

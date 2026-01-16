@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551099,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T03:25:36.000Z",
+    "code_updated_at": "2025-09-30T03:25:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520868,
+        "name": "버붕",
+        "created_at": "2025-09-30T03:19:56.000Z",
+        "url": "https://greasyfork.org/users/1520868-%EB%B2%84%EB%B6%95"
+      }
+    ],
+    "name": "호감이모티콘",
+    "description": "-",
+    "url": "https://greasyfork.org/scripts/551099-%ED%98%B8%EA%B0%90%EC%9D%B4%EB%AA%A8%ED%8B%B0%EC%BD%98",
+    "code_url": "https://update.greasyfork.org/scripts/551099/%ED%98%B8%EA%B0%90%EC%9D%B4%EB%AA%A8%ED%8B%B0%EC%BD%98.user.js",
+    "code_size": 12893,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

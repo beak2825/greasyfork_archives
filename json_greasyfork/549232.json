@@ -1,0 +1,34 @@
+{
+  "id": 549232,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-12T08:41:28.000Z",
+  "code_updated_at": "2025-09-15T05:33:21.000Z",
+  "namespace": "bg-jump",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "BetGenius API",
+  "description": "Najdi eventId ve vloženém iframe / URL a otevři API multisportgametracker",
+  "url": "https://greasyfork.org/scripts/549232-betgenius-api",
+  "code_url": "https://update.greasyfork.org/scripts/549232/BetGenius%20API.user.js",
+  "code_size": 1842,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 539118,
+  "daily_installs": 1,
+  "total_installs": 75,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T15:13:51.000Z",
+  "code_updated_at": "2025-06-13T12:07:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1482386,
+      "name": "bloxy81",
+      "created_at": "2025-06-11T15:07:50.000Z",
+      "url": "https://greasyfork.org/users/1482386-bloxy81",
+      "scripts": [
+        {
+          "id": 539118,
+          "daily_installs": 1,
+          "total_installs": 75,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-06-11T15:13:51.000Z",
+          "code_updated_at": "2025-06-13T12:07:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Automix Remover",
+          "description": "Remove Automix/autoplay junk from YouTube video URLs",
+          "url": "https://greasyfork.org/scripts/539118-youtube-automix-remover",
+          "code_url": "https://update.greasyfork.org/scripts/539118/YouTube%20Automix%20Remover.user.js",
+          "code_size": 2422,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Automix Remover",
+  "description": "Remove Automix/autoplay junk from YouTube video URLs",
+  "url": "https://greasyfork.org/scripts/539118-youtube-automix-remover",
+  "code_url": "https://update.greasyfork.org/scripts/539118/YouTube%20Automix%20Remover.user.js",
+  "code_size": 2422,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 505936,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-30T20:02:01.000Z",
+  "code_updated_at": "2024-08-30T20:02:01.000Z",
+  "namespace": "https://github.com/m1kethai/UserScripts",
+  "support_url": "https://github.com/m1kethai/UserScripts",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1078672,
+      "name": "m1kethai",
+      "created_at": "2023-05-13T20:43:44.000Z",
+      "url": "https://greasyfork.org/users/1078672-m1kethai",
+      "scripts": []
+    }
+  ],
+  "name": "NixOS Package Search: GitHub Stargazers badge for every package in results with a GH repo \"Homepage\"",
+  "description": "Show the # of GitHub repo stars for every applicable NixOS package. Since this only fetches the stargazers count via GitHub's public API at the moment, there's a rate limit of 60 requests/hr.",
+  "url": "https://greasyfork.org/scripts/505936-nixos-package-search-github-stargazers-badge-for-every-package-in-results-with-a-gh-repo-homepage",
+  "code_url": "https://update.greasyfork.org/scripts/505936/NixOS%20Package%20Search%3A%20GitHub%20Stargazers%20badge%20for%20every%20package%20in%20results%20with%20a%20GH%20repo%20%22Homepage%22.user.js",
+  "code_size": 4278,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

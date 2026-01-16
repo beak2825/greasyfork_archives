@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533835,
+    "daily_installs": 31,
+    "total_installs": 6397,
+    "fan_score": "48.7",
+    "good_ratings": 5,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2025-04-24T14:39:17.000Z",
+    "code_updated_at": "2025-05-29T07:02:19.000Z",
+    "namespace": "Teng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 726536,
+        "name": "samisold",
+        "created_at": "2021-01-12T10:42:30.000Z",
+        "url": "https://greasyfork.org/users/726536-samisold"
+      }
+    ],
+    "name": "Teng 网盘直链下载助手【免验证码】",
+    "description": "侵删；原作者 油小猴 👆👆👆👆👆👆👆 - 支持批量获取 ✅百度网盘 ✅阿里云盘 ✅天翼云盘 ✅迅雷云盘 ✅夸克网盘 ✅移动云盘 六大网盘的直链下载地址，配合 IDM，Xdown，Aria2，Curl，比特彗星等工具高效🚀🚀🚀下载，完美适配 Chrome，Edge，FireFox，360，QQ，搜狗，百分，遨游，星愿，Opera，猎豹，Vivaldi，Yandex，Kiwi 等 18 种浏览器。可在无法安装客户端的环境下使用，助手免费开源。😎",
+    "url": "https://greasyfork.org/scripts/533835-teng-%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-%E5%85%8D%E9%AA%8C%E8%AF%81%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/533835/Teng%20%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%E3%80%90%E5%85%8D%E9%AA%8C%E8%AF%81%E7%A0%81%E3%80%91.user.js",
+    "code_size": 151524,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "6.2.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518700,
+    "daily_installs": 0,
+    "total_installs": 496,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T14:40:39.000Z",
+    "code_updated_at": "2024-11-24T14:45:15.000Z",
+    "namespace": "Teng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 726536,
+        "name": "samisold",
+        "created_at": "2021-01-12T10:42:30.000Z",
+        "url": "https://greasyfork.org/users/726536-samisold"
+      }
+    ],
+    "name": "Teng 百度网盘文件转存助手（改）",
+    "description": "同名脚本有bug（感谢原作者shimmer），已修正，暂时可正常使用（20241124），原作者若修正给我留言我将下架本脚本。使用百度网盘的时候经常要将别人分享的文件（转存到自己网盘里。对于非会员用户有每次500个文件的限制，超过500个文件只能自己手动弄，比较麻烦，因此有了这个工具，希望能帮到需要的人，不喜轻喷。(目前支持保存到根目录)",
+    "url": "https://greasyfork.org/scripts/518700-teng-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/518700/Teng%20%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B%EF%BC%88%E6%94%B9%EF%BC%89.user.js",
+    "code_size": 18643,
+    "license": "BSD",
+    "version": "1.0.11-patch",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

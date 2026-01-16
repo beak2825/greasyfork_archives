@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523300,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-09T10:10:14.000Z",
+    "code_updated_at": "2025-02-21T05:52:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 474665,
+        "name": "erichui",
+        "created_at": "2020-04-04T05:49:33.000Z",
+        "url": "https://greasyfork.org/users/474665-erichui"
+      }
+    ],
+    "name": "kibana-html-decode",
+    "description": "kibana html decode",
+    "url": "https://greasyfork.org/scripts/523300-kibana-html-decode",
+    "code_url": "https://update.greasyfork.org/scripts/523300/kibana-html-decode.user.js",
+    "code_size": 3029,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

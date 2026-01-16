@@ -1,0 +1,33 @@
+{
+  "id": 528339,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-28T09:26:30.000Z",
+  "code_updated_at": "2025-04-14T08:28:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data"
+    }
+  ],
+  "name": "CHL - minutáž (finální)",
+  "description": "Finální skript pro live použití: sleduje status a správně zobrazuje minutáž (1–20) s auto-incrementem, prioritou statusu a ochranou proti stažení hodnoty. 🏒✅",
+  "url": "https://greasyfork.org/scripts/528339-chl-minut%C3%A1%C5%BE-fin%C3%A1ln%C3%AD",
+  "code_url": "https://update.greasyfork.org/scripts/528339/CHL%20-%20minut%C3%A1%C5%BE%20%28fin%C3%A1ln%C3%AD%29.user.js",
+  "code_size": 4522,
+  "license": "MIT License",
+  "version": "4.5",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -30,6 +30,39 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551109,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T05:42:53.000Z",
+    "code_updated_at": "2025-09-30T05:42:53.000Z",
+    "namespace": "xwd-snitch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520298,
+        "name": "Stuart B Powell",
+        "created_at": "2025-09-28T10:08:52.000Z",
+        "url": "https://greasyfork.org/users/1520298-stuart-b-powell"
+      }
+    ],
+    "name": "Times Crossword Extractor",
+    "description": "Extract grid, clues, and answers from The Times crossword page",
+    "url": "https://greasyfork.org/scripts/551109-times-crossword-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/551109/Times%20Crossword%20Extractor.user.js",
+    "code_size": 15018,
+    "license": "MIT License",
+    "version": "0.4.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

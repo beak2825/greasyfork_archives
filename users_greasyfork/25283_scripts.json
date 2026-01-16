@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534359,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-29T08:40:18.000Z",
+    "code_updated_at": "2025-05-26T09:57:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 25283,
+        "name": "goodhope",
+        "created_at": "2015-12-28T22:30:16.000Z",
+        "url": "https://greasyfork.org/users/25283-goodhope"
+      }
+    ],
+    "name": "EZTVx enhancement",
+    "description": "EZTVx Add show's poster preview on info icon at the left of torrent list's Mouseover, move \"Aired today\" list to the left side, etc. find out yourself.",
+    "url": "https://greasyfork.org/scripts/534359-eztvx-enhancement",
+    "code_url": "https://update.greasyfork.org/scripts/534359/EZTVx%20enhancement.user.js",
+    "code_size": 7344,
+    "license": "aGPL License",
+    "version": "0.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

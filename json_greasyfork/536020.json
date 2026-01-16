@@ -1,0 +1,34 @@
+{
+  "id": 536020,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T00:51:47.000Z",
+  "code_updated_at": "2025-05-15T00:51:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 153616,
+      "name": "44 1 (144)",
+      "created_at": "2017-09-22T16:49:45.000Z",
+      "url": "https://greasyfork.org/users/153616-44-1-144",
+      "scripts": []
+    }
+  ],
+  "name": "AI绘画提示词助手",
+  "description": "为AI绘画网站(jimeng/vido/doubao)和Google AI Studio/Gemini添加快捷提示词按钮，/n全选和删除的方法需要优化。",
+  "url": "https://greasyfork.org/scripts/536020-ai%E7%BB%98%E7%94%BB%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/536020/AI%E7%BB%98%E7%94%BB%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 23694,
+  "license": "GPL",
+  "version": "0.2.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

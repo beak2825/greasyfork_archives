@@ -99,6 +99,39 @@
     "visibility": "public"
   },
   {
+    "id": 553423,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-23T01:53:05.000Z",
+    "code_updated_at": "2025-11-01T13:03:52.000Z",
+    "namespace": "https://greasyfork.org/users/1526786",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1526786,
+        "name": "LangYa466",
+        "created_at": "2025-10-15T02:55:21.000Z",
+        "url": "https://greasyfork.org/users/1526786-langya466"
+      }
+    ],
+    "name": "ITDog 测速结果通用排序",
+    "description": "为 itdog.cn 网站的多种测速结果表格添加客户端排序功能。",
+    "url": "https://greasyfork.org/scripts/553423-itdog-%E6%B5%8B%E9%80%9F%E7%BB%93%E6%9E%9C%E9%80%9A%E7%94%A8%E6%8E%92%E5%BA%8F",
+    "code_url": "https://update.greasyfork.org/scripts/553423/ITDog%20%E6%B5%8B%E9%80%9F%E7%BB%93%E6%9E%9C%E9%80%9A%E7%94%A8%E6%8E%92%E5%BA%8F.user.js",
+    "code_size": 5134,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 552627,
     "daily_installs": 0,
     "total_installs": 5,

@@ -1,0 +1,200 @@
+[
+  {
+    "id": 544445,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-02T21:44:45.000Z",
+    "code_updated_at": "2025-08-02T21:44:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332751,
+        "name": "abadi 718",
+        "created_at": "2024-07-13T10:59:20.000Z",
+        "url": "https://greasyfork.org/users/1332751-abadi-718"
+      }
+    ],
+    "name": "MPROGaming Ad Bypass",
+    "description": "Bypass ads and ad-blocker detection on MPROGaming",
+    "url": "https://greasyfork.org/scripts/544445-mprogaming-ad-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/544445/MPROGaming%20Ad%20Bypass.user.js",
+    "code_size": 8884,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533459,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T21:36:31.000Z",
+    "code_updated_at": "2025-04-20T21:36:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332751,
+        "name": "abadi 718",
+        "created_at": "2024-07-13T10:59:20.000Z",
+        "url": "https://greasyfork.org/users/1332751-abadi-718"
+      }
+    ],
+    "name": "Medium to Freedium Redirect Button",
+    "description": "Adds a button ONLY to Medium article pages to redirect to Freedium.cfd",
+    "url": "https://greasyfork.org/scripts/533459-medium-to-freedium-redirect-button",
+    "code_url": "https://update.greasyfork.org/scripts/533459/Medium%20to%20Freedium%20Redirect%20Button.user.js",
+    "code_size": 5783,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533396,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T08:26:03.000Z",
+    "code_updated_at": "2025-11-09T08:22:04.000Z",
+    "namespace": "abadi718",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332751,
+        "name": "abadi 718",
+        "created_at": "2024-07-13T10:59:20.000Z",
+        "url": "https://greasyfork.org/users/1332751-abadi-718"
+      }
+    ],
+    "name": "AppAgg - Auto Copy Clean Play Store Link",
+    "description": "Automatically resolves AppAgg redirect and copies a clean Play Store link (no referrer, no utm params)",
+    "url": "https://greasyfork.org/scripts/533396-appagg-auto-copy-clean-play-store-link",
+    "code_url": "https://update.greasyfork.org/scripts/533396/AppAgg%20-%20Auto%20Copy%20Clean%20Play%20Store%20Link.user.js",
+    "code_size": 4455,
+    "license": "MIT License",
+    "version": "7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533385,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T06:34:36.000Z",
+    "code_updated_at": "2025-04-20T07:41:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332751,
+        "name": "abadi 718",
+        "created_at": "2024-07-13T10:59:20.000Z",
+        "url": "https://greasyfork.org/users/1332751-abadi-718"
+      }
+    ],
+    "name": "Google Amazon.sa Search Button (Desktop & Mobile)",
+    "description": "Adds an Amazon.sa search button. Desktop: next to Google Search button. Mobile: inside search bar as an icon. (Desktop fix)",
+    "url": "https://greasyfork.org/scripts/533385-google-amazon-sa-search-button-desktop-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/533385/Google%20Amazonsa%20Search%20Button%20%28Desktop%20%20Mobile%29.user.js",
+    "code_size": 12008,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532925,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-15T12:26:53.000Z",
+    "code_updated_at": "2025-04-15T12:28:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332751,
+        "name": "abadi 718",
+        "created_at": "2024-07-13T10:59:20.000Z",
+        "url": "https://greasyfork.org/users/1332751-abadi-718"
+      }
+    ],
+    "name": "Wecima Anti-Adblock Detector",
+    "description": "Attempts to disable the adblock overlay triggered by a specific script checking adsbygoogle.js loading.",
+    "url": "https://greasyfork.org/scripts/532925-wecima-anti-adblock-detector",
+    "code_url": "https://update.greasyfork.org/scripts/532925/Wecima%20Anti-Adblock%20Detector.user.js",
+    "code_size": 2582,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500528,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-13T11:02:36.000Z",
+    "code_updated_at": "2024-07-13T11:02:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332751,
+        "name": "abadi 718",
+        "created_at": "2024-07-13T10:59:20.000Z",
+        "url": "https://greasyfork.org/users/1332751-abadi-718"
+      }
+    ],
+    "name": "Twitter Arab Blocklist",
+    "description": "Block all Arab users ads",
+    "url": "https://greasyfork.org/scripts/500528-twitter-arab-blocklist",
+    "code_url": "https://update.greasyfork.org/scripts/500528/Twitter%20Arab%20Blocklist.user.js",
+    "code_size": 2234,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

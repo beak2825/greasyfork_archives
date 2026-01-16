@@ -1,0 +1,59 @@
+{
+  "id": 525444,
+  "daily_installs": 1,
+  "total_installs": 43,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T16:52:16.000Z",
+  "code_updated_at": "2025-12-13T16:10:31.000Z",
+  "namespace": "https://github.com/candymagicshow/dmm_bangou_shower",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429376,
+      "name": "candymagic",
+      "created_at": "2025-01-31T09:27:13.000Z",
+      "url": "https://greasyfork.org/users/1429376-candymagic",
+      "scripts": [
+        {
+          "id": 525444,
+          "daily_installs": 1,
+          "total_installs": 43,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-31T16:52:16.000Z",
+          "code_updated_at": "2025-12-13T16:10:31.000Z",
+          "namespace": "https://github.com/candymagicshow/dmm_bangou_shower",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DMM番号展示",
+          "description": "在标题下方展示番号",
+          "url": "https://greasyfork.org/scripts/525444-dmm%E7%95%AA%E5%8F%B7%E5%B1%95%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/525444/DMM%E7%95%AA%E5%8F%B7%E5%B1%95%E7%A4%BA.user.js",
+          "code_size": 7527,
+          "license": "GPL License",
+          "version": "4.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DMM番号展示",
+  "description": "在标题下方展示番号",
+  "url": "https://greasyfork.org/scripts/525444-dmm%E7%95%AA%E5%8F%B7%E5%B1%95%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/525444/DMM%E7%95%AA%E5%8F%B7%E5%B1%95%E7%A4%BA.user.js",
+  "code_size": 7527,
+  "license": "GPL License",
+  "version": "4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551506,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-04T03:54:19.000Z",
+    "code_updated_at": "2025-10-27T09:59:27.000Z",
+    "namespace": "https://app.augmentcode.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414880,
+        "name": "ltwRich",
+        "created_at": "2024-12-24T02:58:47.000Z",
+        "url": "https://greasyfork.org/users/1414880-ltwrich"
+      }
+    ],
+    "name": "Augment Session提取器",
+    "description": "在Augment订阅页面提取Session值（自动跨页面提取）",
+    "url": "https://greasyfork.org/scripts/551506-augment-session%E6%8F%90%E5%8F%96%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/551506/Augment%20Session%E6%8F%90%E5%8F%96%E5%99%A8.user.js",
+    "code_size": 14364,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521622,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T03:24:29.000Z",
+    "code_updated_at": "2025-08-08T10:04:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414880,
+        "name": "ltwRich",
+        "created_at": "2024-12-24T02:58:47.000Z",
+        "url": "https://greasyfork.org/users/1414880-ltwrich"
+      }
+    ],
+    "name": "Linux DO 助手 (Clash导入+快捷评论)",
+    "description": "为 Linux DO 论坛添加Clash订阅导入和快捷评论功能",
+    "url": "https://greasyfork.org/scripts/521622-linux-do-%E5%8A%A9%E6%89%8B-clash%E5%AF%BC%E5%85%A5-%E5%BF%AB%E6%8D%B7%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/521622/Linux%20DO%20%E5%8A%A9%E6%89%8B%20%28Clash%E5%AF%BC%E5%85%A5%2B%E5%BF%AB%E6%8D%B7%E8%AF%84%E8%AE%BA%29.user.js",
+    "code_size": 13242,
+    "license": "MIT License",
+    "version": "1.04",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

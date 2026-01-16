@@ -1,0 +1,34 @@
+{
+  "id": 543528,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-24T17:29:20.000Z",
+  "code_updated_at": "2025-07-24T17:29:20.000Z",
+  "namespace": "https://tuempresa.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497994,
+      "name": "darking920",
+      "created_at": "2025-07-24T17:19:43.000Z",
+      "url": "https://greasyfork.org/users/1497994-darking920",
+      "scripts": []
+    }
+  ],
+  "name": "Bloquear modal de hogar en Netflix (por Content-Length)",
+  "description": "Bloquea el mensaje de hogar en Netflix detectando requests POST con Content-Length = 190 hacia GraphQL.",
+  "url": "https://greasyfork.org/scripts/543528-bloquear-modal-de-hogar-en-netflix-por-content-length",
+  "code_url": "https://update.greasyfork.org/scripts/543528/Bloquear%20modal%20de%20hogar%20en%20Netflix%20%28por%20Content-Length%29.user.js",
+  "code_size": 2160,
+  "license": null,
+  "version": "1.2",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

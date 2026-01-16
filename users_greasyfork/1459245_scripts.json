@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533202,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T05:43:17.000Z",
+    "code_updated_at": "2025-04-19T09:30:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459245,
+        "name": "xccd1",
+        "created_at": "2025-04-18T05:38:25.000Z",
+        "url": "https://greasyfork.org/users/1459245-xccd1"
+      }
+    ],
+    "name": "BetterX",
+    "description": "Make mentioned users more obvious! Along with several additional features.",
+    "url": "https://greasyfork.org/scripts/533202-betterx",
+    "code_url": "https://update.greasyfork.org/scripts/533202/BetterX.user.js",
+    "code_size": 30662,
+    "license": "MIT License",
+    "version": "1.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 535610,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-11T02:55:16.000Z",
+  "code_updated_at": "2025-05-21T12:19:02.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456111,
+      "name": "Кампотик Камрадов",
+      "created_at": "2025-04-10T07:27:49.000Z",
+      "url": "https://greasyfork.org/users/1456111-%D0%BA%D0%B0%D0%BC%D0%BF%D0%BE%D1%82%D0%B8%D0%BA-%D0%BA%D0%B0%D0%BC%D1%80%D0%B0%D0%B4%D0%BE%D0%B2",
+      "scripts": [
+        {
+          "id": 535610,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-11T02:55:16.000Z",
+          "code_updated_at": "2025-05-21T12:19:02.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "скрипт руководства",
+          "description": "васап мабой",
+          "url": "https://greasyfork.org/scripts/535610-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0",
+          "code_url": "https://update.greasyfork.org/scripts/535610/%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0.user.js",
+          "code_size": 50346,
+          "license": "MIT License",
+          "version": "1.29",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "скрипт руководства",
+  "description": "васап мабой",
+  "url": "https://greasyfork.org/scripts/535610-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/535610/%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0.user.js",
+  "code_size": 50346,
+  "license": "MIT License",
+  "version": "1.29",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

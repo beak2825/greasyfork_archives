@@ -1,0 +1,33 @@
+{
+  "id": 551488,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-03T19:06:30.000Z",
+  "code_updated_at": "2025-10-04T07:30:09.000Z",
+  "namespace": "https://marumori.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1375759,
+      "name": "matskye",
+      "created_at": "2024-10-02T10:30:31.000Z",
+      "url": "https://greasyfork.org/users/1375759-matskye"
+    }
+  ],
+  "name": "MaruMori Conjugation Feedback Tweaker",
+  "description": "Replace end-of-session title based on mistakes, with random phrases",
+  "url": "https://greasyfork.org/scripts/551488-marumori-conjugation-feedback-tweaker",
+  "code_url": "https://update.greasyfork.org/scripts/551488/MaruMori%20Conjugation%20Feedback%20Tweaker.user.js",
+  "code_size": 5323,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

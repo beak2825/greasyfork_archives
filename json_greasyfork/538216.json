@@ -1,0 +1,59 @@
+{
+  "id": 538216,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-03T13:12:06.000Z",
+  "code_updated_at": "2025-06-03T13:12:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1478411,
+      "name": "Coconut Nut",
+      "created_at": "2025-06-03T13:06:06.000Z",
+      "url": "https://greasyfork.org/users/1478411-coconut-nut",
+      "scripts": [
+        {
+          "id": 538216,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-03T13:12:06.000Z",
+          "code_updated_at": "2025-06-03T13:12:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Reliable Fast Simulated Typing on Paste",
+          "description": "Intercept and replace paste behavior with fast simulated typing (works across most sites)",
+          "url": "https://greasyfork.org/scripts/538216-reliable-fast-simulated-typing-on-paste",
+          "code_url": "https://update.greasyfork.org/scripts/538216/Reliable%20Fast%20Simulated%20Typing%20on%20Paste.user.js",
+          "code_size": 2197,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Reliable Fast Simulated Typing on Paste",
+  "description": "Intercept and replace paste behavior with fast simulated typing (works across most sites)",
+  "url": "https://greasyfork.org/scripts/538216-reliable-fast-simulated-typing-on-paste",
+  "code_url": "https://update.greasyfork.org/scripts/538216/Reliable%20Fast%20Simulated%20Typing%20on%20Paste.user.js",
+  "code_size": 2197,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

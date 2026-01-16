@@ -1,0 +1,59 @@
+{
+  "id": 511340,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-03T12:56:40.000Z",
+  "code_updated_at": "2024-10-03T12:56:40.000Z",
+  "namespace": "https://greasyfork.org/users/1376225",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1376225,
+      "name": "reaseno",
+      "created_at": "2024-10-03T12:36:49.000Z",
+      "url": "https://greasyfork.org/users/1376225-reaseno",
+      "scripts": [
+        {
+          "id": 511340,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-03T12:56:40.000Z",
+          "code_updated_at": "2024-10-03T12:56:40.000Z",
+          "namespace": "https://greasyfork.org/users/1376225",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Script B for testing",
+          "description": "Just a test",
+          "url": "https://greasyfork.org/scripts/511340-script-b-for-testing",
+          "code_url": "https://update.greasyfork.org/scripts/511340/Script%20B%20for%20testing.user.js",
+          "code_size": 222,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Script B for testing",
+  "description": "Just a test",
+  "url": "https://greasyfork.org/scripts/511340-script-b-for-testing",
+  "code_url": "https://update.greasyfork.org/scripts/511340/Script%20B%20for%20testing.user.js",
+  "code_size": 222,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

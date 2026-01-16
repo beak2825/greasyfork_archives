@@ -1,0 +1,68 @@
+[
+  {
+    "id": 532381,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T02:07:00.000Z",
+    "code_updated_at": "2025-09-07T22:27:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1233972,
+        "name": "Will@BH",
+        "created_at": "2023-12-15T01:26:33.000Z",
+        "url": "https://greasyfork.org/users/1233972-will-bh"
+      }
+    ],
+    "name": "Quotient Lead Autofill with Groq AI (Email-first + Company detection)",
+    "description": "Autofill QuotientApp quote form using Groq AI (email search + company field support)",
+    "url": "https://greasyfork.org/scripts/532381-quotient-lead-autofill-with-groq-ai-email-first-company-detection",
+    "code_url": "https://update.greasyfork.org/scripts/532381/Quotient%20Lead%20Autofill%20with%20Groq%20AI%20%28Email-first%20%2B%20Company%20detection%29.user.js",
+    "code_size": 10174,
+    "license": "All Rights Reserved",
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 510201,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T03:01:43.000Z",
+    "code_updated_at": "2025-04-04T01:28:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1233972,
+        "name": "Will@BH",
+        "created_at": "2023-12-15T01:26:33.000Z",
+        "url": "https://greasyfork.org/users/1233972-will-bh"
+      }
+    ],
+    "name": "Send New Quote & Follow-up SMS from Quotient",
+    "description": "Adds Send SMS button to QuotientApp Send quote page, sends SMS to customer on quote.",
+    "url": "https://greasyfork.org/scripts/510201-send-new-quote-follow-up-sms-from-quotient",
+    "code_url": "https://update.greasyfork.org/scripts/510201/Send%20New%20Quote%20%20Follow-up%20SMS%20from%20Quotient.user.js",
+    "code_size": 14656,
+    "license": "All Rights Reserved",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

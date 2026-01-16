@@ -1,0 +1,101 @@
+[
+  {
+    "id": 542803,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T08:02:04.000Z",
+    "code_updated_at": "2025-08-17T17:32:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933213,
+        "name": "03 (‪03 A Random Noob‬)",
+        "created_at": "2022-07-07T03:29:27.000Z",
+        "url": "https://greasyfork.org/users/933213-03-03-a-random-noob"
+      }
+    ],
+    "name": "ROBLOX 2011",
+    "description": "A script that makes Roblox look even more 2011!",
+    "url": "https://greasyfork.org/scripts/542803-roblox-2011",
+    "code_url": "https://update.greasyfork.org/scripts/542803/ROBLOX%202011.user.js",
+    "code_size": 311339,
+    "license": "MIT License",
+    "version": "1.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542802,
+    "daily_installs": 0,
+    "total_installs": 93,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T07:57:22.000Z",
+    "code_updated_at": "2025-07-17T23:45:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933213,
+        "name": "03 (‪03 A Random Noob‬)",
+        "created_at": "2022-07-07T03:29:27.000Z",
+        "url": "https://greasyfork.org/users/933213-03-03-a-random-noob"
+      }
+    ],
+    "name": "ROBLOX 2011 BC Page",
+    "description": "A script that restores the 2011 Roblox BC Page.",
+    "url": "https://greasyfork.org/scripts/542802-roblox-2011-bc-page",
+    "code_url": "https://update.greasyfork.org/scripts/542802/ROBLOX%202011%20BC%20Page.user.js",
+    "code_size": 509653,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500144,
+    "daily_installs": 0,
+    "total_installs": 97,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-09T22:23:01.000Z",
+    "code_updated_at": "2024-07-09T22:23:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933213,
+        "name": "03 (‪03 A Random Noob‬)",
+        "created_at": "2022-07-07T03:29:27.000Z",
+        "url": "https://greasyfork.org/users/933213-03-03-a-random-noob"
+      }
+    ],
+    "name": "2009 Google Accounts",
+    "description": "To be used with 2009 Google Accounts Userstlye.",
+    "url": "https://greasyfork.org/scripts/500144-2009-google-accounts",
+    "code_url": "https://update.greasyfork.org/scripts/500144/2009%20Google%20Accounts.user.js",
+    "code_size": 2269,
+    "license": "MIT License",
+    "version": "2024-07-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

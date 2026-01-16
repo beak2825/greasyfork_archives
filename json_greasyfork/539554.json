@@ -1,0 +1,33 @@
+{
+  "id": 539554,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-16T01:12:24.000Z",
+  "code_updated_at": "2025-06-16T01:12:24.000Z",
+  "namespace": "https://github.com/weberyap/GitHub-Copilot-Free-Quota-Display",
+  "support_url": "https://github.com/weberyap/GitHub-Copilot-Free-Quota-Display/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1289544,
+      "name": "Yap Weber",
+      "created_at": "2024-04-17T15:52:49.000Z",
+      "url": "https://greasyfork.org/users/1289544-yap-weber"
+    }
+  ],
+  "name": "GitHub Copilot 免费额度显示（美化 + 主动查询）",
+  "description": "主动查询 GitHub Copilot 免费额度并以美观方式显示",
+  "url": "https://greasyfork.org/scripts/539554-github-copilot-%E5%85%8D%E8%B4%B9%E9%A2%9D%E5%BA%A6%E6%98%BE%E7%A4%BA-%E7%BE%8E%E5%8C%96-%E4%B8%BB%E5%8A%A8%E6%9F%A5%E8%AF%A2",
+  "code_url": "https://update.greasyfork.org/scripts/539554/GitHub%20Copilot%20%E5%85%8D%E8%B4%B9%E9%A2%9D%E5%BA%A6%E6%98%BE%E7%A4%BA%EF%BC%88%E7%BE%8E%E5%8C%96%20%2B%20%E4%B8%BB%E5%8A%A8%E6%9F%A5%E8%AF%A2%EF%BC%89.user.js",
+  "code_size": 3814,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

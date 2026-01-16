@@ -1,0 +1,34 @@
+{
+  "id": 501294,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-20T16:56:47.000Z",
+  "code_updated_at": "2024-07-20T16:56:47.000Z",
+  "namespace": "https://t.me/BrightGrid",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1337284,
+      "name": "xelasleepi",
+      "created_at": "2024-07-20T16:37:02.000Z",
+      "url": "https://greasyfork.org/users/1337284-xelasleepi",
+      "scripts": []
+    }
+  ],
+  "name": "TEST SCRIPT INSPIRED BY - BrightGrid Enterprises",
+  "description": "TEST.",
+  "url": "https://greasyfork.org/scripts/501294-test-script-inspired-by-brightgrid-enterprises",
+  "code_url": "https://update.greasyfork.org/scripts/501294/TEST%20SCRIPT%20INSPIRED%20BY%20-%20BrightGrid%20Enterprises.user.js",
+  "code_size": 1939,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

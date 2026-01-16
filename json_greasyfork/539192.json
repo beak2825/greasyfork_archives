@@ -1,0 +1,59 @@
+{
+  "id": 539192,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-12T09:41:42.000Z",
+  "code_updated_at": "2025-06-12T09:41:41.000Z",
+  "namespace": "https://uestc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1482721,
+      "name": "echo cec",
+      "created_at": "2025-06-12T09:02:34.000Z",
+      "url": "https://greasyfork.org/users/1482721-echo-cec",
+      "scripts": [
+        {
+          "id": 539192,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-12T09:41:42.000Z",
+          "code_updated_at": "2025-06-12T09:41:41.000Z",
+          "namespace": "https://uestc",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "uestc全自动党旗飘飘刷课工具(webvpn版)",
+          "description": "非常感谢同济大佬Hyoung提供的脚本，请大家支持https://github.com/Flesymeb。但是因为它有一些问题，所以我二次开发了这一版。",
+          "url": "https://greasyfork.org/scripts/539192-uestc%E5%85%A8%E8%87%AA%E5%8A%A8%E5%85%9A%E6%97%97%E9%A3%98%E9%A3%98%E5%88%B7%E8%AF%BE%E5%B7%A5%E5%85%B7-webvpn%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/539192/uestc%E5%85%A8%E8%87%AA%E5%8A%A8%E5%85%9A%E6%97%97%E9%A3%98%E9%A3%98%E5%88%B7%E8%AF%BE%E5%B7%A5%E5%85%B7%28webvpn%E7%89%88%29.user.js",
+          "code_size": 19840,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "uestc全自动党旗飘飘刷课工具(webvpn版)",
+  "description": "非常感谢同济大佬Hyoung提供的脚本，请大家支持https://github.com/Flesymeb。但是因为它有一些问题，所以我二次开发了这一版。",
+  "url": "https://greasyfork.org/scripts/539192-uestc%E5%85%A8%E8%87%AA%E5%8A%A8%E5%85%9A%E6%97%97%E9%A3%98%E9%A3%98%E5%88%B7%E8%AF%BE%E5%B7%A5%E5%85%B7-webvpn%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/539192/uestc%E5%85%A8%E8%87%AA%E5%8A%A8%E5%85%9A%E6%97%97%E9%A3%98%E9%A3%98%E5%88%B7%E8%AF%BE%E5%B7%A5%E5%85%B7%28webvpn%E7%89%88%29.user.js",
+  "code_size": 19840,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

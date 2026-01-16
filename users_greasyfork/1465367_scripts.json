@@ -1,0 +1,68 @@
+[
+  {
+    "id": 542189,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T10:59:12.000Z",
+    "code_updated_at": "2025-07-10T10:59:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465367,
+        "name": "cyber-rye",
+        "created_at": "2025-05-04T01:38:25.000Z",
+        "url": "https://greasyfork.org/users/1465367-cyber-rye"
+      }
+    ],
+    "name": "Hide Gradients on HBO Max",
+    "description": "Hides the annoying gradient layers on play.hbomax.com",
+    "url": "https://greasyfork.org/scripts/542189-hide-gradients-on-hbo-max",
+    "code_url": "https://update.greasyfork.org/scripts/542189/Hide%20Gradients%20on%20HBO%20Max.user.js",
+    "code_size": 1057,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538234,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T17:58:36.000Z",
+    "code_updated_at": "2025-06-03T19:19:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465367,
+        "name": "cyber-rye",
+        "created_at": "2025-05-04T01:38:25.000Z",
+        "url": "https://greasyfork.org/users/1465367-cyber-rye"
+      }
+    ],
+    "name": "ESPN Fantasy Baseball - Enhanced Pitcher Indicators",
+    "description": "Improves visibility of starting pitcher indicators",
+    "url": "https://greasyfork.org/scripts/538234-espn-fantasy-baseball-enhanced-pitcher-indicators",
+    "code_url": "https://update.greasyfork.org/scripts/538234/ESPN%20Fantasy%20Baseball%20-%20Enhanced%20Pitcher%20Indicators.user.js",
+    "code_size": 5233,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

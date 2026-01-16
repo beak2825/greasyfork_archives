@@ -1,0 +1,59 @@
+{
+  "id": 514241,
+  "daily_installs": 0,
+  "total_installs": 193,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-10-27T00:13:15.000Z",
+  "code_updated_at": "2024-10-27T00:13:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1386864,
+      "name": "Clickbate remover",
+      "created_at": "2024-10-27T00:11:39.000Z",
+      "url": "https://greasyfork.org/users/1386864-clickbate-remover",
+      "scripts": [
+        {
+          "id": 514241,
+          "daily_installs": 0,
+          "total_installs": 193,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2024-10-27T00:13:15.000Z",
+          "code_updated_at": "2024-10-27T00:13:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "60fps bugfix",
+          "description": "Literally the best mod ever made. Makes 60fps not only playable, it feels exactly the same as 240fps while *reducing* lag and ping instead of increasing it. Fullscreen recommended. Keywords: starblast.io starblast dueling mod fps bypass unlock uncap if you want more than 60fps, please instead use this mod, it'll solve all your problems.",
+          "url": "https://greasyfork.org/scripts/514241-60fps-bugfix",
+          "code_url": "https://update.greasyfork.org/scripts/514241/60fps%20bugfix.user.js",
+          "code_size": 5362,
+          "license": "MIT License",
+          "version": "2.113",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "60fps bugfix",
+  "description": "Literally the best mod ever made. Makes 60fps not only playable, it feels exactly the same as 240fps while *reducing* lag and ping instead of increasing it. Fullscreen recommended. Keywords: starblast.io starblast dueling mod fps bypass unlock uncap if you want more than 60fps, please instead use this mod, it'll solve all your problems.",
+  "url": "https://greasyfork.org/scripts/514241-60fps-bugfix",
+  "code_url": "https://update.greasyfork.org/scripts/514241/60fps%20bugfix.user.js",
+  "code_size": 5362,
+  "license": "MIT License",
+  "version": "2.113",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

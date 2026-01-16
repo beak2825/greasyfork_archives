@@ -1,0 +1,59 @@
+{
+  "id": 520574,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-13T08:07:08.000Z",
+  "code_updated_at": "2024-12-13T08:07:07.000Z",
+  "namespace": null,
+  "support_url": "https://github.com/mapbox/togeojson/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1409964,
+      "name": "DosojinTaizo",
+      "created_at": "2024-12-12T13:02:18.000Z",
+      "url": "https://greasyfork.org/users/1409964-dosojintaizo",
+      "scripts": [
+        {
+          "id": 520575,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-13T08:08:26.000Z",
+          "code_updated_at": "2024-12-13T14:20:42.000Z",
+          "namespace": "https://www.waze.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WME GPX/KML/WKT/GML/GeoJSON Overlay",
+          "description": "Overlay GPX, KML, WKT, GML or GeoJSON files onto Waze Map Editor",
+          "url": "https://greasyfork.org/scripts/520575-wme-gpx-kml-wkt-gml-geojson-overlay",
+          "code_url": "https://update.greasyfork.org/scripts/520575/WME%20GPXKMLWKTGMLGeoJSON%20Overlay.user.js",
+          "code_size": 12213,
+          "license": "MIT/BSD/X11",
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "togeojson",
+  "description": "convert KML and GPX to GeoJSON, without the fuss",
+  "url": "https://greasyfork.org/scripts/520574-togeojson",
+  "code_url": "https://update.greasyfork.org/scripts/520574/1502033/togeojson.js",
+  "code_size": 21171,
+  "license": "MIT License",
+  "version": "0.16.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

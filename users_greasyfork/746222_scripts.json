@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540678,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T02:03:29.000Z",
+    "code_updated_at": "2025-07-01T02:46:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 746222,
+        "name": "echo&",
+        "created_at": "2021-03-12T01:52:39.000Z",
+        "url": "https://greasyfork.org/users/746222-echo"
+      }
+    ],
+    "name": "自动识别验证码登录",
+    "description": "自动识别登录页面的验证码并填写",
+    "url": "https://greasyfork.org/scripts/540678-%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/540678/%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E9%AA%8C%E8%AF%81%E7%A0%81%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 7327,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540171,
+    "daily_installs": 1,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T15:14:11.000Z",
+    "code_updated_at": "2025-06-20T15:14:10.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486266,
+        "name": "Lucas11",
+        "created_at": "2025-06-20T15:03:03.000Z",
+        "url": "https://greasyfork.org/users/1486266-lucas11"
+      }
+    ],
+    "name": "Delete-WikiDonations",
+    "description": "Removes all references to Wikipedia donation banners and links.",
+    "url": "https://greasyfork.org/scripts/540171-delete-wikidonations",
+    "code_url": "https://update.greasyfork.org/scripts/540171/Delete-WikiDonations.user.js",
+    "code_size": 1103,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

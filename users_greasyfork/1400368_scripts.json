@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523636,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T10:21:42.000Z",
+    "code_updated_at": "2025-05-05T11:47:20.000Z",
+    "namespace": "https://wme.michaelrosstarr.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400368,
+        "name": "michaelrosstarr",
+        "created_at": "2024-11-21T20:14:13.000Z",
+        "url": "https://greasyfork.org/users/1400368-michaelrosstarr"
+      }
+    ],
+    "name": "WME Always Visible (BushmanZA Edition)",
+    "description": "Makes your user status always visible in Waze Map Editor.",
+    "url": "https://greasyfork.org/scripts/523636-wme-always-visible-bushmanza-edition",
+    "code_url": "https://update.greasyfork.org/scripts/523636/WME%20Always%20Visible%20%28BushmanZA%20Edition%29.user.js",
+    "code_size": 9813,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

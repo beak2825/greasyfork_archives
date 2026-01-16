@@ -1,0 +1,33 @@
+{
+  "id": 538870,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-08T22:41:17.000Z",
+  "code_updated_at": "2025-06-08T22:41:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480803,
+      "name": "alee33",
+      "created_at": "2025-06-08T21:04:22.000Z",
+      "url": "https://greasyfork.org/users/1480803-alee33"
+    }
+  ],
+  "name": "Internet Roadtrip - Can of Beans",
+  "description": "Replaces the coffee cup in Internet Roadtrip with a can of beans",
+  "url": "https://greasyfork.org/scripts/538870-internet-roadtrip-can-of-beans",
+  "code_url": "https://update.greasyfork.org/scripts/538870/Internet%20Roadtrip%20-%20Can%20of%20Beans.user.js",
+  "code_size": 1427,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

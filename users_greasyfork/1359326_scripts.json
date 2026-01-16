@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509200,
+    "daily_installs": 0,
+    "total_installs": 247,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T14:15:52.000Z",
+    "code_updated_at": "2024-10-06T06:27:12.000Z",
+    "namespace": "https://www.ocrosoft.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1359326,
+        "name": "wuxiupu",
+        "created_at": "2024-08-28T13:17:32.000Z",
+        "url": "https://greasyfork.org/users/1359326-wuxiupu"
+      }
+    ],
+    "name": "（修改版）网易云音乐直接下载",
+    "description": "修改了一些内容[二创提示:本脚本程序根据大佬ocrosoft的程序二创]",
+    "url": "https://greasyfork.org/scripts/509200-%E4%BF%AE%E6%94%B9%E7%89%88-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/509200/%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 57622,
+    "license": "GPLV2",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

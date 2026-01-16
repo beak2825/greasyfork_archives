@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502650,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-05T01:39:28.000Z",
+    "code_updated_at": "2024-08-05T01:39:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1345414,
+        "name": "a蒟蒻",
+        "created_at": "2024-08-05T01:23:40.000Z",
+        "url": "https://greasyfork.org/users/1345414-a%E8%92%9F%E8%92%BB"
+      }
+    ],
+    "name": "电子科技大学深圳高等研究院校园网自动重置",
+    "description": "自动填写、勾选单选框、定时刷新，并提交表单",
+    "url": "https://greasyfork.org/scripts/502650-%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E6%B7%B1%E5%9C%B3%E9%AB%98%E7%AD%89%E7%A0%94%E7%A9%B6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E9%87%8D%E7%BD%AE",
+    "code_url": "https://update.greasyfork.org/scripts/502650/%E7%94%B5%E5%AD%90%E7%A7%91%E6%8A%80%E5%A4%A7%E5%AD%A6%E6%B7%B1%E5%9C%B3%E9%AB%98%E7%AD%89%E7%A0%94%E7%A9%B6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E9%87%8D%E7%BD%AE.user.js",
+    "code_size": 2437,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

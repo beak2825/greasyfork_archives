@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553515,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-10-23T22:55:14.000Z",
+    "code_updated_at": "2025-10-23T23:02:46.000Z",
+    "namespace": "http://aliexpress.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 715435,
+        "name": "byteshaman",
+        "created_at": "2020-12-10T16:40:49.000Z",
+        "url": "https://greasyfork.org/users/715435-byteshaman"
+      }
+    ],
+    "name": "AliExpress Bundle Deal Highlighter",
+    "description": "Highlight bundle deals with a yellow background on AliExpress",
+    "url": "https://greasyfork.org/scripts/553515-aliexpress-bundle-deal-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/553515/AliExpress%20Bundle%20Deal%20Highlighter.user.js",
+    "code_size": 1844,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

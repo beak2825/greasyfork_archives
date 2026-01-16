@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513047,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T09:05:43.000Z",
+    "code_updated_at": "2024-11-10T10:50:14.000Z",
+    "namespace": "https://space.bilibili.com/13723713",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 855630,
+        "name": "Tokaiteio",
+        "created_at": "2021-12-20T08:40:48.000Z",
+        "url": "https://greasyfork.org/users/855630-tokaiteio"
+      }
+    ],
+    "name": "Bilibili Copy Cleaner 专栏复制免后缀",
+    "description": "移除 Bilibili 专栏复制时自动添加的多余信息，如作者、链接和出处。",
+    "url": "https://greasyfork.org/scripts/513047-bilibili-copy-cleaner-%E4%B8%93%E6%A0%8F%E5%A4%8D%E5%88%B6%E5%85%8D%E5%90%8E%E7%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/513047/Bilibili%20Copy%20Cleaner%20%E4%B8%93%E6%A0%8F%E5%A4%8D%E5%88%B6%E5%85%8D%E5%90%8E%E7%BC%80.user.js",
+    "code_size": 5463,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

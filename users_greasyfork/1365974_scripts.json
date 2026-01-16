@@ -1,0 +1,101 @@
+[
+  {
+    "id": 553937,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T08:02:46.000Z",
+    "code_updated_at": "2025-10-28T08:02:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1365974,
+        "name": "Draconian Draconomicon",
+        "created_at": "2024-09-11T05:12:18.000Z",
+        "url": "https://greasyfork.org/users/1365974-draconian-draconomicon"
+      }
+    ],
+    "name": "TikTok Auto Promote My Videos",
+    "description": "Automatically likes, shares, and comments on your own TikTok videos to boost their visibility and engagement without payment.",
+    "url": "https://greasyfork.org/scripts/553937-tiktok-auto-promote-my-videos",
+    "code_url": "https://update.greasyfork.org/scripts/553937/TikTok%20Auto%20Promote%20My%20Videos.user.js",
+    "code_size": 2908,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511694,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-06T20:44:48.000Z",
+    "code_updated_at": "2024-10-06T20:44:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1365974,
+        "name": "Draconian Draconomicon",
+        "created_at": "2024-09-11T05:12:18.000Z",
+        "url": "https://greasyfork.org/users/1365974-draconian-draconomicon"
+      }
+    ],
+    "name": "Infinite Image Generator",
+    "description": "Generate images infinitely using OpenAI's DALL-E API",
+    "url": "https://greasyfork.org/scripts/511694-infinite-image-generator",
+    "code_url": "https://update.greasyfork.org/scripts/511694/Infinite%20Image%20Generator.user.js",
+    "code_size": 1699,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 507904,
+    "daily_installs": 2,
+    "total_installs": 2872,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-09-11T05:13:32.000Z",
+    "code_updated_at": "2024-09-11T05:13:32.000Z",
+    "namespace": "https://chat.openai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1365974,
+        "name": "Draconian Draconomicon",
+        "created_at": "2024-09-11T05:12:18.000Z",
+        "url": "https://greasyfork.org/users/1365974-draconian-draconomicon"
+      }
+    ],
+    "name": "ChatGPT Jailbroken! Use it for whatever",
+    "description": "ChatGPT Jailbroken! Includes FREE GPT-4",
+    "url": "https://greasyfork.org/scripts/507904-chatgpt-jailbroken-use-it-for-whatever",
+    "code_url": "https://update.greasyfork.org/scripts/507904/ChatGPT%20Jailbroken%21%20Use%20it%20for%20whatever.user.js",
+    "code_size": 10299,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 522287,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-30T10:51:51.000Z",
+  "code_updated_at": "2024-12-30T10:51:51.000Z",
+  "namespace": "https://catalogue.bm-lyon.fr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417536,
+      "name": "Eldeberen",
+      "created_at": "2024-12-30T10:47:04.000Z",
+      "url": "https://greasyfork.org/users/1417536-eldeberen",
+      "scripts": []
+    }
+  ],
+  "name": "Disponibilité BM Lyon",
+  "description": "Affiche la disponibilité des livres dans une liste de la BM Lyon",
+  "url": "https://greasyfork.org/scripts/522287-disponibilit%C3%A9-bm-lyon",
+  "code_url": "https://update.greasyfork.org/scripts/522287/Disponibilit%C3%A9%20BM%20Lyon.user.js",
+  "code_size": 2407,
+  "license": null,
+  "version": "2024.12.30-1",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531493,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T11:46:44.000Z",
+    "code_updated_at": "2025-04-02T11:48:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 918091,
+        "name": "dielec",
+        "created_at": "2022-05-24T13:52:14.000Z",
+        "url": "https://greasyfork.org/users/918091-dielec"
+      }
+    ],
+    "name": "KNMI Temperature °C/°F Switcher (Scroll down to see table)",
+    "description": "Adds a C/F slider switch above the column containing the KNMI forecast table.",
+    "url": "https://greasyfork.org/scripts/531493-knmi-temperature-c-f-switcher-scroll-down-to-see-table",
+    "code_url": "https://update.greasyfork.org/scripts/531493/KNMI%20Temperature%20%C2%B0C%C2%B0F%20Switcher%20%28Scroll%20down%20to%20see%20table%29.user.js",
+    "code_size": 11996,
+    "license": "GNU GPLv3",
+    "version": "1.15 // Incremented version",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

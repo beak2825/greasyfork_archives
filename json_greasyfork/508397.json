@@ -1,0 +1,33 @@
+{
+  "id": 508397,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-14T08:17:00.000Z",
+  "code_updated_at": "2024-09-14T08:18:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1367330,
+      "name": "览豪",
+      "created_at": "2024-09-14T08:06:37.000Z",
+      "url": "https://greasyfork.org/users/1367330-%E8%A7%88%E8%B1%AA"
+    }
+  ],
+  "name": "B站-播放器自动宽屏",
+  "description": "B站进入播放页后，自动点击宽屏按钮，并将播放器滚动到合适的位置",
+  "url": "https://greasyfork.org/scripts/508397-b%E7%AB%99-%E6%92%AD%E6%94%BE%E5%99%A8%E8%87%AA%E5%8A%A8%E5%AE%BD%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/508397/B%E7%AB%99-%E6%92%AD%E6%94%BE%E5%99%A8%E8%87%AA%E5%8A%A8%E5%AE%BD%E5%B1%8F.user.js",
+  "code_size": 6788,
+  "license": "GPL-3.0 License",
+  "version": "2024-09-14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

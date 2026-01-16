@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 542741,
+    "daily_installs": 1,
+    "total_installs": 51,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-07-16T17:17:44.000Z",
+    "code_updated_at": "2025-09-24T14:36:26.000Z",
+    "namespace": "https://www.nite07.com",
+    "support_url": "https://www.nite07.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1075817,
+        "name": "bestnite",
+        "created_at": "2023-05-09T02:32:25.000Z",
+        "url": "https://greasyfork.org/users/1075817-bestnite"
+      }
+    ],
+    "name": "不太灵去除VIP遮罩",
+    "description": "去除不太灵网站视频播放页的VIP登录遮罩，并显示完整的资源列表。",
+    "url": "https://greasyfork.org/scripts/542741-%E4%B8%8D%E5%A4%AA%E7%81%B5%E5%8E%BB%E9%99%A4vip%E9%81%AE%E7%BD%A9",
+    "code_url": "https://update.greasyfork.org/scripts/542741/%E4%B8%8D%E5%A4%AA%E7%81%B5%E5%8E%BB%E9%99%A4VIP%E9%81%AE%E7%BD%A9.user.js",
+    "code_size": 3405,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

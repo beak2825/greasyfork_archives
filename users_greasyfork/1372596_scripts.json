@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510047,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-24T21:30:40.000Z",
+    "code_updated_at": "2024-09-26T13:49:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1372596,
+        "name": "Arth19",
+        "created_at": "2024-09-24T21:22:49.000Z",
+        "url": "https://greasyfork.org/users/1372596-arth19"
+      }
+    ],
+    "name": "Notificador de Task com Som e Notificação",
+    "description": "Notifica quando o há task disponível com som e notificação no desktop",
+    "url": "https://greasyfork.org/scripts/510047-notificador-de-task-com-som-e-notifica%C3%A7%C3%A3o",
+    "code_url": "https://update.greasyfork.org/scripts/510047/Notificador%20de%20Task%20com%20Som%20e%20Notifica%C3%A7%C3%A3o.user.js",
+    "code_size": 323934,
+    "license": null,
+    "version": "1.6",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

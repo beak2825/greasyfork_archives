@@ -1,0 +1,34 @@
+{
+  "id": 547427,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-27T05:41:38.000Z",
+  "code_updated_at": "2025-08-27T05:41:51.000Z",
+  "namespace": "https://blog.valley.town/@zeronox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508973,
+      "name": "ambiguous435",
+      "created_at": "2025-08-26T09:31:45.000Z",
+      "url": "https://greasyfork.org/users/1508973-ambiguous435",
+      "scripts": []
+    }
+  ],
+  "name": "Perplexity Outline Toggle",
+  "description": "개요 단축키 Alt+F로 설정합니다. Complexity 필요.",
+  "url": "https://greasyfork.org/scripts/547427-perplexity-outline-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/547427/Perplexity%20Outline%20Toggle.user.js",
+  "code_size": 1610,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

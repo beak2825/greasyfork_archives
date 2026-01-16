@@ -1,0 +1,59 @@
+{
+  "id": 499913,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-07T13:10:30.000Z",
+  "code_updated_at": "2024-07-07T13:43:11.000Z",
+  "namespace": "https://cytube.mm428.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1329425,
+      "name": "fetcH",
+      "created_at": "2024-07-06T23:55:50.000Z",
+      "url": "https://greasyfork.org/users/1329425-fetch",
+      "scripts": [
+        {
+          "id": 499913,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-07T13:10:30.000Z",
+          "code_updated_at": "2024-07-07T13:43:11.000Z",
+          "namespace": "https://cytube.mm428.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "cytube_user_check",
+          "description": "複数のアカウントを利用して動画登録しているユーザーを定期的に検知する",
+          "url": "https://greasyfork.org/scripts/499913-cytube-user-check",
+          "code_url": "https://update.greasyfork.org/scripts/499913/cytube_user_check.user.js",
+          "code_size": 5890,
+          "license": null,
+          "version": "1.00",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "cytube_user_check",
+  "description": "複数のアカウントを利用して動画登録しているユーザーを定期的に検知する",
+  "url": "https://greasyfork.org/scripts/499913-cytube-user-check",
+  "code_url": "https://update.greasyfork.org/scripts/499913/cytube_user_check.user.js",
+  "code_size": 5890,
+  "license": null,
+  "version": "1.00",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

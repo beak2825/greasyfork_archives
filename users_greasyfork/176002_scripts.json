@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536947,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-23T08:56:50.000Z",
+    "code_updated_at": "2025-05-25T05:51:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 176002,
+        "name": "REN Dream",
+        "created_at": "2018-03-22T13:03:22.000Z",
+        "url": "https://greasyfork.org/users/176002-ren-dream"
+      }
+    ],
+    "name": "F2 自动按键开关（点击按钮或按 H 键开启/关闭）",
+    "description": "在网页右上角添加一个按钮，点击按钮或按 H 键开启或关闭 F2 自动按键功能。",
+    "url": "https://greasyfork.org/scripts/536947-f2-%E8%87%AA%E5%8A%A8%E6%8C%89%E9%94%AE%E5%BC%80%E5%85%B3-%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE%E6%88%96%E6%8C%89-h-%E9%94%AE%E5%BC%80%E5%90%AF-%E5%85%B3%E9%97%AD",
+    "code_url": "https://update.greasyfork.org/scripts/536947/F2%20%E8%87%AA%E5%8A%A8%E6%8C%89%E9%94%AE%E5%BC%80%E5%85%B3%EF%BC%88%E7%82%B9%E5%87%BB%E6%8C%89%E9%92%AE%E6%88%96%E6%8C%89%20H%20%E9%94%AE%E5%BC%80%E5%90%AF%E5%85%B3%E9%97%AD%EF%BC%89.user.js",
+    "code_size": 4937,
+    "license": "MIT License",
+    "version": "1.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

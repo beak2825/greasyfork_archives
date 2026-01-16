@@ -1,0 +1,101 @@
+[
+  {
+    "id": 553239,
+    "daily_installs": 84,
+    "total_installs": 3568,
+    "fan_score": "30.3",
+    "good_ratings": 4,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2025-10-20T20:25:00.000Z",
+    "code_updated_at": "2025-10-20T20:25:00.000Z",
+    "namespace": "https://github.com/tientq64/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1470853,
+        "name": "Dark-Shadow44",
+        "created_at": "2025-05-16T14:30:58.000Z",
+        "url": "https://greasyfork.org/users/1470853-dark-shadow44"
+      }
+    ],
+    "name": "Auto Skip YouTube Ads",
+    "description": "Automatically skip YouTube ads instantly. Undetected by YouTube ad blocker warnings.",
+    "url": "https://greasyfork.org/scripts/553239-auto-skip-youtube-ads",
+    "code_url": "https://update.greasyfork.org/scripts/553239/Auto%20Skip%20YouTube%20Ads.user.js",
+    "code_size": 10109,
+    "license": "MIT License",
+    "version": "7.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537231,
+    "daily_installs": 8,
+    "total_installs": 544,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-05-25T16:46:40.000Z",
+    "code_updated_at": "2025-05-25T16:46:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1470853,
+        "name": "Dark-Shadow44",
+        "created_at": "2025-05-16T14:30:58.000Z",
+        "url": "https://greasyfork.org/users/1470853-dark-shadow44"
+      }
+    ],
+    "name": "Worldguessr Cheat/Hack 2025",
+    "description": "Always visible tiny \"See Location\" button in the bottom-left corner for WorldGuessr. Made by DarkShadow44. Updated 2025. Undetected.",
+    "url": "https://greasyfork.org/scripts/537231-worldguessr-cheat-hack-2025",
+    "code_url": "https://update.greasyfork.org/scripts/537231/Worldguessr%20CheatHack%202025.user.js",
+    "code_size": 12741,
+    "license": null,
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536804,
+    "daily_installs": 6,
+    "total_installs": 358,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-22T07:39:01.000Z",
+    "code_updated_at": "2025-05-22T07:39:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1470853,
+        "name": "Dark-Shadow44",
+        "created_at": "2025-05-16T14:30:58.000Z",
+        "url": "https://greasyfork.org/users/1470853-dark-shadow44"
+      }
+    ],
+    "name": "Quizlet Live HACK MOD MENU 2025",
+    "description": "A hack for Quizlet Live updated on April 2025! - Dark UI Theme with Background Image - UI loads instantly. Now with working cheat logic.",
+    "url": "https://greasyfork.org/scripts/536804-quizlet-live-hack-mod-menu-2025",
+    "code_url": "https://update.greasyfork.org/scripts/536804/Quizlet%20Live%20HACK%20MOD%20MENU%202025.user.js",
+    "code_size": 26188,
+    "license": null,
+    "version": "2.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

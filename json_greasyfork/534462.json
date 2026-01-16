@@ -1,0 +1,33 @@
+{
+  "id": 534462,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T02:43:51.000Z",
+  "code_updated_at": "2025-04-30T04:31:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463818,
+      "name": "YIxiemin",
+      "created_at": "2025-04-30T02:25:42.000Z",
+      "url": "https://greasyfork.org/users/1463818-yixiemin"
+    }
+  ],
+  "name": "gooboo刷新神秘碎片",
+  "description": "检测指定图标是否存在，不存在则自动刷新页面",
+  "url": "https://greasyfork.org/scripts/534462-gooboo%E5%88%B7%E6%96%B0%E7%A5%9E%E7%A7%98%E7%A2%8E%E7%89%87",
+  "code_url": "https://update.greasyfork.org/scripts/534462/gooboo%E5%88%B7%E6%96%B0%E7%A5%9E%E7%A7%98%E7%A2%8E%E7%89%87.user.js",
+  "code_size": 2085,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

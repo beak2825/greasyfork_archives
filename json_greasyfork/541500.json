@@ -1,0 +1,33 @@
+{
+  "id": 541500,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-03T06:57:54.000Z",
+  "code_updated_at": "2025-07-07T19:37:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1117438,
+      "name": "Tiartyos",
+      "created_at": "2023-07-02T15:22:19.000Z",
+      "url": "https://greasyfork.org/users/1117438-tiartyos"
+    }
+  ],
+  "name": "n8n Workflow Preview Enhancer",
+  "description": "Fix the awful non-responsive layout on n8n workflow pages, kupo!",
+  "url": "https://greasyfork.org/scripts/541500-n8n-workflow-preview-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/541500/n8n%20Workflow%20Preview%20Enhancer.user.js",
+  "code_size": 10942,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

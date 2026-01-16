@@ -1,0 +1,34 @@
+{
+  "id": 550045,
+  "daily_installs": 0,
+  "total_installs": 190,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-19T10:13:11.000Z",
+  "code_updated_at": "2025-09-21T01:45:12.000Z",
+  "namespace": "poe2.ninja.trade.helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516906,
+      "name": "Святослав Орлов",
+      "created_at": "2025-09-19T10:10:12.000Z",
+      "url": "https://greasyfork.org/users/1516906-%D1%81%D0%B2%D1%8F%D1%82%D0%BE%D1%81%D0%BB%D0%B0%D0%B2-%D0%BE%D1%80%D0%BB%D0%BE%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "PoE2 Ninja → Trade (Arpg_community)",
+  "description": "Кнопка Trade на плитке. Глобальный тумблер в правом верхнем углу: включать/выключать передачу числовых значений модов, а так же доработал Jewels",
+  "url": "https://greasyfork.org/scripts/550045-poe2-ninja-trade-arpg-community",
+  "code_url": "https://update.greasyfork.org/scripts/550045/PoE2%20Ninja%20%E2%86%92%20Trade%20%28Arpg_community%29.user.js",
+  "code_size": 26111,
+  "license": null,
+  "version": "0.1.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

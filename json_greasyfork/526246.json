@@ -1,0 +1,59 @@
+{
+  "id": 526246,
+  "daily_installs": 0,
+  "total_installs": 92,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-08T06:03:38.000Z",
+  "code_updated_at": "2025-02-08T06:03:38.000Z",
+  "namespace": "x0t.youtubeuirevert",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1432830,
+      "name": "HAMZA ❶",
+      "created_at": "2025-02-08T05:59:51.000Z",
+      "url": "https://greasyfork.org/users/1432830-hamza",
+      "scripts": [
+        {
+          "id": 526246,
+          "daily_installs": 0,
+          "total_installs": 92,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-08T06:03:38.000Z",
+          "code_updated_at": "2025-02-08T06:03:38.000Z",
+          "namespace": "x0t.youtubeuirevert",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Classic UI Restorer (Trusted Types Safe)",
+          "description": "Reverts YouTube UI to classic layout with security compliance",
+          "url": "https://greasyfork.org/scripts/526246-youtube-classic-ui-restorer-trusted-types-safe",
+          "code_url": "https://update.greasyfork.org/scripts/526246/YouTube%20Classic%20UI%20Restorer%20%28Trusted%20Types%20Safe%29.user.js",
+          "code_size": 4659,
+          "license": "MIT License",
+          "version": "1.4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Classic UI Restorer (Trusted Types Safe)",
+  "description": "Reverts YouTube UI to classic layout with security compliance",
+  "url": "https://greasyfork.org/scripts/526246-youtube-classic-ui-restorer-trusted-types-safe",
+  "code_url": "https://update.greasyfork.org/scripts/526246/YouTube%20Classic%20UI%20Restorer%20%28Trusted%20Types%20Safe%29.user.js",
+  "code_size": 4659,
+  "license": "MIT License",
+  "version": "1.4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

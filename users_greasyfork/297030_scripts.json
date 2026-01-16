@@ -1,0 +1,68 @@
+[
+  {
+    "id": 523576,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-12T19:31:26.000Z",
+    "code_updated_at": "2025-01-16T13:16:35.000Z",
+    "namespace": "https://github.com/sqrtox/yt-thumbnail-anywhere",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "YouTube - Thumbnail Anywhere",
+    "description": "A user script to add a little functionality related to YouTube thumbnails.",
+    "url": "https://greasyfork.org/scripts/523576-youtube-thumbnail-anywhere",
+    "code_url": "https://update.greasyfork.org/scripts/523576/YouTube%20-%20Thumbnail%20Anywhere.user.js",
+    "code_size": 5603,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504770,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-23T06:40:40.000Z",
+    "code_updated_at": "2024-08-23T08:24:56.000Z",
+    "namespace": "https://github.com/sqrtox/userscript-niconico-better-nicoru",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 297030,
+        "name": "sqrtox",
+        "created_at": "2019-05-01T14:00:23.000Z",
+        "url": "https://greasyfork.org/users/297030-sqrtox"
+      }
+    ],
+    "name": "Niconico - Better Nicoru",
+    "description": "Improve issues such as Niconico's Nicoru only showing up to 9+.",
+    "url": "https://greasyfork.org/scripts/504770-niconico-better-nicoru",
+    "code_url": "https://update.greasyfork.org/scripts/504770/Niconico%20-%20Better%20Nicoru.user.js",
+    "code_size": 6083,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

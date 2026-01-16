@@ -1,0 +1,33 @@
+{
+  "id": 534461,
+  "daily_installs": 2,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T02:43:10.000Z",
+  "code_updated_at": "2025-04-30T08:06:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463818,
+      "name": "YIxiemin",
+      "created_at": "2025-04-30T02:25:42.000Z",
+      "url": "https://greasyfork.org/users/1463818-yixiemin"
+    }
+  ],
+  "name": "gooboo部落2叠技能，自动保存要设置10秒",
+  "description": "自动进入部落点击技能",
+  "url": "https://greasyfork.org/scripts/534461-gooboo%E9%83%A8%E8%90%BD2%E5%8F%A0%E6%8A%80%E8%83%BD-%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98%E8%A6%81%E8%AE%BE%E7%BD%AE10%E7%A7%92",
+  "code_url": "https://update.greasyfork.org/scripts/534461/gooboo%E9%83%A8%E8%90%BD2%E5%8F%A0%E6%8A%80%E8%83%BD%EF%BC%8C%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98%E8%A6%81%E8%AE%BE%E7%BD%AE10%E7%A7%92.user.js",
+  "code_size": 3382,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

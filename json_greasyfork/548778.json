@@ -1,0 +1,34 @@
+{
+  "id": 548778,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-08T06:16:16.000Z",
+  "code_updated_at": "2025-09-09T04:43:26.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265194,
+      "name": "루시퍼홍",
+      "created_at": "2024-02-22T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D",
+      "scripts": []
+    }
+  ],
+  "name": "[루시퍼홍] 네이버부동산 단지추출",
+  "description": "단지 정보 추출",
+  "url": "https://greasyfork.org/scripts/548778-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EB%84%A4%EC%9D%B4%EB%B2%84%EB%B6%80%EB%8F%99%EC%82%B0-%EB%8B%A8%EC%A7%80%EC%B6%94%EC%B6%9C",
+  "code_url": "https://update.greasyfork.org/scripts/548778/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EB%84%A4%EC%9D%B4%EB%B2%84%EB%B6%80%EB%8F%99%EC%82%B0%20%EB%8B%A8%EC%A7%80%EC%B6%94%EC%B6%9C.user.js",
+  "code_size": 359223,
+  "license": null,
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

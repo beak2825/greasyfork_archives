@@ -1,0 +1,68 @@
+[
+  {
+    "id": 516292,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-07T18:58:55.000Z",
+    "code_updated_at": "2024-11-07T18:58:55.000Z",
+    "namespace": "https://greasyfork.org/users/1392618",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392618,
+        "name": "temptctemp",
+        "created_at": "2024-11-07T18:45:13.000Z",
+        "url": "https://greasyfork.org/users/1392618-temptctemp"
+      }
+    ],
+    "name": "TinyChatScript 03_06_2024",
+    "description": "Modified TinyChat - Best Scripts; prepare to be amazed.",
+    "url": "https://greasyfork.org/scripts/516292-tinychatscript-03-06-2024",
+    "code_url": "https://update.greasyfork.org/scripts/516292/TinyChatScript%2003_06_2024.user.js",
+    "code_size": 394173,
+    "license": "none",
+    "version": "1.8.58",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516291,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-07T18:58:07.000Z",
+    "code_updated_at": "2024-11-07T18:58:06.000Z",
+    "namespace": "http://example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392618,
+        "name": "temptctemp",
+        "created_at": "2024-11-07T18:45:13.000Z",
+        "url": "https://greasyfork.org/users/1392618-temptctemp"
+      }
+    ],
+    "name": "My Custom Style",
+    "description": "This is a custom style to enhance the appearance of a website.",
+    "url": "https://greasyfork.org/scripts/516291-my-custom-style",
+    "code_url": "https://update.greasyfork.org/scripts/516291/My%20Custom%20Style.user.css",
+    "code_size": 424,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

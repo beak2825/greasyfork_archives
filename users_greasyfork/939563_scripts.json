@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508709,
+    "daily_installs": 0,
+    "total_installs": 287,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-16T14:36:34.000Z",
+    "code_updated_at": "2025-11-16T12:42:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 939563,
+        "name": "Hoooooo",
+        "created_at": "2022-07-26T10:52:30.000Z",
+        "url": "https://greasyfork.org/users/939563-hoooooo"
+      }
+    ],
+    "name": "zhihu web",
+    "description": "为https://zhihulite.github.io/提供跨域支持",
+    "url": "https://greasyfork.org/scripts/508709-zhihu-web",
+    "code_url": "https://update.greasyfork.org/scripts/508709/zhihu%20web.user.js",
+    "code_size": 483,
+    "license": null,
+    "version": "2025-11-16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

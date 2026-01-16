@@ -1,0 +1,59 @@
+{
+  "id": 548211,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-03T09:00:41.000Z",
+  "code_updated_at": "2025-09-03T09:00:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511377,
+      "name": "ray jay",
+      "created_at": "2025-09-03T08:57:04.000Z",
+      "url": "https://greasyfork.org/users/1511377-ray-jay",
+      "scripts": [
+        {
+          "id": 548211,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-03T09:00:41.000Z",
+          "code_updated_at": "2025-09-03T09:00:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TikTok Playback Speed Controller",
+          "description": "Adds a persistent playback speed controller to the TikTok website. The selected speed is saved and applied to all videos automatically.",
+          "url": "https://greasyfork.org/scripts/548211-tiktok-playback-speed-controller",
+          "code_url": "https://update.greasyfork.org/scripts/548211/TikTok%20Playback%20Speed%20Controller.user.js",
+          "code_size": 8085,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TikTok Playback Speed Controller",
+  "description": "Adds a persistent playback speed controller to the TikTok website. The selected speed is saved and applied to all videos automatically.",
+  "url": "https://greasyfork.org/scripts/548211-tiktok-playback-speed-controller",
+  "code_url": "https://update.greasyfork.org/scripts/548211/TikTok%20Playback%20Speed%20Controller.user.js",
+  "code_size": 8085,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

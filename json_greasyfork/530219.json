@@ -1,0 +1,34 @@
+{
+  "id": 530219,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-18T19:06:30.000Z",
+  "code_updated_at": "2025-11-07T15:21:40.000Z",
+  "namespace": "https://greasyfork.org/users/1429440",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429440,
+      "name": "Nyannerz",
+      "created_at": "2025-01-31T12:57:58.000Z",
+      "url": "https://greasyfork.org/users/1429440-nyannerz",
+      "scripts": []
+    }
+  ],
+  "name": "GGn 20 Questions Host",
+  "description": "Help Host 20 questions type games on GGn",
+  "url": "https://greasyfork.org/scripts/530219-ggn-20-questions-host",
+  "code_url": "https://update.greasyfork.org/scripts/530219/GGn%2020%20Questions%20Host.user.js",
+  "code_size": 20224,
+  "license": "MIT License",
+  "version": "1.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

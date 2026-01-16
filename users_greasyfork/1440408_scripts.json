@@ -130,5 +130,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 542923,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-18T14:35:27.000Z",
+    "code_updated_at": "2025-12-26T13:00:17.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "WME Workflow Engine",
+    "description": "Xây dựng và chạy các chuỗi tác vụ tự động hóa (workflows) tùy chỉnh trong WME. Tự động điều hướng từ file Excel/CSV/GG Sheets và thực thi các hành động được điều chỉnh sẵn bằng WME SDK.",
+    "url": "https://greasyfork.org/scripts/542923-wme-workflow-engine",
+    "code_url": "https://update.greasyfork.org/scripts/542923/WME%20Workflow%20Engine.user.js",
+    "code_size": 133288,
+    "license": null,
+    "version": "2.1.4",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542818,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T11:11:22.000Z",
+    "code_updated_at": "2025-11-09T16:18:59.000Z",
+    "namespace": "https://greasyfork.org/users/1440408",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "WME Openers",
+    "description": "Opens StreetView.vn (Ctrl+Alt+F), Mapillary (Ctrl+Alt+G), OSM (Ctrl+Alt+H), or Google Maps (Ctrl+Alt+J) at the current WME map center and zoom level.",
+    "url": "https://greasyfork.org/scripts/542818-wme-openers",
+    "code_url": "https://update.greasyfork.org/scripts/542818/WME%20Openers.user.js",
+    "code_size": 2829,
+    "license": "none",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541106,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T12:19:03.000Z",
+    "code_updated_at": "2025-10-31T12:33:03.000Z",
+    "namespace": "https://greasyfork.org/en/users/1440408-minhtanz1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440408,
+        "name": "minhtanz1",
+        "created_at": "2025-02-27T01:09:42.000Z",
+        "url": "https://greasyfork.org/users/1440408-minhtanz1"
+      }
+    ],
+    "name": "WME Comment Icons",
+    "description": "Displays custom icons on the map based on the text of Map Comments in Vietnam.",
+    "url": "https://greasyfork.org/scripts/541106-wme-comment-icons",
+    "code_url": "https://update.greasyfork.org/scripts/541106/WME%20Comment%20Icons.user.js",
+    "code_size": 46413,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

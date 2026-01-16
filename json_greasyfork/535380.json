@@ -1,0 +1,33 @@
+{
+  "id": 535380,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T18:56:39.000Z",
+  "code_updated_at": "2025-05-08T20:37:57.000Z",
+  "namespace": "https://greasyfork.org/users/1435046",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1435046,
+      "name": "Cochinver",
+      "created_at": "2025-02-14T13:24:11.000Z",
+      "url": "https://greasyfork.org/users/1435046-cochinver"
+    }
+  ],
+  "name": "YouTube → Supabase Logger (Homepage Only)",
+  "description": "Inserts each YouTube video ID into your Supabase table exactly once—only on the homepage feed",
+  "url": "https://greasyfork.org/scripts/535380-youtube-supabase-logger-homepage-only",
+  "code_url": "https://update.greasyfork.org/scripts/535380/YouTube%20%E2%86%92%20Supabase%20Logger%20%28Homepage%20Only%29.user.js",
+  "code_size": 2375,
+  "license": null,
+  "version": "0.0.1.20250508203757",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

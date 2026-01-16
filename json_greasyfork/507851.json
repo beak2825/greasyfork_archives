@@ -1,0 +1,34 @@
+{
+  "id": 507851,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-10T20:15:29.000Z",
+  "code_updated_at": "2024-09-23T11:06:21.000Z",
+  "namespace": "https://github.com/SnowAgar25",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 984250,
+      "name": "Tsuyumi25",
+      "created_at": "2022-11-17T02:01:25.000Z",
+      "url": "https://greasyfork.org/users/984250-tsuyumi25",
+      "scripts": []
+    }
+  ],
+  "name": "DLsite 譯者工具 檢查作品翻譯狀態",
+  "description": "當滑鼠對準任何含有RJ號href的物件時，將顯示一個預覽框，顯示翻譯報酬和申請情況",
+  "url": "https://greasyfork.org/scripts/507851-dlsite-%E8%AD%AF%E8%80%85%E5%B7%A5%E5%85%B7-%E6%AA%A2%E6%9F%A5%E4%BD%9C%E5%93%81%E7%BF%BB%E8%AD%AF%E7%8B%80%E6%85%8B",
+  "code_url": "https://update.greasyfork.org/scripts/507851/DLsite%20%E8%AD%AF%E8%80%85%E5%B7%A5%E5%85%B7%20%E6%AA%A2%E6%9F%A5%E4%BD%9C%E5%93%81%E7%BF%BB%E8%AD%AF%E7%8B%80%E6%85%8B.user.js",
+  "code_size": 41601,
+  "license": "MIT License",
+  "version": "3.3.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

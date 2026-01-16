@@ -1,0 +1,33 @@
+{
+  "id": 534783,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-03T05:58:06.000Z",
+  "code_updated_at": "2025-05-22T13:12:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465046,
+      "name": "志哥开饭了",
+      "created_at": "2025-05-03T05:52:43.000Z",
+      "url": "https://greasyfork.org/users/1465046-%E5%BF%97%E5%93%A5%E5%BC%80%E9%A5%AD%E4%BA%86"
+    }
+  ],
+  "name": "象视自动同步V1.98版",
+  "description": "优化同步功能，增加提取",
+  "url": "https://greasyfork.org/scripts/534783-%E8%B1%A1%E8%A7%86%E8%87%AA%E5%8A%A8%E5%90%8C%E6%AD%A5v1-98%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/534783/%E8%B1%A1%E8%A7%86%E8%87%AA%E5%8A%A8%E5%90%8C%E6%AD%A5V198%E7%89%88.user.js",
+  "code_size": 20633,
+  "license": null,
+  "version": "1.98",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

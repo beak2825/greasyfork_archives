@@ -1,0 +1,34 @@
+{
+  "id": 547349,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-26T11:53:18.000Z",
+  "code_updated_at": "2025-09-08T22:00:46.000Z",
+  "namespace": "https://blog.valley.town/@zeronox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508973,
+      "name": "ambiguous435",
+      "created_at": "2025-08-26T09:31:45.000Z",
+      "url": "https://greasyfork.org/users/1508973-ambiguous435",
+      "scripts": []
+    }
+  ],
+  "name": "Perplexity AI Model Selector",
+  "description": "Alt+A로 모델 선택 팝업 띄우기. 1-9, 0, -, =로 AI 모델을 선택할 수 있습니다.",
+  "url": "https://greasyfork.org/scripts/547349-perplexity-ai-model-selector",
+  "code_url": "https://update.greasyfork.org/scripts/547349/Perplexity%20AI%20Model%20Selector.user.js",
+  "code_size": 5050,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

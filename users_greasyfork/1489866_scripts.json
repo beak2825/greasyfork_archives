@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541093,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T07:22:12.000Z",
+    "code_updated_at": "2025-06-29T07:22:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489866,
+        "name": "DoctorPeriodtt",
+        "created_at": "2025-06-29T07:05:25.000Z",
+        "url": "https://greasyfork.org/users/1489866-doctorperiodtt"
+      }
+    ],
+    "name": "Ultimate Browser Enhancer (Lite)",
+    "description": "Stream ads skip, cookie accept, reader tools, smart shopping – no API keys needed. With settings & update check.",
+    "url": "https://greasyfork.org/scripts/541093-ultimate-browser-enhancer-lite",
+    "code_url": "https://update.greasyfork.org/scripts/541093/Ultimate%20Browser%20Enhancer%20%28Lite%29.user.js",
+    "code_size": 6722,
+    "license": null,
+    "version": "4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

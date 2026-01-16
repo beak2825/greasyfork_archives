@@ -1,0 +1,33 @@
+{
+  "id": 544702,
+  "daily_installs": 1,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-05T08:43:22.000Z",
+  "code_updated_at": "2025-12-01T05:25:08.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1491160,
+      "name": "Zloy_Litvinenko",
+      "created_at": "2025-07-03T05:46:46.000Z",
+      "url": "https://greasyfork.org/users/1491160-zloy-litvinenko"
+    }
+  ],
+  "name": "BLACK | Скрипт Для Кураторов Форума Z.litvinenko",
+  "description": "Для Кураторов Форума - BLACK RUSSIA | BLACK",
+  "url": "https://greasyfork.org/scripts/544702-black-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-z-litvinenko",
+  "code_url": "https://update.greasyfork.org/scripts/544702/BLACK%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%94%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20Zlitvinenko.user.js",
+  "code_size": 167971,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

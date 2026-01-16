@@ -1,0 +1,34 @@
+{
+  "id": 535631,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-11T08:10:01.000Z",
+  "code_updated_at": "2025-05-11T08:10:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468603,
+      "name": "obineller411",
+      "created_at": "2025-05-11T08:00:59.000Z",
+      "url": "https://greasyfork.org/users/1468603-obineller411",
+      "scripts": []
+    }
+  ],
+  "name": "哔哩哔哩终极优化工具箱（自用整合）",
+  "description": "全面优化哔哩哔哩体验：禁用 P2P CDN、移除鸿蒙字体、阻止 WebRTC、去除地址栏多余参数、禁用上报数据、未登录时自动试用最高画质、去广告、首页和动态优化、直播原画、视频裁切、自定义CDN切换等。",
+  "url": "https://greasyfork.org/scripts/535631-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%BB%88%E6%9E%81%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1-%E8%87%AA%E7%94%A8%E6%95%B4%E5%90%88",
+  "code_url": "https://update.greasyfork.org/scripts/535631/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%BB%88%E6%9E%81%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7%E7%AE%B1%EF%BC%88%E8%87%AA%E7%94%A8%E6%95%B4%E5%90%88%EF%BC%89.user.js",
+  "code_size": 23507,
+  "license": "GNU General Public License v3.0 only",
+  "version": "6.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

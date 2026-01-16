@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523672,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T16:27:04.000Z",
+    "code_updated_at": "2025-01-13T16:27:04.000Z",
+    "namespace": "xuyiming.open@outlook.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 14344,
+        "name": "xymopen",
+        "created_at": "2015-08-16T14:52:40.000Z",
+        "url": "https://greasyfork.org/users/14344-xymopen"
+      }
+    ],
+    "name": "Webpack Hacks",
+    "description": "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED",
+    "url": "https://greasyfork.org/scripts/523672-webpack-hacks",
+    "code_url": "https://update.greasyfork.org/scripts/523672/1520050/Webpack%20Hacks.js",
+    "code_size": 10409,
+    "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

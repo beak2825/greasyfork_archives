@@ -1,0 +1,59 @@
+{
+  "id": 523287,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T08:32:59.000Z",
+  "code_updated_at": "2025-01-09T08:32:59.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421088,
+      "name": "zaggerj",
+      "created_at": "2025-01-09T02:09:02.000Z",
+      "url": "https://greasyfork.org/users/1421088-zaggerj",
+      "scripts": [
+        {
+          "id": 523287,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-09T08:32:59.000Z",
+          "code_updated_at": "2025-01-09T08:32:59.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "zentao tool",
+          "description": "仅针对 OS-EASY 适配，标记 bug 留存时间、解决方案填写人提示、计算每日工时、一键复制解决的 bug、解决指派 bug 强制填写工时、Bug 点击在新标签页打开",
+          "url": "https://greasyfork.org/scripts/523287-zentao-tool",
+          "code_url": "https://update.greasyfork.org/scripts/523287/zentao%20tool.user.js",
+          "code_size": 22848,
+          "license": "GPLv3",
+          "version": "1.4.1",
+          "locale": "da",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "zentao tool",
+  "description": "仅针对 OS-EASY 适配，标记 bug 留存时间、解决方案填写人提示、计算每日工时、一键复制解决的 bug、解决指派 bug 强制填写工时、Bug 点击在新标签页打开",
+  "url": "https://greasyfork.org/scripts/523287-zentao-tool",
+  "code_url": "https://update.greasyfork.org/scripts/523287/zentao%20tool.user.js",
+  "code_size": 22848,
+  "license": "GPLv3",
+  "version": "1.4.1",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

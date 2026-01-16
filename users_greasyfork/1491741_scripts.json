@@ -1,0 +1,101 @@
+[
+  {
+    "id": 541691,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T03:56:00.000Z",
+    "code_updated_at": "2025-07-05T03:56:00.000Z",
+    "namespace": "https://ugphone.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491741,
+        "name": "hiuvc",
+        "created_at": "2025-07-05T02:30:43.000Z",
+        "url": "https://greasyfork.org/users/1491741-hiuvc"
+      }
+    ],
+    "name": "Tool UgPhone PRO MAX",
+    "description": "Tự động đăng nhập và mua máy trên UgPhone",
+    "url": "https://greasyfork.org/scripts/541691-tool-ugphone-pro-max",
+    "code_url": "https://update.greasyfork.org/scripts/541691/Tool%20UgPhone%20PRO%20MAX.user.js",
+    "code_size": 7246,
+    "license": null,
+    "version": "2.3",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541685,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T02:45:26.000Z",
+    "code_updated_at": "2025-07-05T02:45:26.000Z",
+    "namespace": "https://ugphone.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491741,
+        "name": "hiuvc",
+        "created_at": "2025-07-05T02:30:43.000Z",
+        "url": "https://greasyfork.org/users/1491741-hiuvc"
+      }
+    ],
+    "name": "Tool UgPhone PRO MAX (Mobile UI)",
+    "description": "Tự động đăng nhập và mua máy trên UgPhone - hỗ trợ mobile",
+    "url": "https://greasyfork.org/scripts/541685-tool-ugphone-pro-max-mobile-ui",
+    "code_url": "https://update.greasyfork.org/scripts/541685/Tool%20UgPhone%20PRO%20MAX%20%28Mobile%20UI%29.user.js",
+    "code_size": 5969,
+    "license": null,
+    "version": "2.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541683,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T02:38:50.000Z",
+    "code_updated_at": "2025-07-05T02:38:50.000Z",
+    "namespace": "https://ugphone.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491741,
+        "name": "hiuvc",
+        "created_at": "2025-07-05T02:30:43.000Z",
+        "url": "https://greasyfork.org/users/1491741-hiuvc"
+      }
+    ],
+    "name": "Tool UgPhone PRO MAX",
+    "description": "Tự động đăng nhập và mua máy trên UgPhone",
+    "url": "https://greasyfork.org/scripts/541683-tool-ugphone-pro-max",
+    "code_url": "https://update.greasyfork.org/scripts/541683/Tool%20UgPhone%20PRO%20MAX.user.js",
+    "code_size": 5573,
+    "license": null,
+    "version": "2.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

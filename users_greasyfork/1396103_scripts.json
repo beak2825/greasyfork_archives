@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517292,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-14T08:17:59.000Z",
+    "code_updated_at": "2024-11-14T08:29:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1396103,
+        "name": "reyearx001",
+        "created_at": "2024-11-14T08:15:31.000Z",
+        "url": "https://greasyfork.org/users/1396103-reyearx001"
+      }
+    ],
+    "name": "pingan_login",
+    "description": "用于平安账号登录树莓派，地址为自己的树莓派",
+    "url": "https://greasyfork.org/scripts/517292-pingan-login",
+    "code_url": "https://update.greasyfork.org/scripts/517292/pingan_login.user.js",
+    "code_size": 3553,
+    "license": "MIT License",
+    "version": "v3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

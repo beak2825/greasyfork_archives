@@ -1,0 +1,68 @@
+[
+  {
+    "id": 516599,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-09T21:45:40.000Z",
+    "code_updated_at": "2024-11-09T21:45:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1390284,
+        "name": "fredtheceo",
+        "created_at": "2024-11-02T23:16:48.000Z",
+        "url": "https://greasyfork.org/users/1390284-fredtheceo"
+      }
+    ],
+    "name": "automatically bot youtube views with proxy",
+    "description": "free youtube proxy viewbot",
+    "url": "https://greasyfork.org/scripts/516599-automatically-bot-youtube-views-with-proxy",
+    "code_url": "https://update.greasyfork.org/scripts/516599/automatically%20bot%20youtube%20views%20with%20proxy.user.js",
+    "code_size": 1833,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515472,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T23:18:02.000Z",
+    "code_updated_at": "2024-11-02T23:18:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1390284,
+        "name": "fredtheceo",
+        "created_at": "2024-11-02T23:16:48.000Z",
+        "url": "https://greasyfork.org/users/1390284-fredtheceo"
+      }
+    ],
+    "name": "Simple Theme for Kick.com",
+    "description": "A simple theme for Kick.com",
+    "url": "https://greasyfork.org/scripts/515472-simple-theme-for-kick-com",
+    "code_url": "https://update.greasyfork.org/scripts/515472/Simple%20Theme%20for%20Kickcom.user.js",
+    "code_size": 1102,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

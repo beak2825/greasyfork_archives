@@ -1,0 +1,167 @@
+[
+  {
+    "id": 551167,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T16:56:30.000Z",
+    "code_updated_at": "2025-10-12T13:46:31.000Z",
+    "namespace": "wwdboy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952577,
+        "name": "wwdboy",
+        "created_at": "2022-08-30T15:26:51.000Z",
+        "url": "https://greasyfork.org/users/952577-wwdboy"
+      }
+    ],
+    "name": "随机网页背景，适用手机",
+    "description": "使用Chrome以及stylus插件获得完整体验",
+    "url": "https://greasyfork.org/scripts/551167-%E9%9A%8F%E6%9C%BA%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF-%E9%80%82%E7%94%A8%E6%89%8B%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/551167/%E9%9A%8F%E6%9C%BA%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF%EF%BC%8C%E9%80%82%E7%94%A8%E6%89%8B%E6%9C%BA.user.js",
+    "code_size": 2354,
+    "license": null,
+    "version": "1.1.9.91",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532498,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T06:50:57.000Z",
+    "code_updated_at": "2025-11-03T07:06:38.000Z",
+    "namespace": "wwdboy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952577,
+        "name": "wwdboy",
+        "created_at": "2022-08-30T15:26:51.000Z",
+        "url": "https://greasyfork.org/users/952577-wwdboy"
+      }
+    ],
+    "name": "随机网页背景",
+    "description": "公开第一版。随机网页背景，自带图片适用于电脑，可自行添加或删减图片地址以适应自己需要，亦可用于手机支持脚本的浏览器，配合这个脚本体验更佳：https://update.greasyfork.org/scripts/532495/%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF%E8%B0%83%E8%8A%82%E5%99%A8.user.js。能力有限，不喜勿喷。",
+    "url": "https://greasyfork.org/scripts/532498-%E9%9A%8F%E6%9C%BA%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF",
+    "code_url": "https://update.greasyfork.org/scripts/532498/%E9%9A%8F%E6%9C%BA%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF.user.js",
+    "code_size": 3870,
+    "license": null,
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532495,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T06:40:22.000Z",
+    "code_updated_at": "2026-01-06T18:58:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952577,
+        "name": "wwdboy",
+        "created_at": "2022-08-30T15:26:51.000Z",
+        "url": "https://greasyfork.org/users/952577-wwdboy"
+      }
+    ],
+    "name": "网页背景调节器",
+    "description": "调整网页下方背景的透明度、颜色遮罩、模糊度，并支持上传本地图片作为背景。优化 UI 美观性并按域名单独记忆设置，反转遮罩透明度逻辑，支持自定义默认配置，重置恢复页面原始状态，Dark 模式下 UI 面板背景变黑，添加中英文切换，修复百分比更新、卡顿、元素错位、关闭按钮失效问题，保存默认配置时应用到所有网站。",
+    "url": "https://greasyfork.org/scripts/532495-%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF%E8%B0%83%E8%8A%82%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/532495/%E7%BD%91%E9%A1%B5%E8%83%8C%E6%99%AF%E8%B0%83%E8%8A%82%E5%99%A8.user.js",
+    "code_size": 36577,
+    "license": "MIT License",
+    "version": "1.72.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 510100,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-25T08:18:22.000Z",
+    "code_updated_at": "2024-10-05T16:59:40.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952577,
+        "name": "wwdboy",
+        "created_at": "2022-08-30T15:26:51.000Z",
+        "url": "https://greasyfork.org/users/952577-wwdboy"
+      }
+    ],
+    "name": "自定义背景-手机",
+    "description": "自定义网页背景",
+    "url": "https://greasyfork.org/scripts/510100-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%83%8C%E6%99%AF-%E6%89%8B%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/510100/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%83%8C%E6%99%AF-%E6%89%8B%E6%9C%BA.user.js",
+    "code_size": 3442,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 510097,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-25T06:59:36.000Z",
+    "code_updated_at": "2024-09-25T06:59:35.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 952577,
+        "name": "wwdboy",
+        "created_at": "2022-08-30T15:26:51.000Z",
+        "url": "https://greasyfork.org/users/952577-wwdboy"
+      }
+    ],
+    "name": "浏览器背景",
+    "description": "修改浏览器背景，请自行修改图片链接",
+    "url": "https://greasyfork.org/scripts/510097-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%83%8C%E6%99%AF",
+    "code_url": "https://update.greasyfork.org/scripts/510097/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%83%8C%E6%99%AF.user.js",
+    "code_size": 4747,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 515225,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-01T14:49:02.000Z",
+    "code_updated_at": "2024-11-01T14:49:02.000Z",
+    "namespace": "Steam Fix RU (Only store.css)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 660905,
+        "name": "Danzo",
+        "created_at": "2020-06-28T12:16:57.000Z",
+        "url": "https://greasyfork.org/users/660905-danzo"
+      }
+    ],
+    "name": "Steam Fix RU (Only store.css)",
+    "description": "Убирает параметр `l=russian` из URL только для store.css",
+    "url": "https://greasyfork.org/scripts/515225-steam-fix-ru-only-store-css",
+    "code_url": "https://update.greasyfork.org/scripts/515225/Steam%20Fix%20RU%20%28Only%20storecss%29.user.js",
+    "code_size": 2340,
+    "license": null,
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515187,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-01T10:08:53.000Z",
+    "code_updated_at": "2024-11-01T12:35:15.000Z",
+    "namespace": "Steam Fix RU",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 660905,
+        "name": "Danzo",
+        "created_at": "2020-06-28T12:16:57.000Z",
+        "url": "https://greasyfork.org/users/660905-danzo"
+      }
+    ],
+    "name": "Steam Fix RU",
+    "description": "Убирает параметр `l=russian` из URL для CSS и JS",
+    "url": "https://greasyfork.org/scripts/515187-steam-fix-ru",
+    "code_url": "https://update.greasyfork.org/scripts/515187/Steam%20Fix%20RU.user.js",
+    "code_size": 2226,
+    "license": null,
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

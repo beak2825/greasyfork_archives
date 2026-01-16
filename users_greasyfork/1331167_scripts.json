@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500773,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-16T05:44:11.000Z",
+    "code_updated_at": "2024-07-16T06:17:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1331167,
+        "name": "历飞雨yyds",
+        "created_at": "2024-07-10T07:25:52.000Z",
+        "url": "https://greasyfork.org/users/1331167-%E5%8E%86%E9%A3%9E%E9%9B%A8yyds"
+      }
+    ],
+    "name": "斗鱼直播间有些右下角游戏广告",
+    "description": "广告关闭 启用脚本后F5刷新页面 出现脚本红点代表生效",
+    "url": "https://greasyfork.org/scripts/500773-%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%9C%89%E4%BA%9B%E5%8F%B3%E4%B8%8B%E8%A7%92%E6%B8%B8%E6%88%8F%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/500773/%E6%96%97%E9%B1%BC%E7%9B%B4%E6%92%AD%E9%97%B4%E6%9C%89%E4%BA%9B%E5%8F%B3%E4%B8%8B%E8%A7%92%E6%B8%B8%E6%88%8F%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 776,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

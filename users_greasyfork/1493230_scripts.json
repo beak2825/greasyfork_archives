@@ -1,0 +1,68 @@
+[
+  {
+    "id": 544847,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-06T19:16:44.000Z",
+    "code_updated_at": "2025-08-06T19:16:44.000Z",
+    "namespace": "http://turbobricks.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493230,
+        "name": "Eugene Meuwissen",
+        "created_at": "2025-07-09T16:54:23.000Z",
+        "url": "https://greasyfork.org/users/1493230-eugene-meuwissen"
+      }
+    ],
+    "name": "PIHB - Pre Interstitial Helper Buttons",
+    "description": "Restores navigation buttons to top of page in mobile browsers,",
+    "url": "https://greasyfork.org/scripts/544847-pihb-pre-interstitial-helper-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/544847/PIHB%20-%20Pre%20Interstitial%20Helper%20Buttons.user.js",
+    "code_size": 809,
+    "license": "gnu gpl",
+    "version": "122",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542128,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-09T16:57:26.000Z",
+    "code_updated_at": "2025-08-06T19:34:52.000Z",
+    "namespace": "http://turbobricks.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493230,
+        "name": "Eugene Meuwissen",
+        "created_at": "2025-07-09T16:54:23.000Z",
+        "url": "https://greasyfork.org/users/1493230-eugene-meuwissen"
+      }
+    ],
+    "name": "TurboFicks",
+    "description": "Fixes broken links on Turbobricks",
+    "url": "https://greasyfork.org/scripts/542128-turboficks",
+    "code_url": "https://update.greasyfork.org/scripts/542128/TurboFicks.user.js",
+    "code_size": 1672,
+    "license": "gnu gpl",
+    "version": "264",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

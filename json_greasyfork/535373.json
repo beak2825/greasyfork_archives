@@ -1,0 +1,33 @@
+{
+  "id": 535373,
+  "daily_installs": 0,
+  "total_installs": 276,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T16:56:32.000Z",
+  "code_updated_at": "2025-05-08T16:56:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 770702,
+      "name": "cccaaannn",
+      "created_at": "2021-05-10T20:10:12.000Z",
+      "url": "https://greasyfork.org/users/770702-cccaaannn"
+    }
+  ],
+  "name": "Remove Instagram login popup",
+  "description": "Removes login popup that is shown after scroll",
+  "url": "https://greasyfork.org/scripts/535373-remove-instagram-login-popup",
+  "code_url": "https://update.greasyfork.org/scripts/535373/Remove%20Instagram%20login%20popup.user.js",
+  "code_size": 800,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

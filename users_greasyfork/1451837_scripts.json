@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536627,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-20T18:33:05.000Z",
+    "code_updated_at": "2025-05-20T18:33:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451837,
+        "name": "oovz",
+        "created_at": "2025-03-30T02:27:36.000Z",
+        "url": "https://greasyfork.org/users/1451837-oovz"
+      }
+    ],
+    "name": "晋江章节修改高亮",
+    "description": "高亮修改过的章节，区别首发时间和更新时间",
+    "url": "https://greasyfork.org/scripts/536627-%E6%99%8B%E6%B1%9F%E7%AB%A0%E8%8A%82%E4%BF%AE%E6%94%B9%E9%AB%98%E4%BA%AE",
+    "code_url": "https://update.greasyfork.org/scripts/536627/%E6%99%8B%E6%B1%9F%E7%AB%A0%E8%8A%82%E4%BF%AE%E6%94%B9%E9%AB%98%E4%BA%AE.user.js",
+    "code_size": 8529,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532897,
+    "daily_installs": 0,
+    "total_installs": 110,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-15T05:48:00.000Z",
+    "code_updated_at": "2025-05-29T08:22:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451837,
+        "name": "oovz",
+        "created_at": "2025-03-30T02:27:36.000Z",
+        "url": "https://greasyfork.org/users/1451837-oovz"
+      }
+    ],
+    "name": "Jinjiang Chapter Downloader",
+    "description": "Download chapter content from JinJiang (jjwxc.net)",
+    "url": "https://greasyfork.org/scripts/532897-jinjiang-chapter-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/532897/Jinjiang%20Chapter%20Downloader.user.js",
+    "code_size": 27524,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

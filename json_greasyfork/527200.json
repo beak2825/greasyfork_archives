@@ -1,0 +1,59 @@
+{
+  "id": 527200,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-17T11:06:09.000Z",
+  "code_updated_at": "2025-02-22T09:38:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 311017,
+      "name": "DavidZhang53",
+      "created_at": "2019-06-20T01:57:00.000Z",
+      "url": "https://greasyfork.org/users/311017-davidzhang53",
+      "scripts": [
+        {
+          "id": 527200,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-17T11:06:09.000Z",
+          "code_updated_at": "2025-02-22T09:38:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页保活助手",
+          "description": "【多站点独立配置】智能状态同步 + 跨Tab保活控制（每个网站独立设置）+AJAX心跳",
+          "url": "https://greasyfork.org/scripts/527200-%E7%BD%91%E9%A1%B5%E4%BF%9D%E6%B4%BB%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/527200/%E7%BD%91%E9%A1%B5%E4%BF%9D%E6%B4%BB%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 11818,
+          "license": "MIT License",
+          "version": "5.2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页保活助手",
+  "description": "【多站点独立配置】智能状态同步 + 跨Tab保活控制（每个网站独立设置）+AJAX心跳",
+  "url": "https://greasyfork.org/scripts/527200-%E7%BD%91%E9%A1%B5%E4%BF%9D%E6%B4%BB%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/527200/%E7%BD%91%E9%A1%B5%E4%BF%9D%E6%B4%BB%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 11818,
+  "license": "MIT License",
+  "version": "5.2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

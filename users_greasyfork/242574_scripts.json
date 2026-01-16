@@ -1,0 +1,35 @@
+[
+  {
+    "id": 506703,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-04T02:23:59.000Z",
+    "code_updated_at": "2024-09-05T05:05:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 242574,
+        "name": "uJZk",
+        "created_at": "2019-01-27T18:50:53.000Z",
+        "url": "https://greasyfork.org/users/242574-ujzk"
+      }
+    ],
+    "name": "NGA 访客直接访问",
+    "description": "解决“访客不能直接访问”",
+    "url": "https://greasyfork.org/scripts/506703-nga-%E8%AE%BF%E5%AE%A2%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE",
+    "code_url": "https://update.greasyfork.org/scripts/506703/NGA%20%E8%AE%BF%E5%AE%A2%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE.user.js",
+    "code_size": 923,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

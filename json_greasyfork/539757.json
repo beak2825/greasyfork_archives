@@ -1,0 +1,33 @@
+{
+  "id": 539757,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-17T14:10:58.000Z",
+  "code_updated_at": "2025-10-06T02:03:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 650900,
+      "name": "PRO-2684",
+      "created_at": "2020-06-25T07:52:09.000Z",
+      "url": "https://greasyfork.org/users/650900-pro-2684"
+    }
+  ],
+  "name": "百度翻译 Plus (Deprecated)",
+  "description": "一系列针对百度翻译的功能增强",
+  "url": "https://greasyfork.org/scripts/539757-%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91-plus-deprecated",
+  "code_url": "https://update.greasyfork.org/scripts/539757/%E7%99%BE%E5%BA%A6%E7%BF%BB%E8%AF%91%20Plus%20%28Deprecated%29.user.js",
+  "code_size": 4075,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

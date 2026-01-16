@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540923,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T09:16:49.000Z",
+    "code_updated_at": "2025-06-27T09:16:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692570,
+        "name": "MarvinXu",
+        "created_at": "2020-10-05T10:03:22.000Z",
+        "url": "https://greasyfork.org/users/692570-marvinxu"
+      }
+    ],
+    "name": "小红书清理点赞",
+    "description": "自动批量取消和添加小红书点赞",
+    "url": "https://greasyfork.org/scripts/540923-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E6%B8%85%E7%90%86%E7%82%B9%E8%B5%9E",
+    "code_url": "https://update.greasyfork.org/scripts/540923/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E6%B8%85%E7%90%86%E7%82%B9%E8%B5%9E.user.js",
+    "code_size": 8815,
+    "license": null,
+    "version": "2025-06-27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 512823,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-16T08:50:45.000Z",
+  "code_updated_at": "2024-10-16T10:21:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1381643,
+      "name": "amadeusk",
+      "created_at": "2024-10-16T08:31:53.000Z",
+      "url": "https://greasyfork.org/users/1381643-amadeusk",
+      "scripts": [
+        {
+          "id": 512823,
+          "daily_installs": 0,
+          "total_installs": 58,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-16T08:50:45.000Z",
+          "code_updated_at": "2024-10-16T10:21:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bypass Paste Restriction",
+          "description": "Allows pasting using Ctrl+V on sites that block it and triggers formatting",
+          "url": "https://greasyfork.org/scripts/512823-bypass-paste-restriction",
+          "code_url": "https://update.greasyfork.org/scripts/512823/Bypass%20Paste%20Restriction.user.js",
+          "code_size": 3116,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bypass Paste Restriction",
+  "description": "Allows pasting using Ctrl+V on sites that block it and triggers formatting",
+  "url": "https://greasyfork.org/scripts/512823-bypass-paste-restriction",
+  "code_url": "https://update.greasyfork.org/scripts/512823/Bypass%20Paste%20Restriction.user.js",
+  "code_size": 3116,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527317,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T10:29:46.000Z",
+    "code_updated_at": "2025-02-18T10:29:46.000Z",
+    "namespace": "pppkkd_auto_pickup",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252486,
+        "name": "Xanthella",
+        "created_at": "2019-03-04T02:54:40.000Z",
+        "url": "https://greasyfork.org/users/252486-xanthella"
+      }
+    ],
+    "name": "Lokacijske usluge",
+    "description": "Lokacijske usluge，Lokacijske usluge",
+    "url": "https://greasyfork.org/scripts/527317-lokacijske-usluge",
+    "code_url": "https://update.greasyfork.org/scripts/527317/Lokacijske%20usluge.user.js",
+    "code_size": 1052,
+    "license": "AGPL License",
+    "version": "1.0.1",
+    "locale": "hr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511827,
+    "daily_installs": 0,
+    "total_installs": 10288,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-08T03:18:20.000Z",
+    "code_updated_at": "2024-10-10T07:07:06.000Z",
+    "namespace": "Xanthella_Onestep_Search",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 252486,
+        "name": "Xanthella",
+        "created_at": "2019-03-04T02:54:40.000Z",
+        "url": "https://greasyfork.org/users/252486-xanthella"
+      }
+    ],
+    "name": "Onestep Search - 一键快搜，纵享丝滑搜索体验",
+    "description": "任意网页【快速按2次Ctrl键】均可开启资源搜索，并且可自由切换搜索平台，搜索关键词会自动填充（关键词来源：1、鼠标选中的词；2、已经搜索使用的词），避免关键词重复输入。👉时间就是金钱，快速搜索，一步直达👈 。脚本现在已内置常用搜索平台，包括：常见搜索引擎、视频网站、音乐网站、购物网站、知识搜索等，更多快捷功能请查看详情~",
+    "url": "https://greasyfork.org/scripts/511827-onestep-search-%E4%B8%80%E9%94%AE%E5%BF%AB%E6%90%9C-%E7%BA%B5%E4%BA%AB%E4%B8%9D%E6%BB%91%E6%90%9C%E7%B4%A2%E4%BD%93%E9%AA%8C",
+    "code_url": "https://update.greasyfork.org/scripts/511827/Onestep%20Search%20-%20%E4%B8%80%E9%94%AE%E5%BF%AB%E6%90%9C%EF%BC%8C%E7%BA%B5%E4%BA%AB%E4%B8%9D%E6%BB%91%E6%90%9C%E7%B4%A2%E4%BD%93%E9%AA%8C.user.js",
+    "code_size": 155586,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

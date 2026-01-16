@@ -1,0 +1,59 @@
+{
+  "id": 534594,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-01T04:17:58.000Z",
+  "code_updated_at": "2025-05-01T04:22:24.000Z",
+  "namespace": "https://github.com/jimmyorz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 705401,
+      "name": "jimmyorz",
+      "created_at": "2020-11-15T18:26:28.000Z",
+      "url": "https://greasyfork.org/users/705401-jimmyorz",
+      "scripts": [
+        {
+          "id": 534594,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-01T04:17:58.000Z",
+          "code_updated_at": "2025-05-01T04:22:24.000Z",
+          "namespace": "https://github.com/jimmyorz",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "KKTV 隱藏浮水印",
+          "description": "移除 KKTV 影片上的浮水印，移植自mickey87910@github",
+          "url": "https://greasyfork.org/scripts/534594-kktv-%E9%9A%B1%E8%97%8F%E6%B5%AE%E6%B0%B4%E5%8D%B0",
+          "code_url": "https://update.greasyfork.org/scripts/534594/KKTV%20%E9%9A%B1%E8%97%8F%E6%B5%AE%E6%B0%B4%E5%8D%B0.user.js",
+          "code_size": 602,
+          "license": null,
+          "version": "1.1",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "KKTV 隱藏浮水印",
+  "description": "移除 KKTV 影片上的浮水印，移植自mickey87910@github",
+  "url": "https://greasyfork.org/scripts/534594-kktv-%E9%9A%B1%E8%97%8F%E6%B5%AE%E6%B0%B4%E5%8D%B0",
+  "code_url": "https://update.greasyfork.org/scripts/534594/KKTV%20%E9%9A%B1%E8%97%8F%E6%B5%AE%E6%B0%B4%E5%8D%B0.user.js",
+  "code_size": 602,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 528752,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-04T12:45:48.000Z",
+  "code_updated_at": "2025-03-04T12:45:48.000Z",
+  "namespace": "lr-toolbox-VideoPlay",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1442232,
+      "name": "xiaozhangkeji",
+      "created_at": "2025-03-04T12:16:35.000Z",
+      "url": "https://greasyfork.org/users/1442232-xiaozhangkeji",
+      "scripts": []
+    }
+  ],
+  "name": "💯 xiaozhangkeji— 全网 VIP 视频破解去广告",
+  "description": "⭕精选解析线路为大家提供优酷、爱奇艺、腾讯、B站(bilibili)、乐视、芒果、搜狐、PPTV等各大视频网站(PC+移动端)视频解析服务，让你省去购买视频VIP费用。⭕去除原视频广告。⭕可自由增加修改线路。⭕可自由选择站内外解析。⭕可自由修改图标位置、大小、透明度。❌拒绝收费。⭕持续更新。",
+  "url": "https://greasyfork.org/scripts/528752-xiaozhangkeji-%E5%85%A8%E7%BD%91-vip-%E8%A7%86%E9%A2%91%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/528752/%F0%9F%92%AF%20xiaozhangkeji%E2%80%94%20%E5%85%A8%E7%BD%91%20VIP%20%E8%A7%86%E9%A2%91%E7%A0%B4%E8%A7%A3%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 114867,
+  "license": null,
+  "version": "1.0.37",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

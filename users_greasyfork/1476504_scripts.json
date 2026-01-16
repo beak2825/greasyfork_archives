@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537691,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-29T20:58:51.000Z",
+    "code_updated_at": "2025-05-29T20:58:51.000Z",
+    "namespace": "https://greasyfork.org/users/54",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1476504,
+        "name": "Clash Locke",
+        "created_at": "2025-05-29T20:54:00.000Z",
+        "url": "https://greasyfork.org/users/1476504-clash-locke"
+      }
+    ],
+    "name": "Showdown - Traducción al español(ian y nacho)",
+    "description": "Traducción completa y corregida de Pokémon Showdown al castellano",
+    "url": "https://greasyfork.org/scripts/537691-showdown-traducci%C3%B3n-al-espa%C3%B1ol-ian-y-nacho",
+    "code_url": "https://update.greasyfork.org/scripts/537691/Showdown%20-%20Traducci%C3%B3n%20al%20espa%C3%B1ol%28ian%20y%20nacho%29.user.js",
+    "code_size": 38862,
+    "license": null,
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

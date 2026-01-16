@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499687,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-04T16:42:46.000Z",
+    "code_updated_at": "2024-07-18T06:45:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231704,
+        "name": "A. Ryan",
+        "created_at": "2023-12-10T14:20:51.000Z",
+        "url": "https://greasyfork.org/users/1231704-a-ryan"
+      }
+    ],
+    "name": "Кураторы форума Novosibirsk",
+    "description": "Для КФ 34 сервера (Novosibirska)",
+    "url": "https://greasyfork.org/scripts/499687-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-novosibirsk",
+    "code_url": "https://update.greasyfork.org/scripts/499687/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20Novosibirsk.user.js",
+    "code_size": 161426,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

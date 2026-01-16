@@ -30,6 +30,72 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533382,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T05:55:52.000Z",
+    "code_updated_at": "2025-04-20T05:55:51.000Z",
+    "namespace": "https://github.com/notKaiAnderson/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 703117,
+        "name": "Junako.D",
+        "created_at": "2020-11-09T09:15:09.000Z",
+        "url": "https://greasyfork.org/users/703117-junako-d"
+      }
+    ],
+    "name": "Surviv.io input replay recorder",
+    "description": "Records lightweight game recordings, which can be reviewed with any custom mods applied",
+    "url": "https://greasyfork.org/scripts/533382-surviv-io-input-replay-recorder",
+    "code_url": "https://update.greasyfork.org/scripts/533382/Survivio%20input%20replay%20recorder.user.js",
+    "code_size": 25142,
+    "license": "MIT License",
+    "version": "1.0.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 514864,
+    "daily_installs": 2,
+    "total_installs": 160,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-30T13:26:08.000Z",
+    "code_updated_at": "2025-11-15T12:58:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 703117,
+        "name": "Junako.D",
+        "created_at": "2020-11-09T09:15:09.000Z",
+        "url": "https://greasyfork.org/users/703117-junako-d"
+      }
+    ],
+    "name": "Survev.io Dark Cyan Theme w/ FPS & Ping Counter",
+    "description": "skibidi ? ping isnt ping just input lantency to the server LOL",
+    "url": "https://greasyfork.org/scripts/514864-survev-io-dark-cyan-theme-w-fps-ping-counter",
+    "code_url": "https://update.greasyfork.org/scripts/514864/Survevio%20Dark%20Cyan%20Theme%20w%20FPS%20%20Ping%20Counter.user.js",
+    "code_size": 27461,
+    "license": "GNU General Public License v3.0",
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

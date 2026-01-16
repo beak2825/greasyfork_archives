@@ -1,0 +1,134 @@
+[
+  {
+    "id": 531782,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-04T00:53:17.000Z",
+    "code_updated_at": "2025-04-04T01:06:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452914,
+        "name": "Jacki28",
+        "created_at": "2025-04-01T16:50:34.000Z",
+        "url": "https://greasyfork.org/users/1452914-jacki28"
+      }
+    ],
+    "name": "Slither.io AI Bot",
+    "description": "AI bot for Slither.io with toggle key (Z)",
+    "url": "https://greasyfork.org/scripts/531782-slither-io-ai-bot",
+    "code_url": "https://update.greasyfork.org/scripts/531782/Slitherio%20AI%20Bot.user.js",
+    "code_size": 2357,
+    "license": null,
+    "version": "1.3",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531529,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T19:23:27.000Z",
+    "code_updated_at": "2025-04-01T19:26:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452914,
+        "name": "Jacki28",
+        "created_at": "2025-04-01T16:50:34.000Z",
+        "url": "https://greasyfork.org/users/1452914-jacki28"
+      }
+    ],
+    "name": "Moomoo.io Auto Heal",
+    "description": "Auto heal script for moomoo.io",
+    "url": "https://greasyfork.org/scripts/531529-moomoo-io-auto-heal",
+    "code_url": "https://update.greasyfork.org/scripts/531529/Moomooio%20Auto%20Heal.user.js",
+    "code_size": 1108,
+    "license": null,
+    "version": "0.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531525,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T17:54:57.000Z",
+    "code_updated_at": "2025-04-01T18:02:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452914,
+        "name": "Jacki28",
+        "created_at": "2025-04-01T16:50:34.000Z",
+        "url": "https://greasyfork.org/users/1452914-jacki28"
+      }
+    ],
+    "name": "Diep.io Zoom Hack (Guaranteed Working)",
+    "description": "Properly working zoom hack by modifying game view settings",
+    "url": "https://greasyfork.org/scripts/531525-diep-io-zoom-hack-guaranteed-working",
+    "code_url": "https://update.greasyfork.org/scripts/531525/Diepio%20Zoom%20Hack%20%28Guaranteed%20Working%29.user.js",
+    "code_size": 954,
+    "license": null,
+    "version": "5.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531524,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T16:58:16.000Z",
+    "code_updated_at": "2025-04-01T17:22:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452914,
+        "name": "Jacki28",
+        "created_at": "2025-04-01T16:50:34.000Z",
+        "url": "https://greasyfork.org/users/1452914-jacki28"
+      }
+    ],
+    "name": "Slither.io Zoom Control",
+    "description": "Zoom in and out in Slither.io using Z and X keys (safe and undetectable)",
+    "url": "https://greasyfork.org/scripts/531524-slither-io-zoom-control",
+    "code_url": "https://update.greasyfork.org/scripts/531524/Slitherio%20Zoom%20Control.user.js",
+    "code_size": 1313,
+    "license": null,
+    "version": "1.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

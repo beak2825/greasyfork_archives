@@ -1,0 +1,167 @@
+[
+  {
+    "id": 514442,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-28T07:45:35.000Z",
+    "code_updated_at": "2024-10-28T11:08:36.000Z",
+    "namespace": "https://github.com/dadaewqq/fun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184321,
+        "name": "乙二胺",
+        "created_at": "2018-05-06T11:06:40.000Z",
+        "url": "https://greasyfork.org/users/184321-%E4%B9%99%E4%BA%8C%E8%83%BA"
+      }
+    ],
+    "name": "HIO页面 文字可选&右键可点",
+    "description": "移除no-copy类和允许右键",
+    "url": "https://greasyfork.org/scripts/514442-hio%E9%A1%B5%E9%9D%A2-%E6%96%87%E5%AD%97%E5%8F%AF%E9%80%89-%E5%8F%B3%E9%94%AE%E5%8F%AF%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/514442/HIO%E9%A1%B5%E9%9D%A2%20%E6%96%87%E5%AD%97%E5%8F%AF%E9%80%89%E5%8F%B3%E9%94%AE%E5%8F%AF%E7%82%B9.user.js",
+    "code_size": 725,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512701,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T07:09:47.000Z",
+    "code_updated_at": "2024-10-15T07:09:47.000Z",
+    "namespace": "https://github.com/dadaewqq/fun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184321,
+        "name": "乙二胺",
+        "created_at": "2018-05-06T11:06:40.000Z",
+        "url": "https://greasyfork.org/users/184321-%E4%B9%99%E4%BA%8C%E8%83%BA"
+      }
+    ],
+    "name": "hio直播刷礼物数量可手动更改",
+    "description": "可+可-可为0",
+    "url": "https://greasyfork.org/scripts/512701-hio%E7%9B%B4%E6%92%AD%E5%88%B7%E7%A4%BC%E7%89%A9%E6%95%B0%E9%87%8F%E5%8F%AF%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/512701/hio%E7%9B%B4%E6%92%AD%E5%88%B7%E7%A4%BC%E7%89%A9%E6%95%B0%E9%87%8F%E5%8F%AF%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%94%B9.user.js",
+    "code_size": 646,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509023,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-18T10:18:19.000Z",
+    "code_updated_at": "2024-09-20T02:41:18.000Z",
+    "namespace": "https://github.com/dadaewqq/fun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184321,
+        "name": "乙二胺",
+        "created_at": "2018-05-06T11:06:40.000Z",
+        "url": "https://greasyfork.org/users/184321-%E4%B9%99%E4%BA%8C%E8%83%BA"
+      }
+    ],
+    "name": "拦截修改xhr和fetch响应",
+    "description": "修改fetch，xhr等请求",
+    "url": "https://greasyfork.org/scripts/509023-%E6%8B%A6%E6%88%AA%E4%BF%AE%E6%94%B9xhr%E5%92%8Cfetch%E5%93%8D%E5%BA%94",
+    "code_url": "https://update.greasyfork.org/scripts/509023/%E6%8B%A6%E6%88%AA%E4%BF%AE%E6%94%B9xhr%E5%92%8Cfetch%E5%93%8D%E5%BA%94.user.js",
+    "code_size": 6379,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508120,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-12T12:12:28.000Z",
+    "code_updated_at": "2024-09-24T15:33:02.000Z",
+    "namespace": "https://github.com/dadaewqq/fun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184321,
+        "name": "乙二胺",
+        "created_at": "2018-05-06T11:06:40.000Z",
+        "url": "https://greasyfork.org/users/184321-%E4%B9%99%E4%BA%8C%E8%83%BA"
+      }
+    ],
+    "name": "文档下载使能",
+    "description": "在hio文档预览页面上添加一个下载按钮",
+    "url": "https://greasyfork.org/scripts/508120-%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD%E4%BD%BF%E8%83%BD",
+    "code_url": "https://update.greasyfork.org/scripts/508120/%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD%E4%BD%BF%E8%83%BD.user.js",
+    "code_size": 7781,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 507064,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-06T02:26:07.000Z",
+    "code_updated_at": "2024-09-10T18:06:35.000Z",
+    "namespace": "https://github.com/dadaewqq/fun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 184321,
+        "name": "乙二胺",
+        "created_at": "2018-05-06T11:06:40.000Z",
+        "url": "https://greasyfork.org/users/184321-%E4%B9%99%E4%BA%8C%E8%83%BA"
+      }
+    ],
+    "name": "切换andes对话框显示状态",
+    "description": "在对话页面添加两个浮动按钮，点击按钮以切换对话框、对话记录等元素的可见性",
+    "url": "https://greasyfork.org/scripts/507064-%E5%88%87%E6%8D%A2andes%E5%AF%B9%E8%AF%9D%E6%A1%86%E6%98%BE%E7%A4%BA%E7%8A%B6%E6%80%81",
+    "code_url": "https://update.greasyfork.org/scripts/507064/%E5%88%87%E6%8D%A2andes%E5%AF%B9%E8%AF%9D%E6%A1%86%E6%98%BE%E7%A4%BA%E7%8A%B6%E6%80%81.user.js",
+    "code_size": 5000,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

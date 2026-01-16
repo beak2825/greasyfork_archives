@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527979,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T22:06:57.000Z",
+    "code_updated_at": "2025-02-24T22:40:40.000Z",
+    "namespace": "smilenet-202502250555",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1019654,
+        "name": "smilenet",
+        "created_at": "2023-01-31T19:22:47.000Z",
+        "url": "https://greasyfork.org/users/1019654-smilenet"
+      }
+    ],
+    "name": "AGSV banner美化-by原作者IITII",
+    "description": "个人觉得这个banner太大了，稍微调整下样式。想直接隐藏就把下面的 100px 改成 0px",
+    "url": "https://greasyfork.org/scripts/527979-agsv-banner%E7%BE%8E%E5%8C%96-by%E5%8E%9F%E4%BD%9C%E8%80%85iitii",
+    "code_url": "https://update.greasyfork.org/scripts/527979/AGSV%20banner%E7%BE%8E%E5%8C%96-by%E5%8E%9F%E4%BD%9C%E8%80%85IITII.user.js",
+    "code_size": 1569,
+    "license": "MIT License",
+    "version": "0.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

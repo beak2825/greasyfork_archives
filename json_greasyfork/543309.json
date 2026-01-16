@@ -1,0 +1,33 @@
+{
+  "id": 543309,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-22T09:05:16.000Z",
+  "code_updated_at": "2025-07-23T06:24:41.000Z",
+  "namespace": "https://portal.nap.gsic.titech.ac.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497242,
+      "name": "Google Google Google",
+      "created_at": "2025-07-22T08:54:25.000Z",
+      "url": "https://greasyfork.org/users/1497242-google-google-google"
+    }
+  ],
+  "name": "Auto TokyoTech Portal Login 東工大ポータルログイン",
+  "description": "A login script for old TokyoTech Portal.",
+  "url": "https://greasyfork.org/scripts/543309-auto-tokyotech-portal-login-%E6%9D%B1%E5%B7%A5%E5%A4%A7%E3%83%9D%E3%83%BC%E3%82%BF%E3%83%AB%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3",
+  "code_url": "https://update.greasyfork.org/scripts/543309/Auto%20TokyoTech%20Portal%20Login%20%E6%9D%B1%E5%B7%A5%E5%A4%A7%E3%83%9D%E3%83%BC%E3%82%BF%E3%83%AB%E3%83%AD%E3%82%B0%E3%82%A4%E3%83%B3.user.js",
+  "code_size": 4125,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

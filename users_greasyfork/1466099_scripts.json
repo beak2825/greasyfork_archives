@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535039,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T17:35:51.000Z",
+    "code_updated_at": "2025-05-05T17:35:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466099,
+        "name": "Boss Mou",
+        "created_at": "2025-05-05T17:29:00.000Z",
+        "url": "https://greasyfork.org/users/1466099-boss-mou"
+      }
+    ],
+    "name": "ns随机背景图片加载与反代图片链接",
+    "description": "在 https://www.nodeseek.com/ 网站加载随机背景图片，并为加载失败的图片加反代链接；悬浮球开关功能并记住选择；添加切换背景图按钮。",
+    "url": "https://greasyfork.org/scripts/535039-ns%E9%9A%8F%E6%9C%BA%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%8F%8D%E4%BB%A3%E5%9B%BE%E7%89%87%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/535039/ns%E9%9A%8F%E6%9C%BA%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%8F%8D%E4%BB%A3%E5%9B%BE%E7%89%87%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 12839,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

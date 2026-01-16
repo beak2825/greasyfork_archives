@@ -1,0 +1,59 @@
+{
+  "id": 531069,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-27T23:17:10.000Z",
+  "code_updated_at": "2025-06-14T19:04:06.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1437246,
+      "name": "Roman Romanovich",
+      "created_at": "2025-02-19T17:50:43.000Z",
+      "url": "https://greasyfork.org/users/1437246-roman-romanovich",
+      "scripts": [
+        {
+          "id": 530468,
+          "daily_installs": 0,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-21T18:31:34.000Z",
+          "code_updated_at": "2025-07-17T08:13:34.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "N.NOVGOROD | Кураторы форума",
+          "description": "Скрипт для Кураторов форума",
+          "url": "https://greasyfork.org/scripts/530468-n-novgorod-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+          "code_url": "https://update.greasyfork.org/scripts/530468/NNOVGOROD%20%7C%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+          "code_size": 32603,
+          "license": "MIT License",
+          "version": "3.9",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "скрипт....",
+  "description": "скрипт..",
+  "url": "https://greasyfork.org/scripts/531069-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82",
+  "code_url": "https://update.greasyfork.org/scripts/531069/%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82.user.js",
+  "code_size": 7549,
+  "license": "MIT License",
+  "version": "15.14",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

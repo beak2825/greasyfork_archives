@@ -1,0 +1,59 @@
+{
+  "id": 549391,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-13T11:10:45.000Z",
+  "code_updated_at": "2025-09-13T23:13:41.000Z",
+  "namespace": "https://github.com/estudiobrisacriativa/CineBusca-Pro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514547,
+      "name": "estudiobrisacriativa",
+      "created_at": "2025-09-13T10:54:48.000Z",
+      "url": "https://greasyfork.org/users/1514547-estudiobrisacriativa",
+      "scripts": [
+        {
+          "id": 549391,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-13T11:10:45.000Z",
+          "code_updated_at": "2025-09-13T23:13:41.000Z",
+          "namespace": "https://github.com/estudiobrisacriativa/CineBusca-Pro",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CineBusca Pro",
+          "description": "O seu assistente de mídia definitivo. Busque informações detalhadas, trailers e torrents para qualquer filme ou série com um simples atalho (Ctrl+1). Explore lançamentos, veja os títulos mais populares e organize sua lista de favoritos com facilidade.",
+          "url": "https://greasyfork.org/scripts/549391-cinebusca-pro",
+          "code_url": "https://update.greasyfork.org/scripts/549391/CineBusca%20Pro.user.js",
+          "code_size": 50792,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CineBusca Pro",
+  "description": "O seu assistente de mídia definitivo. Busque informações detalhadas, trailers e torrents para qualquer filme ou série com um simples atalho (Ctrl+1). Explore lançamentos, veja os títulos mais populares e organize sua lista de favoritos com facilidade.",
+  "url": "https://greasyfork.org/scripts/549391-cinebusca-pro",
+  "code_url": "https://update.greasyfork.org/scripts/549391/CineBusca%20Pro.user.js",
+  "code_size": 50792,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

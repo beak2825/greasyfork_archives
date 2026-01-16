@@ -1,0 +1,68 @@
+[
+  {
+    "id": 550190,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T23:57:39.000Z",
+    "code_updated_at": "2025-09-20T23:57:39.000Z",
+    "namespace": "https://scratch.mit.edu/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957079,
+        "name": "Yukkku",
+        "created_at": "2022-09-10T23:38:26.000Z",
+        "url": "https://greasyfork.org/users/957079-yukkku"
+      }
+    ],
+    "name": "Scratch JSON Editor",
+    "description": "JSONエディター画面を作る",
+    "url": "https://greasyfork.org/scripts/550190-scratch-json-editor",
+    "code_url": "https://update.greasyfork.org/scripts/550190/Scratch%20JSON%20Editor.user.js",
+    "code_size": 3385,
+    "license": "MIT License",
+    "version": "2025-09-09",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539951,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T06:50:48.000Z",
+    "code_updated_at": "2025-06-19T06:50:48.000Z",
+    "namespace": "http://atcoder.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 957079,
+        "name": "Yukkku",
+        "created_at": "2022-09-10T23:38:26.000Z",
+        "url": "https://greasyfork.org/users/957079-yukkku"
+      }
+    ],
+    "name": "AI補助付きAtCoder",
+    "description": "智神がコードを書きます",
+    "url": "https://greasyfork.org/scripts/539951-ai%E8%A3%9C%E5%8A%A9%E4%BB%98%E3%81%8Datcoder",
+    "code_url": "https://update.greasyfork.org/scripts/539951/AI%E8%A3%9C%E5%8A%A9%E4%BB%98%E3%81%8DAtCoder.user.js",
+    "code_size": 3932,
+    "license": "MIT License",
+    "version": "2025-06-19",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

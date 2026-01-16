@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534694,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-02T06:48:28.000Z",
+    "code_updated_at": "2025-05-02T07:02:03.000Z",
+    "namespace": "https://aliyang.greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464667,
+        "name": "aliyang",
+        "created_at": "2025-05-02T06:39:05.000Z",
+        "url": "https://greasyfork.org/users/1464667-aliyang"
+      }
+    ],
+    "name": "Nidin(你訂) 訂單一鍵複製 & 下載",
+    "description": "於 Nidin(你訂) 訂單頁面加入「複製」與「匯出 CSV」按鈕，方便貼到 Excel／Google Sheets 或下載保存",
+    "url": "https://greasyfork.org/scripts/534694-nidin-%E4%BD%A0%E8%A8%82-%E8%A8%82%E5%96%AE%E4%B8%80%E9%8D%B5%E8%A4%87%E8%A3%BD-%E4%B8%8B%E8%BC%89",
+    "code_url": "https://update.greasyfork.org/scripts/534694/Nidin%28%E4%BD%A0%E8%A8%82%29%20%E8%A8%82%E5%96%AE%E4%B8%80%E9%8D%B5%E8%A4%87%E8%A3%BD%20%20%E4%B8%8B%E8%BC%89.user.js",
+    "code_size": 4519,
+    "license": "MIT © 2025 Ali Yang",
+    "version": "1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

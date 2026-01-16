@@ -1,0 +1,59 @@
+{
+  "id": 536311,
+  "daily_installs": 0,
+  "total_installs": 236,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-05-17T14:59:21.000Z",
+  "code_updated_at": "2025-05-18T12:29:58.000Z",
+  "namespace": "http://www.example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1471288,
+      "name": "fromaaage",
+      "created_at": "2025-05-17T14:47:36.000Z",
+      "url": "https://greasyfork.org/users/1471288-fromaaage",
+      "scripts": [
+        {
+          "id": 536311,
+          "daily_installs": 0,
+          "total_installs": 236,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-05-17T14:59:21.000Z",
+          "code_updated_at": "2025-05-18T12:29:58.000Z",
+          "namespace": "http://www.example.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Grok’s Twitch AdBlaster",
+          "description": "Blocks Twitch.tv ads with Grok’s power",
+          "url": "https://greasyfork.org/scripts/536311-grok-s-twitch-adblaster",
+          "code_url": "https://update.greasyfork.org/scripts/536311/Grok%E2%80%99s%20Twitch%20AdBlaster.user.js",
+          "code_size": 7191,
+          "license": "MIT License",
+          "version": "3.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Grok’s Twitch AdBlaster",
+  "description": "Blocks Twitch.tv ads with Grok’s power",
+  "url": "https://greasyfork.org/scripts/536311-grok-s-twitch-adblaster",
+  "code_url": "https://update.greasyfork.org/scripts/536311/Grok%E2%80%99s%20Twitch%20AdBlaster.user.js",
+  "code_size": 7191,
+  "license": "MIT License",
+  "version": "3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

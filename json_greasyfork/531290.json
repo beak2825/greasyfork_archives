@@ -1,0 +1,33 @@
+{
+  "id": 531290,
+  "daily_installs": 1,
+  "total_installs": 115,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-30T02:29:37.000Z",
+  "code_updated_at": "2025-05-16T05:44:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451837,
+      "name": "oovz",
+      "created_at": "2025-03-30T02:27:36.000Z",
+      "url": "https://greasyfork.org/users/1451837-oovz"
+    }
+  ],
+  "name": "Qidian Chapter Downloader",
+  "description": "Download chapter content from Qidian (qidian.com)",
+  "url": "https://greasyfork.org/scripts/531290-qidian-chapter-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/531290/Qidian%20Chapter%20Downloader.user.js",
+  "code_size": 15251,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

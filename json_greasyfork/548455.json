@@ -1,0 +1,59 @@
+{
+  "id": 548455,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-05T10:44:29.000Z",
+  "code_updated_at": "2025-09-07T07:12:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 734794,
+      "name": "Equalxxp",
+      "created_at": "2021-02-05T13:15:35.000Z",
+      "url": "https://greasyfork.org/users/734794-equalxxp",
+      "scripts": [
+        {
+          "id": 521923,
+          "daily_installs": 1,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-27T04:18:51.000Z",
+          "code_updated_at": "2025-01-03T02:58:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "亚马逊ABA数据自动下载",
+          "description": "通过JS脚本 实现亚马逊ABA数据 在季度、月、周的自动下载   此版本只包括了2024-12-23时期的年、季度、月、周数据 不排除在未来某些数据亚马逊不提供",
+          "url": "https://greasyfork.org/scripts/521923-%E4%BA%9A%E9%A9%AC%E9%80%8Aaba%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/521923/%E4%BA%9A%E9%A9%AC%E9%80%8AABA%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 9562,
+          "license": "MIT License",
+          "version": "1.4.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "查关键词排名Dev",
+  "description": "dev_Test环境 1.startPage 2.并发 3.503等捕获处理 待优化：错误处理(指数退避（Exponential Backoff）策略)、并发策略优化(并发关键词)、结果处理优化(保留排名高的 totalRank 最小的)、网络请求优化、日志 & 可视化优化、代码结构 &可维护性优化。已做:(搜索核心中先统计自然位置再解析)",
+  "url": "https://greasyfork.org/scripts/548455-%E6%9F%A5%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8E%92%E5%90%8Ddev",
+  "code_url": "https://update.greasyfork.org/scripts/548455/%E6%9F%A5%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8E%92%E5%90%8DDev.user.js",
+  "code_size": 39357,
+  "license": "MIT License",
+  "version": "3.9.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

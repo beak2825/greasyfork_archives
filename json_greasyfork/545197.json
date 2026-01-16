@@ -1,0 +1,33 @@
+{
+  "id": 545197,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-09T18:02:04.000Z",
+  "code_updated_at": "2025-08-09T18:02:04.000Z",
+  "namespace": "https://greasyfork.org/ja/users/1328592-naoqv",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1328592,
+      "name": "NaoQv",
+      "created_at": "2024-07-05T08:10:54.000Z",
+      "url": "https://greasyfork.org/users/1328592-naoqv"
+    }
+  ],
+  "name": "hinatazaka46-accordion",
+  "description": "Accordion library for Hinatazaka46 web site",
+  "url": "https://greasyfork.org/scripts/545197-hinatazaka46-accordion",
+  "code_url": "https://update.greasyfork.org/scripts/545197/1638565/hinatazaka46-accordion.js",
+  "code_size": 2483,
+  "license": "MIT License",
+  "version": "0.0.1.20250809180204",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

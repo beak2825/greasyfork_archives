@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529581,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-12T08:08:23.000Z",
+    "code_updated_at": "2025-03-12T08:19:33.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/529581-shoptet-upravit-produkt-jako-link",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1444875,
+        "name": "Michal Fridrich",
+        "created_at": "2025-03-12T08:07:25.000Z",
+        "url": "https://greasyfork.org/users/1444875-michal-fridrich"
+      }
+    ],
+    "name": "Shoptet - upravit produkt jako link",
+    "description": "Make a span clickable by extracting an href and wrapping it in an anchor tag",
+    "url": "https://greasyfork.org/scripts/529581-shoptet-upravit-produkt-jako-link",
+    "code_url": "https://update.greasyfork.org/scripts/529581/Shoptet%20-%20upravit%20produkt%20jako%20link.user.js",
+    "code_size": 1924,
+    "license": null,
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

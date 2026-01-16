@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545843,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-14T16:32:25.000Z",
+    "code_updated_at": "2025-08-14T16:41:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 198166,
+        "name": "Juan Suárez",
+        "created_at": "2018-07-24T14:39:23.000Z",
+        "url": "https://greasyfork.org/users/198166-juan-su%C3%A1rez"
+      }
+    ],
+    "name": "Compensar bot reprogramar citas",
+    "description": "Compensar citas",
+    "url": "https://greasyfork.org/scripts/545843-compensar-bot-reprogramar-citas",
+    "code_url": "https://update.greasyfork.org/scripts/545843/Compensar%20bot%20reprogramar%20citas.user.js",
+    "code_size": 2024,
+    "license": "MIT License",
+    "version": "2025-08-14",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 549759,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-16T19:32:16.000Z",
+    "code_updated_at": "2025-09-16T19:32:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358308,
+        "name": "Paulo Viruet Rios",
+        "created_at": "2024-08-26T22:04:20.000Z",
+        "url": "https://greasyfork.org/users/1358308-paulo-viruet-rios"
+      }
+    ],
+    "name": "Indeed Custom New Jobs Search",
+    "description": "Adds a button to Indeed.com for custom searching new job posts. Requires login.",
+    "url": "https://greasyfork.org/scripts/549759-indeed-custom-new-jobs-search",
+    "code_url": "https://update.greasyfork.org/scripts/549759/Indeed%20Custom%20New%20Jobs%20Search.user.js",
+    "code_size": 2453,
+    "license": "PNDT",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549640,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-15T16:21:52.000Z",
+    "code_updated_at": "2025-09-15T16:21:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358308,
+        "name": "Paulo Viruet Rios",
+        "created_at": "2024-08-26T22:04:20.000Z",
+        "url": "https://greasyfork.org/users/1358308-paulo-viruet-rios"
+      }
+    ],
+    "name": "Indeed Fresh Job Highlighter with User Input (Brave-Optimized)",
+    "description": "Highlights fresh job postings on Indeed.com based on user-specified days. Optimized for Brave browser and logged-in users.",
+    "url": "https://greasyfork.org/scripts/549640-indeed-fresh-job-highlighter-with-user-input-brave-optimized",
+    "code_url": "https://update.greasyfork.org/scripts/549640/Indeed%20Fresh%20Job%20Highlighter%20with%20User%20Input%20%28Brave-Optimized%29.user.js",
+    "code_size": 13679,
+    "license": "PNDT",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506509,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-02T22:36:26.000Z",
+    "code_updated_at": "2024-09-02T22:36:26.000Z",
+    "namespace": "http://javalatte.xyz/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358308,
+        "name": "Paulo Viruet Rios",
+        "created_at": "2024-08-26T22:04:20.000Z",
+        "url": "https://greasyfork.org/users/1358308-paulo-viruet-rios"
+      }
+    ],
+    "name": "Gogoanime Expand Video",
+    "description": "gogoanime Expand main div to make video bigger without  the need to be fullscreen",
+    "url": "https://greasyfork.org/scripts/506509-gogoanime-expand-video",
+    "code_url": "https://update.greasyfork.org/scripts/506509/Gogoanime%20Expand%20Video.user.js",
+    "code_size": 5601,
+    "license": null,
+    "version": "0.2.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505338,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-26T22:08:23.000Z",
+    "code_updated_at": "2024-08-26T22:08:23.000Z",
+    "namespace": "https://github.com/ArjixWasTaken/my-userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358308,
+        "name": "Paulo Viruet Rios",
+        "created_at": "2024-08-26T22:04:20.000Z",
+        "url": "https://greasyfork.org/users/1358308-paulo-viruet-rios"
+      }
+    ],
+    "name": "GogoRandom",
+    "description": "A userscript that adds a random button to gogoanime, that one feature we all wanted years now but didn't get.",
+    "url": "https://greasyfork.org/scripts/505338-gogorandom",
+    "code_url": "https://update.greasyfork.org/scripts/505338/GogoRandom.user.js",
+    "code_size": 2579,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537191,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T09:28:34.000Z",
+    "code_updated_at": "2025-05-25T09:28:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474613,
+        "name": "Duce Lanius",
+        "created_at": "2025-05-25T09:03:08.000Z",
+        "url": "https://greasyfork.org/users/1474613-duce-lanius"
+      }
+    ],
+    "name": "OSM剪报系统lite Alt+C 快速生成 Markdown 链接（多站支持）",
+    "description": "Alt+C 快速复制当前页面标题和链接为 Markdown 格式，知乎支持清洗剪贴板并获取作者。",
+    "url": "https://greasyfork.org/scripts/537191-osm%E5%89%AA%E6%8A%A5%E7%B3%BB%E7%BB%9Flite-alt-c-%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90-markdown-%E9%93%BE%E6%8E%A5-%E5%A4%9A%E7%AB%99%E6%94%AF%E6%8C%81",
+    "code_url": "https://update.greasyfork.org/scripts/537191/OSM%E5%89%AA%E6%8A%A5%E7%B3%BB%E7%BB%9Flite%20Alt%2BC%20%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90%20Markdown%20%E9%93%BE%E6%8E%A5%EF%BC%88%E5%A4%9A%E7%AB%99%E6%94%AF%E6%8C%81%EF%BC%89.user.js",
+    "code_size": 4933,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

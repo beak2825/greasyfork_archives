@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500462,
+    "daily_installs": 0,
+    "total_installs": 228,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-12T19:29:31.000Z",
+    "code_updated_at": "2024-07-12T19:29:31.000Z",
+    "namespace": "Custom Skins",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332457,
+        "name": "Rhonda Patrick",
+        "created_at": "2024-07-12T19:27:37.000Z",
+        "url": "https://greasyfork.org/users/1332457-rhonda-patrick"
+      }
+    ],
+    "name": "Agar.io custom skins",
+    "description": "Custom Skins for Agar.io",
+    "url": "https://greasyfork.org/scripts/500462-agar-io-custom-skins",
+    "code_url": "https://update.greasyfork.org/scripts/500462/Agario%20custom%20skins.user.js",
+    "code_size": 1384,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

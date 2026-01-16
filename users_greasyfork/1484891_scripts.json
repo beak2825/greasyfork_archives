@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539736,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-17T11:03:50.000Z",
+    "code_updated_at": "2025-06-18T07:09:13.000Z",
+    "namespace": "https://scratch.mit.edu/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484891,
+        "name": "VIGARPAST-777-2",
+        "created_at": "2025-06-17T11:00:15.000Z",
+        "url": "https://greasyfork.org/users/1484891-vigarpast-777-2"
+      }
+    ],
+    "name": "VIGARPAST_777 Scratch Ad Manager with Quick Button",
+    "description": "Easily manage your project and studio ads with a quick access button on all Scratch pages except ad pages. Made by VIGARPAST_777.",
+    "url": "https://greasyfork.org/scripts/539736-vigarpast-777-scratch-ad-manager-with-quick-button",
+    "code_url": "https://update.greasyfork.org/scripts/539736/VIGARPAST_777%20Scratch%20Ad%20Manager%20with%20Quick%20Button.user.js",
+    "code_size": 12819,
+    "license": null,
+    "version": "2.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

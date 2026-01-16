@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543990,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T12:51:34.000Z",
+    "code_updated_at": "2025-07-29T12:51:34.000Z",
+    "namespace": "https://www.etcpa.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499498,
+        "name": "Ashley Miller",
+        "created_at": "2025-07-29T12:48:15.000Z",
+        "url": "https://greasyfork.org/users/1499498-ashley-miller"
+      }
+    ],
+    "name": "Edward Torres, CPA Info Box",
+    "description": "Display Edward Torres, CPA PC’s services info on any webpage with a direct link to the official site.",
+    "url": "https://greasyfork.org/scripts/543990-edward-torres-cpa-info-box",
+    "code_url": "https://update.greasyfork.org/scripts/543990/Edward%20Torres%2C%20CPA%20Info%20Box.user.js",
+    "code_size": 1082,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

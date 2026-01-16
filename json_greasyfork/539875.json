@@ -1,0 +1,33 @@
+{
+  "id": 539875,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-18T11:56:51.000Z",
+  "code_updated_at": "2025-06-18T11:56:51.000Z",
+  "namespace": "https://greasyfork.org/users/681644",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 681644,
+      "name": "kater4343587",
+      "created_at": "2020-08-22T01:40:12.000Z",
+      "url": "https://greasyfork.org/users/681644-kater4343587"
+    }
+  ],
+  "name": "多站點搜尋面板",
+  "description": "懸浮關鍵字面板：可自訂搜尋站點,自訂關鍵字,同時在多站點搜尋全部關鍵字,部分拍賣網站有排序功能",
+  "url": "https://greasyfork.org/scripts/539875-%E5%A4%9A%E7%AB%99%E9%BB%9E%E6%90%9C%E5%B0%8B%E9%9D%A2%E6%9D%BF",
+  "code_url": "https://update.greasyfork.org/scripts/539875/%E5%A4%9A%E7%AB%99%E9%BB%9E%E6%90%9C%E5%B0%8B%E9%9D%A2%E6%9D%BF.user.js",
+  "code_size": 14076,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

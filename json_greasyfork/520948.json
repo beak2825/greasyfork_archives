@@ -1,0 +1,59 @@
+{
+  "id": 520948,
+  "daily_installs": 27,
+  "total_installs": 8647,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-12-16T20:40:53.000Z",
+  "code_updated_at": "2024-12-16T20:40:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1411846,
+      "name": "Willi Ott",
+      "created_at": "2024-12-16T20:18:34.000Z",
+      "url": "https://greasyfork.org/users/1411846-willi-ott",
+      "scripts": [
+        {
+          "id": 520948,
+          "daily_installs": 27,
+          "total_installs": 8647,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-12-16T20:40:53.000Z",
+          "code_updated_at": "2024-12-16T20:40:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Krunker Cheating Software 0.8.0",
+          "description": "Enhanced Krunker Cheat Script (v0.8.0) with AimBot, AimAssist, ESP, High Jump, FPS Boost, Speed Boost, Auto Shoot, Auto Jump and Recoil Compensation",
+          "url": "https://greasyfork.org/scripts/520948-krunker-cheating-software-0-8-0",
+          "code_url": "https://update.greasyfork.org/scripts/520948/Krunker%20Cheating%20Software%20080.user.js",
+          "code_size": 30842,
+          "license": null,
+          "version": "0.8.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Krunker Cheating Software 0.8.0",
+  "description": "Enhanced Krunker Cheat Script (v0.8.0) with AimBot, AimAssist, ESP, High Jump, FPS Boost, Speed Boost, Auto Shoot, Auto Jump and Recoil Compensation",
+  "url": "https://greasyfork.org/scripts/520948-krunker-cheating-software-0-8-0",
+  "code_url": "https://update.greasyfork.org/scripts/520948/Krunker%20Cheating%20Software%20080.user.js",
+  "code_size": 30842,
+  "license": null,
+  "version": "0.8.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

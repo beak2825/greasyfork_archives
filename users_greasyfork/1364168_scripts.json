@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507215,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-06T22:46:07.000Z",
+    "code_updated_at": "2024-09-06T22:46:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1364168,
+        "name": "scapocchia",
+        "created_at": "2024-09-06T22:42:25.000Z",
+        "url": "https://greasyfork.org/users/1364168-scapocchia"
+      }
+    ],
+    "name": "AnimeUnity Cinema Mode",
+    "description": "Enable full-width video play",
+    "url": "https://greasyfork.org/scripts/507215-animeunity-cinema-mode",
+    "code_url": "https://update.greasyfork.org/scripts/507215/AnimeUnity%20Cinema%20Mode.user.js",
+    "code_size": 1518,
+    "license": "GNU",
+    "version": "2024-08-30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

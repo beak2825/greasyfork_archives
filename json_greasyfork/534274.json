@@ -1,0 +1,34 @@
+{
+  "id": 534274,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-28T11:33:06.000Z",
+  "code_updated_at": "2025-04-30T17:01:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463179,
+      "name": "Lesch Epifania",
+      "created_at": "2025-04-28T11:29:58.000Z",
+      "url": "https://greasyfork.org/users/1463179-lesch-epifania",
+      "scripts": []
+    }
+  ],
+  "name": "AMEX Code Helper (通知设置保存优化)",
+  "description": "自动提交AMEX offer code和WOC code，防止会话超时，支持批量测试，自动识别链接有效性，并记录结果 (已优化同步逻辑和通知设置保存)",
+  "url": "https://greasyfork.org/scripts/534274-amex-code-helper-%E9%80%9A%E7%9F%A5%E8%AE%BE%E7%BD%AE%E4%BF%9D%E5%AD%98%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/534274/AMEX%20Code%20Helper%20%28%E9%80%9A%E7%9F%A5%E8%AE%BE%E7%BD%AE%E4%BF%9D%E5%AD%98%E4%BC%98%E5%8C%96%29.user.js",
+  "code_size": 123011,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

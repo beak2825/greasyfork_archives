@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534615,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-01T08:18:46.000Z",
+    "code_updated_at": "2025-05-01T08:18:46.000Z",
+    "namespace": "https://poki.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464330,
+        "name": "superhacker",
+        "created_at": "2025-05-01T08:09:02.000Z",
+        "url": "https://greasyfork.org/users/1464330-superhacker"
+      }
+    ],
+    "name": "Poki 游戏全屏/Poki game full screen",
+    "description": "Maximize the poki game window and remove navigation bar",
+    "url": "https://greasyfork.org/scripts/534615-poki-%E6%B8%B8%E6%88%8F%E5%85%A8%E5%B1%8F-poki-game-full-screen",
+    "code_url": "https://update.greasyfork.org/scripts/534615/Poki%20%E6%B8%B8%E6%88%8F%E5%85%A8%E5%B1%8FPoki%20game%20full%20screen.user.js",
+    "code_size": 1501,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 526663,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T10:48:05.000Z",
+    "code_updated_at": "2025-02-12T10:48:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342119,
+        "name": "DeHydra",
+        "created_at": "2024-07-29T18:21:21.000Z",
+        "url": "https://greasyfork.org/users/1342119-dehydra"
+      }
+    ],
+    "name": "WorkHelper",
+    "description": "Helper for work",
+    "url": "https://greasyfork.org/scripts/526663-workhelper",
+    "code_url": "https://update.greasyfork.org/scripts/526663/WorkHelper.user.js",
+    "code_size": 7255,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502111,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T19:48:42.000Z",
+    "code_updated_at": "2024-08-01T18:36:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342119,
+        "name": "DeHydra",
+        "created_at": "2024-07-29T18:21:21.000Z",
+        "url": "https://greasyfork.org/users/1342119-dehydra"
+      }
+    ],
+    "name": "Автоматическое заполнение формы списания",
+    "description": "Скрипт автоматически вставляет в поле \"Сумма\" сумму к списанию в размере 101. А так же добавляет в коментарий количество привязанных карт у клиента. Если карт не добавлено, страница сама закроется",
+    "url": "https://greasyfork.org/scripts/502111-%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5-%D0%B7%D0%B0%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-%D1%84%D0%BE%D1%80%D0%BC%D1%8B-%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/502111/%D0%90%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5%20%D0%B7%D0%B0%D0%BF%D0%BE%D0%BB%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%84%D0%BE%D1%80%D0%BC%D1%8B%20%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F.user.js",
+    "code_size": 1572,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502106,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T19:00:08.000Z",
+    "code_updated_at": "2024-08-01T18:38:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342119,
+        "name": "DeHydra",
+        "created_at": "2024-07-29T18:21:21.000Z",
+        "url": "https://greasyfork.org/users/1342119-dehydra"
+      }
+    ],
+    "name": "Выделение последнего списания",
+    "description": "Выделяет последнее списание цветом. Если статус списания \"Успешно\", то выделение будет зеленым цветом, если \"Ошибка\", то красным",
+    "url": "https://greasyfork.org/scripts/502106-%D0%B2%D1%8B%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B5%D0%B3%D0%BE-%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/502106/%D0%92%D1%8B%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BD%D0%B5%D0%B3%D0%BE%20%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F.user.js",
+    "code_size": 1221,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502103,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T18:29:59.000Z",
+    "code_updated_at": "2024-09-15T18:47:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342119,
+        "name": "DeHydra",
+        "created_at": "2024-07-29T18:21:21.000Z",
+        "url": "https://greasyfork.org/users/1342119-dehydra"
+      }
+    ],
+    "name": "Добавление кнопки списания",
+    "description": "Скрипт добавляет кнопку, которая открывает страницу списаний для каждого договора на странице. Еще немного изменяет менюшку для выбора количества договоров на странице.",
+    "url": "https://greasyfork.org/scripts/502103-%D0%B4%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8-%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/502103/%D0%94%D0%BE%D0%B1%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8%20%D1%81%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F.user.js",
+    "code_size": 3740,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

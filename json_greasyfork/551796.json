@@ -1,0 +1,33 @@
+{
+  "id": 551796,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-06T21:40:35.000Z",
+  "code_updated_at": "2025-10-06T21:40:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522983,
+      "name": "Lvē Maki",
+      "created_at": "2025-10-06T21:38:16.000Z",
+      "url": "https://greasyfork.org/users/1522983-lv%C4%93-maki"
+    }
+  ],
+  "name": "(v9.2 Фильтры Фона++) Стиль форум By Normyan(Поднята иконка, компактная панель)",
+  "description": "Настройка стиля BR Forum: панель, пресеты, шрифты, импорт/экспорт, градиент+, освещение+, дин. ссылки+, позиция панели+, Визуальные Эффекты V2, Продвинутый фон (Фильтры), Часы в панели. (Иконка поднята, панель навигации прокручивается)",
+  "url": "https://greasyfork.org/scripts/551796-v9-2-%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D1%8B-%D1%84%D0%BE%D0%BD%D0%B0-%D1%81%D1%82%D0%B8%D0%BB%D1%8C-%D1%84%D0%BE%D1%80%D1%83%D0%BC-by-normyan-%D0%BF%D0%BE%D0%B4%D0%BD%D1%8F%D1%82%D0%B0-%D0%B8%D0%BA%D0%BE%D0%BD%D0%BA%D0%B0-%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BA%D1%82%D0%BD%D0%B0%D1%8F-%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/551796/%28v92%20%D0%A4%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D1%8B%20%D0%A4%D0%BE%D0%BD%D0%B0%2B%2B%29%20%D0%A1%D1%82%D0%B8%D0%BB%D1%8C%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%20By%20Normyan%28%D0%9F%D0%BE%D0%B4%D0%BD%D1%8F%D1%82%D0%B0%20%D0%B8%D0%BA%D0%BE%D0%BD%D0%BA%D0%B0%2C%20%D0%BA%D0%BE%D0%BC%D0%BF%D0%B0%D0%BA%D1%82%D0%BD%D0%B0%D1%8F%20%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C%29.user.js",
+  "code_size": 100110,
+  "license": "MIT License",
+  "version": "10.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

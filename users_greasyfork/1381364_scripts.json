@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513912,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T20:45:13.000Z",
+    "code_updated_at": "2024-10-24T20:45:12.000Z",
+    "namespace": "https://github.com/ketan-16/dontfollow-for-linkedin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381364,
+        "name": "ketan-16",
+        "created_at": "2024-10-15T16:03:29.000Z",
+        "url": "https://greasyfork.org/users/1381364-ketan-16"
+      }
+    ],
+    "name": "DontFollow for Linkedin",
+    "description": "Unticks the annoying \"Follow company for more updates\" in the final Easy Apply modal.",
+    "url": "https://greasyfork.org/scripts/513912-dontfollow-for-linkedin",
+    "code_url": "https://update.greasyfork.org/scripts/513912/DontFollow%20for%20Linkedin.user.js",
+    "code_size": 1252,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

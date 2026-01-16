@@ -1,0 +1,33 @@
+{
+  "id": 547587,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T10:01:20.000Z",
+  "code_updated_at": "2025-08-28T11:47:59.000Z",
+  "namespace": "https://trophymanager.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1120757,
+      "name": "rafatrace",
+      "created_at": "2023-07-07T06:42:47.000Z",
+      "url": "https://greasyfork.org/users/1120757-rafatrace"
+    }
+  ],
+  "name": "TM Player Squad - Extra Columns",
+  "description": "Add extra columns to the player squad page",
+  "url": "https://greasyfork.org/scripts/547587-tm-player-squad-extra-columns",
+  "code_url": "https://update.greasyfork.org/scripts/547587/TM%20Player%20Squad%20-%20Extra%20Columns.user.js",
+  "code_size": 2737,
+  "license": "MIT License",
+  "version": "1.0.19",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

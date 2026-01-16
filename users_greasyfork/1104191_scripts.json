@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519924,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-06T04:00:34.000Z",
+    "code_updated_at": "2024-12-06T06:09:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1104191,
+        "name": "이경훈",
+        "created_at": "2023-06-18T08:12:15.000Z",
+        "url": "https://greasyfork.org/users/1104191-%EC%9D%B4%EA%B2%BD%ED%9B%88"
+      }
+    ],
+    "name": "Newtoki Helper",
+    "description": "Download images as ZIP or open links in a new tab for Newtoki",
+    "url": "https://greasyfork.org/scripts/519924-newtoki-helper",
+    "code_url": "https://update.greasyfork.org/scripts/519924/Newtoki%20Helper.user.js",
+    "code_size": 4262,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

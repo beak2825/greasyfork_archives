@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548343,
+    "daily_installs": 0,
+    "total_installs": 139,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T11:25:32.000Z",
+    "code_updated_at": "2025-09-04T20:14:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "mailto:chrysalyx@proton.me",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511765,
+        "name": "Chrysalyx",
+        "created_at": "2025-09-04T11:18:25.000Z",
+        "url": "https://greasyfork.org/users/1511765-chrysalyx"
+      }
+    ],
+    "name": "YouTube Sensible Mode",
+    "description": "Removes the stupid \"Youtube Big Mode\" update.",
+    "url": "https://greasyfork.org/scripts/548343-youtube-sensible-mode",
+    "code_url": "https://update.greasyfork.org/scripts/548343/YouTube%20Sensible%20Mode.user.js",
+    "code_size": 1568,
+    "license": "GPL-3.0-only; http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "0.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

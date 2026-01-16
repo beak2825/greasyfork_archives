@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524512,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-22T11:14:11.000Z",
+    "code_updated_at": "2025-01-23T07:45:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426087,
+        "name": "IvyOnGreasy",
+        "created_at": "2025-01-22T10:41:01.000Z",
+        "url": "https://greasyfork.org/users/1426087-ivyongreasy"
+      }
+    ],
+    "name": "YouTube Filter: Remove Low View Count Videos",
+    "description": "Hide YouTube videos with less than 1,000 views on the homepage and sidebar.",
+    "url": "https://greasyfork.org/scripts/524512-youtube-filter-remove-low-view-count-videos",
+    "code_url": "https://update.greasyfork.org/scripts/524512/YouTube%20Filter%3A%20Remove%20Low%20View%20Count%20Videos.user.js",
+    "code_size": 3001,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -97,5 +97,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 547155,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-24T22:49:15.000Z",
+    "code_updated_at": "2025-08-24T22:49:15.000Z",
+    "namespace": "http://tampermonkey.net/DoobiesButtonBypass+",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Doobies Button Bypass+",
+    "description": "Enables attack button when user is in hospital on profile page and mini attack buttons. It also Duplicates the \"start fight\" button and puts it on each of your weapons slots, It also has a redirect button to Items/Armory when you get the \"cannot do this in hospital\" error",
+    "url": "https://greasyfork.org/scripts/547155-doobies-button-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/547155/Doobies%20Button%20Bypass%2B.user.js",
+    "code_size": 9764,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545133,
+    "daily_installs": 2,
+    "total_installs": 55,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-09T04:58:10.000Z",
+    "code_updated_at": "2025-08-09T04:58:10.000Z",
+    "namespace": "http://tampermonkey.net/Doobie-BlackJack'n",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Doobie BlackJack'n | A Martingale Based Blackjack Script for Torn City",
+    "description": "A Simple draggable Martingale betting window equipped with customizable multipliers and 8 different betting buttons. Works On PDA",
+    "url": "https://greasyfork.org/scripts/545133-doobie-blackjack-n-a-martingale-based-blackjack-script-for-torn-city",
+    "code_url": "https://update.greasyfork.org/scripts/545133/Doobie%20BlackJack%27n%20%7C%20A%20Martingale%20Based%20Blackjack%20Script%20for%20Torn%20City.user.js",
+    "code_size": 14788,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541384,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T00:44:39.000Z",
+    "code_updated_at": "2025-07-02T02:03:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Doobie's Stock Days Remaining Company Script",
+    "description": "Calculate and displays the remaining days you have left for company stock",
+    "url": "https://greasyfork.org/scripts/541384-doobie-s-stock-days-remaining-company-script",
+    "code_url": "https://update.greasyfork.org/scripts/541384/Doobie%27s%20Stock%20Days%20Remaining%20Company%20Script.user.js",
+    "code_size": 9839,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518038,
+    "daily_installs": 1,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-19T08:16:30.000Z",
+    "code_updated_at": "2025-05-30T21:36:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Doobie's Torn City Chat Popout (Chat 3.0 ONLY)",
+    "description": "Adds a popout button for Torn chat. After clicking Boots up Window you can drag around and use on other sites/windows. To get your chat back in Torn, Close the chat!",
+    "url": "https://greasyfork.org/scripts/518038-doobie-s-torn-city-chat-popout-chat-3-0-only",
+    "code_url": "https://update.greasyfork.org/scripts/518038/Doobie%27s%20Torn%20City%20Chat%20Popout%20%28Chat%2030%20ONLY%29.user.js",
+    "code_size": 7847,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517463,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T07:21:41.000Z",
+    "code_updated_at": "2025-08-21T08:34:48.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Doobie's Torn City Supply Pack Exclusion",
+    "description": "Disables the \"Yes\" button for Torn supply packs. Just remove the script when you are done with exclusion. Does not remove the Open button itself, just removes the Confirmation Button. Should make packs un-useable",
+    "url": "https://greasyfork.org/scripts/517463-doobie-s-torn-city-supply-pack-exclusion",
+    "code_url": "https://update.greasyfork.org/scripts/517463/Doobie%27s%20Torn%20City%20Supply%20Pack%20Exclusion.user.js",
+    "code_size": 4063,
+    "license": null,
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517188,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-13T16:23:41.000Z",
+    "code_updated_at": "2024-11-13T18:37:10.000Z",
+    "namespace": "http://tampermonkey.net/DoobiesButtonBypass",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395710,
+        "name": "Doobiesuckin",
+        "created_at": "2024-11-13T15:48:14.000Z",
+        "url": "https://greasyfork.org/users/1395710-doobiesuckin"
+      }
+    ],
+    "name": "Doobie's Button Bypass",
+    "description": "Enables attack button when user is in hospital on profile page and mini attack buttons (when holding left click on username) Mail me if you have issues",
+    "url": "https://greasyfork.org/scripts/517188-doobie-s-button-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/517188/Doobie%27s%20Button%20Bypass.user.js",
+    "code_size": 3459,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

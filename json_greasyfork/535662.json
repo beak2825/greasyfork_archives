@@ -1,0 +1,34 @@
+{
+  "id": 535662,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-11T12:51:08.000Z",
+  "code_updated_at": "2025-09-21T20:36:44.000Z",
+  "namespace": "github.com/openstyles/stylus",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1363629,
+      "name": "Rennege",
+      "created_at": "2024-09-05T18:37:24.000Z",
+      "url": "https://greasyfork.org/users/1363629-rennege",
+      "scripts": []
+    }
+  ],
+  "name": "Сколько лечат травы",
+  "description": "Заменяет стандартные иконки предметов в Kinwoods на кастомные",
+  "url": "https://greasyfork.org/scripts/535662-%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE-%D0%BB%D0%B5%D1%87%D0%B0%D1%82-%D1%82%D1%80%D0%B0%D0%B2%D1%8B",
+  "code_url": "https://update.greasyfork.org/scripts/535662/%D0%A1%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE%20%D0%BB%D0%B5%D1%87%D0%B0%D1%82%20%D1%82%D1%80%D0%B0%D0%B2%D1%8B.user.js",
+  "code_size": 3662,
+  "license": "CC BY-NC-ND 4.0",
+  "version": "1.3",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 521575,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-23T15:07:12.000Z",
+    "code_updated_at": "2025-05-31T19:10:10.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/521575-netflix-episode-title-and-description-extractor",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32411,
+        "name": "Abu3safeer",
+        "created_at": "2016-03-03T11:31:23.000Z",
+        "url": "https://greasyfork.org/users/32411-abu3safeer"
+      }
+    ],
+    "name": "Netflix Episode title and description Extractor",
+    "description": "Extract episode number, title, and description from Netflix and save to file, with cookie handling",
+    "url": "https://greasyfork.org/scripts/521575-netflix-episode-title-and-description-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/521575/Netflix%20Episode%20title%20and%20description%20Extractor.user.js",
+    "code_size": 10585,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520694,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-14T11:44:33.000Z",
+    "code_updated_at": "2024-12-14T12:37:51.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/520694-shahid-series-downloader-with-json-export",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32411,
+        "name": "Abu3safeer",
+        "created_at": "2016-03-03T11:31:23.000Z",
+        "url": "https://greasyfork.org/users/32411-abu3safeer"
+      }
+    ],
+    "name": "Shahid Series Downloader with JSON Export",
+    "description": "Add a button to download episodes' details from Shahid series page as JSON without links.",
+    "url": "https://greasyfork.org/scripts/520694-shahid-series-downloader-with-json-export",
+    "code_url": "https://update.greasyfork.org/scripts/520694/Shahid%20Series%20Downloader%20with%20JSON%20Export.user.js",
+    "code_size": 4942,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520447,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T18:43:58.000Z",
+    "code_updated_at": "2024-12-14T12:35:11.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/520447-elcinema-episode-title-and-description-extractor",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32411,
+        "name": "Abu3safeer",
+        "created_at": "2016-03-03T11:31:23.000Z",
+        "url": "https://greasyfork.org/users/32411-abu3safeer"
+      }
+    ],
+    "name": "elcinema Episode title and description Extractor",
+    "description": "Extract episode number, title, and description from elcinema.com and save to file",
+    "url": "https://greasyfork.org/scripts/520447-elcinema-episode-title-and-description-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/520447/elcinema%20Episode%20title%20and%20description%20Extractor.user.js",
+    "code_size": 5440,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518373,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-21T18:05:53.000Z",
+    "code_updated_at": "2025-06-09T12:45:36.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/518373-crunchyroll-arabic-episode-titles-and-descriptions-extractor",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32411,
+        "name": "Abu3safeer",
+        "created_at": "2016-03-03T11:31:23.000Z",
+        "url": "https://greasyfork.org/users/32411-abu3safeer"
+      }
+    ],
+    "name": "Crunchyroll Arabic Episode Titles and Descriptions Extractor",
+    "description": "Extract titles, episode numbers, and descriptions of all episodes on Crunchyroll and save them as JSON",
+    "url": "https://greasyfork.org/scripts/518373-crunchyroll-arabic-episode-titles-and-descriptions-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/518373/Crunchyroll%20Arabic%20Episode%20Titles%20and%20Descriptions%20Extractor.user.js",
+    "code_size": 5292,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "ar",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515574,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-03T12:32:35.000Z",
+    "code_updated_at": "2024-11-03T12:32:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 32411,
+        "name": "Abu3safeer",
+        "created_at": "2016-03-03T11:31:23.000Z",
+        "url": "https://greasyfork.org/users/32411-abu3safeer"
+      }
+    ],
+    "name": "Asharq download button",
+    "description": "Adds a download button for videos on specific episode pages.",
+    "url": "https://greasyfork.org/scripts/515574-asharq-download-button",
+    "code_url": "https://update.greasyfork.org/scripts/515574/Asharq%20download%20button.user.js",
+    "code_size": 3202,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

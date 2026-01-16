@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521511,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-23T00:19:27.000Z",
+    "code_updated_at": "2024-12-23T02:44:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414363,
+        "name": "hamburglers",
+        "created_at": "2024-12-23T00:13:07.000Z",
+        "url": "https://greasyfork.org/users/1414363-hamburglers"
+      }
+    ],
+    "name": "Leetcode Difficulty Hider",
+    "description": "Replace difficulty labels with \"Hidden\" and apply custom styles.",
+    "url": "https://greasyfork.org/scripts/521511-leetcode-difficulty-hider",
+    "code_url": "https://update.greasyfork.org/scripts/521511/Leetcode%20Difficulty%20Hider.user.js",
+    "code_size": 2906,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

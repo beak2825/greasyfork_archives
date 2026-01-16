@@ -1,0 +1,33 @@
+{
+  "id": 549462,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-14T01:21:46.000Z",
+  "code_updated_at": "2025-09-14T01:21:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510073,
+      "name": "Tristan_Sikora",
+      "created_at": "2025-08-29T20:43:51.000Z",
+      "url": "https://greasyfork.org/users/1510073-tristan-sikora"
+    }
+  ],
+  "name": "Ísland.is Kennitala Fix (SPA-safe) (Glóey Bibi Jónsdóttir | 290608-2010)",
+  "description": "Works with React routing on island.is and safely replaces Kennitala without breaking layout or styles.",
+  "url": "https://greasyfork.org/scripts/549462-%C3%ADsland-is-kennitala-fix-spa-safe-gl%C3%B3ey-bibi-j%C3%B3nsd%C3%B3ttir-290608-2010",
+  "code_url": "https://update.greasyfork.org/scripts/549462/%C3%8Dslandis%20Kennitala%20Fix%20%28SPA-safe%29%20%28Gl%C3%B3ey%20Bibi%20J%C3%B3nsd%C3%B3ttir%20%7C%20290608-2010%29.user.js",
+  "code_size": 1674,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

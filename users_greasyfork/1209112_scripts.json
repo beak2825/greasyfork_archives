@@ -1,0 +1,167 @@
+[
+  {
+    "id": 521843,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-26T08:15:15.000Z",
+    "code_updated_at": "2024-12-26T08:15:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209112,
+        "name": "Faq Groland",
+        "created_at": "2023-11-02T07:27:21.000Z",
+        "url": "https://greasyfork.org/users/1209112-faq-groland"
+      }
+    ],
+    "name": "Clear countdown",
+    "description": "sdfr345tdtg",
+    "url": "https://greasyfork.org/scripts/521843-clear-countdown",
+    "code_url": "https://update.greasyfork.org/scripts/521843/Clear%20countdown.user.js",
+    "code_size": 8309,
+    "license": null,
+    "version": "0.2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517515,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T13:29:38.000Z",
+    "code_updated_at": "2024-11-15T13:29:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209112,
+        "name": "Faq Groland",
+        "created_at": "2023-11-02T07:27:21.000Z",
+        "url": "https://greasyfork.org/users/1209112-faq-groland"
+      }
+    ],
+    "name": "accascs",
+    "description": "acaccacacaca",
+    "url": "https://greasyfork.org/scripts/517515-accascs",
+    "code_url": "https://update.greasyfork.org/scripts/517515/accascs.user.js",
+    "code_size": 1917,
+    "license": null,
+    "version": "2024-11-15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511664,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-06T11:25:38.000Z",
+    "code_updated_at": "2024-10-06T11:25:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209112,
+        "name": "Faq Groland",
+        "created_at": "2023-11-02T07:27:21.000Z",
+        "url": "https://greasyfork.org/users/1209112-faq-groland"
+      }
+    ],
+    "name": "claimbox",
+    "description": "dvbvcbc",
+    "url": "https://greasyfork.org/scripts/511664-claimbox",
+    "code_url": "https://update.greasyfork.org/scripts/511664/claimbox.user.js",
+    "code_size": 3105,
+    "license": null,
+    "version": "1",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508121,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-12T12:13:12.000Z",
+    "code_updated_at": "2024-09-12T12:13:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209112,
+        "name": "Faq Groland",
+        "created_at": "2023-11-02T07:27:21.000Z",
+        "url": "https://greasyfork.org/users/1209112-faq-groland"
+      }
+    ],
+    "name": "Nokofaucet",
+    "description": "Renda Extra",
+    "url": "https://greasyfork.org/scripts/508121-nokofaucet",
+    "code_url": "https://update.greasyfork.org/scripts/508121/Nokofaucet.user.js",
+    "code_size": 2428,
+    "license": null,
+    "version": "1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504178,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-18T21:06:30.000Z",
+    "code_updated_at": "2024-09-16T18:44:05.000Z",
+    "namespace": "Tampermonkey script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1209112,
+        "name": "Faq Groland",
+        "created_at": "2023-11-02T07:27:21.000Z",
+        "url": "https://greasyfork.org/users/1209112-faq-groland"
+      }
+    ],
+    "name": "Short clks bypass",
+    "description": "Personal script",
+    "url": "https://greasyfork.org/scripts/504178-short-clks-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/504178/Short%20clks%20bypass.user.js",
+    "code_size": 8053,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

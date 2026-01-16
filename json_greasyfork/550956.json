@@ -1,0 +1,33 @@
+{
+  "id": 550956,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-28T11:39:46.000Z",
+  "code_updated_at": "2025-09-28T11:39:46.000Z",
+  "namespace": "org.sidneys.userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 4839,
+      "name": "Leadra",
+      "created_at": "2014-08-29T13:28:40.000Z",
+      "url": "https://greasyfork.org/users/4839-leadra"
+    }
+  ],
+  "name": "Library: onElementReady ES7",
+  "description": "Detect any new DOM Element by its CSS Selector, then trigger a function. Includes Promise- & Callback interface. Based on ES6 MutationObserver. Ships legacy waitForKeyElements interface, too.",
+  "url": "https://greasyfork.org/scripts/550956-library-onelementready-es7",
+  "code_url": "https://update.greasyfork.org/scripts/550956/1668280/Library%3A%20onElementReady%20ES7.js",
+  "code_size": 3074,
+  "license": null,
+  "version": "0.8.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523310,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-09T14:19:36.000Z",
+    "code_updated_at": "2025-01-09T15:40:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421301,
+        "name": "BOXeS",
+        "created_at": "2025-01-09T13:46:13.000Z",
+        "url": "https://greasyfork.org/users/1421301-boxes"
+      }
+    ],
+    "name": "Slope 3 Ad Panel Remover",
+    "description": "Remove that annoying ad panel from the slope 3 website",
+    "url": "https://greasyfork.org/scripts/523310-slope-3-ad-panel-remover",
+    "code_url": "https://update.greasyfork.org/scripts/523310/Slope%203%20Ad%20Panel%20Remover.user.js",
+    "code_size": 1588,
+    "license": "MIT License",
+    "version": "1.2.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549135,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T12:01:47.000Z",
+    "code_updated_at": "2025-09-13T05:41:32.000Z",
+    "namespace": "mwidle-auto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497147,
+        "name": "yuanfirst1212",
+        "created_at": "2025-07-22T02:36:53.000Z",
+        "url": "https://greasyfork.org/users/1497147-yuanfirst1212"
+      }
+    ],
+    "name": "MW Idle 无所事事自动挤奶",
+    "description": "每5分钟检测“无所事事”，若存在则自动执行：挤奶 → 奶牛 → 开始（每步1秒），并确认状态切换为“奶牛 [∞]”。",
+    "url": "https://greasyfork.org/scripts/549135-mw-idle-%E6%97%A0%E6%89%80%E4%BA%8B%E4%BA%8B%E8%87%AA%E5%8A%A8%E6%8C%A4%E5%A5%B6",
+    "code_url": "https://update.greasyfork.org/scripts/549135/MW%20Idle%20%E6%97%A0%E6%89%80%E4%BA%8B%E4%BA%8B%E8%87%AA%E5%8A%A8%E6%8C%A4%E5%A5%B6.user.js",
+    "code_size": 7672,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

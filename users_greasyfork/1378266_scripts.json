@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511884,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-08T13:38:40.000Z",
+    "code_updated_at": "2025-01-08T23:58:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378266,
+        "name": "frederico-kluser",
+        "created_at": "2024-10-08T13:25:59.000Z",
+        "url": "https://greasyfork.org/users/1378266-frederico-kluser"
+      }
+    ],
+    "name": "Gerador de Prompt de Resumo do YouTube",
+    "description": "Gera um prompt resumido com base nas legendas do vídeo no YouTube e copia para a área de transferência!",
+    "url": "https://greasyfork.org/scripts/511884-gerador-de-prompt-de-resumo-do-youtube",
+    "code_url": "https://update.greasyfork.org/scripts/511884/Gerador%20de%20Prompt%20de%20Resumo%20do%20YouTube.user.js",
+    "code_size": 6674,
+    "license": "MIT License",
+    "version": "2025-01-08",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

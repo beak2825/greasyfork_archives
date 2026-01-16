@@ -1,0 +1,68 @@
+[
+  {
+    "id": 545771,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-14T06:05:10.000Z",
+    "code_updated_at": "2025-08-14T06:08:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://gitee.com/azad-sl/GiteeTree/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500392,
+        "name": "Azad-sl",
+        "created_at": "2025-08-01T04:12:57.000Z",
+        "url": "https://greasyfork.org/users/1500392-azad-sl"
+      }
+    ],
+    "name": "GiteeTree",
+    "description": "Gitee目录树生成与卡片化分享",
+    "url": "https://greasyfork.org/scripts/545771-giteetree",
+    "code_url": "https://update.greasyfork.org/scripts/545771/GiteeTree.user.js",
+    "code_size": 60552,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544254,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T04:22:29.000Z",
+    "code_updated_at": "2025-08-10T05:18:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500392,
+        "name": "Azad-sl",
+        "created_at": "2025-08-01T04:12:57.000Z",
+        "url": "https://greasyfork.org/users/1500392-azad-sl"
+      }
+    ],
+    "name": "GitHub Repo Tree Generator",
+    "description": "Generate, filter, and share a clean directory tree for any GitHub repo",
+    "url": "https://greasyfork.org/scripts/544254-github-repo-tree-generator",
+    "code_url": "https://update.greasyfork.org/scripts/544254/GitHub%20Repo%20Tree%20Generator.user.js",
+    "code_size": 91336,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

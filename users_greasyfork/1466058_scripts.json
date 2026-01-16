@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535027,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T15:14:42.000Z",
+    "code_updated_at": "2025-05-05T15:14:41.000Z",
+    "namespace": "https://your.domain/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466058,
+        "name": "uwot mate",
+        "created_at": "2025-05-05T15:11:43.000Z",
+        "url": "https://greasyfork.org/users/1466058-uwot-mate"
+      }
+    ],
+    "name": "Misskey Auto-Unblur Sensitive Image (Open in New Tab)",
+    "description": "Replaces blurred images and opens real image in a new tab",
+    "url": "https://greasyfork.org/scripts/535027-misskey-auto-unblur-sensitive-image-open-in-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/535027/Misskey%20Auto-Unblur%20Sensitive%20Image%20%28Open%20in%20New%20Tab%29.user.js",
+    "code_size": 1300,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

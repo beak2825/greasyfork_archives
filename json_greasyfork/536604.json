@@ -1,0 +1,59 @@
+{
+  "id": 536604,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-20T11:59:54.000Z",
+  "code_updated_at": "2025-05-20T11:59:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472417,
+      "name": "AlexSchoolOH",
+      "created_at": "2025-05-20T11:53:18.000Z",
+      "url": "https://greasyfork.org/users/1472417-alexschooloh",
+      "scripts": [
+        {
+          "id": 536604,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-20T11:59:54.000Z",
+          "code_updated_at": "2025-05-20T11:59:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fix NetAcad wide monitor offset",
+          "description": "Fixes the user dashboard offset in Cisco's Net Academy",
+          "url": "https://greasyfork.org/scripts/536604-fix-netacad-wide-monitor-offset",
+          "code_url": "https://update.greasyfork.org/scripts/536604/Fix%20NetAcad%20wide%20monitor%20offset.user.js",
+          "code_size": 776,
+          "license": "MIT License",
+          "version": "2025-05-20",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fix NetAcad wide monitor offset",
+  "description": "Fixes the user dashboard offset in Cisco's Net Academy",
+  "url": "https://greasyfork.org/scripts/536604-fix-netacad-wide-monitor-offset",
+  "code_url": "https://update.greasyfork.org/scripts/536604/Fix%20NetAcad%20wide%20monitor%20offset.user.js",
+  "code_size": 776,
+  "license": "MIT License",
+  "version": "2025-05-20",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

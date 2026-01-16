@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522677,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-03T07:44:12.000Z",
+    "code_updated_at": "2025-01-03T07:46:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1303433,
+        "name": "Angury",
+        "created_at": "2024-05-18T04:36:51.000Z",
+        "url": "https://greasyfork.org/users/1303433-angury"
+      }
+    ],
+    "name": "Claude聊天对话导出md格式",
+    "description": "在claude对话页面添加一个下载按钮，点击即可将对话记录下载到本地",
+    "url": "https://greasyfork.org/scripts/522677-claude%E8%81%8A%E5%A4%A9%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BAmd%E6%A0%BC%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/522677/Claude%E8%81%8A%E5%A4%A9%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BAmd%E6%A0%BC%E5%BC%8F.user.js",
+    "code_size": 7532,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

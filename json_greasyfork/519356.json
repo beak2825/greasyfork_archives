@@ -1,0 +1,59 @@
+{
+  "id": 519356,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-30T09:41:28.000Z",
+  "code_updated_at": "2024-11-30T09:41:28.000Z",
+  "namespace": "SSSSLLLL",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1404493,
+      "name": "SSSSLLLL",
+      "created_at": "2024-11-30T09:31:54.000Z",
+      "url": "https://greasyfork.org/users/1404493-ssssllll",
+      "scripts": [
+        {
+          "id": 519356,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-30T09:41:28.000Z",
+          "code_updated_at": "2024-11-30T09:41:28.000Z",
+          "namespace": "SSSSLLLL",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Letterpress image flip",
+          "description": "Flips all images horizontally when both shift keys are pressed simultaneously. Useful for shopping for letterpress cuts.",
+          "url": "https://greasyfork.org/scripts/519356-letterpress-image-flip",
+          "code_url": "https://update.greasyfork.org/scripts/519356/Letterpress%20image%20flip.user.js",
+          "code_size": 1379,
+          "license": "GPLv3",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Letterpress image flip",
+  "description": "Flips all images horizontally when both shift keys are pressed simultaneously. Useful for shopping for letterpress cuts.",
+  "url": "https://greasyfork.org/scripts/519356-letterpress-image-flip",
+  "code_url": "https://update.greasyfork.org/scripts/519356/Letterpress%20image%20flip.user.js",
+  "code_size": 1379,
+  "license": "GPLv3",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

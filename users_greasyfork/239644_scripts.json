@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526621,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T05:13:48.000Z",
+    "code_updated_at": "2025-02-12T05:19:41.000Z",
+    "namespace": "https://chentao1006.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 239644,
+        "name": "chentao1006",
+        "created_at": "2019-01-15T02:43:47.000Z",
+        "url": "https://greasyfork.org/users/239644-chentao1006"
+      }
+    ],
+    "name": "Jump to Top/Bottom of page with hotkeys",
+    "description": "为网页增加向页尾、页首的按钮及快捷键。",
+    "url": "https://greasyfork.org/scripts/526621-jump-to-top-bottom-of-page-with-hotkeys",
+    "code_url": "https://update.greasyfork.org/scripts/526621/Jump%20to%20TopBottom%20of%20page%20with%20hotkeys.user.js",
+    "code_size": 8208,
+    "license": null,
+    "version": "2025.2.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 529105,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-07T15:16:20.000Z",
+  "code_updated_at": "2026-01-12T12:01:25.000Z",
+  "namespace": "https://github.com/soranosita",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1414333,
+      "name": "darisk",
+      "created_at": "2024-12-22T19:58:07.000Z",
+      "url": "https://greasyfork.org/users/1414333-darisk",
+      "scripts": []
+    }
+  ],
+  "name": "BTN - Embed trailer",
+  "description": "Embed trailer on series page",
+  "url": "https://greasyfork.org/scripts/529105-btn-embed-trailer",
+  "code_url": "https://update.greasyfork.org/scripts/529105/BTN%20-%20Embed%20trailer.user.js",
+  "code_size": 9805,
+  "license": "MIT License",
+  "version": "2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

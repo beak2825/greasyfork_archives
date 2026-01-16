@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540133,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T11:25:09.000Z",
+    "code_updated_at": "2025-06-20T11:25:09.000Z",
+    "namespace": "Essential Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486168,
+        "name": "solarcosmic",
+        "created_at": "2025-06-20T11:17:12.000Z",
+        "url": "https://greasyfork.org/users/1486168-solarcosmic"
+      }
+    ],
+    "name": "Efficient Scroll to Top",
+    "description": "Lets you scroll to the top of a page by the click of a button without it being intrusive.",
+    "url": "https://greasyfork.org/scripts/540133-efficient-scroll-to-top",
+    "code_url": "https://update.greasyfork.org/scripts/540133/Efficient%20Scroll%20to%20Top.user.js",
+    "code_size": 3771,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

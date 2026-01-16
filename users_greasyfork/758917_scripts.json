@@ -1,0 +1,101 @@
+[
+  {
+    "id": 529371,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-10T07:32:33.000Z",
+    "code_updated_at": "2025-03-10T07:32:33.000Z",
+    "namespace": "https://jxc.ningmengyun.com/qianfenfu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758917,
+        "name": "ourhk",
+        "created_at": "2021-04-14T06:26:09.000Z",
+        "url": "https://greasyfork.org/users/758917-ourhk"
+      }
+    ],
+    "name": "柠檬云财务复制金额自动去除千分符",
+    "description": "将柠檬云财务中所有复制的金额自动去除千分符",
+    "url": "https://greasyfork.org/scripts/529371-%E6%9F%A0%E6%AA%AC%E4%BA%91%E8%B4%A2%E5%8A%A1%E5%A4%8D%E5%88%B6%E9%87%91%E9%A2%9D%E8%87%AA%E5%8A%A8%E5%8E%BB%E9%99%A4%E5%8D%83%E5%88%86%E7%AC%A6",
+    "code_url": "https://update.greasyfork.org/scripts/529371/%E6%9F%A0%E6%AA%AC%E4%BA%91%E8%B4%A2%E5%8A%A1%E5%A4%8D%E5%88%B6%E9%87%91%E9%A2%9D%E8%87%AA%E5%8A%A8%E5%8E%BB%E9%99%A4%E5%8D%83%E5%88%86%E7%AC%A6.user.js",
+    "code_size": 1213,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529291,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-09T12:31:08.000Z",
+    "code_updated_at": "2025-03-10T05:00:33.000Z",
+    "namespace": "https://jxc.ningmengyun.com/zhuanhuan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758917,
+        "name": "ourhk",
+        "created_at": "2021-04-14T06:26:09.000Z",
+        "url": "https://greasyfork.org/users/758917-ourhk"
+      }
+    ],
+    "name": "柠檬云进销存输入框自动计算箱盒转换",
+    "description": "自动将备注栏或其他自定义列中输入格式如“26=”或“26+”转换为“1箱2盒”（需设置商品规格格式为：200ml×24盒，脚本会捕获“×24盒”来计算），支持动态规格解析和Vue数据绑定",
+    "url": "https://greasyfork.org/scripts/529291-%E6%9F%A0%E6%AA%AC%E4%BA%91%E8%BF%9B%E9%94%80%E5%AD%98%E8%BE%93%E5%85%A5%E6%A1%86%E8%87%AA%E5%8A%A8%E8%AE%A1%E7%AE%97%E7%AE%B1%E7%9B%92%E8%BD%AC%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/529291/%E6%9F%A0%E6%AA%AC%E4%BA%91%E8%BF%9B%E9%94%80%E5%AD%98%E8%BE%93%E5%85%A5%E6%A1%86%E8%87%AA%E5%8A%A8%E8%AE%A1%E7%AE%97%E7%AE%B1%E7%9B%92%E8%BD%AC%E6%8D%A2.user.js",
+    "code_size": 5337,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528925,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-06T00:00:39.000Z",
+    "code_updated_at": "2025-03-07T16:25:27.000Z",
+    "namespace": "https://www.jiandaoyun.com/copy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 758917,
+        "name": "ourhk",
+        "created_at": "2021-04-14T06:26:09.000Z",
+        "url": "https://greasyfork.org/users/758917-ourhk"
+      }
+    ],
+    "name": "简道云文本框内容复制助手Pro",
+    "description": "双击文本框的文字，可以复制内容到剪贴板。方便复制内容粘贴到其他页面。",
+    "url": "https://greasyfork.org/scripts/528925-%E7%AE%80%E9%81%93%E4%BA%91%E6%96%87%E6%9C%AC%E6%A1%86%E5%86%85%E5%AE%B9%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8Bpro",
+    "code_url": "https://update.greasyfork.org/scripts/528925/%E7%AE%80%E9%81%93%E4%BA%91%E6%96%87%E6%9C%AC%E6%A1%86%E5%86%85%E5%AE%B9%E5%A4%8D%E5%88%B6%E5%8A%A9%E6%89%8BPro.user.js",
+    "code_size": 6036,
+    "license": "MIT License",
+    "version": "4.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 510614,
+  "daily_installs": 0,
+  "total_installs": 113,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-28T16:23:06.000Z",
+  "code_updated_at": "2024-09-28T16:23:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 962726,
+      "name": "谢宏伟",
+      "created_at": "2022-09-23T14:28:23.000Z",
+      "url": "https://greasyfork.org/users/962726-%E8%B0%A2%E5%AE%8F%E4%BC%9F",
+      "scripts": [
+        {
+          "id": 510614,
+          "daily_installs": 0,
+          "total_installs": 113,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-28T16:23:06.000Z",
+          "code_updated_at": "2024-09-28T16:23:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "重庆公需老版本",
+          "description": "匹配两个网页，一是课程列表页面https://cqrl.21tb.com/nms-frontend/index.html#/org/courseDetail*，二是课程学习页面https://cqrl.21tb.com/els/html/courseStudyItem*",
+          "url": "https://greasyfork.org/scripts/510614-%E9%87%8D%E5%BA%86%E5%85%AC%E9%9C%80%E8%80%81%E7%89%88%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/510614/%E9%87%8D%E5%BA%86%E5%85%AC%E9%9C%80%E8%80%81%E7%89%88%E6%9C%AC.user.js",
+          "code_size": 11775,
+          "license": "MIT License",
+          "version": "0.3121",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "重庆公需老版本",
+  "description": "匹配两个网页，一是课程列表页面https://cqrl.21tb.com/nms-frontend/index.html#/org/courseDetail*，二是课程学习页面https://cqrl.21tb.com/els/html/courseStudyItem*",
+  "url": "https://greasyfork.org/scripts/510614-%E9%87%8D%E5%BA%86%E5%85%AC%E9%9C%80%E8%80%81%E7%89%88%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/510614/%E9%87%8D%E5%BA%86%E5%85%AC%E9%9C%80%E8%80%81%E7%89%88%E6%9C%AC.user.js",
+  "code_size": 11775,
+  "license": "MIT License",
+  "version": "0.3121",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

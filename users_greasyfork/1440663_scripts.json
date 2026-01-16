@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528534,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-02T13:14:16.000Z",
+    "code_updated_at": "2025-03-02T13:14:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440663,
+        "name": "Николай «Next» Беспалов",
+        "created_at": "2025-02-27T14:47:22.000Z",
+        "url": "https://greasyfork.org/users/1440663-%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9-next-%D0%B1%D0%B5%D1%81%D0%BF%D0%B0%D0%BB%D0%BE%D0%B2"
+      }
+    ],
+    "name": "MT_Player_Stats_Widget",
+    "description": "Скрипт добавляет виджет для отображения статистики игрока на форуме игры \"Мир танков\"",
+    "url": "https://greasyfork.org/scripts/528534-mt-player-stats-widget",
+    "code_url": "https://update.greasyfork.org/scripts/528534/MT_Player_Stats_Widget.user.js",
+    "code_size": 35726,
+    "license": "MIT License",
+    "version": "2.5",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

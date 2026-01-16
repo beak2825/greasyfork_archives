@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532053,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T05:57:23.000Z",
+    "code_updated_at": "2025-05-29T16:24:51.000Z",
+    "namespace": "https://prysaic.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454862,
+        "name": "Prysaic",
+        "created_at": "2025-04-07T05:32:04.000Z",
+        "url": "https://greasyfork.org/users/1454862-prysaic"
+      }
+    ],
+    "name": "💯BigIdeasMath Automatic answer",
+    "description": "Automatically display answers for BigIdeas Math homework using MathJax for math rendering (homework only, not tests)",
+    "url": "https://greasyfork.org/scripts/532053-bigideasmath-automatic-answer",
+    "code_url": "https://update.greasyfork.org/scripts/532053/%F0%9F%92%AFBigIdeasMath%20Automatic%20answer.user.js",
+    "code_size": 15884,
+    "license": "MIT License",
+    "version": "1.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

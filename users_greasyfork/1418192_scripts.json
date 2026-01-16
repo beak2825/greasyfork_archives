@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522474,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-01T09:17:16.000Z",
+    "code_updated_at": "2025-01-01T09:25:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1418192,
+        "name": "GGboy🐷",
+        "created_at": "2025-01-01T09:10:18.000Z",
+        "url": "https://greasyfork.org/users/1418192-ggboy"
+      }
+    ],
+    "name": "嘉兴大学教务处学生评价",
+    "description": "嘉人们，还在为期末教务网学生评价而烦恼吗？快来试试这个吧！",
+    "url": "https://greasyfork.org/scripts/522474-%E5%98%89%E5%85%B4%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E5%A4%84%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7",
+    "code_url": "https://update.greasyfork.org/scripts/522474/%E5%98%89%E5%85%B4%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E5%A4%84%E5%AD%A6%E7%94%9F%E8%AF%84%E4%BB%B7.user.js",
+    "code_size": 12749,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

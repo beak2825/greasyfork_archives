@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524509,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "9.2",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2025-01-22T11:07:37.000Z",
+    "code_updated_at": "2025-01-31T05:46:21.000Z",
+    "namespace": "http://tampermonkey.net/EWT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426085,
+        "name": "Panda_Chen",
+        "created_at": "2025-01-22T10:39:36.000Z",
+        "url": "https://greasyfork.org/users/1426085-panda-chen"
+      }
+    ],
+    "name": "EWT自动过课堂检测",
+    "description": "SB EWT ↓使用教程移步简介↓",
+    "url": "https://greasyfork.org/scripts/524509-ewt%E8%87%AA%E5%8A%A8%E8%BF%87%E8%AF%BE%E5%A0%82%E6%A3%80%E6%B5%8B",
+    "code_url": "https://update.greasyfork.org/scripts/524509/EWT%E8%87%AA%E5%8A%A8%E8%BF%87%E8%AF%BE%E5%A0%82%E6%A3%80%E6%B5%8B.user.js",
+    "code_size": 844,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2025-01-31",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

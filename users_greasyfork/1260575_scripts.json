@@ -1,0 +1,68 @@
+[
+  {
+    "id": 509902,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-24T01:01:38.000Z",
+    "code_updated_at": "2024-09-24T01:01:38.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1260575,
+        "name": "gf2024",
+        "created_at": "2024-02-13T01:57:55.000Z",
+        "url": "https://greasyfork.org/users/1260575-gf2024"
+      }
+    ],
+    "name": "圣豆",
+    "description": "圣豆泥位监测改大字",
+    "url": "https://greasyfork.org/scripts/509902-%E5%9C%A3%E8%B1%86",
+    "code_url": "https://update.greasyfork.org/scripts/509902/%E5%9C%A3%E8%B1%86.user.js",
+    "code_size": 533,
+    "license": "MIT License",
+    "version": "0.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509291,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T01:19:40.000Z",
+    "code_updated_at": "2024-09-20T01:29:09.000Z",
+    "namespace": "http://jxjy.xidian.edu.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1260575,
+        "name": "gf2024",
+        "created_at": "2024-02-13T01:57:55.000Z",
+        "url": "https://greasyfork.org/users/1260575-gf2024"
+      }
+    ],
+    "name": "陕西继续教育自动答题",
+    "description": "通过自动填写答案后提取答案最终获取问题所有答案",
+    "url": "https://greasyfork.org/scripts/509291-%E9%99%95%E8%A5%BF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/509291/%E9%99%95%E8%A5%BF%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js",
+    "code_size": 10262,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

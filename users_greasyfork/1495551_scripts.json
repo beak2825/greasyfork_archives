@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542750,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-16T20:25:01.000Z",
+    "code_updated_at": "2025-07-16T20:25:01.000Z",
+    "namespace": "https://openai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495551,
+        "name": "Ross M",
+        "created_at": "2025-07-16T20:17:44.000Z",
+        "url": "https://greasyfork.org/users/1495551-ross-m"
+      }
+    ],
+    "name": "ChatGPT - Hide Old Messages (New DOM)",
+    "description": "מסתיר הודעות ישנות בצ'אט של GPT ב־#thread article, עם כפתור הצג הכול",
+    "url": "https://greasyfork.org/scripts/542750-chatgpt-hide-old-messages-new-dom",
+    "code_url": "https://update.greasyfork.org/scripts/542750/ChatGPT%20-%20Hide%20Old%20Messages%20%28New%20DOM%29.user.js",
+    "code_size": 2140,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

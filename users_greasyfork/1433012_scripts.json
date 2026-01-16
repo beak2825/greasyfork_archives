@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526296,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T15:41:55.000Z",
+    "code_updated_at": "2025-02-08T15:41:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433012,
+        "name": "lime-scripts",
+        "created_at": "2025-02-08T15:36:57.000Z",
+        "url": "https://greasyfork.org/users/1433012-lime-scripts"
+      }
+    ],
+    "name": "Scalable Capital Depot Export",
+    "description": "Userscript, das den Download des aktuellen Depots bei Scalable Capital als CSV-Datei erlaubt.",
+    "url": "https://greasyfork.org/scripts/526296-scalable-capital-depot-export",
+    "code_url": "https://update.greasyfork.org/scripts/526296/Scalable%20Capital%20Depot%20Export.user.js",
+    "code_size": 4693,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

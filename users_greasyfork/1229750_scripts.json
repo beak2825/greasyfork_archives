@@ -63,6 +63,105 @@
     "version": "0.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502242,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-31T07:22:08.000Z",
+    "code_updated_at": "2024-07-31T07:22:08.000Z",
+    "namespace": "https://www.socialdeal.nl/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229750,
+        "name": "lukaassso",
+        "created_at": "2023-12-07T09:18:58.000Z",
+        "url": "https://greasyfork.org/users/1229750-lukaassso"
+      }
+    ],
+    "name": "Deal aanmaken tools & fixes van Lukas speciaal voor Anne",
+    "description": "Stable version",
+    "url": "https://greasyfork.org/scripts/502242-deal-aanmaken-tools-fixes-van-lukas-speciaal-voor-anne",
+    "code_url": "https://update.greasyfork.org/scripts/502242/Deal%20aanmaken%20tools%20%20fixes%20van%20Lukas%20speciaal%20voor%20Anne.user.js",
+    "code_size": 38306,
+    "license": null,
+    "version": "1.9",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 497595,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-11T07:28:29.000Z",
+    "code_updated_at": "2024-06-11T07:28:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229750,
+        "name": "lukaassso",
+        "created_at": "2023-12-07T09:18:58.000Z",
+        "url": "https://greasyfork.org/users/1229750-lukaassso"
+      }
+    ],
+    "name": "Deal versturen waarschuwing",
+    "description": "Stable version",
+    "url": "https://greasyfork.org/scripts/497595-deal-versturen-waarschuwing",
+    "code_url": "https://update.greasyfork.org/scripts/497595/Deal%20versturen%20waarschuwing.user.js",
+    "code_size": 2638,
+    "license": null,
+    "version": "1.2",
+    "locale": "nl",
+    "deleted": false,
     "visibility": "unknown"
+  },
+  {
+    "id": 497594,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-11T07:27:33.000Z",
+    "code_updated_at": "2024-06-11T07:27:33.000Z",
+    "namespace": "https://www.socialdeal.nl/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229750,
+        "name": "lukaassso",
+        "created_at": "2023-12-07T09:18:58.000Z",
+        "url": "https://greasyfork.org/users/1229750-lukaassso"
+      }
+    ],
+    "name": "Tekstredactie Home",
+    "description": "Stable version",
+    "url": "https://greasyfork.org/scripts/497594-tekstredactie-home",
+    "code_url": "https://update.greasyfork.org/scripts/497594/Tekstredactie%20Home.user.js",
+    "code_size": 39550,
+    "license": null,
+    "version": "1.5",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unlisted"
   }
 ]

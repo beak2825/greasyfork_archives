@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530903,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-26T11:07:39.000Z",
+    "code_updated_at": "2025-03-27T03:51:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 312624,
+        "name": "yuyuyzl",
+        "created_at": "2019-06-24T07:25:21.000Z",
+        "url": "https://greasyfork.org/users/312624-yuyuyzl"
+      }
+    ],
+    "name": "Github Actions: Dispatch Workflow with Active Branch",
+    "description": "Userscript allowing you to select active branches when dispatching a workflow",
+    "url": "https://greasyfork.org/scripts/530903-github-actions-dispatch-workflow-with-active-branch",
+    "code_url": "https://update.greasyfork.org/scripts/530903/Github%20Actions%3A%20Dispatch%20Workflow%20with%20Active%20Branch.user.js",
+    "code_size": 4373,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

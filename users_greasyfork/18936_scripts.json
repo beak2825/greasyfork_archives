@@ -31,5 +31,38 @@
     "locale": "de",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 533252,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T15:22:45.000Z",
+    "code_updated_at": "2026-01-12T13:26:58.000Z",
+    "namespace": "https://greasyfork.org/en/users/18936-therealhawk",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 18936,
+        "name": "TheRealHawk",
+        "created_at": "2015-10-26T19:56:04.000Z",
+        "url": "https://greasyfork.org/users/18936-therealhawk"
+      }
+    ],
+    "name": "JustWatch - Search improvements and watchlist item hider",
+    "description": "Improved search efficiency and hiding of watchlist items",
+    "url": "https://greasyfork.org/scripts/533252-justwatch-search-improvements-and-watchlist-item-hider",
+    "code_url": "https://update.greasyfork.org/scripts/533252/JustWatch%20-%20Search%20improvements%20and%20watchlist%20item%20hider.user.js",
+    "code_size": 3082,
+    "license": "MIT License",
+    "version": "1.14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

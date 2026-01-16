@@ -1,0 +1,68 @@
+[
+  {
+    "id": 544568,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T01:01:58.000Z",
+    "code_updated_at": "2025-08-04T01:02:53.000Z",
+    "namespace": "https://hearthstone.blizzard.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465757,
+        "name": "Brendan Moore",
+        "created_at": "2025-05-05T01:25:34.000Z",
+        "url": "https://greasyfork.org/users/1465757-brendan-moore"
+      }
+    ],
+    "name": "Hearthstone Leaderboard Rating Navigator",
+    "description": "Jump to the page containing a target rating (MMR) using bounded binary search. UI injected into LeaderboardsFilters; live status shown bottom-right.",
+    "url": "https://greasyfork.org/scripts/544568-hearthstone-leaderboard-rating-navigator",
+    "code_url": "https://update.greasyfork.org/scripts/544568/Hearthstone%20Leaderboard%20Rating%20Navigator.user.js",
+    "code_size": 16100,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534969,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T01:28:35.000Z",
+    "code_updated_at": "2025-06-13T05:12:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465757,
+        "name": "Brendan Moore",
+        "created_at": "2025-05-05T01:25:34.000Z",
+        "url": "https://greasyfork.org/users/1465757-brendan-moore"
+      }
+    ],
+    "name": "Begone YouTube Shorts",
+    "description": "Remove all references to YouTube Shorts from the home page, sidebar, and newly loaded content. Any shorts are redirected to the /watch equivalent.",
+    "url": "https://greasyfork.org/scripts/534969-begone-youtube-shorts",
+    "code_url": "https://update.greasyfork.org/scripts/534969/Begone%20YouTube%20Shorts.user.js",
+    "code_size": 6044,
+    "license": "MIT License",
+    "version": "2027-06-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

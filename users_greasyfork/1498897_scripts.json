@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543791,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-27T15:31:39.000Z",
+    "code_updated_at": "2025-07-27T15:31:39.000Z",
+    "namespace": "https://gobattle.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498897,
+        "name": "workerbob",
+        "created_at": "2025-07-27T15:18:24.000Z",
+        "url": "https://greasyfork.org/users/1498897-workerbob"
+      }
+    ],
+    "name": "Gobattle.io Fast Down + Attack (50ms)",
+    "description": "Hold Q to spam down (S) and attack (V) every 50ms in Gobattle.io. Auto combo spam to help test inputs or show how keyboard automation works.",
+    "url": "https://greasyfork.org/scripts/543791-gobattle-io-fast-down-attack-50ms",
+    "code_url": "https://update.greasyfork.org/scripts/543791/Gobattleio%20Fast%20Down%20%2B%20Attack%20%2850ms%29.user.js",
+    "code_size": 1892,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

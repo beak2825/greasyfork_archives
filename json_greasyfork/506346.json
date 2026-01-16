@@ -1,0 +1,34 @@
+{
+  "id": 506346,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-02T05:11:18.000Z",
+  "code_updated_at": "2024-09-02T05:11:18.000Z",
+  "namespace": "https://github.com/yclown/myTamperMokey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1361840,
+      "name": "Madhatter2099",
+      "created_at": "2024-09-02T05:03:04.000Z",
+      "url": "https://greasyfork.org/users/1361840-madhatter2099",
+      "scripts": []
+    }
+  ],
+  "name": "必应积分自动脚本（Bing Rewards Script）",
+  "description": "使用edge搜索，脚本会自动生成搜索字符,循环搜索直到达到指定次数（默认电脑端40，手机端30），次数到了之后不再搜索，在搜索页右边可重置或关闭脚本。按F12进入调式模式，切换成手机模式，可执行手机搜索",
+  "url": "https://greasyfork.org/scripts/506346-%E5%BF%85%E5%BA%94%E7%A7%AF%E5%88%86%E8%87%AA%E5%8A%A8%E8%84%9A%E6%9C%AC-bing-rewards-script",
+  "code_url": "https://update.greasyfork.org/scripts/506346/%E5%BF%85%E5%BA%94%E7%A7%AF%E5%88%86%E8%87%AA%E5%8A%A8%E8%84%9A%E6%9C%AC%EF%BC%88Bing%20Rewards%20Script%EF%BC%89.user.js",
+  "code_size": 6493,
+  "license": "GPL",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526430,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-10T05:40:22.000Z",
+    "code_updated_at": "2025-02-10T05:40:22.000Z",
+    "namespace": "https://main.gatewa.rs/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433473,
+        "name": "sgwfarmer",
+        "created_at": "2025-02-10T05:34:08.000Z",
+        "url": "https://greasyfork.org/users/1433473-sgwfarmer"
+      }
+    ],
+    "name": "Sort Battlefield Table by Treasury (Auto-Sort)",
+    "description": "Automatically sorts the Battlefield table by Treasury in descending order (highest to lowest) by computing the correct column index, cleaning up the treasury value, and reversing it to match the displayed order.",
+    "url": "https://greasyfork.org/scripts/526430-sort-battlefield-table-by-treasury-auto-sort",
+    "code_url": "https://update.greasyfork.org/scripts/526430/Sort%20Battlefield%20Table%20by%20Treasury%20%28Auto-Sort%29.user.js",
+    "code_size": 4418,
+    "license": "MIT License",
+    "version": "1.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

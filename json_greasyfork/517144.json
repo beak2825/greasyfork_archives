@@ -1,0 +1,59 @@
+{
+  "id": 517144,
+  "daily_installs": 0,
+  "total_installs": 190,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-13T10:42:51.000Z",
+  "code_updated_at": "2024-11-14T10:40:42.000Z",
+  "namespace": "https://linux.do/u/f-droid",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1395468,
+      "name": "F-Droid",
+      "created_at": "2024-11-13T10:17:40.000Z",
+      "url": "https://greasyfork.org/users/1395468-f-droid",
+      "scripts": [
+        {
+          "id": 517144,
+          "daily_installs": 0,
+          "total_installs": 190,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-13T10:42:51.000Z",
+          "code_updated_at": "2024-11-14T10:40:42.000Z",
+          "namespace": "https://linux.do/u/f-droid",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT Helper",
+          "description": "一站式ChatGPT增强工具，支持Access Token获取、服务降级检测等功能",
+          "url": "https://greasyfork.org/scripts/517144-chatgpt-helper",
+          "code_url": "https://update.greasyfork.org/scripts/517144/ChatGPT%20Helper.user.js",
+          "code_size": 14098,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT Helper",
+  "description": "一站式ChatGPT增强工具，支持Access Token获取、服务降级检测等功能",
+  "url": "https://greasyfork.org/scripts/517144-chatgpt-helper",
+  "code_url": "https://update.greasyfork.org/scripts/517144/ChatGPT%20Helper.user.js",
+  "code_size": 14098,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

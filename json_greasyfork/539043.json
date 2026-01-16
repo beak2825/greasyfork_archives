@@ -1,0 +1,34 @@
+{
+  "id": 539043,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-10T21:07:23.000Z",
+  "code_updated_at": "2025-06-10T21:30:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481779,
+      "name": "EaZZyHK",
+      "created_at": "2025-06-10T21:02:57.000Z",
+      "url": "https://greasyfork.org/users/1481779-eazzyhk",
+      "scripts": []
+    }
+  ],
+  "name": "Manarion - Codex Donation Counter",
+  "description": "Adds a button to count Codex donations for the current month from the guild activity log.",
+  "url": "https://greasyfork.org/scripts/539043-manarion-codex-donation-counter",
+  "code_url": "https://update.greasyfork.org/scripts/539043/Manarion%20-%20Codex%20Donation%20Counter.user.js",
+  "code_size": 8671,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

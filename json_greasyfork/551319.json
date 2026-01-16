@@ -1,0 +1,34 @@
+{
+  "id": 551319,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-02T07:16:08.000Z",
+  "code_updated_at": "2025-10-02T07:16:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1518624,
+      "name": "chunchunyd",
+      "created_at": "2025-09-23T18:34:51.000Z",
+      "url": "https://greasyfork.org/users/1518624-chunchunyd",
+      "scripts": []
+    }
+  ],
+  "name": "Gemini 内容导出器",
+  "description": "在页面上添加一个按钮，用于点击后遍历所有 immersive-entry-chip，提取内容并整合成一个文件下载。",
+  "url": "https://greasyfork.org/scripts/551319-gemini-%E5%86%85%E5%AE%B9%E5%AF%BC%E5%87%BA%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/551319/Gemini%20%E5%86%85%E5%AE%B9%E5%AF%BC%E5%87%BA%E5%99%A8.user.js",
+  "code_size": 5926,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 496886,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-02T18:35:31.000Z",
+    "code_updated_at": "2024-06-16T18:16:43.000Z",
+    "namespace": "QTools.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1298632,
+        "name": "张未希",
+        "created_at": "2024-05-08T18:02:53.000Z",
+        "url": "https://greasyfork.org/users/1298632-%E5%BC%A0%E6%9C%AA%E5%B8%8C"
+      }
+    ],
+    "name": "自动注册sf",
+    "description": "自动注册openai",
+    "url": "https://greasyfork.org/scripts/496886-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8Csf",
+    "code_url": "https://update.greasyfork.org/scripts/496886/%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8Csf.user.js",
+    "code_size": 13510,
+    "license": "MIT License",
+    "version": "3.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 496884,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-02T18:19:29.000Z",
+    "code_updated_at": "2024-07-21T13:58:11.000Z",
+    "namespace": "QTools.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1298632,
+        "name": "张未希",
+        "created_at": "2024-05-08T18:02:53.000Z",
+        "url": "https://greasyfork.org/users/1298632-%E5%BC%A0%E6%9C%AA%E5%B8%8C"
+      }
+    ],
+    "name": "自动注册gemini",
+    "description": "自动注册openai",
+    "url": "https://greasyfork.org/scripts/496884-%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8Cgemini",
+    "code_url": "https://update.greasyfork.org/scripts/496884/%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8Cgemini.user.js",
+    "code_size": 23993,
+    "license": "MIT License",
+    "version": "3.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 518849,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-25T19:49:04.000Z",
+  "code_updated_at": "2025-12-14T19:36:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1359352,
+      "name": "Vladyslav Svitlyi",
+      "created_at": "2024-08-28T14:00:42.000Z",
+      "url": "https://greasyfork.org/users/1359352-vladyslav-svitlyi"
+    }
+  ],
+  "name": "Change Color and Warn for Customer",
+  "description": "Change color, warn on close, and suggest name updates from forms with ignore functionality.",
+  "url": "https://greasyfork.org/scripts/518849-change-color-and-warn-for-customer",
+  "code_url": "https://update.greasyfork.org/scripts/518849/Change%20Color%20and%20Warn%20for%20Customer.user.js",
+  "code_size": 10979,
+  "license": null,
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

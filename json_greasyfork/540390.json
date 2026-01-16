@@ -1,0 +1,59 @@
+{
+  "id": 540390,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-22T09:56:34.000Z",
+  "code_updated_at": "2025-06-22T09:56:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1192329,
+      "name": "柳志远",
+      "created_at": "2023-10-09T23:06:33.000Z",
+      "url": "https://greasyfork.org/users/1192329-%E6%9F%B3%E5%BF%97%E8%BF%9C",
+      "scripts": [
+        {
+          "id": 540390,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-22T09:56:34.000Z",
+          "code_updated_at": "2025-06-22T09:56:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "防止切屏检测 (ks.html)",
+          "description": "阻止 ks.html 页面检测用户是否切换了浏览器标签或窗口。",
+          "url": "https://greasyfork.org/scripts/540390-%E9%98%B2%E6%AD%A2%E5%88%87%E5%B1%8F%E6%A3%80%E6%B5%8B-ks-html",
+          "code_url": "https://update.greasyfork.org/scripts/540390/%E9%98%B2%E6%AD%A2%E5%88%87%E5%B1%8F%E6%A3%80%E6%B5%8B%20%28kshtml%29.user.js",
+          "code_size": 2118,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "防止切屏检测 (ks.html)",
+  "description": "阻止 ks.html 页面检测用户是否切换了浏览器标签或窗口。",
+  "url": "https://greasyfork.org/scripts/540390-%E9%98%B2%E6%AD%A2%E5%88%87%E5%B1%8F%E6%A3%80%E6%B5%8B-ks-html",
+  "code_url": "https://update.greasyfork.org/scripts/540390/%E9%98%B2%E6%AD%A2%E5%88%87%E5%B1%8F%E6%A3%80%E6%B5%8B%20%28kshtml%29.user.js",
+  "code_size": 2118,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 506207,
+    "daily_installs": 1,
+    "total_installs": 448,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-01T08:02:00.000Z",
+    "code_updated_at": "2024-09-15T15:10:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1360405,
+        "name": "weixiaozi",
+        "created_at": "2024-08-30T11:39:52.000Z",
+        "url": "https://greasyfork.org/users/1360405-weixiaozi"
+      }
+    ],
+    "name": "神行百速",
+    "description": "对网页提供变速功能",
+    "url": "https://greasyfork.org/scripts/506207-%E7%A5%9E%E8%A1%8C%E7%99%BE%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/506207/%E7%A5%9E%E8%A1%8C%E7%99%BE%E9%80%9F.user.js",
+    "code_size": 961,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

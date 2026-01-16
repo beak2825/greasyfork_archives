@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543845,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T08:27:09.000Z",
+    "code_updated_at": "2025-07-28T08:30:05.000Z",
+    "namespace": "https://github.com/adzcsx2/hide-zhihu-comment",
+    "support_url": "https://github.com/adzcsx2/hide-zhihu-comment",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499091,
+        "name": "Hoyn Long",
+        "created_at": "2025-07-28T08:24:49.000Z",
+        "url": "https://greasyfork.org/users/1499091-hoyn-long"
+      }
+    ],
+    "name": "屏蔽知乎营销广告",
+    "description": "屏蔽隐藏低信息量的评论，营销号软广告评论，虽然对精品文章也会误伤，但是为了1%的精品，吃99%的答辩不划算。",
+    "url": "https://greasyfork.org/scripts/543845-%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E8%90%A5%E9%94%80%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/543845/%E5%B1%8F%E8%94%BD%E7%9F%A5%E4%B9%8E%E8%90%A5%E9%94%80%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 5282,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

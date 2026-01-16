@@ -1,0 +1,34 @@
+{
+  "id": 554233,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T21:04:44.000Z",
+  "code_updated_at": "2025-10-30T21:05:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532389,
+      "name": "Conan Kim",
+      "created_at": "2025-10-30T21:02:14.000Z",
+      "url": "https://greasyfork.org/users/1532389-conan-kim",
+      "scripts": []
+    }
+  ],
+  "name": "Chzzk Chat Cleaner",
+  "description": "채팅창에 랭킹 등 불필요한 영역 제거",
+  "url": "https://greasyfork.org/scripts/554233-chzzk-chat-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/554233/Chzzk%20Chat%20Cleaner.user.js",
+  "code_size": 2350,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

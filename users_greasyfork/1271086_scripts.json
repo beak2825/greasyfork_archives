@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545654,
+    "daily_installs": 3,
+    "total_installs": 56,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-13T07:21:11.000Z",
+    "code_updated_at": "2025-08-22T07:43:22.000Z",
+    "namespace": "https://space.bilibili.com/508469689",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271086,
+        "name": "茶铭SerenMaze",
+        "created_at": "2024-03-06T15:16:19.000Z",
+        "url": "https://greasyfork.org/users/1271086-%E8%8C%B6%E9%93%ADserenmaze"
+      }
+    ],
+    "name": "B站视频恰饭广告跳过",
+    "description": "基于弹幕的指路而制作的广告跳过器",
+    "url": "https://greasyfork.org/scripts/545654-b%E7%AB%99%E8%A7%86%E9%A2%91%E6%81%B0%E9%A5%AD%E5%B9%BF%E5%91%8A%E8%B7%B3%E8%BF%87",
+    "code_url": "https://update.greasyfork.org/scripts/545654/B%E7%AB%99%E8%A7%86%E9%A2%91%E6%81%B0%E9%A5%AD%E5%B9%BF%E5%91%8A%E8%B7%B3%E8%BF%87.user.js",
+    "code_size": 23881,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

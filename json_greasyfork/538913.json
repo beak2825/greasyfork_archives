@@ -1,0 +1,34 @@
+{
+  "id": 538913,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T10:04:03.000Z",
+  "code_updated_at": "2025-07-23T16:41:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453552,
+      "name": "Мартин Хачатрян",
+      "created_at": "2025-04-03T09:48:51.000Z",
+      "url": "https://greasyfork.org/users/1453552-%D0%BC%D0%B0%D1%80%D1%82%D0%B8%D0%BD-%D1%85%D0%B0%D1%87%D0%B0%D1%82%D1%80%D1%8F%D0%BD",
+      "scripts": []
+    }
+  ],
+  "name": "Dodo Product Collector",
+  "description": "Автоматический сбор информации о продуктах из административной панели Dodo Pizza с обработкой по частям для избежания ошибок памяти.",
+  "url": "https://greasyfork.org/scripts/538913-dodo-product-collector",
+  "code_url": "https://update.greasyfork.org/scripts/538913/Dodo%20Product%20Collector.user.js",
+  "code_size": 43654,
+  "license": "MIT License",
+  "version": "4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

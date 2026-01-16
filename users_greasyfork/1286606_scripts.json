@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511761,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T12:43:01.000Z",
+    "code_updated_at": "2024-10-08T01:50:30.000Z",
+    "namespace": "HUSEIDON",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1286606,
+        "name": "HUSEIDON",
+        "created_at": "2024-04-10T20:56:28.000Z",
+        "url": "https://greasyfork.org/users/1286606-huseidon"
+      }
+    ],
+    "name": "Highlight Keywords",
+    "description": "Highlights predefined keywords with Ctrl+Right-Click options to manage keywords.",
+    "url": "https://greasyfork.org/scripts/511761-highlight-keywords",
+    "code_url": "https://update.greasyfork.org/scripts/511761/Highlight%20Keywords.user.js",
+    "code_size": 10513,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

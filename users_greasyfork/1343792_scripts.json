@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502373,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-01T16:51:09.000Z",
+    "code_updated_at": "2024-08-01T16:51:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1343792,
+        "name": "hwzt -",
+        "created_at": "2024-08-01T16:50:17.000Z",
+        "url": "https://greasyfork.org/users/1343792-hwzt"
+      }
+    ],
+    "name": "Change GeoGuessr Font to Comic Sans",
+    "description": "Change the font of GeoGuessr to Comic Sans",
+    "url": "https://greasyfork.org/scripts/502373-change-geoguessr-font-to-comic-sans",
+    "code_url": "https://update.greasyfork.org/scripts/502373/Change%20GeoGuessr%20Font%20to%20Comic%20Sans.user.js",
+    "code_size": 1050,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

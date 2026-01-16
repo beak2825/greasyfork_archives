@@ -1,0 +1,59 @@
+{
+  "id": 540266,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T22:51:01.000Z",
+  "code_updated_at": "2025-06-20T23:24:07.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 394099,
+      "name": "ored gaming",
+      "created_at": "2019-11-02T02:45:34.000Z",
+      "url": "https://greasyfork.org/users/394099-ored-gaming",
+      "scripts": [
+        {
+          "id": 471544,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-07-23T23:51:28.000Z",
+          "code_updated_at": "2023-07-23T23:51:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Free Logo Design Utils",
+          "description": "Little utils for free logo design",
+          "url": "https://greasyfork.org/scripts/471544-free-logo-design-utils",
+          "code_url": "https://update.greasyfork.org/scripts/471544/Free%20Logo%20Design%20Utils.user.js",
+          "code_size": 2271,
+          "license": "GNU GPLv3",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "New script",
+  "description": "piss",
+  "url": "https://greasyfork.org/scripts/540266-new-script",
+  "code_url": "https://update.greasyfork.org/scripts/540266/New%20script.user.js",
+  "code_size": 3984,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 544437,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-02T19:59:39.000Z",
+    "code_updated_at": "2025-08-15T04:16:33.000Z",
+    "namespace": "https://oqarshi.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1413936,
+        "name": "Oqarshi",
+        "created_at": "2024-12-21T21:04:26.000Z",
+        "url": "https://greasyfork.org/users/1413936-oqarshi"
+      }
+    ],
+    "name": "Rolocate Restore Classic Terms All Languages",
+    "description": "Classic Terms In All Languages For RoLocate To Use",
+    "url": "https://greasyfork.org/scripts/544437-rolocate-restore-classic-terms-all-languages",
+    "code_url": "https://update.greasyfork.org/scripts/544437/1642116/Rolocate%20Restore%20Classic%20Terms%20All%20Languages.js",
+    "code_size": 2367,
+    "license": null,
+    "version": "1.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540553,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T20:24:37.000Z",
+    "code_updated_at": "2025-08-24T23:53:46.000Z",
+    "namespace": "https://oqarshi.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1413936,
+        "name": "Oqarshi",
+        "created_at": "2024-12-21T21:04:26.000Z",
+        "url": "https://greasyfork.org/users/1413936-oqarshi"
+      }
+    ],
+    "name": "Rolocate Flag Base64 Data",
+    "description": "base64 images fo flags for RoLocate to use.",
+    "url": "https://greasyfork.org/scripts/540553-rolocate-flag-base64-data",
+    "code_url": "https://update.greasyfork.org/scripts/540553/1648593/Rolocate%20Flag%20Base64%20Data.js",
+    "code_size": 21456,
+    "license": null,
+    "version": "1.03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535590,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T22:07:28.000Z",
+    "code_updated_at": "2025-05-10T22:07:27.000Z",
+    "namespace": "https://oqarshi.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1413936,
+        "name": "Oqarshi",
+        "created_at": "2024-12-21T21:04:26.000Z",
+        "url": "https://greasyfork.org/users/1413936-oqarshi"
+      }
+    ],
+    "name": "Rolocate Base64 Image Library 2.0",
+    "description": "Stores Base64 images for reuse in the Rolocate userscript. 2.0 version",
+    "url": "https://greasyfork.org/scripts/535590-rolocate-base64-image-library-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/535590/1586769/Rolocate%20Base64%20Image%20Library%2020.js",
+    "code_size": 17095,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523727,
+    "daily_installs": 49,
+    "total_installs": 9586,
+    "fan_score": "60.2",
+    "good_ratings": 36,
+    "ok_ratings": 23,
+    "bad_ratings": 7,
+    "created_at": "2025-01-14T05:19:59.000Z",
+    "code_updated_at": "2025-12-31T16:59:48.000Z",
+    "namespace": "https://oqarshi.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1413936,
+        "name": "Oqarshi",
+        "created_at": "2024-12-21T21:04:26.000Z",
+        "url": "https://greasyfork.org/users/1413936-oqarshi"
+      }
+    ],
+    "name": "RoLocate",
+    "description": "Adds filter options to roblox server page. Alternative to paid extensions like RoPro, RoGold®, RoQol, and RoKit.",
+    "url": "https://greasyfork.org/scripts/523727-rolocate",
+    "code_url": "https://update.greasyfork.org/scripts/523727/RoLocate.user.js",
+    "code_size": 760969,
+    "license": "Custom - Personal Use Only",
+    "version": "44.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

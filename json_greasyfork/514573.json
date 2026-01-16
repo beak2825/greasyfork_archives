@@ -1,0 +1,59 @@
+{
+  "id": 514573,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-29T01:04:46.000Z",
+  "code_updated_at": "2024-10-29T01:04:46.000Z",
+  "namespace": "https://greasyfork.org/scripts/412245",
+  "support_url": "https://github.com/XIU2/UserScript",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1387833,
+      "name": "Micro84",
+      "created_at": "2024-10-28T23:30:32.000Z",
+      "url": "https://greasyfork.org/users/1387833-micro84",
+      "scripts": [
+        {
+          "id": 514573,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-29T01:04:46.000Z",
+          "code_updated_at": "2024-10-29T01:04:46.000Z",
+          "namespace": "https://greasyfork.org/scripts/412245",
+          "support_url": "https://github.com/XIU2/UserScript",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Github å¢žå¼º - é«˜é€Ÿä¸‹è½½",
+          "description": "é«˜é€Ÿä¸‹è½½ Git Clone/SSHã€Releaseã€Rawã€Code(ZIP) ç­‰æ–‡ä»¶ (å…¬ç›ŠåŠ é€Ÿ)ã€é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)ã€æ·»åŠ  git clone å‘½ä»¤",
+          "url": "https://greasyfork.org/scripts/514573-github-%C3%A5-%C5%BE%C3%A5-%C2%BA-%C3%A9-%C3%A9-%C3%BF%C3%A4-%C3%A8",
+          "code_url": "https://update.greasyfork.org/scripts/514573/Github%20%C3%A5%C2%A2%C5%BE%C3%A5%C2%BC%C2%BA%20-%20%C3%A9%C2%AB%CB%9C%C3%A9%E2%82%AC%C5%B8%C3%A4%C2%B8%E2%80%B9%C3%A8%C2%BD%C2%BD.user.js",
+          "code_size": 50417,
+          "license": "GPL-3.0 License",
+          "version": "2.6.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Github å¢žå¼º - é«˜é€Ÿä¸‹è½½",
+  "description": "é«˜é€Ÿä¸‹è½½ Git Clone/SSHã€Releaseã€Rawã€Code(ZIP) ç­‰æ–‡ä»¶ (å…¬ç›ŠåŠ é€Ÿ)ã€é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)ã€æ·»åŠ  git clone å‘½ä»¤",
+  "url": "https://greasyfork.org/scripts/514573-github-%C3%A5-%C5%BE%C3%A5-%C2%BA-%C3%A9-%C3%A9-%C3%BF%C3%A4-%C3%A8",
+  "code_url": "https://update.greasyfork.org/scripts/514573/Github%20%C3%A5%C2%A2%C5%BE%C3%A5%C2%BC%C2%BA%20-%20%C3%A9%C2%AB%CB%9C%C3%A9%E2%82%AC%C5%B8%C3%A4%C2%B8%E2%80%B9%C3%A8%C2%BD%C2%BD.user.js",
+  "code_size": 50417,
+  "license": "GPL-3.0 License",
+  "version": "2.6.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

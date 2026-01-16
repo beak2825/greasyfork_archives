@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513846,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T12:40:55.000Z",
+    "code_updated_at": "2024-10-24T13:09:05.000Z",
+    "namespace": "https://github.com/linyanm",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385566,
+        "name": "linyanm",
+        "created_at": "2024-10-24T12:29:58.000Z",
+        "url": "https://greasyfork.org/users/1385566-linyanm"
+      }
+    ],
+    "name": "Bilibili Ban Kit",
+    "description": "批量ban掉你讨厌的up主",
+    "url": "https://greasyfork.org/scripts/513846-bilibili-ban-kit",
+    "code_url": "https://update.greasyfork.org/scripts/513846/Bilibili%20Ban%20Kit.user.js",
+    "code_size": 10114,
+    "license": "MIT License",
+    "version": "2024-10-24--01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

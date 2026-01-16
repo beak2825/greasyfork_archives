@@ -1,0 +1,101 @@
+[
+  {
+    "id": 542411,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T17:38:16.000Z",
+    "code_updated_at": "2025-07-13T16:22:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739158,
+        "name": "Limbo Chou",
+        "created_at": "2021-02-20T07:35:56.000Z",
+        "url": "https://greasyfork.org/users/739158-limbo-chou"
+      }
+    ],
+    "name": "知识星球视频缩放",
+    "description": "在知识星球为视频添加一个美观的、不遮挡内容的布局缩放控制器。支持视频从中心突破边界放大，并自动推开上下文内容。",
+    "url": "https://greasyfork.org/scripts/542411-%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E8%A7%86%E9%A2%91%E7%BC%A9%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/542411/%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E8%A7%86%E9%A2%91%E7%BC%A9%E6%94%BE.user.js",
+    "code_size": 11432,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498267,
+    "daily_installs": 0,
+    "total_installs": 100,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-18T11:47:31.000Z",
+    "code_updated_at": "2024-10-18T11:38:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739158,
+        "name": "Limbo Chou",
+        "created_at": "2021-02-20T07:35:56.000Z",
+        "url": "https://greasyfork.org/users/739158-limbo-chou"
+      }
+    ],
+    "name": "B站合集、列表和单视频时间进度查询",
+    "description": "实现B站合集、列表和单视频的总时长、观看时长、剩余时长，并添加进度条",
+    "url": "https://greasyfork.org/scripts/498267-b%E7%AB%99%E5%90%88%E9%9B%86-%E5%88%97%E8%A1%A8%E5%92%8C%E5%8D%95%E8%A7%86%E9%A2%91%E6%97%B6%E9%97%B4%E8%BF%9B%E5%BA%A6%E6%9F%A5%E8%AF%A2",
+    "code_url": "https://update.greasyfork.org/scripts/498267/B%E7%AB%99%E5%90%88%E9%9B%86%E3%80%81%E5%88%97%E8%A1%A8%E5%92%8C%E5%8D%95%E8%A7%86%E9%A2%91%E6%97%B6%E9%97%B4%E8%BF%9B%E5%BA%A6%E6%9F%A5%E8%AF%A2.user.js",
+    "code_size": 10534,
+    "license": "MIT License",
+    "version": "5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498170,
+    "daily_installs": 0,
+    "total_installs": 86,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-17T14:04:50.000Z",
+    "code_updated_at": "2024-06-18T11:34:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 739158,
+        "name": "Limbo Chou",
+        "created_at": "2021-02-20T07:35:56.000Z",
+        "url": "https://greasyfork.org/users/739158-limbo-chou"
+      }
+    ],
+    "name": "B站合集查询时间",
+    "description": "实现B站合集的总时长、观看时长、剩余时长",
+    "url": "https://greasyfork.org/scripts/498170-b%E7%AB%99%E5%90%88%E9%9B%86%E6%9F%A5%E8%AF%A2%E6%97%B6%E9%97%B4",
+    "code_url": "https://update.greasyfork.org/scripts/498170/B%E7%AB%99%E5%90%88%E9%9B%86%E6%9F%A5%E8%AF%A2%E6%97%B6%E9%97%B4.user.js",
+    "code_size": 5099,
+    "license": "MIT License",
+    "version": "2024-06-18",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

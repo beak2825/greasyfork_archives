@@ -1,0 +1,33 @@
+{
+  "id": 544550,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-03T20:55:31.000Z",
+  "code_updated_at": "2025-08-03T21:27:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 863740,
+      "name": "Horst Wittlich",
+      "created_at": "2022-01-11T20:28:14.000Z",
+      "url": "https://greasyfork.org/users/863740-horst-wittlich"
+    }
+  ],
+  "name": "YouTube original Audio Auto Sync Blocker",
+  "description": "Erzwingt das laden der originalen Audiospur und verhindert Auto-Sync dauerhaft so das Automatisch synchronisiert nicht mehr Automatisch läd",
+  "url": "https://greasyfork.org/scripts/544550-youtube-original-audio-auto-sync-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/544550/YouTube%20original%20Audio%20Auto%20Sync%20Blocker.user.js",
+  "code_size": 21737,
+  "license": "MIT License",
+  "version": "3.2",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

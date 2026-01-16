@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502464,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-02T19:03:49.000Z",
+    "code_updated_at": "2024-08-02T19:03:49.000Z",
+    "namespace": "intsven",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1344364,
+        "name": "intsven",
+        "created_at": "2024-08-02T18:58:57.000Z",
+        "url": "https://greasyfork.org/users/1344364-intsven"
+      }
+    ],
+    "name": "RTIRL Speed Display",
+    "description": "Display speed of streamers on rtirl.com",
+    "url": "https://greasyfork.org/scripts/502464-rtirl-speed-display",
+    "code_url": "https://update.greasyfork.org/scripts/502464/RTIRL%20Speed%20Display.user.js",
+    "code_size": 4889,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

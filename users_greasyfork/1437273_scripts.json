@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527477,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-19T20:56:08.000Z",
+    "code_updated_at": "2025-02-19T20:56:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1437273,
+        "name": "Majoramari",
+        "created_at": "2025-02-19T20:52:10.000Z",
+        "url": "https://greasyfork.org/users/1437273-majoramari"
+      }
+    ],
+    "name": "Programming Advices Enhancer",
+    "description": "Extract and show total course lectures and durations.",
+    "url": "https://greasyfork.org/scripts/527477-programming-advices-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/527477/Programming%20Advices%20Enhancer.user.js",
+    "code_size": 5438,
+    "license": "MIT License",
+    "version": "2025-01-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527476,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-19T20:54:13.000Z",
+    "code_updated_at": "2025-02-19T20:54:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1437273,
+        "name": "Majoramari",
+        "created_at": "2025-02-19T20:52:10.000Z",
+        "url": "https://greasyfork.org/users/1437273-majoramari"
+      }
+    ],
+    "name": "Fix Play/Pause",
+    "description": "Fixes media controls (rewind, forward, play/pause) on Udemy course pages.",
+    "url": "https://greasyfork.org/scripts/527476-fix-play-pause",
+    "code_url": "https://update.greasyfork.org/scripts/527476/Fix%20PlayPause.user.js",
+    "code_size": 1164,
+    "license": "MIT License",
+    "version": "2025-02-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

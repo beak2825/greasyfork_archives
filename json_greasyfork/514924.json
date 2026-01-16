@@ -1,0 +1,59 @@
+{
+  "id": 514924,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-30T19:59:26.000Z",
+  "code_updated_at": "2024-10-30T20:11:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1388789,
+      "name": "Vrocks Torn",
+      "created_at": "2024-10-30T18:56:10.000Z",
+      "url": "https://greasyfork.org/users/1388789-vrocks-torn",
+      "scripts": [
+        {
+          "id": 514924,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-30T19:59:26.000Z",
+          "code_updated_at": "2024-10-30T20:11:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Halloweek Equipment Alert",
+          "description": "Show an alert if you're about to fly without one or more of special Halloween weapons/armor.",
+          "url": "https://greasyfork.org/scripts/514924-halloweek-equipment-alert",
+          "code_url": "https://update.greasyfork.org/scripts/514924/Halloweek%20Equipment%20Alert.user.js",
+          "code_size": 2551,
+          "license": "MIT License",
+          "version": "1.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Halloweek Equipment Alert",
+  "description": "Show an alert if you're about to fly without one or more of special Halloween weapons/armor.",
+  "url": "https://greasyfork.org/scripts/514924-halloweek-equipment-alert",
+  "code_url": "https://update.greasyfork.org/scripts/514924/Halloweek%20Equipment%20Alert.user.js",
+  "code_size": 2551,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

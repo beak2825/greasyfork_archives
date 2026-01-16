@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538700,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T12:00:58.000Z",
+    "code_updated_at": "2025-07-24T16:38:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 833671,
+        "name": "Cea",
+        "created_at": "2021-11-08T15:55:47.000Z",
+        "url": "https://greasyfork.org/users/833671-cea"
+      }
+    ],
+    "name": "原神激励领奖",
+    "description": "B站原神激励活动自动领奖脚本，简洁高效的自动化工具",
+    "url": "https://greasyfork.org/scripts/538700-%E5%8E%9F%E7%A5%9E%E6%BF%80%E5%8A%B1%E9%A2%86%E5%A5%96",
+    "code_url": "https://update.greasyfork.org/scripts/538700/%E5%8E%9F%E7%A5%9E%E6%BF%80%E5%8A%B1%E9%A2%86%E5%A5%96.user.js",
+    "code_size": 24818,
+    "license": "MIT License",
+    "version": "20250725003805",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

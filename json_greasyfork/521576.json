@@ -1,0 +1,59 @@
+{
+  "id": 521576,
+  "daily_installs": 0,
+  "total_installs": 679,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-23T15:11:38.000Z",
+  "code_updated_at": "2025-05-26T16:23:17.000Z",
+  "namespace": "https://www.ras-immi.moj.go.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 325969,
+      "name": "Ukenn",
+      "created_at": "2019-08-14T02:30:08.000Z",
+      "url": "https://greasyfork.org/users/325969-ukenn",
+      "scripts": [
+        {
+          "id": 521576,
+          "daily_installs": 0,
+          "total_installs": 679,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-23T15:11:38.000Z",
+          "code_updated_at": "2025-05-26T16:23:17.000Z",
+          "namespace": "https://www.ras-immi.moj.go.jp/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JPKI在留申请在线系统证明书模拟提交",
+          "description": "模拟点击按钮后直接跳过证书验证并进行下一步操作；支持保存证书内容，可折叠并记住折叠状态",
+          "url": "https://greasyfork.org/scripts/521576-jpki%E5%9C%A8%E7%95%99%E7%94%B3%E8%AF%B7%E5%9C%A8%E7%BA%BF%E7%B3%BB%E7%BB%9F%E8%AF%81%E6%98%8E%E4%B9%A6%E6%A8%A1%E6%8B%9F%E6%8F%90%E4%BA%A4",
+          "code_url": "https://update.greasyfork.org/scripts/521576/JPKI%E5%9C%A8%E7%95%99%E7%94%B3%E8%AF%B7%E5%9C%A8%E7%BA%BF%E7%B3%BB%E7%BB%9F%E8%AF%81%E6%98%8E%E4%B9%A6%E6%A8%A1%E6%8B%9F%E6%8F%90%E4%BA%A4.user.js",
+          "code_size": 13128,
+          "license": "MIT License",
+          "version": "1.0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JPKI在留申请在线系统证明书模拟提交",
+  "description": "模拟点击按钮后直接跳过证书验证并进行下一步操作；支持保存证书内容，可折叠并记住折叠状态",
+  "url": "https://greasyfork.org/scripts/521576-jpki%E5%9C%A8%E7%95%99%E7%94%B3%E8%AF%B7%E5%9C%A8%E7%BA%BF%E7%B3%BB%E7%BB%9F%E8%AF%81%E6%98%8E%E4%B9%A6%E6%A8%A1%E6%8B%9F%E6%8F%90%E4%BA%A4",
+  "code_url": "https://update.greasyfork.org/scripts/521576/JPKI%E5%9C%A8%E7%95%99%E7%94%B3%E8%AF%B7%E5%9C%A8%E7%BA%BF%E7%B3%BB%E7%BB%9F%E8%AF%81%E6%98%8E%E4%B9%A6%E6%A8%A1%E6%8B%9F%E6%8F%90%E4%BA%A4.user.js",
+  "code_size": 13128,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

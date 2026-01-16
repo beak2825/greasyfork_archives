@@ -1,0 +1,33 @@
+{
+  "id": 501824,
+  "daily_installs": 0,
+  "total_installs": 894,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-26T06:20:38.000Z",
+  "code_updated_at": "2025-09-26T20:31:27.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/465416-maejok-tools-for-fishtank-live",
+  "support_url": "https://github.com/f3rked/maej3rked-tools/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1339764,
+      "name": "Ferk",
+      "created_at": "2024-07-25T15:43:47.000Z",
+      "url": "https://greasyfork.org/users/1339764-ferk"
+    }
+  ],
+  "name": "MAEJ3RKED-TOOLS for Fishtank.live",
+  "description": "Add-on Tools for Fishtank.live Season 3",
+  "url": "https://greasyfork.org/scripts/501824-maej3rked-tools-for-fishtank-live",
+  "code_url": "https://update.greasyfork.org/scripts/501824/MAEJ3RKED-TOOLS%20for%20Fishtanklive.user.js",
+  "code_size": 191413,
+  "license": "GNU GPLv3",
+  "version": "2.34.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

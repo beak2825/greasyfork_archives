@@ -1,0 +1,33 @@
+{
+  "id": 529246,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-09T02:49:38.000Z",
+  "code_updated_at": "2025-03-09T02:49:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1443748,
+      "name": "Егор Салажников",
+      "created_at": "2025-03-09T02:49:01.000Z",
+      "url": "https://greasyfork.org/users/1443748-%D0%B5%D0%B3%D0%BE%D1%80-%D1%81%D0%B0%D0%BB%D0%B0%D0%B6%D0%BD%D0%B8%D0%BA%D0%BE%D0%B2"
+    }
+  ],
+  "name": "Spam Destroyer",
+  "description": "Удаляет сообщения с запрещёнными символами",
+  "url": "https://greasyfork.org/scripts/529246-spam-destroyer",
+  "code_url": "https://update.greasyfork.org/scripts/529246/Spam%20Destroyer.user.js",
+  "code_size": 2178,
+  "license": null,
+  "version": "1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

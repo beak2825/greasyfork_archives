@@ -1,0 +1,34 @@
+{
+  "id": 514981,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-31T05:10:40.000Z",
+  "code_updated_at": "2024-10-31T05:10:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1347077,
+      "name": "Max-0",
+      "created_at": "2024-08-07T12:20:04.000Z",
+      "url": "https://greasyfork.org/users/1347077-max-0",
+      "scripts": []
+    }
+  ],
+  "name": "Ironwood RPG - Profile Viewer",
+  "description": "View advanced details about your profile using a getUser input.",
+  "url": "https://greasyfork.org/scripts/514981-ironwood-rpg-profile-viewer",
+  "code_url": "https://update.greasyfork.org/scripts/514981/Ironwood%20RPG%20-%20Profile%20Viewer.user.js",
+  "code_size": 428633,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 510307,
+  "daily_installs": 0,
+  "total_installs": 323,
+  "fan_score": "20.8",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-09-26T16:40:59.000Z",
+  "code_updated_at": "2024-09-26T16:43:00.000Z",
+  "namespace": "https://1stream.icu/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1373387,
+      "name": "yuant",
+      "created_at": "2024-09-26T16:04:16.000Z",
+      "url": "https://greasyfork.org/users/1373387-yuant",
+      "scripts": [
+        {
+          "id": 510307,
+          "daily_installs": 0,
+          "total_installs": 323,
+          "fan_score": "20.8",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-09-26T16:40:59.000Z",
+          "code_updated_at": "2024-09-26T16:43:00.000Z",
+          "namespace": "https://1stream.icu/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT Anti-Degeneracy",
+          "description": "修改ChatGPT相关网页UA为移动端以解决模型降级问题",
+          "url": "https://greasyfork.org/scripts/510307-chatgpt-anti-degeneracy",
+          "code_url": "https://update.greasyfork.org/scripts/510307/ChatGPT%20Anti-Degeneracy.user.js",
+          "code_size": 757,
+          "license": "MIT License",
+          "version": "2024-09-27",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT Anti-Degeneracy",
+  "description": "修改ChatGPT相关网页UA为移动端以解决模型降级问题",
+  "url": "https://greasyfork.org/scripts/510307-chatgpt-anti-degeneracy",
+  "code_url": "https://update.greasyfork.org/scripts/510307/ChatGPT%20Anti-Degeneracy.user.js",
+  "code_size": 757,
+  "license": "MIT License",
+  "version": "2024-09-27",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

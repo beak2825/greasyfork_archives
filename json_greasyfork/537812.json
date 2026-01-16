@@ -1,0 +1,59 @@
+{
+  "id": 537812,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T03:22:54.000Z",
+  "code_updated_at": "2025-05-31T03:37:55.000Z",
+  "namespace": "http://creationwong.xyz",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1475019,
+      "name": "CreationWong",
+      "created_at": "2025-05-26T08:53:29.000Z",
+      "url": "https://greasyfork.org/users/1475019-creationwong",
+      "scripts": [
+        {
+          "id": 537812,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-31T03:22:54.000Z",
+          "code_updated_at": "2025-05-31T03:37:55.000Z",
+          "namespace": "http://creationwong.xyz",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Redirect Unity China to Unity3D",
+          "description": "将 *.unity.cn 页面重定向到 unity3d.com",
+          "url": "https://greasyfork.org/scripts/537812-redirect-unity-china-to-unity3d",
+          "code_url": "https://update.greasyfork.org/scripts/537812/Redirect%20Unity%20China%20to%20Unity3D.user.js",
+          "code_size": 1130,
+          "license": "EPL",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Redirect Unity China to Unity3D",
+  "description": "将 *.unity.cn 页面重定向到 unity3d.com",
+  "url": "https://greasyfork.org/scripts/537812-redirect-unity-china-to-unity3d",
+  "code_url": "https://update.greasyfork.org/scripts/537812/Redirect%20Unity%20China%20to%20Unity3D.user.js",
+  "code_size": 1130,
+  "license": "EPL",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

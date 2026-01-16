@@ -17,33 +17,7 @@
       "id": 1530350,
       "name": "Woody Borraccino",
       "created_at": "2025-10-24T21:58:53.000Z",
-      "url": "https://greasyfork.org/users/1530350-woody-borraccino",
-      "scripts": [
-        {
-          "id": 553602,
-          "daily_installs": 0,
-          "total_installs": 0,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-10-24T22:03:06.000Z",
-          "code_updated_at": "2025-10-24T22:03:06.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "CM Summary - Cardmarket summary with PSA/CGC/Beckett details",
-          "description": "Show the grading table only if there are graded cards. Total cards always visible. © Woody",
-          "url": "https://greasyfork.org/scripts/553602-cm-summary-cardmarket-summary-with-psa-cgc-beckett-details",
-          "code_url": "https://update.greasyfork.org/scripts/553602/CM%20Summary%20-%20Cardmarket%20summary%20with%20PSACGCBeckett%20details.user.js",
-          "code_size": 8612,
-          "license": "MIT License",
-          "version": "4.6",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1530350-woody-borraccino"
     }
   ],
   "name": "CM Summary - Cardmarket summary with PSA/CGC/Beckett details",

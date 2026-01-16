@@ -1,0 +1,33 @@
+{
+  "id": 525727,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T09:29:52.000Z",
+  "code_updated_at": "2025-07-21T01:11:38.000Z",
+  "namespace": "https://github.com/GooglyBlox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1289637,
+      "name": "GooglyBlox",
+      "created_at": "2024-04-18T01:04:51.000Z",
+      "url": "https://greasyfork.org/users/1289637-googlyblox"
+    }
+  ],
+  "name": "GitHub Notifications Highlight",
+  "description": "Highlight notifications pertaining to yourself on GitHub and place them at the top of the home feed.",
+  "url": "https://greasyfork.org/scripts/525727-github-notifications-highlight",
+  "code_url": "https://update.greasyfork.org/scripts/525727/GitHub%20Notifications%20Highlight.user.js",
+  "code_size": 3243,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 497760,
+  "daily_installs": 7,
+  "total_installs": 12288,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-06-13T02:44:09.000Z",
+  "code_updated_at": "2024-06-24T14:29:08.000Z",
+  "namespace": "https://search.videoall.icu/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1317009,
+      "name": "greyDeep",
+      "created_at": "2024-06-13T02:21:22.000Z",
+      "url": "https://greasyfork.org/users/1317009-greydeep",
+      "scripts": [
+        {
+          "id": 497760,
+          "daily_installs": 7,
+          "total_installs": 12288,
+          "fan_score": "31.0",
+          "good_ratings": 2,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2024-06-13T02:44:09.000Z",
+          "code_updated_at": "2024-06-24T14:29:08.000Z",
+          "namespace": "https://search.videoall.icu/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[影视工具]VIP电影解析，短视频解析，搜索引擎，豆瓣/时光快搜",
+          "description": "VIP电影解析：优酷，腾讯，爱奇异，乐视，PPTV，1905,芒果，风行，b站，搜狐；短视频解析：youtube，B站，西瓜，抖音，快手，小红书，微博，A站；",
+          "url": "https://greasyfork.org/scripts/497760-%E5%BD%B1%E8%A7%86%E5%B7%A5%E5%85%B7-vip%E7%94%B5%E5%BD%B1%E8%A7%A3%E6%9E%90-%E7%9F%AD%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E-%E8%B1%86%E7%93%A3-%E6%97%B6%E5%85%89%E5%BF%AB%E6%90%9C",
+          "code_url": "https://update.greasyfork.org/scripts/497760/%5B%E5%BD%B1%E8%A7%86%E5%B7%A5%E5%85%B7%5DVIP%E7%94%B5%E5%BD%B1%E8%A7%A3%E6%9E%90%EF%BC%8C%E7%9F%AD%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%EF%BC%8C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%EF%BC%8C%E8%B1%86%E7%93%A3%E6%97%B6%E5%85%89%E5%BF%AB%E6%90%9C.user.js",
+          "code_size": 45218,
+          "license": "MIT License",
+          "version": "v1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[影视工具]VIP电影解析，短视频解析，搜索引擎，豆瓣/时光快搜",
+  "description": "VIP电影解析：优酷，腾讯，爱奇异，乐视，PPTV，1905,芒果，风行，b站，搜狐；短视频解析：youtube，B站，西瓜，抖音，快手，小红书，微博，A站；",
+  "url": "https://greasyfork.org/scripts/497760-%E5%BD%B1%E8%A7%86%E5%B7%A5%E5%85%B7-vip%E7%94%B5%E5%BD%B1%E8%A7%A3%E6%9E%90-%E7%9F%AD%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90-%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E-%E8%B1%86%E7%93%A3-%E6%97%B6%E5%85%89%E5%BF%AB%E6%90%9C",
+  "code_url": "https://update.greasyfork.org/scripts/497760/%5B%E5%BD%B1%E8%A7%86%E5%B7%A5%E5%85%B7%5DVIP%E7%94%B5%E5%BD%B1%E8%A7%A3%E6%9E%90%EF%BC%8C%E7%9F%AD%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%EF%BC%8C%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%EF%BC%8C%E8%B1%86%E7%93%A3%E6%97%B6%E5%85%89%E5%BF%AB%E6%90%9C.user.js",
+  "code_size": 45218,
+  "license": "MIT License",
+  "version": "v1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

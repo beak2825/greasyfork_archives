@@ -1,0 +1,68 @@
+[
+  {
+    "id": 521408,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-21T18:49:54.000Z",
+    "code_updated_at": "2025-02-19T23:47:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1226021,
+        "name": "阿福醬",
+        "created_at": "2023-12-01T02:02:14.000Z",
+        "url": "https://greasyfork.org/users/1226021-%E9%98%BF%E7%A6%8F%E9%86%AC"
+      }
+    ],
+    "name": "RivalRegions auto script V3",
+    "description": "HandsFree Script For RivalRegions!",
+    "url": "https://greasyfork.org/scripts/521408-rivalregions-auto-script-v3",
+    "code_url": "https://update.greasyfork.org/scripts/521408/RivalRegions%20auto%20script%20V3.user.js",
+    "code_size": 24554,
+    "license": null,
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516861,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-11T14:34:29.000Z",
+    "code_updated_at": "2024-12-17T18:00:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1226021,
+        "name": "阿福醬",
+        "created_at": "2023-12-01T02:02:14.000Z",
+        "url": "https://greasyfork.org/users/1226021-%E9%98%BF%E7%A6%8F%E9%86%AC"
+      }
+    ],
+    "name": "RivalRegions auto script reforge",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/516861-rivalregions-auto-script-reforge",
+    "code_url": "https://update.greasyfork.org/scripts/516861/RivalRegions%20auto%20script%20reforge.user.js",
+    "code_size": 22623,
+    "license": null,
+    "version": "2.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

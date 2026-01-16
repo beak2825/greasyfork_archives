@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541406,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T07:35:17.000Z",
+    "code_updated_at": "2025-07-02T07:35:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1365546,
+        "name": "jontyding",
+        "created_at": "2024-09-10T05:56:10.000Z",
+        "url": "https://greasyfork.org/users/1365546-jontyding"
+      }
+    ],
+    "name": "V2EX Ad Blocker",
+    "description": "Remove Phi Browser ad from V2EX",
+    "url": "https://greasyfork.org/scripts/541406-v2ex-ad-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/541406/V2EX%20Ad%20Blocker.user.js",
+    "code_size": 533,
+    "license": "GPL License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

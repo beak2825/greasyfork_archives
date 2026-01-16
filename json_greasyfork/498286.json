@@ -1,0 +1,59 @@
+{
+  "id": 498286,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-18T16:05:05.000Z",
+  "code_updated_at": "2024-06-26T05:45:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320170,
+      "name": "Sei2423",
+      "created_at": "2024-06-18T15:54:14.000Z",
+      "url": "https://greasyfork.org/users/1320170-sei2423",
+      "scripts": [
+        {
+          "id": 498286,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-18T16:05:05.000Z",
+          "code_updated_at": "2024-06-26T05:45:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ニコニコ(Re:仮)、次の動画へGO!!",
+          "description": "次の動画に自動で行ったり前の動画に戻ったりできます",
+          "url": "https://greasyfork.org/scripts/498286-%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3-re-%E4%BB%AE-%E6%AC%A1%E3%81%AE%E5%8B%95%E7%94%BB%E3%81%B8go",
+          "code_url": "https://update.greasyfork.org/scripts/498286/%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%28Re%3A%E4%BB%AE%29%E3%80%81%E6%AC%A1%E3%81%AE%E5%8B%95%E7%94%BB%E3%81%B8GO%21%21.user.js",
+          "code_size": 3743,
+          "license": "MIT License",
+          "version": "2024_6_26",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ニコニコ(Re:仮)、次の動画へGO!!",
+  "description": "次の動画に自動で行ったり前の動画に戻ったりできます",
+  "url": "https://greasyfork.org/scripts/498286-%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3-re-%E4%BB%AE-%E6%AC%A1%E3%81%AE%E5%8B%95%E7%94%BB%E3%81%B8go",
+  "code_url": "https://update.greasyfork.org/scripts/498286/%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%28Re%3A%E4%BB%AE%29%E3%80%81%E6%AC%A1%E3%81%AE%E5%8B%95%E7%94%BB%E3%81%B8GO%21%21.user.js",
+  "code_size": 3743,
+  "license": "MIT License",
+  "version": "2024_6_26",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533070,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T22:39:26.000Z",
+    "code_updated_at": "2025-04-16T23:15:47.000Z",
+    "namespace": "https://github.com/kaubu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453339,
+        "name": "kaubu",
+        "created_at": "2025-04-02T18:51:40.000Z",
+        "url": "https://greasyfork.org/users/1453339-kaubu"
+      }
+    ],
+    "name": "Twitter Followers Mutual Tracker",
+    "description": "Track mutual and non-mutual Twitter followers and download as JSON",
+    "url": "https://greasyfork.org/scripts/533070-twitter-followers-mutual-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/533070/Twitter%20Followers%20Mutual%20Tracker.user.js",
+    "code_size": 15444,
+    "license": "BSD Zero Clause License",
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531617,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-02T19:04:43.000Z",
+    "code_updated_at": "2025-04-08T08:13:25.000Z",
+    "namespace": "https://github.com/kaubu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453339,
+        "name": "kaubu",
+        "created_at": "2025-04-02T18:51:40.000Z",
+        "url": "https://greasyfork.org/users/1453339-kaubu"
+      }
+    ],
+    "name": "Highlight VSBattles Stats based on Key",
+    "description": "Highlights stat sections separated by '|' with different colours in a cyclical pattern on VSBattles wiki.",
+    "url": "https://greasyfork.org/scripts/531617-highlight-vsbattles-stats-based-on-key",
+    "code_url": "https://update.greasyfork.org/scripts/531617/Highlight%20VSBattles%20Stats%20based%20on%20Key.user.js",
+    "code_size": 2144,
+    "license": "BSD Zero Clause License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

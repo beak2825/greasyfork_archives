@@ -1,0 +1,33 @@
+{
+  "id": 537506,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T09:25:31.000Z",
+  "code_updated_at": "2025-05-28T09:25:30.000Z",
+  "namespace": "https://ep-uncum.surge.sh/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1475846,
+      "name": "stephen kingsman (Seassed)",
+      "created_at": "2025-05-28T09:23:47.000Z",
+      "url": "https://greasyfork.org/users/1475846-stephen-kingsman-seassed"
+    }
+  ],
+  "name": "Education Perfect Uncummer - Track Ep Answers and Autoinput (list)",
+  "description": "Extracts EP Answers and autoinput for vocabulary list activities - Semi Automatic Mode only - Autoclicker Supported",
+  "url": "https://greasyfork.org/scripts/537506-education-perfect-uncummer-track-ep-answers-and-autoinput-list",
+  "code_url": "https://update.greasyfork.org/scripts/537506/Education%20Perfect%20Uncummer%20-%20Track%20Ep%20Answers%20and%20Autoinput%20%28list%29.user.js",
+  "code_size": 46843,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "2.05",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

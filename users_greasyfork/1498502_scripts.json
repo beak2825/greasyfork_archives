@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543691,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T11:14:11.000Z",
+    "code_updated_at": "2025-07-26T11:14:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498502,
+        "name": "Devrei",
+        "created_at": "2025-07-26T11:13:22.000Z",
+        "url": "https://greasyfork.org/users/1498502-devrei"
+      }
+    ],
+    "name": "AI场景感知助手",
+    "description": "一个可通过AI判断页面内容类型、可拖动、能对选中和悬停文字做出即时响应，并具备智能学习提醒（全屏警句）功能的AI看板娘。超时会受到递增惩罚！",
+    "url": "https://greasyfork.org/scripts/543691-ai%E5%9C%BA%E6%99%AF%E6%84%9F%E7%9F%A5%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/543691/AI%E5%9C%BA%E6%99%AF%E6%84%9F%E7%9F%A5%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 36954,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

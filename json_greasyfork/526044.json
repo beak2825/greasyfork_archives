@@ -1,0 +1,34 @@
+{
+  "id": 526044,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-06T01:54:12.000Z",
+  "code_updated_at": "2025-04-18T15:18:21.000Z",
+  "namespace": "https://github.com/Mr-Tree-S/BTAS",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1059488,
+      "name": "Mr-Tree-S",
+      "created_at": "2023-04-13T12:25:47.000Z",
+      "url": "https://greasyfork.org/users/1059488-mr-tree-s",
+      "scripts": []
+    }
+  ],
+  "name": "BTAS",
+  "description": "Blue Team Auxiliary Script",
+  "url": "https://greasyfork.org/scripts/526044-btas",
+  "code_url": "https://update.greasyfork.org/scripts/526044/BTAS.user.js",
+  "code_size": 257031,
+  "license": "Apache License 2.0",
+  "version": "4.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 534171,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-27T15:25:43.000Z",
+  "code_updated_at": "2025-04-27T15:25:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462884,
+      "name": "Milo Green",
+      "created_at": "2025-04-27T15:15:31.000Z",
+      "url": "https://greasyfork.org/users/1462884-milo-green"
+    }
+  ],
+  "name": "AI Fuck CC Enhanced Tools (v1.1 - Integrated Simplify Button)",
+  "description": "Combines AI Reply Simplification (last 1-2, visual & API) with a Draggable/Resizable Floating AI Assistant Panel. Simplify button integrated into panel header.",
+  "url": "https://greasyfork.org/scripts/534171-ai-cc-enhanced-tools-v1-1-integrated-simplify-button",
+  "code_url": "https://update.greasyfork.org/scripts/534171/AI%20Fuck%20CC%20Enhanced%20Tools%20%28v11%20-%20Integrated%20Simplify%20Button%29.user.js",
+  "code_size": 62699,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

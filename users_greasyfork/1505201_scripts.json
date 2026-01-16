@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550709,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-26T01:28:56.000Z",
+    "code_updated_at": "2025-09-26T01:28:56.000Z",
+    "namespace": "ocr-demo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505201,
+        "name": "yang-kun-long",
+        "created_at": "2025-08-15T06:29:37.000Z",
+        "url": "https://greasyfork.org/users/1505201-yang-kun-long"
+      }
+    ],
+    "name": "OCR Box (WeChat-like, corrected fixed) → FastAPI",
+    "description": "Alt+0：像微信截图，四周暗化，中间透明；自动探测祖先 transform/缩放并矫正遮罩，消除可见错位",
+    "url": "https://greasyfork.org/scripts/550709-ocr-box-wechat-like-corrected-fixed-fastapi",
+    "code_url": "https://update.greasyfork.org/scripts/550709/OCR%20Box%20%28WeChat-like%2C%20corrected%20fixed%29%20%E2%86%92%20FastAPI.user.js",
+    "code_size": 12310,
+    "license": null,
+    "version": "3.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545922,
+    "daily_installs": 1,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T06:49:09.000Z",
+    "code_updated_at": "2025-08-15T06:49:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505201,
+        "name": "yang-kun-long",
+        "created_at": "2025-08-15T06:29:37.000Z",
+        "url": "https://greasyfork.org/users/1505201-yang-kun-long"
+      }
+    ],
+    "name": "摸鱼神器 - 极简透明阅读器",
+    "description": "透明可调、无边栏、TXT小说阅读器；Alt+Shift+X 启动/隐藏；三击空白隐藏 + S键显示 + 自动记忆章节和滚动位置",
+    "url": "https://greasyfork.org/scripts/545922-%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%99%A8-%E6%9E%81%E7%AE%80%E9%80%8F%E6%98%8E%E9%98%85%E8%AF%BB%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/545922/%E6%91%B8%E9%B1%BC%E7%A5%9E%E5%99%A8%20-%20%E6%9E%81%E7%AE%80%E9%80%8F%E6%98%8E%E9%98%85%E8%AF%BB%E5%99%A8.user.js",
+    "code_size": 12725,
+    "license": "MIT License",
+    "version": "2.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

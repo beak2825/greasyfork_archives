@@ -1,0 +1,59 @@
+{
+  "id": 541268,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-30T19:05:35.000Z",
+  "code_updated_at": "2025-06-30T19:05:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490417,
+      "name": "Juhrien",
+      "created_at": "2025-06-30T19:00:43.000Z",
+      "url": "https://greasyfork.org/users/1490417-juhrien",
+      "scripts": [
+        {
+          "id": 541268,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-30T19:05:35.000Z",
+          "code_updated_at": "2025-06-30T19:05:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Technopat Alıntı Yardımcısı",
+          "description": "Technopat forumunda mesaj alıntılamanın davranışını otomatik kullanıcı bahsetme ekleme ile değiştirir",
+          "url": "https://greasyfork.org/scripts/541268-technopat-al%C4%B1nt%C4%B1-yard%C4%B1mc%C4%B1s%C4%B1",
+          "code_url": "https://update.greasyfork.org/scripts/541268/Technopat%20Al%C4%B1nt%C4%B1%20Yard%C4%B1mc%C4%B1s%C4%B1.user.js",
+          "code_size": 5488,
+          "license": "MIT License",
+          "version": "2025-06-30",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Technopat Alıntı Yardımcısı",
+  "description": "Technopat forumunda mesaj alıntılamanın davranışını otomatik kullanıcı bahsetme ekleme ile değiştirir",
+  "url": "https://greasyfork.org/scripts/541268-technopat-al%C4%B1nt%C4%B1-yard%C4%B1mc%C4%B1s%C4%B1",
+  "code_url": "https://update.greasyfork.org/scripts/541268/Technopat%20Al%C4%B1nt%C4%B1%20Yard%C4%B1mc%C4%B1s%C4%B1.user.js",
+  "code_size": 5488,
+  "license": "MIT License",
+  "version": "2025-06-30",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

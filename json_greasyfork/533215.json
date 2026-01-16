@@ -1,0 +1,34 @@
+{
+  "id": 533215,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-18T07:35:44.000Z",
+  "code_updated_at": "2025-04-18T07:35:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1457753,
+      "name": "Svyatoslav Podolskiy",
+      "created_at": "2025-04-14T10:26:27.000Z",
+      "url": "https://greasyfork.org/users/1457753-svyatoslav-podolskiy",
+      "scripts": []
+    }
+  ],
+  "name": "WOTOM Tools: Copy IP + SSH",
+  "description": "Кнопки копирования IP и прямого подключения по SSH для .pseudolink (только для IP)",
+  "url": "https://greasyfork.org/scripts/533215-wotom-tools-copy-ip-ssh",
+  "code_url": "https://update.greasyfork.org/scripts/533215/WOTOM%20Tools%3A%20Copy%20IP%20%2B%20SSH.user.js",
+  "code_size": 3111,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

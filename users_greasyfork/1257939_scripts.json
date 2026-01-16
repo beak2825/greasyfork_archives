@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 524319,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-20T16:31:48.000Z",
+    "code_updated_at": "2025-01-21T19:40:34.000Z",
+    "namespace": "https://greasyfork.org/users/1257939",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1257939,
+        "name": "Accus1958",
+        "created_at": "2024-02-05T19:34:30.000Z",
+        "url": "https://greasyfork.org/users/1257939-accus1958"
+      }
+    ],
+    "name": "xing.com Recruiter Info without Premium",
+    "description": "Show recruiter name and unblurred photo in notifications",
+    "url": "https://greasyfork.org/scripts/524319-xing-com-recruiter-info-without-premium",
+    "code_url": "https://update.greasyfork.org/scripts/524319/xingcom%20Recruiter%20Info%20without%20Premium.user.js",
+    "code_size": 3377,
+    "license": "GPLv3",
+    "version": "0.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

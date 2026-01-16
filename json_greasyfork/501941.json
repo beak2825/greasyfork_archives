@@ -1,0 +1,59 @@
+{
+  "id": 501941,
+  "daily_installs": 0,
+  "total_installs": 259,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-27T17:58:27.000Z",
+  "code_updated_at": "2024-08-12T11:53:37.000Z",
+  "namespace": "https://greasyfork.org/users/1340999",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1340999,
+      "name": "Zinovia",
+      "created_at": "2024-07-27T17:57:11.000Z",
+      "url": "https://greasyfork.org/users/1340999-zinovia",
+      "scripts": [
+        {
+          "id": 501941,
+          "daily_installs": 0,
+          "total_installs": 259,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-27T17:58:27.000Z",
+          "code_updated_at": "2024-08-12T11:53:37.000Z",
+          "namespace": "https://greasyfork.org/users/1340999",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Super Duolingo Ad Blocker",
+          "description": "Block ads and unwanted promotional content on Duolingo, including dynamically named ad classes, while preserving essential lesson content and handling fullscreen ads by pressing the exit button automatically or selecting \"No Thanks\" on specific ads.",
+          "url": "https://greasyfork.org/scripts/501941-super-duolingo-ad-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/501941/Super%20Duolingo%20Ad%20Blocker.user.js",
+          "code_size": 4667,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Super Duolingo Ad Blocker",
+  "description": "Block ads and unwanted promotional content on Duolingo, including dynamically named ad classes, while preserving essential lesson content and handling fullscreen ads by pressing the exit button automatically or selecting \"No Thanks\" on specific ads.",
+  "url": "https://greasyfork.org/scripts/501941-super-duolingo-ad-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/501941/Super%20Duolingo%20Ad%20Blocker.user.js",
+  "code_size": 4667,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

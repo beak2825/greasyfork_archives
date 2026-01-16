@@ -1,0 +1,34 @@
+{
+  "id": 549757,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-16T19:01:57.000Z",
+  "code_updated_at": "2025-09-16T19:01:57.000Z",
+  "namespace": "https://greasyfork.org/ru/users/1014354-pavel-volue-v",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1317310,
+      "name": "Anubis Goodman",
+      "created_at": "2024-06-13T13:55:47.000Z",
+      "url": "https://greasyfork.org/users/1317310-anubis-goodman",
+      "scripts": []
+    }
+  ],
+  "name": "VLADIMIR | Скрипт для Кураторов форума",
+  "description": "Скрипт для упрощения работы кураторам форума.",
+  "url": "https://greasyfork.org/scripts/549757-vladimir-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/549757/VLADIMIR%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 18099,
+  "license": "MIT License",
+  "version": "1.3.06",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

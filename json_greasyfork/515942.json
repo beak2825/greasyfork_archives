@@ -1,0 +1,59 @@
+{
+  "id": 515942,
+  "daily_installs": 2,
+  "total_installs": 277,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-05T13:33:44.000Z",
+  "code_updated_at": "2024-11-10T18:12:54.000Z",
+  "namespace": "Cassandre",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1390917,
+      "name": "Cassandre",
+      "created_at": "2024-11-04T05:06:54.000Z",
+      "url": "https://greasyfork.org/users/1390917-cassandre",
+      "scripts": [
+        {
+          "id": 515942,
+          "daily_installs": 2,
+          "total_installs": 277,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-05T13:33:44.000Z",
+          "code_updated_at": "2024-11-10T18:12:54.000Z",
+          "namespace": "Cassandre",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Extract Douyin Live Stream URLs",
+          "description": "Extract stream URLs from Douyin live streams",
+          "url": "https://greasyfork.org/scripts/515942-extract-douyin-live-stream-urls",
+          "code_url": "https://update.greasyfork.org/scripts/515942/Extract%20Douyin%20Live%20Stream%20URLs.user.js",
+          "code_size": 24769,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Extract Douyin Live Stream URLs",
+  "description": "Extract stream URLs from Douyin live streams",
+  "url": "https://greasyfork.org/scripts/515942-extract-douyin-live-stream-urls",
+  "code_url": "https://update.greasyfork.org/scripts/515942/Extract%20Douyin%20Live%20Stream%20URLs.user.js",
+  "code_size": 24769,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

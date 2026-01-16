@@ -1,0 +1,34 @@
+{
+  "id": 531616,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-02T18:50:01.000Z",
+  "code_updated_at": "2025-04-02T18:50:01.000Z",
+  "namespace": "https://github.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453337,
+      "name": "Canal Do Jhon !!",
+      "created_at": "2025-04-02T18:48:33.000Z",
+      "url": "https://greasyfork.org/users/1453337-canal-do-jhon",
+      "scripts": []
+    }
+  ],
+  "name": "Xxandy Busca de Vídeos Personalizada + Atalhos + Duração (Corrigido)",
+  "description": "Agora a busca usa OR para funcionar corretamente no Google!",
+  "url": "https://greasyfork.org/scripts/531616-xxandy-busca-de-v%C3%ADdeos-personalizada-atalhos-dura%C3%A7%C3%A3o-corrigido",
+  "code_url": "https://update.greasyfork.org/scripts/531616/Xxandy%20Busca%20de%20V%C3%ADdeos%20Personalizada%20%2B%20Atalhos%20%2B%20Dura%C3%A7%C3%A3o%20%28Corrigido%29.user.js",
+  "code_size": 2947,
+  "license": null,
+  "version": "1.3",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

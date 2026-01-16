@@ -1,0 +1,33 @@
+{
+  "id": 535275,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-07T23:11:43.000Z",
+  "code_updated_at": "2025-05-07T23:25:06.000Z",
+  "namespace": "http://yourdomain.com/mathspace-solver/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1435262,
+      "name": "Caspian Basha",
+      "created_at": "2025-02-15T07:15:40.000Z",
+      "url": "https://greasyfork.org/users/1435262-caspian-basha"
+    }
+  ],
+  "name": "Mathspace Solver (Auto-fill Answers)",
+  "description": "Solves Mathspace problems and auto-fills the answer boxes",
+  "url": "https://greasyfork.org/scripts/535275-mathspace-solver-auto-fill-answers",
+  "code_url": "https://update.greasyfork.org/scripts/535275/Mathspace%20Solver%20%28Auto-fill%20Answers%29.user.js",
+  "code_size": 3966,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

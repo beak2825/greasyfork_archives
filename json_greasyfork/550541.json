@@ -1,0 +1,59 @@
+{
+  "id": 550541,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-24T10:48:54.000Z",
+  "code_updated_at": "2025-10-12T12:09:17.000Z",
+  "namespace": "https://github.com/yourname/douban-fulltext",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1512948,
+      "name": "happymg",
+      "created_at": "2025-09-08T09:58:54.000Z",
+      "url": "https://greasyfork.org/users/1512948-happymg",
+      "scripts": [
+        {
+          "id": 550541,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-24T10:48:54.000Z",
+          "code_updated_at": "2025-10-12T12:09:17.000Z",
+          "namespace": "https://github.com/yourname/douban-fulltext",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆瓣全文无跳转展开",
+          "description": "✨ 终极场景化控制！动态流智能展开，图书/影视/同城页直接跳转，\"提醒\"中的链接纯净跳转。",
+          "url": "https://greasyfork.org/scripts/550541-%E8%B1%86%E7%93%A3%E5%85%A8%E6%96%87%E6%97%A0%E8%B7%B3%E8%BD%AC%E5%B1%95%E5%BC%80",
+          "code_url": "https://update.greasyfork.org/scripts/550541/%E8%B1%86%E7%93%A3%E5%85%A8%E6%96%87%E6%97%A0%E8%B7%B3%E8%BD%AC%E5%B1%95%E5%BC%80.user.js",
+          "code_size": 15992,
+          "license": "MIT License",
+          "version": "3.9.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆瓣全文无跳转展开",
+  "description": "✨ 终极场景化控制！动态流智能展开，图书/影视/同城页直接跳转，\"提醒\"中的链接纯净跳转。",
+  "url": "https://greasyfork.org/scripts/550541-%E8%B1%86%E7%93%A3%E5%85%A8%E6%96%87%E6%97%A0%E8%B7%B3%E8%BD%AC%E5%B1%95%E5%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/550541/%E8%B1%86%E7%93%A3%E5%85%A8%E6%96%87%E6%97%A0%E8%B7%B3%E8%BD%AC%E5%B1%95%E5%BC%80.user.js",
+  "code_size": 15992,
+  "license": "MIT License",
+  "version": "3.9.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

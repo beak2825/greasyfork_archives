@@ -1,0 +1,33 @@
+{
+  "id": 510091,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-25T05:24:42.000Z",
+  "code_updated_at": "2024-09-25T05:24:42.000Z",
+  "namespace": "http://1998x-stack.github.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1372702,
+      "name": "1998x-stack",
+      "created_at": "2024-09-25T05:21:14.000Z",
+      "url": "https://greasyfork.org/users/1372702-1998x-stack"
+    }
+  ],
+  "name": "Disable Auto Translation for Specific Elements",
+  "description": "防止自动翻译数学公式、表格、图表等复杂内容",
+  "url": "https://greasyfork.org/scripts/510091-disable-auto-translation-for-specific-elements",
+  "code_url": "https://update.greasyfork.org/scripts/510091/Disable%20Auto%20Translation%20for%20Specific%20Elements.user.js",
+  "code_size": 1350,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

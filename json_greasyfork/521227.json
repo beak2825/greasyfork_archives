@@ -1,0 +1,34 @@
+{
+  "id": 521227,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-19T17:08:20.000Z",
+  "code_updated_at": "2024-12-19T17:08:20.000Z",
+  "namespace": "https://github.com/Spartan859",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1413088,
+      "name": "Xiangyu Li",
+      "created_at": "2024-12-19T16:29:51.000Z",
+      "url": "https://greasyfork.org/users/1413088-xiangyu-li",
+      "scripts": []
+    }
+  ],
+  "name": "VV吃到爆",
+  "description": "登录vv网站，在商品页面按下 alt+数字1 即可，完成一轮购买后会回到商品页面，再次按下 alt+数字1 重复此操作",
+  "url": "https://greasyfork.org/scripts/521227-vv%E5%90%83%E5%88%B0%E7%88%86",
+  "code_url": "https://update.greasyfork.org/scripts/521227/VV%E5%90%83%E5%88%B0%E7%88%86.user.js",
+  "code_size": 5616,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 518501,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-22T18:02:55.000Z",
+  "code_updated_at": "2024-11-22T18:02:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1342214,
+      "name": "RuriDragon",
+      "created_at": "2024-07-30T02:01:40.000Z",
+      "url": "https://greasyfork.org/users/1342214-ruridragon"
+    }
+  ],
+  "name": "CivitAI Filter Menu Enhanced",
+  "description": "Keep filter menu open and remove like/dislike buttons on civitai.com/generate",
+  "url": "https://greasyfork.org/scripts/518501-civitai-filter-menu-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/518501/CivitAI%20Filter%20Menu%20Enhanced.user.js",
+  "code_size": 2135,
+  "license": null,
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

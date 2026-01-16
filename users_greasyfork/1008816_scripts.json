@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518028,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-19T06:37:28.000Z",
+    "code_updated_at": "2024-11-23T12:56:51.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/518028-gitee%E5%AE%BD%E5%B1%8F%E6%98%BE%E7%A4%BA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1008816,
+        "name": "wangmaoxiong",
+        "created_at": "2023-01-08T07:42:56.000Z",
+        "url": "https://greasyfork.org/users/1008816-wangmaoxiong"
+      }
+    ],
+    "name": "Gitee宽屏显示",
+    "description": "Gitee宽屏显示，更方便的阅读内容。",
+    "url": "https://greasyfork.org/scripts/518028-gitee%E5%AE%BD%E5%B1%8F%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/518028/Gitee%E5%AE%BD%E5%B1%8F%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 2871,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

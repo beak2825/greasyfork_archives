@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535338,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T10:58:41.000Z",
+    "code_updated_at": "2025-05-08T10:58:41.000Z",
+    "namespace": "https://greasyfork.org/en/users/1465519-user89109",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465519,
+        "name": "user89109",
+        "created_at": "2025-05-04T10:40:05.000Z",
+        "url": "https://greasyfork.org/users/1465519-user89109"
+      }
+    ],
+    "name": "Ephemeral Encryptor",
+    "description": "Encrypts/decrypts text using session-based password & markers. Provides input area for encryption.",
+    "url": "https://greasyfork.org/scripts/535338-ephemeral-encryptor",
+    "code_url": "https://update.greasyfork.org/scripts/535338/Ephemeral%20Encryptor.user.js",
+    "code_size": 15425,
+    "license": "All Rights Reserved",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

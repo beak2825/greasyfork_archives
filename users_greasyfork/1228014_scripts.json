@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520419,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T13:16:14.000Z",
+    "code_updated_at": "2024-12-11T13:16:14.000Z",
+    "namespace": "https://github.com/AlainAlan/ZJUlib2douban/tree/main",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1228014,
+        "name": "AlainAlan",
+        "created_at": "2023-12-04T11:57:03.000Z",
+        "url": "https://greasyfork.org/users/1228014-alainalan"
+      }
+    ],
+    "name": "ZJUlib2Clipboard",
+    "description": "在ZJU图书馆页面添加功能按钮，自动复制在架可借书籍的信息（索书号、馆藏地点、书名、作者），并去重。",
+    "url": "https://greasyfork.org/scripts/520419-zjulib2clipboard",
+    "code_url": "https://update.greasyfork.org/scripts/520419/ZJUlib2Clipboard.user.js",
+    "code_size": 4054,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

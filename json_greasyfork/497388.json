@@ -1,0 +1,59 @@
+{
+  "id": 497388,
+  "daily_installs": 0,
+  "total_installs": 208,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-06-08T22:22:31.000Z",
+  "code_updated_at": "2024-08-24T10:11:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1314039,
+      "name": "BringBackTwitter",
+      "created_at": "2024-06-07T15:13:25.000Z",
+      "url": "https://greasyfork.org/users/1314039-bringbacktwitter",
+      "scripts": [
+        {
+          "id": 497388,
+          "daily_installs": 0,
+          "total_installs": 208,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2024-06-08T22:22:31.000Z",
+          "code_updated_at": "2024-08-24T10:11:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "X -> Twitter redirect & misc fixes",
+          "description": "Miscellaneous fixes for the Twitter (formerly X) platform.",
+          "url": "https://greasyfork.org/scripts/497388-x-twitter-redirect-misc-fixes",
+          "code_url": "https://update.greasyfork.org/scripts/497388/X%20-%3E%20Twitter%20redirect%20%20misc%20fixes.user.js",
+          "code_size": 6272,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "X -> Twitter redirect & misc fixes",
+  "description": "Miscellaneous fixes for the Twitter (formerly X) platform.",
+  "url": "https://greasyfork.org/scripts/497388-x-twitter-redirect-misc-fixes",
+  "code_url": "https://update.greasyfork.org/scripts/497388/X%20-%3E%20Twitter%20redirect%20%20misc%20fixes.user.js",
+  "code_size": 6272,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

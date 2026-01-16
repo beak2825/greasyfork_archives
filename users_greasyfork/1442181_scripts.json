@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528739,
+    "daily_installs": 2,
+    "total_installs": 69,
+    "fan_score": "43.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-04T10:50:23.000Z",
+    "code_updated_at": "2025-12-26T01:23:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442181,
+        "name": "util6",
+        "created_at": "2025-03-04T09:49:31.000Z",
+        "url": "https://greasyfork.org/users/1442181-util6"
+      }
+    ],
+    "name": "webAI聊天问题列表导航",
+    "description": "通过点击按钮显示用户问题列表，支持导航到特定问题、分页功能、正序/倒序切换，智能脉冲式加载历史记录突破懒加载，自动适配暗黑模式，按钮可拖动并保存位置，悬浮窗智能展开方向，无极调整按钮大小，新增NotebookLM支持",
+    "url": "https://greasyfork.org/scripts/528739-webai%E8%81%8A%E5%A4%A9%E9%97%AE%E9%A2%98%E5%88%97%E8%A1%A8%E5%AF%BC%E8%88%AA",
+    "code_url": "https://update.greasyfork.org/scripts/528739/webAI%E8%81%8A%E5%A4%A9%E9%97%AE%E9%A2%98%E5%88%97%E8%A1%A8%E5%AF%BC%E8%88%AA.user.js",
+    "code_size": 78175,
+    "license": null,
+    "version": "4.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

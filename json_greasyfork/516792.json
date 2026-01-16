@@ -1,0 +1,59 @@
+{
+  "id": 516792,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-11T04:27:47.000Z",
+  "code_updated_at": "2025-06-22T05:03:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1392684,
+      "name": "Kin7",
+      "created_at": "2024-11-08T01:50:57.000Z",
+      "url": "https://greasyfork.org/users/1392684-kin7",
+      "scripts": [
+        {
+          "id": 519210,
+          "daily_installs": 1,
+          "total_installs": 490,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-29T00:08:05.000Z",
+          "code_updated_at": "2024-11-29T10:36:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Jav备注(罩杯版)",
+          "description": "目前仅支持javdb.com。针对胸部的jav备注，为女优界面额外和个人主页名字后添加年龄、胸型、等备注，",
+          "url": "https://greasyfork.org/scripts/519210-jav%E5%A4%87%E6%B3%A8-%E7%BD%A9%E6%9D%AF%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/519210/Jav%E5%A4%87%E6%B3%A8%28%E7%BD%A9%E6%9D%AF%E7%89%88%29.user.js",
+          "code_size": 100989,
+          "license": "MIT License",
+          "version": "Bus0.9.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "K'S答题副本",
+  "description": "支持国开大部分题型，适合多人批量答题而非单独答题。仅收录并附带2024年秋季的新生答案，自用请自行收集答案，\"学习新思想，争做新青年！\"",
+  "url": "https://greasyfork.org/scripts/516792-k-s%E7%AD%94%E9%A2%98%E5%89%AF%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/516792/K%27S%E7%AD%94%E9%A2%98%E5%89%AF%E6%9C%AC.user.js",
+  "code_size": 51177,
+  "license": "MIT License",
+  "version": "0.77k",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

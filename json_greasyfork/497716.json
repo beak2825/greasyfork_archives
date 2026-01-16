@@ -1,0 +1,33 @@
+{
+  "id": 497716,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-12T09:51:43.000Z",
+  "code_updated_at": "2024-06-12T10:06:47.000Z",
+  "namespace": "leizingyiu.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 901648,
+      "name": "leizingyiu",
+      "created_at": "2022-04-13T10:05:53.000Z",
+      "url": "https://greasyfork.org/users/901648-leizingyiu"
+    }
+  ],
+  "name": "github commits { display: calendar; }",
+  "description": "show github commits as calendar",
+  "url": "https://greasyfork.org/scripts/497716-github-commits-display-calendar",
+  "code_url": "https://update.greasyfork.org/scripts/497716/github%20commits%20%7B%20display%3A%20calendar%3B%20%7D.user.js",
+  "code_size": 5460,
+  "license": "GNU GPLv3",
+  "version": "2024.06.12.17:44",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

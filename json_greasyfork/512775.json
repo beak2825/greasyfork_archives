@@ -1,0 +1,59 @@
+{
+  "id": 512775,
+  "daily_installs": 3,
+  "total_installs": 1444,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-16T02:12:43.000Z",
+  "code_updated_at": "2024-10-16T02:12:43.000Z",
+  "namespace": "real agar.io from 2015.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 948982,
+      "name": "@ya6h_",
+      "created_at": "2022-08-21T09:15:43.000Z",
+      "url": "https://greasyfork.org/users/948982-ya6h",
+      "scripts": [
+        {
+          "id": 512775,
+          "daily_installs": 3,
+          "total_installs": 1444,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-16T02:12:43.000Z",
+          "code_updated_at": "2024-10-16T02:12:43.000Z",
+          "namespace": "real agar.io from 2015.",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AGARIO Vanilla (@ya6h_)",
+          "description": "2015/2016",
+          "url": "https://greasyfork.org/scripts/512775-agario-vanilla-ya6h",
+          "code_url": "https://update.greasyfork.org/scripts/512775/AGARIO%20Vanilla%20%28%40ya6h_%29.user.js",
+          "code_size": 780,
+          "license": null,
+          "version": "v1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AGARIO Vanilla (@ya6h_)",
+  "description": "2015/2016",
+  "url": "https://greasyfork.org/scripts/512775-agario-vanilla-ya6h",
+  "code_url": "https://update.greasyfork.org/scripts/512775/AGARIO%20Vanilla%20%28%40ya6h_%29.user.js",
+  "code_size": 780,
+  "license": null,
+  "version": "v1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

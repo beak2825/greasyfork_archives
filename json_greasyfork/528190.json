@@ -1,0 +1,59 @@
+{
+  "id": 528190,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-27T02:49:53.000Z",
+  "code_updated_at": "2025-02-27T03:24:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244994,
+      "name": "LENIAW Tuma",
+      "created_at": "2024-01-08T09:56:40.000Z",
+      "url": "https://greasyfork.org/users/1244994-leniaw-tuma",
+      "scripts": [
+        {
+          "id": 528190,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-27T02:49:53.000Z",
+          "code_updated_at": "2025-02-27T03:24:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Speed Adjustment",
+          "description": "Video Speed Adjustment",
+          "url": "https://greasyfork.org/scripts/528190-speed-adjustment",
+          "code_url": "https://update.greasyfork.org/scripts/528190/Speed%20Adjustment.user.js",
+          "code_size": 10699,
+          "license": "MIT License",
+          "version": "2025-02-27 V1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Speed Adjustment",
+  "description": "Video Speed Adjustment",
+  "url": "https://greasyfork.org/scripts/528190-speed-adjustment",
+  "code_url": "https://update.greasyfork.org/scripts/528190/Speed%20Adjustment.user.js",
+  "code_size": 10699,
+  "license": "MIT License",
+  "version": "2025-02-27 V1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

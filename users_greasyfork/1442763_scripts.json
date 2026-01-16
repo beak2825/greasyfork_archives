@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528947,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-06T04:51:05.000Z",
+    "code_updated_at": "2025-03-06T04:54:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442763,
+        "name": "boddmg",
+        "created_at": "2025-03-06T04:46:47.000Z",
+        "url": "https://greasyfork.org/users/1442763-boddmg"
+      }
+    ],
+    "name": "Markdown 转 PDF 助手 - ChatGPT版",
+    "description": "在ChatGPT网站添加Markdown转PDF功能，支持脚注转换",
+    "url": "https://greasyfork.org/scripts/528947-markdown-%E8%BD%AC-pdf-%E5%8A%A9%E6%89%8B-chatgpt%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/528947/Markdown%20%E8%BD%AC%20PDF%20%E5%8A%A9%E6%89%8B%20-%20ChatGPT%E7%89%88.user.js",
+    "code_size": 37303,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

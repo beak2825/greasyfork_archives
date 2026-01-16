@@ -1,0 +1,59 @@
+{
+  "id": 526187,
+  "daily_installs": 0,
+  "total_installs": 52,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-07T13:50:42.000Z",
+  "code_updated_at": "2025-02-07T13:50:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1432598,
+      "name": "Imiku39",
+      "created_at": "2025-02-07T13:44:22.000Z",
+      "url": "https://greasyfork.org/users/1432598-imiku39",
+      "scripts": [
+        {
+          "id": 526187,
+          "daily_installs": 0,
+          "total_installs": 52,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-07T13:50:42.000Z",
+          "code_updated_at": "2025-02-07T13:50:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili CC字幕簡體轉繁體",
+          "description": "自動將 Bilibili 影片的 CC 字幕從簡體轉為繁體",
+          "url": "https://greasyfork.org/scripts/526187-bilibili-cc%E5%AD%97%E5%B9%95%E7%B0%A1%E9%AB%94%E8%BD%89%E7%B9%81%E9%AB%94",
+          "code_url": "https://update.greasyfork.org/scripts/526187/bilibili%20CC%E5%AD%97%E5%B9%95%E7%B0%A1%E9%AB%94%E8%BD%89%E7%B9%81%E9%AB%94.user.js",
+          "code_size": 2485,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili CC字幕簡體轉繁體",
+  "description": "自動將 Bilibili 影片的 CC 字幕從簡體轉為繁體",
+  "url": "https://greasyfork.org/scripts/526187-bilibili-cc%E5%AD%97%E5%B9%95%E7%B0%A1%E9%AB%94%E8%BD%89%E7%B9%81%E9%AB%94",
+  "code_url": "https://update.greasyfork.org/scripts/526187/bilibili%20CC%E5%AD%97%E5%B9%95%E7%B0%A1%E9%AB%94%E8%BD%89%E7%B9%81%E9%AB%94.user.js",
+  "code_size": 2485,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

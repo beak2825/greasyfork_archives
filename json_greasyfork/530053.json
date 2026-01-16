@@ -1,0 +1,33 @@
+{
+  "id": 530053,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-17T05:30:53.000Z",
+  "code_updated_at": "2025-03-17T05:36:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 339515,
+      "name": "min long",
+      "created_at": "2019-08-26T02:55:01.000Z",
+      "url": "https://greasyfork.org/users/339515-min-long"
+    }
+  ],
+  "name": "VSCode Extension Downloader",
+  "description": "在VS Code marketplace添加VSIX下载按钮",
+  "url": "https://greasyfork.org/scripts/530053-vscode-extension-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/530053/VSCode%20Extension%20Downloader.user.js",
+  "code_size": 5321,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 535770,
+  "daily_installs": 21,
+  "total_installs": 2318,
+  "fan_score": "9.2",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 2,
+  "created_at": "2025-05-12T10:31:48.000Z",
+  "code_updated_at": "2025-12-09T03:15:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469123,
+      "name": "DXXTHLY",
+      "created_at": "2025-05-12T10:29:38.000Z",
+      "url": "https://greasyfork.org/users/1469123-dxxthly"
+    }
+  ],
+  "name": "SLITHER.IO MOD MENU - DSC.GG/143X - DAMNBRUH ZOOM (FIXING) 11/9",
+  "description": "Ultimate Slither.io Mod Menu with Chat & Custom UI - Fixed chat toggle and simplify - Enhanced Visuals",
+  "url": "https://greasyfork.org/scripts/535770-slither-io-mod-menu-dsc-gg-143x-damnbruh-zoom-fixing-11-9",
+  "code_url": "https://update.greasyfork.org/scripts/535770/SLITHERIO%20MOD%20MENU%20-%20DSCGG143X%20-%20DAMNBRUH%20ZOOM%20%28FIXING%29%20119.user.js",
+  "code_size": 366498,
+  "license": null,
+  "version": "X24 - GreasyFork - DB Zoom (FIX)",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

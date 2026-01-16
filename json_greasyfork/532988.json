@@ -1,0 +1,59 @@
+{
+  "id": 532988,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-16T06:00:22.000Z",
+  "code_updated_at": "2025-04-16T08:20:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458457,
+      "name": "wisenb",
+      "created_at": "2025-04-16T05:44:03.000Z",
+      "url": "https://greasyfork.org/users/1458457-wisenb",
+      "scripts": [
+        {
+          "id": 532988,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-16T06:00:22.000Z",
+          "code_updated_at": "2025-04-16T08:20:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "dak.gg 실시간 통계 필터링",
+          "description": "RP 획득량과 픽률 기준으로 원하는 대로 필터링이 가능해집니다",
+          "url": "https://greasyfork.org/scripts/532988-dak-gg-%EC%8B%A4%EC%8B%9C%EA%B0%84-%ED%86%B5%EA%B3%84-%ED%95%84%ED%84%B0%EB%A7%81",
+          "code_url": "https://update.greasyfork.org/scripts/532988/dakgg%20%EC%8B%A4%EC%8B%9C%EA%B0%84%20%ED%86%B5%EA%B3%84%20%ED%95%84%ED%84%B0%EB%A7%81.user.js",
+          "code_size": 9489,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "dak.gg 실시간 통계 필터링",
+  "description": "RP 획득량과 픽률 기준으로 원하는 대로 필터링이 가능해집니다",
+  "url": "https://greasyfork.org/scripts/532988-dak-gg-%EC%8B%A4%EC%8B%9C%EA%B0%84-%ED%86%B5%EA%B3%84-%ED%95%84%ED%84%B0%EB%A7%81",
+  "code_url": "https://update.greasyfork.org/scripts/532988/dakgg%20%EC%8B%A4%EC%8B%9C%EA%B0%84%20%ED%86%B5%EA%B3%84%20%ED%95%84%ED%84%B0%EB%A7%81.user.js",
+  "code_size": 9489,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

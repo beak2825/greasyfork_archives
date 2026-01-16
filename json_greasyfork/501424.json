@@ -1,0 +1,33 @@
+{
+  "id": 501424,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-21T23:17:30.000Z",
+  "code_updated_at": "2024-07-21T23:17:30.000Z",
+  "namespace": "https://tu-namespace-ejemplo.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1337882,
+      "name": "val78172837812",
+      "created_at": "2024-07-21T23:01:33.000Z",
+      "url": "https://greasyfork.org/users/1337882-val78172837812"
+    }
+  ],
+  "name": "AutoFill Microsoft Teams Quiz",
+  "description": "Autocompleta ciertos campos en los parciales de Microsoft Teams",
+  "url": "https://greasyfork.org/scripts/501424-autofill-microsoft-teams-quiz",
+  "code_url": "https://update.greasyfork.org/scripts/501424/AutoFill%20Microsoft%20Teams%20Quiz.user.js",
+  "code_size": 1054,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

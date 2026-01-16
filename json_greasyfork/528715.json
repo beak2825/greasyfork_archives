@@ -1,0 +1,59 @@
+{
+  "id": 528715,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-04T05:31:14.000Z",
+  "code_updated_at": "2025-03-04T05:31:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441938,
+      "name": "eterlan",
+      "created_at": "2025-03-03T15:30:11.000Z",
+      "url": "https://greasyfork.org/users/1441938-eterlan",
+      "scripts": [
+        {
+          "id": 528715,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-04T05:31:14.000Z",
+          "code_updated_at": "2025-03-04T05:31:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "workflowy-images-and-bilibili-videos",
+          "description": "Embed image links into workflowy",
+          "url": "https://greasyfork.org/scripts/528715-workflowy-images-and-bilibili-videos",
+          "code_url": "https://update.greasyfork.org/scripts/528715/workflowy-images-and-bilibili-videos.user.js",
+          "code_size": 5455,
+          "license": "MIT License",
+          "version": "0.31",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "workflowy-images-and-bilibili-videos",
+  "description": "Embed image links into workflowy",
+  "url": "https://greasyfork.org/scripts/528715-workflowy-images-and-bilibili-videos",
+  "code_url": "https://update.greasyfork.org/scripts/528715/workflowy-images-and-bilibili-videos.user.js",
+  "code_size": 5455,
+  "license": "MIT License",
+  "version": "0.31",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

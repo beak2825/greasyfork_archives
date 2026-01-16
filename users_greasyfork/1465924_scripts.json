@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535005,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T09:36:26.000Z",
+    "code_updated_at": "2025-05-05T09:36:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465924,
+        "name": "nyamuch1",
+        "created_at": "2025-05-05T09:33:33.000Z",
+        "url": "https://greasyfork.org/users/1465924-nyamuch1"
+      }
+    ],
+    "name": "FF14微博十二神屏蔽男找帖子",
+    "description": "精准屏蔽原贴和转发内容中的关键词",
+    "url": "https://greasyfork.org/scripts/535005-ff14%E5%BE%AE%E5%8D%9A%E5%8D%81%E4%BA%8C%E7%A5%9E%E5%B1%8F%E8%94%BD%E7%94%B7%E6%89%BE%E5%B8%96%E5%AD%90",
+    "code_url": "https://update.greasyfork.org/scripts/535005/FF14%E5%BE%AE%E5%8D%9A%E5%8D%81%E4%BA%8C%E7%A5%9E%E5%B1%8F%E8%94%BD%E7%94%B7%E6%89%BE%E5%B8%96%E5%AD%90.user.js",
+    "code_size": 2906,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

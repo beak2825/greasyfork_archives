@@ -1,0 +1,33 @@
+{
+  "id": 543592,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-25T09:42:02.000Z",
+  "code_updated_at": "2025-09-30T12:09:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Ed 4Rec  vb.schnellen@web.de",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/543592-ed-4rec-vb-schnellen-web-de",
+  "code_url": "https://update.greasyfork.org/scripts/543592/Ed%204Rec%20%20vbschnellen%40webde.user.js",
+  "code_size": 2072,
+  "license": null,
+  "version": "5.1",
+  "locale": "rm",
+  "deleted": false,
+  "visibility": "public"
+}

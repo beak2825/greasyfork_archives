@@ -1,0 +1,59 @@
+{
+  "id": 523290,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T08:43:08.000Z",
+  "code_updated_at": "2025-06-14T10:26:48.000Z",
+  "namespace": "https://chzzk-vote.vercel.app/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421191,
+      "name": "김나오",
+      "created_at": "2025-01-09T08:41:00.000Z",
+      "url": "https://greasyfork.org/users/1421191-%EA%B9%80%EB%82%98%EC%98%A4",
+      "scripts": [
+        {
+          "id": 523290,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-09T08:43:08.000Z",
+          "code_updated_at": "2025-06-14T10:26:48.000Z",
+          "namespace": "https://chzzk-vote.vercel.app/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Add Comma to Viewer Nickname",
+          "description": "Add a comma after the viewer nickname in specific buttons",
+          "url": "https://greasyfork.org/scripts/523290-add-comma-to-viewer-nickname",
+          "code_url": "https://update.greasyfork.org/scripts/523290/Add%20Comma%20to%20Viewer%20Nickname.user.js",
+          "code_size": 1327,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Add Comma to Viewer Nickname",
+  "description": "Add a comma after the viewer nickname in specific buttons",
+  "url": "https://greasyfork.org/scripts/523290-add-comma-to-viewer-nickname",
+  "code_url": "https://update.greasyfork.org/scripts/523290/Add%20Comma%20to%20Viewer%20Nickname.user.js",
+  "code_size": 1327,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

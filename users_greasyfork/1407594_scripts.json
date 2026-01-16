@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520017,
+    "daily_installs": 2,
+    "total_installs": 2415,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-07T05:42:33.000Z",
+    "code_updated_at": "2025-11-29T13:35:07.000Z",
+    "namespace": "原作者github：github.com/hmjz100，改版作者github：github.com/moli-ML",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1407594,
+        "name": "moli-ML",
+        "created_at": "2024-12-07T03:16:13.000Z",
+        "url": "https://greasyfork.org/users/1407594-moli-ml"
+      }
+    ],
+    "name": "【已失效】【改】 123 云盘会员青春版",
+    "description": "（已失效）（基于【123 云盘会员青春版】）修改显示 123 云盘身份信息为会员，支持超过 1GB 上限下载文件，支持使用视频倍速、关闭广告、修改头像、修改用户名等功能，自定义程度超高！（原版有的都有）需要修改头部代码来配置显示内容（×）点开右下角菜单可以设置（√）（非常简单！）",
+    "url": "https://greasyfork.org/scripts/520017-%E5%B7%B2%E5%A4%B1%E6%95%88-%E6%94%B9-123-%E4%BA%91%E7%9B%98%E4%BC%9A%E5%91%98%E9%9D%92%E6%98%A5%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/520017/%E3%80%90%E5%B7%B2%E5%A4%B1%E6%95%88%E3%80%91%E3%80%90%E6%94%B9%E3%80%91%20123%20%E4%BA%91%E7%9B%98%E4%BC%9A%E5%91%98%E9%9D%92%E6%98%A5%E7%89%88.user.js",
+    "code_size": 51462,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

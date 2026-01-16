@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531576,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-02T09:04:14.000Z",
+    "code_updated_at": "2025-04-02T09:04:14.000Z",
+    "namespace": "https://github.com/alengaa/genius-plus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453162,
+        "name": "Alén Coira Figueira",
+        "created_at": "2025-04-02T08:48:21.000Z",
+        "url": "https://greasyfork.org/users/1453162-al%C3%A9n-coira-figueira"
+      }
+    ],
+    "name": "Genius+",
+    "description": "Enhances genius.com with a custom artist song search and future improvements.",
+    "url": "https://greasyfork.org/scripts/531576-genius",
+    "code_url": "https://update.greasyfork.org/scripts/531576/Genius%2B.user.js",
+    "code_size": 2606,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

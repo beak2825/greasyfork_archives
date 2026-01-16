@@ -1,0 +1,33 @@
+{
+  "id": 500080,
+  "daily_installs": 0,
+  "total_installs": 98,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-09T08:25:07.000Z",
+  "code_updated_at": "2024-07-09T08:43:35.000Z",
+  "namespace": "https://violentmonkey.github.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330633,
+      "name": "limbonux",
+      "created_at": "2024-07-09T08:19:45.000Z",
+      "url": "https://greasyfork.org/users/1330633-limbonux"
+    }
+  ],
+  "name": "Hamster Kombat Desktop",
+  "description": "Allow Hamster Kombat to run on Telegram Web and optionally open it in a new tab.",
+  "url": "https://greasyfork.org/scripts/500080-hamster-kombat-desktop",
+  "code_url": "https://update.greasyfork.org/scripts/500080/Hamster%20Kombat%20Desktop.user.js",
+  "code_size": 5559,
+  "license": "GPLv3",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

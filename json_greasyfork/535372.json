@@ -1,0 +1,59 @@
+{
+  "id": 535372,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T16:24:19.000Z",
+  "code_updated_at": "2025-05-15T12:02:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 974908,
+      "name": "yui酱",
+      "created_at": "2022-10-25T05:33:16.000Z",
+      "url": "https://greasyfork.org/users/974908-yui%E9%85%B1",
+      "scripts": [
+        {
+          "id": 535372,
+          "daily_installs": 0,
+          "total_installs": 65,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-05-08T16:24:19.000Z",
+          "code_updated_at": "2025-05-15T12:02:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "全局解除选中、复制与右键限制",
+          "description": "精细控制网页限制解除行为 + 可配置强力解除全部限制模式 + 全部关闭模式 (Canvas增强) + 支持用户本地配置规则（本地规则优先于远程）（完结撒花）",
+          "url": "https://greasyfork.org/scripts/535372-%E5%85%A8%E5%B1%80%E8%A7%A3%E9%99%A4%E9%80%89%E4%B8%AD-%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%8F%B3%E9%94%AE%E9%99%90%E5%88%B6",
+          "code_url": "https://update.greasyfork.org/scripts/535372/%E5%85%A8%E5%B1%80%E8%A7%A3%E9%99%A4%E9%80%89%E4%B8%AD%E3%80%81%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%8F%B3%E9%94%AE%E9%99%90%E5%88%B6.user.js",
+          "code_size": 29135,
+          "license": "MIT License",
+          "version": "1.4.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "全局解除选中、复制与右键限制",
+  "description": "精细控制网页限制解除行为 + 可配置强力解除全部限制模式 + 全部关闭模式 (Canvas增强) + 支持用户本地配置规则（本地规则优先于远程）（完结撒花）",
+  "url": "https://greasyfork.org/scripts/535372-%E5%85%A8%E5%B1%80%E8%A7%A3%E9%99%A4%E9%80%89%E4%B8%AD-%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%8F%B3%E9%94%AE%E9%99%90%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/535372/%E5%85%A8%E5%B1%80%E8%A7%A3%E9%99%A4%E9%80%89%E4%B8%AD%E3%80%81%E5%A4%8D%E5%88%B6%E4%B8%8E%E5%8F%B3%E9%94%AE%E9%99%90%E5%88%B6.user.js",
+  "code_size": 29135,
+  "license": "MIT License",
+  "version": "1.4.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

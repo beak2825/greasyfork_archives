@@ -63,6 +63,72 @@
     "version": "1.0",
     "locale": "ko",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548707,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-07T14:34:06.000Z",
+    "code_updated_at": "2025-09-24T12:30:54.000Z",
+    "namespace": "https://greasyfork.org/users/1510796",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510796,
+        "name": "자막",
+        "created_at": "2025-09-01T09:55:39.000Z",
+        "url": "https://greasyfork.org/users/1510796-%EC%9E%90%EB%A7%89"
+      }
+    ],
+    "name": "SOOP 채팅 레이트 관리자",
+    "description": "SOOP 채팅 속도 제한 확장 프로그램",
+    "url": "https://greasyfork.org/scripts/548707-soop-%EC%B1%84%ED%8C%85-%EB%A0%88%EC%9D%B4%ED%8A%B8-%EA%B4%80%EB%A6%AC%EC%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/548707/SOOP%20%EC%B1%84%ED%8C%85%20%EB%A0%88%EC%9D%B4%ED%8A%B8%20%EA%B4%80%EB%A6%AC%EC%9E%90.user.js",
+    "code_size": 4733,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548018,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T09:59:38.000Z",
+    "code_updated_at": "2025-09-01T10:56:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510796,
+        "name": "자막",
+        "created_at": "2025-09-01T09:55:39.000Z",
+        "url": "https://greasyfork.org/users/1510796-%EC%9E%90%EB%A7%89"
+      }
+    ],
+    "name": "SOOP TV 이미지 난독화",
+    "description": "chapi 업로드 시 난독화, ch 페이지에서 복호화",
+    "url": "https://greasyfork.org/scripts/548018-soop-tv-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EB%82%9C%EB%8F%85%ED%99%94",
+    "code_url": "https://update.greasyfork.org/scripts/548018/SOOP%20TV%20%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EB%82%9C%EB%8F%85%ED%99%94.user.js",
+    "code_size": 18407,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

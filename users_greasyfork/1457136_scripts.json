@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532663,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-12T23:18:53.000Z",
+    "code_updated_at": "2025-05-19T17:44:45.000Z",
+    "namespace": "https://www.sere.pr.gov.br/sere/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457136,
+        "name": "joaoggb",
+        "created_at": "2025-04-12T22:57:43.000Z",
+        "url": "https://greasyfork.org/users/1457136-joaoggb"
+      }
+    ],
+    "name": "Utilidades SERE",
+    "description": "Algumas melhorias para o SERE. Esse script não é oficial, e os órgãos da educação não prestarão suporte para o mesmo. O uso deste script é por conta e risco do usuário.",
+    "url": "https://greasyfork.org/scripts/532663-utilidades-sere",
+    "code_url": "https://update.greasyfork.org/scripts/532663/Utilidades%20SERE.user.js",
+    "code_size": 40102,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

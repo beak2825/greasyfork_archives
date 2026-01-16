@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513961,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-25T06:13:51.000Z",
+    "code_updated_at": "2024-10-25T06:13:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385890,
+        "name": "malordin",
+        "created_at": "2024-10-25T05:41:39.000Z",
+        "url": "https://greasyfork.org/users/1385890-malordin"
+      }
+    ],
+    "name": "YouTube Settings Rearranger",
+    "description": "Rearranges \"Playback Speed\" and \"Quality\" settings in YouTube video settings for improved accessibility.",
+    "url": "https://greasyfork.org/scripts/513961-youtube-settings-rearranger",
+    "code_url": "https://update.greasyfork.org/scripts/513961/YouTube%20Settings%20Rearranger.user.js",
+    "code_size": 5018,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513958,
+    "daily_installs": 0,
+    "total_installs": 79,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-25T05:42:50.000Z",
+    "code_updated_at": "2024-10-25T05:43:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385890,
+        "name": "malordin",
+        "created_at": "2024-10-25T05:41:39.000Z",
+        "url": "https://greasyfork.org/users/1385890-malordin"
+      }
+    ],
+    "name": "YouTube Pink Progress Bar Remover (25.10.2024)",
+    "description": "Replace gradient pink color in YouTube player progress bar with solid red",
+    "url": "https://greasyfork.org/scripts/513958-youtube-pink-progress-bar-remover-25-10-2024",
+    "code_url": "https://update.greasyfork.org/scripts/513958/YouTube%20Pink%20Progress%20Bar%20Remover%20%2825102024%29.user.js",
+    "code_size": 6280,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

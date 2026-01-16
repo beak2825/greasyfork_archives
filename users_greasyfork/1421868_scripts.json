@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523426,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-11T04:09:08.000Z",
+    "code_updated_at": "2025-01-11T04:10:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421868,
+        "name": "Velthir",
+        "created_at": "2025-01-11T04:06:31.000Z",
+        "url": "https://greasyfork.org/users/1421868-velthir"
+      }
+    ],
+    "name": "CE remove expedition images",
+    "description": "Remove the annoying images on the CE expeditions page",
+    "url": "https://greasyfork.org/scripts/523426-ce-remove-expedition-images",
+    "code_url": "https://update.greasyfork.org/scripts/523426/CE%20remove%20expedition%20images.user.js",
+    "code_size": 613,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

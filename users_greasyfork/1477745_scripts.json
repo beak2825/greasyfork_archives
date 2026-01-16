@@ -1,0 +1,134 @@
+[
+  {
+    "id": 545509,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T04:49:46.000Z",
+    "code_updated_at": "2025-08-12T04:49:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477745,
+        "name": "Ankit Shekhawat",
+        "created_at": "2025-06-02T03:49:25.000Z",
+        "url": "https://greasyfork.org/users/1477745-ankit-shekhawat"
+      }
+    ],
+    "name": "Hide YouTube Avatars",
+    "description": "Hide comment author avatars (profile pictures) on YouTube without uBlock Origin",
+    "url": "https://greasyfork.org/scripts/545509-hide-youtube-avatars",
+    "code_url": "https://update.greasyfork.org/scripts/545509/Hide%20YouTube%20Avatars.user.js",
+    "code_size": 844,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545507,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T04:45:34.000Z",
+    "code_updated_at": "2025-08-12T04:45:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477745,
+        "name": "Ankit Shekhawat",
+        "created_at": "2025-06-02T03:49:25.000Z",
+        "url": "https://greasyfork.org/users/1477745-ankit-shekhawat"
+      }
+    ],
+    "name": "Toggle Fullscreen by Backtick key",
+    "description": "Press ` (backtick) to toggle fullscreen mode on any webpage",
+    "url": "https://greasyfork.org/scripts/545507-toggle-fullscreen-by-backtick-key",
+    "code_url": "https://update.greasyfork.org/scripts/545507/Toggle%20Fullscreen%20by%20Backtick%20key.user.js",
+    "code_size": 869,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538049,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-02T04:19:01.000Z",
+    "code_updated_at": "2025-06-02T04:35:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477745,
+        "name": "Ankit Shekhawat",
+        "created_at": "2025-06-02T03:49:25.000Z",
+        "url": "https://greasyfork.org/users/1477745-ankit-shekhawat"
+      }
+    ],
+    "name": "YouTube Video Zoom (using =/- & +/- keys)",
+    "description": "Zoom YouTube video in/out by 4%",
+    "url": "https://greasyfork.org/scripts/538049-youtube-video-zoom-using-keys",
+    "code_url": "https://update.greasyfork.org/scripts/538049/YouTube%20Video%20Zoom%20%28using%20%3D-%20%20%2B-%20keys%29.user.js",
+    "code_size": 1724,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 538048,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-02T04:07:39.000Z",
+    "code_updated_at": "2025-06-02T04:07:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1477745,
+        "name": "Ankit Shekhawat",
+        "created_at": "2025-06-02T03:49:25.000Z",
+        "url": "https://greasyfork.org/users/1477745-ankit-shekhawat"
+      }
+    ],
+    "name": "YouTube Video Quality Changer (using number keys)",
+    "description": "change video quality of youtube videos using number keys",
+    "url": "https://greasyfork.org/scripts/538048-youtube-video-quality-changer-using-number-keys",
+    "code_url": "https://update.greasyfork.org/scripts/538048/YouTube%20Video%20Quality%20Changer%20%28using%20number%20keys%29.user.js",
+    "code_size": 3168,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

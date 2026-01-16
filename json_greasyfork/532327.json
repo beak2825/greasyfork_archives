@@ -1,0 +1,33 @@
+{
+  "id": 532327,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-09T13:49:10.000Z",
+  "code_updated_at": "2025-04-11T17:41:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1031970,
+      "name": "AndreyUA",
+      "created_at": "2023-02-23T18:46:00.000Z",
+      "url": "https://greasyfork.org/users/1031970-andreyua"
+    }
+  ],
+  "name": "Steam Pirate & Misc Links Dropdowns",
+  "description": "Adds dropdown menus with links to game download/forum/cheat/filehost sites on Steam app pages. Fixes dropdown opening and cutoff issues. Improves search link reliability. Use responsibly and legally.",
+  "url": "https://greasyfork.org/scripts/532327-steam-pirate-misc-links-dropdowns",
+  "code_url": "https://update.greasyfork.org/scripts/532327/Steam%20Pirate%20%20Misc%20Links%20Dropdowns.user.js",
+  "code_size": 13557,
+  "license": "MIT License",
+  "version": "1.8-min",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

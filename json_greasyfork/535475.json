@@ -1,0 +1,33 @@
+{
+  "id": 535475,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-09T12:07:48.000Z",
+  "code_updated_at": "2025-05-09T12:07:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1467804,
+      "name": "ViezeVingertjes",
+      "created_at": "2025-05-09T11:29:31.000Z",
+      "url": "https://greasyfork.org/users/1467804-viezevingertjes"
+    }
+  ],
+  "name": "Geocaching Trackable GPX Exporter",
+  "description": "Add a GPX export button to download your trackable locations as a GPX file for use in other mapping applications.",
+  "url": "https://greasyfork.org/scripts/535475-geocaching-trackable-gpx-exporter",
+  "code_url": "https://update.greasyfork.org/scripts/535475/Geocaching%20Trackable%20GPX%20Exporter.user.js",
+  "code_size": 28669,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

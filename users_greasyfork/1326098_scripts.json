@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499269,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-30T08:02:17.000Z",
+    "code_updated_at": "2024-06-30T08:02:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1326098,
+        "name": "Charlie T",
+        "created_at": "2024-06-30T08:01:31.000Z",
+        "url": "https://greasyfork.org/users/1326098-charlie-t"
+      }
+    ],
+    "name": "Rajan's Youtubing Youtubes",
+    "description": "cause he don't like YT recs",
+    "url": "https://greasyfork.org/scripts/499269-rajan-s-youtubing-youtubes",
+    "code_url": "https://update.greasyfork.org/scripts/499269/Rajan%27s%20Youtubing%20Youtubes.user.js",
+    "code_size": 511,
+    "license": "MIT License",
+    "version": "2024-06-30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

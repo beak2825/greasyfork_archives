@@ -1,0 +1,34 @@
+{
+  "id": 502835,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-07T04:49:04.000Z",
+  "code_updated_at": "2024-08-08T06:46:34.000Z",
+  "namespace": "http://uni.web.bytedance.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1346856,
+      "name": "赵AJ",
+      "created_at": "2024-08-07T04:41:34.000Z",
+      "url": "https://greasyfork.org/users/1346856-%E8%B5%B5aj",
+      "scripts": []
+    }
+  ],
+  "name": "uni script",
+  "description": "advance Settings!",
+  "url": "https://greasyfork.org/scripts/502835-uni-script",
+  "code_url": "https://update.greasyfork.org/scripts/502835/uni%20script.user.js",
+  "code_size": 4074,
+  "license": "MIT License",
+  "version": "2024-08-09",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

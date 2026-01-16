@@ -1,0 +1,35 @@
+[
+  {
+    "id": 505822,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-30T01:26:08.000Z",
+    "code_updated_at": "2024-08-30T01:26:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1359783,
+        "name": "x.xl",
+        "created_at": "2024-08-29T09:10:54.000Z",
+        "url": "https://greasyfork.org/users/1359783-x-xl"
+      }
+    ],
+    "name": "工时查询",
+    "description": "https://yihr.chinasoftinc.com:18010/#/personal/zrdaydetailnew",
+    "url": "https://greasyfork.org/scripts/505822-%E5%B7%A5%E6%97%B6%E6%9F%A5%E8%AF%A2",
+    "code_url": "https://update.greasyfork.org/scripts/505822/%E5%B7%A5%E6%97%B6%E6%9F%A5%E8%AF%A2.user.js",
+    "code_size": 13686,
+    "license": "MIT License",
+    "version": "2024-08-29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

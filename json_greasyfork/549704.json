@@ -1,0 +1,59 @@
+{
+  "id": 549704,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-16T06:29:18.000Z",
+  "code_updated_at": "2025-09-16T06:29:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1515706,
+      "name": "醋泡白豆",
+      "created_at": "2025-09-16T06:22:49.000Z",
+      "url": "https://greasyfork.org/users/1515706-%E9%86%8B%E6%B3%A1%E7%99%BD%E8%B1%86",
+      "scripts": [
+        {
+          "id": 549704,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-16T06:29:18.000Z",
+          "code_updated_at": "2025-09-16T06:29:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微博高级清理器",
+          "description": "隐藏微博右侧边栏、移除垃圾内容，并支持选择性屏蔽图片视频",
+          "url": "https://greasyfork.org/scripts/549704-%E5%BE%AE%E5%8D%9A%E9%AB%98%E7%BA%A7%E6%B8%85%E7%90%86%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/549704/%E5%BE%AE%E5%8D%9A%E9%AB%98%E7%BA%A7%E6%B8%85%E7%90%86%E5%99%A8.user.js",
+          "code_size": 10025,
+          "license": "MIT License",
+          "version": "2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微博高级清理器",
+  "description": "隐藏微博右侧边栏、移除垃圾内容，并支持选择性屏蔽图片视频",
+  "url": "https://greasyfork.org/scripts/549704-%E5%BE%AE%E5%8D%9A%E9%AB%98%E7%BA%A7%E6%B8%85%E7%90%86%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/549704/%E5%BE%AE%E5%8D%9A%E9%AB%98%E7%BA%A7%E6%B8%85%E7%90%86%E5%99%A8.user.js",
+  "code_size": 10025,
+  "license": "MIT License",
+  "version": "2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

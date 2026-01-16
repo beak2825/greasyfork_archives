@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523089,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-07T05:10:08.000Z",
+    "code_updated_at": "2025-01-07T05:10:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267689,
+        "name": "UshioA",
+        "created_at": "2024-02-27T15:26:54.000Z",
+        "url": "https://greasyfork.org/users/1267689-ushioa"
+      }
+    ],
+    "name": "Baidu Ass Attacher",
+    "description": "自动为用户在百度中搜索的内容后面加上 \"-李彦宏 -robin\"",
+    "url": "https://greasyfork.org/scripts/523089-baidu-ass-attacher",
+    "code_url": "https://update.greasyfork.org/scripts/523089/Baidu%20Ass%20Attacher.user.js",
+    "code_size": 1502,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

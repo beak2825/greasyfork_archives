@@ -1,0 +1,34 @@
+{
+  "id": 504262,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-19T12:59:55.000Z",
+  "code_updated_at": "2024-08-19T13:23:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "WNBA Pokus s tabulkou",
+  "description": "Tabulka WNBA",
+  "url": "https://greasyfork.org/scripts/504262-wnba-pokus-s-tabulkou",
+  "code_url": "https://update.greasyfork.org/scripts/504262/WNBA%20Pokus%20s%20tabulkou.user.js",
+  "code_size": 7532,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

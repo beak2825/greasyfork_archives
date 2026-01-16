@@ -1,0 +1,59 @@
+{
+  "id": 537394,
+  "daily_installs": 1,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-27T04:17:45.000Z",
+  "code_updated_at": "2025-05-27T04:17:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1475321,
+      "name": "Prince Khimani",
+      "created_at": "2025-05-27T04:16:41.000Z",
+      "url": "https://greasyfork.org/users/1475321-prince-khimani",
+      "scripts": [
+        {
+          "id": 537394,
+          "daily_installs": 1,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-27T04:17:45.000Z",
+          "code_updated_at": "2025-05-27T04:17:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Upwork High-Spend & Niche Keyword Filter",
+          "description": "Show only Upwork jobs with $1K+ spend and keywords from your service niche (marketing, design, dev, SEO, etc.)",
+          "url": "https://greasyfork.org/scripts/537394-upwork-high-spend-niche-keyword-filter",
+          "code_url": "https://update.greasyfork.org/scripts/537394/Upwork%20High-Spend%20%20Niche%20Keyword%20Filter.user.js",
+          "code_size": 2788,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Upwork High-Spend & Niche Keyword Filter",
+  "description": "Show only Upwork jobs with $1K+ spend and keywords from your service niche (marketing, design, dev, SEO, etc.)",
+  "url": "https://greasyfork.org/scripts/537394-upwork-high-spend-niche-keyword-filter",
+  "code_url": "https://update.greasyfork.org/scripts/537394/Upwork%20High-Spend%20%20Niche%20Keyword%20Filter.user.js",
+  "code_size": 2788,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

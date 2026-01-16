@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 527103,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T13:24:11.000Z",
+    "code_updated_at": "2025-11-22T10:24:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337619,
+        "name": "Franziska Wang",
+        "created_at": "2024-07-21T09:47:51.000Z",
+        "url": "https://greasyfork.org/users/1337619-franziska-wang"
+      }
+    ],
+    "name": "豆瓣电影 YTS 之间快捷跳转",
+    "description": "更新网址为yts.lt",
+    "url": "https://greasyfork.org/scripts/527103-%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1-yts-%E4%B9%8B%E9%97%B4%E5%BF%AB%E6%8D%B7%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/527103/%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%20YTS%20%E4%B9%8B%E9%97%B4%E5%BF%AB%E6%8D%B7%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 3177,
+    "license": null,
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

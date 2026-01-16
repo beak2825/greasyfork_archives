@@ -1,0 +1,59 @@
+{
+  "id": 529171,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-08T07:42:03.000Z",
+  "code_updated_at": "2025-03-08T07:50:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1443474,
+      "name": "a152917",
+      "created_at": "2025-03-08T07:37:36.000Z",
+      "url": "https://greasyfork.org/users/1443474-a152917",
+      "scripts": [
+        {
+          "id": 529171,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-08T07:42:03.000Z",
+          "code_updated_at": "2025-03-08T07:50:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "币安盯盘助手",
+          "description": "使用WebSocket实时显示多个币安交易对价格及24小时涨跌幅。",
+          "url": "https://greasyfork.org/scripts/529171-%E5%B8%81%E5%AE%89%E7%9B%AF%E7%9B%98%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/529171/%E5%B8%81%E5%AE%89%E7%9B%AF%E7%9B%98%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 16316,
+          "license": null,
+          "version": "1.8.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "币安盯盘助手",
+  "description": "使用WebSocket实时显示多个币安交易对价格及24小时涨跌幅。",
+  "url": "https://greasyfork.org/scripts/529171-%E5%B8%81%E5%AE%89%E7%9B%AF%E7%9B%98%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/529171/%E5%B8%81%E5%AE%89%E7%9B%AF%E7%9B%98%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 16316,
+  "license": null,
+  "version": "1.8.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

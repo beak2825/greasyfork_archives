@@ -1,0 +1,34 @@
+{
+  "id": 524861,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-25T19:11:44.000Z",
+  "code_updated_at": "2025-01-25T19:11:44.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1384748,
+      "name": "Лев Панарин (Тигр)",
+      "created_at": "2024-10-22T20:39:25.000Z",
+      "url": "https://greasyfork.org/users/1384748-%D0%BB%D0%B5%D0%B2-%D0%BF%D0%B0%D0%BD%D0%B0%D1%80%D0%B8%D0%BD-%D1%82%D0%B8%D0%B3%D1%80",
+      "scripts": []
+    }
+  ],
+  "name": "KHABAROVSK | БАКЕРУ",
+  "description": "Если нашли баг/недочёт писать: @mr_hares (ВК)",
+  "url": "https://greasyfork.org/scripts/524861-khabarovsk-%D0%B1%D0%B0%D0%BA%D0%B5%D1%80%D1%83",
+  "code_url": "https://update.greasyfork.org/scripts/524861/KHABAROVSK%20%7C%20%D0%91%D0%90%D0%9A%D0%95%D0%A0%D0%A3.user.js",
+  "code_size": 94603,
+  "license": "MIT License",
+  "version": "1.6.9",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

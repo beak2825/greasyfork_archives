@@ -1,0 +1,33 @@
+{
+  "id": 549917,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-18T05:23:51.000Z",
+  "code_updated_at": "2025-09-18T05:24:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451996,
+      "name": "Hạo Thiên Đấu La",
+      "created_at": "2025-03-30T10:48:07.000Z",
+      "url": "https://greasyfork.org/users/1451996-h%E1%BA%A1o-thi%C3%AAn-%C4%91%E1%BA%A5u-la"
+    }
+  ],
+  "name": "CF4VN - Mini Bầu Cua",
+  "description": "Mini game \"Bầu Cua\" dạng vũ khí cho cf4vn.com",
+  "url": "https://greasyfork.org/scripts/549917-cf4vn-mini-b%E1%BA%A7u-cua",
+  "code_url": "https://update.greasyfork.org/scripts/549917/CF4VN%20-%20Mini%20B%E1%BA%A7u%20Cua.user.js",
+  "code_size": 15323,
+  "license": null,
+  "version": "1.0",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

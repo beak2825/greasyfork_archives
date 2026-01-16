@@ -1,0 +1,134 @@
+[
+  {
+    "id": 530471,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-21T19:38:11.000Z",
+    "code_updated_at": "2025-03-21T19:38:11.000Z",
+    "namespace": "https://github.com/Katstrel/Kats-Tweaks-and-Skins",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433040,
+        "name": "Katstrel",
+        "created_at": "2025-02-08T16:56:29.000Z",
+        "url": "https://greasyfork.org/users/1433040-katstrel"
+      }
+    ],
+    "name": "[AO3] Kat's Tweaks: Tag Colors",
+    "description": "Allows for color coding tags.",
+    "url": "https://greasyfork.org/scripts/530471-ao3-kat-s-tweaks-tag-colors",
+    "code_url": "https://update.greasyfork.org/scripts/530471/%5BAO3%5D%20Kat%27s%20Tweaks%3A%20Tag%20Colors.user.js",
+    "code_size": 8545,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527659,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-21T14:15:22.000Z",
+    "code_updated_at": "2025-09-20T18:25:56.000Z",
+    "namespace": "https://github.com/Katstrel/Kats-Tweaks-and-Skins",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433040,
+        "name": "Katstrel",
+        "created_at": "2025-02-08T16:56:29.000Z",
+        "url": "https://greasyfork.org/users/1433040-katstrel"
+      }
+    ],
+    "name": "[AO3] Kat's Tweaks: Bookmarking",
+    "description": "Bookmark tracking, tagging, and more.",
+    "url": "https://greasyfork.org/scripts/527659-ao3-kat-s-tweaks-bookmarking",
+    "code_url": "https://update.greasyfork.org/scripts/527659/%5BAO3%5D%20Kat%27s%20Tweaks%3A%20Bookmarking.user.js",
+    "code_size": 51875,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527145,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-17T01:05:48.000Z",
+    "code_updated_at": "2025-03-15T02:30:17.000Z",
+    "namespace": "https://github.com/Katstrel/Kats-Tweaks-and-Skins",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433040,
+        "name": "Katstrel",
+        "created_at": "2025-02-08T16:56:29.000Z",
+        "url": "https://greasyfork.org/users/1433040-katstrel"
+      }
+    ],
+    "name": "[AO3] Kat's Tweaks: Settings Manager",
+    "description": "Controls the storage and modification of various settings for all Kat's Tweaks scripts.",
+    "url": "https://greasyfork.org/scripts/527145-ao3-kat-s-tweaks-settings-manager",
+    "code_url": "https://update.greasyfork.org/scripts/527145/%5BAO3%5D%20Kat%27s%20Tweaks%3A%20Settings%20Manager.user.js",
+    "code_size": 67739,
+    "license": null,
+    "version": "1.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526302,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T16:57:34.000Z",
+    "code_updated_at": "2025-02-21T14:19:07.000Z",
+    "namespace": "https://github.com/Katstrel/Kats-Tweaks-and-Skins",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433040,
+        "name": "Katstrel",
+        "created_at": "2025-02-08T16:56:29.000Z",
+        "url": "https://greasyfork.org/users/1433040-katstrel"
+      }
+    ],
+    "name": "[AO3] Kat's Tweaks: Read Time & Word Count",
+    "description": "Adds chapter word count, chapter read time, and work read time to stats in the blurb.",
+    "url": "https://greasyfork.org/scripts/526302-ao3-kat-s-tweaks-read-time-word-count",
+    "code_url": "https://update.greasyfork.org/scripts/526302/%5BAO3%5D%20Kat%27s%20Tweaks%3A%20Read%20Time%20%20Word%20Count.user.js",
+    "code_size": 8818,
+    "license": null,
+    "version": "1.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

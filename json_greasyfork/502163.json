@@ -1,0 +1,34 @@
+{
+  "id": 502163,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-30T09:47:12.000Z",
+  "code_updated_at": "2024-07-31T13:08:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1146769,
+      "name": "likang0110",
+      "created_at": "2023-08-08T08:33:16.000Z",
+      "url": "https://greasyfork.org/users/1146769-likang0110",
+      "scripts": []
+    }
+  ],
+  "name": "Temu降价 半自动选择“我不接受”",
+  "description": "半自动选择我不接受按钮,半自动更安全",
+  "url": "https://greasyfork.org/scripts/502163-temu%E9%99%8D%E4%BB%B7-%E5%8D%8A%E8%87%AA%E5%8A%A8%E9%80%89%E6%8B%A9-%E6%88%91%E4%B8%8D%E6%8E%A5%E5%8F%97",
+  "code_url": "https://update.greasyfork.org/scripts/502163/Temu%E9%99%8D%E4%BB%B7%20%E5%8D%8A%E8%87%AA%E5%8A%A8%E9%80%89%E6%8B%A9%E2%80%9C%E6%88%91%E4%B8%8D%E6%8E%A5%E5%8F%97%E2%80%9D.user.js",
+  "code_size": 2205,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

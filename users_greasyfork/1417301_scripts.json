@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522221,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-29T16:40:31.000Z",
+    "code_updated_at": "2025-04-26T05:55:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417301,
+        "name": "Tiger Orc",
+        "created_at": "2024-12-29T16:24:28.000Z",
+        "url": "https://greasyfork.org/users/1417301-tiger-orc"
+      }
+    ],
+    "name": "高考直通车 下载助手 (PDF)",
+    "description": "高考直通车添加直接下载PDF的按钮（修复提取链接和按钮显示问题），并删除特定元素",
+    "url": "https://greasyfork.org/scripts/522221-%E9%AB%98%E8%80%83%E7%9B%B4%E9%80%9A%E8%BD%A6-%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B-pdf",
+    "code_url": "https://update.greasyfork.org/scripts/522221/%E9%AB%98%E8%80%83%E7%9B%B4%E9%80%9A%E8%BD%A6%20%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B%20%28PDF%29.user.js",
+    "code_size": 4646,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

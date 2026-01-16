@@ -1,0 +1,74 @@
+[
+  {
+    "id": 535084,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-06T02:59:53.000Z",
+    "code_updated_at": "2025-10-25T05:10:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1092906,
+        "name": "Frostine",
+        "created_at": "2023-06-07T03:25:27.000Z",
+        "url": "https://greasyfork.org/users/1092906-frostine"
+      }
+    ],
+    "name": "PTerClub Torrent Checker",
+    "description": "Have fun!",
+    "url": "https://greasyfork.org/scripts/535084-pterclub-torrent-checker",
+    "code_url": "https://update.greasyfork.org/scripts/535084/PTerClub%20Torrent%20Checker.user.js",
+    "code_size": 138774,
+    "license": "MIT License",
+    "version": "1.0.22",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523607,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T04:22:40.000Z",
+    "code_updated_at": "2025-03-25T12:29:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1092906,
+        "name": "Frostine",
+        "created_at": "2023-06-07T03:25:27.000Z",
+        "url": "https://greasyfork.org/users/1092906-frostine"
+      },
+      {
+        "id": 1295941,
+        "name": "gsdwqe",
+        "created_at": "2024-05-02T09:20:52.000Z",
+        "url": "https://greasyfork.org/users/1295941-gsdwqe"
+      }
+    ],
+    "name": "QuicklyReply-PTer (Touch Screen Ver.)",
+    "description": "faster!",
+    "url": "https://greasyfork.org/scripts/523607-quicklyreply-pter-touch-screen-ver",
+    "code_url": "https://update.greasyfork.org/scripts/523607/QuicklyReply-PTer%20%28Touch%20Screen%20Ver%29.user.js",
+    "code_size": 60887,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

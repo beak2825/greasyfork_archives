@@ -1,0 +1,33 @@
+{
+  "id": 501277,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-20T15:16:17.000Z",
+  "code_updated_at": "2024-07-20T15:16:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 459175,
+      "name": "kakasearch",
+      "created_at": "2020-03-14T15:18:20.000Z",
+      "url": "https://greasyfork.org/users/459175-kakasearch"
+    }
+  ],
+  "name": "ooee收藏夹链接直达",
+  "description": "ooee收藏夹网站链接直接跳转",
+  "url": "https://greasyfork.org/scripts/501277-ooee%E6%94%B6%E8%97%8F%E5%A4%B9%E9%93%BE%E6%8E%A5%E7%9B%B4%E8%BE%BE",
+  "code_url": "https://update.greasyfork.org/scripts/501277/ooee%E6%94%B6%E8%97%8F%E5%A4%B9%E9%93%BE%E6%8E%A5%E7%9B%B4%E8%BE%BE.user.js",
+  "code_size": 1017,
+  "license": "MIT License",
+  "version": "2024-07-20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

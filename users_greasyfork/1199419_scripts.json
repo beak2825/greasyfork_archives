@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517862,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-18T07:43:00.000Z",
+    "code_updated_at": "2024-11-21T02:32:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199419,
+        "name": "浮世梦月",
+        "created_at": "2023-10-19T07:43:17.000Z",
+        "url": "https://greasyfork.org/users/1199419-%E6%B5%AE%E4%B8%96%E6%A2%A6%E6%9C%88"
+      }
+    ],
+    "name": "地下探险队小脚本",
+    "description": "支持自动挖矿，分配任务，开箱,自动科技（只支持从上到下）",
+    "url": "https://greasyfork.org/scripts/517862-%E5%9C%B0%E4%B8%8B%E6%8E%A2%E9%99%A9%E9%98%9F%E5%B0%8F%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/517862/%E5%9C%B0%E4%B8%8B%E6%8E%A2%E9%99%A9%E9%98%9F%E5%B0%8F%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3670,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

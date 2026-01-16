@@ -1,0 +1,33 @@
+{
+  "id": 521555,
+  "daily_installs": 1,
+  "total_installs": 1489,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-12-23T11:22:20.000Z",
+  "code_updated_at": "2024-12-23T11:22:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522682,
+      "name": "520wyn",
+      "created_at": "2020-04-19T14:55:25.000Z",
+      "url": "https://greasyfork.org/users/522682-520wyn"
+    }
+  ],
+  "name": "纪念币预约-自动填充",
+  "description": "自动填充网页中的姓名、身份证号和手机号，支持多组数据，此项目为piplong二开，原作者：上仙社区VX：Sxian00001",
+  "url": "https://greasyfork.org/scripts/521555-%E7%BA%AA%E5%BF%B5%E5%B8%81%E9%A2%84%E7%BA%A6-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85",
+  "code_url": "https://update.greasyfork.org/scripts/521555/%E7%BA%AA%E5%BF%B5%E5%B8%81%E9%A2%84%E7%BA%A6-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85.user.js",
+  "code_size": 27318,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

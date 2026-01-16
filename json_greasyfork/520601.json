@@ -1,0 +1,34 @@
+{
+  "id": 520601,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-13T13:34:45.000Z",
+  "code_updated_at": "2024-12-15T20:39:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291442,
+      "name": "jimbootie",
+      "created_at": "2024-04-21T18:51:51.000Z",
+      "url": "https://greasyfork.org/users/1291442-jimbootie",
+      "scripts": []
+    }
+  ],
+  "name": "Auto Pl and start Spotify w reload",
+  "description": "Autoplay load pl and play w reload",
+  "url": "https://greasyfork.org/scripts/520601-auto-pl-and-start-spotify-w-reload",
+  "code_url": "https://update.greasyfork.org/scripts/520601/Auto%20Pl%20and%20start%20Spotify%20w%20reload.user.js",
+  "code_size": 2970,
+  "license": "MIT License",
+  "version": "2.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

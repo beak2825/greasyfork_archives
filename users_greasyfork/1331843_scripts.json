@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500324,
+    "daily_installs": 2,
+    "total_installs": 36046,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2024-07-11T15:03:47.000Z",
+    "code_updated_at": "2025-12-09T12:01:46.000Z",
+    "namespace": "自动答题",
+    "support_url": null,
+    "contribution_url": "https://",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1331843,
+        "name": "免费",
+        "created_at": "2024-07-11T14:10:21.000Z",
+        "url": "https://greasyfork.org/users/1331843-%E5%85%8D%E8%B4%B9"
+      }
+    ],
+    "name": "超星学习通/智慧树以及全平台自动答题脚本免费",
+    "description": "可在线听歌，边答题边听歌.免费。打开章节测试/考试/作业时答题界面脚本就会自动运行，支持【超星学习通】【智慧树】【职教云系列】【雨课堂】【考试星】【168网校】【继续教育类】【绎通云课堂】【九江系列】【柠檬文才】【亿学宝云】【优课学堂】【小鹅通】【安徽继续教育】 【上海开放大学】 【华侨大学自考网络助学平台】【良师在线】【和学在线】【人卫慕课】【国家开放大学】【山财培训网（继续教育）】【浙江省高等学校在线开放课程共享平台】【国地质大学远程与继续教育学院】【重庆大学网络教育学院】【浙江省高等教育自学考试网络助学平台】 【湖南高等学历继续教育】 【优学院】 【学起系列】【青书学堂】 【学堂在线】【英华学堂】【广开网络教学平台】等平台的测验考试，内置题库，自动答题功能全聚合",
+    "url": "https://greasyfork.org/scripts/500324-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E6%99%BA%E6%85%A7%E6%A0%91%E4%BB%A5%E5%8F%8A%E5%85%A8%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC%E5%85%8D%E8%B4%B9",
+    "code_url": "https://update.greasyfork.org/scripts/500324/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E6%99%BA%E6%85%A7%E6%A0%91%E4%BB%A5%E5%8F%8A%E5%85%A8%E5%B9%B3%E5%8F%B0%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC%E5%85%8D%E8%B4%B9.user.js",
+    "code_size": 289616,
+    "license": "mianfei",
+    "version": "99.0.9.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

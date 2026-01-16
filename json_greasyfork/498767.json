@@ -1,0 +1,59 @@
+{
+  "id": 498767,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-06-24T14:00:24.000Z",
+  "code_updated_at": "2024-06-24T14:00:24.000Z",
+  "namespace": "acratomatic",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1323129,
+      "name": "Acratomatic",
+      "created_at": "2024-06-24T10:38:33.000Z",
+      "url": "https://greasyfork.org/users/1323129-acratomatic",
+      "scripts": [
+        {
+          "id": 498767,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-06-24T14:00:24.000Z",
+          "code_updated_at": "2024-06-24T14:00:24.000Z",
+          "namespace": "acratomatic",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Trainline for travel, not accomodation",
+          "description": "Uncheck booking.com search on Trainline",
+          "url": "https://greasyfork.org/scripts/498767-trainline-for-travel-not-accomodation",
+          "code_url": "https://update.greasyfork.org/scripts/498767/Trainline%20for%20travel%2C%20not%20accomodation.user.js",
+          "code_size": 534,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Trainline for travel, not accomodation",
+  "description": "Uncheck booking.com search on Trainline",
+  "url": "https://greasyfork.org/scripts/498767-trainline-for-travel-not-accomodation",
+  "code_url": "https://update.greasyfork.org/scripts/498767/Trainline%20for%20travel%2C%20not%20accomodation.user.js",
+  "code_size": 534,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 507477,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-08T14:18:14.000Z",
+  "code_updated_at": "2025-03-01T10:42:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1364870,
+      "name": "zyyykkkk",
+      "created_at": "2024-09-08T10:42:38.000Z",
+      "url": "https://greasyfork.org/users/1364870-zyyykkkk",
+      "scripts": [
+        {
+          "id": 507477,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-08T14:18:14.000Z",
+          "code_updated_at": "2025-03-01T10:42:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "河南城建学院校园网自动登录v0.2",
+          "description": "带配置界面的校园网自动登录",
+          "url": "https://greasyfork.org/scripts/507477-%E6%B2%B3%E5%8D%97%E5%9F%8E%E5%BB%BA%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95v0-2",
+          "code_url": "https://update.greasyfork.org/scripts/507477/%E6%B2%B3%E5%8D%97%E5%9F%8E%E5%BB%BA%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95v02.user.js",
+          "code_size": 6670,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "河南城建学院校园网自动登录v0.2",
+  "description": "带配置界面的校园网自动登录",
+  "url": "https://greasyfork.org/scripts/507477-%E6%B2%B3%E5%8D%97%E5%9F%8E%E5%BB%BA%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95v0-2",
+  "code_url": "https://update.greasyfork.org/scripts/507477/%E6%B2%B3%E5%8D%97%E5%9F%8E%E5%BB%BA%E5%AD%A6%E9%99%A2%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95v02.user.js",
+  "code_size": 6670,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

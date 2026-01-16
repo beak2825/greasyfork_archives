@@ -1,0 +1,34 @@
+{
+  "id": 534972,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-05T02:00:43.000Z",
+  "code_updated_at": "2025-06-16T01:48:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465766,
+      "name": "aomar",
+      "created_at": "2025-05-05T01:59:12.000Z",
+      "url": "https://greasyfork.org/users/1465766-aomar",
+      "scripts": []
+    }
+  ],
+  "name": "Jira URL Linkifier",
+  "description": "Make plain-text URLs in Jira comments and descriptions clickable, including http(s), ftp, mailto, and www",
+  "url": "https://greasyfork.org/scripts/534972-jira-url-linkifier",
+  "code_url": "https://update.greasyfork.org/scripts/534972/Jira%20URL%20Linkifier.user.js",
+  "code_size": 3922,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

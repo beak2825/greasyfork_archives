@@ -30,6 +30,171 @@
     "version": "0.0.5",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 547686,
+    "daily_installs": 3,
+    "total_installs": 291,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-29T03:58:00.000Z",
+    "code_updated_at": "2025-08-29T06:45:48.000Z",
+    "namespace": "https://ez118.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889923,
+        "name": "EZ118",
+        "created_at": "2022-03-20T12:45:17.000Z",
+        "url": "https://greasyfork.org/users/889923-ez118"
+      }
+    ],
+    "name": "📦 资源嗅探",
+    "description": "网页资源嗅探的另一种选择",
+    "url": "https://greasyfork.org/scripts/547686-%E8%B5%84%E6%BA%90%E5%97%85%E6%8E%A2",
+    "code_url": "https://update.greasyfork.org/scripts/547686/%F0%9F%93%A6%20%E8%B5%84%E6%BA%90%E5%97%85%E6%8E%A2.user.js",
+    "code_size": 6708,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543100,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T07:56:49.000Z",
+    "code_updated_at": "2025-07-20T07:56:49.000Z",
+    "namespace": "https://ez118.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889923,
+        "name": "EZ118",
+        "created_at": "2022-03-20T12:45:17.000Z",
+        "url": "https://greasyfork.org/users/889923-ez118"
+      }
+    ],
+    "name": "🤖 B站人机筛选",
+    "description": "对于B站评论区内各用户的粉丝数、关注量、LV等数据进行综合考量，初次判断是否是人机、低质量账号（电脑网页上用鼠标点评论区用户名即可）",
+    "url": "https://greasyfork.org/scripts/543100-b%E7%AB%99%E4%BA%BA%E6%9C%BA%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/543100/%F0%9F%A4%96%20B%E7%AB%99%E4%BA%BA%E6%9C%BA%E7%AD%9B%E9%80%89.user.js",
+    "code_size": 7323,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511297,
+    "daily_installs": 0,
+    "total_installs": 1487,
+    "fan_score": "70.1",
+    "good_ratings": 9,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-03T04:28:33.000Z",
+    "code_updated_at": "2025-09-12T11:31:55.000Z",
+    "namespace": "https://ez118.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889923,
+        "name": "EZ118",
+        "created_at": "2022-03-20T12:45:17.000Z",
+        "url": "https://greasyfork.org/users/889923-ez118"
+      }
+    ],
+    "name": "🔐 密码填充",
+    "description": "为Via设计的第三方密码保存/填充工具，支持管理、导入与导出密码",
+    "url": "https://greasyfork.org/scripts/511297-%E5%AF%86%E7%A0%81%E5%A1%AB%E5%85%85",
+    "code_url": "https://update.greasyfork.org/scripts/511297/%F0%9F%94%90%20%E5%AF%86%E7%A0%81%E5%A1%AB%E5%85%85.user.js",
+    "code_size": 22628,
+    "license": "GPLv3",
+    "version": "0.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503290,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-11T10:13:52.000Z",
+    "code_updated_at": "2024-08-11T10:13:52.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889923,
+        "name": "EZ118",
+        "created_at": "2022-03-20T12:45:17.000Z",
+        "url": "https://greasyfork.org/users/889923-ez118"
+      }
+    ],
+    "name": "ultra-slim-jquery",
+    "description": "使用jQuery Builder生成的超精简Jquery库（注意版本：v2.1.1）",
+    "url": "https://greasyfork.org/scripts/503290-ultra-slim-jquery",
+    "code_url": "https://update.greasyfork.org/scripts/503290/1426017/ultra-slim-jquery.js",
+    "code_size": 47040,
+    "license": null,
+    "version": "0.0.1.20240811101352",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503038,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-09T03:24:20.000Z",
+    "code_updated_at": "2025-08-27T01:51:47.000Z",
+    "namespace": "https://ez118.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 889923,
+        "name": "EZ118",
+        "created_at": "2022-03-20T12:45:17.000Z",
+        "url": "https://greasyfork.org/users/889923-ez118"
+      }
+    ],
+    "name": "立刻警戒",
+    "description": "点击按钮或Ctrl+Shift+C快速隐藏所有标签页内容，并用其他页面覆盖以伪装、自动暂停媒体。",
+    "url": "https://greasyfork.org/scripts/503038-%E7%AB%8B%E5%88%BB%E8%AD%A6%E6%88%92",
+    "code_url": "https://update.greasyfork.org/scripts/503038/%E7%AB%8B%E5%88%BB%E8%AD%A6%E6%88%92.user.js",
+    "code_size": 11576,
+    "license": "GPLv3",
+    "version": "0.3.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502960,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-08T09:48:31.000Z",
+    "code_updated_at": "2024-08-13T03:15:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1347588,
+        "name": "bao-xiaoyu",
+        "created_at": "2024-08-08T09:16:52.000Z",
+        "url": "https://greasyfork.org/users/1347588-bao-xiaoyu"
+      }
+    ],
+    "name": "校服平台快捷语句",
+    "description": "快捷语句管理工具",
+    "url": "https://greasyfork.org/scripts/502960-%E6%A0%A1%E6%9C%8D%E5%B9%B3%E5%8F%B0%E5%BF%AB%E6%8D%B7%E8%AF%AD%E5%8F%A5",
+    "code_url": "https://update.greasyfork.org/scripts/502960/%E6%A0%A1%E6%9C%8D%E5%B9%B3%E5%8F%B0%E5%BF%AB%E6%8D%B7%E8%AF%AD%E5%8F%A5.user.js",
+    "code_size": 17711,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

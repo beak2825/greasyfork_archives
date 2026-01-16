@@ -1,0 +1,59 @@
+{
+  "id": 523445,
+  "daily_installs": 1,
+  "total_installs": 85,
+  "fan_score": "2.7",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 1,
+  "created_at": "2025-01-11T09:26:32.000Z",
+  "code_updated_at": "2025-06-18T04:39:33.000Z",
+  "namespace": "https://github.com/KelvienLee/question-directory-script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421959,
+      "name": "Yayia Li",
+      "created_at": "2025-01-11T09:01:33.000Z",
+      "url": "https://greasyfork.org/users/1421959-yayia-li",
+      "scripts": [
+        {
+          "id": 523445,
+          "daily_installs": 1,
+          "total_installs": 85,
+          "fan_score": "2.7",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 1,
+          "created_at": "2025-01-11T09:26:32.000Z",
+          "code_updated_at": "2025-06-18T04:39:33.000Z",
+          "namespace": "https://github.com/KelvienLee/question-directory-script",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AI对话提问问题目录列表导航生成器（ChatGPT 和 Perplexity.ai）- 优化版本",
+          "description": "为 ChatGPT 和 Perplexity.ai 提供提问目录导航功能，支持点击跳转至问题开头。",
+          "url": "https://greasyfork.org/scripts/523445-ai%E5%AF%B9%E8%AF%9D%E6%8F%90%E9%97%AE%E9%97%AE%E9%A2%98%E7%9B%AE%E5%BD%95%E5%88%97%E8%A1%A8%E5%AF%BC%E8%88%AA%E7%94%9F%E6%88%90%E5%99%A8-chatgpt-%E5%92%8C-perplexity-ai-%E4%BC%98%E5%8C%96%E7%89%88%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/523445/AI%E5%AF%B9%E8%AF%9D%E6%8F%90%E9%97%AE%E9%97%AE%E9%A2%98%E7%9B%AE%E5%BD%95%E5%88%97%E8%A1%A8%E5%AF%BC%E8%88%AA%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%88ChatGPT%20%E5%92%8C%20Perplexityai%EF%BC%89-%20%E4%BC%98%E5%8C%96%E7%89%88%E6%9C%AC.user.js",
+          "code_size": 9276,
+          "license": "MIT License",
+          "version": "1.0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AI对话提问问题目录列表导航生成器（ChatGPT 和 Perplexity.ai）- 优化版本",
+  "description": "为 ChatGPT 和 Perplexity.ai 提供提问目录导航功能，支持点击跳转至问题开头。",
+  "url": "https://greasyfork.org/scripts/523445-ai%E5%AF%B9%E8%AF%9D%E6%8F%90%E9%97%AE%E9%97%AE%E9%A2%98%E7%9B%AE%E5%BD%95%E5%88%97%E8%A1%A8%E5%AF%BC%E8%88%AA%E7%94%9F%E6%88%90%E5%99%A8-chatgpt-%E5%92%8C-perplexity-ai-%E4%BC%98%E5%8C%96%E7%89%88%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/523445/AI%E5%AF%B9%E8%AF%9D%E6%8F%90%E9%97%AE%E9%97%AE%E9%A2%98%E7%9B%AE%E5%BD%95%E5%88%97%E8%A1%A8%E5%AF%BC%E8%88%AA%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%88ChatGPT%20%E5%92%8C%20Perplexityai%EF%BC%89-%20%E4%BC%98%E5%8C%96%E7%89%88%E6%9C%AC.user.js",
+  "code_size": 9276,
+  "license": "MIT License",
+  "version": "1.0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

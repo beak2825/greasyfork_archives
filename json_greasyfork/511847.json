@@ -1,0 +1,59 @@
+{
+  "id": 511847,
+  "daily_installs": 0,
+  "total_installs": 130,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-08T07:41:37.000Z",
+  "code_updated_at": "2024-10-08T07:41:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1378130,
+      "name": "wf-xian",
+      "created_at": "2024-10-08T07:32:24.000Z",
+      "url": "https://greasyfork.org/users/1378130-wf-xian",
+      "scripts": [
+        {
+          "id": 511847,
+          "daily_installs": 0,
+          "total_installs": 130,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-08T07:41:37.000Z",
+          "code_updated_at": "2024-10-08T07:41:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "广东省国家工作人员学法考试系统自动学习课程章节",
+          "description": "自动阅读章节并点击下一章节，若无下一章节则回到首页",
+          "url": "https://greasyfork.org/scripts/511847-%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%9B%BD%E5%AE%B6%E5%B7%A5%E4%BD%9C%E4%BA%BA%E5%91%98%E5%AD%A6%E6%B3%95%E8%80%83%E8%AF%95%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B%E7%AB%A0%E8%8A%82",
+          "code_url": "https://update.greasyfork.org/scripts/511847/%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%9B%BD%E5%AE%B6%E5%B7%A5%E4%BD%9C%E4%BA%BA%E5%91%98%E5%AD%A6%E6%B3%95%E8%80%83%E8%AF%95%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B%E7%AB%A0%E8%8A%82.user.js",
+          "code_size": 2228,
+          "license": null,
+          "version": "2024-10-08",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "广东省国家工作人员学法考试系统自动学习课程章节",
+  "description": "自动阅读章节并点击下一章节，若无下一章节则回到首页",
+  "url": "https://greasyfork.org/scripts/511847-%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%9B%BD%E5%AE%B6%E5%B7%A5%E4%BD%9C%E4%BA%BA%E5%91%98%E5%AD%A6%E6%B3%95%E8%80%83%E8%AF%95%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B%E7%AB%A0%E8%8A%82",
+  "code_url": "https://update.greasyfork.org/scripts/511847/%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%9B%BD%E5%AE%B6%E5%B7%A5%E4%BD%9C%E4%BA%BA%E5%91%98%E5%AD%A6%E6%B3%95%E8%80%83%E8%AF%95%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%AF%BE%E7%A8%8B%E7%AB%A0%E8%8A%82.user.js",
+  "code_size": 2228,
+  "license": null,
+  "version": "2024-10-08",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

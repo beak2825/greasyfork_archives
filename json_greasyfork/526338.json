@@ -1,0 +1,59 @@
+{
+  "id": 526338,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-09T01:14:20.000Z",
+  "code_updated_at": "2025-02-09T01:58:55.000Z",
+  "namespace": "https://github.com/DavidLJz/userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433101,
+      "name": "DavidLJz",
+      "created_at": "2025-02-09T00:31:14.000Z",
+      "url": "https://greasyfork.org/users/1433101-davidljz",
+      "scripts": [
+        {
+          "id": 526338,
+          "daily_installs": 0,
+          "total_installs": 58,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-09T01:14:20.000Z",
+          "code_updated_at": "2025-02-09T01:58:55.000Z",
+          "namespace": "https://github.com/DavidLJz/userscripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gemini Download Conversation",
+          "description": "Download a conversation from Gemini to a markdown file.",
+          "url": "https://greasyfork.org/scripts/526338-gemini-download-conversation",
+          "code_url": "https://update.greasyfork.org/scripts/526338/Gemini%20Download%20Conversation.user.js",
+          "code_size": 7158,
+          "license": "MIT License",
+          "version": "0.1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gemini Download Conversation",
+  "description": "Download a conversation from Gemini to a markdown file.",
+  "url": "https://greasyfork.org/scripts/526338-gemini-download-conversation",
+  "code_url": "https://update.greasyfork.org/scripts/526338/Gemini%20Download%20Conversation.user.js",
+  "code_size": 7158,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

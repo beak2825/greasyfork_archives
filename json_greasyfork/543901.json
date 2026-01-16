@@ -1,0 +1,34 @@
+{
+  "id": 543901,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-28T16:37:11.000Z",
+  "code_updated_at": "2025-07-30T13:55:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499234,
+      "name": "dabendan123",
+      "created_at": "2025-07-28T16:35:35.000Z",
+      "url": "https://greasyfork.org/users/1499234-dabendan123",
+      "scripts": []
+    }
+  ],
+  "name": "可上线-TikTok 全能对话助手 (v22.1 修正配置版)",
+  "description": "修正脚本不运行的bug。新增菜单配置项，可按需显示泰国(泰/缅)或德国的翻译按钮。",
+  "url": "https://greasyfork.org/scripts/543901-%E5%8F%AF%E4%B8%8A%E7%BA%BF-tiktok-%E5%85%A8%E8%83%BD%E5%AF%B9%E8%AF%9D%E5%8A%A9%E6%89%8B-v22-1-%E4%BF%AE%E6%AD%A3%E9%85%8D%E7%BD%AE%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/543901/%E5%8F%AF%E4%B8%8A%E7%BA%BF-TikTok%20%E5%85%A8%E8%83%BD%E5%AF%B9%E8%AF%9D%E5%8A%A9%E6%89%8B%20%28v221%20%E4%BF%AE%E6%AD%A3%E9%85%8D%E7%BD%AE%E7%89%88%29.user.js",
+  "code_size": 18420,
+  "license": "MIT License",
+  "version": "22.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

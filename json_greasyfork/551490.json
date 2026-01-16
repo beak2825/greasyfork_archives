@@ -1,0 +1,34 @@
+{
+  "id": 551490,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-03T20:25:32.000Z",
+  "code_updated_at": "2025-10-21T11:33:40.000Z",
+  "namespace": "https://store.steampowered.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294135,
+      "name": "sjx01",
+      "created_at": "2024-04-28T02:34:40.000Z",
+      "url": "https://greasyfork.org/users/1294135-sjx01",
+      "scripts": []
+    }
+  ],
+  "name": "Steam鉴赏家页面自动激活Key",
+  "description": "定期刷新鉴赏家页面，自动获取并激活新的Steam Key",
+  "url": "https://greasyfork.org/scripts/551490-steam%E9%89%B4%E8%B5%8F%E5%AE%B6%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E6%BF%80%E6%B4%BBkey",
+  "code_url": "https://update.greasyfork.org/scripts/551490/Steam%E9%89%B4%E8%B5%8F%E5%AE%B6%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E6%BF%80%E6%B4%BBKey.user.js",
+  "code_size": 159473,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

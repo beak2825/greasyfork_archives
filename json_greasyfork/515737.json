@@ -1,0 +1,34 @@
+{
+  "id": 515737,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-04T08:26:52.000Z",
+  "code_updated_at": "2024-11-04T08:26:52.000Z",
+  "namespace": "https://greasyfork.org/users/416400",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 416400,
+      "name": "semiazas",
+      "created_at": "2019-12-12T03:52:46.000Z",
+      "url": "https://greasyfork.org/users/416400-semiazas",
+      "scripts": []
+    }
+  ],
+  "name": "Youtube, Auto-follow Raid redirects",
+  "description": "Attempt to auto-follow live-stream raid redirects, ignoring Youtube auto-play setting",
+  "url": "https://greasyfork.org/scripts/515737-youtube-auto-follow-raid-redirects",
+  "code_url": "https://update.greasyfork.org/scripts/515737/Youtube%2C%20Auto-follow%20Raid%20redirects.user.js",
+  "code_size": 911,
+  "license": "MIT License",
+  "version": "2024-11-04-01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

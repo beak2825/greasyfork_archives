@@ -1,0 +1,34 @@
+{
+  "id": 520929,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-16T16:22:54.000Z",
+  "code_updated_at": "2024-12-16T16:22:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1400923,
+      "name": "Anil99",
+      "created_at": "2024-11-22T21:10:05.000Z",
+      "url": "https://greasyfork.org/users/1400923-anil99",
+      "scripts": []
+    }
+  ],
+  "name": "ANT | Torrent Highlighter",
+  "description": "Highlights seeding, leeching and snatched torrent rows on Anthelion with color-coded backgrounds",
+  "url": "https://greasyfork.org/scripts/520929-ant-torrent-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/520929/ANT%20%7C%20Torrent%20Highlighter.user.js",
+  "code_size": 2733,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

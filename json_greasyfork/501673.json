@@ -1,0 +1,33 @@
+{
+  "id": 501673,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-24T13:53:45.000Z",
+  "code_updated_at": "2024-07-25T08:19:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 185187,
+      "name": "hswmartin",
+      "created_at": "2018-05-11T01:28:30.000Z",
+      "url": "https://greasyfork.org/users/185187-hswmartin"
+    }
+  ],
+  "name": "自动输入fk",
+  "description": "自动输入fk!",
+  "url": "https://greasyfork.org/scripts/501673-%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5fk",
+  "code_url": "https://update.greasyfork.org/scripts/501673/%E8%87%AA%E5%8A%A8%E8%BE%93%E5%85%A5fk.user.js",
+  "code_size": 2401,
+  "license": null,
+  "version": "0.2.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 529934,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-15T20:56:35.000Z",
+    "code_updated_at": "2025-03-15T20:56:35.000Z",
+    "namespace": "https://github.com/Satanarious",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973639,
+        "name": "Satyam Singh Niranjan",
+        "created_at": "2022-10-21T22:23:29.000Z",
+        "url": "https://greasyfork.org/users/973639-satyam-singh-niranjan"
+      }
+    ],
+    "name": "RPCS3 Compatibility Checker(Game Page)",
+    "description": "Check and display the compatibility status of RPCS3 games on the PS3 page of RomsPure Game Page",
+    "url": "https://greasyfork.org/scripts/529934-rpcs3-compatibility-checker-game-page",
+    "code_url": "https://update.greasyfork.org/scripts/529934/RPCS3%20Compatibility%20Checker%28Game%20Page%29.user.js",
+    "code_size": 4038,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529933,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-15T20:51:57.000Z",
+    "code_updated_at": "2025-03-15T20:51:57.000Z",
+    "namespace": "https://github.com/Satanarious",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 973639,
+        "name": "Satyam Singh Niranjan",
+        "created_at": "2022-10-21T22:23:29.000Z",
+        "url": "https://greasyfork.org/users/973639-satyam-singh-niranjan"
+      }
+    ],
+    "name": "RPCS3 Compatibility Checker(Search)",
+    "description": "Check and display the compatibility status of RPCS3 games on the PS3 page of RomsPure Search",
+    "url": "https://greasyfork.org/scripts/529933-rpcs3-compatibility-checker-search",
+    "code_url": "https://update.greasyfork.org/scripts/529933/RPCS3%20Compatibility%20Checker%28Search%29.user.js",
+    "code_size": 4274,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

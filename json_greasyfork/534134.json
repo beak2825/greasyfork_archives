@@ -1,0 +1,34 @@
+{
+  "id": 534134,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-27T06:16:05.000Z",
+  "code_updated_at": "2025-04-27T16:02:51.000Z",
+  "namespace": "https://greasyfork.org/users/1171837",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1171837,
+      "name": "jzbqy",
+      "created_at": "2023-09-12T23:38:04.000Z",
+      "url": "https://greasyfork.org/users/1171837-jzbqy",
+      "scripts": []
+    }
+  ],
+  "name": "一键候选投票",
+  "description": "一键候选投票，支持多个域名，自动关闭弹出窗口，适配大部分NP架构且带有 offers.php 的可投票候选页面。",
+  "url": "https://greasyfork.org/scripts/534134-%E4%B8%80%E9%94%AE%E5%80%99%E9%80%89%E6%8A%95%E7%A5%A8",
+  "code_url": "https://update.greasyfork.org/scripts/534134/%E4%B8%80%E9%94%AE%E5%80%99%E9%80%89%E6%8A%95%E7%A5%A8.user.js",
+  "code_size": 10987,
+  "license": null,
+  "version": "3.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513419,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-21T14:52:12.000Z",
+    "code_updated_at": "2024-10-21T14:55:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 966592,
+        "name": "Alex Moretti",
+        "created_at": "2022-10-04T19:23:48.000Z",
+        "url": "https://greasyfork.org/users/966592-alex-moretti"
+      }
+    ],
+    "name": "Кураторы адм/ЗГА/ГА | INDIGO",
+    "description": "----------------------------",
+    "url": "https://greasyfork.org/scripts/513419-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D0%B0%D0%B4%D0%BC-%D0%B7%D0%B3%D0%B0-%D0%B3%D0%B0-indigo",
+    "code_url": "https://update.greasyfork.org/scripts/513419/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D0%B0%D0%B4%D0%BC%D0%97%D0%93%D0%90%D0%93%D0%90%20%7C%20INDIGO.user.js",
+    "code_size": 47499,
+    "license": "MIT License",
+    "version": "1.10.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501421,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-21T22:35:03.000Z",
+    "code_updated_at": "2024-08-18T08:48:26.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 966592,
+        "name": "Alex Moretti",
+        "created_at": "2022-10-04T19:23:48.000Z",
+        "url": "https://greasyfork.org/users/966592-alex-moretti"
+      }
+    ],
+    "name": "INDIGO | FORUM SCRIPT",
+    "description": "По вопросам(ВК): https://vk.com/alex_morettii",
+    "url": "https://greasyfork.org/scripts/501421-indigo-forum-script",
+    "code_url": "https://update.greasyfork.org/scripts/501421/INDIGO%20%7C%20FORUM%20SCRIPT.user.js",
+    "code_size": 99490,
+    "license": "Kumiho",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

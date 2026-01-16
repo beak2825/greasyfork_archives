@@ -1,0 +1,59 @@
+{
+  "id": 503607,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-14T05:17:51.000Z",
+  "code_updated_at": "2024-08-14T22:36:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1351469,
+      "name": "torrober",
+      "created_at": "2024-08-14T05:14:27.000Z",
+      "url": "https://greasyfork.org/users/1351469-torrober",
+      "scripts": [
+        {
+          "id": 503607,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-14T05:17:51.000Z",
+          "code_updated_at": "2024-08-14T22:36:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Aurora Premium",
+          "description": "Aurora pero con UI fixes",
+          "url": "https://greasyfork.org/scripts/503607-aurora-premium",
+          "code_url": "https://update.greasyfork.org/scripts/503607/Aurora%20Premium.user.js",
+          "code_size": 958,
+          "license": null,
+          "version": "2024-08-14",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Aurora Premium",
+  "description": "Aurora pero con UI fixes",
+  "url": "https://greasyfork.org/scripts/503607-aurora-premium",
+  "code_url": "https://update.greasyfork.org/scripts/503607/Aurora%20Premium.user.js",
+  "code_size": 958,
+  "license": null,
+  "version": "2024-08-14",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

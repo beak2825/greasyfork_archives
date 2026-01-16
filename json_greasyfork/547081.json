@@ -1,0 +1,33 @@
+{
+  "id": 547081,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-24T08:08:51.000Z",
+  "code_updated_at": "2025-12-21T11:37:01.000Z",
+  "namespace": "https://greasyfork.org/users/1197317-opus-x",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1197317,
+      "name": "Opus-X",
+      "created_at": "2023-10-16T11:43:39.000Z",
+      "url": "https://greasyfork.org/users/1197317-opus-x"
+    }
+  ],
+  "name": "SkipCut – Minimal Layout",
+  "description": "Hide specific sections on SkipCut only if the URL has a 'v' parameter",
+  "url": "https://greasyfork.org/scripts/547081-skipcut-minimal-layout",
+  "code_url": "https://update.greasyfork.org/scripts/547081/SkipCut%20%E2%80%93%20Minimal%20Layout.user.js",
+  "code_size": 6305,
+  "license": "MIT License",
+  "version": "1.04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

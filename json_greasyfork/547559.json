@@ -1,0 +1,34 @@
+{
+  "id": 547559,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T06:32:46.000Z",
+  "code_updated_at": "2025-08-28T06:32:46.000Z",
+  "namespace": "https://blog.valley.town/@zeronox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508973,
+      "name": "ambiguous435",
+      "created_at": "2025-08-26T09:31:45.000Z",
+      "url": "https://greasyfork.org/users/1508973-ambiguous435",
+      "scripts": []
+    }
+  ],
+  "name": "Valley AI Sidebar",
+  "description": "Ctrl+Shift+F 단축키로 사이드바 메뉴를 토글합니다.",
+  "url": "https://greasyfork.org/scripts/547559-valley-ai-sidebar",
+  "code_url": "https://update.greasyfork.org/scripts/547559/Valley%20AI%20Sidebar.user.js",
+  "code_size": 1018,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 548384,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T20:26:52.000Z",
+  "code_updated_at": "2025-09-04T20:26:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511908,
+      "name": "muppetbonehead e",
+      "created_at": "2025-09-04T20:23:25.000Z",
+      "url": "https://greasyfork.org/users/1511908-muppetbonehead-e",
+      "scripts": [
+        {
+          "id": 548384,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-04T20:26:52.000Z",
+          "code_updated_at": "2025-09-04T20:26:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bypass UK restrictions",
+          "description": "Block api/geo requests on radio.garden",
+          "url": "https://greasyfork.org/scripts/548384-bypass-uk-restrictions",
+          "code_url": "https://update.greasyfork.org/scripts/548384/Bypass%20UK%20restrictions.user.js",
+          "code_size": 1785,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bypass UK restrictions",
+  "description": "Block api/geo requests on radio.garden",
+  "url": "https://greasyfork.org/scripts/548384-bypass-uk-restrictions",
+  "code_url": "https://update.greasyfork.org/scripts/548384/Bypass%20UK%20restrictions.user.js",
+  "code_size": 1785,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

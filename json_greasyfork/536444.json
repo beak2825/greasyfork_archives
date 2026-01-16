@@ -1,0 +1,59 @@
+{
+  "id": 536444,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-19T02:14:43.000Z",
+  "code_updated_at": "2025-05-19T02:14:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 989590,
+      "name": "xiaocc6",
+      "created_at": "2022-11-29T08:15:42.000Z",
+      "url": "https://greasyfork.org/users/989590-xiaocc6",
+      "scripts": [
+        {
+          "id": 536444,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-19T02:14:43.000Z",
+          "code_updated_at": "2025-05-19T02:14:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "替换Iframe为二维码",
+          "description": "tools",
+          "url": "https://greasyfork.org/scripts/536444-%E6%9B%BF%E6%8D%A2iframe%E4%B8%BA%E4%BA%8C%E7%BB%B4%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/536444/%E6%9B%BF%E6%8D%A2Iframe%E4%B8%BA%E4%BA%8C%E7%BB%B4%E7%A0%81.user.js",
+          "code_size": 1810,
+          "license": "MIT License",
+          "version": "2025-02-06",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "替换Iframe为二维码",
+  "description": "tools",
+  "url": "https://greasyfork.org/scripts/536444-%E6%9B%BF%E6%8D%A2iframe%E4%B8%BA%E4%BA%8C%E7%BB%B4%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/536444/%E6%9B%BF%E6%8D%A2Iframe%E4%B8%BA%E4%BA%8C%E7%BB%B4%E7%A0%81.user.js",
+  "code_size": 1810,
+  "license": "MIT License",
+  "version": "2025-02-06",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

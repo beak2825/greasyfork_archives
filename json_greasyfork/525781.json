@@ -1,0 +1,59 @@
+{
+  "id": 525781,
+  "daily_installs": 1,
+  "total_installs": 2090,
+  "fan_score": "20.2",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 3,
+  "created_at": "2025-02-03T17:47:01.000Z",
+  "code_updated_at": "2025-03-13T22:48:45.000Z",
+  "namespace": "KirkaCentral",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431017,
+      "name": "KirkaCentral",
+      "created_at": "2025-02-03T17:35:25.000Z",
+      "url": "https://greasyfork.org/users/1431017-kirkacentral",
+      "scripts": [
+        {
+          "id": 525781,
+          "daily_installs": 1,
+          "total_installs": 2090,
+          "fan_score": "20.2",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 3,
+          "created_at": "2025-02-03T17:47:01.000Z",
+          "code_updated_at": "2025-03-13T22:48:45.000Z",
+          "namespace": "KirkaCentral",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kirka Wallhack 2025",
+          "description": "Free Working Kirka Wallhack 2025",
+          "url": "https://greasyfork.org/scripts/525781-kirka-wallhack-2025",
+          "code_url": "https://update.greasyfork.org/scripts/525781/Kirka%20Wallhack%202025.user.js",
+          "code_size": 763,
+          "license": null,
+          "version": "1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kirka Wallhack 2025",
+  "description": "Free Working Kirka Wallhack 2025",
+  "url": "https://greasyfork.org/scripts/525781-kirka-wallhack-2025",
+  "code_url": "https://update.greasyfork.org/scripts/525781/Kirka%20Wallhack%202025.user.js",
+  "code_size": 763,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

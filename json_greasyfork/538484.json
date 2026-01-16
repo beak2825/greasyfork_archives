@@ -1,0 +1,33 @@
+{
+  "id": 538484,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-06T01:08:08.000Z",
+  "code_updated_at": "2025-06-06T01:25:20.000Z",
+  "namespace": "http://github.com/hangjeff",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1338298,
+      "name": "Jeff Huang",
+      "created_at": "2024-07-22T15:58:41.000Z",
+      "url": "https://greasyfork.org/users/1338298-jeff-huang"
+    }
+  ],
+  "name": "Komica Save webm to catbox",
+  "description": "Save the Komica webm to catbox",
+  "url": "https://greasyfork.org/scripts/538484-komica-save-webm-to-catbox",
+  "code_url": "https://update.greasyfork.org/scripts/538484/Komica%20Save%20webm%20to%20catbox.user.js",
+  "code_size": 3555,
+  "license": null,
+  "version": "2025-06-06_09h20m",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

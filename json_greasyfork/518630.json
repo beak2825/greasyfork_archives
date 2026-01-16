@@ -1,0 +1,59 @@
+{
+  "id": 518630,
+  "daily_installs": 0,
+  "total_installs": 461,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-23T20:50:51.000Z",
+  "code_updated_at": "2024-11-23T20:50:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1401417,
+      "name": "Wallace Camilo",
+      "created_at": "2024-11-23T20:48:06.000Z",
+      "url": "https://greasyfork.org/users/1401417-wallace-camilo",
+      "scripts": [
+        {
+          "id": 518630,
+          "daily_installs": 0,
+          "total_installs": 461,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-23T20:50:51.000Z",
+          "code_updated_at": "2024-11-23T20:50:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kour KP Script",
+          "description": "Unlimited 1500 KP Daily Rewards",
+          "url": "https://greasyfork.org/scripts/518630-kour-kp-script",
+          "code_url": "https://update.greasyfork.org/scripts/518630/Kour%20KP%20Script.user.js",
+          "code_size": 2854,
+          "license": "ISC <3",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kour KP Script",
+  "description": "Unlimited 1500 KP Daily Rewards",
+  "url": "https://greasyfork.org/scripts/518630-kour-kp-script",
+  "code_url": "https://update.greasyfork.org/scripts/518630/Kour%20KP%20Script.user.js",
+  "code_size": 2854,
+  "license": "ISC <3",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

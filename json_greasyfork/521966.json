@@ -1,0 +1,34 @@
+{
+  "id": 521966,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-27T10:13:32.000Z",
+  "code_updated_at": "2024-12-27T10:13:32.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 953428,
+      "name": "SharonLee",
+      "created_at": "2022-09-01T16:40:26.000Z",
+      "url": "https://greasyfork.org/users/953428-sharonlee",
+      "scripts": []
+    }
+  ],
+  "name": "闪击PPT下载",
+  "description": "2024/11/7 22:07:34",
+  "url": "https://greasyfork.org/scripts/521966-%E9%97%AA%E5%87%BBppt%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/521966/%E9%97%AA%E5%87%BBPPT%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 1375,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

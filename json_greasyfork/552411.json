@@ -1,0 +1,59 @@
+{
+  "id": 552411,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-12T18:48:27.000Z",
+  "code_updated_at": "2025-10-12T18:48:27.000Z",
+  "namespace": "https://github.com/zyrocossol11/Translate-Websites-Userscript",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1525714,
+      "name": "daijidesu",
+      "created_at": "2025-10-12T18:45:14.000Z",
+      "url": "https://greasyfork.org/users/1525714-daijidesu",
+      "scripts": [
+        {
+          "id": 552411,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-12T18:48:27.000Z",
+          "code_updated_at": "2025-10-12T18:48:27.000Z",
+          "namespace": "https://github.com/zyrocossol11/Translate-Websites-Userscript",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Translate Website (Alt+X)",
+          "description": "Press Alt+X to toggle between original and Google-translated page.",
+          "url": "https://greasyfork.org/scripts/552411-translate-website-alt-x",
+          "code_url": "https://update.greasyfork.org/scripts/552411/Translate%20Website%20%28Alt%2BX%29.user.js",
+          "code_size": 4880,
+          "license": null,
+          "version": "2.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Translate Website (Alt+X)",
+  "description": "Press Alt+X to toggle between original and Google-translated page.",
+  "url": "https://greasyfork.org/scripts/552411-translate-website-alt-x",
+  "code_url": "https://update.greasyfork.org/scripts/552411/Translate%20Website%20%28Alt%2BX%29.user.js",
+  "code_size": 4880,
+  "license": null,
+  "version": "2.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

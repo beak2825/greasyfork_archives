@@ -1,0 +1,59 @@
+{
+  "id": 515611,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-03T17:45:44.000Z",
+  "code_updated_at": "2024-11-03T17:45:44.000Z",
+  "namespace": "https://vgwarden.vercel.app",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1390752,
+      "name": "VGWARDEN",
+      "created_at": "2024-11-03T17:41:09.000Z",
+      "url": "https://greasyfork.org/users/1390752-vgwarden",
+      "scripts": [
+        {
+          "id": 515611,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-03T17:45:44.000Z",
+          "code_updated_at": "2024-11-03T17:45:44.000Z",
+          "namespace": "https://vgwarden.vercel.app",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MythicalDash Auto Refresh on Critical Error",
+          "description": "Fix Mythical Dash Error",
+          "url": "https://greasyfork.org/scripts/515611-mythicaldash-auto-refresh-on-critical-error",
+          "code_url": "https://update.greasyfork.org/scripts/515611/MythicalDash%20Auto%20Refresh%20on%20Critical%20Error.user.js",
+          "code_size": 599,
+          "license": "Proprietary",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MythicalDash Auto Refresh on Critical Error",
+  "description": "Fix Mythical Dash Error",
+  "url": "https://greasyfork.org/scripts/515611-mythicaldash-auto-refresh-on-critical-error",
+  "code_url": "https://update.greasyfork.org/scripts/515611/MythicalDash%20Auto%20Refresh%20on%20Critical%20Error.user.js",
+  "code_size": 599,
+  "license": "Proprietary",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

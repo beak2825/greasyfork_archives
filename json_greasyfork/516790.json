@@ -1,0 +1,33 @@
+{
+  "id": 516790,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-11T04:06:44.000Z",
+  "code_updated_at": "2025-01-22T03:14:33.000Z",
+  "namespace": "https://penicillin.github.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 305353,
+      "name": "静夜轻风",
+      "created_at": "2019-05-28T11:03:03.000Z",
+      "url": "https://greasyfork.org/users/305353-%E9%9D%99%E5%A4%9C%E8%BD%BB%E9%A3%8E"
+    }
+  ],
+  "name": "优化NTKO办公OA",
+  "description": "无",
+  "url": "https://greasyfork.org/scripts/516790-%E4%BC%98%E5%8C%96ntko%E5%8A%9E%E5%85%ACoa",
+  "code_url": "https://update.greasyfork.org/scripts/516790/%E4%BC%98%E5%8C%96NTKO%E5%8A%9E%E5%85%ACOA.user.js",
+  "code_size": 30703,
+  "license": "AGPL License",
+  "version": "20250122",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

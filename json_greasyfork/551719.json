@@ -1,0 +1,34 @@
+{
+  "id": 551719,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-06T00:57:39.000Z",
+  "code_updated_at": "2025-10-18T08:48:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472250,
+      "name": "cloud67p",
+      "created_at": "2025-05-20T04:29:27.000Z",
+      "url": "https://greasyfork.org/users/1472250-cloud67p",
+      "scripts": []
+    }
+  ],
+  "name": "koneUserNote 기반 서브,게시글 차단",
+  "description": "For Script User Blocking, Memo, Sub Blocking and Title Filtering",
+  "url": "https://greasyfork.org/scripts/551719-koneusernote-%EA%B8%B0%EB%B0%98-%EC%84%9C%EB%B8%8C-%EA%B2%8C%EC%8B%9C%EA%B8%80-%EC%B0%A8%EB%8B%A8",
+  "code_url": "https://update.greasyfork.org/scripts/551719/koneUserNote%20%EA%B8%B0%EB%B0%98%20%EC%84%9C%EB%B8%8C%2C%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%B0%A8%EB%8B%A8.user.js",
+  "code_size": 91062,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

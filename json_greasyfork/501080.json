@@ -1,0 +1,59 @@
+{
+  "id": 501080,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-18T13:31:35.000Z",
+  "code_updated_at": "2024-07-18T13:31:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1336059,
+      "name": "Claudiu Andronache",
+      "created_at": "2024-07-18T13:23:51.000Z",
+      "url": "https://greasyfork.org/users/1336059-claudiu-andronache",
+      "scripts": [
+        {
+          "id": 501080,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-18T13:31:35.000Z",
+          "code_updated_at": "2024-07-18T13:31:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fort Presence",
+          "description": "Fort presence script for The West",
+          "url": "https://greasyfork.org/scripts/501080-fort-presence",
+          "code_url": "https://update.greasyfork.org/scripts/501080/Fort%20Presence.user.js",
+          "code_size": 3046,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fort Presence",
+  "description": "Fort presence script for The West",
+  "url": "https://greasyfork.org/scripts/501080-fort-presence",
+  "code_url": "https://update.greasyfork.org/scripts/501080/Fort%20Presence.user.js",
+  "code_size": 3046,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

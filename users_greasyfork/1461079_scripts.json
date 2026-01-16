@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533654,
+    "daily_installs": 1,
+    "total_installs": 334,
+    "fan_score": "46.3",
+    "good_ratings": 4,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T18:54:29.000Z",
+    "code_updated_at": "2025-05-05T11:40:11.000Z",
+    "namespace": "https://greasyfork.org/users/1461079",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461079,
+        "name": "Michaelsoft",
+        "created_at": "2025-04-22T17:54:37.000Z",
+        "url": "https://greasyfork.org/users/1461079-michaelsoft"
+      }
+    ],
+    "name": "🪄 YouTube UI Enhancer | Resize Thumbnails & Customize Layout",
+    "description": "Get rid of oversized thumbnails, adjust rows, and clean up layout for a more streamlined YouTube experience.",
+    "url": "https://greasyfork.org/scripts/533654-youtube-ui-enhancer-resize-thumbnails-customize-layout",
+    "code_url": "https://update.greasyfork.org/scripts/533654/%F0%9F%AA%84%20YouTube%20UI%20Enhancer%20%7C%20Resize%20Thumbnails%20%20Customize%20Layout.user.js",
+    "code_size": 11313,
+    "license": "MIT License",
+    "version": "2.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533653,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T18:44:08.000Z",
+    "code_updated_at": "2025-05-05T11:42:06.000Z",
+    "namespace": "https://greasyfork.org/users/1461079",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461079,
+        "name": "Michaelsoft",
+        "created_at": "2025-04-22T17:54:37.000Z",
+        "url": "https://greasyfork.org/users/1461079-michaelsoft"
+      }
+    ],
+    "name": "🔊 YouTube Volume Control on Scroll",
+    "description": "Control YouTube volume with your mouse wheel - just hover over the video and scroll. Simple, fast, and click-free!",
+    "url": "https://greasyfork.org/scripts/533653-youtube-volume-control-on-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/533653/%F0%9F%94%8A%20YouTube%20Volume%20Control%20on%20Scroll.user.js",
+    "code_size": 3628,
+    "license": "MIT License",
+    "version": "1.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

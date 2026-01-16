@@ -1,0 +1,34 @@
+{
+  "id": 503971,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-17T14:15:07.000Z",
+  "code_updated_at": "2025-02-07T02:59:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1353444,
+      "name": "崔岸伟",
+      "created_at": "2024-08-17T14:13:38.000Z",
+      "url": "https://greasyfork.org/users/1353444-%E5%B4%94%E5%B2%B8%E4%BC%9F",
+      "scripts": []
+    }
+  ],
+  "name": "cawplayer",
+  "description": "jellyfin launch external player",
+  "url": "https://greasyfork.org/scripts/503971-cawplayer",
+  "code_url": "https://update.greasyfork.org/scripts/503971/cawplayer.user.js",
+  "code_size": 12291,
+  "license": "MIT License",
+  "version": "1.0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

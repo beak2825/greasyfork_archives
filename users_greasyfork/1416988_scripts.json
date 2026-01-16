@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522209,
+    "daily_installs": 0,
+    "total_installs": 130,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-29T15:02:33.000Z",
+    "code_updated_at": "2024-12-29T15:02:33.000Z",
+    "namespace": "https://www.oba.gov.tr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416988,
+        "name": "irfansubasi",
+        "created_at": "2024-12-28T20:38:47.000Z",
+        "url": "https://greasyfork.org/users/1416988-irfansubasi"
+      }
+    ],
+    "name": "ÖBA Auto video skipper",
+    "description": "ÖBA videolarının arka planda otomatik olarak sırayla oynatılmasını sağlar",
+    "url": "https://greasyfork.org/scripts/522209-%C3%B6ba-auto-video-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/522209/%C3%96BA%20Auto%20video%20skipper.user.js",
+    "code_size": 1150,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

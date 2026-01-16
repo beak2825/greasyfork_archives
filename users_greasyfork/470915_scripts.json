@@ -1,0 +1,200 @@
+[
+  {
+    "id": 526169,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-07T07:10:39.000Z",
+    "code_updated_at": "2025-02-09T05:11:50.000Z",
+    "namespace": "https://www.1024net.tech/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470915,
+        "name": "songkaik",
+        "created_at": "2020-03-29T02:23:52.000Z",
+        "url": "https://greasyfork.org/users/470915-songkaik"
+      }
+    ],
+    "name": "抖音自动发送评论",
+    "description": "I try to take over the world!",
+    "url": "https://greasyfork.org/scripts/526169-%E6%8A%96%E9%9F%B3%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/526169/%E6%8A%96%E9%9F%B3%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 7642,
+    "license": null,
+    "version": "2025.02.02.080000",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523175,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T07:22:48.000Z",
+    "code_updated_at": "2025-01-13T01:41:36.000Z",
+    "namespace": "https://www.1024net.tech/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470915,
+        "name": "songkaik",
+        "created_at": "2020-03-29T02:23:52.000Z",
+        "url": "https://greasyfork.org/users/470915-songkaik"
+      }
+    ],
+    "name": "Anchor link guides",
+    "description": "I try to take over the world!",
+    "url": "https://greasyfork.org/scripts/523175-anchor-link-guides",
+    "code_url": "https://update.greasyfork.org/scripts/523175/Anchor%20link%20guides.user.js",
+    "code_size": 10531,
+    "license": null,
+    "version": "2025.01.13.080000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518311,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-21T07:42:05.000Z",
+    "code_updated_at": "2025-01-10T03:57:13.000Z",
+    "namespace": "https://www.1024net.tech/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470915,
+        "name": "songkaik",
+        "created_at": "2020-03-29T02:23:52.000Z",
+        "url": "https://greasyfork.org/users/470915-songkaik"
+      }
+    ],
+    "name": "Foolproof",
+    "description": "I try to take over the world!",
+    "url": "https://greasyfork.org/scripts/518311-foolproof",
+    "code_url": "https://update.greasyfork.org/scripts/518311/Foolproof.user.js",
+    "code_size": 4445,
+    "license": null,
+    "version": "2025.01.10.080000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509338,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T07:21:57.000Z",
+    "code_updated_at": "2024-12-05T01:20:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470915,
+        "name": "songkaik",
+        "created_at": "2020-03-29T02:23:52.000Z",
+        "url": "https://greasyfork.org/users/470915-songkaik"
+      }
+    ],
+    "name": "Admin",
+    "description": "I try to take over the world!",
+    "url": "https://greasyfork.org/scripts/509338-admin",
+    "code_url": "https://update.greasyfork.org/scripts/509338/Admin.user.js",
+    "code_size": 2086,
+    "license": null,
+    "version": "2024.08.08.080000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502340,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-01T09:46:20.000Z",
+    "code_updated_at": "2024-08-01T12:12:57.000Z",
+    "namespace": "https://www.1024net.tech/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470915,
+        "name": "songkaik",
+        "created_at": "2020-03-29T02:23:52.000Z",
+        "url": "https://greasyfork.org/users/470915-songkaik"
+      }
+    ],
+    "name": "1688店铺首页图片下载",
+    "description": "I try to take over the world!",
+    "url": "https://greasyfork.org/scripts/502340-1688%E5%BA%97%E9%93%BA%E9%A6%96%E9%A1%B5%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/502340/1688%E5%BA%97%E9%93%BA%E9%A6%96%E9%A1%B5%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 1163,
+    "license": null,
+    "version": "2024.08.01.080000",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500692,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T08:10:13.000Z",
+    "code_updated_at": "2024-08-16T03:31:31.000Z",
+    "namespace": "https://www.1024net.tech/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 470915,
+        "name": "songkaik",
+        "created_at": "2020-03-29T02:23:52.000Z",
+        "url": "https://greasyfork.org/users/470915-songkaik"
+      }
+    ],
+    "name": "Zblog后台编辑专用 JS",
+    "description": "I try to take over the world!",
+    "url": "https://greasyfork.org/scripts/500692-zblog%E5%90%8E%E5%8F%B0%E7%BC%96%E8%BE%91%E4%B8%93%E7%94%A8-js",
+    "code_url": "https://update.greasyfork.org/scripts/500692/Zblog%E5%90%8E%E5%8F%B0%E7%BC%96%E8%BE%91%E4%B8%93%E7%94%A8%20JS.user.js",
+    "code_size": 1190,
+    "license": null,
+    "version": "2024.08.16.080000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

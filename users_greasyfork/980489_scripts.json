@@ -1,0 +1,134 @@
+[
+  {
+    "id": 529128,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-07T20:51:16.000Z",
+    "code_updated_at": "2025-03-07T20:51:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980489,
+        "name": "Rust1667",
+        "created_at": "2022-11-07T21:45:09.000Z",
+        "url": "https://greasyfork.org/users/980489-rust1667"
+      }
+    ],
+    "name": "Seg-Social Universal Expander",
+    "description": "Automatically expands all collapsible sections on seg-social.es website (both types)",
+    "url": "https://greasyfork.org/scripts/529128-seg-social-universal-expander",
+    "code_url": "https://update.greasyfork.org/scripts/529128/Seg-Social%20Universal%20Expander.user.js",
+    "code_size": 5445,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528908,
+    "daily_installs": 1,
+    "total_installs": 507,
+    "fan_score": "2.7",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 1,
+    "created_at": "2025-03-05T18:45:02.000Z",
+    "code_updated_at": "2025-11-08T09:04:03.000Z",
+    "namespace": "https://greasyfork.org/users/980489",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980489,
+        "name": "Rust1667",
+        "created_at": "2022-11-07T21:45:09.000Z",
+        "url": "https://greasyfork.org/users/980489-rust1667"
+      }
+    ],
+    "name": "[not working]Terabox video link unlock (redirect to embed)",
+    "description": "Redirect Terabox video links to embed links",
+    "url": "https://greasyfork.org/scripts/528908-not-working-terabox-video-link-unlock-redirect-to-embed",
+    "code_url": "https://update.greasyfork.org/scripts/528908/%5Bnot%20working%5DTerabox%20video%20link%20unlock%20%28redirect%20to%20embed%29.user.js",
+    "code_size": 1597,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509894,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-23T22:50:38.000Z",
+    "code_updated_at": "2024-09-23T22:50:38.000Z",
+    "namespace": "https://greasyfork.org/users/980489",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980489,
+        "name": "Rust1667",
+        "created_at": "2022-11-07T21:45:09.000Z",
+        "url": "https://greasyfork.org/users/980489-rust1667"
+      }
+    ],
+    "name": "YouTube To Invidious Button",
+    "description": "Adds a button to redirect from YouTube to an Invidious instance",
+    "url": "https://greasyfork.org/scripts/509894-youtube-to-invidious-button",
+    "code_url": "https://update.greasyfork.org/scripts/509894/YouTube%20To%20Invidious%20Button.user.js",
+    "code_size": 1235,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 508560,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-15T13:21:43.000Z",
+    "code_updated_at": "2024-09-15T14:00:12.000Z",
+    "namespace": "https://greasyfork.org/users/980489",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 980489,
+        "name": "Rust1667",
+        "created_at": "2022-11-07T21:45:09.000Z",
+        "url": "https://greasyfork.org/users/980489-rust1667"
+      }
+    ],
+    "name": "AudiobookBay Add Magnets Without Login",
+    "description": "Add a magnet link next to the InfoHash",
+    "url": "https://greasyfork.org/scripts/508560-audiobookbay-add-magnets-without-login",
+    "code_url": "https://update.greasyfork.org/scripts/508560/AudiobookBay%20Add%20Magnets%20Without%20Login.user.js",
+    "code_size": 2646,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

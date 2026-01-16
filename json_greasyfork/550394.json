@@ -1,0 +1,33 @@
+{
+  "id": 550394,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-22T19:17:01.000Z",
+  "code_updated_at": "2025-09-22T19:17:01.000Z",
+  "namespace": "https://greasyfork.org/en/users/your-name",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1168708,
+      "name": "Rotski",
+      "created_at": "2023-09-08T09:37:45.000Z",
+      "url": "https://greasyfork.org/users/1168708-rotski"
+    }
+  ],
+  "name": "Geoguessr Spaceplonking",
+  "description": "Prevent zooming in on the map in GeoGuessr.",
+  "url": "https://greasyfork.org/scripts/550394-geoguessr-spaceplonking",
+  "code_url": "https://update.greasyfork.org/scripts/550394/Geoguessr%20Spaceplonking.user.js",
+  "code_size": 3263,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

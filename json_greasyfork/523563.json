@@ -1,0 +1,34 @@
+{
+  "id": 523563,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-12T15:59:24.000Z",
+  "code_updated_at": "2025-01-12T15:59:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1422521,
+      "name": "chengjinglin",
+      "created_at": "2025-01-12T15:41:15.000Z",
+      "url": "https://greasyfork.org/users/1422521-chengjinglin",
+      "scripts": []
+    }
+  ],
+  "name": "Bilibili 弹幕关键词屏蔽生成器",
+  "description": "在Bilibili全站通过UI生成正则表达式屏蔽关键词",
+  "url": "https://greasyfork.org/scripts/523563-bilibili-%E5%BC%B9%E5%B9%95%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%E7%94%9F%E6%88%90%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/523563/Bilibili%20%E5%BC%B9%E5%B9%95%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%E7%94%9F%E6%88%90%E5%99%A8.user.js",
+  "code_size": 6077,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

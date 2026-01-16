@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551068,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-29T14:42:18.000Z",
+    "code_updated_at": "2025-09-29T14:42:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520742,
+        "name": "ohmylock",
+        "created_at": "2025-09-29T14:37:41.000Z",
+        "url": "https://greasyfork.org/users/1520742-ohmylock"
+      }
+    ],
+    "name": "Emulate sendBeacon on Perplexity.ai",
+    "description": "Emulate sendBeacon if beacon.enabled is disabled in Firefox for https://*.perplexity.ai/*",
+    "url": "https://greasyfork.org/scripts/551068-emulate-sendbeacon-on-perplexity-ai",
+    "code_url": "https://update.greasyfork.org/scripts/551068/Emulate%20sendBeacon%20on%20Perplexityai.user.js",
+    "code_size": 1253,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

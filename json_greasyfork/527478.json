@@ -1,0 +1,34 @@
+{
+  "id": 527478,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-19T21:26:07.000Z",
+  "code_updated_at": "2025-02-20T21:15:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294856,
+      "name": "manoflaser",
+      "created_at": "2024-04-29T17:04:20.000Z",
+      "url": "https://greasyfork.org/users/1294856-manoflaser",
+      "scripts": []
+    }
+  ],
+  "name": "ShopGoodwill Disable Slideshow and Gallery Tweaks",
+  "description": "Disables slideshow transitions, prevents auto-start on ShopGoodwill item pages, adds scroll wheel navigation for the gallery, prevents page scrolling when the gallery is open, and allows clicking on the large gallery image to close the gallery.",
+  "url": "https://greasyfork.org/scripts/527478-shopgoodwill-disable-slideshow-and-gallery-tweaks",
+  "code_url": "https://update.greasyfork.org/scripts/527478/ShopGoodwill%20Disable%20Slideshow%20and%20Gallery%20Tweaks.user.js",
+  "code_size": 5304,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

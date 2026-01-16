@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529992,
+    "daily_installs": 1,
+    "total_installs": 115,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-16T15:40:42.000Z",
+    "code_updated_at": "2025-03-16T15:40:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207263,
+        "name": "Ares-Chang",
+        "created_at": "2023-10-30T08:50:28.000Z",
+        "url": "https://greasyfork.org/users/1207263-ares-chang"
+      }
+    ],
+    "name": "跳转 VIP 视频解析",
+    "description": "在视频页跳转 VIP 视频解析网站",
+    "url": "https://greasyfork.org/scripts/529992-%E8%B7%B3%E8%BD%AC-vip-%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90",
+    "code_url": "https://update.greasyfork.org/scripts/529992/%E8%B7%B3%E8%BD%AC%20VIP%20%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90.user.js",
+    "code_size": 16208,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

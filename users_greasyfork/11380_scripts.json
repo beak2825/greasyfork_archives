@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513360,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-21T04:12:11.000Z",
+    "code_updated_at": "2024-10-21T05:16:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 11380,
+        "name": "mm519897405",
+        "created_at": "2015-05-14T12:15:23.000Z",
+        "url": "https://greasyfork.org/users/11380-mm519897405"
+      }
+    ],
+    "name": "Claude.ai 汉化",
+    "description": "自动翻译claude.ai网页内的内容，并且支持自动翻译title",
+    "url": "https://greasyfork.org/scripts/513360-claude-ai-%E6%B1%89%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/513360/Claudeai%20%E6%B1%89%E5%8C%96.user.js",
+    "code_size": 17092,
+    "license": "MIT License",
+    "version": "1.7.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 501566,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-23T08:01:14.000Z",
+    "code_updated_at": "2024-07-23T08:01:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 11380,
+        "name": "mm519897405",
+        "created_at": "2015-05-14T12:15:23.000Z",
+        "url": "https://greasyfork.org/users/11380-mm519897405"
+      }
+    ],
+    "name": "下载杏坛hr种",
+    "description": "在杏坛网站的每一行添加下载按钮，并在页面上添加一个下载所有种子的按钮",
+    "url": "https://greasyfork.org/scripts/501566-%E4%B8%8B%E8%BD%BD%E6%9D%8F%E5%9D%9Bhr%E7%A7%8D",
+    "code_url": "https://update.greasyfork.org/scripts/501566/%E4%B8%8B%E8%BD%BD%E6%9D%8F%E5%9D%9Bhr%E7%A7%8D.user.js",
+    "code_size": 1999,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

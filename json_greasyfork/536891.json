@@ -1,0 +1,33 @@
+{
+  "id": 536891,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-22T19:51:19.000Z",
+  "code_updated_at": "2025-05-22T19:51:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 775676,
+      "name": "enavap",
+      "created_at": "2021-05-24T11:35:17.000Z",
+      "url": "https://greasyfork.org/users/775676-enavap"
+    }
+  ],
+  "name": "Extractor de Contenido de Waze Discuss (desde Archivos TXT)",
+  "description": "Extrae contenido (texto e imágenes incrustadas) de posts del foro Waze Discuss (URLs desde archivos .txt) y genera archivos HTML.",
+  "url": "https://greasyfork.org/scripts/536891-extractor-de-contenido-de-waze-discuss-desde-archivos-txt",
+  "code_url": "https://update.greasyfork.org/scripts/536891/Extractor%20de%20Contenido%20de%20Waze%20Discuss%20%28desde%20Archivos%20TXT%29.user.js",
+  "code_size": 43567,
+  "license": "MIT License",
+  "version": "0.9.1",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

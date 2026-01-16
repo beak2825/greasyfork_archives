@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549316,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T19:51:15.000Z",
+    "code_updated_at": "2025-10-13T23:16:54.000Z",
+    "namespace": "https://greasyfork.org/en/users/735492-mouseindustry",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 735492,
+        "name": "mouseindustry",
+        "created_at": "2021-02-07T18:45:13.000Z",
+        "url": "https://greasyfork.org/users/735492-mouseindustry"
+      }
+    ],
+    "name": "MouseHunt – Map Board",
+    "description": "Map Board + LF message + Sniping + Notes",
+    "url": "https://greasyfork.org/scripts/549316-mousehunt-map-board",
+    "code_url": "https://update.greasyfork.org/scripts/549316/MouseHunt%20%E2%80%93%20Map%20Board.user.js",
+    "code_size": 79352,
+    "license": null,
+    "version": "2.0.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

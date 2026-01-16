@@ -1,0 +1,34 @@
+{
+  "id": 548088,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-02T01:33:03.000Z",
+  "code_updated_at": "2025-12-30T22:41:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510985,
+      "name": "zeri verboten",
+      "created_at": "2025-09-02T01:30:11.000Z",
+      "url": "https://greasyfork.org/users/1510985-zeri-verboten",
+      "scripts": []
+    }
+  ],
+  "name": "OC Role Display - 39th Reapers Edition",
+  "description": "Adding minimum and maximum CPR requirements in accordance with 39th Street Reapers OC 2.0 requirements",
+  "url": "https://greasyfork.org/scripts/548088-oc-role-display-39th-reapers-edition",
+  "code_url": "https://update.greasyfork.org/scripts/548088/OC%20Role%20Display%20-%2039th%20Reapers%20Edition.user.js",
+  "code_size": 8651,
+  "license": "MIT License",
+  "version": "1.0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

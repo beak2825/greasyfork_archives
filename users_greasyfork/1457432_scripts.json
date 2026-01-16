@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532722,
+    "daily_installs": 3,
+    "total_installs": 81,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-13T14:58:24.000Z",
+    "code_updated_at": "2025-11-19T05:17:24.000Z",
+    "namespace": "https://chatgpt.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457432,
+        "name": "Meroneko",
+        "created_at": "2025-04-13T14:56:36.000Z",
+        "url": "https://greasyfork.org/users/1457432-meroneko"
+      }
+    ],
+    "name": "ChatGPT-批量对话删除器",
+    "description": "美化版界面 | 批量删除 | 搜索过滤 | 自动深色模式 | 完美跳转 | 选中状态持久化 | 自动加载 | 主题色实时同步",
+    "url": "https://greasyfork.org/scripts/532722-chatgpt-%E6%89%B9%E9%87%8F%E5%AF%B9%E8%AF%9D%E5%88%A0%E9%99%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/532722/ChatGPT-%E6%89%B9%E9%87%8F%E5%AF%B9%E8%AF%9D%E5%88%A0%E9%99%A4%E5%99%A8.user.js",
+    "code_size": 22197,
+    "license": null,
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

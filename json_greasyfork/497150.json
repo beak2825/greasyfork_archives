@@ -1,0 +1,34 @@
+{
+  "id": 497150,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-05T19:38:05.000Z",
+  "code_updated_at": "2024-06-05T19:38:05.000Z",
+  "namespace": "https://greasyfork.org/users/1313060",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1313060,
+      "name": "ideabreaker",
+      "created_at": "2024-06-05T19:37:18.000Z",
+      "url": "https://greasyfork.org/users/1313060-ideabreaker",
+      "scripts": []
+    }
+  ],
+  "name": "Tests",
+  "description": "better experience",
+  "url": "https://greasyfork.org/scripts/497150-tests",
+  "code_url": "https://update.greasyfork.org/scripts/497150/Tests.user.js",
+  "code_size": 3503,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

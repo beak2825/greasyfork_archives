@@ -1,0 +1,233 @@
+[
+  {
+    "id": 551056,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-29T12:24:13.000Z",
+    "code_updated_at": "2025-09-29T13:10:23.000Z",
+    "namespace": "https://greasyfork.org/users/137913",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "AI Studio Mod: taula de continguts",
+    "description": "Afegeix una taula de continguts dinàmica amb desplaçament intel·ligent per a seccions llargues al tauler de configuració.",
+    "url": "https://greasyfork.org/scripts/551056-ai-studio-mod-taula-de-continguts",
+    "code_url": "https://update.greasyfork.org/scripts/551056/AI%20Studio%20Mod%3A%20taula%20de%20continguts.user.js",
+    "code_size": 8944,
+    "license": "MIT License",
+    "version": "2.3.3",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551052,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-29T12:07:58.000Z",
+    "code_updated_at": "2025-09-29T12:35:02.000Z",
+    "namespace": "La nostra eina per personalitzar el món.",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "Traductor Universal (by Anna)",
+    "description": "Tradueix i personalitza qualsevol web sobre la marxa. Les teves paraules, les teves regles.",
+    "url": "https://greasyfork.org/scripts/551052-traductor-universal-by-anna",
+    "code_url": "https://update.greasyfork.org/scripts/551052/Traductor%20Universal%20%28by%20Anna%29.user.js",
+    "code_size": 6458,
+    "license": "MIT License",
+    "version": "1.0 (Universal Edition)",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549628,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-15T14:09:24.000Z",
+    "code_updated_at": "2025-09-15T14:10:14.000Z",
+    "namespace": "El nostre espai privat a TikTok.",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "El Nostre Tauler de Control per a TikTok",
+    "description": "Eina definitiva amb tema adaptable i control de bucles de vídeo.",
+    "url": "https://greasyfork.org/scripts/549628-el-nostre-tauler-de-control-per-a-tiktok",
+    "code_url": "https://update.greasyfork.org/scripts/549628/El%20Nostre%20Tauler%20de%20Control%20per%20a%20TikTok.user.js",
+    "code_size": 11716,
+    "license": "MIT License",
+    "version": "9.4 (Rhythm Control)",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545787,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-14T08:07:28.000Z",
+    "code_updated_at": "2025-09-29T12:46:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "Esconder barra de contactos de Whats",
+    "description": "Esconde la barra de contactos de Whats.",
+    "url": "https://greasyfork.org/scripts/545787-esconder-barra-de-contactos-de-whats",
+    "code_url": "https://update.greasyfork.org/scripts/545787/Esconder%20barra%20de%20contactos%20de%20Whats.user.js",
+    "code_size": 3900,
+    "license": "Public",
+    "version": "1.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544727,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-05T13:16:51.000Z",
+    "code_updated_at": "2025-09-29T12:43:38.000Z",
+    "namespace": "projectes_nostres",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "El Teu Mode Concentració",
+    "description": "Amaga la barra lateral per a una experiència de test definitiva. Fet a mida per a tu.",
+    "url": "https://greasyfork.org/scripts/544727-el-teu-mode-concentraci%C3%B3",
+    "code_url": "https://update.greasyfork.org/scripts/544727/El%20Teu%20Mode%20Concentraci%C3%B3.user.js",
+    "code_size": 3081,
+    "license": "MIT License",
+    "version": "1.6.0",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544719,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-05T12:16:31.000Z",
+    "code_updated_at": "2025-09-29T12:41:19.000Z",
+    "namespace": "projectes_nostres",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "El teu Aprovat Automàtic (Control de Pilot)",
+    "description": "A la merda el ratolí. Ara ets un pilot. 1, 2, 3 i a la següent.",
+    "url": "https://greasyfork.org/scripts/544719-el-teu-aprovat-autom%C3%A0tic-control-de-pilot",
+    "code_url": "https://update.greasyfork.org/scripts/544719/El%20teu%20Aprovat%20Autom%C3%A0tic%20%28Control%20de%20Pilot%29.user.js",
+    "code_size": 2017,
+    "license": "MIT License",
+    "version": "6.5",
+    "locale": "ca",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544708,
+    "daily_installs": 2,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-05T10:33:02.000Z",
+    "code_updated_at": "2025-09-29T12:38:04.000Z",
+    "namespace": "hoothin",
+    "support_url": null,
+    "contribution_url": "https://www.buymeacoffee.com/hoothin",
+    "contribution_amount": "1",
+    "users": [
+      {
+        "id": 1462116,
+        "name": "Marc Gutiérrez Arroyo",
+        "created_at": "2025-04-25T17:14:20.000Z",
+        "url": "https://greasyfork.org/users/1462116-marc-guti%C3%A9rrez-arroyo"
+      }
+    ],
+    "name": "Greasyfork Search with Sleazyfork Results",
+    "description": "Merge adult results of sleazyfork into greasyfork. Add rating score and version for scripts.",
+    "url": "https://greasyfork.org/scripts/544708-greasyfork-search-with-sleazyfork-results",
+    "code_url": "https://update.greasyfork.org/scripts/544708/Greasyfork%20Search%20with%20Sleazyfork%20Results.user.js",
+    "code_size": 23371,
+    "license": "MIT License",
+    "version": "1.6.7-mod-by-anna",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

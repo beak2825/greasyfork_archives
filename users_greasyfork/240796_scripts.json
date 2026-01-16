@@ -1,0 +1,101 @@
+[
+  {
+    "id": 533193,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T03:36:18.000Z",
+    "code_updated_at": "2025-04-18T03:36:18.000Z",
+    "namespace": "https://accounts.google.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 240796,
+        "name": "hieunv95",
+        "created_at": "2019-01-20T09:25:39.000Z",
+        "url": "https://greasyfork.org/users/240796-hieunv95"
+      }
+    ],
+    "name": "Auto-select Single Google Account",
+    "description": "Auto-clicks the only available Google account if there's just one",
+    "url": "https://greasyfork.org/scripts/533193-auto-select-single-google-account",
+    "code_url": "https://update.greasyfork.org/scripts/533193/Auto-select%20Single%20Google%20Account.user.js",
+    "code_size": 1254,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533192,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T03:11:09.000Z",
+    "code_updated_at": "2025-04-18T03:11:09.000Z",
+    "namespace": "http://sun-asterisk.vn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 240796,
+        "name": "hieunv95",
+        "created_at": "2019-01-20T09:25:39.000Z",
+        "url": "https://greasyfork.org/users/240796-hieunv95"
+      }
+    ],
+    "name": "Auto Click GSuite Login Link",
+    "description": "Automatically click GSuite login link on page load",
+    "url": "https://greasyfork.org/scripts/533192-auto-click-gsuite-login-link",
+    "code_url": "https://update.greasyfork.org/scripts/533192/Auto%20Click%20GSuite%20Login%20Link.user.js",
+    "code_size": 3976,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533187,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T02:25:15.000Z",
+    "code_updated_at": "2025-04-18T02:25:15.000Z",
+    "namespace": "GitHub Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 240796,
+        "name": "hieunv95",
+        "created_at": "2019-01-20T09:25:39.000Z",
+        "url": "https://greasyfork.org/users/240796-hieunv95"
+      }
+    ],
+    "name": "GitHub SSO Auto-Continue",
+    "description": "Add extra copy buttons into pull request pages.",
+    "url": "https://greasyfork.org/scripts/533187-github-sso-auto-continue",
+    "code_url": "https://update.greasyfork.org/scripts/533187/GitHub%20SSO%20Auto-Continue.user.js",
+    "code_size": 1066,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 525470,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T23:22:38.000Z",
+  "code_updated_at": "2025-02-02T22:28:26.000Z",
+  "namespace": "https://swc-bsd.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429625,
+      "name": "castiron",
+      "created_at": "2025-01-31T23:12:19.000Z",
+      "url": "https://greasyfork.org/users/1429625-castiron",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Quick Race",
+  "description": "Add quick custom race buttons to Torn Racing",
+  "url": "https://greasyfork.org/scripts/525470-torn-quick-race",
+  "code_url": "https://update.greasyfork.org/scripts/525470/Torn%20Quick%20Race.user.js",
+  "code_size": 3186,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

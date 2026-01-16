@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526507,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-11T03:25:27.000Z",
+    "code_updated_at": "2025-02-11T03:25:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433802,
+        "name": "凌小添",
+        "created_at": "2025-02-11T03:23:56.000Z",
+        "url": "https://greasyfork.org/users/1433802-%E5%87%8C%E5%B0%8F%E6%B7%BB"
+      }
+    ],
+    "name": "掌阅阅读优化助手Pro",
+    "description": "深度适配掌阅网页版的阅读优化插件，支持微软语音",
+    "url": "https://greasyfork.org/scripts/526507-%E6%8E%8C%E9%98%85%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8Bpro",
+    "code_url": "https://update.greasyfork.org/scripts/526507/%E6%8E%8C%E9%98%85%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8BPro.user.js",
+    "code_size": 6701,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536392,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T12:36:02.000Z",
+    "code_updated_at": "2025-05-18T16:52:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 193042,
+        "name": "Logicr",
+        "created_at": "2018-06-25T03:53:55.000Z",
+        "url": "https://greasyfork.org/users/193042-logicr"
+      }
+    ],
+    "name": "ios小说朗读终极版（样式与自动播放优化版+可折叠控制面板）",
+    "description": "优化面板按钮样式，修复自动播放问题，并支持面板折叠/展开",
+    "url": "https://greasyfork.org/scripts/536392-ios%E5%B0%8F%E8%AF%B4%E6%9C%97%E8%AF%BB%E7%BB%88%E6%9E%81%E7%89%88-%E6%A0%B7%E5%BC%8F%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%BC%98%E5%8C%96%E7%89%88-%E5%8F%AF%E6%8A%98%E5%8F%A0%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/536392/ios%E5%B0%8F%E8%AF%B4%E6%9C%97%E8%AF%BB%E7%BB%88%E6%9E%81%E7%89%88%EF%BC%88%E6%A0%B7%E5%BC%8F%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E4%BC%98%E5%8C%96%E7%89%88%2B%E5%8F%AF%E6%8A%98%E5%8F%A0%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF%EF%BC%89.user.js",
+    "code_size": 11223,
+    "license": null,
+    "version": "6.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 536391,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T12:12:24.000Z",
+    "code_updated_at": "2025-05-18T12:32:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 193042,
+        "name": "Logicr",
+        "created_at": "2018-06-25T03:53:55.000Z",
+        "url": "https://greasyfork.org/users/193042-logicr"
+      }
+    ],
+    "name": "小说朗读终极版（语速记忆 + 当前朗读内容显示）",
+    "description": "小说朗读+高亮+自动翻页+语速音调记忆+暂停继续+顶部滚动+状态展示+可见段落启动",
+    "url": "https://greasyfork.org/scripts/536391-%E5%B0%8F%E8%AF%B4%E6%9C%97%E8%AF%BB%E7%BB%88%E6%9E%81%E7%89%88-%E8%AF%AD%E9%80%9F%E8%AE%B0%E5%BF%86-%E5%BD%93%E5%89%8D%E6%9C%97%E8%AF%BB%E5%86%85%E5%AE%B9%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/536391/%E5%B0%8F%E8%AF%B4%E6%9C%97%E8%AF%BB%E7%BB%88%E6%9E%81%E7%89%88%EF%BC%88%E8%AF%AD%E9%80%9F%E8%AE%B0%E5%BF%86%20%2B%20%E5%BD%93%E5%89%8D%E6%9C%97%E8%AF%BB%E5%86%85%E5%AE%B9%E6%98%BE%E7%A4%BA%EF%BC%89.user.js",
+    "code_size": 10341,
+    "license": null,
+    "version": "6.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

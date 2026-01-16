@@ -1,0 +1,59 @@
+{
+  "id": 516430,
+  "daily_installs": 2,
+  "total_installs": 204,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-08T17:10:51.000Z",
+  "code_updated_at": "2024-11-08T17:20:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1164877,
+      "name": "OnlyHacker",
+      "created_at": "2023-09-02T13:35:40.000Z",
+      "url": "https://greasyfork.org/users/1164877-onlyhacker",
+      "scripts": [
+        {
+          "id": 516430,
+          "daily_installs": 2,
+          "total_installs": 204,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-08T17:10:51.000Z",
+          "code_updated_at": "2024-11-08T17:20:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Stabfish.io Hack",
+          "description": "Stabfish.io Everything Unlocked",
+          "url": "https://greasyfork.org/scripts/516430-stabfish-io-hack",
+          "code_url": "https://update.greasyfork.org/scripts/516430/Stabfishio%20Hack.user.js",
+          "code_size": 2669,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Stabfish.io Hack",
+  "description": "Stabfish.io Everything Unlocked",
+  "url": "https://greasyfork.org/scripts/516430-stabfish-io-hack",
+  "code_url": "https://update.greasyfork.org/scripts/516430/Stabfishio%20Hack.user.js",
+  "code_size": 2669,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

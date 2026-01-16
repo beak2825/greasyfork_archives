@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527321,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T11:31:41.000Z",
+    "code_updated_at": "2025-02-18T11:31:41.000Z",
+    "namespace": "https://github.com/mrpassiontea/Extra-Practice",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435420,
+        "name": "mrpassiontea",
+        "created_at": "2025-02-15T15:34:37.000Z",
+        "url": "https://greasyfork.org/users/1435420-mrpassiontea"
+      }
+    ],
+    "name": "Extra Practice",
+    "description": "Practice your current level's Radicals and Kanji with standard, english -> Kanji, and combination mode!",
+    "url": "https://greasyfork.org/scripts/527321-extra-practice",
+    "code_url": "https://update.greasyfork.org/scripts/527321/Extra%20Practice.user.js",
+    "code_size": 116317,
+    "license": "MIT; http://opensource.org/licenses/MIT",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

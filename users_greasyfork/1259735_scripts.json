@@ -1,0 +1,68 @@
+[
+  {
+    "id": 517168,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-13T13:24:30.000Z",
+    "code_updated_at": "2024-11-13T13:27:46.000Z",
+    "namespace": "https://greasyfork.org/users/1259735",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1259735,
+        "name": "zhaojiew10",
+        "created_at": "2024-02-10T15:50:26.000Z",
+        "url": "https://greasyfork.org/users/1259735-zhaojiew10"
+      }
+    ],
+    "name": "lilylock",
+    "description": "universal update script",
+    "url": "https://greasyfork.org/scripts/517168-lilylock",
+    "code_url": "https://update.greasyfork.org/scripts/517168/lilylock.user.js",
+    "code_size": 354,
+    "license": null,
+    "version": "1.0",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517041,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-12T16:52:15.000Z",
+    "code_updated_at": "2024-11-16T06:24:02.000Z",
+    "namespace": "https://greasyfork.org/users/1259735",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1259735,
+        "name": "zhaojiew10",
+        "created_at": "2024-02-10T15:50:26.000Z",
+        "url": "https://greasyfork.org/users/1259735-zhaojiew10"
+      }
+    ],
+    "name": "autopager",
+    "description": "2024/11/13 00:33:38",
+    "url": "https://greasyfork.org/scripts/517041-autopager",
+    "code_url": "https://update.greasyfork.org/scripts/517041/autopager.user.js",
+    "code_size": 2694,
+    "license": null,
+    "version": "1.1",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

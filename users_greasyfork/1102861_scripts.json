@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530064,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-17T08:44:37.000Z",
+    "code_updated_at": "2025-03-17T08:44:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1102861,
+        "name": "yaohuo365",
+        "created_at": "2023-06-17T11:12:16.000Z",
+        "url": "https://greasyfork.org/users/1102861-yaohuo365"
+      }
+    ],
+    "name": "妖火网 - 只看指定用户回帖",
+    "description": "在妖火网页面添加输入框，输入用户ID后跳转到只看该用户回帖的页面。（只在全部回帖页面生效)",
+    "url": "https://greasyfork.org/scripts/530064-%E5%A6%96%E7%81%AB%E7%BD%91-%E5%8F%AA%E7%9C%8B%E6%8C%87%E5%AE%9A%E7%94%A8%E6%88%B7%E5%9B%9E%E5%B8%96",
+    "code_url": "https://update.greasyfork.org/scripts/530064/%E5%A6%96%E7%81%AB%E7%BD%91%20-%20%E5%8F%AA%E7%9C%8B%E6%8C%87%E5%AE%9A%E7%94%A8%E6%88%B7%E5%9B%9E%E5%B8%96.user.js",
+    "code_size": 2094,
+    "license": "妖火",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

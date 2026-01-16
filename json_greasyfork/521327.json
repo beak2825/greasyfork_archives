@@ -1,0 +1,59 @@
+{
+  "id": 521327,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-20T21:36:58.000Z",
+  "code_updated_at": "2025-01-10T05:13:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1413531,
+      "name": "hyee l",
+      "created_at": "2024-12-20T21:31:43.000Z",
+      "url": "https://greasyfork.org/users/1413531-hyee-l",
+      "scripts": [
+        {
+          "id": 521570,
+          "daily_installs": 1,
+          "total_installs": 88,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-23T14:05:10.000Z",
+          "code_updated_at": "2025-01-02T22:13:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "移动端开发者工具（优化版）",
+          "description": "为移动浏览器提供类似桌面版的开发者工具，优化性能和响应性，适应深浅色模式",
+          "url": "https://greasyfork.org/scripts/521570-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7-%E4%BC%98%E5%8C%96%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/521570/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%EF%BC%88%E4%BC%98%E5%8C%96%E7%89%88%EF%BC%89.user.js",
+          "code_size": 25086,
+          "license": null,
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OpenAI API 测试工具",
+  "description": "测试 OpenAI API 可用性和额度，支持模型对话",
+  "url": "https://greasyfork.org/scripts/521327-openai-api-%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/521327/OpenAI%20API%20%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 61343,
+  "license": null,
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 525620,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-02T08:28:44.000Z",
+    "code_updated_at": "2025-02-02T08:28:44.000Z",
+    "namespace": "Masterofdarkness",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357972,
+        "name": "Masterofdarkness",
+        "created_at": "2024-08-26T07:46:30.000Z",
+        "url": "https://greasyfork.org/users/1357972-masterofdarkness"
+      }
+    ],
+    "name": "[GC] Trading Post QoL L2",
+    "description": "Adds links to the static lot numbers, show how many active lots you have, move autosale items to the top and change the color of the lot, highlight relics, highlight bad actors",
+    "url": "https://greasyfork.org/scripts/525620-gc-trading-post-qol-l2",
+    "code_url": "https://update.greasyfork.org/scripts/525620/%5BGC%5D%20Trading%20Post%20QoL%20L2.user.js",
+    "code_size": 20209,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 505235,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-26T07:47:54.000Z",
+    "code_updated_at": "2024-08-26T07:54:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357972,
+        "name": "Masterofdarkness",
+        "created_at": "2024-08-26T07:46:30.000Z",
+        "url": "https://greasyfork.org/users/1357972-masterofdarkness"
+      }
+    ],
+    "name": "[GC] Negg SDB Calculator",
+    "description": "Automatically calculate the number of Negg points in your Safety Depost Box",
+    "url": "https://greasyfork.org/scripts/505235-gc-negg-sdb-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/505235/%5BGC%5D%20Negg%20SDB%20Calculator.user.js",
+    "code_size": 1503,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

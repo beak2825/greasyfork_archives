@@ -1,0 +1,167 @@
+[
+  {
+    "id": 553960,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T13:16:19.000Z",
+    "code_updated_at": "2025-10-28T13:16:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890190,
+        "name": "つべ222",
+        "created_at": "2022-03-21T05:40:08.000Z",
+        "url": "https://greasyfork.org/users/890190-%E3%81%A4%E3%81%B9222"
+      }
+    ],
+    "name": "次レースショートカット",
+    "description": "ctrl + alt + n",
+    "url": "https://greasyfork.org/scripts/553960-%E6%AC%A1%E3%83%AC%E3%83%BC%E3%82%B9%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/553960/%E6%AC%A1%E3%83%AC%E3%83%BC%E3%82%B9%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88.user.js",
+    "code_size": 862,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527013,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-15T17:25:33.000Z",
+    "code_updated_at": "2025-02-15T19:56:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890190,
+        "name": "つべ222",
+        "created_at": "2022-03-21T05:40:08.000Z",
+        "url": "https://greasyfork.org/users/890190-%E3%81%A4%E3%81%B9222"
+      }
+    ],
+    "name": "2ch過去ログ（タイピ）URL自動変更",
+    "description": "kakoにリンクを変更",
+    "url": "https://greasyfork.org/scripts/527013-2ch%E9%81%8E%E5%8E%BB%E3%83%AD%E3%82%B0-%E3%82%BF%E3%82%A4%E3%83%94-url%E8%87%AA%E5%8B%95%E5%A4%89%E6%9B%B4",
+    "code_url": "https://update.greasyfork.org/scripts/527013/2ch%E9%81%8E%E5%8E%BB%E3%83%AD%E3%82%B0%EF%BC%88%E3%82%BF%E3%82%A4%E3%83%94%EF%BC%89URL%E8%87%AA%E5%8B%95%E5%A4%89%E6%9B%B4.user.js",
+    "code_size": 1552,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503173,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T08:17:57.000Z",
+    "code_updated_at": "2024-08-12T06:57:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890190,
+        "name": "つべ222",
+        "created_at": "2022-03-21T05:40:08.000Z",
+        "url": "https://greasyfork.org/users/890190-%E3%81%A4%E3%81%B9222"
+      }
+    ],
+    "name": "[TypingTube] メニュー追加",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/503173-typingtube-%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E8%BF%BD%E5%8A%A0",
+    "code_url": "https://update.greasyfork.org/scripts/503173/%5BTypingTube%5D%20%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E8%BF%BD%E5%8A%A0.user.js",
+    "code_size": 2829,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503172,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T08:13:27.000Z",
+    "code_updated_at": "2024-08-10T08:13:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890190,
+        "name": "つべ222",
+        "created_at": "2022-03-21T05:40:08.000Z",
+        "url": "https://greasyfork.org/users/890190-%E3%81%A4%E3%81%B9222"
+      }
+    ],
+    "name": "いいね保存マシン",
+    "description": "保存",
+    "url": "https://greasyfork.org/scripts/503172-%E3%81%84%E3%81%84%E3%81%AD%E4%BF%9D%E5%AD%98%E3%83%9E%E3%82%B7%E3%83%B3",
+    "code_url": "https://update.greasyfork.org/scripts/503172/%E3%81%84%E3%81%84%E3%81%AD%E4%BF%9D%E5%AD%98%E3%83%9E%E3%82%B7%E3%83%B3.user.js",
+    "code_size": 2599,
+    "license": "MIT License",
+    "version": "2024-01-20",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502501,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-03T08:58:54.000Z",
+    "code_updated_at": "2025-04-05T02:05:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890190,
+        "name": "つべ222",
+        "created_at": "2022-03-21T05:40:08.000Z",
+        "url": "https://greasyfork.org/users/890190-%E3%81%A4%E3%81%B9222"
+      }
+    ],
+    "name": "YTDL（ローカルServerバージョン）",
+    "description": "ボタンを押して動画を取得",
+    "url": "https://greasyfork.org/scripts/502501-ytdl-%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABserver%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3",
+    "code_url": "https://update.greasyfork.org/scripts/502501/YTDL%EF%BC%88%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%ABServer%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%EF%BC%89.user.js",
+    "code_size": 5867,
+    "license": "MIT License",
+    "version": "0.8.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

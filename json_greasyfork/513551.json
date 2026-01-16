@@ -1,0 +1,33 @@
+{
+  "id": 513551,
+  "daily_installs": 0,
+  "total_installs": 268,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-22T16:47:43.000Z",
+  "code_updated_at": "2025-12-08T15:57:11.000Z",
+  "namespace": "http://jb.zhanyc.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1363816,
+      "name": "Dagobert",
+      "created_at": "2024-09-06T06:57:25.000Z",
+      "url": "https://greasyfork.org/users/1363816-dagobert"
+    }
+  ],
+  "name": "🌱【免费版】南方教师在线|广东开放大学|清远市教师专业发展与管理平台|如需自动下一集、自动换课程、视频中途答题等高级功能见收费版本：https://doc.zhanyc.cn/pages/qysjs/",
+  "description": "当前是免费版本，只包含了视频页面自动播放、解除播放暂停限制功能。如需自动下一集、自动换课程、视频中途答题、全自动无人值守高级功能可升级付费版本，一杯咖啡钱，保你无忧学习，且永久使用|接各类脚本开发、代挂工作，微信：zhanyc_cn 备用微信:zhanfengkuo 个人网站：http://doc.zhanyc.cn",
+  "url": "https://greasyfork.org/scripts/513551-%E5%85%8D%E8%B4%B9%E7%89%88-%E5%8D%97%E6%96%B9%E6%95%99%E5%B8%88%E5%9C%A8%E7%BA%BF-%E5%B9%BF%E4%B8%9C%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E6%B8%85%E8%BF%9C%E5%B8%82%E6%95%99%E5%B8%88%E4%B8%93%E4%B8%9A%E5%8F%91%E5%B1%95%E4%B8%8E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0-%E5%A6%82%E9%9C%80%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%9B%86-%E8%87%AA%E5%8A%A8%E6%8D%A2%E8%AF%BE%E7%A8%8B-%E8%A7%86%E9%A2%91%E4%B8%AD%E9%80%94%E7%AD%94%E9%A2%98%E7%AD%89%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD%E8%A7%81%E6%94%B6%E8%B4%B9%E7%89%88%E6%9C%AC-https-doc-zhanyc-cn-pages-qysjs",
+  "code_url": "https://update.greasyfork.org/scripts/513551/%F0%9F%8C%B1%E3%80%90%E5%85%8D%E8%B4%B9%E7%89%88%E3%80%91%E5%8D%97%E6%96%B9%E6%95%99%E5%B8%88%E5%9C%A8%E7%BA%BF%7C%E5%B9%BF%E4%B8%9C%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%7C%E6%B8%85%E8%BF%9C%E5%B8%82%E6%95%99%E5%B8%88%E4%B8%93%E4%B8%9A%E5%8F%91%E5%B1%95%E4%B8%8E%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%7C%E5%A6%82%E9%9C%80%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%9B%86%E3%80%81%E8%87%AA%E5%8A%A8%E6%8D%A2%E8%AF%BE%E7%A8%8B%E3%80%81%E8%A7%86%E9%A2%91%E4%B8%AD%E9%80%94%E7%AD%94%E9%A2%98%E7%AD%89%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD%E8%A7%81%E6%94%B6%E8%B4%B9%E7%89%88%E6%9C%AC%EF%BC%9Ahttps%3Adoczhanyccnpagesqysjs.user.js",
+  "code_size": 40540,
+  "license": "GPL",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

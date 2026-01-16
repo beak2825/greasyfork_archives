@@ -1,0 +1,59 @@
+{
+  "id": 518253,
+  "daily_installs": 1,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-20T19:06:00.000Z",
+  "code_updated_at": "2024-11-20T19:06:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1284383,
+      "name": "alanapants",
+      "created_at": "2024-04-05T18:12:28.000Z",
+      "url": "https://greasyfork.org/users/1284383-alanapants",
+      "scripts": [
+        {
+          "id": 491742,
+          "daily_installs": 1,
+          "total_installs": 22,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-04-05T18:24:20.000Z",
+          "code_updated_at": "2024-04-05T18:24:20.000Z",
+          "namespace": "https://greasyfork.org/users/1284383",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Lair Checker Adjusted 2.0 -- HTTPS+",
+          "description": "Now with colours added by Alana!",
+          "url": "https://greasyfork.org/scripts/491742-lair-checker-adjusted-2-0-https",
+          "code_url": "https://update.greasyfork.org/scripts/491742/Lair%20Checker%20Adjusted%2020%20--%20HTTPS%2B.user.js",
+          "code_size": 11897,
+          "license": "MIT License",
+          "version": "0.0.1.20240405182420",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pet Shop Buy Button -- Updated",
+  "description": "Adds a Buy button for pets while on the Pet Search page. Updated for Aywas' use of HTTPS, and tweaked code so it no longer uses a deprecated Chrome feature.",
+  "url": "https://greasyfork.org/scripts/518253-pet-shop-buy-button-updated",
+  "code_url": "https://update.greasyfork.org/scripts/518253/Pet%20Shop%20Buy%20Button%20--%20Updated.user.js",
+  "code_size": 3824,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

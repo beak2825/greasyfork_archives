@@ -1,0 +1,59 @@
+{
+  "id": 539098,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T10:09:33.000Z",
+  "code_updated_at": "2025-06-11T10:09:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1482145,
+      "name": "hamzaharoon1314",
+      "created_at": "2025-06-11T09:43:57.000Z",
+      "url": "https://greasyfork.org/users/1482145-hamzaharoon1314",
+      "scripts": [
+        {
+          "id": 539098,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-11T10:09:33.000Z",
+          "code_updated_at": "2025-06-11T10:09:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PPSC Open Job in New Tab (With Toggle)",
+          "description": "Open PPSC job listings in a new tab automatically, with a toggle to enable/disable the feature.",
+          "url": "https://greasyfork.org/scripts/539098-ppsc-open-job-in-new-tab-with-toggle",
+          "code_url": "https://update.greasyfork.org/scripts/539098/PPSC%20Open%20Job%20in%20New%20Tab%20%28With%20Toggle%29.user.js",
+          "code_size": 4571,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PPSC Open Job in New Tab (With Toggle)",
+  "description": "Open PPSC job listings in a new tab automatically, with a toggle to enable/disable the feature.",
+  "url": "https://greasyfork.org/scripts/539098-ppsc-open-job-in-new-tab-with-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/539098/PPSC%20Open%20Job%20in%20New%20Tab%20%28With%20Toggle%29.user.js",
+  "code_size": 4571,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

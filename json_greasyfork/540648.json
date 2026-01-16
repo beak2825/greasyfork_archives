@@ -1,0 +1,33 @@
+{
+  "id": 540648,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-24T16:20:41.000Z",
+  "code_updated_at": "2025-07-09T03:02:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1487862,
+      "name": "arcticrevurne",
+      "created_at": "2025-06-24T09:36:22.000Z",
+      "url": "https://greasyfork.org/users/1487862-arcticrevurne"
+    }
+  ],
+  "name": "Gartic.io Custom Background",
+  "description": "This userscript let you customize your own gartic.io background",
+  "url": "https://greasyfork.org/scripts/540648-gartic-io-custom-background",
+  "code_url": "https://update.greasyfork.org/scripts/540648/Garticio%20Custom%20Background.user.js",
+  "code_size": 15994,
+  "license": "MIT License",
+  "version": "1.25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 542125,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-09T15:17:22.000Z",
+    "code_updated_at": "2025-07-09T15:25:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465386,
+        "name": "KHROTU",
+        "created_at": "2025-05-04T02:56:24.000Z",
+        "url": "https://greasyfork.org/users/1465386-khrotu"
+      }
+    ],
+    "name": "PCPartPicker Budget Helper",
+    "description": "A powerful budgeting and helper tool for PCPartPicker.",
+    "url": "https://greasyfork.org/scripts/542125-pcpartpicker-budget-helper",
+    "code_url": "https://update.greasyfork.org/scripts/542125/PCPartPicker%20Budget%20Helper.user.js",
+    "code_size": 36733,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541351,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T15:09:01.000Z",
+    "code_updated_at": "2025-07-01T15:09:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465386,
+        "name": "KHROTU",
+        "created_at": "2025-05-04T02:56:24.000Z",
+        "url": "https://greasyfork.org/users/1465386-khrotu"
+      }
+    ],
+    "name": "satcls Auto-Retriever",
+    "description": "Displays the correct answer in the bottom-left corner.",
+    "url": "https://greasyfork.org/scripts/541351-satcls-auto-retriever",
+    "code_url": "https://update.greasyfork.org/scripts/541351/satcls%20Auto-Retriever.user.js",
+    "code_size": 2390,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

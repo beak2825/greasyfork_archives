@@ -1,0 +1,33 @@
+{
+  "id": 538051,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-02T04:42:30.000Z",
+  "code_updated_at": "2025-06-02T04:42:30.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1477758,
+      "name": "Not Wario",
+      "created_at": "2025-06-02T04:37:42.000Z",
+      "url": "https://greasyfork.org/users/1477758-not-wario"
+    }
+  ],
+  "name": "LittleBiggy USD to GBP Converter (Targeted)",
+  "description": "Convert $ prices inside span.price.USD to £ on LittleBiggy.net",
+  "url": "https://greasyfork.org/scripts/538051-littlebiggy-usd-to-gbp-converter-targeted",
+  "code_url": "https://update.greasyfork.org/scripts/538051/LittleBiggy%20USD%20to%20GBP%20Converter%20%28Targeted%29.user.js",
+  "code_size": 2924,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

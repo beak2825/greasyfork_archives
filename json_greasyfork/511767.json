@@ -1,0 +1,33 @@
+{
+  "id": 511767,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-07T13:08:23.000Z",
+  "code_updated_at": "2025-05-11T16:27:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1377855,
+      "name": "Snowballl11",
+      "created_at": "2024-10-07T12:42:36.000Z",
+      "url": "https://greasyfork.org/users/1377855-snowballl11"
+    }
+  ],
+  "name": "Cover Zhihu Homepage",
+  "description": "Cover content starting from the header element on Zhihu with a color overlay based on detected header",
+  "url": "https://greasyfork.org/scripts/511767-cover-zhihu-homepage",
+  "code_url": "https://update.greasyfork.org/scripts/511767/Cover%20Zhihu%20Homepage.user.js",
+  "code_size": 4264,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

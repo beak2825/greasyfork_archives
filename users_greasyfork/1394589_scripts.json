@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529379,
+    "daily_installs": 8,
+    "total_installs": 237,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-10T09:15:59.000Z",
+    "code_updated_at": "2025-06-16T23:44:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394589,
+        "name": "OxqNbloF",
+        "created_at": "2024-11-12T03:19:55.000Z",
+        "url": "https://greasyfork.org/users/1394589-oxqnblof"
+      }
+    ],
+    "name": "X Pro",
+    "description": "Twitter AD Filter, Bookmark Remover, and Media Downloader. Hides ads, auto-removes bookmarks, and downloads media.",
+    "url": "https://greasyfork.org/scripts/529379-x-pro",
+    "code_url": "https://update.greasyfork.org/scripts/529379/X%20Pro.user.js",
+    "code_size": 39510,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

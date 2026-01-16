@@ -1,0 +1,134 @@
+[
+  {
+    "id": 544497,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T09:50:46.000Z",
+    "code_updated_at": "2025-09-07T13:30:31.000Z",
+    "namespace": "https://github.com/your-repo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922088,
+        "name": "LightKitty2022",
+        "created_at": "2022-06-04T19:47:55.000Z",
+        "url": "https://greasyfork.org/users/922088-lightkitty2022"
+      }
+    ],
+    "name": "Bloomberg – FullArticle",
+    "description": "隐藏 Bloomberg 订阅登录弹窗、解除正文折叠并恢复滚动",
+    "url": "https://greasyfork.org/scripts/544497-bloomberg-fullarticle",
+    "code_url": "https://update.greasyfork.org/scripts/544497/Bloomberg%20%E2%80%93%20FullArticle.user.js",
+    "code_size": 2538,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 544494,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T09:39:38.000Z",
+    "code_updated_at": "2025-10-09T13:40:06.000Z",
+    "namespace": "https://github.com/your-handle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922088,
+        "name": "LightKitty2022",
+        "created_at": "2022-06-04T19:47:55.000Z",
+        "url": "https://greasyfork.org/users/922088-lightkitty2022"
+      }
+    ],
+    "name": "Reuters-FullArticle",
+    "description": "移除路透新版 paywall，完全展开正文并修复无法滚动到底的问题",
+    "url": "https://greasyfork.org/scripts/544494-reuters-fullarticle",
+    "code_url": "https://update.greasyfork.org/scripts/544494/Reuters-FullArticle.user.js",
+    "code_size": 1992,
+    "license": "MIT License",
+    "version": "0.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540742,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T14:34:03.000Z",
+    "code_updated_at": "2025-06-25T14:37:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922088,
+        "name": "LightKitty2022",
+        "created_at": "2022-06-04T19:47:55.000Z",
+        "url": "https://greasyfork.org/users/922088-lightkitty2022"
+      }
+    ],
+    "name": "inoreader摘录新闻",
+    "description": "用于inoreader摘录新闻",
+    "url": "https://greasyfork.org/scripts/540742-inoreader%E6%91%98%E5%BD%95%E6%96%B0%E9%97%BB",
+    "code_url": "https://update.greasyfork.org/scripts/540742/inoreader%E6%91%98%E5%BD%95%E6%96%B0%E9%97%BB.user.js",
+    "code_size": 1264,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532502,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T07:15:27.000Z",
+    "code_updated_at": "2025-06-10T16:21:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922088,
+        "name": "LightKitty2022",
+        "created_at": "2022-06-04T19:47:55.000Z",
+        "url": "https://greasyfork.org/users/922088-lightkitty2022"
+      }
+    ],
+    "name": "隐藏低热度新闻 - Inoreader",
+    "description": "自动隐藏 Inoreader 中热度低的新闻卡片（通过判断 popularity_div_internal 是否含有 d-none）",
+    "url": "https://greasyfork.org/scripts/532502-%E9%9A%90%E8%97%8F%E4%BD%8E%E7%83%AD%E5%BA%A6%E6%96%B0%E9%97%BB-inoreader",
+    "code_url": "https://update.greasyfork.org/scripts/532502/%E9%9A%90%E8%97%8F%E4%BD%8E%E7%83%AD%E5%BA%A6%E6%96%B0%E9%97%BB%20-%20Inoreader.user.js",
+    "code_size": 1493,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

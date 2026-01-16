@@ -1,0 +1,68 @@
+[
+  {
+    "id": 516293,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-07T19:11:11.000Z",
+    "code_updated_at": "2024-11-07T19:11:10.000Z",
+    "namespace": "https://greasyfork.org/users/919633",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 843476,
+        "name": "jmatg1",
+        "created_at": "2021-11-24T06:00:09.000Z",
+        "url": "https://greasyfork.org/users/843476-jmatg1"
+      }
+    ],
+    "name": "Jutsu helper",
+    "description": "Скрипт для автоматического пропуска опенингов и эндингов",
+    "url": "https://greasyfork.org/scripts/516293-jutsu-helper",
+    "code_url": "https://update.greasyfork.org/scripts/516293/Jutsu%20helper.user.js",
+    "code_size": 1547,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 508800,
+    "daily_installs": 0,
+    "total_installs": 127,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T06:48:52.000Z",
+    "code_updated_at": "2024-09-17T06:48:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 843476,
+        "name": "jmatg1",
+        "created_at": "2021-11-24T06:00:09.000Z",
+        "url": "https://greasyfork.org/users/843476-jmatg1"
+      }
+    ],
+    "name": "Anti AFK",
+    "description": "Antri afk",
+    "url": "https://greasyfork.org/scripts/508800-anti-afk",
+    "code_url": "https://update.greasyfork.org/scripts/508800/Anti%20AFK.user.js",
+    "code_size": 1853,
+    "license": null,
+    "version": "2024-09-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

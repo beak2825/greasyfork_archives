@@ -30,7 +30,7 @@
     "version": "2025.12.02.01",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 552890,
@@ -64,5 +64,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 520398,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T08:28:18.000Z",
+    "code_updated_at": "2026-01-09T12:19:41.000Z",
+    "namespace": "https://github.com/qianjiachun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 328337,
+        "name": "qianjiachun",
+        "created_at": "2019-08-18T11:38:25.000Z",
+        "url": "https://greasyfork.org/users/328337-qianjiachun"
+      }
+    ],
+    "name": "斗鱼星推红包自动领取",
+    "description": "全自动领取斗鱼星推红包",
+    "url": "https://greasyfork.org/scripts/520398-%E6%96%97%E9%B1%BC%E6%98%9F%E6%8E%A8%E7%BA%A2%E5%8C%85%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/520398/%E6%96%97%E9%B1%BC%E6%98%9F%E6%8E%A8%E7%BA%A2%E5%8C%85%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96.user.js",
+    "code_size": 44731,
+    "license": null,
+    "version": "2026.01.09.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

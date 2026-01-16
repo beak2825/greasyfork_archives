@@ -1,0 +1,59 @@
+{
+  "id": 531723,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T14:19:02.000Z",
+  "code_updated_at": "2025-04-03T14:19:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450264,
+      "name": "Brune Youtube",
+      "created_at": "2025-03-25T21:28:00.000Z",
+      "url": "https://greasyfork.org/users/1450264-brune-youtube",
+      "scripts": [
+        {
+          "id": 531723,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-03T14:19:02.000Z",
+          "code_updated_at": "2025-04-03T14:19:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JoshWorth 78 Coins Always Flip on",
+          "description": "Forces all coin flips to land on tails on joshworth.com/dev/78coins/",
+          "url": "https://greasyfork.org/scripts/531723-joshworth-78-coins-always-flip-on",
+          "code_url": "https://update.greasyfork.org/scripts/531723/JoshWorth%2078%20Coins%20Always%20Flip%20on.user.js",
+          "code_size": 1264,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JoshWorth 78 Coins Always Flip on",
+  "description": "Forces all coin flips to land on tails on joshworth.com/dev/78coins/",
+  "url": "https://greasyfork.org/scripts/531723-joshworth-78-coins-always-flip-on",
+  "code_url": "https://update.greasyfork.org/scripts/531723/JoshWorth%2078%20Coins%20Always%20Flip%20on.user.js",
+  "code_size": 1264,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

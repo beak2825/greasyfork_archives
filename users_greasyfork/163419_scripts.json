@@ -1,0 +1,134 @@
+[
+  {
+    "id": 550400,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-22T20:29:43.000Z",
+    "code_updated_at": "2025-09-22T20:29:43.000Z",
+    "namespace": "rinsuki.net",
+    "support_url": "https://github.com/rinsuki/userscripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 163419,
+        "name": "rinsuki",
+        "created_at": "2017-12-17T06:09:11.000Z",
+        "url": "https://greasyfork.org/users/163419-rinsuki"
+      }
+    ],
+    "name": "1Password Extension Passkey Fix",
+    "description": "Treat 1Password extension's response as a instance of window.PublicKeyCredential",
+    "url": "https://greasyfork.org/scripts/550400-1password-extension-passkey-fix",
+    "code_url": "https://update.greasyfork.org/scripts/550400/1Password%20Extension%20Passkey%20Fix.user.js",
+    "code_size": 1473,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545051,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T13:16:45.000Z",
+    "code_updated_at": "2025-08-08T13:16:45.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 163419,
+        "name": "rinsuki",
+        "created_at": "2017-12-17T06:09:11.000Z",
+        "url": "https://greasyfork.org/users/163419-rinsuki"
+      }
+    ],
+    "name": "dom-chef 5.1.1 UMD version",
+    "description": "https://github.com/vadimdemedes/dom-chef/pull/92",
+    "url": "https://greasyfork.org/scripts/545051-dom-chef-5-1-1-umd-version",
+    "code_url": "https://update.greasyfork.org/scripts/545051/1637871/dom-chef%20511%20UMD%20version.js",
+    "code_size": 6774,
+    "license": null,
+    "version": "0.0.1.20250808131645",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 541101,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T08:45:06.000Z",
+    "code_updated_at": "2025-12-02T08:30:07.000Z",
+    "namespace": "https://rinsuki.net",
+    "support_url": "https://github.com/rinsuki/userscripts/issues",
+    "contribution_url": "https://rinsuki.fanbox.cc/",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 163419,
+        "name": "rinsuki",
+        "created_at": "2017-12-17T06:09:11.000Z",
+        "url": "https://greasyfork.org/users/163419-rinsuki"
+      }
+    ],
+    "name": "MusicBrainz: Seed URLs to Release Recordings",
+    "description": "Import recording-url relationship to release's recordings.",
+    "url": "https://greasyfork.org/scripts/541101-musicbrainz-seed-urls-to-release-recordings",
+    "code_url": "https://update.greasyfork.org/scripts/541101/MusicBrainz%3A%20Seed%20URLs%20to%20Release%20Recordings.user.js",
+    "code_size": 8825,
+    "license": null,
+    "version": "0.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525734,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-03T10:55:22.000Z",
+    "code_updated_at": "2025-02-03T10:57:20.000Z",
+    "namespace": "rinsuki.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 163419,
+        "name": "rinsuki",
+        "created_at": "2017-12-17T06:09:11.000Z",
+        "url": "https://greasyfork.org/users/163419-rinsuki"
+      }
+    ],
+    "name": "MB: make some headers sticky on edit release relationships",
+    "description": "maybe useful for messing with multi-disc release",
+    "url": "https://greasyfork.org/scripts/525734-mb-make-some-headers-sticky-on-edit-release-relationships",
+    "code_url": "https://update.greasyfork.org/scripts/525734/MB%3A%20make%20some%20headers%20sticky%20on%20edit%20release%20relationships.user.css",
+    "code_size": 1110,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

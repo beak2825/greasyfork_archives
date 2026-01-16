@@ -1,0 +1,59 @@
+{
+  "id": 546427,
+  "daily_installs": 2,
+  "total_installs": 1236,
+  "fan_score": "21.9",
+  "good_ratings": 1,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T18:30:20.000Z",
+  "code_updated_at": "2026-01-06T16:39:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1506759,
+      "name": "Yinhaoran1128",
+      "created_at": "2025-08-19T18:20:12.000Z",
+      "url": "https://greasyfork.org/users/1506759-yinhaoran1128",
+      "scripts": [
+        {
+          "id": 546427,
+          "daily_installs": 2,
+          "total_installs": 1236,
+          "fan_score": "21.9",
+          "good_ratings": 1,
+          "ok_ratings": 3,
+          "bad_ratings": 0,
+          "created_at": "2025-08-19T18:30:20.000Z",
+          "code_updated_at": "2026-01-06T16:39:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[银河奶牛]康康运气_修复",
+          "description": "更详细的统计数据",
+          "url": "https://greasyfork.org/scripts/546427-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E5%BA%B7%E5%BA%B7%E8%BF%90%E6%B0%94-%E4%BF%AE%E5%A4%8D",
+          "code_url": "https://update.greasyfork.org/scripts/546427/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%E5%BA%B7%E5%BA%B7%E8%BF%90%E6%B0%94_%E4%BF%AE%E5%A4%8D.user.js",
+          "code_size": 404310,
+          "license": "MIT License",
+          "version": "0.1.29",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[银河奶牛]康康运气_修复",
+  "description": "更详细的统计数据",
+  "url": "https://greasyfork.org/scripts/546427-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E5%BA%B7%E5%BA%B7%E8%BF%90%E6%B0%94-%E4%BF%AE%E5%A4%8D",
+  "code_url": "https://update.greasyfork.org/scripts/546427/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%E5%BA%B7%E5%BA%B7%E8%BF%90%E6%B0%94_%E4%BF%AE%E5%A4%8D.user.js",
+  "code_size": 404310,
+  "license": "MIT License",
+  "version": "0.1.29",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

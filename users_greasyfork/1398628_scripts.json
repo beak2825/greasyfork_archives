@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517909,
+    "daily_installs": 1,
+    "total_installs": 470,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-11-18T14:36:25.000Z",
+    "code_updated_at": "2024-11-19T22:47:55.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1398628,
+        "name": "3000021902130127809",
+        "created_at": "2024-11-18T14:31:22.000Z",
+        "url": "https://greasyfork.org/users/1398628-3000021902130127809"
+      }
+    ],
+    "name": "DEATHTO@LL mod v2.9",
+    "description": "i hope you enjoy i like i think you will too :)",
+    "url": "https://greasyfork.org/scripts/517909-deathto-ll-mod-v2-9",
+    "code_url": "https://update.greasyfork.org/scripts/517909/DEATHTO%40LL%20mod%20v29.user.js",
+    "code_size": 744422,
+    "license": null,
+    "version": "2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

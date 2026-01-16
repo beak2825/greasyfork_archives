@@ -1,0 +1,59 @@
+{
+  "id": 498543,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-21T15:37:20.000Z",
+  "code_updated_at": "2024-06-21T15:37:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1321733,
+      "name": "RichardsonSilveira",
+      "created_at": "2024-06-21T15:35:30.000Z",
+      "url": "https://greasyfork.org/users/1321733-richardsonsilveira",
+      "scripts": [
+        {
+          "id": 498543,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-21T15:37:20.000Z",
+          "code_updated_at": "2024-06-21T15:37:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Voter with Page Reload",
+          "description": "Automate voting on a poll and reload the page after each vote",
+          "url": "https://greasyfork.org/scripts/498543-auto-voter-with-page-reload",
+          "code_url": "https://update.greasyfork.org/scripts/498543/Auto%20Voter%20with%20Page%20Reload.user.js",
+          "code_size": 2850,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Voter with Page Reload",
+  "description": "Automate voting on a poll and reload the page after each vote",
+  "url": "https://greasyfork.org/scripts/498543-auto-voter-with-page-reload",
+  "code_url": "https://update.greasyfork.org/scripts/498543/Auto%20Voter%20with%20Page%20Reload.user.js",
+  "code_size": 2850,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

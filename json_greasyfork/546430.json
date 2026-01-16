@@ -1,0 +1,33 @@
+{
+  "id": 546430,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T19:33:01.000Z",
+  "code_updated_at": "2025-08-19T19:33:01.000Z",
+  "namespace": "https://greasyfork.org/users/222079",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 222079,
+      "name": "jiumohoo",
+      "created_at": "2018-10-28T13:42:52.000Z",
+      "url": "https://greasyfork.org/users/222079-jiumohoo"
+    }
+  ],
+  "name": "Таня_CrossMP(Google shit)",
+  "description": "1",
+  "url": "https://greasyfork.org/scripts/546430-%D1%82%D0%B0%D0%BD%D1%8F-crossmp-google",
+  "code_url": "https://update.greasyfork.org/scripts/546430/%D0%A2%D0%B0%D0%BD%D1%8F_CrossMP%28Google%20shit%29.user.js",
+  "code_size": 15304,
+  "license": "1",
+  "version": "0.0.1.20250819193301",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

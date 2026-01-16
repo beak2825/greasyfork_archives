@@ -1,0 +1,33 @@
+{
+  "id": 512956,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-17T11:20:07.000Z",
+  "code_updated_at": "2024-10-17T12:07:44.000Z",
+  "namespace": "http://atcoder.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 985224,
+      "name": "Nauclhlt",
+      "created_at": "2022-11-19T12:14:13.000Z",
+      "url": "https://greasyfork.org/users/985224-nauclhlt"
+    }
+  ],
+  "name": "AtCoder♡♡",
+  "description": "AtCoderの問題文を雑な♡喘ぎ仕様にします。",
+  "url": "https://greasyfork.org/scripts/512956-atcoder",
+  "code_url": "https://update.greasyfork.org/scripts/512956/AtCoder%E2%99%A1%E2%99%A1.user.js",
+  "code_size": 2093,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

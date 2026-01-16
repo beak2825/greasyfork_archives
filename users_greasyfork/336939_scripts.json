@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541721,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T12:15:33.000Z",
+    "code_updated_at": "2025-07-05T12:15:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 336939,
+        "name": "Long Nguyễn (Otee)",
+        "created_at": "2019-08-24T06:34:07.000Z",
+        "url": "https://greasyfork.org/users/336939-long-nguy%E1%BB%85n-otee"
+      }
+    ],
+    "name": "Auto Gmail Registration",
+    "description": "Tự động đăng ký Gmail giả lập hành vi người dùng",
+    "url": "https://greasyfork.org/scripts/541721-auto-gmail-registration",
+    "code_url": "https://update.greasyfork.org/scripts/541721/Auto%20Gmail%20Registration.user.js",
+    "code_size": 22996,
+    "license": null,
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

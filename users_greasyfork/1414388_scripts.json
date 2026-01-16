@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524008,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-17T03:41:14.000Z",
+    "code_updated_at": "2025-01-17T03:41:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414388,
+        "name": "tan tsi",
+        "created_at": "2024-12-23T02:22:27.000Z",
+        "url": "https://greasyfork.org/users/1414388-tan-tsi"
+      }
+    ],
+    "name": "印迹查看要过期的视觉需求",
+    "description": "自動點擊美團 Ingee 頁面元素並統計日期 (使用最快速的北京時間比較和正確的日期提取)",
+    "url": "https://greasyfork.org/scripts/524008-%E5%8D%B0%E8%BF%B9%E6%9F%A5%E7%9C%8B%E8%A6%81%E8%BF%87%E6%9C%9F%E7%9A%84%E8%A7%86%E8%A7%89%E9%9C%80%E6%B1%82",
+    "code_url": "https://update.greasyfork.org/scripts/524008/%E5%8D%B0%E8%BF%B9%E6%9F%A5%E7%9C%8B%E8%A6%81%E8%BF%87%E6%9C%9F%E7%9A%84%E8%A7%86%E8%A7%89%E9%9C%80%E6%B1%82.user.js",
+    "code_size": 3768,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

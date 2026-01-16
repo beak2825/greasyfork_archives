@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549252,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T11:43:18.000Z",
+    "code_updated_at": "2025-09-12T12:13:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514237,
+        "name": "FernAnne",
+        "created_at": "2025-09-12T10:53:53.000Z",
+        "url": "https://greasyfork.org/users/1514237-fernanne"
+      }
+    ],
+    "name": "Custom Item Suite",
+    "description": "Replace placeholder image with an actual image URL if available in the name field. Image URL should be at the end of the name with a preceding '#'. Automatically expands custom parts in a list, and embeds the url if found",
+    "url": "https://greasyfork.org/scripts/549252-custom-item-suite",
+    "code_url": "https://update.greasyfork.org/scripts/549252/Custom%20Item%20Suite.user.js",
+    "code_size": 5261,
+    "license": "MIT License",
+    "version": "1.02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

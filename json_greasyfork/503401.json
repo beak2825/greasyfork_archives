@@ -1,0 +1,34 @@
+{
+  "id": 503401,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-12T10:24:49.000Z",
+  "code_updated_at": "2024-08-12T10:24:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Req 4Rec VB russo@casaline.ch",
+  "description": "Insert",
+  "url": "https://greasyfork.org/scripts/503401-req-4rec-vb-russo-casaline-ch",
+  "code_url": "https://update.greasyfork.org/scripts/503401/Req%204Rec%20VB%20russo%40casalinech.user.js",
+  "code_size": 1005,
+  "license": null,
+  "version": "0.1",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 537738,
+  "daily_installs": 3,
+  "total_installs": 197,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-05-30T08:53:54.000Z",
+  "code_updated_at": "2025-05-30T08:53:54.000Z",
+  "namespace": "https://greasyfork.org/users/1441569",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441569,
+      "name": "Daniel Kz",
+      "created_at": "2025-03-02T13:20:05.000Z",
+      "url": "https://greasyfork.org/users/1441569-daniel-kz",
+      "scripts": [
+        {
+          "id": 537738,
+          "daily_installs": 3,
+          "total_installs": 197,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-05-30T08:53:54.000Z",
+          "code_updated_at": "2025-05-30T08:53:54.000Z",
+          "namespace": "https://greasyfork.org/users/1441569",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DeMoDNs – For Skadimoon 🕊️",
+          "description": "Found Peace, SkadiMoon...",
+          "url": "https://greasyfork.org/scripts/537738-demodns-for-skadimoon",
+          "code_url": "https://update.greasyfork.org/scripts/537738/DeMoDNs%20%E2%80%93%20For%20Skadimoon%20%F0%9F%95%8A%EF%B8%8F.user.js",
+          "code_size": 394407,
+          "license": null,
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DeMoDNs – For Skadimoon 🕊️",
+  "description": "Found Peace, SkadiMoon...",
+  "url": "https://greasyfork.org/scripts/537738-demodns-for-skadimoon",
+  "code_url": "https://update.greasyfork.org/scripts/537738/DeMoDNs%20%E2%80%93%20For%20Skadimoon%20%F0%9F%95%8A%EF%B8%8F.user.js",
+  "code_size": 394407,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

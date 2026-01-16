@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528213,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-27T08:15:15.000Z",
+    "code_updated_at": "2025-02-27T08:15:15.000Z",
+    "namespace": "https://greasyfork.org/en/users/1440425-mrz2sx9d",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440425,
+        "name": "mrz2sx9d",
+        "created_at": "2025-02-27T02:54:16.000Z",
+        "url": "https://greasyfork.org/users/1440425-mrz2sx9d"
+      }
+    ],
+    "name": "Bing Visited Link Color Changer",
+    "description": "Change the color of visited links in Bing search results",
+    "url": "https://greasyfork.org/scripts/528213-bing-visited-link-color-changer",
+    "code_url": "https://update.greasyfork.org/scripts/528213/Bing%20Visited%20Link%20Color%20Changer.user.js",
+    "code_size": 2423,
+    "license": "N/A",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

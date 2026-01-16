@@ -1,0 +1,68 @@
+[
+  {
+    "id": 539886,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T14:16:45.000Z",
+    "code_updated_at": "2025-12-17T14:11:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/f14XuanLv/Claude-Powerest-Manager_Enhancer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454591,
+        "name": "f14xuanlv",
+        "created_at": "2025-04-06T09:19:45.000Z",
+        "url": "https://greasyfork.org/users/1454591-f14xuanlv"
+      }
+    ],
+    "name": "Claude Powerest Manager Enhancer | 导航 导出 管理 跳转 分支 对话 管理器 导出器 export navigate jump branch helper",
+    "description": "一站式搜索、筛选、批量管理所有对话。强大的JSON导出(原始/自定义/含附件)。为聊天框注入新功能，如从任意消息分支、跨分支全局导航、强制PDF深度解析、浮动线性导航面板等。关键词: 管理 增强 导出 导航 跳转 分支 分叉 管理器 增强器 导出器 导航器 助手 manage enhance export navigate jump branch fork manager enhancer exporter navigator helper",
+    "url": "https://greasyfork.org/scripts/539886-claude-powerest-manager-enhancer-%E5%AF%BC%E8%88%AA-%E5%AF%BC%E5%87%BA-%E7%AE%A1%E7%90%86-%E8%B7%B3%E8%BD%AC-%E5%88%86%E6%94%AF-%E5%AF%B9%E8%AF%9D-%E7%AE%A1%E7%90%86%E5%99%A8-%E5%AF%BC%E5%87%BA%E5%99%A8-export-navigate-jump-branch-helper",
+    "code_url": "https://update.greasyfork.org/scripts/539886/Claude%20Powerest%20Manager%20Enhancer%20%7C%20%E5%AF%BC%E8%88%AA%20%E5%AF%BC%E5%87%BA%20%E7%AE%A1%E7%90%86%20%E8%B7%B3%E8%BD%AC%20%E5%88%86%E6%94%AF%20%E5%AF%B9%E8%AF%9D%20%E7%AE%A1%E7%90%86%E5%99%A8%20%E5%AF%BC%E5%87%BA%E5%99%A8%20export%20navigate%20jump%20branch%20helper.user.js",
+    "code_size": 253266,
+    "license": "MIT License",
+    "version": "1.2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531980,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-04-06T09:54:14.000Z",
+    "code_updated_at": "2025-08-10T16:48:33.000Z",
+    "namespace": "https://greasyfork.org/users/1454591",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454591,
+        "name": "f14xuanlv",
+        "created_at": "2025-04-06T09:19:45.000Z",
+        "url": "https://greasyfork.org/users/1454591-f14xuanlv"
+      }
+    ],
+    "name": "Claude SessionKey Manager",
+    "description": "轻松管理和切换Claude的SessionKey（可拖拽浮动按钮，简洁弹出式菜单）。此脚本基于 https://greasyfork.org/scripts/501296，原作者: https://greasyfork.org/zh-CN/users/1337296",
+    "url": "https://greasyfork.org/scripts/531980-claude-sessionkey-manager",
+    "code_url": "https://update.greasyfork.org/scripts/531980/Claude%20SessionKey%20Manager.user.js",
+    "code_size": 15490,
+    "license": "GNU GPLv3",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

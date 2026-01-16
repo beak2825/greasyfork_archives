@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536052,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T07:58:10.000Z",
+    "code_updated_at": "2025-05-15T07:58:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 223723,
+        "name": "RUSSIAVK",
+        "created_at": "2018-11-05T03:26:33.000Z",
+        "url": "https://greasyfork.org/users/223723-russiavk"
+      }
+    ],
+    "name": "Torrent Result Ad Remover",
+    "description": "Remove result containing specified ad keywords (support btdig and bt4gprx)",
+    "url": "https://greasyfork.org/scripts/536052-torrent-result-ad-remover",
+    "code_url": "https://update.greasyfork.org/scripts/536052/Torrent%20Result%20Ad%20Remover.user.js",
+    "code_size": 8121,
+    "license": "MIT License",
+    "version": "2025-05-15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535538,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T08:51:51.000Z",
+    "code_updated_at": "2025-05-10T08:51:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 223723,
+        "name": "RUSSIAVK",
+        "created_at": "2018-11-05T03:26:33.000Z",
+        "url": "https://greasyfork.org/users/223723-russiavk"
+      }
+    ],
+    "name": "sextb auto redirect nitroflare",
+    "description": "sextb auto redirect to nitroflare link",
+    "url": "https://greasyfork.org/scripts/535538-sextb-auto-redirect-nitroflare",
+    "code_url": "https://update.greasyfork.org/scripts/535538/sextb%20auto%20redirect%20nitroflare.user.js",
+    "code_size": 15220,
+    "license": "MIT License",
+    "version": "2025-05-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 551335,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-02T11:48:45.000Z",
+  "code_updated_at": "2025-10-02T14:53:02.000Z",
+  "namespace": "csa.ultralite.locked.uifold",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521585,
+      "name": "drslump34",
+      "created_at": "2025-10-02T11:42:51.000Z",
+      "url": "https://greasyfork.org/users/1521585-drslump34",
+      "scripts": [
+        {
+          "id": 551335,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-02T11:48:45.000Z",
+          "code_updated_at": "2025-10-02T14:53:02.000Z",
+          "namespace": "csa.ultralite.locked.uifold",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WME Curve Safety",
+          "description": "Analyse à chaque clic sur un segment. Pas d'overlay, pas de bouton manuel, UI épurée.",
+          "url": "https://greasyfork.org/scripts/551335-wme-curve-safety",
+          "code_url": "https://update.greasyfork.org/scripts/551335/WME%20Curve%20Safety.user.js",
+          "code_size": 15004,
+          "license": "MIT License",
+          "version": "2025.01.31",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WME Curve Safety",
+  "description": "Analyse à chaque clic sur un segment. Pas d'overlay, pas de bouton manuel, UI épurée.",
+  "url": "https://greasyfork.org/scripts/551335-wme-curve-safety",
+  "code_url": "https://update.greasyfork.org/scripts/551335/WME%20Curve%20Safety.user.js",
+  "code_size": 15004,
+  "license": "MIT License",
+  "version": "2025.01.31",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

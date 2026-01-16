@@ -1,0 +1,59 @@
+{
+  "id": 531057,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-27T19:08:52.000Z",
+  "code_updated_at": "2025-04-07T16:34:27.000Z",
+  "namespace": "nana_vao_script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451009,
+      "name": "izcw",
+      "created_at": "2025-03-27T16:04:00.000Z",
+      "url": "https://greasyfork.org/users/1451009-izcw",
+      "scripts": [
+        {
+          "id": 531057,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-27T19:08:52.000Z",
+          "code_updated_at": "2025-04-07T16:34:27.000Z",
+          "namespace": "nana_vao_script",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili | b站播放页自动宽屏",
+          "description": "B站播放页自动宽屏、滚动控制、导航显示、带悬浮面板",
+          "url": "https://greasyfork.org/scripts/531057-bilibili-b%E7%AB%99%E6%92%AD%E6%94%BE%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%AE%BD%E5%B1%8F",
+          "code_url": "https://update.greasyfork.org/scripts/531057/bilibili%20%7C%20b%E7%AB%99%E6%92%AD%E6%94%BE%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%AE%BD%E5%B1%8F.user.js",
+          "code_size": 19177,
+          "license": "MIT License",
+          "version": "1.0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili | b站播放页自动宽屏",
+  "description": "B站播放页自动宽屏、滚动控制、导航显示、带悬浮面板",
+  "url": "https://greasyfork.org/scripts/531057-bilibili-b%E7%AB%99%E6%92%AD%E6%94%BE%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%AE%BD%E5%B1%8F",
+  "code_url": "https://update.greasyfork.org/scripts/531057/bilibili%20%7C%20b%E7%AB%99%E6%92%AD%E6%94%BE%E9%A1%B5%E8%87%AA%E5%8A%A8%E5%AE%BD%E5%B1%8F.user.js",
+  "code_size": 19177,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

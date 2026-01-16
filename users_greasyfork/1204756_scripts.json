@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526001,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-05T16:33:49.000Z",
+    "code_updated_at": "2025-02-05T16:33:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1204756,
+        "name": "1254 hantuyet",
+        "created_at": "2023-10-27T01:53:18.000Z",
+        "url": "https://greasyfork.org/users/1204756-1254-hantuyet"
+      }
+    ],
+    "name": "Facebook Feed Expander by Johnny.Inc",
+    "description": "Expand the feed size of the new Facebook UI",
+    "url": "https://greasyfork.org/scripts/526001-facebook-feed-expander-by-johnny-inc",
+    "code_url": "https://update.greasyfork.org/scripts/526001/Facebook%20Feed%20Expander%20by%20JohnnyInc.user.js",
+    "code_size": 3072,
+    "license": null,
+    "version": "0.1 beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

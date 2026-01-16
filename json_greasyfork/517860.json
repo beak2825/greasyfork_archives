@@ -1,0 +1,59 @@
+{
+  "id": 517860,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-18T07:33:26.000Z",
+  "code_updated_at": "2024-11-19T01:06:07.000Z",
+  "namespace": "http://example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1398422,
+      "name": "xiaofeiwoshi",
+      "created_at": "2024-11-18T07:21:37.000Z",
+      "url": "https://greasyfork.org/users/1398422-xiaofeiwoshi",
+      "scripts": [
+        {
+          "id": 521254,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-20T02:20:05.000Z",
+          "code_updated_at": "2024-12-20T02:20:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动模糊图片",
+          "description": "打开网站帖子时图片自动模糊，点击后显示正常",
+          "url": "https://greasyfork.org/scripts/521254-%E8%87%AA%E5%8A%A8%E6%A8%A1%E7%B3%8A%E5%9B%BE%E7%89%87",
+          "code_url": "https://update.greasyfork.org/scripts/521254/%E8%87%AA%E5%8A%A8%E6%A8%A1%E7%B3%8A%E5%9B%BE%E7%89%87.user.js",
+          "code_size": 1338,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "猫国科学家简易版",
+  "description": "设置猫国建设者，最小化和移动功能，修改所有道具的数量",
+  "url": "https://greasyfork.org/scripts/517860-%E7%8C%AB%E5%9B%BD%E7%A7%91%E5%AD%A6%E5%AE%B6%E7%AE%80%E6%98%93%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/517860/%E7%8C%AB%E5%9B%BD%E7%A7%91%E5%AD%A6%E5%AE%B6%E7%AE%80%E6%98%93%E7%89%88.user.js",
+  "code_size": 9343,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

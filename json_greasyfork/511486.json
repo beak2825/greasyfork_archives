@@ -1,0 +1,59 @@
+{
+  "id": 511486,
+  "daily_installs": 0,
+  "total_installs": 225,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-04T15:19:51.000Z",
+  "code_updated_at": "2024-10-04T15:19:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1211074,
+      "name": "许子远",
+      "created_at": "2023-11-05T02:43:33.000Z",
+      "url": "https://greasyfork.org/users/1211074-%E8%AE%B8%E5%AD%90%E8%BF%9C",
+      "scripts": [
+        {
+          "id": 511486,
+          "daily_installs": 0,
+          "total_installs": 225,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-04T15:19:51.000Z",
+          "code_updated_at": "2024-10-04T15:19:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "问卷星自动重复提交",
+          "description": "自动重复提交问卷星问卷",
+          "url": "https://greasyfork.org/scripts/511486-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%87%AA%E5%8A%A8%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4",
+          "code_url": "https://update.greasyfork.org/scripts/511486/%E9%97%AE%E5%8D%B7%E6%98%9F%E8%87%AA%E5%8A%A8%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4.user.js",
+          "code_size": 23579,
+          "license": "MIT License",
+          "version": "2024-09-26",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "问卷星自动重复提交",
+  "description": "自动重复提交问卷星问卷",
+  "url": "https://greasyfork.org/scripts/511486-%E9%97%AE%E5%8D%B7%E6%98%9F%E8%87%AA%E5%8A%A8%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4",
+  "code_url": "https://update.greasyfork.org/scripts/511486/%E9%97%AE%E5%8D%B7%E6%98%9F%E8%87%AA%E5%8A%A8%E9%87%8D%E5%A4%8D%E6%8F%90%E4%BA%A4.user.js",
+  "code_size": 23579,
+  "license": "MIT License",
+  "version": "2024-09-26",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

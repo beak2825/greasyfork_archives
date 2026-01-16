@@ -1,0 +1,33 @@
+{
+  "id": 498121,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-17T00:29:33.000Z",
+  "code_updated_at": "2024-06-17T00:29:32.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1319279,
+      "name": "Bomw Balera",
+      "created_at": "2024-06-16T23:58:45.000Z",
+      "url": "https://greasyfork.org/users/1319279-bomw-balera"
+    }
+  ],
+  "name": "РЎРєСЂРїРёС‚ РґР»СЏ Р Рџ Р±РёРѕРіСЂР°С„РёР№ |  Black Russia UFA",
+  "description": "BLACK RUSSIA | UFA",
+  "url": "https://greasyfork.org/scripts/498121-%D1%80%D1%9E%D1%80%D1%94%D1%81%D1%92%D1%80%D1%97%D1%80%D1%91%D1%81-%D1%80%D2%91%D1%80-%D1%81%D1%9F-%D1%80-%D1%80%D1%9F-%D1%80-%D1%80%D1%91%D1%80%D1%95%D1%80%D1%96%D1%81%D1%92%D1%80-%D1%81-%D1%80%D1%91%D1%80-black-russia-ufa",
+  "code_url": "https://update.greasyfork.org/scripts/498121/%D0%A0%D0%8E%D0%A0%D1%94%D0%A1%D0%82%D0%A0%D1%97%D0%A0%D1%91%D0%A1%E2%80%9A%20%D0%A0%D2%91%D0%A0%C2%BB%D0%A1%D0%8F%20%D0%A0%20%D0%A0%D1%9F%20%D0%A0%C2%B1%D0%A0%D1%91%D0%A0%D1%95%D0%A0%D1%96%D0%A1%D0%82%D0%A0%C2%B0%D0%A1%E2%80%9E%D0%A0%D1%91%D0%A0%E2%84%96%20%7C%20%20Black%20Russia%20UFA.user.js",
+  "code_size": 30980,
+  "license": "MIT License",
+  "version": "2.1.0",
+  "locale": "it",
+  "deleted": false,
+  "visibility": "public"
+}

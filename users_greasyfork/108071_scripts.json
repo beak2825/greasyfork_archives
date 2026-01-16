@@ -1,0 +1,134 @@
+[
+  {
+    "id": 539812,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T01:47:36.000Z",
+    "code_updated_at": "2025-06-20T03:42:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 108071,
+        "name": "mumumi",
+        "created_at": "2017-03-08T07:45:10.000Z",
+        "url": "https://greasyfork.org/users/108071-mumumi"
+      }
+    ],
+    "name": "TdtVts",
+    "description": "tdt vts",
+    "url": "https://greasyfork.org/scripts/539812-tdtvts",
+    "code_url": "https://update.greasyfork.org/scripts/539812/TdtVts.user.js",
+    "code_size": 6031,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 529451,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-11T02:24:03.000Z",
+    "code_updated_at": "2025-07-08T07:09:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 108071,
+        "name": "mumumi",
+        "created_at": "2017-03-08T07:45:10.000Z",
+        "url": "https://greasyfork.org/users/108071-mumumi"
+      }
+    ],
+    "name": "Nexus Link Replacer",
+    "description": "将网页中的链接替换为Nexus代理地址",
+    "url": "https://greasyfork.org/scripts/529451-nexus-link-replacer",
+    "code_url": "https://update.greasyfork.org/scripts/529451/Nexus%20Link%20Replacer.user.js",
+    "code_size": 3315,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527530,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-20T08:10:34.000Z",
+    "code_updated_at": "2025-02-20T09:17:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 108071,
+        "name": "mumumi",
+        "created_at": "2017-03-08T07:45:10.000Z",
+        "url": "https://greasyfork.org/users/108071-mumumi"
+      }
+    ],
+    "name": "FOFA Ollama Result Extractor",
+    "description": "提取 FOFA 搜索结果数据（IP、端口、协议等）",
+    "url": "https://greasyfork.org/scripts/527530-fofa-ollama-result-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/527530/FOFA%20Ollama%20Result%20Extractor.user.js",
+    "code_size": 2765,
+    "license": null,
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498736,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-24T06:23:26.000Z",
+    "code_updated_at": "2024-06-24T07:04:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 108071,
+        "name": "mumumi",
+        "created_at": "2017-03-08T07:45:10.000Z",
+        "url": "https://greasyfork.org/users/108071-mumumi"
+      }
+    ],
+    "name": "mitce post",
+    "description": "push links",
+    "url": "https://greasyfork.org/scripts/498736-mitce-post",
+    "code_url": "https://update.greasyfork.org/scripts/498736/mitce%20post.user.js",
+    "code_size": 846,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 545828,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-14T14:28:59.000Z",
+  "code_updated_at": "2025-08-14T14:28:59.000Z",
+  "namespace": "https://github.com/flaging/greasy-plugin.git",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1394973,
+      "name": "flaging",
+      "created_at": "2024-11-12T16:06:09.000Z",
+      "url": "https://greasyfork.org/users/1394973-flaging"
+    }
+  ],
+  "name": "Sync Repo to Local Gitea",
+  "description": "Add a button to mirror the current repository to Gitea",
+  "url": "https://greasyfork.org/scripts/545828-sync-repo-to-local-gitea",
+  "code_url": "https://update.greasyfork.org/scripts/545828/Sync%20Repo%20to%20Local%20Gitea.user.js",
+  "code_size": 6991,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

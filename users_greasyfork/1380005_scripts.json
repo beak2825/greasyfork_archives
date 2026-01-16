@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512367,
+    "daily_installs": 2,
+    "total_installs": 399,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-12T15:51:03.000Z",
+    "code_updated_at": "2024-10-12T15:51:03.000Z",
+    "namespace": "https://greasyfork.org/en/users/1380005-real-aquzr",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380005,
+        "name": "Real AquzR",
+        "created_at": "2024-10-12T15:41:44.000Z",
+        "url": "https://greasyfork.org/users/1380005-real-aquzr"
+      }
+    ],
+    "name": "MonkeyType AutoTyper Bot",
+    "description": "A Bot that automatically types for you in MonkeyType.",
+    "url": "https://greasyfork.org/scripts/512367-monkeytype-autotyper-bot",
+    "code_url": "https://update.greasyfork.org/scripts/512367/MonkeyType%20AutoTyper%20Bot.user.js",
+    "code_size": 3036,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 545040,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T10:05:15.000Z",
+    "code_updated_at": "2025-08-08T10:05:15.000Z",
+    "namespace": "https://tver.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459305,
+        "name": "yst Odyssey",
+        "created_at": "2025-04-18T08:33:03.000Z",
+        "url": "https://greasyfork.org/users/1459305-yst-odyssey"
+      }
+    ],
+    "name": "TVer - 長いタイトルをホバーでフル表示",
+    "description": "TVerの番組名やエピソードタイトルが省略されて表示されるとき、マウスオーバーで全文を表示します。",
+    "url": "https://greasyfork.org/scripts/545040-tver-%E9%95%B7%E3%81%84%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%E3%82%92%E3%83%9B%E3%83%90%E3%83%BC%E3%81%A7%E3%83%95%E3%83%AB%E8%A1%A8%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/545040/TVer%20-%20%E9%95%B7%E3%81%84%E3%82%BF%E3%82%A4%E3%83%88%E3%83%AB%E3%82%92%E3%83%9B%E3%83%90%E3%83%BC%E3%81%A7%E3%83%95%E3%83%AB%E8%A1%A8%E7%A4%BA.user.js",
+    "code_size": 1174,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533218,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T08:38:42.000Z",
+    "code_updated_at": "2025-04-18T08:38:42.000Z",
+    "namespace": "https://tver.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459305,
+        "name": "yst Odyssey",
+        "created_at": "2025-04-18T08:33:03.000Z",
+        "url": "https://greasyfork.org/users/1459305-yst-odyssey"
+      }
+    ],
+    "name": "TVer 自動で「詳細を見る」をクリック（SPA対応）",
+    "description": "TVerの動画ページで「詳細を見る」ボタンを自動でクリック（タブ内遷移にも対応）",
+    "url": "https://greasyfork.org/scripts/533218-tver-%E8%87%AA%E5%8B%95%E3%81%A7-%E8%A9%B3%E7%B4%B0%E3%82%92%E8%A6%8B%E3%82%8B-%E3%82%92%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF-spa%E5%AF%BE%E5%BF%9C",
+    "code_url": "https://update.greasyfork.org/scripts/533218/TVer%20%E8%87%AA%E5%8B%95%E3%81%A7%E3%80%8C%E8%A9%B3%E7%B4%B0%E3%82%92%E8%A6%8B%E3%82%8B%E3%80%8D%E3%82%92%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%EF%BC%88SPA%E5%AF%BE%E5%BF%9C%EF%BC%89.user.js",
+    "code_size": 2515,
+    "license": null,
+    "version": "1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

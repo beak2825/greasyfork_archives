@@ -1,0 +1,33 @@
+{
+  "id": 518858,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-25T21:07:24.000Z",
+  "code_updated_at": "2024-12-15T21:57:51.000Z",
+  "namespace": "https://lauren1701.bsky.social",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1402435,
+      "name": "skyduct",
+      "created_at": "2024-11-25T21:02:42.000Z",
+      "url": "https://greasyfork.org/users/1402435-skyduct"
+    }
+  ],
+  "name": "Quickblock And Such (prev. BEPC)",
+  "description": "Adds quick buttons for weblink, mute, and block, directly on posts, always visible, not even hidden in the post dropdown menu. Also adds a link to clearsky from the three-dot menu on profiles. Tested and works on web as of dec 14, msg me on bsky (lauren1701.bsky.social) if it breaks",
+  "url": "https://greasyfork.org/scripts/518858-quickblock-and-such-prev-bepc",
+  "code_url": "https://update.greasyfork.org/scripts/518858/Quickblock%20And%20Such%20%28prev%20BEPC%29.user.js",
+  "code_size": 16389,
+  "license": "MIT License",
+  "version": "0.0.24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

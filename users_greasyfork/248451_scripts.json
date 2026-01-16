@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525974,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-05T10:14:46.000Z",
+    "code_updated_at": "2025-02-05T12:14:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 248451,
+        "name": "ll shi",
+        "created_at": "2019-02-19T05:32:45.000Z",
+        "url": "https://greasyfork.org/users/248451-ll-shi"
+      }
+    ],
+    "name": "NextChat Think Tag Folding",
+    "description": "折叠NextChat对话中转译后的<think>标签内容，增强版",
+    "url": "https://greasyfork.org/scripts/525974-nextchat-think-tag-folding",
+    "code_url": "https://update.greasyfork.org/scripts/525974/NextChat%20Think%20Tag%20Folding.user.js",
+    "code_size": 6535,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 497634,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-11T12:15:42.000Z",
+  "code_updated_at": "2024-06-11T12:40:43.000Z",
+  "namespace": "koencentratie",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1316207,
+      "name": "Sjoerd Pennings",
+      "created_at": "2024-06-11T12:13:12.000Z",
+      "url": "https://greasyfork.org/users/1316207-sjoerd-pennings",
+      "scripts": []
+    }
+  ],
+  "name": "Koencentratie",
+  "description": "Replaces all the occurrences of \"con\" with \"koen\". Forked from Cloud-to-Butt",
+  "url": "https://greasyfork.org/scripts/497634-koencentratie",
+  "code_url": "https://update.greasyfork.org/scripts/497634/Koencentratie.user.js",
+  "code_size": 991,
+  "license": null,
+  "version": "1.0.4",
+  "locale": "nl",
+  "deleted": false,
+  "visibility": "public"
+}

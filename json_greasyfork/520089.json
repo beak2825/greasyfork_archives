@@ -1,0 +1,59 @@
+{
+  "id": 520089,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-08T02:29:39.000Z",
+  "code_updated_at": "2024-12-08T02:50:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1408027,
+      "name": "Cain Volfir",
+      "created_at": "2024-12-08T02:21:11.000Z",
+      "url": "https://greasyfork.org/users/1408027-cain-volfir",
+      "scripts": [
+        {
+          "id": 520089,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-08T02:29:39.000Z",
+          "code_updated_at": "2024-12-08T02:50:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Universal Site Search for Arc Browser",
+          "description": "Enables site-specific searches with shortcuts for Arc Browser or others. Efficiently handles search queries for various websites.",
+          "url": "https://greasyfork.org/scripts/520089-universal-site-search-for-arc-browser",
+          "code_url": "https://update.greasyfork.org/scripts/520089/Universal%20Site%20Search%20for%20Arc%20Browser.user.js",
+          "code_size": 2160,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Universal Site Search for Arc Browser",
+  "description": "Enables site-specific searches with shortcuts for Arc Browser or others. Efficiently handles search queries for various websites.",
+  "url": "https://greasyfork.org/scripts/520089-universal-site-search-for-arc-browser",
+  "code_url": "https://update.greasyfork.org/scripts/520089/Universal%20Site%20Search%20for%20Arc%20Browser.user.js",
+  "code_size": 2160,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

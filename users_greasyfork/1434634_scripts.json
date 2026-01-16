@@ -1,0 +1,101 @@
+[
+  {
+    "id": 536455,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T04:36:24.000Z",
+    "code_updated_at": "2025-05-19T04:36:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434634,
+        "name": "JoaoWorkspace",
+        "created_at": "2025-02-13T11:38:42.000Z",
+        "url": "https://greasyfork.org/users/1434634-joaoworkspace"
+      }
+    ],
+    "name": "Keep MillenniumBCP Session Active",
+    "description": "A script that observes the pages via MutationObserver and quickly captures and activates the button to extend the session and not be signed off.",
+    "url": "https://greasyfork.org/scripts/536455-keep-millenniumbcp-session-active",
+    "code_url": "https://update.greasyfork.org/scripts/536455/Keep%20MillenniumBCP%20Session%20Active.user.js",
+    "code_size": 10606,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536452,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T03:44:14.000Z",
+    "code_updated_at": "2025-05-19T03:45:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434634,
+        "name": "JoaoWorkspace",
+        "created_at": "2025-02-13T11:38:42.000Z",
+        "url": "https://greasyfork.org/users/1434634-joaoworkspace"
+      }
+    ],
+    "name": "Auto-authenticate MillenniumBCP Company Account",
+    "description": "Given your UserCode, Password and NIF, authenticates you automatically once you land on the login page for MillenniumBCP (Company Version).",
+    "url": "https://greasyfork.org/scripts/536452-auto-authenticate-millenniumbcp-company-account",
+    "code_url": "https://update.greasyfork.org/scripts/536452/Auto-authenticate%20MillenniumBCP%20Company%20Account.user.js",
+    "code_size": 18749,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526790,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-13T14:11:03.000Z",
+    "code_updated_at": "2025-02-13T14:11:03.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434634,
+        "name": "JoaoWorkspace",
+        "created_at": "2025-02-13T11:38:42.000Z",
+        "url": "https://greasyfork.org/users/1434634-joaoworkspace"
+      }
+    ],
+    "name": "Azure Function Inspector with Dynamic Token",
+    "description": "Fetch Azure Functions dynamically with Bearer Token extracted from the Azure Portal and log token expiry.",
+    "url": "https://greasyfork.org/scripts/526790-azure-function-inspector-with-dynamic-token",
+    "code_url": "https://update.greasyfork.org/scripts/526790/Azure%20Function%20Inspector%20with%20Dynamic%20Token.user.js",
+    "code_size": 4984,
+    "license": "MIT License",
+    "version": "0.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

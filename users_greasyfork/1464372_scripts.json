@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534626,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-01T10:24:03.000Z",
+    "code_updated_at": "2025-08-13T13:42:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464372,
+        "name": "bedweb",
+        "created_at": "2025-05-01T10:06:32.000Z",
+        "url": "https://greasyfork.org/users/1464372-bedweb"
+      }
+    ],
+    "name": "Reddit Login Autofill helper",
+    "description": "Show proxy form only when Reddit's login dialog is visible",
+    "url": "https://greasyfork.org/scripts/534626-reddit-login-autofill-helper",
+    "code_url": "https://update.greasyfork.org/scripts/534626/Reddit%20Login%20Autofill%20helper.user.js",
+    "code_size": 5497,
+    "license": "GNU GPLv3",
+    "version": "2.4",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 506794,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-04T13:50:14.000Z",
+  "code_updated_at": "2024-09-04T13:50:13.000Z",
+  "namespace": "https://www.bestmafia.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1275827,
+      "name": "script234",
+      "created_at": "2024-03-17T16:48:36.000Z",
+      "url": "https://greasyfork.org/users/1275827-script234",
+      "scripts": []
+    }
+  ],
+  "name": "Жуки в актива раскрытого СВОИМИ таро (таро руками)",
+  "description": "Жуки",
+  "url": "https://greasyfork.org/scripts/506794-%D0%B6%D1%83%D0%BA%D0%B8-%D0%B2-%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%B0-%D1%80%D0%B0%D1%81%D0%BA%D1%80%D1%8B%D1%82%D0%BE%D0%B3%D0%BE-%D1%81%D0%B2%D0%BE%D0%B8%D0%BC%D0%B8-%D1%82%D0%B0%D1%80%D0%BE-%D1%82%D0%B0%D1%80%D0%BE-%D1%80%D1%83%D0%BA%D0%B0%D0%BC%D0%B8",
+  "code_url": "https://update.greasyfork.org/scripts/506794/%D0%96%D1%83%D0%BA%D0%B8%20%D0%B2%20%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%B0%20%D1%80%D0%B0%D1%81%D0%BA%D1%80%D1%8B%D1%82%D0%BE%D0%B3%D0%BE%20%D0%A1%D0%92%D0%9E%D0%98%D0%9C%D0%98%20%D1%82%D0%B0%D1%80%D0%BE%20%28%D1%82%D0%B0%D1%80%D0%BE%20%D1%80%D1%83%D0%BA%D0%B0%D0%BC%D0%B8%29.user.js",
+  "code_size": 1650,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

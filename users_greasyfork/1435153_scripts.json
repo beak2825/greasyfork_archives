@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526922,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-14T20:39:17.000Z",
+    "code_updated_at": "2025-02-14T20:48:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435153,
+        "name": "the seljuck And otoman edits",
+        "created_at": "2025-02-14T20:37:40.000Z",
+        "url": "https://greasyfork.org/users/1435153-the-seljuck-and-otoman-edits"
+      }
+    ],
+    "name": "Cookie Clicker Auto Everything",
+    "description": "Automates everything in Cookie Clicker at maximum speed",
+    "url": "https://greasyfork.org/scripts/526922-cookie-clicker-auto-everything",
+    "code_url": "https://update.greasyfork.org/scripts/526922/Cookie%20Clicker%20Auto%20Everything.user.js",
+    "code_size": 1460,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

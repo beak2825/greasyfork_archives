@@ -1,0 +1,33 @@
+{
+  "id": 541560,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-03T19:21:55.000Z",
+  "code_updated_at": "2025-07-20T21:23:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1281734,
+      "name": "CL_CL",
+      "created_at": "2024-03-30T18:47:10.000Z",
+      "url": "https://greasyfork.org/users/1281734-cl-cl"
+    }
+  ],
+  "name": "Twitter/X Bot and Flag Post Hider",
+  "description": "Hides posts from suspected bot accounts, users with specific flags, or users with certain keywords in their name. Hover the counter to see who's hidden.",
+  "url": "https://greasyfork.org/scripts/541560-twitter-x-bot-and-flag-post-hider",
+  "code_url": "https://update.greasyfork.org/scripts/541560/TwitterX%20Bot%20and%20Flag%20Post%20Hider.user.js",
+  "code_size": 6609,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

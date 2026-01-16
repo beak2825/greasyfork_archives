@@ -1,0 +1,33 @@
+{
+  "id": 535136,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-06T14:36:26.000Z",
+  "code_updated_at": "2025-05-06T15:02:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 31723,
+      "name": "ChrisHvide",
+      "created_at": "2016-02-25T19:49:11.000Z",
+      "url": "https://greasyfork.org/users/31723-chrishvide"
+    }
+  ],
+  "name": "Navigation for YouTube Shorts",
+  "description": "Navigate YouTube Shorts using your device's next/prev media keys (including headset).",
+  "url": "https://greasyfork.org/scripts/535136-navigation-for-youtube-shorts",
+  "code_url": "https://update.greasyfork.org/scripts/535136/Navigation%20for%20YouTube%20Shorts.user.js",
+  "code_size": 2028,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

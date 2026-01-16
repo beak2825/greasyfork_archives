@@ -1,0 +1,33 @@
+{
+  "id": 533030,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-16T13:31:05.000Z",
+  "code_updated_at": "2025-04-19T06:01:00.000Z",
+  "namespace": "https://greasyfork.org/users/1458606",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458606,
+      "name": "saarmaat",
+      "created_at": "2025-04-16T13:26:21.000Z",
+      "url": "https://greasyfork.org/users/1458606-saarmaat"
+    }
+  ],
+  "name": "Mastodon View in Home Instance",
+  "description": "Show a Mastodon-style banner to view profiles on your own instance (avoids broken post links)",
+  "url": "https://greasyfork.org/scripts/533030-mastodon-view-in-home-instance",
+  "code_url": "https://update.greasyfork.org/scripts/533030/Mastodon%20View%20in%20Home%20Instance.user.js",
+  "code_size": 2415,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

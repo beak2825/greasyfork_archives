@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521148,
+    "daily_installs": 1,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-18T20:11:40.000Z",
+    "code_updated_at": "2024-12-18T20:11:40.000Z",
+    "namespace": "https://greasyfork.org/users/994690",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994690,
+        "name": "Dethkiller15",
+        "created_at": "2022-12-08T19:42:54.000Z",
+        "url": "https://greasyfork.org/users/994690-dethkiller15"
+      }
+    ],
+    "name": "Myrient Collect Links with Filters",
+    "description": "Collect, filter links, and then copy to your clipboard with a single button click. filters for links containing \"(USA)\" and excludes \"(demo)\" and \"(kiosk)\". Is fairly easy to modify.",
+    "url": "https://greasyfork.org/scripts/521148-myrient-collect-links-with-filters",
+    "code_url": "https://update.greasyfork.org/scripts/521148/Myrient%20Collect%20Links%20with%20Filters.user.js",
+    "code_size": 2298,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

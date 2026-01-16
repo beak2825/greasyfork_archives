@@ -1,0 +1,101 @@
+[
+  {
+    "id": 529765,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-14T02:25:27.000Z",
+    "code_updated_at": "2025-03-19T14:43:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291237,
+        "name": "琪露诺Cirno",
+        "created_at": "2024-04-21T08:56:11.000Z",
+        "url": "https://greasyfork.org/users/1291237-%E7%90%AA%E9%9C%B2%E8%AF%BAcirno"
+      }
+    ],
+    "name": "Keylol Table Sort",
+    "description": "对keylol琪露诺折扣贴表格按价格或折扣排序",
+    "url": "https://greasyfork.org/scripts/529765-keylol-table-sort",
+    "code_url": "https://update.greasyfork.org/scripts/529765/Keylol%20Table%20Sort.user.js",
+    "code_size": 7081,
+    "license": null,
+    "version": "0.33",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500884,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-17T00:27:25.000Z",
+    "code_updated_at": "2024-07-17T00:27:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291237,
+        "name": "琪露诺Cirno",
+        "created_at": "2024-04-21T08:56:11.000Z",
+        "url": "https://greasyfork.org/users/1291237-%E7%90%AA%E9%9C%B2%E8%AF%BAcirno"
+      }
+    ],
+    "name": "Edge搜索结果文本复制并防止导航",
+    "description": "允许复制Edge搜索结果中的预览文本而不跳转页面，并保持正常的光标样式。",
+    "url": "https://greasyfork.org/scripts/500884-edge%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%96%87%E6%9C%AC%E5%A4%8D%E5%88%B6%E5%B9%B6%E9%98%B2%E6%AD%A2%E5%AF%BC%E8%88%AA",
+    "code_url": "https://update.greasyfork.org/scripts/500884/Edge%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%96%87%E6%9C%AC%E5%A4%8D%E5%88%B6%E5%B9%B6%E9%98%B2%E6%AD%A2%E5%AF%BC%E8%88%AA.user.js",
+    "code_size": 1746,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499805,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T23:31:53.000Z",
+    "code_updated_at": "2024-07-05T23:31:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291237,
+        "name": "琪露诺Cirno",
+        "created_at": "2024-04-21T08:56:11.000Z",
+        "url": "https://greasyfork.org/users/1291237-%E7%90%AA%E9%9C%B2%E8%AF%BAcirno"
+      }
+    ],
+    "name": "Steam Link Language Checker",
+    "description": "Check if Steam game supports Chinese and mark the link with 🀄 if it does",
+    "url": "https://greasyfork.org/scripts/499805-steam-link-language-checker",
+    "code_url": "https://update.greasyfork.org/scripts/499805/Steam%20Link%20Language%20Checker.user.js",
+    "code_size": 3254,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

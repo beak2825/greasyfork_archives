@@ -1,0 +1,33 @@
+{
+  "id": 523260,
+  "daily_installs": 0,
+  "total_installs": 61,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T02:49:10.000Z",
+  "code_updated_at": "2025-01-09T03:09:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 108099,
+      "name": "pongfcnkl",
+      "created_at": "2017-03-08T09:43:55.000Z",
+      "url": "https://greasyfork.org/users/108099-pongfcnkl"
+    }
+  ],
+  "name": "Modify Limit Rate Script",
+  "description": "Modify limit_rate directly from the fetched data",
+  "url": "https://greasyfork.org/scripts/523260-modify-limit-rate-script",
+  "code_url": "https://update.greasyfork.org/scripts/523260/Modify%20Limit%20Rate%20Script.user.js",
+  "code_size": 4345,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

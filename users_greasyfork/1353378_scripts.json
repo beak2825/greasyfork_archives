@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503965,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-17T13:02:20.000Z",
+    "code_updated_at": "2024-08-17T13:07:55.000Z",
+    "namespace": "https://forum-zloyadmin.ru",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353378,
+        "name": "Roman Makendi",
+        "created_at": "2024-08-17T12:23:56.000Z",
+        "url": "https://greasyfork.org/users/1353378-roman-makendi"
+      }
+    ],
+    "name": "Zloy admin",
+    "description": "staff admins",
+    "url": "https://greasyfork.org/scripts/503965-zloy-admin",
+    "code_url": "https://update.greasyfork.org/scripts/503965/Zloy%20admin.user.js",
+    "code_size": 120221,
+    "license": "MIT License",
+    "version": "7.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

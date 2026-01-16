@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549169,
+    "daily_installs": 2,
+    "total_installs": 159,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T17:19:23.000Z",
+    "code_updated_at": "2025-09-11T17:19:23.000Z",
+    "namespace": "https://greasyfork.org/users/1514019",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514019,
+        "name": "tyroxcc",
+        "created_at": "2025-09-11T17:16:16.000Z",
+        "url": "https://greasyfork.org/users/1514019-tyroxcc"
+      }
+    ],
+    "name": "view cached snaps",
+    "description": "fuck you snapchat privacy!",
+    "url": "https://greasyfork.org/scripts/549169-view-cached-snaps",
+    "code_url": "https://update.greasyfork.org/scripts/549169/view%20cached%20snaps.user.js",
+    "code_size": 2895,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -30,6 +30,237 @@
     "version": "2026.01.06.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542956,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T01:22:21.000Z",
+    "code_updated_at": "2025-07-19T01:22:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "hits_rewards",
+    "description": "hitsquadgodfather custom rewards",
+    "url": "https://greasyfork.org/scripts/542956-hits-rewards",
+    "code_url": "https://update.greasyfork.org/scripts/542956/hits_rewards.user.js",
+    "code_size": 2757,
+    "license": "MIT License",
+    "version": "2025.05.30.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540018,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T13:06:40.000Z",
+    "code_updated_at": "2025-06-19T13:06:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "hits_rewards",
+    "description": "hitsquadgodfather custom rewards",
+    "url": "https://greasyfork.org/scripts/540018-hits-rewards",
+    "code_url": "https://update.greasyfork.org/scripts/540018/hits_rewards.user.js",
+    "code_size": 2785,
+    "license": "MIT License",
+    "version": "2025.05.30.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509284,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T00:39:35.000Z",
+    "code_updated_at": "2024-09-20T00:39:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "pubg_key_list",
+    "description": "pubg key list",
+    "url": "https://greasyfork.org/scripts/509284-pubg-key-list",
+    "code_url": "https://update.greasyfork.org/scripts/509284/pubg_key_list.user.js",
+    "code_size": 2676,
+    "license": "MIT License",
+    "version": "2024.09.19.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509283,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T00:38:59.000Z",
+    "code_updated_at": "2025-07-30T01:29:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "steam_redeam_keys",
+    "description": "steam batch  redeam keys",
+    "url": "https://greasyfork.org/scripts/509283-steam-redeam-keys",
+    "code_url": "https://update.greasyfork.org/scripts/509283/steam_redeam_keys.user.js",
+    "code_size": 5939,
+    "license": "MIT License",
+    "version": "2025.07.30.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508358,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-14T01:10:30.000Z",
+    "code_updated_at": "2024-09-14T09:04:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "buff_parse",
+    "description": "buff parser",
+    "url": "https://greasyfork.org/scripts/508358-buff-parse",
+    "code_url": "https://update.greasyfork.org/scripts/508358/buff_parse.user.js",
+    "code_size": 14959,
+    "license": "MIT License",
+    "version": "2024.09.14.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 507876,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-11T00:48:17.000Z",
+    "code_updated_at": "2025-12-05T08:14:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "steam_market_calc_fee",
+    "description": "calc fee for steam market",
+    "url": "https://greasyfork.org/scripts/507876-steam-market-calc-fee",
+    "code_url": "https://update.greasyfork.org/scripts/507876/steam_market_calc_fee.user.js",
+    "code_size": 4558,
+    "license": "MIT License",
+    "version": "2025.11.28.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503060,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-09T07:57:31.000Z",
+    "code_updated_at": "2025-08-04T11:56:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 906534,
+        "name": "rusania",
+        "created_at": "2022-04-25T01:13:31.000Z",
+        "url": "https://greasyfork.org/users/906534-rusania"
+      }
+    ],
+    "name": "hb_tax_info",
+    "description": "hb tax info",
+    "url": "https://greasyfork.org/scripts/503060-hb-tax-info",
+    "code_url": "https://update.greasyfork.org/scripts/503060/hb_tax_info.user.js",
+    "code_size": 1267,
+    "license": "MIT License",
+    "version": "2025.08.04.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

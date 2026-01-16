@@ -1,0 +1,33 @@
+{
+  "id": 542158,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-10T03:23:13.000Z",
+  "code_updated_at": "2025-11-06T08:11:19.000Z",
+  "namespace": "https://greasyfork.org/users/1111205-geekfox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1111205,
+      "name": "狐极客",
+      "created_at": "2023-06-24T18:07:28.000Z",
+      "url": "https://greasyfork.org/users/1111205-%E7%8B%90%E6%9E%81%E5%AE%A2"
+    }
+  ],
+  "name": "Site Blocker, more focused 屏蔽特定网站让你更专注",
+  "description": "屏蔽分心网站并支持手动管理屏蔽列表，显示全屏提醒以保持专注",
+  "url": "https://greasyfork.org/scripts/542158-site-blocker-more-focused-%E5%B1%8F%E8%94%BD%E7%89%B9%E5%AE%9A%E7%BD%91%E7%AB%99%E8%AE%A9%E4%BD%A0%E6%9B%B4%E4%B8%93%E6%B3%A8",
+  "code_url": "https://update.greasyfork.org/scripts/542158/Site%20Blocker%2C%20more%20focused%20%E5%B1%8F%E8%94%BD%E7%89%B9%E5%AE%9A%E7%BD%91%E7%AB%99%E8%AE%A9%E4%BD%A0%E6%9B%B4%E4%B8%93%E6%B3%A8.user.js",
+  "code_size": 10091,
+  "license": "MIT License",
+  "version": "3.7  // 更新版本号",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

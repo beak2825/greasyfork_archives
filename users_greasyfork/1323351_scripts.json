@@ -1,0 +1,68 @@
+[
+  {
+    "id": 502110,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T19:42:15.000Z",
+    "code_updated_at": "2024-12-24T18:04:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1323351,
+        "name": "Lodha Thut",
+        "created_at": "2024-06-24T17:53:48.000Z",
+        "url": "https://greasyfork.org/users/1323351-lodha-thut"
+      }
+    ],
+    "name": "Gota Team INV spam script",
+    "description": "Spam team invites to players",
+    "url": "https://greasyfork.org/scripts/502110-gota-team-inv-spam-script",
+    "code_url": "https://update.greasyfork.org/scripts/502110/Gota%20Team%20INV%20spam%20script.user.js",
+    "code_size": 3009,
+    "license": null,
+    "version": "2024/12/25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498787,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-24T18:02:56.000Z",
+    "code_updated_at": "2024-06-24T18:02:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1323351,
+        "name": "Lodha Thut",
+        "created_at": "2024-06-24T17:53:48.000Z",
+        "url": "https://greasyfork.org/users/1323351-lodha-thut"
+      }
+    ],
+    "name": "Gota INV script",
+    "description": "Script to send team invite to players by a single click. Just click on any profile on the chat window to send the invite.",
+    "url": "https://greasyfork.org/scripts/498787-gota-inv-script",
+    "code_url": "https://update.greasyfork.org/scripts/498787/Gota%20INV%20script.user.js",
+    "code_size": 1214,
+    "license": "MIT License",
+    "version": "2024-06-24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

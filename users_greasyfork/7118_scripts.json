@@ -1,0 +1,35 @@
+[
+  {
+    "id": 504575,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-22T02:22:59.000Z",
+    "code_updated_at": "2024-08-22T02:22:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 7118,
+        "name": "ShiftWang",
+        "created_at": "2014-11-24T17:47:19.000Z",
+        "url": "https://greasyfork.org/users/7118-shiftwang"
+      }
+    ],
+    "name": "Wise强制开放HKD付款",
+    "description": "在返回的 <script id=\"__NEXT_DATA__\" type=\"application/json\"></script> 标签中的 props.pageProps.payInCurrencies 数组开头添加 \"HKD\"。",
+    "url": "https://greasyfork.org/scripts/504575-wise%E5%BC%BA%E5%88%B6%E5%BC%80%E6%94%BEhkd%E4%BB%98%E6%AC%BE",
+    "code_url": "https://update.greasyfork.org/scripts/504575/Wise%E5%BC%BA%E5%88%B6%E5%BC%80%E6%94%BEHKD%E4%BB%98%E6%AC%BE.user.js",
+    "code_size": 2428,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

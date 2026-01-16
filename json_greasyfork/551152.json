@@ -1,0 +1,34 @@
+{
+  "id": 551152,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-30T14:15:06.000Z",
+  "code_updated_at": "2025-09-30T14:34:54.000Z",
+  "namespace": "http://your-test-domain.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521048,
+      "name": "Ya Bb",
+      "created_at": "2025-09-30T14:12:16.000Z",
+      "url": "https://greasyfork.org/users/1521048-ya-bb",
+      "scripts": []
+    }
+  ],
+  "name": "TestPortal Bypass Tester (Adapted Extension)",
+  "description": "Adapted from anti-testportal extension: Spoofs focus, timer, search for anti-bypass testing on TestPortal staging",
+  "url": "https://greasyfork.org/scripts/551152-testportal-bypass-tester-adapted-extension",
+  "code_url": "https://update.greasyfork.org/scripts/551152/TestPortal%20Bypass%20Tester%20%28Adapted%20Extension%29.user.js",
+  "code_size": 3875,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

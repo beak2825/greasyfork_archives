@@ -31,5 +31,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 541895,
+    "daily_installs": 0,
+    "total_installs": 120,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-07T08:23:35.000Z",
+    "code_updated_at": "2025-07-07T08:23:34.000Z",
+    "namespace": "https://github.com/mefengl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787335,
+        "name": "little-huang",
+        "created_at": "2021-06-25T14:33:19.000Z",
+        "url": "https://greasyfork.org/users/787335-little-huang"
+      }
+    ],
+    "name": "Google AI Studio 汉化脚本",
+    "description": "对 Google AI Studio 网站界面进行汉化，方便中文用户使用。",
+    "url": "https://greasyfork.org/scripts/541895-google-ai-studio-%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/541895/Google%20AI%20Studio%20%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 8881,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530251,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-19T06:26:20.000Z",
+    "code_updated_at": "2025-11-11T09:00:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787335,
+        "name": "little-huang",
+        "created_at": "2021-06-25T14:33:19.000Z",
+        "url": "https://greasyfork.org/users/787335-little-huang"
+      }
+    ],
+    "name": "publink-x-beautify",
+    "description": "x 样式美化",
+    "url": "https://greasyfork.org/scripts/530251-publink-x-beautify",
+    "code_url": "https://update.greasyfork.org/scripts/530251/publink-x-beautify.user.js",
+    "code_size": 622,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518280,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-21T01:38:26.000Z",
+    "code_updated_at": "2024-11-21T01:38:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787335,
+        "name": "little-huang",
+        "created_at": "2021-06-25T14:33:19.000Z",
+        "url": "https://greasyfork.org/users/787335-little-huang"
+      }
+    ],
+    "name": "publink-deepl-beautify",
+    "description": "deepl 样式美化",
+    "url": "https://greasyfork.org/scripts/518280-publink-deepl-beautify",
+    "code_url": "https://update.greasyfork.org/scripts/518280/publink-deepl-beautify.user.js",
+    "code_size": 670,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 514402,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-28T01:32:33.000Z",
+    "code_updated_at": "2024-10-28T01:34:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787335,
+        "name": "little-huang",
+        "created_at": "2021-06-25T14:33:19.000Z",
+        "url": "https://greasyfork.org/users/787335-little-huang"
+      }
+    ],
+    "name": "publink-webpage-test-beautify",
+    "description": "webpage test 样式美化",
+    "url": "https://greasyfork.org/scripts/514402-publink-webpage-test-beautify",
+    "code_url": "https://update.greasyfork.org/scripts/514402/publink-webpage-test-beautify.user.js",
+    "code_size": 645,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507879,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-11T01:12:14.000Z",
+    "code_updated_at": "2024-09-11T01:13:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787335,
+        "name": "little-huang",
+        "created_at": "2021-06-25T14:33:19.000Z",
+        "url": "https://greasyfork.org/users/787335-little-huang"
+      }
+    ],
+    "name": "publink-arxiv-light",
+    "description": "light arxiv",
+    "url": "https://greasyfork.org/scripts/507879-publink-arxiv-light",
+    "code_url": "https://update.greasyfork.org/scripts/507879/publink-arxiv-light.user.js",
+    "code_size": 1157,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499462,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-02T06:16:55.000Z",
+    "code_updated_at": "2025-11-06T05:22:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 787335,
+        "name": "little-huang",
+        "created_at": "2021-06-25T14:33:19.000Z",
+        "url": "https://greasyfork.org/users/787335-little-huang"
+      }
+    ],
+    "name": "publink-remove-dingtalk-boss-image",
+    "description": "remove dingtalk boss image",
+    "url": "https://greasyfork.org/scripts/499462-publink-remove-dingtalk-boss-image",
+    "code_url": "https://update.greasyfork.org/scripts/499462/publink-remove-dingtalk-boss-image.user.js",
+    "code_size": 1100,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

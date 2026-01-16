@@ -1,0 +1,167 @@
+[
+  {
+    "id": 504086,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-18T08:37:20.000Z",
+    "code_updated_at": "2024-08-21T19:09:58.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338374,
+        "name": "Bebragincik",
+        "created_at": "2024-07-22T20:14:08.000Z",
+        "url": "https://greasyfork.org/users/1338374-bebragincik"
+      }
+    ],
+    "name": "EKB*",
+    "description": "Для люпими EKB 31",
+    "url": "https://greasyfork.org/scripts/504086-ekb",
+    "code_url": "https://update.greasyfork.org/scripts/504086/EKB%2A.user.js",
+    "code_size": 88443,
+    "license": "MIT License",
+    "version": "1.11",
+    "locale": "eu",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503669,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-14T18:49:48.000Z",
+    "code_updated_at": "2024-08-14T20:44:27.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338374,
+        "name": "Bebragincik",
+        "created_at": "2024-07-22T20:14:08.000Z",
+        "url": "https://greasyfork.org/users/1338374-bebragincik"
+      }
+    ],
+    "name": "Grozny",
+    "description": "Для люпими Grozny",
+    "url": "https://greasyfork.org/scripts/503669-grozny",
+    "code_url": "https://update.greasyfork.org/scripts/503669/Grozny.user.js",
+    "code_size": 63654,
+    "license": "MIT License",
+    "version": "1.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503659,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-14T16:31:14.000Z",
+    "code_updated_at": "2024-08-14T20:45:41.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338374,
+        "name": "Bebragincik",
+        "created_at": "2024-07-22T20:14:08.000Z",
+        "url": "https://greasyfork.org/users/1338374-bebragincik"
+      }
+    ],
+    "name": "Novosibirsk",
+    "description": "Для люпими Novosibirsk",
+    "url": "https://greasyfork.org/scripts/503659-novosibirsk",
+    "code_url": "https://update.greasyfork.org/scripts/503659/Novosibirsk.user.js",
+    "code_size": 63656,
+    "license": "MIT License",
+    "version": "1.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503657,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-14T16:21:18.000Z",
+    "code_updated_at": "2024-08-14T21:20:40.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338374,
+        "name": "Bebragincik",
+        "created_at": "2024-07-22T20:14:08.000Z",
+        "url": "https://greasyfork.org/users/1338374-bebragincik"
+      }
+    ],
+    "name": "Krasnodar",
+    "description": "Для люпими Krasnodar",
+    "url": "https://greasyfork.org/scripts/503657-krasnodar",
+    "code_url": "https://update.greasyfork.org/scripts/503657/Krasnodar.user.js",
+    "code_size": 63711,
+    "license": "MIT License",
+    "version": "1.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503189,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T11:40:26.000Z",
+    "code_updated_at": "2024-08-10T12:01:24.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338374,
+        "name": "Bebragincik",
+        "created_at": "2024-07-22T20:14:08.000Z",
+        "url": "https://greasyfork.org/users/1338374-bebragincik"
+      }
+    ],
+    "name": "Кураторы EKB",
+    "description": "Для модерирования и работы на форуме",
+    "url": "https://greasyfork.org/scripts/503189-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-ekb",
+    "code_url": "https://update.greasyfork.org/scripts/503189/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20EKB.user.js",
+    "code_size": 27511,
+    "license": "MIT License",
+    "version": "1.9.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

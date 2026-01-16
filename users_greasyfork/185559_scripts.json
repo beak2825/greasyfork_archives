@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527673,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-21T17:17:31.000Z",
+    "code_updated_at": "2025-02-21T17:17:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 185559,
+        "name": "aidalei",
+        "created_at": "2018-05-13T06:11:46.000Z",
+        "url": "https://greasyfork.org/users/185559-aidalei"
+      }
+    ],
+    "name": "Wikipedia Open Specific Links in New Window (Including Homepage)",
+    "description": "在维基百科中点击特定蓝色链接时自动弹出新窗口，排除图片和媒体文件链接，并确保在首页也生效。",
+    "url": "https://greasyfork.org/scripts/527673-wikipedia-open-specific-links-in-new-window-including-homepage",
+    "code_url": "https://update.greasyfork.org/scripts/527673/Wikipedia%20Open%20Specific%20Links%20in%20New%20Window%20%28Including%20Homepage%29.user.js",
+    "code_size": 1102,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

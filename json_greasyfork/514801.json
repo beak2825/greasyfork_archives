@@ -1,0 +1,34 @@
+{
+  "id": 514801,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-30T06:45:14.000Z",
+  "code_updated_at": "2024-10-30T06:45:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1388448,
+      "name": "yilee",
+      "created_at": "2024-10-30T06:07:25.000Z",
+      "url": "https://greasyfork.org/users/1388448-yilee",
+      "scripts": []
+    }
+  ],
+  "name": "iframe最大化",
+  "description": "将当前页面中的iframe最大化，并可以回退到原始页面。",
+  "url": "https://greasyfork.org/scripts/514801-iframe%E6%9C%80%E5%A4%A7%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/514801/iframe%E6%9C%80%E5%A4%A7%E5%8C%96.user.js",
+  "code_size": 2367,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

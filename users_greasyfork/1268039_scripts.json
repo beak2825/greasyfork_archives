@@ -1,0 +1,134 @@
+[
+  {
+    "id": 517280,
+    "daily_installs": 0,
+    "total_installs": 252,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-14T07:23:41.000Z",
+    "code_updated_at": "2025-01-01T11:03:31.000Z",
+    "namespace": "https://greasyfork.org/users/1268039",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268039,
+        "name": "Yi (光与刹那间)",
+        "created_at": "2024-02-28T12:49:24.000Z",
+        "url": "https://greasyfork.org/users/1268039-yi-%E5%85%89%E4%B8%8E%E5%88%B9%E9%82%A3%E9%97%B4"
+      }
+    ],
+    "name": "小雅答答答",
+    "description": "小雅平台学习助手 📖，智能整理归纳学习资料 📚，辅助完成练习 💪，并提供便捷的查阅和修改功能 📝！",
+    "url": "https://greasyfork.org/scripts/517280-%E5%B0%8F%E9%9B%85%E7%AD%94%E7%AD%94%E7%AD%94",
+    "code_url": "https://update.greasyfork.org/scripts/517280/%E5%B0%8F%E9%9B%85%E7%AD%94%E7%AD%94%E7%AD%94.user.js",
+    "code_size": 208759,
+    "license": "MIT License",
+    "version": "1.32",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 516837,
+    "daily_installs": 0,
+    "total_installs": 216,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-11T10:35:20.000Z",
+    "code_updated_at": "2025-01-01T16:32:12.000Z",
+    "namespace": "https://greasyfork.org/users/1268039",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268039,
+        "name": "Yi (光与刹那间)",
+        "created_at": "2024-02-28T12:49:24.000Z",
+        "url": "https://greasyfork.org/users/1268039-yi-%E5%85%89%E4%B8%8E%E5%88%B9%E9%82%A3%E9%97%B4"
+      }
+    ],
+    "name": "小雅做做做",
+    "description": "🚀 一键管理小雅平台任务，智能跟踪作业进度！✨ 支持自主学习任务的便捷提交，直观展示任务状态，帮你更高效完成学习目标！ 📈",
+    "url": "https://greasyfork.org/scripts/516837-%E5%B0%8F%E9%9B%85%E5%81%9A%E5%81%9A%E5%81%9A",
+    "code_url": "https://update.greasyfork.org/scripts/516837/%E5%B0%8F%E9%9B%85%E5%81%9A%E5%81%9A%E5%81%9A.user.js",
+    "code_size": 157804,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515732,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-04T08:03:38.000Z",
+    "code_updated_at": "2024-11-04T08:03:37.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268039,
+        "name": "Yi (光与刹那间)",
+        "created_at": "2024-02-28T12:49:24.000Z",
+        "url": "https://greasyfork.org/users/1268039-yi-%E5%85%89%E4%B8%8E%E5%88%B9%E9%82%A3%E9%97%B4"
+      }
+    ],
+    "name": "av-min",
+    "description": "Leancloud依赖",
+    "url": "https://greasyfork.org/scripts/515732-av-min",
+    "code_url": "https://update.greasyfork.org/scripts/515732/1477483/av-min.js",
+    "code_size": 523186,
+    "license": null,
+    "version": "0.0.1.20241104080337",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512465,
+    "daily_installs": 0,
+    "total_installs": 99,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T14:32:27.000Z",
+    "code_updated_at": "2024-10-18T17:02:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://zygame1314.github.io/LGXT-Assistant/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268039,
+        "name": "Yi (光与刹那间)",
+        "created_at": "2024-02-28T12:49:24.000Z",
+        "url": "https://greasyfork.org/users/1268039-yi-%E5%85%89%E4%B8%8E%E5%88%B9%E9%82%A3%E9%97%B4"
+      }
+    ],
+    "name": "理工学堂助手",
+    "description": "自动化理工学堂，让学习更轻松！✨自动提交作业、导出题目和跟踪进度，一站式搞定所有任务，提高效率，让你专注学习🚀",
+    "url": "https://greasyfork.org/scripts/512465-%E7%90%86%E5%B7%A5%E5%AD%A6%E5%A0%82%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/512465/%E7%90%86%E5%B7%A5%E5%AD%A6%E5%A0%82%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 55659,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

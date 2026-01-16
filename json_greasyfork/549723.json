@@ -1,0 +1,33 @@
+{
+  "id": 549723,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-16T10:44:59.000Z",
+  "code_updated_at": "2026-01-04T00:36:53.000Z",
+  "namespace": "https://gitlab.com/breatfr",
+  "support_url": "https://discord.gg/Q8KSHzdBxs",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257494,
+      "name": "BreatFR",
+      "created_at": "2024-02-05T00:40:38.000Z",
+      "url": "https://greasyfork.org/users/1257494-breatfr"
+    }
+  ],
+  "name": "Amazon responsive + customizations",
+  "description": "Amazon websites are more suitable for wide screens.",
+  "url": "https://greasyfork.org/scripts/549723-amazon-responsive-customizations",
+  "code_url": "https://update.greasyfork.org/scripts/549723/Amazon%20responsive%20%2B%20customizations.user.css",
+  "code_size": 6571,
+  "license": "AGPL-3.0-or-later; https://www.gnu.org/licenses/agpl-3.0.txt",
+  "version": "1.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

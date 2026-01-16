@@ -1,0 +1,34 @@
+{
+  "id": 528528,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-02T12:16:15.000Z",
+  "code_updated_at": "2025-03-03T13:01:21.000Z",
+  "namespace": "ID検索簡易化",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441209,
+      "name": "ONJ",
+      "created_at": "2025-03-01T08:10:42.000Z",
+      "url": "https://greasyfork.org/users/1441209-onj",
+      "scripts": []
+    }
+  ],
+  "name": "ID検索簡易化",
+  "description": "おんjでID検索の簡易化。",
+  "url": "https://greasyfork.org/scripts/528528-id%E6%A4%9C%E7%B4%A2%E7%B0%A1%E6%98%93%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/528528/ID%E6%A4%9C%E7%B4%A2%E7%B0%A1%E6%98%93%E5%8C%96.user.js",
+  "code_size": 1892,
+  "license": null,
+  "version": "2.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

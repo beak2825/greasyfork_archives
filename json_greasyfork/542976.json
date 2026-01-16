@@ -1,0 +1,34 @@
+{
+  "id": 542976,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-19T04:35:54.000Z",
+  "code_updated_at": "2025-07-19T04:35:54.000Z",
+  "namespace": "N/A",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1449385,
+      "name": "FlyingSquirrely",
+      "created_at": "2025-03-23T16:59:21.000Z",
+      "url": "https://greasyfork.org/users/1449385-flyingsquirrely",
+      "scripts": []
+    }
+  ],
+  "name": "AO3: [Wrangling] To the bins!",
+  "description": "Add links at the top of tag landing pages to the associated tag's bin(s).",
+  "url": "https://greasyfork.org/scripts/542976-ao3-wrangling-to-the-bins",
+  "code_url": "https://update.greasyfork.org/scripts/542976/AO3%3A%20%5BWrangling%5D%20To%20the%20bins%21.user.js",
+  "code_size": 1113,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

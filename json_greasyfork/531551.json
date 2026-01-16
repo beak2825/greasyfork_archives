@@ -1,0 +1,33 @@
+{
+  "id": 531551,
+  "daily_installs": 1,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-02T03:55:29.000Z",
+  "code_updated_at": "2025-04-02T03:55:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453032,
+      "name": "Anonymous1234124312",
+      "created_at": "2025-04-02T03:53:13.000Z",
+      "url": "https://greasyfork.org/users/1453032-anonymous1234124312"
+    }
+  ],
+  "name": "ElPais Register Remover",
+  "description": "Script para quitar el modal molesto de que necesitas registrarte para ver el artículo",
+  "url": "https://greasyfork.org/scripts/531551-elpais-register-remover",
+  "code_url": "https://update.greasyfork.org/scripts/531551/ElPais%20Register%20Remover.user.js",
+  "code_size": 1050,
+  "license": "MIT License",
+  "version": "2025-04-02",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

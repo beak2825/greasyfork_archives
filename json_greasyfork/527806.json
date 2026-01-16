@@ -1,0 +1,59 @@
+{
+  "id": 527806,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-23T05:45:56.000Z",
+  "code_updated_at": "2025-02-23T06:39:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 730674,
+      "name": "Anonymous11",
+      "created_at": "2021-01-24T04:14:42.000Z",
+      "url": "https://greasyfork.org/users/730674-anonymous11",
+      "scripts": [
+        {
+          "id": 529182,
+          "daily_installs": 0,
+          "total_installs": 61,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-08T09:36:27.000Z",
+          "code_updated_at": "2025-03-08T09:36:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Openrec チャット欄透明化 (全画面時のみ)",
+          "description": "Openrec の全画面表示時にのみチャットを透明（見えなく）するユーザースクリプトです。",
+          "url": "https://greasyfork.org/scripts/529182-openrec-%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%E6%AC%84%E9%80%8F%E6%98%8E%E5%8C%96-%E5%85%A8%E7%94%BB%E9%9D%A2%E6%99%82%E3%81%AE%E3%81%BF",
+          "code_url": "https://update.greasyfork.org/scripts/529182/Openrec%20%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%E6%AC%84%E9%80%8F%E6%98%8E%E5%8C%96%20%28%E5%85%A8%E7%94%BB%E9%9D%A2%E6%99%82%E3%81%AE%E3%81%BF%29.user.js",
+          "code_size": 1584,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Battlefy フォント変更",
+  "description": "Battlefy表示サイズを最適化",
+  "url": "https://greasyfork.org/scripts/527806-battlefy-%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E5%A4%89%E6%9B%B4",
+  "code_url": "https://update.greasyfork.org/scripts/527806/Battlefy%20%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88%E5%A4%89%E6%9B%B4.user.js",
+  "code_size": 1347,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

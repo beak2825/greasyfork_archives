@@ -1,0 +1,59 @@
+{
+  "id": 497821,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-13T16:41:02.000Z",
+  "code_updated_at": "2024-06-14T07:26:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1317388,
+      "name": "Narsouu",
+      "created_at": "2024-06-13T16:36:02.000Z",
+      "url": "https://greasyfork.org/users/1317388-narsouu",
+      "scripts": [
+        {
+          "id": 497821,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-13T16:41:02.000Z",
+          "code_updated_at": "2024-06-14T07:26:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cacher les Tweets basés sur des mots-clés et des drapeaux",
+          "description": "Cache automatiquement les tweets des utilisateurs basés sur des mots-clés spécifiques et des drapeaux dans leur nom d'utilisateur sur x.com (anciennement Twitter)",
+          "url": "https://greasyfork.org/scripts/497821-cacher-les-tweets-bas%C3%A9s-sur-des-mots-cl%C3%A9s-et-des-drapeaux",
+          "code_url": "https://update.greasyfork.org/scripts/497821/Cacher%20les%20Tweets%20bas%C3%A9s%20sur%20des%20mots-cl%C3%A9s%20et%20des%20drapeaux.user.js",
+          "code_size": 1754,
+          "license": "MIT License",
+          "version": "0.5",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cacher les Tweets basés sur des mots-clés et des drapeaux",
+  "description": "Cache automatiquement les tweets des utilisateurs basés sur des mots-clés spécifiques et des drapeaux dans leur nom d'utilisateur sur x.com (anciennement Twitter)",
+  "url": "https://greasyfork.org/scripts/497821-cacher-les-tweets-bas%C3%A9s-sur-des-mots-cl%C3%A9s-et-des-drapeaux",
+  "code_url": "https://update.greasyfork.org/scripts/497821/Cacher%20les%20Tweets%20bas%C3%A9s%20sur%20des%20mots-cl%C3%A9s%20et%20des%20drapeaux.user.js",
+  "code_size": 1754,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541117,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T16:18:23.000Z",
+    "code_updated_at": "2025-06-29T16:18:23.000Z",
+    "namespace": "https://nodeseek.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489996,
+        "name": "Daily fun",
+        "created_at": "2025-06-29T14:31:11.000Z",
+        "url": "https://greasyfork.org/users/1489996-daily-fun"
+      }
+    ],
+    "name": "NodeSeek抽奖提醒助手",
+    "description": "在NodeSeek论坛方便地管理抽奖活动并获取开奖提醒",
+    "url": "https://greasyfork.org/scripts/541117-nodeseek%E6%8A%BD%E5%A5%96%E6%8F%90%E9%86%92%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/541117/NodeSeek%E6%8A%BD%E5%A5%96%E6%8F%90%E9%86%92%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 26072,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

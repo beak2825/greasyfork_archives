@@ -1,0 +1,59 @@
+{
+  "id": 541323,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-01T08:52:44.000Z",
+  "code_updated_at": "2025-09-05T17:39:04.000Z",
+  "namespace": "https://greasyfork.org/users/1490581",
+  "support_url": "https://github.com/quapyrus/toolbox.qs/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490581,
+      "name": "quapyrus",
+      "created_at": "2025-07-01T08:45:16.000Z",
+      "url": "https://greasyfork.org/users/1490581-quapyrus",
+      "scripts": [
+        {
+          "id": 541323,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-01T08:52:44.000Z",
+          "code_updated_at": "2025-09-05T17:39:04.000Z",
+          "namespace": "https://greasyfork.org/users/1490581",
+          "support_url": "https://github.com/quapyrus/toolbox.qs/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FoldingDeepSeek",
+          "description": "TL;DR: 超弦领域折叠装置，启动！将DeepSeek酱的知识洪流压缩进克莱因瓶的口袋宇宙吧(◕ᴗ◕✿)",
+          "url": "https://greasyfork.org/scripts/541323-foldingdeepseek",
+          "code_url": "https://update.greasyfork.org/scripts/541323/FoldingDeepSeek.user.js",
+          "code_size": 14838,
+          "license": null,
+          "version": "1.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FoldingDeepSeek",
+  "description": "TL;DR: 超弦领域折叠装置，启动！将DeepSeek酱的知识洪流压缩进克莱因瓶的口袋宇宙吧(◕ᴗ◕✿)",
+  "url": "https://greasyfork.org/scripts/541323-foldingdeepseek",
+  "code_url": "https://update.greasyfork.org/scripts/541323/FoldingDeepSeek.user.js",
+  "code_size": 14838,
+  "license": null,
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

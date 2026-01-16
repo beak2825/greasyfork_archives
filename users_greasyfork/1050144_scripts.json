@@ -30,6 +30,39 @@
     "version": "1.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 547814,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-30T07:53:51.000Z",
+    "code_updated_at": "2025-09-16T13:03:44.000Z",
+    "namespace": "pal",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1050144,
+        "name": "Pallab Das",
+        "created_at": "2023-03-29T21:51:03.000Z",
+        "url": "https://greasyfork.org/users/1050144-pallab-das"
+      }
+    ],
+    "name": "Fanatical reveal keys",
+    "description": "reveal keys with multi-select functionality",
+    "url": "https://greasyfork.org/scripts/547814-fanatical-reveal-keys",
+    "code_url": "https://update.greasyfork.org/scripts/547814/Fanatical%20reveal%20keys.user.js",
+    "code_size": 15404,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

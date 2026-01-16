@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521639,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T07:13:23.000Z",
+    "code_updated_at": "2024-12-24T07:13:23.000Z",
+    "namespace": "https://discord.gg/N8cAjjJNmz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414980,
+        "name": "a4324s5sd4d5rftgyhujik",
+        "created_at": "2024-12-24T06:53:08.000Z",
+        "url": "https://greasyfork.org/users/1414980-a4324s5sd4d5rftgyhujik"
+      }
+    ],
+    "name": "Blob.io - Unfriend, for web 2.0!",
+    "description": "so stupid",
+    "url": "https://greasyfork.org/scripts/521639-blob-io-unfriend-for-web-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/521639/Blobio%20-%20Unfriend%2C%20for%20web%2020%21.user.js",
+    "code_size": 2139,
+    "license": "MIT License",
+    "version": "2024-11-22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

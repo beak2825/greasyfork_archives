@@ -1,0 +1,59 @@
+{
+  "id": 541481,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-03T02:12:36.000Z",
+  "code_updated_at": "2025-07-03T02:13:48.000Z",
+  "namespace": "https://github.com/Amatsuka4",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 957039,
+      "name": "ぜるく",
+      "created_at": "2022-09-10T18:01:41.000Z",
+      "url": "https://greasyfork.org/users/957039-%E3%81%9C%E3%82%8B%E3%81%8F",
+      "scripts": [
+        {
+          "id": 479322,
+          "daily_installs": 3,
+          "total_installs": 8868,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-11-08T17:00:39.000Z",
+          "code_updated_at": "2025-07-04T10:37:09.000Z",
+          "namespace": "https://x.com/zerukuVRC",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Boothの購入履歴から累計散財額を計算するツール",
+          "description": "お手軽鬱ボタン。Boothの購入履歴の総額を計算できます。",
+          "url": "https://greasyfork.org/scripts/479322-booth%E3%81%AE%E8%B3%BC%E5%85%A5%E5%B1%A5%E6%AD%B4%E3%81%8B%E3%82%89%E7%B4%AF%E8%A8%88%E6%95%A3%E8%B2%A1%E9%A1%8D%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B%E3%83%84%E3%83%BC%E3%83%AB",
+          "code_url": "https://update.greasyfork.org/scripts/479322/Booth%E3%81%AE%E8%B3%BC%E5%85%A5%E5%B1%A5%E6%AD%B4%E3%81%8B%E3%82%89%E7%B4%AF%E8%A8%88%E6%95%A3%E8%B2%A1%E9%A1%8D%E3%82%92%E8%A8%88%E7%AE%97%E3%81%99%E3%82%8B%E3%83%84%E3%83%BC%E3%83%AB.user.js",
+          "code_size": 27295,
+          "license": "MIT License",
+          "version": "3.0.3",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Dev-Boothの購入履歴",
+  "description": "お手軽鬱ボタン。Boothの購入履歴の総額を計算できます。同じセッションだけしか計算結果は保存できません。",
+  "url": "https://greasyfork.org/scripts/541481-dev-booth%E3%81%AE%E8%B3%BC%E5%85%A5%E5%B1%A5%E6%AD%B4",
+  "code_url": "https://update.greasyfork.org/scripts/541481/Dev-Booth%E3%81%AE%E8%B3%BC%E5%85%A5%E5%B1%A5%E6%AD%B4.user.js",
+  "code_size": 27184,
+  "license": "MIT License",
+  "version": "3.0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

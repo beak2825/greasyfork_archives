@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533605,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T07:53:15.000Z",
+    "code_updated_at": "2025-04-22T08:08:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460838,
+        "name": "ㅇㄹ어라",
+        "created_at": "2025-04-22T07:16:17.000Z",
+        "url": "https://greasyfork.org/users/1460838-%E3%85%87%E3%84%B9%EC%96%B4%EB%9D%BC"
+      }
+    ],
+    "name": "bettercrkcoupons",
+    "description": "쿠킹덤 쿠폰 입력이 한층 더 쉬워집니다.",
+    "url": "https://greasyfork.org/scripts/533605-bettercrkcoupons",
+    "code_url": "https://update.greasyfork.org/scripts/533605/bettercrkcoupons.user.js",
+    "code_size": 3922,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

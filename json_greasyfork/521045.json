@@ -1,0 +1,34 @@
+{
+  "id": 521045,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-17T17:12:21.000Z",
+  "code_updated_at": "2024-12-17T17:12:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1412138,
+      "name": "dongchunhai",
+      "created_at": "2024-12-17T12:36:19.000Z",
+      "url": "https://greasyfork.org/users/1412138-dongchunhai",
+      "scripts": []
+    }
+  ],
+  "name": "Moonshot AI Chat Assistant",
+  "description": "一个优雅的AI聊天助手",
+  "url": "https://greasyfork.org/scripts/521045-moonshot-ai-chat-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/521045/Moonshot%20AI%20Chat%20Assistant.user.js",
+  "code_size": 6031,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

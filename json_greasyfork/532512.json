@@ -1,0 +1,59 @@
+{
+  "id": 532512,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-11T08:21:15.000Z",
+  "code_updated_at": "2025-04-12T05:04:50.000Z",
+  "namespace": "https://chatgpt.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456502,
+      "name": "sytesn",
+      "created_at": "2025-04-11T08:03:35.000Z",
+      "url": "https://greasyfork.org/users/1456502-sytesn",
+      "scripts": [
+        {
+          "id": 532512,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-11T08:21:15.000Z",
+          "code_updated_at": "2025-04-12T05:04:50.000Z",
+          "namespace": "https://chatgpt.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT.com Advanced Message Culler",
+          "description": "Culls messages from ChatGPT conversations via an overlay. Helpful for those who have low-end hardwares",
+          "url": "https://greasyfork.org/scripts/532512-chatgpt-com-advanced-message-culler",
+          "code_url": "https://update.greasyfork.org/scripts/532512/ChatGPTcom%20Advanced%20Message%20Culler.user.js",
+          "code_size": 14287,
+          "license": "MIT License",
+          "version": "1.5.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT.com Advanced Message Culler",
+  "description": "Culls messages from ChatGPT conversations via an overlay. Helpful for those who have low-end hardwares",
+  "url": "https://greasyfork.org/scripts/532512-chatgpt-com-advanced-message-culler",
+  "code_url": "https://update.greasyfork.org/scripts/532512/ChatGPTcom%20Advanced%20Message%20Culler.user.js",
+  "code_size": 14287,
+  "license": "MIT License",
+  "version": "1.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539109,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-11T12:06:41.000Z",
+    "code_updated_at": "2025-06-11T12:06:41.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482226,
+        "name": "SCP:SL Remix",
+        "created_at": "2025-06-11T10:57:20.000Z",
+        "url": "https://greasyfork.org/users/1482226-scp-sl-remix"
+      }
+    ],
+    "name": "KALININGRAD | Для куратор форума",
+    "description": "Обновление 1.1",
+    "url": "https://greasyfork.org/scripts/539109-kaliningrad-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/539109/KALININGRAD%20%7C%20%D0%94%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 153157,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 517002,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-12T12:04:44.000Z",
+    "code_updated_at": "2024-11-12T12:57:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380648,
+        "name": "IGCrystal",
+        "created_at": "2024-10-14T05:13:42.000Z",
+        "url": "https://greasyfork.org/users/1380648-igcrystal"
+      }
+    ],
+    "name": "自动发送消息到 WentUrc 群组",
+    "description": "通过 API 接口向chat.wenturc.com发送消息，带有美化的图形界面, 该脚本仅自用",
+    "url": "https://greasyfork.org/scripts/517002-%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E5%88%B0-wenturc-%E7%BE%A4%E7%BB%84",
+    "code_url": "https://update.greasyfork.org/scripts/517002/%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF%E5%88%B0%20WentUrc%20%E7%BE%A4%E7%BB%84.user.js",
+    "code_size": 6787,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512572,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-14T10:43:08.000Z",
+    "code_updated_at": "2024-12-30T12:43:52.000Z",
+    "namespace": "https://github.com/IGCrystal/Custom-Bilibili-Auto-Follow-Unfollow/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380648,
+        "name": "IGCrystal",
+        "created_at": "2024-10-14T05:13:42.000Z",
+        "url": "https://greasyfork.org/users/1380648-igcrystal"
+      }
+    ],
+    "name": "Custom Bilibili Auto Follow/Unfollow",
+    "description": "A script to automatically follow/unfollow on Bilibili with enhanced UI and controls.",
+    "url": "https://greasyfork.org/scripts/512572-custom-bilibili-auto-follow-unfollow",
+    "code_url": "https://update.greasyfork.org/scripts/512572/Custom%20Bilibili%20Auto%20FollowUnfollow.user.js",
+    "code_size": 18358,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "5.9.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

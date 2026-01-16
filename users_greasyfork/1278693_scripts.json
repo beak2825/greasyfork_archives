@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527216,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-17T12:58:29.000Z",
+    "code_updated_at": "2025-03-10T10:24:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1278693,
+        "name": "waishuu",
+        "created_at": "2024-03-24T06:33:45.000Z",
+        "url": "https://greasyfork.org/users/1278693-waishuu"
+      }
+    ],
+    "name": "Скрипт для КФ (82)",
+    "description": "Скрипт для кураторов форума by K.Xarridson",
+    "url": "https://greasyfork.org/scripts/527216-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%84-82",
+    "code_url": "https://update.greasyfork.org/scripts/527216/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D0%A4%20%2882%29.user.js",
+    "code_size": 188935,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

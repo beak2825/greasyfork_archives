@@ -1,0 +1,33 @@
+{
+  "id": 536346,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-17T22:30:18.000Z",
+  "code_updated_at": "2025-05-17T22:30:17.000Z",
+  "namespace": "https://github.com/huseyinavniuzun/sahibinden-photo-zoom",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1471396,
+      "name": "huseyinavniuzun",
+      "created_at": "2025-05-17T21:35:00.000Z",
+      "url": "https://greasyfork.org/users/1471396-huseyinavniuzun"
+    }
+  ],
+  "name": "Sahibinden Fotoğraf Büyütme",
+  "description": "Küçük fotoğrafın üzerine fare gelince büyük fotoğrafı gösterir",
+  "url": "https://greasyfork.org/scripts/536346-sahibinden-foto%C4%9Fraf-b%C3%BCy%C3%BCtme",
+  "code_url": "https://update.greasyfork.org/scripts/536346/Sahibinden%20Foto%C4%9Fraf%20B%C3%BCy%C3%BCtme.user.js",
+  "code_size": 3103,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

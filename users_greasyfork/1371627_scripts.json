@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509715,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T17:31:20.000Z",
+    "code_updated_at": "2024-09-22T17:31:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371627,
+        "name": "misar-blank",
+        "created_at": "2024-09-22T17:28:05.000Z",
+        "url": "https://greasyfork.org/users/1371627-misar-blank"
+      }
+    ],
+    "name": "No FUCKING ANNOYING pop up website in NCUE",
+    "description": "goto last page when [Office Library & Information Services, National ChangHua University of Education] give you FUCKING ANNOYING POP UP website",
+    "url": "https://greasyfork.org/scripts/509715-no-annoying-pop-up-website-in-ncue",
+    "code_url": "https://update.greasyfork.org/scripts/509715/No%20FUCKING%20ANNOYING%20pop%20up%20website%20in%20NCUE.user.js",
+    "code_size": 1566,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

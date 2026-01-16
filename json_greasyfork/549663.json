@@ -1,0 +1,59 @@
+{
+  "id": 549663,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-15T20:18:24.000Z",
+  "code_updated_at": "2025-09-15T20:18:23.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1313521,
+      "name": "Старый Татарин",
+      "created_at": "2024-06-06T15:01:57.000Z",
+      "url": "https://greasyfork.org/users/1313521-%D1%81%D1%82%D0%B0%D1%80%D1%8B%D0%B9-%D1%82%D0%B0%D1%82%D0%B0%D1%80%D0%B8%D0%BD",
+      "scripts": [
+        {
+          "id": 549665,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-15T20:25:14.000Z",
+          "code_updated_at": "2025-09-15T20:25:14.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Для Руководства IZHEVSK",
+          "description": "kye",
+          "url": "https://greasyfork.org/scripts/549665-%D0%B4%D0%BB%D1%8F-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0-izhevsk",
+          "code_url": "https://update.greasyfork.org/scripts/549665/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20IZHEVSK.user.js",
+          "code_size": 125886,
+          "license": "MIT License",
+          "version": "0.7.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Для Руководства",
+  "description": "kye",
+  "url": "https://greasyfork.org/scripts/549663-%D0%B4%D0%BB%D1%8F-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/549663/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0.user.js",
+  "code_size": 113713,
+  "license": "MIT License",
+  "version": "0.7.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

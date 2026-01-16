@@ -1,0 +1,59 @@
+{
+  "id": 514126,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-26T10:04:44.000Z",
+  "code_updated_at": "2024-10-26T10:04:44.000Z",
+  "namespace": "https://greasyfork.org/users/1386584",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1386584,
+      "name": "Svalocin",
+      "created_at": "2024-10-26T09:58:27.000Z",
+      "url": "https://greasyfork.org/users/1386584-svalocin",
+      "scripts": [
+        {
+          "id": 514126,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-26T10:04:44.000Z",
+          "code_updated_at": "2024-10-26T10:04:44.000Z",
+          "namespace": "https://greasyfork.org/users/1386584",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "谷歌 cn 重定向",
+          "description": "自动从 google.cn 跳转到 google.com",
+          "url": "https://greasyfork.org/scripts/514126-%E8%B0%B7%E6%AD%8C-cn-%E9%87%8D%E5%AE%9A%E5%90%91",
+          "code_url": "https://update.greasyfork.org/scripts/514126/%E8%B0%B7%E6%AD%8C%20cn%20%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+          "code_size": 365,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "谷歌 cn 重定向",
+  "description": "自动从 google.cn 跳转到 google.com",
+  "url": "https://greasyfork.org/scripts/514126-%E8%B0%B7%E6%AD%8C-cn-%E9%87%8D%E5%AE%9A%E5%90%91",
+  "code_url": "https://update.greasyfork.org/scripts/514126/%E8%B0%B7%E6%AD%8C%20cn%20%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+  "code_size": 365,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

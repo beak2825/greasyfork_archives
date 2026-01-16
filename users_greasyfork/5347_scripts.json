@@ -1,0 +1,68 @@
+[
+  {
+    "id": 549319,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T20:26:47.000Z",
+    "code_updated_at": "2025-09-12T20:26:47.000Z",
+    "namespace": "http://stderr.nl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5347,
+        "name": "matthijskooijman",
+        "created_at": "2014-09-15T15:57:25.000Z",
+        "url": "https://greasyfork.org/users/5347-matthijskooijman"
+      }
+    ],
+    "name": "Pull request commit progress counter",
+    "description": "When viewing a commit in a PR, show the number of commits and the position of the current commit in that list to make review progress more visible.",
+    "url": "https://greasyfork.org/scripts/549319-pull-request-commit-progress-counter",
+    "code_url": "https://update.greasyfork.org/scripts/549319/Pull%20request%20commit%20progress%20counter.user.js",
+    "code_size": 2317,
+    "license": "CC0-1.0-Universal, https://creativecommons.org/publicdomain/zero/1.0/",
+    "version": "2025-09-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506631,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-03T14:36:04.000Z",
+    "code_updated_at": "2024-09-03T14:38:09.000Z",
+    "namespace": "http://www.stderr.nl/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5347,
+        "name": "matthijskooijman",
+        "created_at": "2014-09-15T15:57:25.000Z",
+        "url": "https://greasyfork.org/users/5347-matthijskooijman"
+      }
+    ],
+    "name": "Altium viewer - disable number hotkeys",
+    "description": "Suppress some number keys in online altium viewer, to prevent accidentally switching between e.g. schematic and PCB views.",
+    "url": "https://greasyfork.org/scripts/506631-altium-viewer-disable-number-hotkeys",
+    "code_url": "https://update.greasyfork.org/scripts/506631/Altium%20viewer%20-%20disable%20number%20hotkeys.user.js",
+    "code_size": 1557,
+    "license": "The MIT license; http://opensource.org/licenses/MIT",
+    "version": "2024-09-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

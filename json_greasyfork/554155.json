@@ -17,33 +17,7 @@
       "id": 1532107,
       "name": "Reisar",
       "created_at": "2025-10-30T01:18:39.000Z",
-      "url": "https://greasyfork.org/users/1532107-reisar",
-      "scripts": [
-        {
-          "id": 554155,
-          "daily_installs": 0,
-          "total_installs": 2,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-10-30T01:26:09.000Z",
-          "code_updated_at": "2025-11-18T23:47:37.000Z",
-          "namespace": "https://github.com/aeit/tampermonkey-tumblr-video-control",
-          "support_url": "https://github.com/aeit/tumblr-video-control/issues",
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Tumblr Video Autoplay Blocker + Keyboard Control",
-          "description": "P — play with sound, O — muted, M — toggle mute. No autoplay.",
-          "url": "https://greasyfork.org/scripts/554155-tumblr-video-autoplay-blocker-keyboard-control",
-          "code_url": "https://update.greasyfork.org/scripts/554155/Tumblr%20Video%20Autoplay%20Blocker%20%2B%20Keyboard%20Control.user.js",
-          "code_size": 7038,
-          "license": "MIT License",
-          "version": "31.2.2",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1532107-reisar"
     }
   ],
   "name": "Tumblr Video Autoplay Blocker + Keyboard Control",

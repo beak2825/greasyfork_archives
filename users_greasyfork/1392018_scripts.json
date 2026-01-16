@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516055,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-06T11:51:36.000Z",
+    "code_updated_at": "2024-11-06T13:06:32.000Z",
+    "namespace": "*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392018,
+        "name": "DanClancySucks",
+        "created_at": "2024-11-06T11:41:48.000Z",
+        "url": "https://greasyfork.org/users/1392018-danclancysucks"
+      }
+    ],
+    "name": "Stop Anti-Semitism",
+    "description": "replaces all instances of \"Zionist\", an attempt to showcase how the anti-semitic dogwhistle is used as a catch-all term for the Jewish people.",
+    "url": "https://greasyfork.org/scripts/516055-stop-anti-semitism",
+    "code_url": "https://update.greasyfork.org/scripts/516055/Stop%20Anti-Semitism.user.js",
+    "code_size": 45346,
+    "license": null,
+    "version": "2024-11-06",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

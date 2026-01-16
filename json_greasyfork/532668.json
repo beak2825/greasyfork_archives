@@ -1,0 +1,34 @@
+{
+  "id": 532668,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-13T01:47:28.000Z",
+  "code_updated_at": "2025-04-14T04:29:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444380,
+      "name": "renjianjike",
+      "created_at": "2025-03-10T17:32:12.000Z",
+      "url": "https://greasyfork.org/users/1444380-renjianjike",
+      "scripts": []
+    }
+  ],
+  "name": "雪球评论无限滚动",
+  "description": "支持 JSON 和 HTML 的评论加载，实现雪球股票评论无限滚动",
+  "url": "https://greasyfork.org/scripts/532668-%E9%9B%AA%E7%90%83%E8%AF%84%E8%AE%BA%E6%97%A0%E9%99%90%E6%BB%9A%E5%8A%A8",
+  "code_url": "https://update.greasyfork.org/scripts/532668/%E9%9B%AA%E7%90%83%E8%AF%84%E8%AE%BA%E6%97%A0%E9%99%90%E6%BB%9A%E5%8A%A8.user.js",
+  "code_size": 23207,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510319,
+    "daily_installs": 0,
+    "total_installs": 226,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T17:44:46.000Z",
+    "code_updated_at": "2024-09-26T17:44:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 900019,
+        "name": "DA PRO pros",
+        "created_at": "2022-04-09T22:45:41.000Z",
+        "url": "https://greasyfork.org/users/900019-da-pro-pros"
+      }
+    ],
+    "name": "Gats.io Flick and Shoot Aimbot Script with E Key",
+    "description": "Press E to flick, shoot, and aimbot in Gats.io",
+    "url": "https://greasyfork.org/scripts/510319-gats-io-flick-and-shoot-aimbot-script-with-e-key",
+    "code_url": "https://update.greasyfork.org/scripts/510319/Gatsio%20Flick%20and%20Shoot%20Aimbot%20Script%20with%20E%20Key.user.js",
+    "code_size": 3708,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

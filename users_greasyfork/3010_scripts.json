@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510581,
+    "daily_installs": 0,
+    "total_installs": 225,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-09-28T12:01:13.000Z",
+    "code_updated_at": "2025-01-27T16:03:26.000Z",
+    "namespace": "https://github.com/SuperNG6/YouTube-Comment-Script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 3010,
+        "name": "NG6",
+        "created_at": "2014-06-24T14:02:14.000Z",
+        "url": "https://greasyfork.org/users/3010-ng6"
+      }
+    ],
+    "name": "YouTube Auto Expand Comments and Replies",
+    "description": "Automatically expand comments and replies on YouTube with performance optimization",
+    "url": "https://greasyfork.org/scripts/510581-youtube-auto-expand-comments-and-replies",
+    "code_url": "https://update.greasyfork.org/scripts/510581/YouTube%20Auto%20Expand%20Comments%20and%20Replies.user.js",
+    "code_size": 12871,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

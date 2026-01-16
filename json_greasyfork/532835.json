@@ -1,0 +1,34 @@
+{
+  "id": 532835,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-14T15:52:02.000Z",
+  "code_updated_at": "2025-04-17T06:21:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444380,
+      "name": "renjianjike",
+      "created_at": "2025-03-10T17:32:12.000Z",
+      "url": "https://greasyfork.org/users/1444380-renjianjike",
+      "scripts": []
+    }
+  ],
+  "name": "雪球显示成交额",
+  "description": "在雪球自选股页面添加成交额数据列，初始显示缓存，定期更新，支持分组切换",
+  "url": "https://greasyfork.org/scripts/532835-%E9%9B%AA%E7%90%83%E6%98%BE%E7%A4%BA%E6%88%90%E4%BA%A4%E9%A2%9D",
+  "code_url": "https://update.greasyfork.org/scripts/532835/%E9%9B%AA%E7%90%83%E6%98%BE%E7%A4%BA%E6%88%90%E4%BA%A4%E9%A2%9D.user.js",
+  "code_size": 14806,
+  "license": null,
+  "version": "1.32",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

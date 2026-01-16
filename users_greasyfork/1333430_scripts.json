@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514236,
+    "daily_installs": 3,
+    "total_installs": 1467,
+    "fan_score": "15.0",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2024-10-26T22:55:50.000Z",
+    "code_updated_at": "2025-10-19T16:41:05.000Z",
+    "namespace": "https://greasyfork.org/en/users/1333430",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1333430,
+        "name": "paradox-sp",
+        "created_at": "2024-07-14T18:34:48.000Z",
+        "url": "https://greasyfork.org/users/1333430-paradox-sp"
+      }
+    ],
+    "name": "FanPass Btn",
+    "description": "Adds button to redirect OnlyFans,Fansly,Candfans to Coomer with enhancement",
+    "url": "https://greasyfork.org/scripts/514236-fanpass-btn",
+    "code_url": "https://update.greasyfork.org/scripts/514236/FanPass%20Btn.user.js",
+    "code_size": 10461,
+    "license": null,
+    "version": "1.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

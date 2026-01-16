@@ -1,0 +1,33 @@
+{
+  "id": 539960,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-19T07:30:40.000Z",
+  "code_updated_at": "2025-06-19T07:30:40.000Z",
+  "namespace": "https://chat.openai.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441970,
+      "name": "南竹",
+      "created_at": "2025-03-03T17:26:50.000Z",
+      "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+    }
+  ],
+  "name": "ChatGPT 导出聊天为 Markdown (.md)",
+  "description": "在 ChatGPT 单个对话页面添加导出按钮，将聊天记录导出为 Markdown 文件",
+  "url": "https://greasyfork.org/scripts/539960-chatgpt-%E5%AF%BC%E5%87%BA%E8%81%8A%E5%A4%A9%E4%B8%BA-markdown-md",
+  "code_url": "https://update.greasyfork.org/scripts/539960/ChatGPT%20%E5%AF%BC%E5%87%BA%E8%81%8A%E5%A4%A9%E4%B8%BA%20Markdown%20%28md%29.user.js",
+  "code_size": 3082,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

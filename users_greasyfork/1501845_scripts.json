@@ -1,0 +1,68 @@
+[
+  {
+    "id": 545576,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T14:11:52.000Z",
+    "code_updated_at": "2025-08-12T14:11:52.000Z",
+    "namespace": "https://gtihub/txy-sky",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501845,
+        "name": "Txy-Sky",
+        "created_at": "2025-08-05T12:28:54.000Z",
+        "url": "https://greasyfork.org/users/1501845-txy-sky"
+      }
+    ],
+    "name": "YouTube 主页强制新标签页",
+    "description": "强制YouTube主页所有视频链接在新标签页打开",
+    "url": "https://greasyfork.org/scripts/545576-youtube-%E4%B8%BB%E9%A1%B5%E5%BC%BA%E5%88%B6%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/545576/YouTube%20%E4%B8%BB%E9%A1%B5%E5%BC%BA%E5%88%B6%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5.user.js",
+    "code_size": 1861,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544826,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-06T12:51:29.000Z",
+    "code_updated_at": "2025-08-14T02:02:38.000Z",
+    "namespace": "https://github.com/txy-sky",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501845,
+        "name": "Txy-Sky",
+        "created_at": "2025-08-05T12:28:54.000Z",
+        "url": "https://greasyfork.org/users/1501845-txy-sky"
+      }
+    ],
+    "name": "GitHub 增强工具栏",
+    "description": "在 Github 网站顶部显示 Github.dev 和 DeepWiki 和 ZreadAi 按钮，方便更好地查看代码。当按钮过多时自动切换为图标模式。",
+    "url": "https://greasyfork.org/scripts/544826-github-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/544826/GitHub%20%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7%E6%A0%8F.user.js",
+    "code_size": 13327,
+    "license": "MIT License",
+    "version": "1.5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 526906,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-14T17:16:59.000Z",
+  "code_updated_at": "2025-02-14T17:16:59.000Z",
+  "namespace": "blsspainmorocco.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1435110,
+      "name": "rada132",
+      "created_at": "2025-02-14T17:10:51.000Z",
+      "url": "https://greasyfork.org/users/1435110-rada132"
+    }
+  ],
+  "name": "session",
+  "description": "take appointment",
+  "url": "https://greasyfork.org/scripts/526906-session",
+  "code_url": "https://update.greasyfork.org/scripts/526906/session.user.js",
+  "code_size": 555,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

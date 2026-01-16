@@ -1,0 +1,59 @@
+{
+  "id": 530727,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-24T17:25:42.000Z",
+  "code_updated_at": "2025-03-24T17:25:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1304578,
+      "name": "FrnkPsycho",
+      "created_at": "2024-05-20T12:23:44.000Z",
+      "url": "https://greasyfork.org/users/1304578-frnkpsycho",
+      "scripts": [
+        {
+          "id": 530727,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-24T17:25:42.000Z",
+          "code_updated_at": "2025-03-24T17:25:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RYM Combine Genres and Scenes",
+          "description": "Combines primary genres with scenes and movements on RateYourMusic album pages",
+          "url": "https://greasyfork.org/scripts/530727-rym-combine-genres-and-scenes",
+          "code_url": "https://update.greasyfork.org/scripts/530727/RYM%20Combine%20Genres%20and%20Scenes.user.js",
+          "code_size": 3043,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RYM Combine Genres and Scenes",
+  "description": "Combines primary genres with scenes and movements on RateYourMusic album pages",
+  "url": "https://greasyfork.org/scripts/530727-rym-combine-genres-and-scenes",
+  "code_url": "https://update.greasyfork.org/scripts/530727/RYM%20Combine%20Genres%20and%20Scenes.user.js",
+  "code_size": 3043,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

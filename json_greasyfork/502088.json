@@ -1,0 +1,59 @@
+{
+  "id": 502088,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-29T14:17:52.000Z",
+  "code_updated_at": "2024-07-29T14:17:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1245150,
+      "name": "Lucas Soumon",
+      "created_at": "2024-01-08T15:28:39.000Z",
+      "url": "https://greasyfork.org/users/1245150-lucas-soumon",
+      "scripts": [
+        {
+          "id": 484254,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-01-08T15:52:51.000Z",
+          "code_updated_at": "2024-01-08T15:52:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Carimbador GED",
+          "description": "Carimba os documentos GED do eemop!",
+          "url": "https://greasyfork.org/scripts/484254-carimbador-ged",
+          "code_url": "https://update.greasyfork.org/scripts/484254/Carimbador%20GED.user.js",
+          "code_size": 1419,
+          "license": "MIT License",
+          "version": "2023-12-26",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cadastro no Open4School",
+  "description": "Importa os dados so sigeduca para o Open",
+  "url": "https://greasyfork.org/scripts/502088-cadastro-no-open4school",
+  "code_url": "https://update.greasyfork.org/scripts/502088/Cadastro%20no%20Open4School.user.js",
+  "code_size": 10795,
+  "license": "MIT License",
+  "version": "v1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

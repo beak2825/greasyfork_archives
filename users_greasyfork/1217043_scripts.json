@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516746,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-10T16:39:18.000Z",
+    "code_updated_at": "2024-11-11T22:46:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1217043,
+        "name": "SergoZar",
+        "created_at": "2023-11-14T01:29:33.000Z",
+        "url": "https://greasyfork.org/users/1217043-sergozar"
+      }
+    ],
+    "name": "YT Youtube Miniplayer Killer Remove Delete",
+    "description": "remove mini player in youtube",
+    "url": "https://greasyfork.org/scripts/516746-yt-youtube-miniplayer-killer-remove-delete",
+    "code_url": "https://update.greasyfork.org/scripts/516746/YT%20Youtube%20Miniplayer%20Killer%20Remove%20Delete.user.js",
+    "code_size": 4838,
+    "license": "GPLv3",
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

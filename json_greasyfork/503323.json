@@ -1,0 +1,33 @@
+{
+  "id": 503323,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-11T16:06:18.000Z",
+  "code_updated_at": "2024-08-11T16:06:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1349912,
+      "name": "TAYLOR CHARLIE",
+      "created_at": "2024-08-11T15:48:25.000Z",
+      "url": "https://greasyfork.org/users/1349912-taylor-charlie"
+    }
+  ],
+  "name": "YT去廣告",
+  "description": "移除 YouTube 廣告的用戶腳本，包括視頻廣告和界面廣告",
+  "url": "https://greasyfork.org/scripts/503323-yt%E5%8E%BB%E5%BB%A3%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/503323/YT%E5%8E%BB%E5%BB%A3%E5%91%8A.user.js",
+  "code_size": 8347,
+  "license": "MIT License",
+  "version": "0.8.0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

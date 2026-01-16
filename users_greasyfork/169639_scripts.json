@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512923,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-17T03:52:57.000Z",
+    "code_updated_at": "2024-10-17T03:52:57.000Z",
+    "namespace": "none",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 169639,
+        "name": "jayvzh",
+        "created_at": "2018-02-06T05:24:54.000Z",
+        "url": "https://greasyfork.org/users/169639-jayvzh"
+      }
+    ],
+    "name": "AMZ123关键词小写化",
+    "description": "将输入框中的关键词转为小写，并在点击搜索按钮或按回车时保证小写跳转。",
+    "url": "https://greasyfork.org/scripts/512923-amz123%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B0%8F%E5%86%99%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/512923/AMZ123%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B0%8F%E5%86%99%E5%8C%96.user.js",
+    "code_size": 1976,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

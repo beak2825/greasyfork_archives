@@ -1,0 +1,33 @@
+{
+  "id": 508447,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-14T14:31:46.000Z",
+  "code_updated_at": "2025-07-28T22:48:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1367471,
+      "name": "NEO REBORN",
+      "created_at": "2024-09-14T14:14:34.000Z",
+      "url": "https://greasyfork.org/users/1367471-neo-reborn"
+    }
+  ],
+  "name": "JVC_ImageViewer",
+  "description": "Naviguer entre les images d'un post sous forme de slideshow en cliquant sur une image sans ouvrir NoelShack.",
+  "url": "https://greasyfork.org/scripts/508447-jvc-imageviewer",
+  "code_url": "https://update.greasyfork.org/scripts/508447/JVC_ImageViewer.user.js",
+  "code_size": 70764,
+  "license": "MIT License",
+  "version": "2.0.9",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

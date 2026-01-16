@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507660,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-09T15:38:22.000Z",
+    "code_updated_at": "2024-09-10T12:17:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 572040,
+        "name": "IBAS Sun",
+        "created_at": "2020-05-25T08:01:42.000Z",
+        "url": "https://greasyfork.org/users/572040-ibas-sun"
+      }
+    ],
+    "name": "自动下载腾讯文字转音频文件",
+    "description": "Auto download tx tts audio file.",
+    "url": "https://greasyfork.org/scripts/507660-%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E8%85%BE%E8%AE%AF%E6%96%87%E5%AD%97%E8%BD%AC%E9%9F%B3%E9%A2%91%E6%96%87%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/507660/%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E8%85%BE%E8%AE%AF%E6%96%87%E5%AD%97%E8%BD%AC%E9%9F%B3%E9%A2%91%E6%96%87%E4%BB%B6.user.js",
+    "code_size": 4342,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

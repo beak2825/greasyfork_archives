@@ -1,0 +1,59 @@
+{
+  "id": 510108,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-25T09:07:43.000Z",
+  "code_updated_at": "2024-09-25T09:17:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1085160,
+      "name": "Yu marvin",
+      "created_at": "2023-05-26T15:30:13.000Z",
+      "url": "https://greasyfork.org/users/1085160-yu-marvin",
+      "scripts": [
+        {
+          "id": 510108,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-25T09:07:43.000Z",
+          "code_updated_at": "2024-09-25T09:17:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "WeChat Article Directory",
+          "description": "Generate a directory for WeChat articles with line wrapping, limited width, scrollable height, and adaptive heading matching. 微信阅读目录生成",
+          "url": "https://greasyfork.org/scripts/510108-wechat-article-directory",
+          "code_url": "https://update.greasyfork.org/scripts/510108/WeChat%20Article%20Directory.user.js",
+          "code_size": 5012,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WeChat Article Directory",
+  "description": "Generate a directory for WeChat articles with line wrapping, limited width, scrollable height, and adaptive heading matching. 微信阅读目录生成",
+  "url": "https://greasyfork.org/scripts/510108-wechat-article-directory",
+  "code_url": "https://update.greasyfork.org/scripts/510108/WeChat%20Article%20Directory.user.js",
+  "code_size": 5012,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

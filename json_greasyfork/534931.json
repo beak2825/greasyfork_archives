@@ -1,0 +1,59 @@
+{
+  "id": 534931,
+  "daily_installs": 2,
+  "total_installs": 77,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-05-04T16:20:52.000Z",
+  "code_updated_at": "2025-05-04T16:20:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465646,
+      "name": "Cyxee",
+      "created_at": "2025-05-04T16:18:30.000Z",
+      "url": "https://greasyfork.org/users/1465646-cyxee",
+      "scripts": [
+        {
+          "id": 534931,
+          "daily_installs": 2,
+          "total_installs": 77,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-05-04T16:20:52.000Z",
+          "code_updated_at": "2025-05-04T16:20:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Grok Model Patcher",
+          "description": "Patches grok.com POST requests to switch between grok-3 and grok-2 models",
+          "url": "https://greasyfork.org/scripts/534931-grok-model-patcher",
+          "code_url": "https://update.greasyfork.org/scripts/534931/Grok%20Model%20Patcher.user.js",
+          "code_size": 9978,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Grok Model Patcher",
+  "description": "Patches grok.com POST requests to switch between grok-3 and grok-2 models",
+  "url": "https://greasyfork.org/scripts/534931-grok-model-patcher",
+  "code_url": "https://update.greasyfork.org/scripts/534931/Grok%20Model%20Patcher.user.js",
+  "code_size": 9978,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

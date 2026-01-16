@@ -1,0 +1,68 @@
+[
+  {
+    "id": 525443,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-31T16:48:35.000Z",
+    "code_updated_at": "2025-01-31T17:10:48.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1428532,
+        "name": "Mushfiq Munna",
+        "created_at": "2025-01-29T11:00:56.000Z",
+        "url": "https://greasyfork.org/users/1428532-mushfiq-munna"
+      }
+    ],
+    "name": "TBD Auto Rep, Thanks & Gift",
+    "description": "Automates adding reputation, thanking uploader, and gifting seedbonus on TorrentBD",
+    "url": "https://greasyfork.org/scripts/525443-tbd-auto-rep-thanks-gift",
+    "code_url": "https://update.greasyfork.org/scripts/525443/TBD%20Auto%20Rep%2C%20Thanks%20%20Gift.user.js",
+    "code_size": 1554,
+    "license": "MIT License",
+    "version": "1.69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 525219,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-29T11:03:40.000Z",
+    "code_updated_at": "2025-01-29T14:45:06.000Z",
+    "namespace": "Pushiiii",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1428532,
+        "name": "Mushfiq Munna",
+        "created_at": "2025-01-29T11:00:56.000Z",
+        "url": "https://greasyfork.org/users/1428532-mushfiq-munna"
+      }
+    ],
+    "name": "Auto SeedBonus Gift",
+    "description": "Automates gifting seedbonus on TorrentBD",
+    "url": "https://greasyfork.org/scripts/525219-auto-seedbonus-gift",
+    "code_url": "https://update.greasyfork.org/scripts/525219/Auto%20SeedBonus%20Gift.user.js",
+    "code_size": 948,
+    "license": "MIT License",
+    "version": "1.69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

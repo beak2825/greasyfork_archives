@@ -1,0 +1,35 @@
+[
+  {
+    "id": 546376,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-19T08:17:01.000Z",
+    "code_updated_at": "2025-08-19T08:22:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1506570,
+        "name": "엑",
+        "created_at": "2025-08-19T08:09:56.000Z",
+        "url": "https://greasyfork.org/users/1506570-%EC%97%91"
+      }
+    ],
+    "name": "No more AI overview",
+    "description": "Automatically adds \"-gemini\" to all Google searches to remove AI overviews",
+    "url": "https://greasyfork.org/scripts/546376-no-more-ai-overview",
+    "code_url": "https://update.greasyfork.org/scripts/546376/No%20more%20AI%20overview.user.js",
+    "code_size": 4843,
+    "license": "GNU General Public License v3.0",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

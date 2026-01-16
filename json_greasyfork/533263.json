@@ -1,0 +1,34 @@
+{
+  "id": 533263,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-18T19:31:39.000Z",
+  "code_updated_at": "2025-04-18T19:35:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 696482,
+      "name": "Sivar Aziz",
+      "created_at": "2020-10-19T19:30:57.000Z",
+      "url": "https://greasyfork.org/users/696482-sivar-aziz",
+      "scripts": []
+    }
+  ],
+  "name": "I'm posting this as a library",
+  "description": "The whole purpose of this is to solve a problem of mine",
+  "url": "https://greasyfork.org/scripts/533263-i-m-posting-this-as-a-library",
+  "code_url": "https://update.greasyfork.org/scripts/533263/1573469/I%27m%20posting%20this%20as%20a%20library.js",
+  "code_size": 25634,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

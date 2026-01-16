@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551104,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T03:59:39.000Z",
+    "code_updated_at": "2025-09-30T04:00:49.000Z",
+    "namespace": "SteamHistoryLowestPrice",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481476,
+        "name": "StarRain",
+        "created_at": "2025-06-10T07:49:32.000Z",
+        "url": "https://greasyfork.org/users/1481476-starrain"
+      }
+    ],
+    "name": "Steam历史最低价格查询",
+    "description": "在steam商店页和愿望单页显示当前app历史最低价格及进包次数(此脚本需要勾选Steam商店加速才会生效)",
+    "url": "https://greasyfork.org/scripts/551104-steam%E5%8E%86%E5%8F%B2%E6%9C%80%E4%BD%8E%E4%BB%B7%E6%A0%BC%E6%9F%A5%E8%AF%A2",
+    "code_url": "https://update.greasyfork.org/scripts/551104/Steam%E5%8E%86%E5%8F%B2%E6%9C%80%E4%BD%8E%E4%BB%B7%E6%A0%BC%E6%9F%A5%E8%AF%A2.user.js",
+    "code_size": 17814,
+    "license": "GPL version 3 or any later version",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538976,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T07:53:54.000Z",
+    "code_updated_at": "2025-06-10T07:53:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481476,
+        "name": "StarRain",
+        "created_at": "2025-06-10T07:49:32.000Z",
+        "url": "https://greasyfork.org/users/1481476-starrain"
+      }
+    ],
+    "name": "NGA帖子宽度优化",
+    "description": "即时调整NGA帖子宽度，无刷新闪烁",
+    "url": "https://greasyfork.org/scripts/538976-nga%E5%B8%96%E5%AD%90%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/538976/NGA%E5%B8%96%E5%AD%90%E5%AE%BD%E5%BA%A6%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 3713,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

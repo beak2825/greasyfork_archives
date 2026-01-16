@@ -1,0 +1,33 @@
+{
+  "id": 524956,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-26T15:42:36.000Z",
+  "code_updated_at": "2025-03-07T13:48:10.000Z",
+  "namespace": "https://greasyfork.org/users/1184528",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1184528,
+      "name": "rssa_romeo",
+      "created_at": "2023-09-30T14:17:31.000Z",
+      "url": "https://greasyfork.org/users/1184528-rssa-romeo"
+    }
+  ],
+  "name": "scratch extesion: math by rssaromeo",
+  "description": "none",
+  "url": "https://greasyfork.org/scripts/524956-scratch-extesion-math-by-rssaromeo",
+  "code_url": "https://update.greasyfork.org/scripts/524956/scratch%20extesion%3A%20math%20by%20rssaromeo.user.js",
+  "code_size": 12726,
+  "license": "GPLv3",
+  "version": "4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

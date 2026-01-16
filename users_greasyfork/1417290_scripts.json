@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522213,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-29T15:42:07.000Z",
+    "code_updated_at": "2024-12-29T16:01:23.000Z",
+    "namespace": "https://bbs.oldmantvg.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417290,
+        "name": "薛老师",
+        "created_at": "2024-12-29T15:35:10.000Z",
+        "url": "https://greasyfork.org/users/1417290-%E8%96%9B%E8%80%81%E5%B8%88"
+      }
+    ],
+    "name": "老男人暗黑主题",
+    "description": "给 OldManTVG 论坛添加黑暗主题",
+    "url": "https://greasyfork.org/scripts/522213-%E8%80%81%E7%94%B7%E4%BA%BA%E6%9A%97%E9%BB%91%E4%B8%BB%E9%A2%98",
+    "code_url": "https://update.greasyfork.org/scripts/522213/%E8%80%81%E7%94%B7%E4%BA%BA%E6%9A%97%E9%BB%91%E4%B8%BB%E9%A2%98.user.js",
+    "code_size": 1639,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541035,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-28T13:23:15.000Z",
+    "code_updated_at": "2025-06-28T19:03:46.000Z",
+    "namespace": "https://github.com/zhisenyang/civitai-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814758,
+        "name": "Johnsen Young",
+        "created_at": "2021-09-12T15:34:50.000Z",
+        "url": "https://greasyfork.org/users/814758-johnsen-young"
+      }
+    ],
+    "name": "civitai 助手",
+    "description": "当前版本只有快捷下载功能，会有些 bug，后续将更新更多功能。",
+    "url": "https://greasyfork.org/scripts/541035-civitai-%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/541035/civitai%20%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 23724,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

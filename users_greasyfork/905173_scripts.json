@@ -1,0 +1,68 @@
+[
+  {
+    "id": 500739,
+    "daily_installs": 1,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T15:28:43.000Z",
+    "code_updated_at": "2024-07-27T11:06:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905173,
+        "name": "w4t3r1ily",
+        "created_at": "2022-04-21T11:41:11.000Z",
+        "url": "https://greasyfork.org/users/905173-w4t3r1ily"
+      }
+    ],
+    "name": "Facebook Reel to Watch Link Converter",
+    "description": "Convert Facebook reel links to watch links",
+    "url": "https://greasyfork.org/scripts/500739-facebook-reel-to-watch-link-converter",
+    "code_url": "https://update.greasyfork.org/scripts/500739/Facebook%20Reel%20to%20Watch%20Link%20Converter.user.js",
+    "code_size": 1922,
+    "license": null,
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 497546,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-10T15:38:58.000Z",
+    "code_updated_at": "2024-11-18T09:06:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905173,
+        "name": "w4t3r1ily",
+        "created_at": "2022-04-21T11:41:11.000Z",
+        "url": "https://greasyfork.org/users/905173-w4t3r1ily"
+      }
+    ],
+    "name": "Okoun - Živé identity",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/497546-okoun-%C5%BEiv%C3%A9-identity",
+    "code_url": "https://update.greasyfork.org/scripts/497546/Okoun%20-%20%C5%BDiv%C3%A9%20identity.user.js",
+    "code_size": 5746,
+    "license": null,
+    "version": "0.0.3",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

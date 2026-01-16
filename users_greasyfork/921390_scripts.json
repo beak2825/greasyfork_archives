@@ -1,0 +1,101 @@
+[
+  {
+    "id": 499080,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-27T22:08:20.000Z",
+    "code_updated_at": "2024-06-27T22:08:20.000Z",
+    "namespace": "https://rutracker.org/forum/tracker.php?type=movies",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921390,
+        "name": "Aleksei Arkhipenko",
+        "created_at": "2022-06-02T20:02:19.000Z",
+        "url": "https://greasyfork.org/users/921390-aleksei-arkhipenko"
+      }
+    ],
+    "name": "Rutracker Movies Images",
+    "description": "Loads images from rutracker torrent description to the search page.",
+    "url": "https://greasyfork.org/scripts/499080-rutracker-movies-images",
+    "code_url": "https://update.greasyfork.org/scripts/499080/Rutracker%20Movies%20Images.user.js",
+    "code_size": 2961,
+    "license": "MIT License",
+    "version": "2024-06-27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499079,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-27T22:06:51.000Z",
+    "code_updated_at": "2024-06-27T22:06:51.000Z",
+    "namespace": "https://rutracker.org/forum/tracker.php?type=movies",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921390,
+        "name": "Aleksei Arkhipenko",
+        "created_at": "2022-06-02T20:02:19.000Z",
+        "url": "https://greasyfork.org/users/921390-aleksei-arkhipenko"
+      }
+    ],
+    "name": "Rutracker Movies Highlighter",
+    "description": "Highlights too small or too large torrents for movies",
+    "url": "https://greasyfork.org/scripts/499079-rutracker-movies-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/499079/Rutracker%20Movies%20Highlighter.user.js",
+    "code_size": 1381,
+    "license": "MIT License",
+    "version": "2024-06-27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499078,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-27T22:04:25.000Z",
+    "code_updated_at": "2024-06-27T22:04:25.000Z",
+    "namespace": "https://rutracker.org/forum/tracker.php?type=movies",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921390,
+        "name": "Aleksei Arkhipenko",
+        "created_at": "2022-06-02T20:02:19.000Z",
+        "url": "https://greasyfork.org/users/921390-aleksei-arkhipenko"
+      }
+    ],
+    "name": "Rutracker Movies Form",
+    "description": "Simplifies Rutracker search form for movies",
+    "url": "https://greasyfork.org/scripts/499078-rutracker-movies-form",
+    "code_url": "https://update.greasyfork.org/scripts/499078/Rutracker%20Movies%20Form.user.js",
+    "code_size": 3229,
+    "license": "MIT License",
+    "version": "2024-06-27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

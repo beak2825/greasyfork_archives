@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 553365,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T10:54:11.000Z",
+    "code_updated_at": "2025-10-22T11:59:11.000Z",
+    "namespace": "https://greasyfork.org/en/users/1244737",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244737,
+        "name": "robomoist",
+        "created_at": "2024-01-07T21:27:52.000Z",
+        "url": "https://greasyfork.org/users/1244737-robomoist"
+      }
+    ],
+    "name": "Stumblechat horizontal (bottom chat)",
+    "description": "With 2 different styles and various options.",
+    "url": "https://greasyfork.org/scripts/553365-stumblechat-horizontal-bottom-chat",
+    "code_url": "https://update.greasyfork.org/scripts/553365/Stumblechat%20horizontal%20%28bottom%20chat%29.user.css",
+    "code_size": 4473,
+    "license": "MIT License",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507551,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-09T01:42:53.000Z",
+    "code_updated_at": "2024-09-09T01:45:47.000Z",
+    "namespace": "https://greasyfork.org/en/users/1244737",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244737,
+        "name": "robomoist",
+        "created_at": "2024-01-07T21:27:52.000Z",
+        "url": "https://greasyfork.org/users/1244737-robomoist"
+      }
+    ],
+    "name": "Stumblechat lag fix",
+    "description": "Fixes lag by hiding old messages, with a custom amount.",
+    "url": "https://greasyfork.org/scripts/507551-stumblechat-lag-fix",
+    "code_url": "https://update.greasyfork.org/scripts/507551/Stumblechat%20lag%20fix.user.css",
+    "code_size": 527,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507542,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-08T22:49:11.000Z",
+    "code_updated_at": "2024-09-09T05:34:28.000Z",
+    "namespace": "https://greasyfork.org/en/users/1244737",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1244737,
+        "name": "robomoist",
+        "created_at": "2024-01-07T21:27:52.000Z",
+        "url": "https://greasyfork.org/users/1244737-robomoist"
+      }
+    ],
+    "name": "Stumblechat quoting",
+    "description": "Generate a message quote by Shift + Clicking it.",
+    "url": "https://greasyfork.org/scripts/507542-stumblechat-quoting",
+    "code_url": "https://update.greasyfork.org/scripts/507542/Stumblechat%20quoting.user.js",
+    "code_size": 2087,
+    "license": "MIT License",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

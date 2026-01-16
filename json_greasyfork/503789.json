@@ -1,0 +1,59 @@
+{
+  "id": 503789,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-16T02:35:07.000Z",
+  "code_updated_at": "2024-08-16T02:35:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 72574,
+      "name": "qq9323294",
+      "created_at": "2016-10-11T01:39:22.000Z",
+      "url": "https://greasyfork.org/users/72574-qq9323294",
+      "scripts": [
+        {
+          "id": 503789,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-16T02:35:07.000Z",
+          "code_updated_at": "2024-08-16T02:35:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "wcm发布文档页Input Value Saver",
+          "description": "Save and restore input values from localStorage",
+          "url": "https://greasyfork.org/scripts/503789-wcm%E5%8F%91%E5%B8%83%E6%96%87%E6%A1%A3%E9%A1%B5input-value-saver",
+          "code_url": "https://update.greasyfork.org/scripts/503789/wcm%E5%8F%91%E5%B8%83%E6%96%87%E6%A1%A3%E9%A1%B5Input%20Value%20Saver.user.js",
+          "code_size": 1564,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "wcm发布文档页Input Value Saver",
+  "description": "Save and restore input values from localStorage",
+  "url": "https://greasyfork.org/scripts/503789-wcm%E5%8F%91%E5%B8%83%E6%96%87%E6%A1%A3%E9%A1%B5input-value-saver",
+  "code_url": "https://update.greasyfork.org/scripts/503789/wcm%E5%8F%91%E5%B8%83%E6%96%87%E6%A1%A3%E9%A1%B5Input%20Value%20Saver.user.js",
+  "code_size": 1564,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

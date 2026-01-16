@@ -1,0 +1,59 @@
+{
+  "id": 535347,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T12:47:01.000Z",
+  "code_updated_at": "2025-05-08T13:02:18.000Z",
+  "namespace": "Kanji + Radical time label",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1467396,
+      "name": "coherber",
+      "created_at": "2025-05-08T12:43:33.000Z",
+      "url": "https://greasyfork.org/users/1467396-coherber",
+      "scripts": [
+        {
+          "id": 535347,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-08T12:47:01.000Z",
+          "code_updated_at": "2025-05-08T13:02:18.000Z",
+          "namespace": "Kanji + Radical time label",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kanji + Radical time label",
+          "description": "Shows the time until the next review session.",
+          "url": "https://greasyfork.org/scripts/535347-kanji-radical-time-label",
+          "code_url": "https://update.greasyfork.org/scripts/535347/Kanji%20%2B%20Radical%20time%20label.user.js",
+          "code_size": 1781,
+          "license": null,
+          "version": "0.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kanji + Radical time label",
+  "description": "Shows the time until the next review session.",
+  "url": "https://greasyfork.org/scripts/535347-kanji-radical-time-label",
+  "code_url": "https://update.greasyfork.org/scripts/535347/Kanji%20%2B%20Radical%20time%20label.user.js",
+  "code_size": 1781,
+  "license": null,
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

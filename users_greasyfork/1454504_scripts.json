@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531972,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-06T05:40:24.000Z",
+    "code_updated_at": "2025-04-06T05:40:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454504,
+        "name": "trtyr",
+        "created_at": "2025-04-06T05:02:16.000Z",
+        "url": "https://greasyfork.org/users/1454504-trtyr"
+      }
+    ],
+    "name": "Google Search Subdomain Extractor",
+    "description": "Extracts unique subdomains from Google search result <cite> tags, logs beautifully, and sends to a local Python server. / 从 Google 搜索结果提取子域名，并发送到本地 Python 服务器。",
+    "url": "https://greasyfork.org/scripts/531972-google-search-subdomain-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/531972/Google%20Search%20Subdomain%20Extractor.user.js",
+    "code_size": 6534,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.4.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

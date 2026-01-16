@@ -1,0 +1,34 @@
+{
+  "id": 518324,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-21T10:00:25.000Z",
+  "code_updated_at": "2025-03-23T19:10:15.000Z",
+  "namespace": "https://greasyfork.org/users/1130260",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1130260,
+      "name": "Wizzard",
+      "created_at": "2023-07-19T02:06:37.000Z",
+      "url": "https://greasyfork.org/users/1130260-wizzard",
+      "scripts": []
+    }
+  ],
+  "name": "GGn Stickied Torrent Hider",
+  "description": "Hides stickied torrents",
+  "url": "https://greasyfork.org/scripts/518324-ggn-stickied-torrent-hider",
+  "code_url": "https://update.greasyfork.org/scripts/518324/GGn%20Stickied%20Torrent%20Hider.user.js",
+  "code_size": 517,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

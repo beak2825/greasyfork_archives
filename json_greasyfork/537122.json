@@ -1,0 +1,59 @@
+{
+  "id": 537122,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-24T15:34:02.000Z",
+  "code_updated_at": "2025-05-24T15:34:02.000Z",
+  "namespace": "zsk-url-cleaner",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474347,
+      "name": "ZerSKYi",
+      "created_at": "2025-05-24T15:00:45.000Z",
+      "url": "https://greasyfork.org/users/1474347-zerskyi",
+      "scripts": [
+        {
+          "id": 537122,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-24T15:34:02.000Z",
+          "code_updated_at": "2025-05-24T15:34:02.000Z",
+          "namespace": "zsk-url-cleaner",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Stealth URL Cleaner",
+          "description": "Silently cleans URLs by removing tracking parameters and other clutter.",
+          "url": "https://greasyfork.org/scripts/537122-stealth-url-cleaner",
+          "code_url": "https://update.greasyfork.org/scripts/537122/Stealth%20URL%20Cleaner.user.js",
+          "code_size": 3820,
+          "license": "BSD 3-Clause",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Stealth URL Cleaner",
+  "description": "Silently cleans URLs by removing tracking parameters and other clutter.",
+  "url": "https://greasyfork.org/scripts/537122-stealth-url-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/537122/Stealth%20URL%20Cleaner.user.js",
+  "code_size": 3820,
+  "license": "BSD 3-Clause",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

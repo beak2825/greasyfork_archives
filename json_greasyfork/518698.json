@@ -1,0 +1,33 @@
+{
+  "id": 518698,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-24T14:38:47.000Z",
+  "code_updated_at": "2024-11-24T21:54:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1081229,
+      "name": "Vishanka",
+      "created_at": "2023-05-18T23:46:44.000Z",
+      "url": "https://greasyfork.org/users/1081229-vishanka"
+    }
+  ],
+  "name": "Discord/Shapes - Rules",
+  "description": "Logic for rotating custom texts on Discord",
+  "url": "https://greasyfork.org/scripts/518698-discord-shapes-rules",
+  "code_url": "https://update.greasyfork.org/scripts/518698/DiscordShapes%20-%20Rules.user.js",
+  "code_size": 2973,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

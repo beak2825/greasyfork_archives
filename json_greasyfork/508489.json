@@ -1,0 +1,59 @@
+{
+  "id": 508489,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-14T21:29:43.000Z",
+  "code_updated_at": "2024-09-14T23:18:48.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1367588,
+      "name": "alt 3rd",
+      "created_at": "2024-09-14T21:22:34.000Z",
+      "url": "https://greasyfork.org/users/1367588-alt-3rd",
+      "scripts": [
+        {
+          "id": 508489,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-14T21:29:43.000Z",
+          "code_updated_at": "2024-09-14T23:18:48.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better anitaku",
+          "description": "2024-09-14, 5:17:22 p.m.",
+          "url": "https://greasyfork.org/scripts/508489-better-anitaku",
+          "code_url": "https://update.greasyfork.org/scripts/508489/Better%20anitaku.user.js",
+          "code_size": 1210,
+          "license": "GNU",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better anitaku",
+  "description": "2024-09-14, 5:17:22 p.m.",
+  "url": "https://greasyfork.org/scripts/508489-better-anitaku",
+  "code_url": "https://update.greasyfork.org/scripts/508489/Better%20anitaku.user.js",
+  "code_size": 1210,
+  "license": "GNU",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

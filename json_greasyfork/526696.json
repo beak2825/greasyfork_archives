@@ -1,0 +1,59 @@
+{
+  "id": 526696,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-12T16:43:07.000Z",
+  "code_updated_at": "2025-02-18T18:00:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434385,
+      "name": "Eden Ferguson",
+      "created_at": "2025-02-12T16:41:50.000Z",
+      "url": "https://greasyfork.org/users/1434385-eden-ferguson",
+      "scripts": [
+        {
+          "id": 526696,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-12T16:43:07.000Z",
+          "code_updated_at": "2025-02-18T18:00:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Facebook Business Automation",
+          "description": "Automates actions in Facebook Business Manager, specifically Rights Manager.",
+          "url": "https://greasyfork.org/scripts/526696-facebook-business-automation",
+          "code_url": "https://update.greasyfork.org/scripts/526696/Facebook%20Business%20Automation.user.js",
+          "code_size": 19849,
+          "license": "MIT License",
+          "version": "2.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Facebook Business Automation",
+  "description": "Automates actions in Facebook Business Manager, specifically Rights Manager.",
+  "url": "https://greasyfork.org/scripts/526696-facebook-business-automation",
+  "code_url": "https://update.greasyfork.org/scripts/526696/Facebook%20Business%20Automation.user.js",
+  "code_size": 19849,
+  "license": "MIT License",
+  "version": "2.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

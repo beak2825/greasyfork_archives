@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530522,
+    "daily_installs": 1,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-22T09:07:02.000Z",
+    "code_updated_at": "2025-03-22T09:07:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383016,
+        "name": "da蘑菇大",
+        "created_at": "2024-10-19T04:44:19.000Z",
+        "url": "https://greasyfork.org/users/1383016-da%E8%98%91%E8%8F%87%E5%A4%A7"
+      }
+    ],
+    "name": "B站收藏夹与合集视频链接批量获取",
+    "description": "获取B站收藏夹和合集内所有视频的链接（直接解析网页）",
+    "url": "https://greasyfork.org/scripts/530522-b%E7%AB%99%E6%94%B6%E8%97%8F%E5%A4%B9%E4%B8%8E%E5%90%88%E9%9B%86%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5%E6%89%B9%E9%87%8F%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/530522/B%E7%AB%99%E6%94%B6%E8%97%8F%E5%A4%B9%E4%B8%8E%E5%90%88%E9%9B%86%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5%E6%89%B9%E9%87%8F%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 19075,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

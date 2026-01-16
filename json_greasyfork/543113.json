@@ -1,0 +1,34 @@
+{
+  "id": 543113,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-20T11:24:02.000Z",
+  "code_updated_at": "2025-09-07T10:52:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1419627,
+      "name": "dogedoge",
+      "created_at": "2025-01-04T21:41:50.000Z",
+      "url": "https://greasyfork.org/users/1419627-dogedoge",
+      "scripts": []
+    }
+  ],
+  "name": "lanis 자동사냥 3.7.1",
+  "description": "화면 좌측에 ON/OFF 버튼, 레벨제한 입력창, 골드제한 입력창, 숙련도제한 입력창, 버튼 텍스트 입력창, 제외 버튼 텍스트 입력창을 추가. 레벨제한 또는 숙련도제한 도달 시 버튼 클릭을 일시 중지하고 조건 변화 시 재개. 입력된 텍스트가 포함된 버튼을 골드제한 이하일 때 0.3초 간격으로 자동 클릭. 제외 버튼 텍스트가 포함된 버튼이 있으면 자동 클릭 중지. 입력창 크기 드래그로 조절 가능.",
+  "url": "https://greasyfork.org/scripts/543113-lanis-%EC%9E%90%EB%8F%99%EC%82%AC%EB%83%A5-3-7-1",
+  "code_url": "https://update.greasyfork.org/scripts/543113/lanis%20%EC%9E%90%EB%8F%99%EC%82%AC%EB%83%A5%20371.user.js",
+  "code_size": 16787,
+  "license": "MIT License",
+  "version": "3.7.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

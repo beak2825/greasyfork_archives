@@ -1,0 +1,68 @@
+[
+  {
+    "id": 518695,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T14:01:09.000Z",
+    "code_updated_at": "2024-11-25T09:56:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815643,
+        "name": "addpd",
+        "created_at": "2021-09-15T08:57:06.000Z",
+        "url": "https://greasyfork.org/users/815643-addpd"
+      }
+    ],
+    "name": "哔哩哔哩 (B站|Bilibili) 限制视频种类(做减法)",
+    "description": "隐藏搜索内容，必须选择时长和视频分区才显示（环境改变引导自己要什么）",
+    "url": "https://greasyfork.org/scripts/518695-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-b%E7%AB%99-bilibili-%E9%99%90%E5%88%B6%E8%A7%86%E9%A2%91%E7%A7%8D%E7%B1%BB-%E5%81%9A%E5%87%8F%E6%B3%95",
+    "code_url": "https://update.greasyfork.org/scripts/518695/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%20%28B%E7%AB%99%7CBilibili%29%20%E9%99%90%E5%88%B6%E8%A7%86%E9%A2%91%E7%A7%8D%E7%B1%BB%28%E5%81%9A%E5%87%8F%E6%B3%95%29.user.js",
+    "code_size": 7668,
+    "license": "MIT License",
+    "version": "1.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509202,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T14:20:59.000Z",
+    "code_updated_at": "2024-09-19T14:20:59.000Z",
+    "namespace": "https://github.com/addpd/gamersky-image-helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 815643,
+        "name": "addpd",
+        "created_at": "2021-09-15T08:57:06.000Z",
+        "url": "https://greasyfork.org/users/815643-addpd"
+      }
+    ],
+    "name": "游民星空图片助手",
+    "description": "为游民星空网站提供图片下载功能的油猴插件",
+    "url": "https://greasyfork.org/scripts/509202-%E6%B8%B8%E6%B0%91%E6%98%9F%E7%A9%BA%E5%9B%BE%E7%89%87%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/509202/%E6%B8%B8%E6%B0%91%E6%98%9F%E7%A9%BA%E5%9B%BE%E7%89%87%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 27917,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

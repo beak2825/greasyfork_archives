@@ -1,0 +1,34 @@
+{
+  "id": 507430,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-08T09:21:29.000Z",
+  "code_updated_at": "2024-09-08T10:43:16.000Z",
+  "namespace": "KEENOY",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1349082,
+      "name": "keenoy",
+      "created_at": "2024-08-10T10:56:06.000Z",
+      "url": "https://greasyfork.org/users/1349082-keenoy",
+      "scripts": []
+    }
+  ],
+  "name": "Mahjong AI Reviwer Extended",
+  "description": "Functional extension for https://mjai.ekyu.moe/",
+  "url": "https://greasyfork.org/scripts/507430-mahjong-ai-reviwer-extended",
+  "code_url": "https://update.greasyfork.org/scripts/507430/Mahjong%20AI%20Reviwer%20Extended.user.js",
+  "code_size": 49930,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

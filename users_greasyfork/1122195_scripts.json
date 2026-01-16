@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536596,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-20T09:59:49.000Z",
+    "code_updated_at": "2025-05-20T10:22:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1122195,
+        "name": "ExcuseLme",
+        "created_at": "2023-07-09T03:22:44.000Z",
+        "url": "https://greasyfork.org/users/1122195-excuselme"
+      }
+    ],
+    "name": "游民星空-\"你已经点过赞!\"alert弹窗样式重写",
+    "description": "重复点赞后会alert弹窗提示\"你已经点过赞!\", 需要点击\"确认\"才能关闭, 现将其修改为持续3s的浮窗, 到期后自动消失无需点击",
+    "url": "https://greasyfork.org/scripts/536596-%E6%B8%B8%E6%B0%91%E6%98%9F%E7%A9%BA-%E4%BD%A0%E5%B7%B2%E7%BB%8F%E7%82%B9%E8%BF%87%E8%B5%9E-alert%E5%BC%B9%E7%AA%97%E6%A0%B7%E5%BC%8F%E9%87%8D%E5%86%99",
+    "code_url": "https://update.greasyfork.org/scripts/536596/%E6%B8%B8%E6%B0%91%E6%98%9F%E7%A9%BA-%22%E4%BD%A0%E5%B7%B2%E7%BB%8F%E7%82%B9%E8%BF%87%E8%B5%9E%21%22alert%E5%BC%B9%E7%AA%97%E6%A0%B7%E5%BC%8F%E9%87%8D%E5%86%99.user.js",
+    "code_size": 3116,
+    "license": "MIT License",
+    "version": "2025-05-20 18:22",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

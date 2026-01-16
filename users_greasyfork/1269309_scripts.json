@@ -31,5 +31,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 509352,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T09:13:14.000Z",
+    "code_updated_at": "2024-09-20T09:17:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1269309,
+        "name": "oldkingOK",
+        "created_at": "2024-03-02T12:00:12.000Z",
+        "url": "https://greasyfork.org/users/1269309-oldkingok"
+      }
+    ],
+    "name": "刷客刷客",
+    "description": "刷客刷客刷客",
+    "url": "https://greasyfork.org/scripts/509352-%E5%88%B7%E5%AE%A2%E5%88%B7%E5%AE%A2",
+    "code_url": "https://update.greasyfork.org/scripts/509352/%E5%88%B7%E5%AE%A2%E5%88%B7%E5%AE%A2.user.js",
+    "code_size": 956,
+    "license": "MIT License",
+    "version": "2024-09-20",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502833,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-07T03:27:58.000Z",
+    "code_updated_at": "2024-08-07T03:33:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1269309,
+        "name": "oldkingOK",
+        "created_at": "2024-03-02T12:00:12.000Z",
+        "url": "https://greasyfork.org/users/1269309-oldkingok"
+      }
+    ],
+    "name": "刷客",
+    "description": "Hello World!",
+    "url": "https://greasyfork.org/scripts/502833-%E5%88%B7%E5%AE%A2",
+    "code_url": "https://update.greasyfork.org/scripts/502833/%E5%88%B7%E5%AE%A2.user.js",
+    "code_size": 559,
+    "license": "MIT License",
+    "version": "2024-08-08",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502084,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T13:30:31.000Z",
+    "code_updated_at": "2024-07-29T13:30:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1269309,
+        "name": "oldkingOK",
+        "created_at": "2024-03-02T12:00:12.000Z",
+        "url": "https://greasyfork.org/users/1269309-oldkingok"
+      }
+    ],
+    "name": "Fuck 抢课",
+    "description": "把课程英文名替换成课程 id",
+    "url": "https://greasyfork.org/scripts/502084-%E6%8A%A2%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/502084/Fuck%20%E6%8A%A2%E8%AF%BE.user.js",
+    "code_size": 1713,
+    "license": "MIT License",
+    "version": "2024-07-29",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

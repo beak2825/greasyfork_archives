@@ -1,0 +1,34 @@
+{
+  "id": 502351,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-01T12:13:16.000Z",
+  "code_updated_at": "2024-08-01T12:22:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed 2 Rec4 VB moe.bodensee@t-online.de",
+  "description": "Modify account balance values, update data-positive attribute, and remove currency elements",
+  "url": "https://greasyfork.org/scripts/502351-ed-2-rec4-vb-moe-bodensee-t-online-de",
+  "code_url": "https://update.greasyfork.org/scripts/502351/Ed%202%20Rec4%20VB%20moebodensee%40t-onlinede.user.js",
+  "code_size": 94513,
+  "license": null,
+  "version": "8.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

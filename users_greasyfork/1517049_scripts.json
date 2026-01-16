@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550090,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-19T16:37:16.000Z",
+    "code_updated_at": "2025-09-19T16:37:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1517049,
+        "name": "vaib",
+        "created_at": "2025-09-19T16:34:57.000Z",
+        "url": "https://greasyfork.org/users/1517049-vaib"
+      }
+    ],
+    "name": "Blur Dop.Account",
+    "description": "...",
+    "url": "https://greasyfork.org/scripts/550090-blur-dop-account",
+    "code_url": "https://update.greasyfork.org/scripts/550090/Blur%20DopAccount.user.js",
+    "code_size": 774,
+    "license": "MIT License",
+    "version": "v1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

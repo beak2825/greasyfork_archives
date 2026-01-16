@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534922,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-04T14:51:11.000Z",
+    "code_updated_at": "2025-05-04T14:51:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465608,
+        "name": "forever_you",
+        "created_at": "2025-05-04T14:36:15.000Z",
+        "url": "https://greasyfork.org/users/1465608-forever-you"
+      }
+    ],
+    "name": "自动打卡并继续学习助手",
+    "description": "在学习打卡弹窗出现时自动点击“确定打卡”，然后自动点击“继续学习”按钮，免去手动操作。",
+    "url": "https://greasyfork.org/scripts/534922-%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1%E5%B9%B6%E7%BB%A7%E7%BB%AD%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/534922/%E8%87%AA%E5%8A%A8%E6%89%93%E5%8D%A1%E5%B9%B6%E7%BB%A7%E7%BB%AD%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 1864,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

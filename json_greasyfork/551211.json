@@ -1,0 +1,59 @@
+{
+  "id": 551211,
+  "daily_installs": 1,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-01T05:22:34.000Z",
+  "code_updated_at": "2025-10-02T01:24:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521208,
+      "name": "Caskexe",
+      "created_at": "2025-10-01T05:15:43.000Z",
+      "url": "https://greasyfork.org/users/1521208-caskexe",
+      "scripts": [
+        {
+          "id": 551211,
+          "daily_installs": 1,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-01T05:22:34.000Z",
+          "code_updated_at": "2025-10-02T01:24:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Set Portainer Items per Page to All",
+          "description": "Automatically set Items per page to 'All' in Portainer",
+          "url": "https://greasyfork.org/scripts/551211-set-portainer-items-per-page-to-all",
+          "code_url": "https://update.greasyfork.org/scripts/551211/Set%20Portainer%20Items%20per%20Page%20to%20All.user.js",
+          "code_size": 2771,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Set Portainer Items per Page to All",
+  "description": "Automatically set Items per page to 'All' in Portainer",
+  "url": "https://greasyfork.org/scripts/551211-set-portainer-items-per-page-to-all",
+  "code_url": "https://update.greasyfork.org/scripts/551211/Set%20Portainer%20Items%20per%20Page%20to%20All.user.js",
+  "code_size": 2771,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538959,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T02:44:34.000Z",
+    "code_updated_at": "2025-06-10T02:44:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438926,
+        "name": "loure marv",
+        "created_at": "2025-02-23T12:05:15.000Z",
+        "url": "https://greasyfork.org/users/1438926-loure-marv"
+      }
+    ],
+    "name": "解除tcpc.org.cn右键屏蔽",
+    "description": "解除tcpc.org.cn网站对鼠标右键的屏蔽",
+    "url": "https://greasyfork.org/scripts/538959-%E8%A7%A3%E9%99%A4tcpc-org-cn%E5%8F%B3%E9%94%AE%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/538959/%E8%A7%A3%E9%99%A4tcpcorgcn%E5%8F%B3%E9%94%AE%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 1545,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 526088,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-06T12:34:34.000Z",
+  "code_updated_at": "2025-02-06T13:21:39.000Z",
+  "namespace": "https://t.me/adung98",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1267321,
+      "name": "anhdung98",
+      "created_at": "2024-02-26T17:30:28.000Z",
+      "url": "https://greasyfork.org/users/1267321-anhdung98",
+      "scripts": [
+        {
+          "id": 557564,
+          "daily_installs": 0,
+          "total_installs": 275,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-01T16:42:03.000Z",
+          "code_updated_at": "2025-12-08T06:39:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Supercell Store Ultimate Claimer",
+          "description": "Fetches and claims free Supercell Store rewards on store.supercell.com via a floating widget.",
+          "url": "https://greasyfork.org/scripts/557564-supercell-store-ultimate-claimer",
+          "code_url": "https://update.greasyfork.org/scripts/557564/Supercell%20Store%20Ultimate%20Claimer.user.js",
+          "code_size": 31881,
+          "license": "MIT License",
+          "version": "7.11",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Login on chat.daangn.com",
+  "description": "Fetch tokens and insert a dropdown selector in the header",
+  "url": "https://greasyfork.org/scripts/526088-login-on-chat-daangn-com",
+  "code_url": "https://update.greasyfork.org/scripts/526088/Login%20on%20chatdaangncom.user.js",
+  "code_size": 140310,
+  "license": null,
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 501814,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-26T02:42:38.000Z",
+  "code_updated_at": "2024-07-26T02:42:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956446,
+      "name": "TorinMars",
+      "created_at": "2022-09-09T07:57:37.000Z",
+      "url": "https://greasyfork.org/users/956446-torinmars",
+      "scripts": []
+    }
+  ],
+  "name": "格式化快手日志",
+  "description": "格式化快手日志， 并且会过滤下拉筛选框",
+  "url": "https://greasyfork.org/scripts/501814-%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%BF%AB%E6%89%8B%E6%97%A5%E5%BF%97",
+  "code_url": "https://update.greasyfork.org/scripts/501814/%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%BF%AB%E6%89%8B%E6%97%A5%E5%BF%97.user.js",
+  "code_size": 4094,
+  "license": "MIT License",
+  "version": "2024-07-22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

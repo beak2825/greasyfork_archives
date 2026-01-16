@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524742,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-24T16:45:31.000Z",
+    "code_updated_at": "2025-01-26T17:52:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426949,
+        "name": "down_to_earth",
+        "created_at": "2025-01-24T16:38:12.000Z",
+        "url": "https://greasyfork.org/users/1426949-down-to-earth"
+      }
+    ],
+    "name": "Magnet Link Handler for qBittorrent WebUI",
+    "description": "Intercept magnet links and open qBittorrent download dialog in a popup.",
+    "url": "https://greasyfork.org/scripts/524742-magnet-link-handler-for-qbittorrent-webui",
+    "code_url": "https://update.greasyfork.org/scripts/524742/Magnet%20Link%20Handler%20for%20qBittorrent%20WebUI.user.js",
+    "code_size": 8750,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

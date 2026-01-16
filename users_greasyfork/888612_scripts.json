@@ -1,0 +1,134 @@
+[
+  {
+    "id": 512327,
+    "daily_installs": 0,
+    "total_installs": 168,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-12T07:32:19.000Z",
+    "code_updated_at": "2024-10-12T07:36:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888612,
+        "name": "duoluodexiaoxiaoyuan",
+        "created_at": "2022-03-17T12:15:44.000Z",
+        "url": "https://greasyfork.org/users/888612-duoluodexiaoxiaoyuan"
+      }
+    ],
+    "name": "考试题库划词搜索",
+    "description": "适用与超星，智慧树等任意考试网站搜索一之题库的答案，支持划词搜索、拖拽和自定义token（加密显示）",
+    "url": "https://greasyfork.org/scripts/512327-%E8%80%83%E8%AF%95%E9%A2%98%E5%BA%93%E5%88%92%E8%AF%8D%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/512327/%E8%80%83%E8%AF%95%E9%A2%98%E5%BA%93%E5%88%92%E8%AF%8D%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 6214,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511946,
+    "daily_installs": 0,
+    "total_installs": 179,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-09T02:02:28.000Z",
+    "code_updated_at": "2024-10-09T02:02:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888612,
+        "name": "duoluodexiaoxiaoyuan",
+        "created_at": "2022-03-17T12:15:44.000Z",
+        "url": "https://greasyfork.org/users/888612-duoluodexiaoxiaoyuan"
+      }
+    ],
+    "name": "天津市专业技术人员继续教育视频自动播放到下一节",
+    "description": "自动点击播放下一节视频",
+    "url": "https://greasyfork.org/scripts/511946-%E5%A4%A9%E6%B4%A5%E5%B8%82%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E5%88%B0%E4%B8%8B%E4%B8%80%E8%8A%82",
+    "code_url": "https://update.greasyfork.org/scripts/511946/%E5%A4%A9%E6%B4%A5%E5%B8%82%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E5%88%B0%E4%B8%8B%E4%B8%80%E8%8A%82.user.js",
+    "code_size": 1120,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510353,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T00:29:18.000Z",
+    "code_updated_at": "2024-09-27T00:29:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888612,
+        "name": "duoluodexiaoxiaoyuan",
+        "created_at": "2022-03-17T12:15:44.000Z",
+        "url": "https://greasyfork.org/users/888612-duoluodexiaoxiaoyuan"
+      }
+    ],
+    "name": "Linux.do一键滚动到底部和顶部（支持懒加载和拖拽）",
+    "description": "实现网页滚动到底部、顶部，处理懒加载内容，支持按钮拖拽",
+    "url": "https://greasyfork.org/scripts/510353-linux-do%E4%B8%80%E9%94%AE%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8%E5%92%8C%E9%A1%B6%E9%83%A8-%E6%94%AF%E6%8C%81%E6%87%92%E5%8A%A0%E8%BD%BD%E5%92%8C%E6%8B%96%E6%8B%BD",
+    "code_url": "https://update.greasyfork.org/scripts/510353/Linuxdo%E4%B8%80%E9%94%AE%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8%E5%92%8C%E9%A1%B6%E9%83%A8%EF%BC%88%E6%94%AF%E6%8C%81%E6%87%92%E5%8A%A0%E8%BD%BD%E5%92%8C%E6%8B%96%E6%8B%BD%EF%BC%89.user.js",
+    "code_size": 3615,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510209,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T03:52:57.000Z",
+    "code_updated_at": "2024-09-26T03:52:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 888612,
+        "name": "duoluodexiaoxiaoyuan",
+        "created_at": "2022-03-17T12:15:44.000Z",
+        "url": "https://greasyfork.org/users/888612-duoluodexiaoxiaoyuan"
+      }
+    ],
+    "name": "Linux.do简化版超级链接获取器（支持拖拽）",
+    "description": "就是想跳转到用户的主题下面右键点击时智能获取链接并显示在可拖拽的框中，可编辑链接并跳转，同时禁用默认右键菜单",
+    "url": "https://greasyfork.org/scripts/510209-linux-do%E7%AE%80%E5%8C%96%E7%89%88%E8%B6%85%E7%BA%A7%E9%93%BE%E6%8E%A5%E8%8E%B7%E5%8F%96%E5%99%A8-%E6%94%AF%E6%8C%81%E6%8B%96%E6%8B%BD",
+    "code_url": "https://update.greasyfork.org/scripts/510209/Linuxdo%E7%AE%80%E5%8C%96%E7%89%88%E8%B6%85%E7%BA%A7%E9%93%BE%E6%8E%A5%E8%8E%B7%E5%8F%96%E5%99%A8%EF%BC%88%E6%94%AF%E6%8C%81%E6%8B%96%E6%8B%BD%EF%BC%89.user.js",
+    "code_size": 5210,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

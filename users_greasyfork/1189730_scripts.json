@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533863,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-24T19:52:34.000Z",
+    "code_updated_at": "2025-04-24T19:52:34.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189730,
+        "name": "SnabbSpelare",
+        "created_at": "2023-10-06T15:58:04.000Z",
+        "url": "https://greasyfork.org/users/1189730-snabbspelare"
+      }
+    ],
+    "name": "Steam Chat Message Logger (with Load More)",
+    "description": "Extract and save Steam friend chat messages to a file, even when the page has \"Load more\" button",
+    "url": "https://greasyfork.org/scripts/533863-steam-chat-message-logger-with-load-more",
+    "code_url": "https://update.greasyfork.org/scripts/533863/Steam%20Chat%20Message%20Logger%20%28with%20Load%20More%29.user.js",
+    "code_size": 5873,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

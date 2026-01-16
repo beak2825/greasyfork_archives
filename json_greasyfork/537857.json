@@ -1,0 +1,33 @@
+{
+  "id": 537857,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T13:40:26.000Z",
+  "code_updated_at": "2025-05-31T13:40:26.000Z",
+  "namespace": "https://github.com/YOUR_USERNAME/yts-cleaner",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1477197,
+      "name": "Eliminater74",
+      "created_at": "2025-05-31T13:35:57.000Z",
+      "url": "https://greasyfork.org/users/1477197-eliminater74"
+    }
+  ],
+  "name": "YTS Mirror Cleaner with Toggle",
+  "description": "Remove all popups, overlays, and ads from YTS.mx and mirrors without breaking torrents. Includes on-page toggle to enable/disable cleanup.",
+  "url": "https://greasyfork.org/scripts/537857-yts-mirror-cleaner-with-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/537857/YTS%20Mirror%20Cleaner%20with%20Toggle.user.js",
+  "code_size": 3736,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

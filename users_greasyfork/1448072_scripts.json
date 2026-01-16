@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530349,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-20T10:13:29.000Z",
+    "code_updated_at": "2025-03-20T10:13:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1448072,
+        "name": "walid jazayeri",
+        "created_at": "2025-03-20T10:10:36.000Z",
+        "url": "https://greasyfork.org/users/1448072-walid-jazayeri"
+      }
+    ],
+    "name": "Hide Videos by Title or Text",
+    "description": "Masque les vidéos contenant des mots interdits dans le titre ou le texte",
+    "url": "https://greasyfork.org/scripts/530349-hide-videos-by-title-or-text",
+    "code_url": "https://update.greasyfork.org/scripts/530349/Hide%20Videos%20by%20Title%20or%20Text.user.js",
+    "code_size": 1618,
+    "license": "DizayeurCorp",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

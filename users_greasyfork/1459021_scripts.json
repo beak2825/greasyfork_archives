@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533132,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T13:25:16.000Z",
+    "code_updated_at": "2025-04-17T13:25:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459021,
+        "name": "The Cloud",
+        "created_at": "2025-04-17T13:24:09.000Z",
+        "url": "https://greasyfork.org/users/1459021-the-cloud"
+      }
+    ],
+    "name": "asp",
+    "description": "Adds a custom button and sends data to a server using fetch API with extra permissions.",
+    "url": "https://greasyfork.org/scripts/533132-asp",
+    "code_url": "https://update.greasyfork.org/scripts/533132/asp.user.js",
+    "code_size": 3387,
+    "license": null,
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

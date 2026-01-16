@@ -1,0 +1,68 @@
+[
+  {
+    "id": 506448,
+    "daily_installs": 2,
+    "total_installs": 686,
+    "fan_score": "31.0",
+    "good_ratings": 2,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-09-02T14:54:44.000Z",
+    "code_updated_at": "2025-06-28T09:28:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358098,
+        "name": "理塘帝國最強伝説絶兇の猛虎純真丁一郎です!",
+        "created_at": "2024-08-26T11:58:07.000Z",
+        "url": "https://greasyfork.org/users/1358098-%E7%90%86%E5%A1%98%E5%B8%9D%E5%9C%8B%E6%9C%80%E5%BC%B7%E4%BC%9D%E8%AA%AC%E7%B5%B6%E5%85%87%E3%81%AE%E7%8C%9B%E8%99%8E%E7%B4%94%E7%9C%9F%E4%B8%81%E4%B8%80%E9%83%8E%E3%81%A7%E3%81%99"
+      }
+    ],
+    "name": "虎牙页面优化",
+    "description": "虎牙精简版，移除首页直播，移除直播礼物特效等不必要元素，还你纯粹的直播体验",
+    "url": "https://greasyfork.org/scripts/506448-%E8%99%8E%E7%89%99%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/506448/%E8%99%8E%E7%89%99%E9%A1%B5%E9%9D%A2%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 5862,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505372,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-27T05:18:42.000Z",
+    "code_updated_at": "2024-08-27T05:18:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358098,
+        "name": "理塘帝國最強伝説絶兇の猛虎純真丁一郎です!",
+        "created_at": "2024-08-26T11:58:07.000Z",
+        "url": "https://greasyfork.org/users/1358098-%E7%90%86%E5%A1%98%E5%B8%9D%E5%9C%8B%E6%9C%80%E5%BC%B7%E4%BC%9D%E8%AA%AC%E7%B5%B6%E5%85%87%E3%81%AE%E7%8C%9B%E8%99%8E%E7%B4%94%E7%9C%9F%E4%B8%81%E4%B8%80%E9%83%8E%E3%81%A7%E3%81%99"
+      }
+    ],
+    "name": "禁用open3dmodel的广告拦截弹窗",
+    "description": "移除安装广告拦截插件后导致的弹窗",
+    "url": "https://greasyfork.org/scripts/505372-%E7%A6%81%E7%94%A8open3dmodel%E7%9A%84%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/505372/%E7%A6%81%E7%94%A8open3dmodel%E7%9A%84%E5%B9%BF%E5%91%8A%E6%8B%A6%E6%88%AA%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 1206,
+    "license": "MIT License",
+    "version": "2024-08-27",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

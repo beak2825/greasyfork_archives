@@ -1,0 +1,59 @@
+{
+  "id": 547339,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "9.5",
+  "good_ratings": 0,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2025-08-26T10:04:18.000Z",
+  "code_updated_at": "2025-12-18T02:04:37.000Z",
+  "namespace": "vite-plugin-monkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 923377,
+      "name": "overrei",
+      "created_at": "2022-06-08T09:25:04.000Z",
+      "url": "https://greasyfork.org/users/923377-overrei",
+      "scripts": [
+        {
+          "id": 547339,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "9.5",
+          "good_ratings": 0,
+          "ok_ratings": 2,
+          "bad_ratings": 0,
+          "created_at": "2025-08-26T10:04:18.000Z",
+          "code_updated_at": "2025-12-18T02:04:37.000Z",
+          "namespace": "vite-plugin-monkey",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "上班摸鱼小说阅读器",
+          "description": "一款简单的网页小说阅读器，可以隐藏在网页中，自定义书籍，功能持续维护升级中。",
+          "url": "https://greasyfork.org/scripts/547339-%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/547339/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8.user.js",
+          "code_size": 1939080,
+          "license": "MIT License",
+          "version": "0.0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "上班摸鱼小说阅读器",
+  "description": "一款简单的网页小说阅读器，可以隐藏在网页中，自定义书籍，功能持续维护升级中。",
+  "url": "https://greasyfork.org/scripts/547339-%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/547339/%E4%B8%8A%E7%8F%AD%E6%91%B8%E9%B1%BC%E5%B0%8F%E8%AF%B4%E9%98%85%E8%AF%BB%E5%99%A8.user.js",
+  "code_size": 1939080,
+  "license": "MIT License",
+  "version": "0.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 548365,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T15:36:57.000Z",
+  "code_updated_at": "2025-09-06T17:59:22.000Z",
+  "namespace": "dq.secure.v2.client",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1410283,
+      "name": "ifever",
+      "created_at": "2024-12-13T09:15:31.000Z",
+      "url": "https://greasyfork.org/users/1410283-ifever",
+      "scripts": [
+        {
+          "id": 520579,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-13T09:18:18.000Z",
+          "code_updated_at": "2024-12-13T09:18:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎关键词过滤助手",
+          "description": "过滤知乎推荐中包含特定关键词的内容，支持黑白名单和模式切换",
+          "url": "https://greasyfork.org/scripts/520579-%E7%9F%A5%E4%B9%8E%E5%85%B3%E9%94%AE%E8%AF%8D%E8%BF%87%E6%BB%A4%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/520579/%E7%9F%A5%E4%B9%8E%E5%85%B3%E9%94%AE%E8%AF%8D%E8%BF%87%E6%BB%A4%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 5123,
+          "license": "AGPLv3",
+          "version": "0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DeepQuery Secure Client",
+  "description": "客户端：把查询请求放到 GM 通道，等待结果返回",
+  "url": "https://greasyfork.org/scripts/548365-deepquery-secure-client",
+  "code_url": "https://update.greasyfork.org/scripts/548365/1656053/DeepQuery%20Secure%20Client.js",
+  "code_size": 7385,
+  "license": null,
+  "version": "3.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

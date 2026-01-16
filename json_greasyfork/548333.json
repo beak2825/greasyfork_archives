@@ -1,0 +1,33 @@
+{
+  "id": 548333,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T09:00:35.000Z",
+  "code_updated_at": "2025-09-04T09:00:35.000Z",
+  "namespace": "https://github.com/thebestg5",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503523,
+      "name": "Guillem",
+      "created_at": "2025-08-10T14:26:08.000Z",
+      "url": "https://greasyfork.org/users/1503523-guillem"
+    }
+  ],
+  "name": "Bonk.io – Mute/Hide Toxic Users (Safe Client-side)",
+  "description": "Adds buttons to Mute/Unmute users in Bonk.io chat and hides messages containing offensive/banned words. Saves list in localStorage. Muted users appear in red, report links to Bonk Discord.",
+  "url": "https://greasyfork.org/scripts/548333-bonk-io-mute-hide-toxic-users-safe-client-side",
+  "code_url": "https://update.greasyfork.org/scripts/548333/Bonkio%20%E2%80%93%20MuteHide%20Toxic%20Users%20%28Safe%20Client-side%29.user.js",
+  "code_size": 10007,
+  "license": null,
+  "version": "1.2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

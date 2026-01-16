@@ -1,0 +1,59 @@
+{
+  "id": 530977,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-27T04:20:21.000Z",
+  "code_updated_at": "2025-03-27T04:20:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450757,
+      "name": "baka-9",
+      "created_at": "2025-03-27T04:13:21.000Z",
+      "url": "https://greasyfork.org/users/1450757-baka-9",
+      "scripts": [
+        {
+          "id": 530977,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-27T04:20:21.000Z",
+          "code_updated_at": "2025-03-27T04:20:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[直播用]将HLTV台湾地区旗帜替换为中国国旗",
+          "description": "将HLTV台湾地区旗帜替换为中国国旗，规避审核",
+          "url": "https://greasyfork.org/scripts/530977-%E7%9B%B4%E6%92%AD%E7%94%A8-%E5%B0%86hltv%E5%8F%B0%E6%B9%BE%E5%9C%B0%E5%8C%BA%E6%97%97%E5%B8%9C%E6%9B%BF%E6%8D%A2%E4%B8%BA%E4%B8%AD%E5%9B%BD%E5%9B%BD%E6%97%97",
+          "code_url": "https://update.greasyfork.org/scripts/530977/%5B%E7%9B%B4%E6%92%AD%E7%94%A8%5D%E5%B0%86HLTV%E5%8F%B0%E6%B9%BE%E5%9C%B0%E5%8C%BA%E6%97%97%E5%B8%9C%E6%9B%BF%E6%8D%A2%E4%B8%BA%E4%B8%AD%E5%9B%BD%E5%9B%BD%E6%97%97.user.js",
+          "code_size": 846,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[直播用]将HLTV台湾地区旗帜替换为中国国旗",
+  "description": "将HLTV台湾地区旗帜替换为中国国旗，规避审核",
+  "url": "https://greasyfork.org/scripts/530977-%E7%9B%B4%E6%92%AD%E7%94%A8-%E5%B0%86hltv%E5%8F%B0%E6%B9%BE%E5%9C%B0%E5%8C%BA%E6%97%97%E5%B8%9C%E6%9B%BF%E6%8D%A2%E4%B8%BA%E4%B8%AD%E5%9B%BD%E5%9B%BD%E6%97%97",
+  "code_url": "https://update.greasyfork.org/scripts/530977/%5B%E7%9B%B4%E6%92%AD%E7%94%A8%5D%E5%B0%86HLTV%E5%8F%B0%E6%B9%BE%E5%9C%B0%E5%8C%BA%E6%97%97%E5%B8%9C%E6%9B%BF%E6%8D%A2%E4%B8%BA%E4%B8%AD%E5%9B%BD%E5%9B%BD%E6%97%97.user.js",
+  "code_size": 846,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

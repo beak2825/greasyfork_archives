@@ -1,0 +1,34 @@
+{
+  "id": 523968,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-16T19:34:23.000Z",
+  "code_updated_at": "2025-03-08T09:47:49.000Z",
+  "namespace": "https://viayoo.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 73019,
+      "name": "Devil-zero",
+      "created_at": "2016-10-13T07:53:59.000Z",
+      "url": "https://greasyfork.org/users/73019-devil-zero",
+      "scripts": []
+    }
+  ],
+  "name": "拷贝漫画免app",
+  "description": "通过修改ua的方式，免app",
+  "url": "https://greasyfork.org/scripts/523968-%E6%8B%B7%E8%B4%9D%E6%BC%AB%E7%94%BB%E5%85%8Dapp",
+  "code_url": "https://update.greasyfork.org/scripts/523968/%E6%8B%B7%E8%B4%9D%E6%BC%AB%E7%94%BB%E5%85%8Dapp.user.js",
+  "code_size": 6294,
+  "license": null,
+  "version": "1.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

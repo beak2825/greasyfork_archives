@@ -1,0 +1,34 @@
+{
+  "id": 542083,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-09T05:05:20.000Z",
+  "code_updated_at": "2025-07-09T05:05:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1493030,
+      "name": "SOO KIM",
+      "created_at": "2025-07-09T03:54:24.000Z",
+      "url": "https://greasyfork.org/users/1493030-soo-kim",
+      "scripts": []
+    }
+  ],
+  "name": "SOOSOSOOSOSOO",
+  "description": "block unwanted blobs & netfunnel",
+  "url": "https://greasyfork.org/scripts/542083-soososoososoo",
+  "code_url": "https://update.greasyfork.org/scripts/542083/SOOSOSOOSOSOO.user.js",
+  "code_size": 1618,
+  "license": null,
+  "version": "2025-07-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

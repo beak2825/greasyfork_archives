@@ -1,0 +1,59 @@
+{
+  "id": 502590,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-04T11:42:48.000Z",
+  "code_updated_at": "2024-08-04T11:47:35.000Z",
+  "namespace": "https://github.com/Jeremy-Hibiki/fantia-tora-coin-auto-fill",
+  "support_url": "https://github.com/Jeremy-Hibiki/fantia-tora-coin-auto-fill/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 542082,
+      "name": "HBK",
+      "created_at": "2020-04-26T15:10:27.000Z",
+      "url": "https://greasyfork.org/users/542082-hbk",
+      "scripts": [
+        {
+          "id": 502590,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-04T11:42:48.000Z",
+          "code_updated_at": "2024-08-04T11:47:35.000Z",
+          "namespace": "https://github.com/Jeremy-Hibiki/fantia-tora-coin-auto-fill",
+          "support_url": "https://github.com/Jeremy-Hibiki/fantia-tora-coin-auto-fill/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fantia TORA COIN 序列码自动填写",
+          "description": "Fantia TORA COIN 序列码自动填写，在任意一个输入框中黏贴，脚本将自动填充所有 4 个输入框",
+          "url": "https://greasyfork.org/scripts/502590-fantia-tora-coin-%E5%BA%8F%E5%88%97%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+          "code_url": "https://update.greasyfork.org/scripts/502590/Fantia%20TORA%20COIN%20%E5%BA%8F%E5%88%97%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+          "code_size": 1830,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fantia TORA COIN 序列码自动填写",
+  "description": "Fantia TORA COIN 序列码自动填写，在任意一个输入框中黏贴，脚本将自动填充所有 4 个输入框",
+  "url": "https://greasyfork.org/scripts/502590-fantia-tora-coin-%E5%BA%8F%E5%88%97%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99",
+  "code_url": "https://update.greasyfork.org/scripts/502590/Fantia%20TORA%20COIN%20%E5%BA%8F%E5%88%97%E7%A0%81%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99.user.js",
+  "code_size": 1830,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

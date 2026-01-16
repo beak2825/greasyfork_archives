@@ -1,0 +1,33 @@
+{
+  "id": 508426,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-14T11:18:54.000Z",
+  "code_updated_at": "2025-06-14T20:03:07.000Z",
+  "namespace": "http://monnef.eu",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1698,
+      "name": "monnef",
+      "created_at": "2014-05-20T07:30:37.000Z",
+      "url": "https://greasyfork.org/users/1698-monnef"
+    }
+  ],
+  "name": "Cursor.com Usage Tracker",
+  "description": "Enhanced usage statistics and analytics for Cursor.com's new frontend, providing detailed insights into usage patterns and billing cycles.",
+  "url": "https://greasyfork.org/scripts/508426-cursor-com-usage-tracker",
+  "code_url": "https://update.greasyfork.org/scripts/508426/Cursorcom%20Usage%20Tracker.user.js",
+  "code_size": 28698,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

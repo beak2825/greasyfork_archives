@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502666,
+    "daily_installs": 0,
+    "total_installs": 96,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-05T07:04:13.000Z",
+    "code_updated_at": "2024-08-05T09:00:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1345616,
+        "name": "Hayden Zhang",
+        "created_at": "2024-08-05T06:59:01.000Z",
+        "url": "https://greasyfork.org/users/1345616-hayden-zhang"
+      }
+    ],
+    "name": "通用网站登录状态保存和恢复（增强版）",
+    "description": "手动保存网站的登录状态，自动恢复登录，适用于绝大多数网站，包括复杂的登录系统",
+    "url": "https://greasyfork.org/scripts/502666-%E9%80%9A%E7%94%A8%E7%BD%91%E7%AB%99%E7%99%BB%E5%BD%95%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D-%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/502666/%E9%80%9A%E7%94%A8%E7%BD%91%E7%AB%99%E7%99%BB%E5%BD%95%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E5%92%8C%E6%81%A2%E5%A4%8D%EF%BC%88%E5%A2%9E%E5%BC%BA%E7%89%88%EF%BC%89.user.js",
+    "code_size": 9057,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

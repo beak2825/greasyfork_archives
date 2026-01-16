@@ -1,0 +1,59 @@
+{
+  "id": 513646,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-23T07:30:35.000Z",
+  "code_updated_at": "2024-10-23T07:30:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1282331,
+      "name": "1090197965",
+      "created_at": "2024-04-01T05:43:40.000Z",
+      "url": "https://greasyfork.org/users/1282331-1090197965",
+      "scripts": [
+        {
+          "id": 510837,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-30T03:03:27.000Z",
+          "code_updated_at": "2024-09-30T03:03:27.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "zteam自动重定向sso登录前界面",
+          "description": "zteam自动重定向sso登录前界面, 防止频繁跳回首页",
+          "url": "https://greasyfork.org/scripts/510837-zteam%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91sso%E7%99%BB%E5%BD%95%E5%89%8D%E7%95%8C%E9%9D%A2",
+          "code_url": "https://update.greasyfork.org/scripts/510837/zteam%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91sso%E7%99%BB%E5%BD%95%E5%89%8D%E7%95%8C%E9%9D%A2.user.js",
+          "code_size": 950,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ARK油猴脚本工具",
+  "description": "Alert inner text of clicked el-table__cell element",
+  "url": "https://greasyfork.org/scripts/513646-ark%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/513646/ARK%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 7363,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

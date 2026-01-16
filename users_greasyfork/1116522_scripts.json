@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522467,
+    "daily_installs": 1,
+    "total_installs": 386,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-01T07:54:16.000Z",
+    "code_updated_at": "2025-01-01T07:54:16.000Z",
+    "namespace": "gongchen,daonali",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1116522,
+        "name": "daonali",
+        "created_at": "2023-07-01T11:39:42.000Z",
+        "url": "https://greasyfork.org/users/1116522-daonali"
+      }
+    ],
+    "name": "🎉【U校园、Unipus网课答案显示】支持视听说新视野读写答案显示 增加了序号和复制答案按钮",
+    "description": "U校园题目答案显示；支持视听说、新视野；不支持单元测试",
+    "url": "https://greasyfork.org/scripts/522467-u%E6%A0%A1%E5%9B%AD-unipus%E7%BD%91%E8%AF%BE%E7%AD%94%E6%A1%88%E6%98%BE%E7%A4%BA-%E6%94%AF%E6%8C%81%E8%A7%86%E5%90%AC%E8%AF%B4%E6%96%B0%E8%A7%86%E9%87%8E%E8%AF%BB%E5%86%99%E7%AD%94%E6%A1%88%E6%98%BE%E7%A4%BA-%E5%A2%9E%E5%8A%A0%E4%BA%86%E5%BA%8F%E5%8F%B7%E5%92%8C%E5%A4%8D%E5%88%B6%E7%AD%94%E6%A1%88%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/522467/%F0%9F%8E%89%E3%80%90U%E6%A0%A1%E5%9B%AD%E3%80%81Unipus%E7%BD%91%E8%AF%BE%E7%AD%94%E6%A1%88%E6%98%BE%E7%A4%BA%E3%80%91%E6%94%AF%E6%8C%81%E8%A7%86%E5%90%AC%E8%AF%B4%E6%96%B0%E8%A7%86%E9%87%8E%E8%AF%BB%E5%86%99%E7%AD%94%E6%A1%88%E6%98%BE%E7%A4%BA%20%E5%A2%9E%E5%8A%A0%E4%BA%86%E5%BA%8F%E5%8F%B7%E5%92%8C%E5%A4%8D%E5%88%B6%E7%AD%94%E6%A1%88%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 8174,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

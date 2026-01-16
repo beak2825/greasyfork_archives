@@ -1,0 +1,34 @@
+{
+  "id": 515419,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-02T16:05:22.000Z",
+  "code_updated_at": "2025-10-17T16:39:18.000Z",
+  "namespace": "lss.grisu118.ch",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1375104,
+      "name": "Grisu118",
+      "created_at": "2024-09-30T19:38:43.000Z",
+      "url": "https://greasyfork.org/users/1375104-grisu118",
+      "scripts": []
+    }
+  ],
+  "name": "enhanced-map",
+  "description": "Zusätziche Funktionen für die Karte",
+  "url": "https://greasyfork.org/scripts/515419-enhanced-map",
+  "code_url": "https://update.greasyfork.org/scripts/515419/enhanced-map.user.js",
+  "code_size": 57351,
+  "license": "MIT License",
+  "version": "0.4.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

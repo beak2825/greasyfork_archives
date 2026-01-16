@@ -1,0 +1,33 @@
+{
+  "id": 545894,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T03:45:01.000Z",
+  "code_updated_at": "2025-10-02T11:38:35.000Z",
+  "namespace": "https://rokoucha.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 28829,
+      "name": "Rokoucha",
+      "created_at": "2016-01-30T01:38:38.000Z",
+      "url": "https://greasyfork.org/users/28829-rokoucha"
+    }
+  ],
+  "name": "Roaming Authenticator Everywhere",
+  "description": "嘘のPasskey対応を真のPasskey対応にします",
+  "url": "https://greasyfork.org/scripts/545894-roaming-authenticator-everywhere",
+  "code_url": "https://update.greasyfork.org/scripts/545894/Roaming%20Authenticator%20Everywhere.user.js",
+  "code_size": 1812,
+  "license": "MIT License",
+  "version": "0.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

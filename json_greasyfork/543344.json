@@ -1,0 +1,34 @@
+{
+  "id": 543344,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-22T15:41:08.000Z",
+  "code_updated_at": "2025-07-22T15:41:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1129783,
+      "name": "Crazy uncle",
+      "created_at": "2023-07-18T09:29:14.000Z",
+      "url": "https://greasyfork.org/users/1129783-crazy-uncle",
+      "scripts": []
+    }
+  ],
+  "name": "CZZYMovie 采集",
+  "description": "自动分类、批量&单页提取&上传；电影分类固定1080P；无豆瓣ID时按名称查询；列表增加全选功能。",
+  "url": "https://greasyfork.org/scripts/543344-czzymovie-%E9%87%87%E9%9B%86",
+  "code_url": "https://update.greasyfork.org/scripts/543344/CZZYMovie%20%E9%87%87%E9%9B%86.user.js",
+  "code_size": 24085,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

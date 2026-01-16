@@ -1,0 +1,101 @@
+[
+  {
+    "id": 522311,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T14:04:24.000Z",
+    "code_updated_at": "2025-03-15T00:52:47.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/522311",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 211528,
+        "name": "小楫轻舟",
+        "created_at": "2018-09-09T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/211528-%E5%B0%8F%E6%A5%AB%E8%BD%BB%E8%88%9F"
+      }
+    ],
+    "name": "公需课助手",
+    "description": "自动播放课程视频，自动跳转下一章节，自动静音，暂停后自动播放",
+    "url": "https://greasyfork.org/scripts/522311-%E5%85%AC%E9%9C%80%E8%AF%BE%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/522311/%E5%85%AC%E9%9C%80%E8%AF%BE%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 3590,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519663,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-03T16:21:23.000Z",
+    "code_updated_at": "2024-12-07T03:17:58.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/519663",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 211528,
+        "name": "小楫轻舟",
+        "created_at": "2018-09-09T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/211528-%E5%B0%8F%E6%A5%AB%E8%BD%BB%E8%88%9F"
+      }
+    ],
+    "name": "CMS人员管理助手",
+    "description": "自定义人员添加和管理工具",
+    "url": "https://greasyfork.org/scripts/519663-cms%E4%BA%BA%E5%91%98%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/519663/CMS%E4%BA%BA%E5%91%98%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 14878,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502733,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T02:10:08.000Z",
+    "code_updated_at": "2024-12-07T03:17:09.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/502733",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 211528,
+        "name": "小楫轻舟",
+        "created_at": "2018-09-09T10:37:05.000Z",
+        "url": "https://greasyfork.org/users/211528-%E5%B0%8F%E6%A5%AB%E8%BD%BB%E8%88%9F"
+      }
+    ],
+    "name": "自动打开消息中的民主评分链接性能模式",
+    "description": "自动打开消息中的民主评分链接",
+    "url": "https://greasyfork.org/scripts/502733-%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E6%B6%88%E6%81%AF%E4%B8%AD%E7%9A%84%E6%B0%91%E4%B8%BB%E8%AF%84%E5%88%86%E9%93%BE%E6%8E%A5%E6%80%A7%E8%83%BD%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/502733/%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E6%B6%88%E6%81%AF%E4%B8%AD%E7%9A%84%E6%B0%91%E4%B8%BB%E8%AF%84%E5%88%86%E9%93%BE%E6%8E%A5%E6%80%A7%E8%83%BD%E6%A8%A1%E5%BC%8F.user.js",
+    "code_size": 4207,
+    "license": "MIT License",
+    "version": "1.5.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

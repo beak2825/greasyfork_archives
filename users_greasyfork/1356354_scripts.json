@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541872,
+    "daily_installs": 1,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-07T01:49:44.000Z",
+    "code_updated_at": "2025-07-07T01:49:44.000Z",
+    "namespace": "https://launcherleaks.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356354,
+        "name": "MrNiggels",
+        "created_at": "2024-08-23T05:36:17.000Z",
+        "url": "https://greasyfork.org/users/1356354-mrniggels"
+      }
+    ],
+    "name": "LauncherLeaks Popup & Scroll Fix",
+    "description": "Block popups and restore scrolling on LauncherLeaks.net",
+    "url": "https://greasyfork.org/scripts/541872-launcherleaks-popup-scroll-fix",
+    "code_url": "https://update.greasyfork.org/scripts/541872/LauncherLeaks%20Popup%20%20Scroll%20Fix.user.js",
+    "code_size": 1496,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

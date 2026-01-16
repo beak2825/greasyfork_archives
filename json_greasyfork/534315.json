@@ -1,0 +1,33 @@
+{
+  "id": 534315,
+  "daily_installs": 0,
+  "total_installs": 94,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-28T22:32:28.000Z",
+  "code_updated_at": "2026-01-01T05:09:19.000Z",
+  "namespace": "9e7f6239-592e-409b-913f-06e11cc5e545",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463353,
+      "name": "bag-hare",
+      "created_at": "2025-04-28T21:42:51.000Z",
+      "url": "https://greasyfork.org/users/1463353-bag-hare"
+    }
+  ],
+  "name": "bagscript",
+  "description": "bag script with anti bot features + more",
+  "url": "https://greasyfork.org/scripts/534315-bagscript",
+  "code_url": "https://update.greasyfork.org/scripts/534315/bagscript.user.js",
+  "code_size": 39029,
+  "license": "MIT License",
+  "version": "0.9.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

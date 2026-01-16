@@ -1,0 +1,34 @@
+{
+  "id": 544174,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-31T06:36:39.000Z",
+  "code_updated_at": "2025-07-31T06:36:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1399657,
+      "name": "Vanakh Chea",
+      "created_at": "2024-11-20T13:25:12.000Z",
+      "url": "https://greasyfork.org/users/1399657-vanakh-chea",
+      "scripts": []
+    }
+  ],
+  "name": "Display CMP Infos",
+  "description": "This displays information about the CMP from the page currently being visited.",
+  "url": "https://greasyfork.org/scripts/544174-display-cmp-infos",
+  "code_url": "https://update.greasyfork.org/scripts/544174/Display%20CMP%20Infos.user.js",
+  "code_size": 4568,
+  "license": "MIT License",
+  "version": "2025-07-31",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

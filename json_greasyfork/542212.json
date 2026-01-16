@@ -1,0 +1,34 @@
+{
+  "id": 542212,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-10T14:47:40.000Z",
+  "code_updated_at": "2025-11-19T00:20:56.000Z",
+  "namespace": "https://animestars.org",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444353,
+      "name": "Sandr.",
+      "created_at": "2025-03-10T16:06:00.000Z",
+      "url": "https://greasyfork.org/users/1444353-sandr",
+      "scripts": []
+    }
+  ],
+  "name": "AS Notebook",
+  "description": "Записная книжка с группами, ссылками, поиском и встроенными кнопками. Сохраняет состояние окна, групп и скролла.",
+  "url": "https://greasyfork.org/scripts/542212-as-notebook",
+  "code_url": "https://update.greasyfork.org/scripts/542212/AS%20Notebook.user.js",
+  "code_size": 29052,
+  "license": "MIT License",
+  "version": "2.8",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

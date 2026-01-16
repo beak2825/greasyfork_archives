@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523692,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T21:23:41.000Z",
+    "code_updated_at": "2025-01-13T21:23:41.000Z",
+    "namespace": "https://sharemods.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1422974,
+        "name": "Riley Hopkins",
+        "created_at": "2025-01-13T21:21:23.000Z",
+        "url": "https://greasyfork.org/users/1422974-riley-hopkins"
+      }
+    ],
+    "name": "ShareMods Bypasser",
+    "description": "Bypass ShareMod lLinks",
+    "url": "https://greasyfork.org/scripts/523692-sharemods-bypasser",
+    "code_url": "https://update.greasyfork.org/scripts/523692/ShareMods%20Bypasser.user.js",
+    "code_size": 416,
+    "license": "MIT License",
+    "version": "2024-09-25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

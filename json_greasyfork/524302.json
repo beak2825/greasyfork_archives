@@ -1,0 +1,59 @@
+{
+  "id": 524302,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-20T13:38:03.000Z",
+  "code_updated_at": "2025-01-20T13:38:02.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1425392,
+      "name": "vaalerian",
+      "created_at": "2025-01-20T13:15:35.000Z",
+      "url": "https://greasyfork.org/users/1425392-vaalerian",
+      "scripts": [
+        {
+          "id": 524302,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-20T13:38:03.000Z",
+          "code_updated_at": "2025-01-20T13:38:02.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HailuoAI Auto Generate and Download",
+          "description": "Automatically clicks generate button and downloads new videos",
+          "url": "https://greasyfork.org/scripts/524302-hailuoai-auto-generate-and-download",
+          "code_url": "https://update.greasyfork.org/scripts/524302/HailuoAI%20Auto%20Generate%20and%20Download.user.js",
+          "code_size": 5879,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HailuoAI Auto Generate and Download",
+  "description": "Automatically clicks generate button and downloads new videos",
+  "url": "https://greasyfork.org/scripts/524302-hailuoai-auto-generate-and-download",
+  "code_url": "https://update.greasyfork.org/scripts/524302/HailuoAI%20Auto%20Generate%20and%20Download.user.js",
+  "code_size": 5879,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

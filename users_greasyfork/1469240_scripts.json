@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536463,
+    "daily_installs": 0,
+    "total_installs": 767,
+    "fan_score": "48.7",
+    "good_ratings": 5,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T07:31:35.000Z",
+    "code_updated_at": "2025-05-22T10:36:30.000Z",
+    "namespace": "https://www.milkywayidle.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1469240,
+        "name": "houguoyu",
+        "created_at": "2025-05-12T14:54:31.000Z",
+        "url": "https://greasyfork.org/users/1469240-houguoyu"
+      }
+    ],
+    "name": "牛牛UI增强插件",
+    "description": "可以调整优化一些界面，可以配合聊天增强插件使用",
+    "url": "https://greasyfork.org/scripts/536463-%E7%89%9B%E7%89%9Bui%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/536463/%E7%89%9B%E7%89%9BUI%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 72208,
+    "license": "MIT License",
+    "version": "0.1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535795,
+    "daily_installs": 0,
+    "total_installs": 279,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T15:00:50.000Z",
+    "code_updated_at": "2025-05-28T04:03:32.000Z",
+    "namespace": "https://www.milkywayidle.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1469240,
+        "name": "houguoyu",
+        "created_at": "2025-05-12T14:54:31.000Z",
+        "url": "https://greasyfork.org/users/1469240-houguoyu"
+      }
+    ],
+    "name": "牛牛聊天增强插件",
+    "description": "让牛牛聊天支持发送图片、解析图片；支持插件专属表情；支持自定义聊天界面；支持屏蔽复读机",
+    "url": "https://greasyfork.org/scripts/535795-%E7%89%9B%E7%89%9B%E8%81%8A%E5%A4%A9%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/535795/%E7%89%9B%E7%89%9B%E8%81%8A%E5%A4%A9%E5%A2%9E%E5%BC%BA%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 77187,
+    "license": "MIT License",
+    "version": "0.2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

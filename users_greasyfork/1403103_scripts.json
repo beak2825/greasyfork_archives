@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519027,
+    "daily_installs": 1,
+    "total_installs": 889,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-27T09:32:40.000Z",
+    "code_updated_at": "2024-11-27T09:32:40.000Z",
+    "namespace": "https://greasyfork.org/users/1403103",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1403103,
+        "name": "Maxime Barber",
+        "created_at": "2024-11-27T09:30:57.000Z",
+        "url": "https://greasyfork.org/users/1403103-maxime-barber"
+      }
+    ],
+    "name": "Enable Songsterr Plus",
+    "description": "Enable songsterr Plus",
+    "url": "https://greasyfork.org/scripts/519027-enable-songsterr-plus",
+    "code_url": "https://update.greasyfork.org/scripts/519027/Enable%20Songsterr%20Plus.user.js",
+    "code_size": 1203,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

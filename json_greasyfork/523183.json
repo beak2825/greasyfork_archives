@@ -1,0 +1,59 @@
+{
+  "id": 523183,
+  "daily_installs": 1,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-08T08:53:57.000Z",
+  "code_updated_at": "2025-02-12T17:27:37.000Z",
+  "namespace": "https://hulu.jp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1410166,
+      "name": "Ronny ZHANG",
+      "created_at": "2024-12-13T03:00:34.000Z",
+      "url": "https://greasyfork.org/users/1410166-ronny-zhang",
+      "scripts": [
+        {
+          "id": 523183,
+          "daily_installs": 1,
+          "total_installs": 35,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-08T08:53:57.000Z",
+          "code_updated_at": "2025-02-12T17:27:37.000Z",
+          "namespace": "https://hulu.jp",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hulu.jp Subtitle Downloader",
+          "description": "Download subtitle guides from Hulu.jp in VTT format",
+          "url": "https://greasyfork.org/scripts/523183-hulu-jp-subtitle-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/523183/Hulujp%20Subtitle%20Downloader.user.js",
+          "code_size": 5620,
+          "license": "MIT License",
+          "version": "2.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hulu.jp Subtitle Downloader",
+  "description": "Download subtitle guides from Hulu.jp in VTT format",
+  "url": "https://greasyfork.org/scripts/523183-hulu-jp-subtitle-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/523183/Hulujp%20Subtitle%20Downloader.user.js",
+  "code_size": 5620,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

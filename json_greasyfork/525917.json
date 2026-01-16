@@ -1,0 +1,34 @@
+{
+  "id": 525917,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-04T19:11:22.000Z",
+  "code_updated_at": "2025-02-04T19:26:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420420,
+      "name": "Blake Stacks",
+      "created_at": "2025-01-07T02:23:20.000Z",
+      "url": "https://greasyfork.org/users/1420420-blake-stacks",
+      "scripts": []
+    }
+  ],
+  "name": "Remove google tracking link redirect",
+  "description": "Remove google tracking link redirect from all links on the page",
+  "url": "https://greasyfork.org/scripts/525917-remove-google-tracking-link-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/525917/Remove%20google%20tracking%20link%20redirect.user.js",
+  "code_size": 1005,
+  "license": "MIT License",
+  "version": "2025-02-04.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

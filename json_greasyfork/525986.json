@@ -1,0 +1,34 @@
+{
+  "id": 525986,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-05T13:29:07.000Z",
+  "code_updated_at": "2025-02-08T23:58:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1036645,
+      "name": "MagMateoo",
+      "created_at": "2023-03-04T22:06:00.000Z",
+      "url": "https://greasyfork.org/users/1036645-magmateoo",
+      "scripts": []
+    }
+  ],
+  "name": "LL do Purple NI",
+  "description": "Motyw NI",
+  "url": "https://greasyfork.org/scripts/525986-ll-do-purple-ni",
+  "code_url": "https://update.greasyfork.org/scripts/525986/LL%20do%20Purple%20NI.user.js",
+  "code_size": 2371,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

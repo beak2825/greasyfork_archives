@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536250,
+    "daily_installs": 1,
+    "total_installs": 233,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T02:56:42.000Z",
+    "code_updated_at": "2025-05-18T07:29:20.000Z",
+    "namespace": "https://greasyfork.org/users/1471001",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471001,
+        "name": "liu9727",
+        "created_at": "2025-05-17T02:33:04.000Z",
+        "url": "https://greasyfork.org/users/1471001-liu9727"
+      }
+    ],
+    "name": "YouTube 去广告优化版",
+    "description": "移除 YouTube 广告：视频前中贴片广告、横幅广告、会员弹窗等，兼容桌面与移动端，增强稳定性与兼容性。防止误暂停",
+    "url": "https://greasyfork.org/scripts/536250-youtube-%E5%8E%BB%E5%B9%BF%E5%91%8A%E4%BC%98%E5%8C%96%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/536250/YouTube%20%E5%8E%BB%E5%B9%BF%E5%91%8A%E4%BC%98%E5%8C%96%E7%89%88.user.js",
+    "code_size": 3297,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

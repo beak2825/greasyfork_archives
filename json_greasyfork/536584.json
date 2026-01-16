@@ -1,0 +1,59 @@
+{
+  "id": 536584,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-20T07:44:57.000Z",
+  "code_updated_at": "2025-08-02T11:16:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472312,
+      "name": "Işık Barış Fidaner",
+      "created_at": "2025-05-20T07:42:22.000Z",
+      "url": "https://greasyfork.org/users/1472312-i%C5%9F%C4%B1k-bar%C4%B1%C5%9F-fidaner",
+      "scripts": [
+        {
+          "id": 536584,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-20T07:44:57.000Z",
+          "code_updated_at": "2025-08-02T11:16:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Scroll to Nearest Paragraph (← → keys) - No Skips",
+          "description": "Scroll to nearest paragraph using ← and → keys, never skips paragraphs",
+          "url": "https://greasyfork.org/scripts/536584-scroll-to-nearest-paragraph-keys-no-skips",
+          "code_url": "https://update.greasyfork.org/scripts/536584/Scroll%20to%20Nearest%20Paragraph%20%28%E2%86%90%20%E2%86%92%20keys%29%20-%20No%20Skips.user.js",
+          "code_size": 3086,
+          "license": null,
+          "version": "1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Scroll to Nearest Paragraph (← → keys) - No Skips",
+  "description": "Scroll to nearest paragraph using ← and → keys, never skips paragraphs",
+  "url": "https://greasyfork.org/scripts/536584-scroll-to-nearest-paragraph-keys-no-skips",
+  "code_url": "https://update.greasyfork.org/scripts/536584/Scroll%20to%20Nearest%20Paragraph%20%28%E2%86%90%20%E2%86%92%20keys%29%20-%20No%20Skips.user.js",
+  "code_size": 3086,
+  "license": null,
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

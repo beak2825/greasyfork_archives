@@ -1,0 +1,68 @@
+[
+  {
+    "id": 542264,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T05:13:14.000Z",
+    "code_updated_at": "2026-01-14T08:36:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482727,
+        "name": "Moker32",
+        "created_at": "2025-06-12T09:15:19.000Z",
+        "url": "https://greasyfork.org/users/1482727-moker32"
+      }
+    ],
+    "name": "安徽干部教育在线自动学习",
+    "description": "安徽干部教育在线自动学习脚本，支持自动播放、自动跳转、防暂停",
+    "url": "https://greasyfork.org/scripts/542264-%E5%AE%89%E5%BE%BD%E5%B9%B2%E9%83%A8%E6%95%99%E8%82%B2%E5%9C%A8%E7%BA%BF%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0",
+    "code_url": "https://update.greasyfork.org/scripts/542264/%E5%AE%89%E5%BE%BD%E5%B9%B2%E9%83%A8%E6%95%99%E8%82%B2%E5%9C%A8%E7%BA%BF%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0.user.js",
+    "code_size": 140497,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.5.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542254,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T03:22:23.000Z",
+    "code_updated_at": "2026-01-10T09:11:26.000Z",
+    "namespace": "https://github.com/Moker32/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482727,
+        "name": "Moker32",
+        "created_at": "2025-06-12T09:15:19.000Z",
+        "url": "https://greasyfork.org/users/1482727-moker32"
+      }
+    ],
+    "name": "cela-自动学习脚本API版",
+    "description": "[API版] 中国干部网络学院自动学习脚本，支持主站及浦东分院，采用状态机驱动的极简高效架构。",
+    "url": "https://greasyfork.org/scripts/542254-cela-%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%ACapi%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/542254/cela-%E8%87%AA%E5%8A%A8%E5%AD%A6%E4%B9%A0%E8%84%9A%E6%9C%ACAPI%E7%89%88.user.js",
+    "code_size": 102643,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "3.50",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

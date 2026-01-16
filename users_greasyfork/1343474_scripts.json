@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502321,
+    "daily_installs": 0,
+    "total_installs": 235,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-01T05:20:56.000Z",
+    "code_updated_at": "2024-08-05T01:10:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1343474,
+        "name": "shadow007001",
+        "created_at": "2024-08-01T05:17:54.000Z",
+        "url": "https://greasyfork.org/users/1343474-shadow007001"
+      }
+    ],
+    "name": "学习教育公需课和专业课视频",
+    "description": "提前报名所需课程，进入【学习中心】，点击脚本开始按钮。鼠标移到左上角显示控制窗口，移开自动隐藏。",
+    "url": "https://greasyfork.org/scripts/502321-%E5%AD%A6%E4%B9%A0%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%E5%92%8C%E4%B8%93%E4%B8%9A%E8%AF%BE%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/502321/%E5%AD%A6%E4%B9%A0%E6%95%99%E8%82%B2%E5%85%AC%E9%9C%80%E8%AF%BE%E5%92%8C%E4%B8%93%E4%B8%9A%E8%AF%BE%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 10500,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

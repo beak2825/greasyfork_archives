@@ -1,0 +1,33 @@
+{
+  "id": 532915,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-15T10:17:33.000Z",
+  "code_updated_at": "2025-04-15T10:17:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458126,
+      "name": "PURPLE YT VR",
+      "created_at": "2025-04-15T10:06:02.000Z",
+      "url": "https://greasyfork.org/users/1458126-purple-yt-vr"
+    }
+  ],
+  "name": "YouTube Auto Skip Ads",
+  "description": "Automatically skips video ads and closes overlay ads on YouTube",
+  "url": "https://greasyfork.org/scripts/532915-youtube-auto-skip-ads",
+  "code_url": "https://update.greasyfork.org/scripts/532915/YouTube%20Auto%20Skip%20Ads.user.js",
+  "code_size": 861,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

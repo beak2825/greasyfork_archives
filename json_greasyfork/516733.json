@@ -1,0 +1,33 @@
+{
+  "id": 516733,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-10T15:52:45.000Z",
+  "code_updated_at": "2025-04-30T11:21:02.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1384755,
+      "name": "Null Hellsing",
+      "created_at": "2024-10-22T21:20:22.000Z",
+      "url": "https://greasyfork.org/users/1384755-null-hellsing"
+    }
+  ],
+  "name": "SCRIPT J.Uzumaki | Форум | VERSION=DEFOLT - VOLGOGRAD",
+  "description": "Best Deputy",
+  "url": "https://greasyfork.org/scripts/516733-script-j-uzumaki-%D1%84%D0%BE%D1%80%D1%83%D0%BC-version-defolt-volgograd",
+  "code_url": "https://update.greasyfork.org/scripts/516733/SCRIPT%20JUzumaki%20%7C%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%20%7C%20VERSION%3DDEFOLT%20-%20VOLGOGRAD.user.js",
+  "code_size": 191627,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

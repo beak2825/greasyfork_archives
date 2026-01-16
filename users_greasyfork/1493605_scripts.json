@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542235,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T01:05:43.000Z",
+    "code_updated_at": "2025-07-11T01:05:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493605,
+        "name": "rbxpusk",
+        "created_at": "2025-07-11T01:03:10.000Z",
+        "url": "https://greasyfork.org/users/1493605-rbxpusk"
+      }
+    ],
+    "name": "Rustmagic data analyzer",
+    "description": "Scrapes all pages of game history, analyzes the data, displays stats with graphs, and allows CSV export.",
+    "url": "https://greasyfork.org/scripts/542235-rustmagic-data-analyzer",
+    "code_url": "https://update.greasyfork.org/scripts/542235/Rustmagic%20data%20analyzer.user.js",
+    "code_size": 14870,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

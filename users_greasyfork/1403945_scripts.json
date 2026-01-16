@@ -1,0 +1,68 @@
+[
+  {
+    "id": 521197,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-19T07:42:09.000Z",
+    "code_updated_at": "2024-12-19T07:42:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1403945,
+        "name": "GhostAnderson",
+        "created_at": "2024-11-29T06:58:43.000Z",
+        "url": "https://greasyfork.org/users/1403945-ghostanderson"
+      }
+    ],
+    "name": "Bilibili独轮车",
+    "description": "dulunche for bilibili live",
+    "url": "https://greasyfork.org/scripts/521197-bilibili%E7%8B%AC%E8%BD%AE%E8%BD%A6",
+    "code_url": "https://update.greasyfork.org/scripts/521197/Bilibili%E7%8B%AC%E8%BD%AE%E8%BD%A6.user.js",
+    "code_size": 4277,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519248,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-29T07:22:32.000Z",
+    "code_updated_at": "2024-11-29T07:22:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1403945,
+        "name": "GhostAnderson",
+        "created_at": "2024-11-29T06:58:43.000Z",
+        "url": "https://greasyfork.org/users/1403945-ghostanderson"
+      }
+    ],
+    "name": "dblp filter",
+    "description": "Filtering dblp result with including keywords and excluding keywords.",
+    "url": "https://greasyfork.org/scripts/519248-dblp-filter",
+    "code_url": "https://update.greasyfork.org/scripts/519248/dblp%20filter.user.js",
+    "code_size": 4354,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

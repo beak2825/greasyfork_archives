@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535323,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T08:03:52.000Z",
+    "code_updated_at": "2025-05-08T08:03:52.000Z",
+    "namespace": "http://office.syswise.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466829,
+        "name": "Joaquim Perez",
+        "created_at": "2025-05-07T11:08:34.000Z",
+        "url": "https://greasyfork.org/users/1466829-joaquim-perez"
+      }
+    ],
+    "name": "SYSWISE - ABAP Task List - Hide garbage fields",
+    "description": "SYSWISE - ABAP Task List - Userscript for Hide garbage fields",
+    "url": "https://greasyfork.org/scripts/535323-syswise-abap-task-list-hide-garbage-fields",
+    "code_url": "https://update.greasyfork.org/scripts/535323/SYSWISE%20-%20ABAP%20Task%20List%20-%20Hide%20garbage%20fields.user.js",
+    "code_size": 2884,
+    "license": "none",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535233,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-07T11:16:02.000Z",
+    "code_updated_at": "2025-12-15T11:19:10.000Z",
+    "namespace": "http://office.syswise.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466829,
+        "name": "Joaquim Perez",
+        "created_at": "2025-05-07T11:08:34.000Z",
+        "url": "https://greasyfork.org/users/1466829-joaquim-perez"
+      }
+    ],
+    "name": "SYSWISE Portal - UI tweaks",
+    "description": "SYSWISE Portal - Userscript for UI tweaks",
+    "url": "https://greasyfork.org/scripts/535233-syswise-portal-ui-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/535233/SYSWISE%20Portal%20-%20UI%20tweaks.user.js",
+    "code_size": 85700,
+    "license": "none",
+    "version": "0.1.17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

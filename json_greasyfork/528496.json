@@ -1,0 +1,34 @@
+{
+  "id": 528496,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-02T04:43:21.000Z",
+  "code_updated_at": "2025-03-02T04:47:59.000Z",
+  "namespace": "MyCustomScripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441456,
+      "name": "CoBool",
+      "created_at": "2025-03-02T04:41:13.000Z",
+      "url": "https://greasyfork.org/users/1441456-cobool",
+      "scripts": []
+    }
+  ],
+  "name": "Video.js Controller Customizer",
+  "description": "video.js 컨트롤러에서 전체화면 버튼만 남기고 다른 버튼들을 제거합니다",
+  "url": "https://greasyfork.org/scripts/528496-video-js-controller-customizer",
+  "code_url": "https://update.greasyfork.org/scripts/528496/Videojs%20Controller%20Customizer.user.js",
+  "code_size": 3336,
+  "license": null,
+  "version": "1.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

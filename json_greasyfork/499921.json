@@ -1,0 +1,34 @@
+{
+  "id": 499921,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-07T14:08:09.000Z",
+  "code_updated_at": "2024-07-07T14:08:09.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1329742,
+      "name": "klliio",
+      "created_at": "2024-07-07T14:04:17.000Z",
+      "url": "https://greasyfork.org/users/1329742-klliio",
+      "scripts": []
+    }
+  ],
+  "name": "f1-dash radio downloads",
+  "description": "Download team radios from f1-dash.com",
+  "url": "https://greasyfork.org/scripts/499921-f1-dash-radio-downloads",
+  "code_url": "https://update.greasyfork.org/scripts/499921/f1-dash%20radio%20downloads.user.js",
+  "code_size": 1692,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

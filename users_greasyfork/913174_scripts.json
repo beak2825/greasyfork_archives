@@ -1,0 +1,134 @@
+[
+  {
+    "id": 545983,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T15:18:56.000Z",
+    "code_updated_at": "2025-08-15T15:18:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913174,
+        "name": "Ngã Ba Ông Tạ Sài Gòn",
+        "created_at": "2022-05-11T16:16:46.000Z",
+        "url": "https://greasyfork.org/users/913174-ng%C3%A3-ba-%C3%B4ng-t%E1%BA%A1-s%C3%A0i-g%C3%B2n"
+      }
+    ],
+    "name": "Total Skill at Trainer Page",
+    "description": "..",
+    "url": "https://greasyfork.org/scripts/545983-total-skill-at-trainer-page",
+    "code_url": "https://update.greasyfork.org/scripts/545983/Total%20Skill%20at%20Trainer%20Page.user.js",
+    "code_size": 2305,
+    "license": "MIT License",
+    "version": "2024-09-18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545982,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T15:18:03.000Z",
+    "code_updated_at": "2025-08-15T15:18:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913174,
+        "name": "Ngã Ba Ông Tạ Sài Gòn",
+        "created_at": "2022-05-11T16:16:46.000Z",
+        "url": "https://greasyfork.org/users/913174-ng%C3%A3-ba-%C3%B4ng-t%E1%BA%A1-s%C3%A0i-g%C3%B2n"
+      }
+    ],
+    "name": "Total skills at squad page",
+    "description": "..",
+    "url": "https://greasyfork.org/scripts/545982-total-skills-at-squad-page",
+    "code_url": "https://update.greasyfork.org/scripts/545982/Total%20skills%20at%20squad%20page.user.js",
+    "code_size": 3377,
+    "license": "MIT License",
+    "version": "2024-07-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545981,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T15:16:46.000Z",
+    "code_updated_at": "2025-08-15T15:16:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913174,
+        "name": "Ngã Ba Ông Tạ Sài Gòn",
+        "created_at": "2022-05-11T16:16:46.000Z",
+        "url": "https://greasyfork.org/users/913174-ng%C3%A3-ba-%C3%B4ng-t%E1%BA%A1-s%C3%A0i-g%C3%B2n"
+      }
+    ],
+    "name": "Sum of skills at transfer search",
+    "description": "Sum of attribute",
+    "url": "https://greasyfork.org/scripts/545981-sum-of-skills-at-transfer-search",
+    "code_url": "https://update.greasyfork.org/scripts/545981/Sum%20of%20skills%20at%20transfer%20search.user.js",
+    "code_size": 1603,
+    "license": "MIT License",
+    "version": "2024-07-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545980,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T15:15:46.000Z",
+    "code_updated_at": "2025-08-15T15:15:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 913174,
+        "name": "Ngã Ba Ông Tạ Sài Gòn",
+        "created_at": "2022-05-11T16:16:46.000Z",
+        "url": "https://greasyfork.org/users/913174-ng%C3%A3-ba-%C3%B4ng-t%E1%BA%A1-s%C3%A0i-g%C3%B2n"
+      }
+    ],
+    "name": "Total Skill at Player Page",
+    "description": "..",
+    "url": "https://greasyfork.org/scripts/545980-total-skill-at-player-page",
+    "code_url": "https://update.greasyfork.org/scripts/545980/Total%20Skill%20at%20Player%20Page.user.js",
+    "code_size": 2297,
+    "license": "MIT License",
+    "version": "2024-07-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

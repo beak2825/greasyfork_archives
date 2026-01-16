@@ -1,0 +1,59 @@
+{
+  "id": 549854,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-17T15:36:03.000Z",
+  "code_updated_at": "2025-09-24T00:57:38.000Z",
+  "namespace": "https://greasyfork.org/users/1516265",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516265,
+      "name": "nicolai mihaic",
+      "created_at": "2025-09-17T14:17:26.000Z",
+      "url": "https://greasyfork.org/users/1516265-nicolai-mihaic",
+      "scripts": [
+        {
+          "id": 557099,
+          "daily_installs": 1,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-27T14:33:01.000Z",
+          "code_updated_at": "2025-11-27T14:33:01.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Sheets Focus Cell",
+          "description": "Highlights the row and column of the active cell in Google Sheets (like Excel's Focus Cell)",
+          "url": "https://greasyfork.org/scripts/557099-google-sheets-focus-cell",
+          "code_url": "https://update.greasyfork.org/scripts/557099/Google%20Sheets%20Focus%20Cell.user.js",
+          "code_size": 7596,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bold Account Manager Text + Highlight Steps",
+  "description": "Bold + Verdana on account name in gray alert bar, highlight Step cells, add Vessel column sorting, and enable Quantity sorting",
+  "url": "https://greasyfork.org/scripts/549854-bold-account-manager-text-highlight-steps",
+  "code_url": "https://update.greasyfork.org/scripts/549854/Bold%20Account%20Manager%20Text%20%2B%20Highlight%20Steps.user.js",
+  "code_size": 13922,
+  "license": null,
+  "version": "1.9.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

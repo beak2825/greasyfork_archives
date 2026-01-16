@@ -1,0 +1,59 @@
+{
+  "id": 508900,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-17T18:07:37.000Z",
+  "code_updated_at": "2024-09-17T20:10:46.000Z",
+  "namespace": "Dead Frontier - TheKiing",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369278,
+      "name": "eriickz",
+      "created_at": "2024-09-17T18:00:02.000Z",
+      "url": "https://greasyfork.org/users/1369278-eriickz",
+      "scripts": [
+        {
+          "id": 508900,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-17T18:07:37.000Z",
+          "code_updated_at": "2024-09-17T20:10:46.000Z",
+          "namespace": "Dead Frontier - TheKiing",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Dead Frontier - Amount Prettier",
+          "description": "Automatically place commas in amounts as the user type, both in bank and marketplace.",
+          "url": "https://greasyfork.org/scripts/508900-dead-frontier-amount-prettier",
+          "code_url": "https://update.greasyfork.org/scripts/508900/Dead%20Frontier%20-%20Amount%20Prettier.user.js",
+          "code_size": 7147,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Dead Frontier - Amount Prettier",
+  "description": "Automatically place commas in amounts as the user type, both in bank and marketplace.",
+  "url": "https://greasyfork.org/scripts/508900-dead-frontier-amount-prettier",
+  "code_url": "https://update.greasyfork.org/scripts/508900/Dead%20Frontier%20-%20Amount%20Prettier.user.js",
+  "code_size": 7147,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

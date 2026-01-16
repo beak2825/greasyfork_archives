@@ -1,0 +1,33 @@
+{
+  "id": 535943,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-14T07:08:59.000Z",
+  "code_updated_at": "2025-12-31T01:24:40.000Z",
+  "namespace": "https://greasyfork.org/users/1395131",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1395131,
+      "name": "SleepingGiant",
+      "created_at": "2024-11-13T01:56:50.000Z",
+      "url": "https://greasyfork.org/users/1395131-sleepinggiant"
+    }
+  ],
+  "name": "GGn Forum Game Banned Group Highlighter",
+  "description": "Highlight adult groups in all forums and detect unchained posts Game Title Chains",
+  "url": "https://greasyfork.org/scripts/535943-ggn-forum-game-banned-group-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/535943/GGn%20Forum%20Game%20Banned%20Group%20Highlighter.user.js",
+  "code_size": 112250,
+  "license": null,
+  "version": "1.5.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

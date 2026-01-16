@@ -31,5 +31,137 @@
     "locale": "ko",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 539196,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T10:08:57.000Z",
+    "code_updated_at": "2025-06-12T10:09:24.000Z",
+    "namespace": "https://arca.live/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201285,
+        "name": "Ti티타늄",
+        "created_at": "2018-08-06T01:43:49.000Z",
+        "url": "https://greasyfork.org/users/201285-ti%ED%8B%B0%ED%83%80%EB%8A%84"
+      }
+    ],
+    "name": "아카라이브 만화 뷰어 모드",
+    "description": "아카라이브의 이미지를 만화처럼 볼 수 있는 뷰어 모드를 추가합니다",
+    "url": "https://greasyfork.org/scripts/539196-%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C-%EB%A7%8C%ED%99%94-%EB%B7%B0%EC%96%B4-%EB%AA%A8%EB%93%9C",
+    "code_url": "https://update.greasyfork.org/scripts/539196/%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EB%A7%8C%ED%99%94%20%EB%B7%B0%EC%96%B4%20%EB%AA%A8%EB%93%9C.user.js",
+    "code_size": 79514,
+    "license": null,
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522065,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-28T06:03:29.000Z",
+    "code_updated_at": "2024-12-28T06:27:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201285,
+        "name": "Ti티타늄",
+        "created_at": "2018-08-06T01:43:49.000Z",
+        "url": "https://greasyfork.org/users/201285-ti%ED%8B%B0%ED%83%80%EB%8A%84"
+      }
+    ],
+    "name": "이터널 리턴 갤러리 통합 스크립트 (Beta)",
+    "description": "이터널 리턴 마이너 갤러리와 인방 미니 갤러리를 통합해서 보여줍니다",
+    "url": "https://greasyfork.org/scripts/522065-%EC%9D%B4%ED%84%B0%EB%84%90-%EB%A6%AC%ED%84%B4-%EA%B0%A4%EB%9F%AC%EB%A6%AC-%ED%86%B5%ED%95%A9-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-beta",
+    "code_url": "https://update.greasyfork.org/scripts/522065/%EC%9D%B4%ED%84%B0%EB%84%90%20%EB%A6%AC%ED%84%B4%20%EA%B0%A4%EB%9F%AC%EB%A6%AC%20%ED%86%B5%ED%95%A9%20%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%20%28Beta%29.user.js",
+    "code_size": 9169,
+    "license": null,
+    "version": "0.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521971,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T11:10:45.000Z",
+    "code_updated_at": "2025-01-01T13:03:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201285,
+        "name": "Ti티타늄",
+        "created_at": "2018-08-06T01:43:49.000Z",
+        "url": "https://greasyfork.org/users/201285-ti%ED%8B%B0%ED%83%80%EB%8A%84"
+      }
+    ],
+    "name": "아카라이브 레인보우",
+    "description": "아카라이브의 복잡하게 된 답글을 무지개 형식으로 구분해줍니다.",
+    "url": "https://greasyfork.org/scripts/521971-%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C-%EB%A0%88%EC%9D%B8%EB%B3%B4%EC%9A%B0",
+    "code_url": "https://update.greasyfork.org/scripts/521971/%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EB%A0%88%EC%9D%B8%EB%B3%B4%EC%9A%B0.user.js",
+    "code_size": 3995,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519566,
+    "daily_installs": 0,
+    "total_installs": 137,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-02T12:30:55.000Z",
+    "code_updated_at": "2024-12-02T12:30:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 201285,
+        "name": "Ti티타늄",
+        "created_at": "2018-08-06T01:43:49.000Z",
+        "url": "https://greasyfork.org/users/201285-ti%ED%8B%B0%ED%83%80%EB%8A%84"
+      }
+    ],
+    "name": "URL 자동 디코딩",
+    "description": "base64로 인코딩된 URL를 자동으로 디코딩하여 링크로 연결해줍니다. (구글, 네이버, 다음 지원)",
+    "url": "https://greasyfork.org/scripts/519566-url-%EC%9E%90%EB%8F%99-%EB%94%94%EC%BD%94%EB%94%A9",
+    "code_url": "https://update.greasyfork.org/scripts/519566/URL%20%EC%9E%90%EB%8F%99%20%EB%94%94%EC%BD%94%EB%94%A9.user.js",
+    "code_size": 2493,
+    "license": null,
+    "version": "0.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

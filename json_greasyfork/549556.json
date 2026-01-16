@@ -1,0 +1,34 @@
+{
+  "id": 549556,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-14T20:06:05.000Z",
+  "code_updated_at": "2025-09-14T20:06:05.000Z",
+  "namespace": "https://play.sooplive.co.kr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511650,
+      "name": "해인",
+      "created_at": "2025-09-04T04:34:25.000Z",
+      "url": "https://greasyfork.org/users/1511650-%ED%95%B4%EC%9D%B8",
+      "scripts": []
+    }
+  ],
+  "name": "SOOP null: 방종후 채팅가능",
+  "description": "null 페이지",
+  "url": "https://greasyfork.org/scripts/549556-soop-null-%EB%B0%A9%EC%A2%85%ED%9B%84-%EC%B1%84%ED%8C%85%EA%B0%80%EB%8A%A5",
+  "code_url": "https://update.greasyfork.org/scripts/549556/SOOP%20null%3A%20%EB%B0%A9%EC%A2%85%ED%9B%84%20%EC%B1%84%ED%8C%85%EA%B0%80%EB%8A%A5.user.js",
+  "code_size": 9833,
+  "license": "MIT License",
+  "version": "1.3.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

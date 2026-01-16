@@ -1,0 +1,33 @@
+{
+  "id": 548065,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-01T19:14:46.000Z",
+  "code_updated_at": "2025-09-08T00:18:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510939,
+      "name": "Coder248",
+      "created_at": "2025-09-01T19:07:49.000Z",
+      "url": "https://greasyfork.org/users/1510939-coder248"
+    }
+  ],
+  "name": "Colemak-DH Remapper for Remote Desktop",
+  "description": "Remaps QWERTY key codes to Colemak-DH for Google Remote Desktop",
+  "url": "https://greasyfork.org/scripts/548065-colemak-dh-remapper-for-remote-desktop",
+  "code_url": "https://update.greasyfork.org/scripts/548065/Colemak-DH%20Remapper%20for%20Remote%20Desktop.user.js",
+  "code_size": 3650,
+  "license": "GNU Lesser General Public License v3.0 or later",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

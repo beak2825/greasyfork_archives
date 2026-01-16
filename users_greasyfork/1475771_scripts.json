@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537500,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-28T07:17:45.000Z",
+    "code_updated_at": "2025-06-10T06:08:38.000Z",
+    "namespace": "https://greasyfork.org/users/1475771",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1475771,
+        "name": "是东山呀",
+        "created_at": "2025-05-28T07:15:23.000Z",
+        "url": "https://greasyfork.org/users/1475771-%E6%98%AF%E4%B8%9C%E5%B1%B1%E5%91%80"
+      }
+    ],
+    "name": "在VSCode插件中快速地下载特定版本(.vsix)，支持打开Trae和Cursor",
+    "description": "在VSCode插件市场中快速下载任意历史版本的扩展(.vsix)，支持一键安装到Cursor和Trae编辑器。",
+    "url": "https://greasyfork.org/scripts/537500-%E5%9C%A8vscode%E6%8F%92%E4%BB%B6%E4%B8%AD%E5%BF%AB%E9%80%9F%E5%9C%B0%E4%B8%8B%E8%BD%BD%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC-vsix-%E6%94%AF%E6%8C%81%E6%89%93%E5%BC%80trae%E5%92%8Ccursor",
+    "code_url": "https://update.greasyfork.org/scripts/537500/%E5%9C%A8VSCode%E6%8F%92%E4%BB%B6%E4%B8%AD%E5%BF%AB%E9%80%9F%E5%9C%B0%E4%B8%8B%E8%BD%BD%E7%89%B9%E5%AE%9A%E7%89%88%E6%9C%AC%28vsix%29%EF%BC%8C%E6%94%AF%E6%8C%81%E6%89%93%E5%BC%80Trae%E5%92%8CCursor.user.js",
+    "code_size": 8674,
+    "license": "GPL",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

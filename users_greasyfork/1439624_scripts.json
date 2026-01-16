@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527992,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-25T04:26:13.000Z",
+    "code_updated_at": "2025-02-25T04:26:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439624,
+        "name": "chengdada925",
+        "created_at": "2025-02-25T04:22:07.000Z",
+        "url": "https://greasyfork.org/users/1439624-chengdada925"
+      }
+    ],
+    "name": "国家智慧教育平台职教专用|去弹窗",
+    "description": "精准处理学习完成弹窗",
+    "url": "https://greasyfork.org/scripts/527992-%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E8%81%8C%E6%95%99%E4%B8%93%E7%94%A8-%E5%8E%BB%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/527992/%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E8%81%8C%E6%95%99%E4%B8%93%E7%94%A8%7C%E5%8E%BB%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 2650,
+    "license": null,
+    "version": "2025.2.25.1.000-hotfix",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

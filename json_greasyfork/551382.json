@@ -1,0 +1,33 @@
+{
+  "id": 551382,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-02T20:06:48.000Z",
+  "code_updated_at": "2025-10-02T20:06:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521699,
+      "name": "PBD",
+      "created_at": "2025-10-02T20:05:53.000Z",
+      "url": "https://greasyfork.org/users/1521699-pbd"
+    }
+  ],
+  "name": "WhatsApp View-Once: Mostrar na conversa (Tentativa)",
+  "description": "Tenta mostrar mídias \"view once\" inline na conversa (funciona apenas quando o WA expõe mídia no DOM). Use com responsabilidade.",
+  "url": "https://greasyfork.org/scripts/551382-whatsapp-view-once-mostrar-na-conversa-tentativa",
+  "code_url": "https://update.greasyfork.org/scripts/551382/WhatsApp%20View-Once%3A%20Mostrar%20na%20conversa%20%28Tentativa%29.user.js",
+  "code_size": 8517,
+  "license": null,
+  "version": "0.3",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

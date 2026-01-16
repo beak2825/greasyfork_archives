@@ -1,0 +1,59 @@
+{
+  "id": 499677,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-04T14:41:59.000Z",
+  "code_updated_at": "2024-07-04T14:41:58.000Z",
+  "namespace": "viral",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1328234,
+      "name": "Keir Simmons",
+      "created_at": "2024-07-04T14:27:58.000Z",
+      "url": "https://greasyfork.org/users/1328234-keir-simmons",
+      "scripts": [
+        {
+          "id": 499677,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-04T14:41:59.000Z",
+          "code_updated_at": "2024-07-04T14:41:58.000Z",
+          "namespace": "viral",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PWCC Bid details",
+          "description": "Shows changes in bid prices & total/net bids on the PWCC selling page.",
+          "url": "https://greasyfork.org/scripts/499677-pwcc-bid-details",
+          "code_url": "https://update.greasyfork.org/scripts/499677/PWCC%20Bid%20details.user.js",
+          "code_size": 5241,
+          "license": null,
+          "version": "2024-07-01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PWCC Bid details",
+  "description": "Shows changes in bid prices & total/net bids on the PWCC selling page.",
+  "url": "https://greasyfork.org/scripts/499677-pwcc-bid-details",
+  "code_url": "https://update.greasyfork.org/scripts/499677/PWCC%20Bid%20details.user.js",
+  "code_size": 5241,
+  "license": null,
+  "version": "2024-07-01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

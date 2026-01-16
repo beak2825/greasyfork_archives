@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526051,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-06T04:51:35.000Z",
+    "code_updated_at": "2025-02-06T04:51:35.000Z",
+    "namespace": "https://greasyfork.org/en/users/131965-levinit",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1432055,
+        "name": "King21",
+        "created_at": "2025-02-06T04:48:07.000Z",
+        "url": "https://greasyfork.org/users/1432055-king21"
+      }
+    ],
+    "name": "bye-flash-hello-html5 | 再见flash 你好html5",
+    "description": "国内主流视频网站的HTML5播放",
+    "url": "https://greasyfork.org/scripts/526051-bye-flash-hello-html5-%E5%86%8D%E8%A7%81flash-%E4%BD%A0%E5%A5%BDhtml5",
+    "code_url": "https://update.greasyfork.org/scripts/526051/bye-flash-hello-html5%20%7C%20%E5%86%8D%E8%A7%81flash%20%E4%BD%A0%E5%A5%BDhtml5.user.js",
+    "code_size": 3186,
+    "license": null,
+    "version": "1.8.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

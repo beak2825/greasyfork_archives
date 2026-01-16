@@ -1,0 +1,33 @@
+{
+  "id": 510096,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-25T06:56:32.000Z",
+  "code_updated_at": "2024-09-25T06:56:32.000Z",
+  "namespace": "https://viayoo.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 952577,
+      "name": "wwdboy",
+      "created_at": "2022-08-30T15:26:51.000Z",
+      "url": "https://greasyfork.org/users/952577-wwdboy"
+    }
+  ],
+  "name": "浏览器背景-适配手机",
+  "description": "修改浏览器背景，请自行修改图片链接",
+  "url": "https://greasyfork.org/scripts/510096-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%83%8C%E6%99%AF-%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA",
+  "code_url": "https://update.greasyfork.org/scripts/510096/%E6%B5%8F%E8%A7%88%E5%99%A8%E8%83%8C%E6%99%AF-%E9%80%82%E9%85%8D%E6%89%8B%E6%9C%BA.user.js",
+  "code_size": 4970,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

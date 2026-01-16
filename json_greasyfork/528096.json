@@ -1,0 +1,59 @@
+{
+  "id": 528096,
+  "daily_installs": 1,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-26T02:55:32.000Z",
+  "code_updated_at": "2025-02-26T02:55:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 969879,
+      "name": "eggfry",
+      "created_at": "2022-10-12T22:20:51.000Z",
+      "url": "https://greasyfork.org/users/969879-eggfry",
+      "scripts": [
+        {
+          "id": 528096,
+          "daily_installs": 1,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-26T02:55:32.000Z",
+          "code_updated_at": "2025-02-26T02:55:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "중고나라 VIP 게시글 제거 스크립트",
+          "description": "중고나라 VIP 회원의 게시글을 표시하지 않습니다.",
+          "url": "https://greasyfork.org/scripts/528096-%EC%A4%91%EA%B3%A0%EB%82%98%EB%9D%BC-vip-%EA%B2%8C%EC%8B%9C%EA%B8%80-%EC%A0%9C%EA%B1%B0-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8",
+          "code_url": "https://update.greasyfork.org/scripts/528096/%EC%A4%91%EA%B3%A0%EB%82%98%EB%9D%BC%20VIP%20%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%A0%9C%EA%B1%B0%20%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8.user.js",
+          "code_size": 1036,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "중고나라 VIP 게시글 제거 스크립트",
+  "description": "중고나라 VIP 회원의 게시글을 표시하지 않습니다.",
+  "url": "https://greasyfork.org/scripts/528096-%EC%A4%91%EA%B3%A0%EB%82%98%EB%9D%BC-vip-%EA%B2%8C%EC%8B%9C%EA%B8%80-%EC%A0%9C%EA%B1%B0-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8",
+  "code_url": "https://update.greasyfork.org/scripts/528096/%EC%A4%91%EA%B3%A0%EB%82%98%EB%9D%BC%20VIP%20%EA%B2%8C%EC%8B%9C%EA%B8%80%20%EC%A0%9C%EA%B1%B0%20%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8.user.js",
+  "code_size": 1036,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 540747,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-25T15:16:02.000Z",
+  "code_updated_at": "2025-10-15T10:20:04.000Z",
+  "namespace": "urn:uuid:a1b2c3d4-e5f6-7890-1234-567890abcdef // Unikátní identifikátor",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 284844,
+      "name": "Ondřej Horník",
+      "created_at": "2019-03-21T07:27:28.000Z",
+      "url": "https://greasyfork.org/users/284844-ond%C5%99ej-horn%C3%ADk",
+      "scripts": []
+    }
+  ],
+  "name": "Editor pro export do InCopy",
+  "description": "Vloží na WordPress lištu tlačítko pro spuštění editoru pro export textu do InCopy, s pokročilou správou greyboxů a funkcí stručného výtahu pomocí Gemini AI.",
+  "url": "https://greasyfork.org/scripts/540747-editor-pro-export-do-incopy",
+  "code_url": "https://update.greasyfork.org/scripts/540747/Editor%20pro%20export%20do%20InCopy.user.js",
+  "code_size": 30634,
+  "license": null,
+  "version": "2.1",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

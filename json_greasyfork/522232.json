@@ -1,0 +1,59 @@
+{
+  "id": 522232,
+  "daily_installs": 0,
+  "total_installs": 141,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-29T19:24:20.000Z",
+  "code_updated_at": "2024-12-29T19:24:20.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417344,
+      "name": "amari carter",
+      "created_at": "2024-12-29T19:22:40.000Z",
+      "url": "https://greasyfork.org/users/1417344-amari-carter",
+      "scripts": [
+        {
+          "id": 522232,
+          "daily_installs": 0,
+          "total_installs": 141,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-29T19:24:20.000Z",
+          "code_updated_at": "2024-12-29T19:24:20.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Blox Fruits Level Mastery Script",
+          "description": "1.0",
+          "url": "https://greasyfork.org/scripts/522232-blox-fruits-level-mastery-script",
+          "code_url": "https://update.greasyfork.org/scripts/522232/Blox%20Fruits%20Level%20Mastery%20Script.user.js",
+          "code_size": 1017,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blox Fruits Level Mastery Script",
+  "description": "1.0",
+  "url": "https://greasyfork.org/scripts/522232-blox-fruits-level-mastery-script",
+  "code_url": "https://update.greasyfork.org/scripts/522232/Blox%20Fruits%20Level%20Mastery%20Script.user.js",
+  "code_size": 1017,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 544117,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-30T15:33:38.000Z",
+  "code_updated_at": "2025-07-31T17:25:10.000Z",
+  "namespace": "https://chat.openai.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499899,
+      "name": "aiqeten",
+      "created_at": "2025-07-30T14:52:15.000Z",
+      "url": "https://greasyfork.org/users/1499899-aiqeten",
+      "scripts": [
+        {
+          "id": 544117,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-30T15:33:38.000Z",
+          "code_updated_at": "2025-07-31T17:25:10.000Z",
+          "namespace": "https://chat.openai.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "動画ページに飛ばずにワンクリックでマイリス登録",
+          "description": "ニコニコ動画の検索結果ページやランキングページにマイリストボタンを追加",
+          "url": "https://greasyfork.org/scripts/544117-%E5%8B%95%E7%94%BB%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AB%E9%A3%9B%E3%81%B0%E3%81%9A%E3%81%AB%E3%83%AF%E3%83%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%A7%E3%83%9E%E3%82%A4%E3%83%AA%E3%82%B9%E7%99%BB%E9%8C%B2",
+          "code_url": "https://update.greasyfork.org/scripts/544117/%E5%8B%95%E7%94%BB%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AB%E9%A3%9B%E3%81%B0%E3%81%9A%E3%81%AB%E3%83%AF%E3%83%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%A7%E3%83%9E%E3%82%A4%E3%83%AA%E3%82%B9%E7%99%BB%E9%8C%B2.user.js",
+          "code_size": 13254,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "動画ページに飛ばずにワンクリックでマイリス登録",
+  "description": "ニコニコ動画の検索結果ページやランキングページにマイリストボタンを追加",
+  "url": "https://greasyfork.org/scripts/544117-%E5%8B%95%E7%94%BB%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AB%E9%A3%9B%E3%81%B0%E3%81%9A%E3%81%AB%E3%83%AF%E3%83%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%A7%E3%83%9E%E3%82%A4%E3%83%AA%E3%82%B9%E7%99%BB%E9%8C%B2",
+  "code_url": "https://update.greasyfork.org/scripts/544117/%E5%8B%95%E7%94%BB%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AB%E9%A3%9B%E3%81%B0%E3%81%9A%E3%81%AB%E3%83%AF%E3%83%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%A7%E3%83%9E%E3%82%A4%E3%83%AA%E3%82%B9%E7%99%BB%E9%8C%B2.user.js",
+  "code_size": 13254,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

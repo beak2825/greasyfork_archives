@@ -1,0 +1,34 @@
+{
+  "id": 550503,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-24T00:46:17.000Z",
+  "code_updated_at": "2025-09-28T01:24:24.000Z",
+  "namespace": "https://greasyfork.org/users/your-name",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1235227,
+      "name": "2220 pp",
+      "created_at": "2023-12-17T08:14:02.000Z",
+      "url": "https://greasyfork.org/users/1235227-2220-pp",
+      "scripts": []
+    }
+  ],
+  "name": "chatgpt.com 写入 sessionStorage",
+  "description": "在 chatgpt.com 的会话存储中新增键 poijcwa，值为 jwoid",
+  "url": "https://greasyfork.org/scripts/550503-chatgpt-com-%E5%86%99%E5%85%A5-sessionstorage",
+  "code_url": "https://update.greasyfork.org/scripts/550503/chatgptcom%20%E5%86%99%E5%85%A5%20sessionStorage.user.js",
+  "code_size": 831,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

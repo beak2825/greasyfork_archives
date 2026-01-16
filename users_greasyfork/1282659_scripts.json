@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527356,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T16:26:29.000Z",
+    "code_updated_at": "2025-08-19T20:05:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282659,
+        "name": "Crimsab",
+        "created_at": "2024-04-02T00:19:47.000Z",
+        "url": "https://greasyfork.org/users/1282659-crimsab"
+      }
+    ],
+    "name": "GG.deals Steam Companion",
+    "description": "Shows lowest price from gg.deals on Steam game pages",
+    "url": "https://greasyfork.org/scripts/527356-gg-deals-steam-companion",
+    "code_url": "https://update.greasyfork.org/scripts/527356/GGdeals%20Steam%20Companion.user.js",
+    "code_size": 111600,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.6.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517720,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T03:53:57.000Z",
+    "code_updated_at": "2024-11-17T03:53:57.000Z",
+    "namespace": "https://greasyfork.org/users/1282659",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282659,
+        "name": "Crimsab",
+        "created_at": "2024-04-02T00:19:47.000Z",
+        "url": "https://greasyfork.org/users/1282659-crimsab"
+      }
+    ],
+    "name": "Amazon to Annas Archive",
+    "description": "Enhances Amazon book pages by adding a direct link to search for the book on Annas Archive. The link appears next to the reviews, providing a convenient way to find additional information and resources related to the book on Annas Archive.",
+    "url": "https://greasyfork.org/scripts/517720-amazon-to-annas-archive",
+    "code_url": "https://update.greasyfork.org/scripts/517720/Amazon%20to%20Annas%20Archive.user.js",
+    "code_size": 1881,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

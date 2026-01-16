@@ -1,0 +1,101 @@
+[
+  {
+    "id": 532385,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T03:29:01.000Z",
+    "code_updated_at": "2025-04-10T03:29:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1387888,
+        "name": "Henry Suen",
+        "created_at": "2024-10-29T02:48:33.000Z",
+        "url": "https://greasyfork.org/users/1387888-henry-suen"
+      }
+    ],
+    "name": "YouTube Auto Turn on Subtitles",
+    "description": "Automatically enables subtitles on YouTube videos if available",
+    "url": "https://greasyfork.org/scripts/532385-youtube-auto-turn-on-subtitles",
+    "code_url": "https://update.greasyfork.org/scripts/532385/YouTube%20Auto%20Turn%20on%20Subtitles.user.js",
+    "code_size": 3997,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532056,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T07:08:20.000Z",
+    "code_updated_at": "2025-04-07T07:08:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1387888,
+        "name": "Henry Suen",
+        "created_at": "2024-10-29T02:48:33.000Z",
+        "url": "https://greasyfork.org/users/1387888-henry-suen"
+      }
+    ],
+    "name": "Force Bing Dark Mode",
+    "description": "Automatically selects dark mode in Bing settings",
+    "url": "https://greasyfork.org/scripts/532056-force-bing-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/532056/Force%20Bing%20Dark%20Mode.user.js",
+    "code_size": 4695,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 514587,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-29T02:51:47.000Z",
+    "code_updated_at": "2024-10-29T02:51:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1387888,
+        "name": "Henry Suen",
+        "created_at": "2024-10-29T02:48:33.000Z",
+        "url": "https://greasyfork.org/users/1387888-henry-suen"
+      }
+    ],
+    "name": "Open Reddit YouTube Player in New Tab",
+    "description": "Opens embedded YouTube videos from Reddit in a new tab",
+    "url": "https://greasyfork.org/scripts/514587-open-reddit-youtube-player-in-new-tab",
+    "code_url": "https://update.greasyfork.org/scripts/514587/Open%20Reddit%20YouTube%20Player%20in%20New%20Tab.user.js",
+    "code_size": 2844,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

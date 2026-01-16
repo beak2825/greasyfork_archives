@@ -1,0 +1,59 @@
+{
+  "id": 541790,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-06T07:07:49.000Z",
+  "code_updated_at": "2025-07-06T07:07:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492118,
+      "name": "super game-17",
+      "created_at": "2025-07-06T06:41:14.000Z",
+      "url": "https://greasyfork.org/users/1492118-super-game-17",
+      "scripts": [
+        {
+          "id": 541790,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-06T07:07:49.000Z",
+          "code_updated_at": "2025-07-06T07:07:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TLS Contact Appointment Checker (Full UI + Timer)",
+          "description": "Vérifie les créneaux TLScontact avec notifications, interface dynamique, timer visible, bouton de vérification manuelle et sauvegarde des préférences.",
+          "url": "https://greasyfork.org/scripts/541790-tls-contact-appointment-checker-full-ui-timer",
+          "code_url": "https://update.greasyfork.org/scripts/541790/TLS%20Contact%20Appointment%20Checker%20%28Full%20UI%20%2B%20Timer%29.user.js",
+          "code_size": 11273,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TLS Contact Appointment Checker (Full UI + Timer)",
+  "description": "Vérifie les créneaux TLScontact avec notifications, interface dynamique, timer visible, bouton de vérification manuelle et sauvegarde des préférences.",
+  "url": "https://greasyfork.org/scripts/541790-tls-contact-appointment-checker-full-ui-timer",
+  "code_url": "https://update.greasyfork.org/scripts/541790/TLS%20Contact%20Appointment%20Checker%20%28Full%20UI%20%2B%20Timer%29.user.js",
+  "code_size": 11273,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

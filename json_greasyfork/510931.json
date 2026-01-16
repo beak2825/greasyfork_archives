@@ -1,0 +1,34 @@
+{
+  "id": 510931,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-30T17:21:12.000Z",
+  "code_updated_at": "2024-09-30T17:21:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1375073,
+      "name": "Gannon",
+      "created_at": "2024-09-30T17:14:23.000Z",
+      "url": "https://greasyfork.org/users/1375073-gannon",
+      "scripts": []
+    }
+  ],
+  "name": "Stay on Incident Creation Page, Clear Requested For, and Add Text to Description",
+  "description": "Keeps the kiosk webpage on the incident creation page after ticket submission, clears the Requested for field, and adds text to the description",
+  "url": "https://greasyfork.org/scripts/510931-stay-on-incident-creation-page-clear-requested-for-and-add-text-to-description",
+  "code_url": "https://update.greasyfork.org/scripts/510931/Stay%20on%20Incident%20Creation%20Page%2C%20Clear%20Requested%20For%2C%20and%20Add%20Text%20to%20Description.user.js",
+  "code_size": 4600,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

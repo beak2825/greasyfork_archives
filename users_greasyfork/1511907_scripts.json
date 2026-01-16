@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548386,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T20:30:28.000Z",
+    "code_updated_at": "2025-09-04T20:30:27.000Z",
+    "namespace": "https://sye.ct.ws/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511907,
+        "name": "yuu ik",
+        "created_at": "2025-09-04T20:20:29.000Z",
+        "url": "https://greasyfork.org/users/1511907-yuu-ik"
+      }
+    ],
+    "name": "Sye Network – Local Post Injector",
+    "description": "Add local news articles directly to /posts/ on Sye Network",
+    "url": "https://greasyfork.org/scripts/548386-sye-network-local-post-injector",
+    "code_url": "https://update.greasyfork.org/scripts/548386/Sye%20Network%20%E2%80%93%20Local%20Post%20Injector.user.js",
+    "code_size": 3398,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

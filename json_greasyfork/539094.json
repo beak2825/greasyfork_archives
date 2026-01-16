@@ -1,0 +1,33 @@
+{
+  "id": 539094,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T09:17:33.000Z",
+  "code_updated_at": "2025-06-17T06:19:59.000Z",
+  "namespace": "dav",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1043662,
+      "name": "HenryToys",
+      "created_at": "2023-03-17T12:51:28.000Z",
+      "url": "https://greasyfork.org/users/1043662-henrytoys"
+    }
+  ],
+  "name": "dav",
+  "description": "Henry Toys dav api",
+  "url": "https://greasyfork.org/scripts/539094-dav",
+  "code_url": "https://update.greasyfork.org/scripts/539094/1609048/dav.js",
+  "code_size": 10530,
+  "license": "Creative Commons Attribution 4.0 International",
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

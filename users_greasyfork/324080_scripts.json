@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524044,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-17T12:29:47.000Z",
+    "code_updated_at": "2025-01-17T12:40:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 324080,
+        "name": "ziopuzzle",
+        "created_at": "2019-08-07T03:59:49.000Z",
+        "url": "https://greasyfork.org/users/324080-ziopuzzle"
+      }
+    ],
+    "name": "Twitter(X) search auto update",
+    "description": "検索(最新)時に一定時間毎にスクロールさせ更新を誘発させます",
+    "url": "https://greasyfork.org/scripts/524044-twitter-x-search-auto-update",
+    "code_url": "https://update.greasyfork.org/scripts/524044/Twitter%28X%29%20search%20auto%20update.user.js",
+    "code_size": 995,
+    "license": null,
+    "version": "2025-01-17",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

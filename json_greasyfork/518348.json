@@ -1,0 +1,34 @@
+{
+  "id": 518348,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-21T15:20:18.000Z",
+  "code_updated_at": "2024-11-21T15:20:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "Kvido Difficulty 5",
+  "description": "Automatické nastavení stylů pro lazy loaded prvky na stránce",
+  "url": "https://greasyfork.org/scripts/518348-kvido-difficulty-5",
+  "code_url": "https://update.greasyfork.org/scripts/518348/Kvido%20Difficulty%205.user.js",
+  "code_size": 1811,
+  "license": "none",
+  "version": "1.0",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528353,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-28T11:28:01.000Z",
+    "code_updated_at": "2025-02-28T11:28:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1206936,
+        "name": "anothershm",
+        "created_at": "2023-10-29T18:57:14.000Z",
+        "url": "https://greasyfork.org/users/1206936-anothershm"
+      }
+    ],
+    "name": "Limit Chat Messages of ChatGPT",
+    "description": "Keep only the last 10 conversation elements in ChatGPT chat",
+    "url": "https://greasyfork.org/scripts/528353-limit-chat-messages-of-chatgpt",
+    "code_url": "https://update.greasyfork.org/scripts/528353/Limit%20Chat%20Messages%20of%20ChatGPT.user.js",
+    "code_size": 854,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

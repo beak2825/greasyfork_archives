@@ -1,0 +1,34 @@
+{
+  "id": 515835,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-05T00:05:47.000Z",
+  "code_updated_at": "2024-11-05T00:05:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294856,
+      "name": "manoflaser",
+      "created_at": "2024-04-29T17:04:20.000Z",
+      "url": "https://greasyfork.org/users/1294856-manoflaser",
+      "scripts": []
+    }
+  ],
+  "name": "AliExpress Sidecart Width Modifier",
+  "description": "Modify the width of the .root-sidecart on AliExpress US",
+  "url": "https://greasyfork.org/scripts/515835-aliexpress-sidecart-width-modifier",
+  "code_url": "https://update.greasyfork.org/scripts/515835/AliExpress%20Sidecart%20Width%20Modifier.user.js",
+  "code_size": 787,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

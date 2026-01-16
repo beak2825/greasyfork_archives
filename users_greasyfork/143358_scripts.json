@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514223,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-26T20:34:28.000Z",
+    "code_updated_at": "2024-10-26T21:06:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 143358,
+        "name": "dang",
+        "created_at": "2017-07-24T17:42:19.000Z",
+        "url": "https://greasyfork.org/users/143358-dang"
+      }
+    ],
+    "name": "Torn City - Duke Safe Combinations",
+    "description": "Autofill safe combinations based on list provided in this forum thread: https://www.torn.com/forums.php#/p=threads&f=47&t=16406373&b=0&a=0",
+    "url": "https://greasyfork.org/scripts/514223-torn-city-duke-safe-combinations",
+    "code_url": "https://update.greasyfork.org/scripts/514223/Torn%20City%20-%20Duke%20Safe%20Combinations.user.js",
+    "code_size": 6690,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2024-10-26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

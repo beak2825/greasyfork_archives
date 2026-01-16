@@ -1,0 +1,34 @@
+{
+  "id": 499987,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-08T09:25:59.000Z",
+  "code_updated_at": "2024-07-12T09:38:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed WM Raif AT MARKUS ULREICH",
+  "description": "Modify account balance values, update data-positive attribute, and remove currency elements",
+  "url": "https://greasyfork.org/scripts/499987-ed-wm-raif-at-markus-ulreich",
+  "code_url": "https://update.greasyfork.org/scripts/499987/Ed%20WM%20Raif%20AT%20MARKUS%20ULREICH.user.js",
+  "code_size": 43196,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

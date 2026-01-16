@@ -1,0 +1,59 @@
+{
+  "id": 553992,
+  "daily_installs": 1,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-28T17:07:24.000Z",
+  "code_updated_at": "2025-10-28T17:41:22.000Z",
+  "namespace": "https://github.com/zyaga/bunpro-exporter",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1531684,
+      "name": "zyaga",
+      "created_at": "2025-10-28T16:49:42.000Z",
+      "url": "https://greasyfork.org/users/1531684-zyaga",
+      "scripts": [
+        {
+          "id": 553992,
+          "daily_installs": 1,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-28T17:07:24.000Z",
+          "code_updated_at": "2025-10-28T17:41:22.000Z",
+          "namespace": "https://github.com/zyaga/bunpro-exporter",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bunpro Exporter",
+          "description": "Tampermonkey / Greasemonkey userscript that adds a floating export button to Bunpro.jp pages which exports all of a users in progress and learned vocabulary to a CSV file.",
+          "url": "https://greasyfork.org/scripts/553992-bunpro-exporter",
+          "code_url": "https://update.greasyfork.org/scripts/553992/Bunpro%20Exporter.user.js",
+          "code_size": 11619,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bunpro Exporter",
+  "description": "Tampermonkey / Greasemonkey userscript that adds a floating export button to Bunpro.jp pages which exports all of a users in progress and learned vocabulary to a CSV file.",
+  "url": "https://greasyfork.org/scripts/553992-bunpro-exporter",
+  "code_url": "https://update.greasyfork.org/scripts/553992/Bunpro%20Exporter.user.js",
+  "code_size": 11619,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

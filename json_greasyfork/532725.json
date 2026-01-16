@@ -1,0 +1,59 @@
+{
+  "id": 532725,
+  "daily_installs": 0,
+  "total_installs": 331,
+  "fan_score": "6.0",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 4,
+  "created_at": "2025-04-13T16:18:54.000Z",
+  "code_updated_at": "2025-06-20T17:27:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1457459,
+      "name": "Einstein@Alberton",
+      "created_at": "2025-04-13T16:01:53.000Z",
+      "url": "https://greasyfork.org/users/1457459-einstein-alberton",
+      "scripts": [
+        {
+          "id": 532725,
+          "daily_installs": 0,
+          "total_installs": 331,
+          "fan_score": "6.0",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 4,
+          "created_at": "2025-04-13T16:18:54.000Z",
+          "code_updated_at": "2025-06-20T17:27:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Anna's Archive Wait Skipper (v4.1)",
+          "description": "Finds the real download link on the slow download page and bypasses the timer.",
+          "url": "https://greasyfork.org/scripts/532725-anna-s-archive-wait-skipper-v4-1",
+          "code_url": "https://update.greasyfork.org/scripts/532725/Anna%27s%20Archive%20Wait%20Skipper%20%28v41%29.user.js",
+          "code_size": 2893,
+          "license": null,
+          "version": "4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Anna's Archive Wait Skipper (v4.1)",
+  "description": "Finds the real download link on the slow download page and bypasses the timer.",
+  "url": "https://greasyfork.org/scripts/532725-anna-s-archive-wait-skipper-v4-1",
+  "code_url": "https://update.greasyfork.org/scripts/532725/Anna%27s%20Archive%20Wait%20Skipper%20%28v41%29.user.js",
+  "code_size": 2893,
+  "license": null,
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

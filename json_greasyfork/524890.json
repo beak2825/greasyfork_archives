@@ -1,0 +1,59 @@
+{
+  "id": 524890,
+  "daily_installs": 0,
+  "total_installs": 144,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-26T04:17:10.000Z",
+  "code_updated_at": "2025-01-29T15:15:41.000Z",
+  "namespace": "https://greasyfork.org/en/users/1427435-fevnax",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1427435,
+      "name": "fevnax",
+      "created_at": "2025-01-26T04:06:33.000Z",
+      "url": "https://greasyfork.org/users/1427435-fevnax",
+      "scripts": [
+        {
+          "id": 524890,
+          "daily_installs": 0,
+          "total_installs": 144,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-26T04:17:10.000Z",
+          "code_updated_at": "2025-01-29T15:15:41.000Z",
+          "namespace": "https://greasyfork.org/en/users/1427435-fevnax",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Asura - Advert Remover",
+          "description": "Removes the advert overlay, premium card, subscription prompts, and additional ads automatically when the page loads.",
+          "url": "https://greasyfork.org/scripts/524890-asura-advert-remover",
+          "code_url": "https://update.greasyfork.org/scripts/524890/Asura%20-%20Advert%20Remover.user.js",
+          "code_size": 2189,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Asura - Advert Remover",
+  "description": "Removes the advert overlay, premium card, subscription prompts, and additional ads automatically when the page loads.",
+  "url": "https://greasyfork.org/scripts/524890-asura-advert-remover",
+  "code_url": "https://update.greasyfork.org/scripts/524890/Asura%20-%20Advert%20Remover.user.js",
+  "code_size": 2189,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 531704,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T11:16:33.000Z",
+  "code_updated_at": "2025-04-03T11:16:33.000Z",
+  "namespace": "https://dodopizza.design-terminal.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453552,
+      "name": "Мартин Хачатрян",
+      "created_at": "2025-04-03T09:48:51.000Z",
+      "url": "https://greasyfork.org/users/1453552-%D0%BC%D0%B0%D1%80%D1%82%D0%B8%D0%BD-%D1%85%D0%B0%D1%87%D0%B0%D1%82%D1%80%D1%8F%D0%BD",
+      "scripts": []
+    }
+  ],
+  "name": "Toggle Parent Checkbox for Kazakhstan",
+  "description": "Waits for the \"Kazakhstan 🇰🇿\" container to appear and toggles the parent checkbox if necessary.",
+  "url": "https://greasyfork.org/scripts/531704-toggle-parent-checkbox-for-kazakhstan",
+  "code_url": "https://update.greasyfork.org/scripts/531704/Toggle%20Parent%20Checkbox%20for%20Kazakhstan.user.js",
+  "code_size": 2696,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

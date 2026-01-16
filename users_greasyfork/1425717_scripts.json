@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524391,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-21T10:57:11.000Z",
+    "code_updated_at": "2025-10-12T17:35:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425717,
+        "name": "연습용더미1",
+        "created_at": "2025-01-21T10:51:28.000Z",
+        "url": "https://greasyfork.org/users/1425717-%EC%97%B0%EC%8A%B5%EC%9A%A9%EB%8D%94%EB%AF%B81"
+      }
+    ],
+    "name": "YouTube Skip Time Customizer",
+    "description": "Customize YouTube skip time by arrow key and block Numpad0~Numpad9 function",
+    "url": "https://greasyfork.org/scripts/524391-youtube-skip-time-customizer",
+    "code_url": "https://update.greasyfork.org/scripts/524391/YouTube%20Skip%20Time%20Customizer.user.js",
+    "code_size": 2602,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

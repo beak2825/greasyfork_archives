@@ -1,0 +1,34 @@
+{
+  "id": 500063,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-09T03:51:58.000Z",
+  "code_updated_at": "2024-08-21T02:44:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330004,
+      "name": "Kayleigh",
+      "created_at": "2024-07-08T04:45:53.000Z",
+      "url": "https://greasyfork.org/users/1330004-kayleigh",
+      "scripts": []
+    }
+  ],
+  "name": "Enable Twitter/X 'Open in App' Prompt",
+  "description": "Attempt to enable the 'Open in App' prompt on Twitter/X",
+  "url": "https://greasyfork.org/scripts/500063-enable-twitter-x-open-in-app-prompt",
+  "code_url": "https://update.greasyfork.org/scripts/500063/Enable%20TwitterX%20%27Open%20in%20App%27%20Prompt.user.js",
+  "code_size": 4211,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

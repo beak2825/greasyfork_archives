@@ -1,0 +1,59 @@
+{
+  "id": 525257,
+  "daily_installs": 0,
+  "total_installs": 127,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-29T18:44:19.000Z",
+  "code_updated_at": "2025-01-29T21:03:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1428696,
+      "name": "Mr.Time",
+      "created_at": "2025-01-29T17:13:08.000Z",
+      "url": "https://greasyfork.org/users/1428696-mr-time",
+      "scripts": [
+        {
+          "id": 525257,
+          "daily_installs": 0,
+          "total_installs": 127,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-29T18:44:19.000Z",
+          "code_updated_at": "2025-01-29T21:03:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kirka.io",
+          "description": "VOID Kirka tool",
+          "url": "https://greasyfork.org/scripts/525257-kirka-io",
+          "code_url": "https://update.greasyfork.org/scripts/525257/Kirkaio.user.js",
+          "code_size": 6223,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kirka.io",
+  "description": "VOID Kirka tool",
+  "url": "https://greasyfork.org/scripts/525257-kirka-io",
+  "code_url": "https://update.greasyfork.org/scripts/525257/Kirkaio.user.js",
+  "code_size": 6223,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

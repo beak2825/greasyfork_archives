@@ -1,0 +1,34 @@
+{
+  "id": 523372,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-10T11:21:21.000Z",
+  "code_updated_at": "2025-04-08T18:33:21.000Z",
+  "namespace": "https://github.com/cryosis7/torn_userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421622,
+      "name": "BackFromTheDead_Gaming",
+      "created_at": "2025-01-10T11:08:30.000Z",
+      "url": "https://greasyfork.org/users/1421622-backfromthedead-gaming",
+      "scripts": []
+    }
+  ],
+  "name": "Warning On Attack Join",
+  "description": "Stops you from joining an attack when you don't want to.",
+  "url": "https://greasyfork.org/scripts/523372-warning-on-attack-join",
+  "code_url": "https://update.greasyfork.org/scripts/523372/Warning%20On%20Attack%20Join.user.js",
+  "code_size": 759,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

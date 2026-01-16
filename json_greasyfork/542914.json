@@ -1,0 +1,59 @@
+{
+  "id": 542914,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-18T12:31:03.000Z",
+  "code_updated_at": "2025-07-18T12:31:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458286,
+      "name": "cottay",
+      "created_at": "2025-04-15T16:33:37.000Z",
+      "url": "https://greasyfork.org/users/1458286-cottay",
+      "scripts": [
+        {
+          "id": 533663,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-22T20:03:37.000Z",
+          "code_updated_at": "2025-10-28T13:47:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Threads 自動化愛心工具 - 版本 2.4 - tf-ads.com",
+          "description": "支援多目標、自訂首頁、倒數顯示、防偵測與隨機按愛心功能，按愛心機率提升到60%，優化時間並正確計算完整循環。",
+          "url": "https://greasyfork.org/scripts/533663-threads-%E8%87%AA%E5%8B%95%E5%8C%96%E6%84%9B%E5%BF%83%E5%B7%A5%E5%85%B7-%E7%89%88%E6%9C%AC-2-4-tf-ads-com",
+          "code_url": "https://update.greasyfork.org/scripts/533663/Threads%20%E8%87%AA%E5%8B%95%E5%8C%96%E6%84%9B%E5%BF%83%E5%B7%A5%E5%85%B7%20-%20%E7%89%88%E6%9C%AC%2024%20-%20tf-adscom.user.js",
+          "code_size": 8098,
+          "license": "MIT License",
+          "version": "2.4",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Threads 免登入 5.4 (Auto-Match .net / .com)",
+  "description": "支援多目標、自訂首頁、自動登入憑證帶入、429/401 靜默、GraphQL 請求統計的 Threads 自動瀏覽腳本",
+  "url": "https://greasyfork.org/scripts/542914-threads-%E5%85%8D%E7%99%BB%E5%85%A5-5-4-auto-match-net-com",
+  "code_url": "https://update.greasyfork.org/scripts/542914/Threads%20%E5%85%8D%E7%99%BB%E5%85%A5%2054%20%28Auto-Match%20net%20%20com%29.user.js",
+  "code_size": 10907,
+  "license": "MIT License",
+  "version": "5.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

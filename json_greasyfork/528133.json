@@ -1,0 +1,33 @@
+{
+  "id": 528133,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-26T12:32:08.000Z",
+  "code_updated_at": "2025-02-26T12:32:08.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440248,
+      "name": "b41dfb9",
+      "created_at": "2025-02-26T12:20:07.000Z",
+      "url": "https://greasyfork.org/users/1440248-b41dfb9"
+    }
+  ],
+  "name": "RuijieRouterBypass",
+  "description": "解除锐捷睿易路由器 EWEB 登录次数限制",
+  "url": "https://greasyfork.org/scripts/528133-ruijierouterbypass",
+  "code_url": "https://update.greasyfork.org/scripts/528133/RuijieRouterBypass.user.js",
+  "code_size": 756,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

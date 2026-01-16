@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526139,
+    "daily_installs": 1,
+    "total_installs": 71,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-07T00:23:13.000Z",
+    "code_updated_at": "2025-02-07T12:25:22.000Z",
+    "namespace": "http://github/hafeoz",
+    "support_url": "https://gist.github.com/hafeoz/666c8cd11a3c7be20167a3aeb3e9df7b",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1432360,
+        "name": "hafeoz",
+        "created_at": "2025-02-07T00:17:18.000Z",
+        "url": "https://greasyfork.org/users/1432360-hafeoz"
+      }
+    ],
+    "name": "t.me fix",
+    "description": "Make t.me image savable and prevent \"open with...\" dialog on load",
+    "url": "https://greasyfork.org/scripts/526139-t-me-fix",
+    "code_url": "https://update.greasyfork.org/scripts/526139/tme%20fix.user.js",
+    "code_size": 1736,
+    "license": "0BSD OR CC0-1.0 OR WTFPL",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

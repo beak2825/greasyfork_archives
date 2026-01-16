@@ -1,0 +1,33 @@
+{
+  "id": 507595,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-09T06:38:12.000Z",
+  "code_updated_at": "2024-09-09T06:59:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1365175,
+      "name": "Dhudean",
+      "created_at": "2024-09-09T06:36:10.000Z",
+      "url": "https://greasyfork.org/users/1365175-dhudean"
+    }
+  ],
+  "name": "Hide Custom Affix Divs on mianshiya.com",
+  "description": "Hide all div elements with class 'custom-affix' on mianshiya.com",
+  "url": "https://greasyfork.org/scripts/507595-hide-custom-affix-divs-on-mianshiya-com",
+  "code_url": "https://update.greasyfork.org/scripts/507595/Hide%20Custom%20Affix%20Divs%20on%20mianshiyacom.user.js",
+  "code_size": 1173,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

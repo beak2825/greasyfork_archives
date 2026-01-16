@@ -97,5 +97,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 532051,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T05:45:41.000Z",
+    "code_updated_at": "2025-04-07T05:45:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430831,
+        "name": "jimchen2",
+        "created_at": "2025-02-03T11:43:16.000Z",
+        "url": "https://greasyfork.org/users/1430831-jimchen2"
+      }
+    ],
+    "name": "Bilibili Search and Video Control Shortcuts",
+    "description": "Press \"/\" to focus Bilibili search bar, video control shortcuts (Shift+>/<, j,k,l), and 0-9 for seeking",
+    "url": "https://greasyfork.org/scripts/532051-bilibili-search-and-video-control-shortcuts",
+    "code_url": "https://update.greasyfork.org/scripts/532051/Bilibili%20Search%20and%20Video%20Control%20Shortcuts.user.js",
+    "code_size": 2287,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 529505,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-11T13:36:14.000Z",
+    "code_updated_at": "2025-03-30T11:13:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430831,
+        "name": "jimchen2",
+        "created_at": "2025-02-03T11:43:16.000Z",
+        "url": "https://greasyfork.org/users/1430831-jimchen2"
+      }
+    ],
+    "name": "YouTube VK Toggle Translation for French, German, Russian, Ukrainian",
+    "description": "Toggle translation for YouTube and VK videos with a fixed translation box",
+    "url": "https://greasyfork.org/scripts/529505-youtube-vk-toggle-translation-for-french-german-russian-ukrainian",
+    "code_url": "https://update.greasyfork.org/scripts/529505/YouTube%20VK%20Toggle%20Translation%20for%20French%2C%20German%2C%20Russian%2C%20Ukrainian.user.js",
+    "code_size": 30386,
+    "license": "The Unlicense",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528054,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-25T16:30:55.000Z",
+    "code_updated_at": "2025-03-29T07:27:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430831,
+        "name": "jimchen2",
+        "created_at": "2025-02-03T11:43:16.000Z",
+        "url": "https://greasyfork.org/users/1430831-jimchen2"
+      }
+    ],
+    "name": "Reddit to Old Reddit Redirector",
+    "description": "Automatically redirects Reddit pages to old.reddit.com",
+    "url": "https://greasyfork.org/scripts/528054-reddit-to-old-reddit-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/528054/Reddit%20to%20Old%20Reddit%20Redirector.user.js",
+    "code_size": 819,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528052,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-25T16:29:30.000Z",
+    "code_updated_at": "2025-03-28T16:38:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1430831,
+        "name": "jimchen2",
+        "created_at": "2025-02-03T11:43:16.000Z",
+        "url": "https://greasyfork.org/users/1430831-jimchen2"
+      }
+    ],
+    "name": "Simple Website Blocker",
+    "description": "Blocks specified websites",
+    "url": "https://greasyfork.org/scripts/528052-simple-website-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/528052/Simple%20Website%20Blocker.user.js",
+    "code_size": 1236,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

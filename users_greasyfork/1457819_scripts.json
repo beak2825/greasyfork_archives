@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532824,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-14T13:22:19.000Z",
+    "code_updated_at": "2025-04-14T13:22:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457819,
+        "name": "Legeek123",
+        "created_at": "2025-04-14T13:18:48.000Z",
+        "url": "https://greasyfork.org/users/1457819-legeek123"
+      }
+    ],
+    "name": "Discord - Cacher images + prévisualisations de liens",
+    "description": "Cache toutes les images et les previews de liens sur Discord web",
+    "url": "https://greasyfork.org/scripts/532824-discord-cacher-images-pr%C3%A9visualisations-de-liens",
+    "code_url": "https://update.greasyfork.org/scripts/532824/Discord%20-%20Cacher%20images%20%2B%20pr%C3%A9visualisations%20de%20liens.user.js",
+    "code_size": 1140,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

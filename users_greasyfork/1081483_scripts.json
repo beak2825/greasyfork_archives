@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539698,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-17T03:04:59.000Z",
+    "code_updated_at": "2026-01-06T01:41:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1081483,
+        "name": "Sean-big",
+        "created_at": "2023-05-19T09:49:34.000Z",
+        "url": "https://greasyfork.org/users/1081483-sean-big"
+      }
+    ],
+    "name": "GitLab Assistant",
+    "description": "GitLab Viewer Publish and Deploy Project!",
+    "url": "https://greasyfork.org/scripts/539698-gitlab-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/539698/GitLab%20Assistant.user.js",
+    "code_size": 103979,
+    "license": "MIT License",
+    "version": "2.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

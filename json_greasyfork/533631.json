@@ -1,0 +1,59 @@
+{
+  "id": 533631,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-22T13:10:18.000Z",
+  "code_updated_at": "2025-04-22T13:10:18.000Z",
+  "namespace": "https://github.com/jOaawd/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1460985,
+      "name": "Jacob Ortiz",
+      "created_at": "2025-04-22T13:06:51.000Z",
+      "url": "https://greasyfork.org/users/1460985-jacob-ortiz",
+      "scripts": [
+        {
+          "id": 533631,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-22T13:10:18.000Z",
+          "code_updated_at": "2025-04-22T13:10:18.000Z",
+          "namespace": "https://github.com/jOaawd/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Blocki",
+          "description": "Block Instagram from registering that you've viewed stories",
+          "url": "https://greasyfork.org/scripts/533631-blocki",
+          "code_url": "https://update.greasyfork.org/scripts/533631/Blocki.user.js",
+          "code_size": 1583,
+          "license": "CC BY-NC 4.0 https://creativecommons.org/licenses/by-nc/4.0/",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Blocki",
+  "description": "Block Instagram from registering that you've viewed stories",
+  "url": "https://greasyfork.org/scripts/533631-blocki",
+  "code_url": "https://update.greasyfork.org/scripts/533631/Blocki.user.js",
+  "code_size": 1583,
+  "license": "CC BY-NC 4.0 https://creativecommons.org/licenses/by-nc/4.0/",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

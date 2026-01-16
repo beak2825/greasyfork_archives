@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502775,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T11:18:15.000Z",
+    "code_updated_at": "2024-08-06T11:18:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 158611,
+        "name": "zcf0508",
+        "created_at": "2017-11-09T09:12:23.000Z",
+        "url": "https://greasyfork.org/users/158611-zcf0508"
+      }
+    ],
+    "name": "AddNewIssueButton",
+    "description": "Adds an issue creation button to GitHub repository pages.",
+    "url": "https://greasyfork.org/scripts/502775-addnewissuebutton",
+    "code_url": "https://update.greasyfork.org/scripts/502775/AddNewIssueButton.user.js",
+    "code_size": 1896,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

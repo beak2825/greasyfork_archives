@@ -1,0 +1,59 @@
+{
+  "id": 506301,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-01T20:04:49.000Z",
+  "code_updated_at": "2024-09-02T20:14:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1361696,
+      "name": "Gooner Labs",
+      "created_at": "2024-09-01T20:02:27.000Z",
+      "url": "https://greasyfork.org/users/1361696-gooner-labs",
+      "scripts": [
+        {
+          "id": 506301,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-01T20:04:49.000Z",
+          "code_updated_at": "2024-09-02T20:14:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bdsmlr Gooner Labs",
+          "description": "idk",
+          "url": "https://greasyfork.org/scripts/506301-bdsmlr-gooner-labs",
+          "code_url": "https://update.greasyfork.org/scripts/506301/bdsmlr%20Gooner%20Labs.user.js",
+          "code_size": 3361,
+          "license": null,
+          "version": "2024-08-31",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bdsmlr Gooner Labs",
+  "description": "idk",
+  "url": "https://greasyfork.org/scripts/506301-bdsmlr-gooner-labs",
+  "code_url": "https://update.greasyfork.org/scripts/506301/bdsmlr%20Gooner%20Labs.user.js",
+  "code_size": 3361,
+  "license": null,
+  "version": "2024-08-31",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

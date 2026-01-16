@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523687,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T20:17:39.000Z",
+    "code_updated_at": "2025-09-14T20:01:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421043,
+        "name": "MonkeyBro",
+        "created_at": "2025-01-08T20:03:54.000Z",
+        "url": "https://greasyfork.org/users/1421043-monkeybro"
+      }
+    ],
+    "name": "b站评论区保存为html (bili-comments-to-html)",
+    "description": "删除b站视频及动态中的多余元素，展开评论区二级回复，调整页面样式，为通过SingleFile等工具导出网页备份评论区做准备。必须搭配油猴脚本“Bilibili - 在未登录的情况下照常加载评论”使用。",
+    "url": "https://greasyfork.org/scripts/523687-b%E7%AB%99%E8%AF%84%E8%AE%BA%E5%8C%BA%E4%BF%9D%E5%AD%98%E4%B8%BAhtml-bili-comments-to-html",
+    "code_url": "https://update.greasyfork.org/scripts/523687/b%E7%AB%99%E8%AF%84%E8%AE%BA%E5%8C%BA%E4%BF%9D%E5%AD%98%E4%B8%BAhtml%20%28bili-comments-to-html%29.user.js",
+    "code_size": 44429,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.6.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

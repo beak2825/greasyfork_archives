@@ -1,0 +1,33 @@
+{
+  "id": 538877,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T01:31:04.000Z",
+  "code_updated_at": "2025-08-01T08:22:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 713757,
+      "name": "shanlanwork",
+      "created_at": "2020-12-06T12:21:45.000Z",
+      "url": "https://greasyfork.org/users/713757-shanlanwork"
+    }
+  ],
+  "name": "去除elearning倒計時並自動勾選帶✔️選項",
+  "description": "去除解答腳本的倒計時，並自動勾選帶✔️的選項",
+  "url": "https://greasyfork.org/scripts/538877-%E5%8E%BB%E9%99%A4elearning%E5%80%92%E8%A8%88%E6%99%82%E4%B8%A6%E8%87%AA%E5%8B%95%E5%8B%BE%E9%81%B8%E5%B8%B6-%E9%81%B8%E9%A0%85",
+  "code_url": "https://update.greasyfork.org/scripts/538877/%E5%8E%BB%E9%99%A4elearning%E5%80%92%E8%A8%88%E6%99%82%E4%B8%A6%E8%87%AA%E5%8B%95%E5%8B%BE%E9%81%B8%E5%B8%B6%E2%9C%94%EF%B8%8F%E9%81%B8%E9%A0%85.user.js",
+  "code_size": 2470,
+  "license": "MIT License",
+  "version": "1.5.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

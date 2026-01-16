@@ -1,0 +1,68 @@
+[
+  {
+    "id": 512974,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-17T14:02:15.000Z",
+    "code_updated_at": "2024-10-17T14:02:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10666,
+        "name": "sbdx",
+        "created_at": "2015-04-20T07:17:10.000Z",
+        "url": "https://greasyfork.org/users/10666-sbdx"
+      }
+    ],
+    "name": "115Rename",
+    "description": "115改名称(根据现有的文件名<番号>查询并修改文件名)",
+    "url": "https://greasyfork.org/scripts/512974-115rename",
+    "code_url": "https://update.greasyfork.org/scripts/512974/115Rename.user.js",
+    "code_size": 12499,
+    "license": "GLPv3",
+    "version": "20241017",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512967,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-17T12:53:04.000Z",
+    "code_updated_at": "2025-12-03T08:51:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 10666,
+        "name": "sbdx",
+        "created_at": "2015-04-20T07:17:10.000Z",
+        "url": "https://greasyfork.org/users/10666-sbdx"
+      }
+    ],
+    "name": "微信公众号图集一键展示",
+    "description": "让世界更美好！",
+    "url": "https://greasyfork.org/scripts/512967-%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%9B%BE%E9%9B%86%E4%B8%80%E9%94%AE%E5%B1%95%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/512967/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E5%9B%BE%E9%9B%86%E4%B8%80%E9%94%AE%E5%B1%95%E7%A4%BA.user.js",
+    "code_size": 4291,
+    "license": "GPLv3",
+    "version": "20251203",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

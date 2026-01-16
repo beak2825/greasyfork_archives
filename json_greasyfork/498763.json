@@ -1,0 +1,59 @@
+{
+  "id": 498763,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-24T13:03:30.000Z",
+  "code_updated_at": "2024-06-24T13:03:29.000Z",
+  "namespace": "ao3",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1322360,
+      "name": "NovaCarmen",
+      "created_at": "2024-06-22T20:47:11.000Z",
+      "url": "https://greasyfork.org/users/1322360-novacarmen",
+      "scripts": [
+        {
+          "id": 498763,
+          "daily_installs": 0,
+          "total_installs": 20,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-24T13:03:30.000Z",
+          "code_updated_at": "2024-06-24T13:03:29.000Z",
+          "namespace": "ao3",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ao3 multishipper savior",
+          "description": "Show only works with the specified character(s) in a (romantic/platonic/any) relationship",
+          "url": "https://greasyfork.org/scripts/498763-ao3-multishipper-savior",
+          "code_url": "https://update.greasyfork.org/scripts/498763/ao3%20multishipper%20savior.user.js",
+          "code_size": 5946,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ao3 multishipper savior",
+  "description": "Show only works with the specified character(s) in a (romantic/platonic/any) relationship",
+  "url": "https://greasyfork.org/scripts/498763-ao3-multishipper-savior",
+  "code_url": "https://update.greasyfork.org/scripts/498763/ao3%20multishipper%20savior.user.js",
+  "code_size": 5946,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 541764,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T22:42:18.000Z",
+    "code_updated_at": "2025-07-05T22:42:18.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1492027,
+        "name": "Josh Paro",
+        "created_at": "2025-07-05T22:01:10.000Z",
+        "url": "https://greasyfork.org/users/1492027-josh-paro"
+      }
+    ],
+    "name": "Torn Bounty Filter UI (Live Refresh)",
+    "description": "Filter visible bounties by level and days played with UI sliders",
+    "url": "https://greasyfork.org/scripts/541764-torn-bounty-filter-ui-live-refresh",
+    "code_url": "https://update.greasyfork.org/scripts/541764/Torn%20Bounty%20Filter%20UI%20%28Live%20Refresh%29.user.js",
+    "code_size": 4278,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 541762,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T22:05:37.000Z",
+    "code_updated_at": "2025-07-05T22:05:37.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1492027,
+        "name": "Josh Paro",
+        "created_at": "2025-07-05T22:01:10.000Z",
+        "url": "https://greasyfork.org/users/1492027-josh-paro"
+      }
+    ],
+    "name": "Torn Bounty Filter UI",
+    "description": "Filter bounties using level and days sliders",
+    "url": "https://greasyfork.org/scripts/541762-torn-bounty-filter-ui",
+    "code_url": "https://update.greasyfork.org/scripts/541762/Torn%20Bounty%20Filter%20UI.user.js",
+    "code_size": 3955,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

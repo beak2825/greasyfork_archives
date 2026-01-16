@@ -1,0 +1,59 @@
+{
+  "id": 508382,
+  "daily_installs": 0,
+  "total_installs": 83,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-14T04:51:24.000Z",
+  "code_updated_at": "2024-09-14T04:51:24.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1367263,
+      "name": "genesy308",
+      "created_at": "2024-09-14T04:49:20.000Z",
+      "url": "https://greasyfork.org/users/1367263-genesy308",
+      "scripts": [
+        {
+          "id": 508382,
+          "daily_installs": 0,
+          "total_installs": 83,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-14T04:51:24.000Z",
+          "code_updated_at": "2024-09-14T04:51:24.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Base64 Link Decoder for 4chan and Archives",
+          "description": "Decode base64-encoded links in 4chan posts and various archives",
+          "url": "https://greasyfork.org/scripts/508382-base64-link-decoder-for-4chan-and-archives",
+          "code_url": "https://update.greasyfork.org/scripts/508382/Base64%20Link%20Decoder%20for%204chan%20and%20Archives.user.js",
+          "code_size": 3542,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Base64 Link Decoder for 4chan and Archives",
+  "description": "Decode base64-encoded links in 4chan posts and various archives",
+  "url": "https://greasyfork.org/scripts/508382-base64-link-decoder-for-4chan-and-archives",
+  "code_url": "https://update.greasyfork.org/scripts/508382/Base64%20Link%20Decoder%20for%204chan%20and%20Archives.user.js",
+  "code_size": 3542,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

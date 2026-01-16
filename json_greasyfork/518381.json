@@ -1,0 +1,33 @@
+{
+  "id": 518381,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-21T20:15:11.000Z",
+  "code_updated_at": "2025-03-09T18:41:46.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/518381-wme-ezsegments",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1400368,
+      "name": "michaelrosstarr",
+      "created_at": "2024-11-21T20:14:13.000Z",
+      "url": "https://greasyfork.org/users/1400368-michaelrosstarr"
+    }
+  ],
+  "name": "WME EZSegments",
+  "description": "Easily update roads",
+  "url": "https://greasyfork.org/scripts/518381-wme-ezsegments",
+  "code_url": "https://update.greasyfork.org/scripts/518381/WME%20EZSegments.user.js",
+  "code_size": 21012,
+  "license": "GNU GPL(v3)",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

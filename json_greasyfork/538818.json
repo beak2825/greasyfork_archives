@@ -1,0 +1,33 @@
+{
+  "id": 538818,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-08T12:37:57.000Z",
+  "code_updated_at": "2025-06-08T14:15:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480661,
+      "name": "anga83",
+      "created_at": "2025-06-08T12:28:14.000Z",
+      "url": "https://greasyfork.org/users/1480661-anga83"
+    }
+  ],
+  "name": "Auto Remove ChatGPT UTM Parameter",
+  "description": "Removes ?utm_source=chatgpt.com from URLs and reloads the page automatically",
+  "url": "https://greasyfork.org/scripts/538818-auto-remove-chatgpt-utm-parameter",
+  "code_url": "https://update.greasyfork.org/scripts/538818/Auto%20Remove%20ChatGPT%20UTM%20Parameter.user.js",
+  "code_size": 1259,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

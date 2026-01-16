@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551261,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-01T15:37:59.000Z",
+    "code_updated_at": "2025-10-01T15:37:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521357,
+        "name": "flynaj",
+        "created_at": "2025-10-01T15:33:04.000Z",
+        "url": "https://greasyfork.org/users/1521357-flynaj"
+      }
+    ],
+    "name": "替换百度的 jQuery 为新版 jQuery",
+    "description": "立即替换已存在的脚本，并监视后续动态添加的脚本。将 http://libs.baidu.com/jquery/2.0.0/jquery.js 替换为 https://code.jquery.com/jquery-2.2.4.js。",
+    "url": "https://greasyfork.org/scripts/551261-%E6%9B%BF%E6%8D%A2%E7%99%BE%E5%BA%A6%E7%9A%84-jquery-%E4%B8%BA%E6%96%B0%E7%89%88-jquery",
+    "code_url": "https://update.greasyfork.org/scripts/551261/%E6%9B%BF%E6%8D%A2%E7%99%BE%E5%BA%A6%E7%9A%84%20jQuery%20%E4%B8%BA%E6%96%B0%E7%89%88%20jQuery.user.js",
+    "code_size": 2832,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

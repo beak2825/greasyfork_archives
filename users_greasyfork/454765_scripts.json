@@ -1,0 +1,134 @@
+[
+  {
+    "id": 531737,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-03T16:12:05.000Z",
+    "code_updated_at": "2025-04-03T16:46:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454765,
+        "name": "CListery",
+        "created_at": "2020-03-06T03:52:35.000Z",
+        "url": "https://greasyfork.org/users/454765-clistery"
+      }
+    ],
+    "name": "阿里云邮箱自动登陆sample",
+    "description": "阿里云邮箱自动登陆简易版",
+    "url": "https://greasyfork.org/scripts/531737-%E9%98%BF%E9%87%8C%E4%BA%91%E9%82%AE%E7%AE%B1%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86sample",
+    "code_url": "https://update.greasyfork.org/scripts/531737/%E9%98%BF%E9%87%8C%E4%BA%91%E9%82%AE%E7%AE%B1%E8%87%AA%E5%8A%A8%E7%99%BB%E9%99%86sample.user.js",
+    "code_size": 3304,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528117,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-26T09:07:21.000Z",
+    "code_updated_at": "2025-02-26T09:07:21.000Z",
+    "namespace": "https://github.com/CListery",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454765,
+        "name": "CListery",
+        "created_at": "2020-03-06T03:52:35.000Z",
+        "url": "https://greasyfork.org/users/454765-clistery"
+      }
+    ],
+    "name": "点击特效",
+    "description": "炫就完了",
+    "url": "https://greasyfork.org/scripts/528117-%E7%82%B9%E5%87%BB%E7%89%B9%E6%95%88",
+    "code_url": "https://update.greasyfork.org/scripts/528117/%E7%82%B9%E5%87%BB%E7%89%B9%E6%95%88.user.js",
+    "code_size": 5274,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507062,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-06T02:14:22.000Z",
+    "code_updated_at": "2024-09-07T05:19:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454765,
+        "name": "CListery",
+        "created_at": "2020-03-06T03:52:35.000Z",
+        "url": "https://greasyfork.org/users/454765-clistery"
+      }
+    ],
+    "name": "立创商城页面增强",
+    "description": "立创商城页面增强~~~",
+    "url": "https://greasyfork.org/scripts/507062-%E7%AB%8B%E5%88%9B%E5%95%86%E5%9F%8E%E9%A1%B5%E9%9D%A2%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/507062/%E7%AB%8B%E5%88%9B%E5%95%86%E5%9F%8E%E9%A1%B5%E9%9D%A2%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 2862,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498811,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-25T01:20:59.000Z",
+    "code_updated_at": "2024-06-25T01:20:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 454765,
+        "name": "CListery",
+        "created_at": "2020-03-06T03:52:35.000Z",
+        "url": "https://greasyfork.org/users/454765-clistery"
+      }
+    ],
+    "name": "拉取 stcmcu 论坛视频链接",
+    "description": "自动获取 stcmcu 论坛视频链接，并发送到aria2服务器",
+    "url": "https://greasyfork.org/scripts/498811-%E6%8B%89%E5%8F%96-stcmcu-%E8%AE%BA%E5%9D%9B%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/498811/%E6%8B%89%E5%8F%96%20stcmcu%20%E8%AE%BA%E5%9D%9B%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 7383,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

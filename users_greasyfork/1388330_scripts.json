@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514757,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-29T22:46:13.000Z",
+    "code_updated_at": "2024-10-29T22:46:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1388330,
+        "name": "zodah43",
+        "created_at": "2024-10-29T22:40:22.000Z",
+        "url": "https://greasyfork.org/users/1388330-zodah43"
+      }
+    ],
+    "name": "PaperTube",
+    "description": "PaperTube is a Userscript that makes YT have a Material Design 1 Look. very much like early Polymer.",
+    "url": "https://greasyfork.org/scripts/514757-papertube",
+    "code_url": "https://update.greasyfork.org/scripts/514757/PaperTube.user.js",
+    "code_size": 3743,
+    "license": null,
+    "version": "0.1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500906,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-17T05:20:08.000Z",
+    "code_updated_at": "2024-07-17T05:20:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1335001,
+        "name": "deshpandetanmay03",
+        "created_at": "2024-07-17T05:18:38.000Z",
+        "url": "https://greasyfork.org/users/1335001-deshpandetanmay03"
+      }
+    ],
+    "name": "Change to Special Mess",
+    "description": "Changes hostel info for vit chennai website to special mess everytime",
+    "url": "https://greasyfork.org/scripts/500906-change-to-special-mess",
+    "code_url": "https://update.greasyfork.org/scripts/500906/Change%20to%20Special%20Mess.user.js",
+    "code_size": 949,
+    "license": "GPLv3",
+    "version": "2024-07-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

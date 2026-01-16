@@ -1,0 +1,34 @@
+{
+  "id": 511030,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-01T12:12:40.000Z",
+  "code_updated_at": "2024-10-02T17:32:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 821896,
+      "name": "zortilox",
+      "created_at": "2021-10-04T15:35:43.000Z",
+      "url": "https://greasyfork.org/users/821896-zortilox",
+      "scripts": []
+    }
+  ],
+  "name": "RED - Show time elapsed since torrent creation",
+  "description": "create a new column on torrent pages showing time elapsed since each torrent creation",
+  "url": "https://greasyfork.org/scripts/511030-red-show-time-elapsed-since-torrent-creation",
+  "code_url": "https://update.greasyfork.org/scripts/511030/RED%20-%20Show%20time%20elapsed%20since%20torrent%20creation.user.js",
+  "code_size": 1568,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

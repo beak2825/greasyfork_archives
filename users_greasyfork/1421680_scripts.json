@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523397,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-10T16:03:46.000Z",
+    "code_updated_at": "2025-01-10T16:03:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421680,
+        "name": "wake shxzz11",
+        "created_at": "2025-01-10T13:55:57.000Z",
+        "url": "https://greasyfork.org/users/1421680-wake-shxzz11"
+      }
+    ],
+    "name": "B站稍后再看跳转",
+    "description": "从B站稍后再看页面跳转到视频详情页",
+    "url": "https://greasyfork.org/scripts/523397-b%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/523397/B%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 3297,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

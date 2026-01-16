@@ -1,0 +1,34 @@
+{
+  "id": 527385,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-19T00:50:55.000Z",
+  "code_updated_at": "2025-02-19T00:50:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1436780,
+      "name": "Eithan Twig",
+      "created_at": "2025-02-19T00:45:58.000Z",
+      "url": "https://greasyfork.org/users/1436780-eithan-twig",
+      "scripts": []
+    }
+  ],
+  "name": "Skribbl.io Auto Answer",
+  "description": "Automatically answers Skribbl.io drawings (Work in progress)",
+  "url": "https://greasyfork.org/scripts/527385-skribbl-io-auto-answer",
+  "code_url": "https://update.greasyfork.org/scripts/527385/Skribblio%20Auto%20Answer.user.js",
+  "code_size": 2516,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

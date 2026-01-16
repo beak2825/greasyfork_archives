@@ -1,0 +1,34 @@
+{
+  "id": 551812,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-07T04:28:51.000Z",
+  "code_updated_at": "2025-10-07T04:28:51.000Z",
+  "namespace": "https://greasyfork.org/users/1523046",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1523046,
+      "name": "SF42 er",
+      "created_at": "2025-10-07T04:26:39.000Z",
+      "url": "https://greasyfork.org/users/1523046-sf42-er",
+      "scripts": []
+    }
+  ],
+  "name": "Reload Claimer (10 minutes) V1",
+  "description": "Reload Claimer for stake.com",
+  "url": "https://greasyfork.org/scripts/551812-reload-claimer-10-minutes-v1",
+  "code_url": "https://update.greasyfork.org/scripts/551812/Reload%20Claimer%20%2810%20minutes%29%20V1.user.js",
+  "code_size": 512,
+  "license": null,
+  "version": "1.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540746,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T15:14:56.000Z",
+    "code_updated_at": "2025-06-25T16:12:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488432,
+        "name": "charge li",
+        "created_at": "2025-06-25T15:11:33.000Z",
+        "url": "https://greasyfork.org/users/1488432-charge-li"
+      }
+    ],
+    "name": "重庆医科大学自动评教脚本",
+    "description": "自动给老师的除最后一个选项选a，如果没有应用上，刷新一下即可",
+    "url": "https://greasyfork.org/scripts/540746-%E9%87%8D%E5%BA%86%E5%8C%BB%E7%A7%91%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/540746/%E9%87%8D%E5%BA%86%E5%8C%BB%E7%A7%91%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 8365,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 534107,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-26T23:03:43.000Z",
+  "code_updated_at": "2025-04-26T23:03:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462224,
+      "name": "Juan Angel Desgarennes Camacho",
+      "created_at": "2025-04-26T02:21:26.000Z",
+      "url": "https://greasyfork.org/users/1462224-juan-angel-desgarennes-camacho",
+      "scripts": []
+    }
+  ],
+  "name": "Extractor Avanzado JW.org (Menú Contextual)",
+  "description": "Extrae asignaciones o enlaces de imágenes/videos/posters (alta calidad) de JW.org mediante menú contextual. Los medios se guardan entre sesiones.",
+  "url": "https://greasyfork.org/scripts/534107-extractor-avanzado-jw-org-men%C3%BA-contextual",
+  "code_url": "https://update.greasyfork.org/scripts/534107/Extractor%20Avanzado%20JWorg%20%28Men%C3%BA%20Contextual%29.user.js",
+  "code_size": 20314,
+  "license": null,
+  "version": "0.8",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

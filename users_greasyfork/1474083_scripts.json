@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 537060,
+    "daily_installs": 0,
+    "total_installs": 60,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-24T04:46:17.000Z",
+    "code_updated_at": "2025-11-07T13:20:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474083,
+        "name": "上官永石",
+        "created_at": "2025-05-24T04:24:50.000Z",
+        "url": "https://greasyfork.org/users/1474083-%E4%B8%8A%E5%AE%98%E6%B0%B8%E7%9F%B3"
+      }
+    ],
+    "name": "CSDN 轻优化",
+    "description": "CSDN 移除搜索关键词、git仓库关键词链接、代码块自动展开，免关注阅读",
+    "url": "https://greasyfork.org/scripts/537060-csdn-%E8%BD%BB%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/537060/CSDN%20%E8%BD%BB%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 4123,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

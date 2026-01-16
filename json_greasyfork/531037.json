@@ -1,0 +1,59 @@
+{
+  "id": 531037,
+  "daily_installs": 0,
+  "total_installs": 100,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-27T15:47:22.000Z",
+  "code_updated_at": "2025-03-27T15:49:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451005,
+      "name": "remedios",
+      "created_at": "2025-03-27T15:45:27.000Z",
+      "url": "https://greasyfork.org/users/1451005-remedios",
+      "scripts": [
+        {
+          "id": 531037,
+          "daily_installs": 0,
+          "total_installs": 100,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-27T15:47:22.000Z",
+          "code_updated_at": "2025-03-27T15:49:49.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HTML5视频倍速",
+          "description": "精准控制视频速度不跳帧（1=1x, 2=2x, 3=3x）",
+          "url": "https://greasyfork.org/scripts/531037-html5%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F",
+          "code_url": "https://update.greasyfork.org/scripts/531037/HTML5%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F.user.js",
+          "code_size": 4442,
+          "license": null,
+          "version": "1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HTML5视频倍速",
+  "description": "精准控制视频速度不跳帧（1=1x, 2=2x, 3=3x）",
+  "url": "https://greasyfork.org/scripts/531037-html5%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F",
+  "code_url": "https://update.greasyfork.org/scripts/531037/HTML5%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F.user.js",
+  "code_size": 4442,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

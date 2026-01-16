@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537836,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-31T08:20:23.000Z",
+    "code_updated_at": "2025-06-08T09:58:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 145831,
+        "name": "Curtion",
+        "created_at": "2017-08-02T07:05:04.000Z",
+        "url": "https://greasyfork.org/users/145831-curtion"
+      }
+    ],
+    "name": "B站自动镜像翻转视频",
+    "description": "部分视频为了解决版权问题，发布时会进行水平翻转，该脚本可自动翻转回去。",
+    "url": "https://greasyfork.org/scripts/537836-b%E7%AB%99%E8%87%AA%E5%8A%A8%E9%95%9C%E5%83%8F%E7%BF%BB%E8%BD%AC%E8%A7%86%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/537836/B%E7%AB%99%E8%87%AA%E5%8A%A8%E9%95%9C%E5%83%8F%E7%BF%BB%E8%BD%AC%E8%A7%86%E9%A2%91.user.js",
+    "code_size": 6532,
+    "license": "MIT License",
+    "version": "2025-05-31-03",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

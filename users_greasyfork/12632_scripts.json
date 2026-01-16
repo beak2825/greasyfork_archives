@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537838,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-31T08:33:53.000Z",
+    "code_updated_at": "2025-05-31T08:33:53.000Z",
+    "namespace": "https://codeberg.org/schegge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12632,
+        "name": "Schegge",
+        "created_at": "2015-06-22T21:02:26.000Z",
+        "url": "https://greasyfork.org/users/12632-schegge"
+      }
+    ],
+    "name": "AO3: Score",
+    "description": "'Engagement' score - it's calculated as follows: (Bookmarks + (Comments / Chapters)) / Kudos * 100, for works with a minimum of 1 bookmark and 6 kudos.",
+    "url": "https://greasyfork.org/scripts/537838-ao3-score",
+    "code_url": "https://update.greasyfork.org/scripts/537838/AO3%3A%20Score.user.js",
+    "code_size": 1968,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520421,
+    "daily_installs": 3,
+    "total_installs": 424,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T13:33:56.000Z",
+    "code_updated_at": "2024-12-11T13:39:38.000Z",
+    "namespace": "https://www.sooplive.co.kr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381297,
+        "name": "minibox24",
+        "created_at": "2024-10-15T13:22:57.000Z",
+        "url": "https://greasyfork.org/users/1381297-minibox24"
+      }
+    ],
+    "name": "SOOP(숲) - VOD 다운로더",
+    "description": "숲 VOD를 다운로드하는 FFmpeg 스크립트를 생성합니다.",
+    "url": "https://greasyfork.org/scripts/520421-soop-%EC%88%B2-vod-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%8D%94",
+    "code_url": "https://update.greasyfork.org/scripts/520421/SOOP%28%EC%88%B2%29%20-%20VOD%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%8D%94.user.js",
+    "code_size": 7829,
+    "license": "MIT License",
+    "version": "2024-12-11",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

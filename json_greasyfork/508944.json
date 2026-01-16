@@ -1,0 +1,59 @@
+{
+  "id": 508944,
+  "daily_installs": 0,
+  "total_installs": 157,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-17T23:47:52.000Z",
+  "code_updated_at": "2024-09-17T23:47:52.000Z",
+  "namespace": "https://your-website.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369372,
+      "name": "bacondude117",
+      "created_at": "2024-09-17T23:46:51.000Z",
+      "url": "https://greasyfork.org/users/1369372-bacondude117",
+      "scripts": [
+        {
+          "id": 508944,
+          "daily_installs": 0,
+          "total_installs": 157,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-17T23:47:52.000Z",
+          "code_updated_at": "2024-09-17T23:47:52.000Z",
+          "namespace": "https://your-website.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Krunker.io In google classroom",
+          "description": "Embeds Krunker into Google Classroom",
+          "url": "https://greasyfork.org/scripts/508944-krunker-io-in-google-classroom",
+          "code_url": "https://update.greasyfork.org/scripts/508944/Krunkerio%20In%20google%20classroom.user.js",
+          "code_size": 1315,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Krunker.io In google classroom",
+  "description": "Embeds Krunker into Google Classroom",
+  "url": "https://greasyfork.org/scripts/508944-krunker-io-in-google-classroom",
+  "code_url": "https://update.greasyfork.org/scripts/508944/Krunkerio%20In%20google%20classroom.user.js",
+  "code_size": 1315,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

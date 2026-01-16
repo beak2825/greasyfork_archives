@@ -1,0 +1,101 @@
+[
+  {
+    "id": 539639,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-16T14:55:01.000Z",
+    "code_updated_at": "2025-06-16T14:55:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445740,
+        "name": "Falcon Punch",
+        "created_at": "2025-03-14T17:06:09.000Z",
+        "url": "https://greasyfork.org/users/1445740-falcon-punch"
+      }
+    ],
+    "name": "Cheat Engine Forum Dark Theme + Modern Search",
+    "description": "Apply a dark modern theme site-wide on Cheat Engine Forum and modernize the search page UI with Google CSE styled search box",
+    "url": "https://greasyfork.org/scripts/539639-cheat-engine-forum-dark-theme-modern-search",
+    "code_url": "https://update.greasyfork.org/scripts/539639/Cheat%20Engine%20Forum%20Dark%20Theme%20%2B%20Modern%20Search.user.js",
+    "code_size": 6654,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529832,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-14T17:37:21.000Z",
+    "code_updated_at": "2025-03-14T17:37:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445740,
+        "name": "Falcon Punch",
+        "created_at": "2025-03-14T17:06:09.000Z",
+        "url": "https://greasyfork.org/users/1445740-falcon-punch"
+      }
+    ],
+    "name": "Modernize Forum Design (Dark Theme)",
+    "description": "Apply dark theme with rounded corners to the forum",
+    "url": "https://greasyfork.org/scripts/529832-modernize-forum-design-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/529832/Modernize%20Forum%20Design%20%28Dark%20Theme%29.user.js",
+    "code_size": 5511,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529831,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-14T17:17:10.000Z",
+    "code_updated_at": "2025-03-14T17:17:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445740,
+        "name": "Falcon Punch",
+        "created_at": "2025-03-14T17:06:09.000Z",
+        "url": "https://greasyfork.org/users/1445740-falcon-punch"
+      }
+    ],
+    "name": "MC5 Chat Enhancer",
+    "description": "Beautifies and organizes the MC5 chat API display with auto-refresh and multi-server support",
+    "url": "https://greasyfork.org/scripts/529831-mc5-chat-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/529831/MC5%20Chat%20Enhancer.user.js",
+    "code_size": 4810,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

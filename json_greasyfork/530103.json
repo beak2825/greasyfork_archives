@@ -1,0 +1,59 @@
+{
+  "id": 530103,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-17T17:30:44.000Z",
+  "code_updated_at": "2025-04-08T05:28:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431873,
+      "name": "aipinky",
+      "created_at": "2025-02-05T15:34:52.000Z",
+      "url": "https://greasyfork.org/users/1431873-aipinky",
+      "scripts": [
+        {
+          "id": 530103,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-17T17:30:44.000Z",
+          "code_updated_at": "2025-04-08T05:28:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "最简洁的划线翻译",
+          "description": "网页不认识的单词，划线点击按钮，立马得到结果",
+          "url": "https://greasyfork.org/scripts/530103-%E6%9C%80%E7%AE%80%E6%B4%81%E7%9A%84%E5%88%92%E7%BA%BF%E7%BF%BB%E8%AF%91",
+          "code_url": "https://update.greasyfork.org/scripts/530103/%E6%9C%80%E7%AE%80%E6%B4%81%E7%9A%84%E5%88%92%E7%BA%BF%E7%BF%BB%E8%AF%91.user.js",
+          "code_size": 12952,
+          "license": "MIT License",
+          "version": "2025-4-8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "最简洁的划线翻译",
+  "description": "网页不认识的单词，划线点击按钮，立马得到结果",
+  "url": "https://greasyfork.org/scripts/530103-%E6%9C%80%E7%AE%80%E6%B4%81%E7%9A%84%E5%88%92%E7%BA%BF%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/530103/%E6%9C%80%E7%AE%80%E6%B4%81%E7%9A%84%E5%88%92%E7%BA%BF%E7%BF%BB%E8%AF%91.user.js",
+  "code_size": 12952,
+  "license": "MIT License",
+  "version": "2025-4-8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 523745,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-14T10:37:18.000Z",
+    "code_updated_at": "2025-01-14T10:37:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057716,
+        "name": "M3th4d0n",
+        "created_at": "2023-04-10T21:29:19.000Z",
+        "url": "https://greasyfork.org/users/1057716-m3th4d0n"
+      }
+    ],
+    "name": "lolz thread exporter",
+    "description": "thread exporter",
+    "url": "https://greasyfork.org/scripts/523745-lolz-thread-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/523745/lolz%20thread%20exporter.user.js",
+    "code_size": 2449,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515130,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-01T01:13:35.000Z",
+    "code_updated_at": "2024-11-04T17:39:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057716,
+        "name": "M3th4d0n",
+        "created_at": "2023-04-10T21:29:19.000Z",
+        "url": "https://greasyfork.org/users/1057716-m3th4d0n"
+      }
+    ],
+    "name": "YouTube Music WebSocket Tracker",
+    "description": "11",
+    "url": "https://greasyfork.org/scripts/515130-youtube-music-websocket-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/515130/YouTube%20Music%20WebSocket%20Tracker.user.js",
+    "code_size": 3158,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 501225,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-20T00:42:10.000Z",
+    "code_updated_at": "2025-01-14T10:33:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1057716,
+        "name": "M3th4d0n",
+        "created_at": "2023-04-10T21:29:19.000Z",
+        "url": "https://greasyfork.org/users/1057716-m3th4d0n"
+      }
+    ],
+    "name": "Steam Inventory Price",
+    "description": "lol",
+    "url": "https://greasyfork.org/scripts/501225-steam-inventory-price",
+    "code_url": "https://update.greasyfork.org/scripts/501225/Steam%20Inventory%20Price.user.js",
+    "code_size": 2317,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 497012,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-04T08:06:45.000Z",
+  "code_updated_at": "2024-06-04T08:06:45.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1312208,
+      "name": "Weijar Z",
+      "created_at": "2024-06-04T07:59:22.000Z",
+      "url": "https://greasyfork.org/users/1312208-weijar-z",
+      "scripts": [
+        {
+          "id": 497012,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-04T08:06:45.000Z",
+          "code_updated_at": "2024-06-04T08:06:45.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "X (Twitter): Hide all ads",
+          "description": "7/5/2023, 9:31:41 PM",
+          "url": "https://greasyfork.org/scripts/497012-x-twitter-hide-all-ads",
+          "code_url": "https://update.greasyfork.org/scripts/497012/X%20%28Twitter%29%3A%20Hide%20all%20ads.user.js",
+          "code_size": 1970,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "X (Twitter): Hide all ads",
+  "description": "7/5/2023, 9:31:41 PM",
+  "url": "https://greasyfork.org/scripts/497012-x-twitter-hide-all-ads",
+  "code_url": "https://update.greasyfork.org/scripts/497012/X%20%28Twitter%29%3A%20Hide%20all%20ads.user.js",
+  "code_size": 1970,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522581,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-02T09:35:21.000Z",
+    "code_updated_at": "2025-01-27T07:11:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 946150,
+        "name": "kevin_GFK",
+        "created_at": "2022-08-14T03:36:12.000Z",
+        "url": "https://greasyfork.org/users/946150-kevin-gfk"
+      }
+    ],
+    "name": "智能文书系统助手",
+    "description": "表格导出、缴款发票跳转下载、案件调查报告数据导入。",
+    "url": "https://greasyfork.org/scripts/522581-%E6%99%BA%E8%83%BD%E6%96%87%E4%B9%A6%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/522581/%E6%99%BA%E8%83%BD%E6%96%87%E4%B9%A6%E7%B3%BB%E7%BB%9F%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 31215,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

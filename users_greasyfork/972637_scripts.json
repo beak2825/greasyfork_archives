@@ -1,0 +1,101 @@
+[
+  {
+    "id": 543824,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T03:17:51.000Z",
+    "code_updated_at": "2025-07-28T03:38:12.000Z",
+    "namespace": "RANRAN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972637,
+        "name": "RanRAN.",
+        "created_at": "2022-10-19T08:19:04.000Z",
+        "url": "https://greasyfork.org/users/972637-ranran"
+      }
+    ],
+    "name": "给哔哩哔哩（B站）添加一个智能悬浮按钮",
+    "description": "适用于改善WEB端哔哩哔哩的“稍后再看”功能。添加一个指定BV号跳转按钮，可自定义按钮文字和颜色；可拖拽、记忆位置、边缘半隐藏；右键悬浮按钮打开设置面板，左键直接跳转，且视频页自动点击“跳转播放”。",
+    "url": "https://greasyfork.org/scripts/543824-%E7%BB%99%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9-b%E7%AB%99-%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E6%82%AC%E6%B5%AE%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/543824/%E7%BB%99%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%EF%BC%88B%E7%AB%99%EF%BC%89%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%99%BA%E8%83%BD%E6%82%AC%E6%B5%AE%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 10831,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543800,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-27T17:51:39.000Z",
+    "code_updated_at": "2025-07-29T12:58:06.000Z",
+    "namespace": "RANRAN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972637,
+        "name": "RanRAN.",
+        "created_at": "2022-10-19T08:19:04.000Z",
+        "url": "https://greasyfork.org/users/972637-ranran"
+      }
+    ],
+    "name": "阅图标记 (边框标记版)",
+    "description": "可配合【阅图标记 (Visited Image Marker)】使用",
+    "url": "https://greasyfork.org/scripts/543800-%E9%98%85%E5%9B%BE%E6%A0%87%E8%AE%B0-%E8%BE%B9%E6%A1%86%E6%A0%87%E8%AE%B0%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/543800/%E9%98%85%E5%9B%BE%E6%A0%87%E8%AE%B0%20%28%E8%BE%B9%E6%A1%86%E6%A0%87%E8%AE%B0%E7%89%88%29.user.js",
+    "code_size": 14885,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543777,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-27T13:08:15.000Z",
+    "code_updated_at": "2025-08-05T16:19:58.000Z",
+    "namespace": "RANRAN",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 972637,
+        "name": "RanRAN.",
+        "created_at": "2022-10-19T08:19:04.000Z",
+        "url": "https://greasyfork.org/users/972637-ranran"
+      }
+    ],
+    "name": "阅图标记 (Visited Image Marker)",
+    "description": "为您点击过的图片链接添加一个可自定义样式的醒目标记，以方便您识别已阅内容。",
+    "url": "https://greasyfork.org/scripts/543777-%E9%98%85%E5%9B%BE%E6%A0%87%E8%AE%B0-visited-image-marker",
+    "code_url": "https://update.greasyfork.org/scripts/543777/%E9%98%85%E5%9B%BE%E6%A0%87%E8%AE%B0%20%28Visited%20Image%20Marker%29.user.js",
+    "code_size": 27079,
+    "license": null,
+    "version": "1.0.30",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539209,
+    "daily_installs": 1,
+    "total_installs": 112,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-06-12T12:38:30.000Z",
+    "code_updated_at": "2025-07-27T08:36:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 824124,
+        "name": "Amir peckovic",
+        "created_at": "2021-10-11T13:54:51.000Z",
+        "url": "https://greasyfork.org/users/824124-amir-peckovic"
+      }
+    ],
+    "name": "FLBOT_NO1",
+    "description": "free crypto + Dice roll",
+    "url": "https://greasyfork.org/scripts/539209-flbot-no1",
+    "code_url": "https://update.greasyfork.org/scripts/539209/FLBOT_NO1.user.js",
+    "code_size": 38540,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

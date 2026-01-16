@@ -1,0 +1,59 @@
+{
+  "id": 529111,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-07T17:11:08.000Z",
+  "code_updated_at": "2025-03-07T17:11:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1307816,
+      "name": "YAMBAI channel",
+      "created_at": "2024-05-27T06:15:59.000Z",
+      "url": "https://greasyfork.org/users/1307816-yambai-channel",
+      "scripts": [
+        {
+          "id": 529111,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-07T17:11:08.000Z",
+          "code_updated_at": "2025-03-07T17:11:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Тесты тренировочные ответы.",
+          "description": "Этот скрипт не достает ответы, а просто ускоряет решения тренировочного теста, где все равно есть ответ, а скрипт просто подстовляет. Не используйте на реальных тестах так как он заруинит вашу попытку.",
+          "url": "https://greasyfork.org/scripts/529111-%D1%82%D0%B5%D1%81%D1%82%D1%8B-%D1%82%D1%80%D0%B5%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B%D0%B5-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B",
+          "code_url": "https://update.greasyfork.org/scripts/529111/%D0%A2%D0%B5%D1%81%D1%82%D1%8B%20%D1%82%D1%80%D0%B5%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B%D0%B5%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B.user.js",
+          "code_size": 11218,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Тесты тренировочные ответы.",
+  "description": "Этот скрипт не достает ответы, а просто ускоряет решения тренировочного теста, где все равно есть ответ, а скрипт просто подстовляет. Не используйте на реальных тестах так как он заруинит вашу попытку.",
+  "url": "https://greasyfork.org/scripts/529111-%D1%82%D0%B5%D1%81%D1%82%D1%8B-%D1%82%D1%80%D0%B5%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B%D0%B5-%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B",
+  "code_url": "https://update.greasyfork.org/scripts/529111/%D0%A2%D0%B5%D1%81%D1%82%D1%8B%20%D1%82%D1%80%D0%B5%D0%BD%D0%B8%D1%80%D0%BE%D0%B2%D0%BE%D1%87%D0%BD%D1%8B%D0%B5%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B.user.js",
+  "code_size": 11218,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

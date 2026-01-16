@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507761,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-10T08:39:09.000Z",
+    "code_updated_at": "2024-09-10T08:45:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1365605,
+        "name": "hydrofluoric07",
+        "created_at": "2024-09-10T08:21:23.000Z",
+        "url": "https://greasyfork.org/users/1365605-hydrofluoric07"
+      }
+    ],
+    "name": "删除学习通课程页面AI助教",
+    "description": "删除课程页面AI助教",
+    "url": "https://greasyfork.org/scripts/507761-%E5%88%A0%E9%99%A4%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%AF%BE%E7%A8%8B%E9%A1%B5%E9%9D%A2ai%E5%8A%A9%E6%95%99",
+    "code_url": "https://update.greasyfork.org/scripts/507761/%E5%88%A0%E9%99%A4%E5%AD%A6%E4%B9%A0%E9%80%9A%E8%AF%BE%E7%A8%8B%E9%A1%B5%E9%9D%A2AI%E5%8A%A9%E6%95%99.user.js",
+    "code_size": 745,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

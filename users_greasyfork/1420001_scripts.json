@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522941,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-05T21:01:03.000Z",
+    "code_updated_at": "2025-01-07T08:45:21.000Z",
+    "namespace": "https://example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1420001,
+        "name": "kakotte",
+        "created_at": "2025-01-05T20:51:32.000Z",
+        "url": "https://greasyfork.org/users/1420001-kakotte"
+      }
+    ],
+    "name": "Suppress Suggested & Promoted Posts on LinkedIn",
+    "description": "Remove LinkedIn posts labeled as \"Suggested\" and dynamically observe for new ones",
+    "url": "https://greasyfork.org/scripts/522941-suppress-suggested-promoted-posts-on-linkedin",
+    "code_url": "https://update.greasyfork.org/scripts/522941/Suppress%20Suggested%20%20Promoted%20Posts%20on%20LinkedIn.user.js",
+    "code_size": 1636,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529314,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-09T16:08:53.000Z",
+    "code_updated_at": "2025-03-09T16:12:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "http://www.burningall.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 762911,
+        "name": "tTtTtTXx",
+        "created_at": "2021-04-21T07:50:04.000Z",
+        "url": "https://greasyfork.org/users/762911-ttttttxx"
+      }
+    ],
+    "name": "速卖通7天热卖商品一键筛选",
+    "description": "安装后在速卖通页面，点击右侧按钮，可以一键筛选出当前页面所有含有7天热卖的产品，再次点击可以恢复正常。使用效果受网页加载速度和网络影响。【参考插件代码：Add button for Smooth Scroll to the top / bottom】",
+    "url": "https://greasyfork.org/scripts/529314-%E9%80%9F%E5%8D%96%E9%80%9A7%E5%A4%A9%E7%83%AD%E5%8D%96%E5%95%86%E5%93%81%E4%B8%80%E9%94%AE%E7%AD%9B%E9%80%89",
+    "code_url": "https://update.greasyfork.org/scripts/529314/%E9%80%9F%E5%8D%96%E9%80%9A7%E5%A4%A9%E7%83%AD%E5%8D%96%E5%95%86%E5%93%81%E4%B8%80%E9%94%AE%E7%AD%9B%E9%80%89.user.js",
+    "code_size": 9654,
+    "license": "The MIT License (MIT); http://opensource.org/licenses/MIT",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

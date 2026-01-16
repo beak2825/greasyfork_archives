@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527782,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-22T21:20:27.000Z",
+    "code_updated_at": "2025-02-22T21:20:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438335,
+        "name": "zlost666",
+        "created_at": "2025-02-21T21:46:51.000Z",
+        "url": "https://greasyfork.org/users/1438335-zlost666"
+      }
+    ],
+    "name": "HDrezka 1.75x Speed Toggle Button",
+    "description": "Add custom speed toggle button for HDrezka media player",
+    "url": "https://greasyfork.org/scripts/527782-hdrezka-1-75x-speed-toggle-button",
+    "code_url": "https://update.greasyfork.org/scripts/527782/HDrezka%20175x%20Speed%20Toggle%20Button.user.js",
+    "code_size": 3123,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

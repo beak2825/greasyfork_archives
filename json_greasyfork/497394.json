@@ -1,0 +1,33 @@
+{
+  "id": 497394,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-08T23:48:08.000Z",
+  "code_updated_at": "2024-06-08T23:53:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1314732,
+      "name": "ezluci",
+      "created_at": "2024-06-08T23:43:08.000Z",
+      "url": "https://greasyfork.org/users/1314732-ezluci"
+    }
+  ],
+  "name": "powerline.io remove annoying names",
+  "description": "removes annoying names from the leaderboard",
+  "url": "https://greasyfork.org/scripts/497394-powerline-io-remove-annoying-names",
+  "code_url": "https://update.greasyfork.org/scripts/497394/powerlineio%20remove%20annoying%20names.user.js",
+  "code_size": 1099,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -97,5 +97,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 554224,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-30T16:22:16.000Z",
+    "code_updated_at": "2025-10-30T16:22:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1524088,
+        "name": "thezuki10",
+        "created_at": "2025-10-08T17:23:30.000Z",
+        "url": "https://greasyfork.org/users/1524088-thezuki10"
+      }
+    ],
+    "name": "Neopets QuickSave Pro",
+    "description": "Save, organize, and track your favorite Neopets pages with ease. Create custom categories, manage daily visits, and set smart NST→local reminders — all in one streamlined dashboard.",
+    "url": "https://greasyfork.org/scripts/554224-neopets-quicksave-pro",
+    "code_url": "https://update.greasyfork.org/scripts/554224/Neopets%20QuickSave%20Pro.user.js",
+    "code_size": 92510,
+    "license": "Thezuki10",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551965,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-08T17:31:21.000Z",
+    "code_updated_at": "2025-10-23T16:57:17.000Z",
+    "namespace": "Neopets Auto Zapper Pro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1524088,
+        "name": "thezuki10",
+        "created_at": "2025-10-08T17:23:30.000Z",
+        "url": "https://greasyfork.org/users/1524088-thezuki10"
+      }
+    ],
+    "name": "Neopets Auto Zapper Pro V2",
+    "description": "Auto-zapper with persistent pet memory and lab2 cooldown sync",
+    "url": "https://greasyfork.org/scripts/551965-neopets-auto-zapper-pro-v2",
+    "code_url": "https://update.greasyfork.org/scripts/551965/Neopets%20Auto%20Zapper%20Pro%20V2.user.js",
+    "code_size": 17102,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

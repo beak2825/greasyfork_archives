@@ -1,0 +1,34 @@
+{
+  "id": 539220,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-12T14:42:11.000Z",
+  "code_updated_at": "2025-09-22T03:54:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1043348,
+      "name": "langlink-localization",
+      "created_at": "2023-03-17T02:28:11.000Z",
+      "url": "https://greasyfork.org/users/1043348-langlink-localization",
+      "scripts": []
+    }
+  ],
+  "name": "LangLink fbCAT 工具",
+  "description": "提取所有fbCAT的内容，保存成mqxliff文件，支持批量提取，兼容新旧页面格式",
+  "url": "https://greasyfork.org/scripts/539220-langlink-fbcat-%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/539220/LangLink%20fbCAT%20%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 82227,
+  "license": "MIT License",
+  "version": "19.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 521409,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-21T19:04:35.000Z",
+    "code_updated_at": "2024-12-21T19:06:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1397125,
+        "name": "signedbytes",
+        "created_at": "2024-11-15T23:31:01.000Z",
+        "url": "https://greasyfork.org/users/1397125-signedbytes"
+      }
+    ],
+    "name": "ESO-Hub Emote Extractor",
+    "description": "Extract emote data from ESO-Hub collectibles page with a nice button",
+    "url": "https://greasyfork.org/scripts/521409-eso-hub-emote-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/521409/ESO-Hub%20Emote%20Extractor.user.js",
+    "code_size": 3658,
+    "license": "CC BY 4.0",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517593,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-16T03:12:39.000Z",
+    "code_updated_at": "2024-11-16T03:12:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1397125,
+        "name": "signedbytes",
+        "created_at": "2024-11-15T23:31:01.000Z",
+        "url": "https://greasyfork.org/users/1397125-signedbytes"
+      }
+    ],
+    "name": "Podcrtaj za placane vrstice",
+    "description": "Highlight rows where the invoice is paid with green color",
+    "url": "https://greasyfork.org/scripts/517593-podcrtaj-za-placane-vrstice",
+    "code_url": "https://update.greasyfork.org/scripts/517593/Podcrtaj%20za%20placane%20vrstice.user.js",
+    "code_size": 1215,
+    "license": "CC BY 4.0",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517578,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T23:49:28.000Z",
+    "code_updated_at": "2024-11-15T23:49:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1397125,
+        "name": "signedbytes",
+        "created_at": "2024-11-15T23:31:01.000Z",
+        "url": "https://greasyfork.org/users/1397125-signedbytes"
+      }
+    ],
+    "name": "AbuseIPDB Dark Mode Toggle with State Persistence",
+    "description": "Adds a button to toggle a dark theme on AbuseIPDB, with state persistence using localStorage.",
+    "url": "https://greasyfork.org/scripts/517578-abuseipdb-dark-mode-toggle-with-state-persistence",
+    "code_url": "https://update.greasyfork.org/scripts/517578/AbuseIPDB%20Dark%20Mode%20Toggle%20with%20State%20Persistence.user.js",
+    "code_size": 7745,
+    "license": "CC BY 4.0",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503045,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-09T04:03:20.000Z",
+    "code_updated_at": "2024-08-09T04:03:20.000Z",
+    "namespace": "https://greasyfork.org/users/1348053",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1348053,
+        "name": "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj9",
+        "created_at": "2024-08-09T04:01:43.000Z",
+        "url": "https://greasyfork.org/users/1348053-jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj9"
+      }
+    ],
+    "name": "Reddit Fix RTL",
+    "description": "Script that fixes Arabic language in Reddit",
+    "url": "https://greasyfork.org/scripts/503045-reddit-fix-rtl",
+    "code_url": "https://update.greasyfork.org/scripts/503045/Reddit%20Fix%20RTL.user.js",
+    "code_size": 760,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

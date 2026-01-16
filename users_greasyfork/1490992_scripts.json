@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541452,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T14:38:04.000Z",
+    "code_updated_at": "2025-07-02T14:38:04.000Z",
+    "namespace": "https://greasyfork.org/users/1490992",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490992,
+        "name": "Raffidafi",
+        "created_at": "2025-07-02T14:28:03.000Z",
+        "url": "https://greasyfork.org/users/1490992-raffidafi"
+      }
+    ],
+    "name": "Prime Video – Overlays & störende Elemente entfernen",
+    "description": "Entfernt dauerhaft bestimmte störende Elemente auf Prime Video",
+    "url": "https://greasyfork.org/scripts/541452-prime-video-overlays-st%C3%B6rende-elemente-entfernen",
+    "code_url": "https://update.greasyfork.org/scripts/541452/Prime%20Video%20%E2%80%93%20Overlays%20%20st%C3%B6rende%20Elemente%20entfernen.user.js",
+    "code_size": 1138,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 497414,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-09T07:36:05.000Z",
+  "code_updated_at": "2024-07-10T15:07:20.000Z",
+  "namespace": "https://github.com/frei-l/Intuitive-Sharplingo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1310812,
+      "name": "frei-l",
+      "created_at": "2024-06-01T12:34:38.000Z",
+      "url": "https://greasyfork.org/users/1310812-frei-l",
+      "scripts": [
+        {
+          "id": 497414,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-09T07:36:05.000Z",
+          "code_updated_at": "2024-07-10T15:07:20.000Z",
+          "namespace": "https://github.com/frei-l/Intuitive-Sharplingo",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Intuitive SharpLingo",
+          "description": "改善sharplingo在PC端的体验",
+          "url": "https://greasyfork.org/scripts/497414-intuitive-sharplingo",
+          "code_url": "https://update.greasyfork.org/scripts/497414/Intuitive%20SharpLingo.user.js",
+          "code_size": 4426,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Intuitive SharpLingo",
+  "description": "改善sharplingo在PC端的体验",
+  "url": "https://greasyfork.org/scripts/497414-intuitive-sharplingo",
+  "code_url": "https://update.greasyfork.org/scripts/497414/Intuitive%20SharpLingo.user.js",
+  "code_size": 4426,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

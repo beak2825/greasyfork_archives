@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515353,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T08:42:31.000Z",
+    "code_updated_at": "2024-11-04T14:43:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1287882,
+        "name": "player27",
+        "created_at": "2024-04-13T15:15:39.000Z",
+        "url": "https://greasyfork.org/users/1287882-player27"
+      }
+    ],
+    "name": "YouTube Playback Saver",
+    "description": "Periodically save and restore playback time of YouTube videos, including seek events.",
+    "url": "https://greasyfork.org/scripts/515353-youtube-playback-saver",
+    "code_url": "https://update.greasyfork.org/scripts/515353/YouTube%20Playback%20Saver.user.js",
+    "code_size": 4678,
+    "license": "The Unlicense",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

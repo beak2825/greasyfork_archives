@@ -1,0 +1,59 @@
+{
+  "id": 508343,
+  "daily_installs": 0,
+  "total_installs": 130,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-13T22:29:09.000Z",
+  "code_updated_at": "2024-09-13T22:29:09.000Z",
+  "namespace": "BoostedTypistYT",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1367172,
+      "name": "BoostedTypist",
+      "created_at": "2024-09-13T22:22:43.000Z",
+      "url": "https://greasyfork.org/users/1367172-boostedtypist",
+      "scripts": [
+        {
+          "id": 508343,
+          "daily_installs": 0,
+          "total_installs": 130,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-13T22:29:09.000Z",
+          "code_updated_at": "2024-09-13T22:29:09.000Z",
+          "namespace": "BoostedTypistYT",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Nitro Type Car Hack _ Literally get ALL the cars",
+          "description": "Bypass Name Filter",
+          "url": "https://greasyfork.org/scripts/508343-nitro-type-car-hack-literally-get-all-the-cars",
+          "code_url": "https://update.greasyfork.org/scripts/508343/Nitro%20Type%20Car%20Hack%20_%20Literally%20get%20ALL%20the%20cars.user.js",
+          "code_size": 354,
+          "license": "Anyone",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Nitro Type Car Hack _ Literally get ALL the cars",
+  "description": "Bypass Name Filter",
+  "url": "https://greasyfork.org/scripts/508343-nitro-type-car-hack-literally-get-all-the-cars",
+  "code_url": "https://update.greasyfork.org/scripts/508343/Nitro%20Type%20Car%20Hack%20_%20Literally%20get%20ALL%20the%20cars.user.js",
+  "code_size": 354,
+  "license": "Anyone",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 535931,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-14T03:37:59.000Z",
+  "code_updated_at": "2025-05-14T03:37:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469870,
+      "name": "Yiki Yiki",
+      "created_at": "2025-05-14T03:35:16.000Z",
+      "url": "https://greasyfork.org/users/1469870-yiki-yiki"
+    }
+  ],
+  "name": "视频播放保持焦点 + 播放完提醒（安全二合一）",
+  "description": "模拟页面聚焦，防止视频暂停 + 播放结束提醒，适用于雨课堂等平台，风险极低",
+  "url": "https://greasyfork.org/scripts/535931-%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E4%BF%9D%E6%8C%81%E7%84%A6%E7%82%B9-%E6%92%AD%E6%94%BE%E5%AE%8C%E6%8F%90%E9%86%92-%E5%AE%89%E5%85%A8%E4%BA%8C%E5%90%88%E4%B8%80",
+  "code_url": "https://update.greasyfork.org/scripts/535931/%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E4%BF%9D%E6%8C%81%E7%84%A6%E7%82%B9%20%2B%20%E6%92%AD%E6%94%BE%E5%AE%8C%E6%8F%90%E9%86%92%EF%BC%88%E5%AE%89%E5%85%A8%E4%BA%8C%E5%90%88%E4%B8%80%EF%BC%89.user.js",
+  "code_size": 6377,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

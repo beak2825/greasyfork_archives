@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520595,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-13T12:15:04.000Z",
+    "code_updated_at": "2024-12-13T13:05:15.000Z",
+    "namespace": "https://mydramalist.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1410332,
+        "name": "Geniusssmit",
+        "created_at": "2024-12-13T12:10:29.000Z",
+        "url": "https://greasyfork.org/users/1410332-geniusssmit"
+      }
+    ],
+    "name": "MyDramaList to Avistaz Search",
+    "description": "Add a button to search dramas and movies on Avistaz from MyDramaList.",
+    "url": "https://greasyfork.org/scripts/520595-mydramalist-to-avistaz-search",
+    "code_url": "https://update.greasyfork.org/scripts/520595/MyDramaList%20to%20Avistaz%20Search.user.js",
+    "code_size": 2557,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

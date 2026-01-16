@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551177,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T18:30:41.000Z",
+    "code_updated_at": "2025-09-30T18:31:51.000Z",
+    "namespace": "https://github.com/Reacien/Userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520945,
+        "name": "Reacien",
+        "created_at": "2025-09-30T08:34:36.000Z",
+        "url": "https://greasyfork.org/users/1520945-reacien"
+      }
+    ],
+    "name": "MapGenie - Hide Top Right Sidebar",
+    "description": "Hides the top right sidebar on page load",
+    "url": "https://greasyfork.org/scripts/551177-mapgenie-hide-top-right-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/551177/MapGenie%20-%20Hide%20Top%20Right%20Sidebar.user.js",
+    "code_size": 809,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551149,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T13:40:47.000Z",
+    "code_updated_at": "2025-09-30T14:52:43.000Z",
+    "namespace": "https://github.com/Reacien/Userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520945,
+        "name": "Reacien",
+        "created_at": "2025-09-30T08:34:36.000Z",
+        "url": "https://greasyfork.org/users/1520945-reacien"
+      }
+    ],
+    "name": "MapGenie - Icon Size Slider",
+    "description": "Add a slider to dynamically adjust the size of icons on mapgenie.io maps for better visibility and customization. Now with dynamic text color matching the map theme/logo!",
+    "url": "https://greasyfork.org/scripts/551149-mapgenie-icon-size-slider",
+    "code_url": "https://update.greasyfork.org/scripts/551149/MapGenie%20-%20Icon%20Size%20Slider.user.js",
+    "code_size": 6218,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

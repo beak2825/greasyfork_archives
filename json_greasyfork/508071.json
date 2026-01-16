@@ -1,0 +1,34 @@
+{
+  "id": 508071,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-12T06:26:58.000Z",
+  "code_updated_at": "2024-09-12T06:26:58.000Z",
+  "namespace": "https://greasyfork.org/users/1326983",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326983,
+      "name": "lulzhang",
+      "created_at": "2024-07-02T03:47:37.000Z",
+      "url": "https://greasyfork.org/users/1326983-lulzhang",
+      "scripts": []
+    }
+  ],
+  "name": "[59768]循环case倒数提醒",
+  "description": "循环case的倒数第2及第1期进行留言提醒",
+  "url": "https://greasyfork.org/scripts/508071-59768-%E5%BE%AA%E7%8E%AFcase%E5%80%92%E6%95%B0%E6%8F%90%E9%86%92",
+  "code_url": "https://update.greasyfork.org/scripts/508071/%5B59768%5D%E5%BE%AA%E7%8E%AFcase%E5%80%92%E6%95%B0%E6%8F%90%E9%86%92.user.js",
+  "code_size": 1827,
+  "license": null,
+  "version": "v1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

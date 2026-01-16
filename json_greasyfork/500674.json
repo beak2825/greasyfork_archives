@@ -1,0 +1,59 @@
+{
+  "id": 500674,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-15T02:53:22.000Z",
+  "code_updated_at": "2025-03-11T12:43:37.000Z",
+  "namespace": "https://script.yaka.fun/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 830463,
+      "name": "bzym2",
+      "created_at": "2021-10-31T01:15:27.000Z",
+      "url": "https://greasyfork.org/users/830463-bzym2",
+      "scripts": [
+        {
+          "id": 500674,
+          "daily_installs": 0,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-15T02:53:22.000Z",
+          "code_updated_at": "2025-03-11T12:43:37.000Z",
+          "namespace": "https://script.yaka.fun/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "千千蓝鲸OJ优化",
+          "description": "千千蓝鲸OJ的优化脚本，包括但不限于：动画优化、毛玻璃优化等",
+          "url": "https://greasyfork.org/scripts/500674-%E5%8D%83%E5%8D%83%E8%93%9D%E9%B2%B8oj%E4%BC%98%E5%8C%96",
+          "code_url": "https://update.greasyfork.org/scripts/500674/%E5%8D%83%E5%8D%83%E8%93%9D%E9%B2%B8OJ%E4%BC%98%E5%8C%96.user.js",
+          "code_size": 5754,
+          "license": "MIT License",
+          "version": "1.4.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "千千蓝鲸OJ优化",
+  "description": "千千蓝鲸OJ的优化脚本，包括但不限于：动画优化、毛玻璃优化等",
+  "url": "https://greasyfork.org/scripts/500674-%E5%8D%83%E5%8D%83%E8%93%9D%E9%B2%B8oj%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/500674/%E5%8D%83%E5%8D%83%E8%93%9D%E9%B2%B8OJ%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 5754,
+  "license": "MIT License",
+  "version": "1.4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

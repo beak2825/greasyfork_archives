@@ -1,0 +1,33 @@
+{
+  "id": 542237,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-11T01:20:53.000Z",
+  "code_updated_at": "2025-07-11T02:33:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 508041,
+      "name": "叶子Jinn",
+      "created_at": "2020-04-14T11:50:39.000Z",
+      "url": "https://greasyfork.org/users/508041-%E5%8F%B6%E5%AD%90jinn"
+    }
+  ],
+  "name": "语雀文档链接直达,避免语雀提醒风险:\"如需浏览，请复制后访问。\"",
+  "description": "在语雀文档中，点开链接跳转时，直达目标地址。把语雀强行附加的中转链接，还原为原始链接。不再提示：“该链接疑似存在风险，请谨慎操作。如需浏览，请复制后访问。”",
+  "url": "https://greasyfork.org/scripts/542237-%E8%AF%AD%E9%9B%80%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5%E7%9B%B4%E8%BE%BE-%E9%81%BF%E5%85%8D%E8%AF%AD%E9%9B%80%E6%8F%90%E9%86%92%E9%A3%8E%E9%99%A9-%E5%A6%82%E9%9C%80%E6%B5%8F%E8%A7%88-%E8%AF%B7%E5%A4%8D%E5%88%B6%E5%90%8E%E8%AE%BF%E9%97%AE",
+  "code_url": "https://update.greasyfork.org/scripts/542237/%E8%AF%AD%E9%9B%80%E6%96%87%E6%A1%A3%E9%93%BE%E6%8E%A5%E7%9B%B4%E8%BE%BE%2C%E9%81%BF%E5%85%8D%E8%AF%AD%E9%9B%80%E6%8F%90%E9%86%92%E9%A3%8E%E9%99%A9%3A%22%E5%A6%82%E9%9C%80%E6%B5%8F%E8%A7%88%EF%BC%8C%E8%AF%B7%E5%A4%8D%E5%88%B6%E5%90%8E%E8%AE%BF%E9%97%AE%E3%80%82%22.user.js",
+  "code_size": 2072,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

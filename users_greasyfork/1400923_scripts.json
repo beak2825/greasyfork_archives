@@ -1,0 +1,200 @@
+[
+  {
+    "id": 520929,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T16:22:54.000Z",
+    "code_updated_at": "2024-12-16T16:22:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400923,
+        "name": "Anil99",
+        "created_at": "2024-11-22T21:10:05.000Z",
+        "url": "https://greasyfork.org/users/1400923-anil99"
+      }
+    ],
+    "name": "ANT | Torrent Highlighter",
+    "description": "Highlights seeding, leeching and snatched torrent rows on Anthelion with color-coded backgrounds",
+    "url": "https://greasyfork.org/scripts/520929-ant-torrent-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/520929/ANT%20%7C%20Torrent%20Highlighter.user.js",
+    "code_size": 2733,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520898,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T13:31:28.000Z",
+    "code_updated_at": "2025-05-04T12:50:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400923,
+        "name": "Anil99",
+        "created_at": "2024-11-22T21:10:05.000Z",
+        "url": "https://greasyfork.org/users/1400923-anil99"
+      }
+    ],
+    "name": "BHD | Torrent Highlighter",
+    "description": "Highlights torrent rows on Beyond-HD with color-coded backgrounds based on seeding, downloading, or completed statuses for easy identification.",
+    "url": "https://greasyfork.org/scripts/520898-bhd-torrent-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/520898/BHD%20%7C%20Torrent%20Highlighter.user.js",
+    "code_size": 5642,
+    "license": "MIT License",
+    "version": "1.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520216,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-09T09:25:24.000Z",
+    "code_updated_at": "2024-12-09T13:19:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400923,
+        "name": "Anil99",
+        "created_at": "2024-11-22T21:10:05.000Z",
+        "url": "https://greasyfork.org/users/1400923-anil99"
+      }
+    ],
+    "name": "Aither | Better User Icons | OCS + BG",
+    "description": "close up with original color scheme",
+    "url": "https://greasyfork.org/scripts/520216-aither-better-user-icons-ocs-bg",
+    "code_url": "https://update.greasyfork.org/scripts/520216/Aither%20%7C%20Better%20User%20Icons%20%7C%20OCS%20%2B%20BG.user.js",
+    "code_size": 9330,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519892,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-05T19:08:04.000Z",
+    "code_updated_at": "2024-12-09T13:17:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400923,
+        "name": "Anil99",
+        "created_at": "2024-11-22T21:10:05.000Z",
+        "url": "https://greasyfork.org/users/1400923-anil99"
+      }
+    ],
+    "name": "Aither | Better User Icons | PCS",
+    "description": "Alternative with Aither colors progressive scheme for user icons",
+    "url": "https://greasyfork.org/scripts/519892-aither-better-user-icons-pcs",
+    "code_url": "https://update.greasyfork.org/scripts/519892/Aither%20%7C%20Better%20User%20Icons%20%7C%20PCS.user.js",
+    "code_size": 8946,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519861,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-05T11:30:34.000Z",
+    "code_updated_at": "2024-12-09T13:16:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400923,
+        "name": "Anil99",
+        "created_at": "2024-11-22T21:10:05.000Z",
+        "url": "https://greasyfork.org/users/1400923-anil99"
+      }
+    ],
+    "name": "Aither | Better User Icons | OCS",
+    "description": "close up with original color scheme",
+    "url": "https://greasyfork.org/scripts/519861-aither-better-user-icons-ocs",
+    "code_url": "https://update.greasyfork.org/scripts/519861/Aither%20%7C%20Better%20User%20Icons%20%7C%20OCS.user.js",
+    "code_size": 8917,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518521,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T21:22:10.000Z",
+    "code_updated_at": "2025-10-03T17:31:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400923,
+        "name": "Anil99",
+        "created_at": "2024-11-22T21:10:05.000Z",
+        "url": "https://greasyfork.org/users/1400923-anil99"
+      }
+    ],
+    "name": "ATH | Enhanced Torrent Visibility",
+    "description": "Upgraded torrent visibility on Aither with color-coded rows based on activity indicators, enhanced icons for free torrents, awards, and high-speed statuses, and custom images for DV, HDR, and HDR10+ formats.",
+    "url": "https://greasyfork.org/scripts/518521-ath-enhanced-torrent-visibility",
+    "code_url": "https://update.greasyfork.org/scripts/518521/ATH%20%7C%20Enhanced%20Torrent%20Visibility.user.js",
+    "code_size": 18503,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

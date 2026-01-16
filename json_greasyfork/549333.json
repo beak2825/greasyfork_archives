@@ -1,0 +1,34 @@
+{
+  "id": 549333,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-13T00:27:42.000Z",
+  "code_updated_at": "2025-09-21T20:35:48.000Z",
+  "namespace": "vm-steamgifts-region-helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514399,
+      "name": "BuzzyX",
+      "created_at": "2025-09-12T22:10:54.000Z",
+      "url": "https://greasyfork.org/users/1514399-buzzyx",
+      "scripts": []
+    }
+  ],
+  "name": "SteamGifts Region Helper V2",
+  "description": "Adds a compact country-names→codes converter and applies regions on SteamGifts \"new giveaway\" page; also lists region restrictions. Textarea stays fixed height with vertical scrollbar (no resize handle).",
+  "url": "https://greasyfork.org/scripts/549333-steamgifts-region-helper-v2",
+  "code_url": "https://update.greasyfork.org/scripts/549333/SteamGifts%20Region%20Helper%20V2.user.js",
+  "code_size": 14590,
+  "license": "MIT License",
+  "version": "2.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

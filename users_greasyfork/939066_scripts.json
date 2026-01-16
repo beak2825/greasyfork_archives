@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513160,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-19T09:22:49.000Z",
+    "code_updated_at": "2024-10-19T09:22:49.000Z",
+    "namespace": "https://github.com/F-park/python-docs-redirect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 939066,
+        "name": "F-park",
+        "created_at": "2022-07-25T06:21:25.000Z",
+        "url": "https://greasyfork.org/users/939066-f-park"
+      }
+    ],
+    "name": "我要看 python 中文文档！",
+    "description": "自动跳转 python 中文文档",
+    "url": "https://greasyfork.org/scripts/513160-%E6%88%91%E8%A6%81%E7%9C%8B-python-%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3",
+    "code_url": "https://update.greasyfork.org/scripts/513160/%E6%88%91%E8%A6%81%E7%9C%8B%20python%20%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%EF%BC%81.user.js",
+    "code_size": 921,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509129,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T03:17:21.000Z",
+    "code_updated_at": "2024-09-19T03:27:10.000Z",
+    "namespace": "https://github.com/F-park/BiliFold",
+    "support_url": "https://github.com/F-park/BiliFold/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 939066,
+        "name": "F-park",
+        "created_at": "2022-07-25T06:21:25.000Z",
+        "url": "https://greasyfork.org/users/939066-f-park"
+      }
+    ],
+    "name": "BiliFold - 收起动态评论",
+    "description": "点击两侧空白收起B站动态评论（包括 up 空间动态）",
+    "url": "https://greasyfork.org/scripts/509129-bilifold-%E6%94%B6%E8%B5%B7%E5%8A%A8%E6%80%81%E8%AF%84%E8%AE%BA",
+    "code_url": "https://update.greasyfork.org/scripts/509129/BiliFold%20-%20%E6%94%B6%E8%B5%B7%E5%8A%A8%E6%80%81%E8%AF%84%E8%AE%BA.user.js",
+    "code_size": 2322,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

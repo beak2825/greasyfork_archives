@@ -1,0 +1,34 @@
+{
+  "id": 550441,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-23T08:26:08.000Z",
+  "code_updated_at": "2025-10-23T09:54:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1416446,
+      "name": "3014203030",
+      "created_at": "2024-12-27T13:25:23.000Z",
+      "url": "https://greasyfork.org/users/1416446-3014203030",
+      "scripts": []
+    }
+  ],
+  "name": "多多买菜平台助手 v2.14 Lite (商品销量统计精简版)",
+  "description": "拦截API请求并统计商品销量、销售额数据（无图表，轻量级版本，自动修改pageSize=100，复制Excel数据，悬浮按钮，拖动边界限制，清新浅色主题，支持多场次数据累加）",
+  "url": "https://greasyfork.org/scripts/550441-%E5%A4%9A%E5%A4%9A%E4%B9%B0%E8%8F%9C%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B-v2-14-lite-%E5%95%86%E5%93%81%E9%94%80%E9%87%8F%E7%BB%9F%E8%AE%A1%E7%B2%BE%E7%AE%80%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/550441/%E5%A4%9A%E5%A4%9A%E4%B9%B0%E8%8F%9C%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B%20v214%20Lite%20%28%E5%95%86%E5%93%81%E9%94%80%E9%87%8F%E7%BB%9F%E8%AE%A1%E7%B2%BE%E7%AE%80%E7%89%88%29.user.js",
+  "code_size": 44331,
+  "license": "MIT License",
+  "version": "2.14.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

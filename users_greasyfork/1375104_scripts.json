@@ -1,0 +1,134 @@
+[
+  {
+    "id": 523977,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-16T21:20:30.000Z",
+    "code_updated_at": "2025-01-30T19:09:56.000Z",
+    "namespace": "lss.grisu118.ch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375104,
+        "name": "Grisu118",
+        "created_at": "2024-09-30T19:38:43.000Z",
+        "url": "https://greasyfork.org/users/1375104-grisu118"
+      }
+    ],
+    "name": "mission-info",
+    "description": "Zeigt details zum Einsatz an, u.a. Kategorie, Generierungszeitpunkt & erwartete Einnahmen",
+    "url": "https://greasyfork.org/scripts/523977-mission-info",
+    "code_url": "https://update.greasyfork.org/scripts/523977/mission-info.user.js",
+    "code_size": 39857,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 515419,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T16:05:22.000Z",
+    "code_updated_at": "2025-10-17T16:39:18.000Z",
+    "namespace": "lss.grisu118.ch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375104,
+        "name": "Grisu118",
+        "created_at": "2024-09-30T19:38:43.000Z",
+        "url": "https://greasyfork.org/users/1375104-grisu118"
+      }
+    ],
+    "name": "enhanced-map",
+    "description": "Zusätziche Funktionen für die Karte",
+    "url": "https://greasyfork.org/scripts/515419-enhanced-map",
+    "code_url": "https://update.greasyfork.org/scripts/515419/enhanced-map.user.js",
+    "code_size": 57351,
+    "license": "MIT License",
+    "version": "0.4.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 510949,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-30T19:53:53.000Z",
+    "code_updated_at": "2024-11-04T21:07:06.000Z",
+    "namespace": "lss.grisu118.ch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375104,
+        "name": "Grisu118",
+        "created_at": "2024-09-30T19:38:43.000Z",
+        "url": "https://greasyfork.org/users/1375104-grisu118"
+      }
+    ],
+    "name": "mission-vehicle-filter",
+    "description": "Filtert die Fahrzeuge im Alarmfenster und zeigt nur ausgewählte an. Der Filter kann ein / ausgeschaltet werden, der Zustand wird lokal gespeichert.",
+    "url": "https://greasyfork.org/scripts/510949-mission-vehicle-filter",
+    "code_url": "https://update.greasyfork.org/scripts/510949/mission-vehicle-filter.user.js",
+    "code_size": 18407,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 510948,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-30T19:49:59.000Z",
+    "code_updated_at": "2024-09-30T19:49:59.000Z",
+    "namespace": "lss.grisu118.ch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375104,
+        "name": "Grisu118",
+        "created_at": "2024-09-30T19:38:43.000Z",
+        "url": "https://greasyfork.org/users/1375104-grisu118"
+      }
+    ],
+    "name": "aao-counter",
+    "description": "Zählt wie oft eine AAO angeglickt wurde und zeigt es mit einem badge direkt auf der AAO an",
+    "url": "https://greasyfork.org/scripts/510948-aao-counter",
+    "code_url": "https://update.greasyfork.org/scripts/510948/aao-counter.user.js",
+    "code_size": 1771,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

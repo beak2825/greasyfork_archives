@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530506,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-22T02:32:27.000Z",
+    "code_updated_at": "2025-03-22T02:32:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 782635,
+        "name": "kylemd",
+        "created_at": "2021-06-12T12:38:00.000Z",
+        "url": "https://greasyfork.org/users/782635-kylemd"
+      }
+    ],
+    "name": "Amazon Transaction History Exporter",
+    "description": "Export Amazon transaction history to CSV",
+    "url": "https://greasyfork.org/scripts/530506-amazon-transaction-history-exporter",
+    "code_url": "https://update.greasyfork.org/scripts/530506/Amazon%20Transaction%20History%20Exporter.user.js",
+    "code_size": 22199,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

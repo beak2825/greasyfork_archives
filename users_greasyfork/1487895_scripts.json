@@ -1,0 +1,101 @@
+[
+  {
+    "id": 540865,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-26T17:44:52.000Z",
+    "code_updated_at": "2025-06-26T17:44:52.000Z",
+    "namespace": "https://lichess.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487895,
+        "name": "ObnubiladO",
+        "created_at": "2025-06-24T10:40:03.000Z",
+        "url": "https://greasyfork.org/users/1487895-obnubilado"
+      }
+    ],
+    "name": "Lichess Grab Cursor",
+    "description": "Changes the cursor to a grab hand when hovering over pieces and to a grabbing hand when dragging pieces.",
+    "url": "https://greasyfork.org/scripts/540865-lichess-grab-cursor",
+    "code_url": "https://update.greasyfork.org/scripts/540865/Lichess%20Grab%20Cursor.user.js",
+    "code_size": 1208,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540801,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-26T00:24:13.000Z",
+    "code_updated_at": "2025-06-26T17:43:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487895,
+        "name": "ObnubiladO",
+        "created_at": "2025-06-24T10:40:03.000Z",
+        "url": "https://greasyfork.org/users/1487895-obnubilado"
+      }
+    ],
+    "name": "Lichess Custom Board Colors",
+    "description": "Unique embedded UI with profile support that allows you to pick any board colors.",
+    "url": "https://greasyfork.org/scripts/540801-lichess-custom-board-colors",
+    "code_url": "https://update.greasyfork.org/scripts/540801/Lichess%20Custom%20Board%20Colors.user.js",
+    "code_size": 13344,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540609,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-24T10:50:26.000Z",
+    "code_updated_at": "2025-11-18T12:28:36.000Z",
+    "namespace": "https://aliexpress.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487895,
+        "name": "ObnubiladO",
+        "created_at": "2025-06-24T10:40:03.000Z",
+        "url": "https://greasyfork.org/users/1487895-obnubilado"
+      }
+    ],
+    "name": "AliExpress Enhanced Listings",
+    "description": "Shows full listing titles and highlights Choice, Bundle deals, and Premium Quality tagged listings in a unique way.",
+    "url": "https://greasyfork.org/scripts/540609-aliexpress-enhanced-listings",
+    "code_url": "https://update.greasyfork.org/scripts/540609/AliExpress%20Enhanced%20Listings.user.js",
+    "code_size": 8397,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.71",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

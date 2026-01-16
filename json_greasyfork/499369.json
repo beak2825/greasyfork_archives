@@ -1,0 +1,59 @@
+{
+  "id": 499369,
+  "daily_installs": 0,
+  "total_installs": 581,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-01T08:52:23.000Z",
+  "code_updated_at": "2024-07-02T01:54:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1216471,
+      "name": "vettel",
+      "created_at": "2023-11-13T03:42:52.000Z",
+      "url": "https://greasyfork.org/users/1216471-vettel",
+      "scripts": [
+        {
+          "id": 499369,
+          "daily_installs": 0,
+          "total_installs": 581,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-01T08:52:23.000Z",
+          "code_updated_at": "2024-07-02T01:54:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "2024远程研修",
+          "description": "山东省教师教育网",
+          "url": "https://greasyfork.org/scripts/499369-2024%E8%BF%9C%E7%A8%8B%E7%A0%94%E4%BF%AE",
+          "code_url": "https://update.greasyfork.org/scripts/499369/2024%E8%BF%9C%E7%A8%8B%E7%A0%94%E4%BF%AE.user.js",
+          "code_size": 8627,
+          "license": "vettel",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "2024远程研修",
+  "description": "山东省教师教育网",
+  "url": "https://greasyfork.org/scripts/499369-2024%E8%BF%9C%E7%A8%8B%E7%A0%94%E4%BF%AE",
+  "code_url": "https://update.greasyfork.org/scripts/499369/2024%E8%BF%9C%E7%A8%8B%E7%A0%94%E4%BF%AE.user.js",
+  "code_size": 8627,
+  "license": "vettel",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

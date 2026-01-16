@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523281,
+    "daily_installs": 1,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-09T06:58:21.000Z",
+    "code_updated_at": "2025-01-14T02:32:52.000Z",
+    "namespace": "imabihidetranslations",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421163,
+        "name": "Kiyoshi Turbitt",
+        "created_at": "2025-01-09T06:55:31.000Z",
+        "url": "https://greasyfork.org/users/1421163-kiyoshi-turbitt"
+      }
+    ],
+    "name": "IMABI hide example sentence translations",
+    "description": "Tries to blur example sentence translations to aid in reading practice. Tap/hover to reveal. Auto-detects with regex, so it might fail if there’s any irregular formatting, but it seems to be pretty consistent.",
+    "url": "https://greasyfork.org/scripts/523281-imabi-hide-example-sentence-translations",
+    "code_url": "https://update.greasyfork.org/scripts/523281/IMABI%20hide%20example%20sentence%20translations.user.js",
+    "code_size": 2222,
+    "license": "MIT License",
+    "version": "2025-01-13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,200 @@
+[
+  {
+    "id": 511197,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T15:01:38.000Z",
+    "code_updated_at": "2024-10-02T15:01:38.000Z",
+    "namespace": "https://github.com/ewigl/hus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373482,
+        "name": "westmood",
+        "created_at": "2024-09-26T23:11:21.000Z",
+        "url": "https://greasyfork.org/users/1373482-westmood"
+      }
+    ],
+    "name": "我真的好烦，搞不掂",
+    "description": "我真的好烦，搞不掂，我真的好烦，搞不掂啊",
+    "url": "https://greasyfork.org/scripts/511197-%E6%88%91%E7%9C%9F%E7%9A%84%E5%A5%BD%E7%83%A6-%E6%90%9E%E4%B8%8D%E6%8E%82",
+    "code_url": "https://update.greasyfork.org/scripts/511197/%E6%88%91%E7%9C%9F%E7%9A%84%E5%A5%BD%E7%83%A6%EF%BC%8C%E6%90%9E%E4%B8%8D%E6%8E%82.user.js",
+    "code_size": 8423,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511182,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T13:13:21.000Z",
+    "code_updated_at": "2024-10-02T13:13:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373482,
+        "name": "westmood",
+        "created_at": "2024-09-26T23:11:21.000Z",
+        "url": "https://greasyfork.org/users/1373482-westmood"
+      }
+    ],
+    "name": "这是个什么东西_Auto Click Button and Link",
+    "description": "自动点击指定按钮和下载链接,但这个等待页面加载完成好像挺有用",
+    "url": "https://greasyfork.org/scripts/511182-%E8%BF%99%E6%98%AF%E4%B8%AA%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF-auto-click-button-and-link",
+    "code_url": "https://update.greasyfork.org/scripts/511182/%E8%BF%99%E6%98%AF%E4%B8%AA%E4%BB%80%E4%B9%88%E4%B8%9C%E8%A5%BF_Auto%20Click%20Button%20and%20Link.user.js",
+    "code_size": 1477,
+    "license": "MIT License",
+    "version": "2024-09-26",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510835,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-30T02:51:42.000Z",
+    "code_updated_at": "2024-10-02T13:15:05.000Z",
+    "namespace": "https://github.com/ewigl/hus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373482,
+        "name": "westmood",
+        "created_at": "2024-09-26T23:11:21.000Z",
+        "url": "https://greasyfork.org/users/1373482-westmood"
+      }
+    ],
+    "name": "Test_增强与自动点击",
+    "description": "Test_增强与自动点击_防止原作者删库",
+    "url": "https://greasyfork.org/scripts/510835-test-%E5%A2%9E%E5%BC%BA%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB",
+    "code_url": "https://update.greasyfork.org/scripts/510835/Test_%E5%A2%9E%E5%BC%BA%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB.user.js",
+    "code_size": 6566,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510724,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-29T09:24:46.000Z",
+    "code_updated_at": "2024-10-02T13:16:20.000Z",
+    "namespace": "https://github.com/ewigl/hus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373482,
+        "name": "westmood",
+        "created_at": "2024-09-26T23:11:21.000Z",
+        "url": "https://greasyfork.org/users/1373482-westmood"
+      }
+    ],
+    "name": "Test_auto reply",
+    "description": "Test_自动回复_防止原作者删库",
+    "url": "https://greasyfork.org/scripts/510724-test-auto-reply",
+    "code_url": "https://update.greasyfork.org/scripts/510724/Test_auto%20reply.user.js",
+    "code_size": 7248,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510723,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-29T09:23:39.000Z",
+    "code_updated_at": "2024-10-02T13:16:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373482,
+        "name": "westmood",
+        "created_at": "2024-09-26T23:11:21.000Z",
+        "url": "https://greasyfork.org/users/1373482-westmood"
+      }
+    ],
+    "name": "Test_Automatic Check-in",
+    "description": "Test_自动签到_防止原作者删库",
+    "url": "https://greasyfork.org/scripts/510723-test-automatic-check-in",
+    "code_url": "https://update.greasyfork.org/scripts/510723/Test_Automatic%20Check-in.user.js",
+    "code_size": 1308,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510700,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-29T06:38:26.000Z",
+    "code_updated_at": "2024-09-29T09:30:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373482,
+        "name": "westmood",
+        "created_at": "2024-09-26T23:11:21.000Z",
+        "url": "https://greasyfork.org/users/1373482-westmood"
+      }
+    ],
+    "name": "Hifini Auto Click VIP Button",
+    "description": "自动点击VIP按钮",
+    "url": "https://greasyfork.org/scripts/510700-hifini-auto-click-vip-button",
+    "code_url": "https://update.greasyfork.org/scripts/510700/Hifini%20Auto%20Click%20VIP%20Button.user.js",
+    "code_size": 1050,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

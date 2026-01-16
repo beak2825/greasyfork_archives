@@ -1,0 +1,59 @@
+{
+  "id": 499149,
+  "daily_installs": 1,
+  "total_installs": 457,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-06-28T17:15:34.000Z",
+  "code_updated_at": "2025-09-24T16:20:21.000Z",
+  "namespace": "https://github.com/qxinGitHub/searchAV",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1325384,
+      "name": "yanggang0225",
+      "created_at": "2024-06-28T17:10:44.000Z",
+      "url": "https://greasyfork.org/users/1325384-yanggang0225",
+      "scripts": [
+        {
+          "id": 499149,
+          "daily_installs": 1,
+          "total_installs": 457,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2024-06-28T17:15:34.000Z",
+          "code_updated_at": "2025-09-24T16:20:21.000Z",
+          "namespace": "https://github.com/qxinGitHub/searchAV",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "根据番号快速搜索",
+          "description": "标记网页上的所有番号, 在相关网站快速方便的进行搜索",
+          "url": "https://greasyfork.org/scripts/499149-%E6%A0%B9%E6%8D%AE%E7%95%AA%E5%8F%B7%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2",
+          "code_url": "https://update.greasyfork.org/scripts/499149/%E6%A0%B9%E6%8D%AE%E7%95%AA%E5%8F%B7%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2.user.js",
+          "code_size": 156807,
+          "license": "MIT License",
+          "version": "0.24.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "根据番号快速搜索",
+  "description": "标记网页上的所有番号, 在相关网站快速方便的进行搜索",
+  "url": "https://greasyfork.org/scripts/499149-%E6%A0%B9%E6%8D%AE%E7%95%AA%E5%8F%B7%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2",
+  "code_url": "https://update.greasyfork.org/scripts/499149/%E6%A0%B9%E6%8D%AE%E7%95%AA%E5%8F%B7%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2.user.js",
+  "code_size": 156807,
+  "license": "MIT License",
+  "version": "0.24.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

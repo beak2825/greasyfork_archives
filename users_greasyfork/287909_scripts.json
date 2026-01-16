@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535366,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T15:09:58.000Z",
+    "code_updated_at": "2025-05-09T10:58:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 287909,
+        "name": "野原新之布",
+        "created_at": "2019-04-01T03:43:47.000Z",
+        "url": "https://greasyfork.org/users/287909-%E9%87%8E%E5%8E%9F%E6%96%B0%E4%B9%8B%E5%B8%83"
+      }
+    ],
+    "name": "中少快乐阅读平台中少报刊资源下载器",
+    "description": "在幼儿画报期刊列表页为每一期添加“下载”按钮，自动下载 XML 中的高分辨率图像资源（href2）并打包为 ZIP 文件",
+    "url": "https://greasyfork.org/scripts/535366-%E4%B8%AD%E5%B0%91%E5%BF%AB%E4%B9%90%E9%98%85%E8%AF%BB%E5%B9%B3%E5%8F%B0%E4%B8%AD%E5%B0%91%E6%8A%A5%E5%88%8A%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/535366/%E4%B8%AD%E5%B0%91%E5%BF%AB%E4%B9%90%E9%98%85%E8%AF%BB%E5%B9%B3%E5%8F%B0%E4%B8%AD%E5%B0%91%E6%8A%A5%E5%88%8A%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 11668,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.2.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

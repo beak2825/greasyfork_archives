@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540524,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T15:34:14.000Z",
+    "code_updated_at": "2025-07-22T13:26:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1166270,
+        "name": "Run-os",
+        "created_at": "2023-09-04T16:49:28.000Z",
+        "url": "https://greasyfork.org/users/1166270-run-os"
+      }
+    ],
+    "name": "征纳互动人数和在线监控",
+    "description": "监控征纳互动等待人数变化，是否离线，并进行语音提示，带折叠面板",
+    "url": "https://greasyfork.org/scripts/540524-%E5%BE%81%E7%BA%B3%E4%BA%92%E5%8A%A8%E4%BA%BA%E6%95%B0%E5%92%8C%E5%9C%A8%E7%BA%BF%E7%9B%91%E6%8E%A7",
+    "code_url": "https://update.greasyfork.org/scripts/540524/%E5%BE%81%E7%BA%B3%E4%BA%92%E5%8A%A8%E4%BA%BA%E6%95%B0%E5%92%8C%E5%9C%A8%E7%BA%BF%E7%9B%91%E6%8E%A7.user.js",
+    "code_size": 17899,
+    "license": "MIT License",
+    "version": "25.7.22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

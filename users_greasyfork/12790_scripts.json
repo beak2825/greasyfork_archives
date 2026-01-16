@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533610,
+    "daily_installs": 1,
+    "total_installs": 534,
+    "fan_score": "43.6",
+    "good_ratings": 4,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T08:30:20.000Z",
+    "code_updated_at": "2025-12-12T18:31:38.000Z",
+    "namespace": "http://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12790,
+        "name": "NeoCortex",
+        "created_at": "2015-06-27T21:08:00.000Z",
+        "url": "https://greasyfork.org/users/12790-neocortex"
+      }
+    ],
+    "name": "YouTube Smaller Thumbnails",
+    "description": "Adds additional thumbnails per row",
+    "url": "https://greasyfork.org/scripts/533610-youtube-smaller-thumbnails",
+    "code_url": "https://update.greasyfork.org/scripts/533610/YouTube%20Smaller%20Thumbnails.user.js",
+    "code_size": 10170,
+    "license": "MIT License",
+    "version": "0.0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527674,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-21T17:34:31.000Z",
+    "code_updated_at": "2025-02-21T17:34:31.000Z",
+    "namespace": "Neur0toxine",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12790,
+        "name": "NeoCortex",
+        "created_at": "2015-06-27T21:08:00.000Z",
+        "url": "https://greasyfork.org/users/12790-neocortex"
+      }
+    ],
+    "name": "4PDA Удаление редиректов",
+    "description": "Удаляет редиректы из ссылок на форуме 4PDA",
+    "url": "https://greasyfork.org/scripts/527674-4pda-%D1%83%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5-%D1%80%D0%B5%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/527674/4PDA%20%D0%A3%D0%B4%D0%B0%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%20%D1%80%D0%B5%D0%B4%D0%B8%D1%80%D0%B5%D0%BA%D1%82%D0%BE%D0%B2.user.js",
+    "code_size": 611,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

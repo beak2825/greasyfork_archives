@@ -1,0 +1,101 @@
+[
+  {
+    "id": 500633,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-14T16:24:26.000Z",
+    "code_updated_at": "2024-07-14T16:24:26.000Z",
+    "namespace": "guebosch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1261426,
+        "name": "Günther Bosch",
+        "created_at": "2024-02-15T07:54:09.000Z",
+        "url": "https://greasyfork.org/users/1261426-g%C3%BCnther-bosch"
+      }
+    ],
+    "name": "Tweet Cramming",
+    "description": "Allow 280 characters in a Tweet sent from TweetDeck automatically",
+    "url": "https://greasyfork.org/scripts/500633-tweet-cramming",
+    "code_url": "https://update.greasyfork.org/scripts/500633/Tweet%20Cramming.user.js",
+    "code_size": 1092,
+    "license": "MIT License",
+    "version": "2024-07-14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498514,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-21T08:41:39.000Z",
+    "code_updated_at": "2024-08-11T12:05:53.000Z",
+    "namespace": "guebosch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1261426,
+        "name": "Günther Bosch",
+        "created_at": "2024-02-15T07:54:09.000Z",
+        "url": "https://greasyfork.org/users/1261426-g%C3%BCnther-bosch"
+      }
+    ],
+    "name": "perplexa",
+    "description": "Greasemonkey script to get Perplexity answers within Google search",
+    "url": "https://greasyfork.org/scripts/498514-perplexa",
+    "code_url": "https://update.greasyfork.org/scripts/498514/perplexa.user.js",
+    "code_size": 7203,
+    "license": "GPLv3",
+    "version": "2024-08-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 497505,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-10T06:25:33.000Z",
+    "code_updated_at": "2025-01-19T18:19:46.000Z",
+    "namespace": "guebosch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1261426,
+        "name": "Günther Bosch",
+        "created_at": "2024-02-15T07:54:09.000Z",
+        "url": "https://greasyfork.org/users/1261426-g%C3%BCnther-bosch"
+      }
+    ],
+    "name": "TweetDeck Clear and Remove Buttons",
+    "description": "Adds \"Clear\" button to each column.",
+    "url": "https://greasyfork.org/scripts/497505-tweetdeck-clear-and-remove-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/497505/TweetDeck%20Clear%20and%20Remove%20Buttons.user.js",
+    "code_size": 3910,
+    "license": "MIT License",
+    "version": "2025-01-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

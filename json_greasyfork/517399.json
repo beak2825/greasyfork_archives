@@ -1,0 +1,59 @@
+{
+  "id": 517399,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-14T19:53:17.000Z",
+  "code_updated_at": "2024-11-16T06:27:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1396462,
+      "name": "Yaowun",
+      "created_at": "2024-11-14T19:49:02.000Z",
+      "url": "https://greasyfork.org/users/1396462-yaowun",
+      "scripts": [
+        {
+          "id": 517399,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-14T19:53:17.000Z",
+          "code_updated_at": "2024-11-16T06:27:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NCU sports center - volleyball booking",
+          "description": "Manual trigger for booking automation",
+          "url": "https://greasyfork.org/scripts/517399-ncu-sports-center-volleyball-booking",
+          "code_url": "https://update.greasyfork.org/scripts/517399/NCU%20sports%20center%20-%20volleyball%20booking.user.js",
+          "code_size": 12883,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NCU sports center - volleyball booking",
+  "description": "Manual trigger for booking automation",
+  "url": "https://greasyfork.org/scripts/517399-ncu-sports-center-volleyball-booking",
+  "code_url": "https://update.greasyfork.org/scripts/517399/NCU%20sports%20center%20-%20volleyball%20booking.user.js",
+  "code_size": 12883,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

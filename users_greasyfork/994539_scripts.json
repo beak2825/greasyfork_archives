@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498706,
+    "daily_installs": 0,
+    "total_installs": 101,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-23T23:33:48.000Z",
+    "code_updated_at": "2024-06-25T15:25:51.000Z",
+    "namespace": "https://userstyles.world/user/2013internetlover",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994539,
+        "name": "2013internetlover",
+        "created_at": "2022-12-08T11:57:43.000Z",
+        "url": "https://greasyfork.org/users/994539-2013internetlover"
+      }
+    ],
+    "name": "2012-2014 ESQUE PlanetMinecraft",
+    "description": "This userstyle restores the 2012-2014 PlanetMinecraft",
+    "url": "https://greasyfork.org/scripts/498706-2012-2014-esque-planetminecraft",
+    "code_url": "https://update.greasyfork.org/scripts/498706/2012-2014%20ESQUE%20PlanetMinecraft.user.css",
+    "code_size": 168028,
+    "license": "Creative Commons Attribution Share Alike 4.0 International",
+    "version": "1.4.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

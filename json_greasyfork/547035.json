@@ -1,0 +1,33 @@
+{
+  "id": 547035,
+  "daily_installs": 2,
+  "total_installs": 78,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-23T20:08:17.000Z",
+  "code_updated_at": "2026-01-10T16:18:12.000Z",
+  "namespace": "https://github.com/tientq64/userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451396,
+      "name": "Bee Luck",
+      "created_at": "2025-03-28T19:16:30.000Z",
+      "url": "https://greasyfork.org/users/1451396-bee-luck"
+    }
+  ],
+  "name": "YouTube Ad-Master",
+  "description": "综合历史所有有效逻辑：API劫持、深度影子DOM探测、动态倍速调节、UI穿透屏蔽",
+  "url": "https://greasyfork.org/scripts/547035-youtube-ad-master",
+  "code_url": "https://update.greasyfork.org/scripts/547035/YouTube%20Ad-Master.user.js",
+  "code_size": 5915,
+  "license": "MIT License",
+  "version": "9.5.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

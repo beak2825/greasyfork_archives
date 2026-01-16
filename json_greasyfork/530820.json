@@ -1,0 +1,59 @@
+{
+  "id": 530820,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-25T13:42:05.000Z",
+  "code_updated_at": "2025-03-25T13:42:05.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450100,
+      "name": "005",
+      "created_at": "2025-03-25T11:35:00.000Z",
+      "url": "https://greasyfork.org/users/1450100-005",
+      "scripts": [
+        {
+          "id": 530820,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-25T13:42:05.000Z",
+          "code_updated_at": "2025-03-25T13:42:05.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Comment Remover",
+          "description": "YouTubeのコメント欄を非表示にする",
+          "url": "https://greasyfork.org/scripts/530820-youtube-comment-remover",
+          "code_url": "https://update.greasyfork.org/scripts/530820/YouTube%20Comment%20Remover.user.js",
+          "code_size": 611,
+          "license": null,
+          "version": "1.0",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Comment Remover",
+  "description": "YouTubeのコメント欄を非表示にする",
+  "url": "https://greasyfork.org/scripts/530820-youtube-comment-remover",
+  "code_url": "https://update.greasyfork.org/scripts/530820/YouTube%20Comment%20Remover.user.js",
+  "code_size": 611,
+  "license": null,
+  "version": "1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

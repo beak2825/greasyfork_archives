@@ -1,0 +1,34 @@
+{
+  "id": 520470,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-12T03:00:10.000Z",
+  "code_updated_at": "2024-12-13T09:00:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1409303,
+      "name": "kimi super",
+      "created_at": "2024-12-11T02:58:53.000Z",
+      "url": "https://greasyfork.org/users/1409303-kimi-super",
+      "scripts": []
+    }
+  ],
+  "name": "周数据统计生成器",
+  "description": "生成本周数据统计表格",
+  "url": "https://greasyfork.org/scripts/520470-%E5%91%A8%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E7%94%9F%E6%88%90%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/520470/%E5%91%A8%E6%95%B0%E6%8D%AE%E7%BB%9F%E8%AE%A1%E7%94%9F%E6%88%90%E5%99%A8.user.js",
+  "code_size": 23403,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

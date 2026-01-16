@@ -1,0 +1,68 @@
+[
+  {
+    "id": 519164,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-28T15:58:54.000Z",
+    "code_updated_at": "2024-11-28T15:58:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338998,
+        "name": "Zheyu Jiang",
+        "created_at": "2024-07-24T07:26:34.000Z",
+        "url": "https://greasyfork.org/users/1338998-zheyu-jiang"
+      }
+    ],
+    "name": "隐藏微信公众号二维码",
+    "description": "隐藏微信公众号文章页面的二维码",
+    "url": "https://greasyfork.org/scripts/519164-%E9%9A%90%E8%97%8F%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/519164/%E9%9A%90%E8%97%8F%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7%E4%BA%8C%E7%BB%B4%E7%A0%81.user.js",
+    "code_size": 1237,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502072,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T11:50:56.000Z",
+    "code_updated_at": "2024-08-06T08:13:24.000Z",
+    "namespace": "https://greasyfork.org/users/1338998",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338998,
+        "name": "Zheyu Jiang",
+        "created_at": "2024-07-24T07:26:34.000Z",
+        "url": "https://greasyfork.org/users/1338998-zheyu-jiang"
+      }
+    ],
+    "name": "ClaudeToken 切换（自用）",
+    "description": "动态切换claude的token",
+    "url": "https://greasyfork.org/scripts/502072-claudetoken-%E5%88%87%E6%8D%A2-%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/502072/ClaudeToken%20%E5%88%87%E6%8D%A2%EF%BC%88%E8%87%AA%E7%94%A8%EF%BC%89.user.js",
+    "code_size": 25052,
+    "license": "GNU GPLv3",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

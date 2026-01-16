@@ -1,0 +1,59 @@
+{
+  "id": 538562,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-06T11:39:20.000Z",
+  "code_updated_at": "2025-06-06T11:39:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1386652,
+      "name": "havlifi",
+      "created_at": "2024-10-26T12:39:09.000Z",
+      "url": "https://greasyfork.org/users/1386652-havlifi",
+      "scripts": [
+        {
+          "id": 514148,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-26T12:44:28.000Z",
+          "code_updated_at": "2024-10-26T12:44:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Seznam/Idnes Auto Consent",
+          "description": "Automatically conset to data collection on Seznam and Idnes",
+          "url": "https://greasyfork.org/scripts/514148-seznam-idnes-auto-consent",
+          "code_url": "https://update.greasyfork.org/scripts/514148/SeznamIdnes%20Auto%20Consent.user.js",
+          "code_size": 3565,
+          "license": "MIT License",
+          "version": "2024-10-12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auth Fit username fix",
+  "description": "Removes the unwanted email part of the username",
+  "url": "https://greasyfork.org/scripts/538562-auth-fit-username-fix",
+  "code_url": "https://update.greasyfork.org/scripts/538562/Auth%20Fit%20username%20fix.user.js",
+  "code_size": 828,
+  "license": "MIT License",
+  "version": "2025-06-06",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 505837,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-30T03:51:29.000Z",
+    "code_updated_at": "2024-08-30T03:51:29.000Z",
+    "namespace": "mattdoofus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1230669,
+        "name": "MNM9258",
+        "created_at": "2023-12-08T19:19:21.000Z",
+        "url": "https://greasyfork.org/users/1230669-mnm9258"
+      }
+    ],
+    "name": "BTN Bonus Point Optimization",
+    "description": "adds better bonus rate details to the bonus rates page",
+    "url": "https://greasyfork.org/scripts/505837-btn-bonus-point-optimization",
+    "code_url": "https://update.greasyfork.org/scripts/505837/BTN%20Bonus%20Point%20Optimization.user.js",
+    "code_size": 5812,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

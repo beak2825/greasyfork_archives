@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532640,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-12T16:35:17.000Z",
+    "code_updated_at": "2025-04-12T16:35:17.000Z",
+    "namespace": "https://greasyfork.org/ru/users/781312-ivankr08/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 781312,
+        "name": "IvanKr08",
+        "created_at": "2021-06-08T16:11:00.000Z",
+        "url": "https://greasyfork.org/users/781312-ivankr08"
+      }
+    ],
+    "name": "Vombat Fixes",
+    "description": "Vombat.su, но с исправлением досадных упущений",
+    "url": "https://greasyfork.org/scripts/532640-vombat-fixes",
+    "code_url": "https://update.greasyfork.org/scripts/532640/Vombat%20Fixes.user.js",
+    "code_size": 10013,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "2025-04-12",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

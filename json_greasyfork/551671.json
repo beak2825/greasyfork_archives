@@ -1,0 +1,59 @@
+{
+  "id": 551671,
+  "daily_installs": 0,
+  "total_installs": 182,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-05T12:44:42.000Z",
+  "code_updated_at": "2025-10-05T12:44:42.000Z",
+  "namespace": "1353464539@qq.com",
+  "support_url": "https://ac.tujidu.com/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522489,
+      "name": "presiddent",
+      "created_at": "2025-10-05T12:37:42.000Z",
+      "url": "https://greasyfork.org/users/1522489-presiddent",
+      "scripts": [
+        {
+          "id": 551671,
+          "daily_installs": 0,
+          "total_installs": 182,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-05T12:44:42.000Z",
+          "code_updated_at": "2025-10-05T12:44:42.000Z",
+          "namespace": "1353464539@qq.com",
+          "support_url": "https://ac.tujidu.com/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列",
+          "description": "1.繞過百度、搜狗、谷歌、好搜搜索結果中的自己的跳轉鏈接，直接訪問原始網頁-反正都能看懂 2.新增自定义网站拦截功能 3添加Favicon显示 4.页面CSS 5.添加计数 6.开关选择以上功能 7.自动翻页功能",
+          "url": "https://greasyfork.org/scripts/551671-ac-baidu-%E9%87%8D%E5%AE%9A%E5%90%91%E4%BC%98%E5%8C%96%E7%99%BE%E5%BA%A6%E6%90%9C%E7%8B%97%E8%B0%B7%E6%AD%8C%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2-favicon-%E5%8F%8C%E5%88%97",
+          "code_url": "https://update.greasyfork.org/scripts/551671/AC-baidu-google_sogou_bing_RedirectRemove_favicon_adaway_TwoLine.user.js",
+          "code_size": 134979,
+          "license": "GNU General Public License v3.0 only",
+          "version": "27.17",
+          "locale": "lt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AC-baidu-重定向优化百度搜狗谷歌必应搜索_favicon_双列",
+  "description": "1.繞過百度、搜狗、谷歌、好搜搜索結果中的自己的跳轉鏈接，直接訪問原始網頁-反正都能看懂 2.新增自定义网站拦截功能 3添加Favicon显示 4.页面CSS 5.添加计数 6.开关选择以上功能 7.自动翻页功能",
+  "url": "https://greasyfork.org/scripts/551671-ac-baidu-%E9%87%8D%E5%AE%9A%E5%90%91%E4%BC%98%E5%8C%96%E7%99%BE%E5%BA%A6%E6%90%9C%E7%8B%97%E8%B0%B7%E6%AD%8C%E5%BF%85%E5%BA%94%E6%90%9C%E7%B4%A2-favicon-%E5%8F%8C%E5%88%97",
+  "code_url": "https://update.greasyfork.org/scripts/551671/AC-baidu-google_sogou_bing_RedirectRemove_favicon_adaway_TwoLine.user.js",
+  "code_size": 134979,
+  "license": "GNU General Public License v3.0 only",
+  "version": "27.17",
+  "locale": "lt",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503834,
+    "daily_installs": 0,
+    "total_installs": 716,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-16T10:51:27.000Z",
+    "code_updated_at": "2024-09-03T23:24:11.000Z",
+    "namespace": "https://greasyfork.org/users/1172355",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1172355,
+        "name": "Xiao Rik",
+        "created_at": "2023-09-13T14:58:15.000Z",
+        "url": "https://greasyfork.org/users/1172355-xiao-rik"
+      }
+    ],
+    "name": "小红书工具",
+    "description": "仅用于学习：小红书搜索、首页、推荐页面笔记数据导出、小红书笔记图片视频导出、小红书搜索快速跳转",
+    "url": "https://greasyfork.org/scripts/503834-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/503834/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 14469,
+    "license": "MIT License",
+    "version": "3.1.16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

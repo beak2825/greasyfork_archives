@@ -1,0 +1,59 @@
+{
+  "id": 527810,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-23T08:19:00.000Z",
+  "code_updated_at": "2025-02-26T20:57:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1438859,
+      "name": "duqub",
+      "created_at": "2025-02-23T07:37:03.000Z",
+      "url": "https://greasyfork.org/users/1438859-duqub",
+      "scripts": [
+        {
+          "id": 527810,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-23T08:19:00.000Z",
+          "code_updated_at": "2025-02-26T20:57:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "置顶bilibili未读私信",
+          "description": "置顶未读消息，自动滚动消息列表到底部，查看下一条未读",
+          "url": "https://greasyfork.org/scripts/527810-%E7%BD%AE%E9%A1%B6bilibili%E6%9C%AA%E8%AF%BB%E7%A7%81%E4%BF%A1",
+          "code_url": "https://update.greasyfork.org/scripts/527810/%E7%BD%AE%E9%A1%B6bilibili%E6%9C%AA%E8%AF%BB%E7%A7%81%E4%BF%A1.user.js",
+          "code_size": 6161,
+          "license": "MIT License",
+          "version": "2025.2.27",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "置顶bilibili未读私信",
+  "description": "置顶未读消息，自动滚动消息列表到底部，查看下一条未读",
+  "url": "https://greasyfork.org/scripts/527810-%E7%BD%AE%E9%A1%B6bilibili%E6%9C%AA%E8%AF%BB%E7%A7%81%E4%BF%A1",
+  "code_url": "https://update.greasyfork.org/scripts/527810/%E7%BD%AE%E9%A1%B6bilibili%E6%9C%AA%E8%AF%BB%E7%A7%81%E4%BF%A1.user.js",
+  "code_size": 6161,
+  "license": "MIT License",
+  "version": "2025.2.27",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

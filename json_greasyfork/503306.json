@@ -1,0 +1,59 @@
+{
+  "id": 503306,
+  "daily_installs": 0,
+  "total_installs": 293,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-11T12:59:41.000Z",
+  "code_updated_at": "2025-06-28T15:49:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1349800,
+      "name": "ConeF C",
+      "created_at": "2024-08-11T12:58:19.000Z",
+      "url": "https://greasyfork.org/users/1349800-conef-c",
+      "scripts": [
+        {
+          "id": 503306,
+          "daily_installs": 0,
+          "total_installs": 293,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-11T12:59:41.000Z",
+          "code_updated_at": "2025-06-28T15:49:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "优化Bilibili",
+          "description": "优化Bilibili主页、文章和直播页面,增加禁用追踪、日志和 P2P CDN 功能",
+          "url": "https://greasyfork.org/scripts/503306-%E4%BC%98%E5%8C%96bilibili",
+          "code_url": "https://update.greasyfork.org/scripts/503306/%E4%BC%98%E5%8C%96Bilibili.user.js",
+          "code_size": 141878,
+          "license": null,
+          "version": "1.9.9.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "优化Bilibili",
+  "description": "优化Bilibili主页、文章和直播页面,增加禁用追踪、日志和 P2P CDN 功能",
+  "url": "https://greasyfork.org/scripts/503306-%E4%BC%98%E5%8C%96bilibili",
+  "code_url": "https://update.greasyfork.org/scripts/503306/%E4%BC%98%E5%8C%96Bilibili.user.js",
+  "code_size": 141878,
+  "license": null,
+  "version": "1.9.9.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 540219,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T18:19:48.000Z",
+  "code_updated_at": "2025-06-20T18:19:48.000Z",
+  "namespace": "Sam-2503",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486339,
+      "name": "Sam-2503",
+      "created_at": "2025-06-20T18:16:23.000Z",
+      "url": "https://greasyfork.org/users/1486339-sam-2503",
+      "scripts": [
+        {
+          "id": 540219,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-20T18:19:48.000Z",
+          "code_updated_at": "2025-06-20T18:19:48.000Z",
+          "namespace": "Sam-2503",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "USD to INR script",
+          "description": "6/20/2025, 11:46:35 PM",
+          "url": "https://greasyfork.org/scripts/540219-usd-to-inr-script",
+          "code_url": "https://update.greasyfork.org/scripts/540219/USD%20to%20INR%20script.user.js",
+          "code_size": 1819,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "USD to INR script",
+  "description": "6/20/2025, 11:46:35 PM",
+  "url": "https://greasyfork.org/scripts/540219-usd-to-inr-script",
+  "code_url": "https://update.greasyfork.org/scripts/540219/USD%20to%20INR%20script.user.js",
+  "code_size": 1819,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 517039,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-12T16:36:00.000Z",
+    "code_updated_at": "2024-11-13T04:48:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394973,
+        "name": "flaging",
+        "created_at": "2024-11-12T16:06:09.000Z",
+        "url": "https://greasyfork.org/users/1394973-flaging"
+      }
+    ],
+    "name": "arxiv Link Extractor",
+    "description": "在打开axriv.org的某篇论文,自动在新标签页打开对应论文的paper.cool(kimi总结)和alphaxiv.org(论文讨论)内容",
+    "url": "https://greasyfork.org/scripts/517039-arxiv-link-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/517039/arxiv%20Link%20Extractor.user.js",
+    "code_size": 870,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517032,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-12T16:13:38.000Z",
+    "code_updated_at": "2024-11-12T16:27:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394973,
+        "name": "flaging",
+        "created_at": "2024-11-12T16:06:09.000Z",
+        "url": "https://greasyfork.org/users/1394973-flaging"
+      }
+    ],
+    "name": "Weibo GitHub Link Extractor",
+    "description": "在微博正文中提取github.com下的网址，并在页面上显示一个带超链接的按钮，点击能够跳转到对应的网址上去。",
+    "url": "https://greasyfork.org/scripts/517032-weibo-github-link-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/517032/Weibo%20GitHub%20Link%20Extractor.user.js",
+    "code_size": 3036,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

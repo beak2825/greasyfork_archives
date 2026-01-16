@@ -17,7 +17,33 @@
       "id": 1531608,
       "name": "GOTOU kun",
       "created_at": "2025-10-28T13:14:06.000Z",
-      "url": "https://greasyfork.org/users/1531608-gotou-kun"
+      "url": "https://greasyfork.org/users/1531608-gotou-kun",
+      "scripts": [
+        {
+          "id": 554038,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-29T05:21:17.000Z",
+          "code_updated_at": "2025-10-29T17:48:11.000Z",
+          "namespace": "http://tampermonkey.net",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "youtube 譜面作成ボタン追加（mp4download,歌詞検索,譜面作成,メモ帳,Ctrlショートカット単押し左右対応）spa対応",
+          "description": "通常動画はタイトル右端、Shortsは右下固定にMP4/検索/歌詞/タイツベ/YTyping/メモ帳ボタン表示＋左右Ctrl単押しで3秒スキップ（左=戻る/右=進む）＋メモ帳上でも動作",
+          "url": "https://greasyfork.org/scripts/554038-youtube-%E8%AD%9C%E9%9D%A2%E4%BD%9C%E6%88%90%E3%83%9C%E3%82%BF%E3%83%B3%E8%BF%BD%E5%8A%A0-mp4download-%E6%AD%8C%E8%A9%9E%E6%A4%9C%E7%B4%A2-%E8%AD%9C%E9%9D%A2%E4%BD%9C%E6%88%90-%E3%83%A1%E3%83%A2%E5%B8%B3-ctrl%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E5%8D%98%E6%8A%BC%E3%81%97%E5%B7%A6%E5%8F%B3%E5%AF%BE%E5%BF%9C-spa%E5%AF%BE%E5%BF%9C",
+          "code_url": "https://update.greasyfork.org/scripts/554038/youtube%20%E8%AD%9C%E9%9D%A2%E4%BD%9C%E6%88%90%E3%83%9C%E3%82%BF%E3%83%B3%E8%BF%BD%E5%8A%A0%EF%BC%88mp4download%2C%E6%AD%8C%E8%A9%9E%E6%A4%9C%E7%B4%A2%2C%E8%AD%9C%E9%9D%A2%E4%BD%9C%E6%88%90%2C%E3%83%A1%E3%83%A2%E5%B8%B3%2CCtrl%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E5%8D%98%E6%8A%BC%E3%81%97%E5%B7%A6%E5%8F%B3%E5%AF%BE%E5%BF%9C%EF%BC%89spa%E5%AF%BE%E5%BF%9C.user.js",
+          "code_size": 10020,
+          "license": null,
+          "version": "2025-10-30.05",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "youtube 譜面作成ボタン追加（mp4download,歌詞検索,譜面作成,メモ帳,Ctrlショートカット単押し左右対応）spa対応",

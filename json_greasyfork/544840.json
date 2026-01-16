@@ -1,0 +1,33 @@
+{
+  "id": 544840,
+  "daily_installs": 2,
+  "total_installs": 68,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-06T17:52:16.000Z",
+  "code_updated_at": "2025-08-06T17:52:16.000Z",
+  "namespace": "DomopremoScripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1501339,
+      "name": "Domopremo",
+      "created_at": "2025-08-03T22:29:23.000Z",
+      "url": "https://greasyfork.org/users/1501339-domopremo"
+    }
+  ],
+  "name": "YouTube Ad Auto-Skipper by Domopremo",
+  "description": "Skips all YouTube ads instantly and quietly. Smart, fast, and stealthy — optimized by Domopremo.",
+  "url": "https://greasyfork.org/scripts/544840-youtube-ad-auto-skipper-by-domopremo",
+  "code_url": "https://update.greasyfork.org/scripts/544840/YouTube%20Ad%20Auto-Skipper%20by%20Domopremo.user.js",
+  "code_size": 3814,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

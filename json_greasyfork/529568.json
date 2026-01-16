@@ -1,0 +1,34 @@
+{
+  "id": 529568,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-12T05:13:12.000Z",
+  "code_updated_at": "2025-05-14T07:47:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444380,
+      "name": "renjianjike",
+      "created_at": "2025-03-10T17:32:12.000Z",
+      "url": "https://greasyfork.org/users/1444380-renjianjike",
+      "scripts": []
+    }
+  ],
+  "name": "微博黑名单",
+  "description": "根据页面规则隐藏黑名单内用户的评论和博文，并支持右键屏蔽用户功能",
+  "url": "https://greasyfork.org/scripts/529568-%E5%BE%AE%E5%8D%9A%E9%BB%91%E5%90%8D%E5%8D%95",
+  "code_url": "https://update.greasyfork.org/scripts/529568/%E5%BE%AE%E5%8D%9A%E9%BB%91%E5%90%8D%E5%8D%95.user.js",
+  "code_size": 12743,
+  "license": null,
+  "version": "2.12",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

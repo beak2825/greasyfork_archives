@@ -1,0 +1,33 @@
+{
+  "id": 546601,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-21T03:18:23.000Z",
+  "code_updated_at": "2025-08-21T03:18:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1507163,
+      "name": "TianMing Qin",
+      "created_at": "2025-08-21T03:14:48.000Z",
+      "url": "https://greasyfork.org/users/1507163-tianming-qin"
+    }
+  ],
+  "name": "Gemini LaTeX Renderer Fix (Gemini LaTeX 渲染修复脚本)",
+  "description": "Finds unrendered LaTeX on the Gemini website and renders it correctly using the KaTeX library. (查找Gemini网站上未渲染的LaTeX代码，并使用KaTeX库进行正确渲染。)",
+  "url": "https://greasyfork.org/scripts/546601-gemini-latex-renderer-fix-gemini-latex-%E6%B8%B2%E6%9F%93%E4%BF%AE%E5%A4%8D%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/546601/Gemini%20LaTeX%20Renderer%20Fix%20%28Gemini%20LaTeX%20%E6%B8%B2%E6%9F%93%E4%BF%AE%E5%A4%8D%E8%84%9A%E6%9C%AC%29.user.js",
+  "code_size": 4614,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

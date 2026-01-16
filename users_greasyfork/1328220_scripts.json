@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499675,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-04T14:02:59.000Z",
+    "code_updated_at": "2024-07-10T11:04:19.000Z",
+    "namespace": "https://github.com/tariel36/MAL-Unretard-Related-Entries",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1328220,
+        "name": "tariel36",
+        "created_at": "2024-07-04T13:59:06.000Z",
+        "url": "https://greasyfork.org/users/1328220-tariel36"
+      }
+    ],
+    "name": "MAL - Unretard Related Entries",
+    "description": "Reverts retarded changes from 2024-05-24 to related entries back to the sane list.",
+    "url": "https://greasyfork.org/scripts/499675-mal-unretard-related-entries",
+    "code_url": "https://update.greasyfork.org/scripts/499675/MAL%20-%20Unretard%20Related%20Entries.user.js",
+    "code_size": 6913,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

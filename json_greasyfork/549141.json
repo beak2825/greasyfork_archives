@@ -1,0 +1,59 @@
+{
+  "id": 549141,
+  "daily_installs": 1,
+  "total_installs": 154,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-11T12:55:48.000Z",
+  "code_updated_at": "2025-09-12T00:56:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513953,
+      "name": "dexhunter",
+      "created_at": "2025-09-11T12:55:23.000Z",
+      "url": "https://greasyfork.org/users/1513953-dexhunter",
+      "scripts": [
+        {
+          "id": 549141,
+          "daily_installs": 1,
+          "total_installs": 154,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-11T12:55:48.000Z",
+          "code_updated_at": "2025-09-12T00:56:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Taobao Auto Buyer (v2.1 - Refresh Window)",
+          "description": "Automated Taobao flash buying script with scheduled purchasing, price range targeting, aggressive refresh window, automated checkout and order submission. Features dry run mode for safe testing.",
+          "url": "https://greasyfork.org/scripts/549141-taobao-auto-buyer-v2-1-refresh-window",
+          "code_url": "https://update.greasyfork.org/scripts/549141/Taobao%20Auto%20Buyer%20%28v21%20-%20Refresh%20Window%29.user.js",
+          "code_size": 9406,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Taobao Auto Buyer (v2.1 - Refresh Window)",
+  "description": "Automated Taobao flash buying script with scheduled purchasing, price range targeting, aggressive refresh window, automated checkout and order submission. Features dry run mode for safe testing.",
+  "url": "https://greasyfork.org/scripts/549141-taobao-auto-buyer-v2-1-refresh-window",
+  "code_url": "https://update.greasyfork.org/scripts/549141/Taobao%20Auto%20Buyer%20%28v21%20-%20Refresh%20Window%29.user.js",
+  "code_size": 9406,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

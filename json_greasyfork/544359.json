@@ -1,0 +1,33 @@
+{
+  "id": 544359,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-02T02:04:16.000Z",
+  "code_updated_at": "2025-08-02T02:32:26.000Z",
+  "namespace": "https://greasyfork.org/users/your-user-id",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 820296,
+      "name": "TxAgBQ",
+      "created_at": "2021-09-29T18:17:28.000Z",
+      "url": "https://greasyfork.org/users/820296-txagbq"
+    }
+  ],
+  "name": "WME AI UR Assist",
+  "description": "AI UR Assist toggle with UR info display including Description and Discussion fields, Copy Summary and Send to AI buttons with Role and Tone dropdowns near buttons",
+  "url": "https://greasyfork.org/scripts/544359-wme-ai-ur-assist",
+  "code_url": "https://update.greasyfork.org/scripts/544359/WME%20AI%20UR%20Assist.user.js",
+  "code_size": 11503,
+  "license": null,
+  "version": "20250802.38",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

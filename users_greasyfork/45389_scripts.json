@@ -1,0 +1,245 @@
+[
+  {
+    "id": 532567,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T17:22:45.000Z",
+    "code_updated_at": "2025-04-11T17:31:21.000Z",
+    "namespace": "https://greasyfork.org/users/30701-justins83-waze",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      }
+    ],
+    "name": "WazeWrap dev",
+    "description": "A base library for WME script writers (dev version)",
+    "url": "https://greasyfork.org/scripts/532567-wazewrap-dev",
+    "code_url": "https://update.greasyfork.org/scripts/532567/1569502/WazeWrap%20dev.js",
+    "code_size": 1714,
+    "license": null,
+    "version": "2025.03.22.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532551,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T14:42:48.000Z",
+    "code_updated_at": "2025-04-11T20:50:51.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      }
+    ],
+    "name": "WazeWrapLib dev",
+    "description": "WazeWrapLib for development purposes",
+    "url": "https://greasyfork.org/scripts/532551-wazewraplib-dev",
+    "code_url": "https://update.greasyfork.org/scripts/532551/1569557/WazeWrapLib%20dev.js",
+    "code_size": 118991,
+    "license": null,
+    "version": "0.0.1.20250411205051",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516445,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-08T19:23:57.000Z",
+    "code_updated_at": "2024-11-08T19:23:57.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      }
+    ],
+    "name": "Make GM xhr more parallel again",
+    "description": "Workaround for Tampermonkey 5.3.2 parallel GM_xmlhttpRequest issue",
+    "url": "https://greasyfork.org/scripts/516445-make-gm-xhr-more-parallel-again",
+    "code_url": "https://update.greasyfork.org/scripts/516445/1480246/Make%20GM%20xhr%20more%20parallel%20again.js",
+    "code_size": 6189,
+    "license": null,
+    "version": "0.0.1.20241108192357",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509664,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T11:01:51.000Z",
+    "code_updated_at": "2024-10-09T17:13:03.000Z",
+    "namespace": "WazeDev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      },
+      {
+        "id": 166843,
+        "name": "WazeDev",
+        "created_at": "2018-01-15T19:52:14.000Z",
+        "url": "https://greasyfork.org/users/166843-wazedev"
+      }
+    ],
+    "name": "WME Utils - Bootstrap",
+    "description": "Adds a bootstrap function for easier startup of wmeSdk, WazeWrap, and ScriptUpdateMonitor.",
+    "url": "https://greasyfork.org/scripts/509664-wme-utils-bootstrap",
+    "code_url": "https://update.greasyfork.org/scripts/509664/1461898/WME%20Utils%20-%20Bootstrap.js",
+    "code_size": 2964,
+    "license": "GNU GPLv3",
+    "version": "2024.10.09.000",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 506615,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-03T13:32:59.000Z",
+    "code_updated_at": "2024-09-03T13:32:59.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      }
+    ],
+    "name": "esprima-next",
+    "description": "This is a copy of the esprima-next library. The jsNode build has been modified to work with userscripts.",
+    "url": "https://greasyfork.org/scripts/506615-esprima-next",
+    "code_url": "https://update.greasyfork.org/scripts/506615/1440562/esprima-next.js",
+    "code_size": 244935,
+    "license": null,
+    "version": "0.0.1.20240903133259",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 506614,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-03T13:29:57.000Z",
+    "code_updated_at": "2025-03-09T13:13:42.000Z",
+    "namespace": "https://github.com/mapomatic",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      },
+      {
+        "id": 166843,
+        "name": "WazeDev",
+        "created_at": "2018-01-15T19:52:14.000Z",
+        "url": "https://greasyfork.org/users/166843-wazedev"
+      }
+    ],
+    "name": "ESTreeProcessor",
+    "description": "Compiles a string containing Javascript to an ESTree object and/or executes an ESTree object in Javascript",
+    "url": "https://greasyfork.org/scripts/506614-estreeprocessor",
+    "code_url": "https://update.greasyfork.org/scripts/506614/1550456/ESTreeProcessor.js",
+    "code_size": 303480,
+    "license": "GNU GPLv3",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504305,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-19T20:30:41.000Z",
+    "code_updated_at": "2024-09-08T00:32:54.000Z",
+    "namespace": "WazeDev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 45389,
+        "name": "mapomatic",
+        "created_at": "2016-05-24T18:58:37.000Z",
+        "url": "https://greasyfork.org/users/45389-mapomatic"
+      }
+    ],
+    "name": "WME Segment City Highlighter",
+    "description": "Highlighter to help out with cities on WME road segments",
+    "url": "https://greasyfork.org/scripts/504305-wme-segment-city-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/504305/WME%20Segment%20City%20Highlighter.user.js",
+    "code_size": 14163,
+    "license": null,
+    "version": "2024.09.07.002",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

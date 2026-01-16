@@ -1,0 +1,59 @@
+{
+  "id": 544135,
+  "daily_installs": 0,
+  "total_installs": 826,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-30T20:44:24.000Z",
+  "code_updated_at": "2025-07-30T20:44:23.000Z",
+  "namespace": "https://github.com/FrodoCompacto",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499978,
+      "name": "FrodoCompacto",
+      "created_at": "2025-07-30T20:41:32.000Z",
+      "url": "https://greasyfork.org/users/1499978-frodocompacto",
+      "scripts": [
+        {
+          "id": 544135,
+          "daily_installs": 0,
+          "total_installs": 826,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-30T20:44:24.000Z",
+          "code_updated_at": "2025-07-30T20:44:23.000Z",
+          "namespace": "https://github.com/FrodoCompacto",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wplace Overlay",
+          "description": "Permite escolher, mover, redimensionar, fixar e salvar overlay personalizado no wplace.live com slider de opacidade.",
+          "url": "https://greasyfork.org/scripts/544135-wplace-overlay",
+          "code_url": "https://update.greasyfork.org/scripts/544135/Wplace%20Overlay.user.js",
+          "code_size": 11798,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wplace Overlay",
+  "description": "Permite escolher, mover, redimensionar, fixar e salvar overlay personalizado no wplace.live com slider de opacidade.",
+  "url": "https://greasyfork.org/scripts/544135-wplace-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/544135/Wplace%20Overlay.user.js",
+  "code_size": 11798,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

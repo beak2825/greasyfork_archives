@@ -1,0 +1,33 @@
+{
+  "id": 538805,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-08T11:08:05.000Z",
+  "code_updated_at": "2025-06-09T21:10:53.000Z",
+  "namespace": "freebee9@tuta.io",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480627,
+      "name": "freebee9",
+      "created_at": "2025-06-08T10:57:17.000Z",
+      "url": "https://greasyfork.org/users/1480627-freebee9"
+    }
+  ],
+  "name": "Reddit Multi Code Decoder for obfuscated content",
+  "description": "Detects obfuscated text in Reddit comments as: binary and NATO (usually in NSFW); convert it back to human readable string. Implement a text selection popup for Google search.",
+  "url": "https://greasyfork.org/scripts/538805-reddit-multi-code-decoder-for-obfuscated-content",
+  "code_url": "https://update.greasyfork.org/scripts/538805/Reddit%20Multi%20Code%20Decoder%20for%20obfuscated%20content.user.js",
+  "code_size": 19468,
+  "license": "MIT License",
+  "version": "0.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

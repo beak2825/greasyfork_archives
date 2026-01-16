@@ -1,0 +1,33 @@
+{
+  "id": 501621,
+  "daily_installs": 0,
+  "total_installs": 255,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-24T00:27:08.000Z",
+  "code_updated_at": "2024-07-24T00:27:08.000Z",
+  "namespace": "https://freebitco.in/?r=47792358",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1338854,
+      "name": "Bitco.in Feen Queen",
+      "created_at": "2024-07-24T00:07:43.000Z",
+      "url": "https://greasyfork.org/users/1338854-bitco-in-feen-queen"
+    }
+  ],
+  "name": "freebitco.in autoclaim",
+  "description": "autoclaim freebitco.in https://freebitco.in/?r=47792358",
+  "url": "https://greasyfork.org/scripts/501621-freebitco-in-autoclaim",
+  "code_url": "https://update.greasyfork.org/scripts/501621/freebitcoin%20autoclaim.user.js",
+  "code_size": 724,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

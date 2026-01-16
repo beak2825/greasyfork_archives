@@ -1,0 +1,59 @@
+{
+  "id": 531274,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-29T21:58:55.000Z",
+  "code_updated_at": "2025-03-30T12:48:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451799,
+      "name": "sypcerr",
+      "created_at": "2025-03-29T21:55:12.000Z",
+      "url": "https://greasyfork.org/users/1451799-sypcerr",
+      "scripts": [
+        {
+          "id": 531274,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-29T21:58:55.000Z",
+          "code_updated_at": "2025-03-30T12:48:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ExtTube",
+          "description": "Replaces YouTube player with Invidious player and adds a \"Watch on Invidious\" button.",
+          "url": "https://greasyfork.org/scripts/531274-exttube",
+          "code_url": "https://update.greasyfork.org/scripts/531274/ExtTube.user.js",
+          "code_size": 5370,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ExtTube",
+  "description": "Replaces YouTube player with Invidious player and adds a \"Watch on Invidious\" button.",
+  "url": "https://greasyfork.org/scripts/531274-exttube",
+  "code_url": "https://update.greasyfork.org/scripts/531274/ExtTube.user.js",
+  "code_size": 5370,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

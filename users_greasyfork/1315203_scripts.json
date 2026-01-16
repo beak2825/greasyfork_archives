@@ -1,0 +1,68 @@
+[
+  {
+    "id": 524087,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-18T03:01:13.000Z",
+    "code_updated_at": "2025-01-18T03:14:51.000Z",
+    "namespace": "https://greasyfork.org/en/users/1315203-tranlong5252",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1315203,
+        "name": "tranlong5252",
+        "created_at": "2024-06-09T15:49:45.000Z",
+        "url": "https://greasyfork.org/users/1315203-tranlong5252"
+      }
+    ],
+    "name": "WME Cities Overlay DB",
+    "description": "IndexedDB interface for Cities overlay",
+    "url": "https://greasyfork.org/scripts/524087-wme-cities-overlay-db",
+    "code_url": "https://update.greasyfork.org/scripts/524087/WME%20Cities%20Overlay%20DB.user.js",
+    "code_size": 3384,
+    "license": "GNU GPLv3",
+    "version": "2025.01.18.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 497466,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-09T17:19:19.000Z",
+    "code_updated_at": "2025-08-20T01:47:07.000Z",
+    "namespace": "asd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1315203,
+        "name": "tranlong5252",
+        "created_at": "2024-06-09T15:49:45.000Z",
+        "url": "https://greasyfork.org/users/1315203-tranlong5252"
+      }
+    ],
+    "name": "wme-wazevn-traffic-cams-list",
+    "description": "List of traffic cams in VietNam. To be used with WME WazeVN script.",
+    "url": "https://greasyfork.org/scripts/497466-wme-wazevn-traffic-cams-list",
+    "code_url": "https://update.greasyfork.org/scripts/497466/1645301/wme-wazevn-traffic-cams-list.js",
+    "code_size": 207623,
+    "license": "MIT License",
+    "version": "2025.08.20.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

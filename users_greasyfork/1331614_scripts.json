@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500254,
+    "daily_installs": 0,
+    "total_installs": 275,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-11T04:52:30.000Z",
+    "code_updated_at": "2024-07-11T04:56:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1331614,
+        "name": "邢柯",
+        "created_at": "2024-07-11T04:48:44.000Z",
+        "url": "https://greasyfork.org/users/1331614-%E9%82%A2%E6%9F%AF"
+      }
+    ],
+    "name": "网页缩放调节器",
+    "description": "添加按钮以调节网页缩放，点击主按钮后再显示+-按钮，并添加动画效果，按钮为白色半透明，支持触摸拖动，贴边收起",
+    "url": "https://greasyfork.org/scripts/500254-%E7%BD%91%E9%A1%B5%E7%BC%A9%E6%94%BE%E8%B0%83%E8%8A%82%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/500254/%E7%BD%91%E9%A1%B5%E7%BC%A9%E6%94%BE%E8%B0%83%E8%8A%82%E5%99%A8.user.js",
+    "code_size": 8093,
+    "license": null,
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

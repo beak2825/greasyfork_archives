@@ -1,0 +1,34 @@
+{
+  "id": 549185,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-11T20:59:47.000Z",
+  "code_updated_at": "2025-09-11T20:59:47.000Z",
+  "namespace": "https://greasyfork.org/users/783447",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1400957,
+      "name": "idkkm",
+      "created_at": "2024-11-23T00:44:07.000Z",
+      "url": "https://greasyfork.org/users/1400957-idkkm",
+      "scripts": []
+    }
+  ],
+  "name": "fuckhan",
+  "description": "boy kakakakkakakak",
+  "url": "https://greasyfork.org/scripts/549185-han",
+  "code_url": "https://update.greasyfork.org/scripts/549185/fuckhan.user.js",
+  "code_size": 19603,
+  "license": null,
+  "version": "6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

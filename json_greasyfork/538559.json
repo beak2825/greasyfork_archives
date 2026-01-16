@@ -1,0 +1,33 @@
+{
+  "id": 538559,
+  "daily_installs": 0,
+  "total_installs": 91,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-06T10:58:47.000Z",
+  "code_updated_at": "2025-06-06T10:58:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479804,
+      "name": "Salmanova Natavan",
+      "created_at": "2025-06-06T10:57:54.000Z",
+      "url": "https://greasyfork.org/users/1479804-salmanova-natavan"
+    }
+  ],
+  "name": "Tribals.io spawner",
+  "description": "Script to spawn tools, items, and players in Tribals.io game using Tampermonkey.",
+  "url": "https://greasyfork.org/scripts/538559-tribals-io-spawner",
+  "code_url": "https://update.greasyfork.org/scripts/538559/Tribalsio%20spawner.user.js",
+  "code_size": 2421,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

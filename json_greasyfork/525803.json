@@ -1,0 +1,34 @@
+{
+  "id": 525803,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-04T01:11:26.000Z",
+  "code_updated_at": "2025-02-04T03:03:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 836861,
+      "name": "John Neville",
+      "created_at": "2021-11-10T18:28:56.000Z",
+      "url": "https://greasyfork.org/users/836861-john-neville",
+      "scripts": []
+    }
+  ],
+  "name": "Hacker News Archive Link Replacer",
+  "description": "Replace links on Hacker News with archive.today links from a GitHub-hosted mapping and add an icon to the left of the title—if an archive exists, display a green checkbox; otherwise, display a magnifying glass. Both open in new tabs.",
+  "url": "https://greasyfork.org/scripts/525803-hacker-news-archive-link-replacer",
+  "code_url": "https://update.greasyfork.org/scripts/525803/Hacker%20News%20Archive%20Link%20Replacer.user.js",
+  "code_size": 4794,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

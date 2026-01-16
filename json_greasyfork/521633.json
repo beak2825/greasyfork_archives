@@ -1,0 +1,34 @@
+{
+  "id": 521633,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-24T06:30:52.000Z",
+  "code_updated_at": "2024-12-24T06:30:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1414536,
+      "name": "qmsy",
+      "created_at": "2024-12-23T09:42:48.000Z",
+      "url": "https://greasyfork.org/users/1414536-qmsy",
+      "scripts": []
+    }
+  ],
+  "name": "唯品会批量搜索销量",
+  "description": "在魔方罗盘创建批量搜索款号销量",
+  "url": "https://greasyfork.org/scripts/521633-%E5%94%AF%E5%93%81%E4%BC%9A%E6%89%B9%E9%87%8F%E6%90%9C%E7%B4%A2%E9%94%80%E9%87%8F",
+  "code_url": "https://update.greasyfork.org/scripts/521633/%E5%94%AF%E5%93%81%E4%BC%9A%E6%89%B9%E9%87%8F%E6%90%9C%E7%B4%A2%E9%94%80%E9%87%8F.user.js",
+  "code_size": 5062,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

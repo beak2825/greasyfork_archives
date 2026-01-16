@@ -1,0 +1,33 @@
+{
+  "id": 542900,
+  "daily_installs": 1,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-18T08:58:48.000Z",
+  "code_updated_at": "2025-07-18T08:58:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1495811,
+      "name": "Bugcokaka",
+      "created_at": "2025-07-17T15:43:15.000Z",
+      "url": "https://greasyfork.org/users/1495811-bugcokaka"
+    }
+  ],
+  "name": "高德地图POI提取并导出CSV",
+  "description": "在amap.com搜索结果页面添加UI，用于提取商户信息（名称、地址），实时显示数量并可导出为CSV文件。",
+  "url": "https://greasyfork.org/scripts/542900-%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BEpoi%E6%8F%90%E5%8F%96%E5%B9%B6%E5%AF%BC%E5%87%BAcsv",
+  "code_url": "https://update.greasyfork.org/scripts/542900/%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BEPOI%E6%8F%90%E5%8F%96%E5%B9%B6%E5%AF%BC%E5%87%BACSV.user.js",
+  "code_size": 6700,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

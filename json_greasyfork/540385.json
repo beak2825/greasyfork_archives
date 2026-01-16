@@ -1,0 +1,34 @@
+{
+  "id": 540385,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-22T08:49:58.000Z",
+  "code_updated_at": "2025-06-22T09:28:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486958,
+      "name": "ros I",
+      "created_at": "2025-06-22T08:46:52.000Z",
+      "url": "https://greasyfork.org/users/1486958-ros-i",
+      "scripts": []
+    }
+  ],
+  "name": "绕过 orangeSpeedCheck_v3.js 检查",
+  "description": "如题",
+  "url": "https://greasyfork.org/scripts/540385-%E7%BB%95%E8%BF%87-orangespeedcheck-v3-js-%E6%A3%80%E6%9F%A5",
+  "code_url": "https://update.greasyfork.org/scripts/540385/%E7%BB%95%E8%BF%87%20orangeSpeedCheck_v3js%20%E6%A3%80%E6%9F%A5.user.js",
+  "code_size": 2031,
+  "license": null,
+  "version": "0.0.1.20250622092841",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

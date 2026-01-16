@@ -1,0 +1,34 @@
+{
+  "id": 550082,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-19T16:12:21.000Z",
+  "code_updated_at": "2025-09-19T16:12:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1517038,
+      "name": "Robert Steingall",
+      "created_at": "2025-09-19T15:59:35.000Z",
+      "url": "https://greasyfork.org/users/1517038-robert-steingall",
+      "scripts": []
+    }
+  ],
+  "name": "SafeSchools Training Helper",
+  "description": "Skips videos by simulating completion and highlights correct answers in quizzes for SafeSchools (Vector LMS). For use on northwarren-nj.safeschools.com.",
+  "url": "https://greasyfork.org/scripts/550082-safeschools-training-helper",
+  "code_url": "https://update.greasyfork.org/scripts/550082/SafeSchools%20Training%20Helper.user.js",
+  "code_size": 8032,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

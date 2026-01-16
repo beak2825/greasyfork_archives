@@ -1,0 +1,68 @@
+[
+  {
+    "id": 521387,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-21T14:04:18.000Z",
+    "code_updated_at": "2024-12-21T14:04:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357100,
+        "name": "powq powq",
+        "created_at": "2024-08-24T13:39:27.000Z",
+        "url": "https://greasyfork.org/users/1357100-powq-powq"
+      }
+    ],
+    "name": "CordLink (Original)",
+    "description": "Best Client for Bloxdhub",
+    "url": "https://greasyfork.org/scripts/521387-cordlink-original",
+    "code_url": "https://update.greasyfork.org/scripts/521387/CordLink%20%28Original%29.user.js",
+    "code_size": 25179,
+    "license": "Proprietary",
+    "version": "2024-12-01p",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504980,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-24T13:41:05.000Z",
+    "code_updated_at": "2024-08-24T13:41:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357100,
+        "name": "powq powq",
+        "created_at": "2024-08-24T13:39:27.000Z",
+        "url": "https://greasyfork.org/users/1357100-powq-powq"
+      }
+    ],
+    "name": "Moon Client Beta (eine Werbung)",
+    "description": "Adds a button to join a Discord server",
+    "url": "https://greasyfork.org/scripts/504980-moon-client-beta-eine-werbung",
+    "code_url": "https://update.greasyfork.org/scripts/504980/Moon%20Client%20Beta%20%28eine%20Werbung%29.user.js",
+    "code_size": 1993,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

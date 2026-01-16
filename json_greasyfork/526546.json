@@ -1,0 +1,59 @@
+{
+  "id": 526546,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-11T12:07:35.000Z",
+  "code_updated_at": "2025-02-11T12:07:34.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 584817,
+      "name": "水煮鱼",
+      "created_at": "2020-06-11T08:14:21.000Z",
+      "url": "https://greasyfork.org/users/584817-%E6%B0%B4%E7%85%AE%E9%B1%BC",
+      "scripts": [
+        {
+          "id": 526548,
+          "daily_installs": 0,
+          "total_installs": 123,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-11T12:43:37.000Z",
+          "code_updated_at": "2025-02-11T12:46:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "视频 VIP 解析工具",
+          "description": "可以解析爱奇艺、优酷和腾讯视频的vip视频",
+          "url": "https://greasyfork.org/scripts/526548-%E8%A7%86%E9%A2%91-vip-%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/526548/%E8%A7%86%E9%A2%91%20VIP%20%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 5726,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "addjs",
+  "description": "动态加载库",
+  "url": "https://greasyfork.org/scripts/526546-addjs",
+  "code_url": "https://update.greasyfork.org/scripts/526546/1535402/addjs.js",
+  "code_size": 21,
+  "license": null,
+  "version": "0.0.1.20250211120734",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,233 @@
+[
+  {
+    "id": 539967,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T08:01:38.000Z",
+    "code_updated_at": "2025-06-19T08:01:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "网页分享小按钮 ／ Share Button",
+    "description": "在页面右上方添加“分享”按钮，将页面标题和URL复制到剪贴板，并支持下载Internet快捷方式(.url)；Adds a share button to copy page title and URL to clipboard and download .url shortcut",
+    "url": "https://greasyfork.org/scripts/539967-%E7%BD%91%E9%A1%B5%E5%88%86%E4%BA%AB%E5%B0%8F%E6%8C%89%E9%92%AE-share-button",
+    "code_url": "https://update.greasyfork.org/scripts/539967/%E7%BD%91%E9%A1%B5%E5%88%86%E4%BA%AB%E5%B0%8F%E6%8C%89%E9%92%AE%20%EF%BC%8F%20Share%20Button.user.js",
+    "code_size": 5163,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539965,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T07:51:39.000Z",
+    "code_updated_at": "2025-06-25T16:56:01.000Z",
+    "namespace": "https://grok.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "Grok Chat对话记录导出为.md（Markdown）",
+    "description": "将 https://grok.com/chat/* 页面中的聊天记录导出为 .md 文件，使用对话标题命名，固定交替标识 User / Grok 3 发言者身份（奇偶标）",
+    "url": "https://greasyfork.org/scripts/539965-grok-chat%E5%AF%B9%E8%AF%9D%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA%E4%B8%BA-md-markdown",
+    "code_url": "https://update.greasyfork.org/scripts/539965/Grok%20Chat%E5%AF%B9%E8%AF%9D%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA%E4%B8%BAmd%EF%BC%88Markdown%EF%BC%89.user.js",
+    "code_size": 4100,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538922,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-09T13:56:19.000Z",
+    "code_updated_at": "2025-06-09T13:56:19.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1441970-%E5%8D%97%E7%AB%B9",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "搜书小组(404吧)-主页 帖子过滤器【增加九千本绿文标题过滤】",
+    "description": "通过编辑代码管理黑/白名单，并通过Ctrl+Shift+E快捷键或点击右下方按钮显示过滤历史窗口（显示当前页面上屏蔽和保护的帖子列表）",
+    "url": "https://greasyfork.org/scripts/538922-%E6%90%9C%E4%B9%A6%E5%B0%8F%E7%BB%84-404%E5%90%A7-%E4%B8%BB%E9%A1%B5-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8-%E5%A2%9E%E5%8A%A0%E4%B9%9D%E5%8D%83%E6%9C%AC%E7%BB%BF%E6%96%87%E6%A0%87%E9%A2%98%E8%BF%87%E6%BB%A4",
+    "code_url": "https://update.greasyfork.org/scripts/538922/%E6%90%9C%E4%B9%A6%E5%B0%8F%E7%BB%84%28404%E5%90%A7%29-%E4%B8%BB%E9%A1%B5%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8%E3%80%90%E5%A2%9E%E5%8A%A0%E4%B9%9D%E5%8D%83%E6%9C%AC%E7%BB%BF%E6%96%87%E6%A0%87%E9%A2%98%E8%BF%87%E6%BB%A4%E3%80%91.user.js",
+    "code_size": 469265,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533021,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T12:40:25.000Z",
+    "code_updated_at": "2025-04-16T12:40:25.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1441970-%E5%8D%97%E7%AB%B9",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "搜书吧-小说下载区 帖子过滤器",
+    "description": "通过关键词屏蔽相关帖子，支持白名单功能，并通过Ctrl+Shift+Q快捷键或点击右下方按钮显示过滤历史窗口（显示当前页面上屏蔽和保护的帖子列表）",
+    "url": "https://greasyfork.org/scripts/533021-%E6%90%9C%E4%B9%A6%E5%90%A7-%E5%B0%8F%E8%AF%B4%E4%B8%8B%E8%BD%BD%E5%8C%BA-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/533021/%E6%90%9C%E4%B9%A6%E5%90%A7-%E5%B0%8F%E8%AF%B4%E4%B8%8B%E8%BD%BD%E5%8C%BA%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+    "code_size": 463788,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533020,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T12:38:39.000Z",
+    "code_updated_at": "2025-04-16T12:38:38.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1441970-%E5%8D%97%E7%AB%B9",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "搜书吧-主页 帖子过滤器",
+    "description": "通过关键词屏蔽主页帖子，支持白名单功能，并通过Ctrl+Shift+E快捷键或点击右下方按钮显示过滤历史窗口（显示当前页面上屏蔽和保护的帖子列表）",
+    "url": "https://greasyfork.org/scripts/533020-%E6%90%9C%E4%B9%A6%E5%90%A7-%E4%B8%BB%E9%A1%B5-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/533020/%E6%90%9C%E4%B9%A6%E5%90%A7-%E4%B8%BB%E9%A1%B5%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+    "code_size": 463145,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533018,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T12:38:10.000Z",
+    "code_updated_at": "2025-04-16T12:38:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "搜书吧 屏蔽无用回复",
+    "description": "根据自定义的黑名单关键词、关键词与该条回复字数占比等条件屏蔽无用回复；有白名单功能；可点击页面右下方“回复过滤窗口”或使用快捷键显示当前已屏蔽或保护的回复内容。新增：屏蔽纯数字回复及纯字母无分隔符回复。注意：滚动浏览到当前页面底部时会自动加载下一页回复。",
+    "url": "https://greasyfork.org/scripts/533018-%E6%90%9C%E4%B9%A6%E5%90%A7-%E5%B1%8F%E8%94%BD%E6%97%A0%E7%94%A8%E5%9B%9E%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/533018/%E6%90%9C%E4%B9%A6%E5%90%A7%20%E5%B1%8F%E8%94%BD%E6%97%A0%E7%94%A8%E5%9B%9E%E5%A4%8D.user.js",
+    "code_size": 14502,
+    "license": "MIT License",
+    "version": "0.9.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528692,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-04T02:16:14.000Z",
+    "code_updated_at": "2025-05-21T07:55:11.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1441970-%E5%8D%97%E7%AB%B9",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441970,
+        "name": "南竹",
+        "created_at": "2025-03-03T17:26:50.000Z",
+        "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+      }
+    ],
+    "name": "搜书小组(404吧)-主页 帖子过滤器",
+    "description": "通过编辑代码管理黑/白名单，并通过Ctrl+Shift+E快捷键或点击右下方按钮显示过滤历史窗口（显示当前页面上屏蔽和保护的帖子列表）",
+    "url": "https://greasyfork.org/scripts/528692-%E6%90%9C%E4%B9%A6%E5%B0%8F%E7%BB%84-404%E5%90%A7-%E4%B8%BB%E9%A1%B5-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/528692/%E6%90%9C%E4%B9%A6%E5%B0%8F%E7%BB%84%28404%E5%90%A7%29-%E4%B8%BB%E9%A1%B5%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+    "code_size": 16796,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

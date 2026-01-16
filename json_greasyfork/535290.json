@@ -1,0 +1,33 @@
+{
+  "id": 535290,
+  "daily_installs": 1,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T02:49:40.000Z",
+  "code_updated_at": "2025-05-09T08:15:42.000Z",
+  "namespace": "Finickyspider://envato/auto",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1467106,
+      "name": "Gator",
+      "created_at": "2025-05-08T02:11:54.000Z",
+      "url": "https://greasyfork.org/users/1467106-gator"
+    }
+  ],
+  "name": "Envato Elements Quick Downloader",
+  "description": "Automatically selects your configured Envato Elements project and/or collection, triggers “Add & Download,” and closes modals. Defaults to “My Project” & collections off—be sure to configure!",
+  "url": "https://greasyfork.org/scripts/535290-envato-elements-quick-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/535290/Envato%20Elements%20Quick%20Downloader.user.js",
+  "code_size": 9634,
+  "license": "GNU GPLv3",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

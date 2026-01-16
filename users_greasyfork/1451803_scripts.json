@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536774,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-22T01:42:24.000Z",
+    "code_updated_at": "2025-05-31T23:47:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451803,
+        "name": "Piotr Sułkowsko",
+        "created_at": "2025-03-29T22:45:01.000Z",
+        "url": "https://greasyfork.org/users/1451803-piotr-su%C5%82kowsko"
+      }
+    ],
+    "name": "Taskonator_Beta",
+    "description": "Pomocne narzędzia dla Ship Lead KTW1",
+    "url": "https://greasyfork.org/scripts/536774-taskonator-beta",
+    "code_url": "https://update.greasyfork.org/scripts/536774/Taskonator_Beta.user.js",
+    "code_size": 20821,
+    "license": null,
+    "version": "1.5.6",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531276,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T22:48:16.000Z",
+    "code_updated_at": "2025-06-07T06:45:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451803,
+        "name": "Piotr Sułkowsko",
+        "created_at": "2025-03-29T22:45:01.000Z",
+        "url": "https://greasyfork.org/users/1451803-piotr-su%C5%82kowsko"
+      }
+    ],
+    "name": "Taskonator",
+    "description": "Pomocne narzędzia dla Lead",
+    "url": "https://greasyfork.org/scripts/531276-taskonator",
+    "code_url": "https://update.greasyfork.org/scripts/531276/Taskonator.user.js",
+    "code_size": 21603,
+    "license": null,
+    "version": "1.5.7.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

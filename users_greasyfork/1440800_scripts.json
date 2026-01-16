@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528507,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-02T07:07:46.000Z",
+    "code_updated_at": "2025-03-02T07:07:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440800,
+        "name": "EthanGreasyFork",
+        "created_at": "2025-02-28T04:14:36.000Z",
+        "url": "https://greasyfork.org/users/1440800-ethangreasyfork"
+      }
+    ],
+    "name": "Trump Text Styler",
+    "description": "Makes instances of \"trump\" more prominent on webpages",
+    "url": "https://greasyfork.org/scripts/528507-trump-text-styler",
+    "code_url": "https://update.greasyfork.org/scripts/528507/Trump%20Text%20Styler.user.js",
+    "code_size": 4472,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

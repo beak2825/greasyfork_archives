@@ -1,0 +1,233 @@
+[
+  {
+    "id": 545140,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-09T06:28:42.000Z",
+    "code_updated_at": "2025-08-09T06:37:55.000Z",
+    "namespace": "https://greasyfork.org/users/1419751",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "Delete_Ticket",
+    "description": "delete ticket",
+    "url": "https://greasyfork.org/scripts/545140-delete-ticket",
+    "code_url": "https://update.greasyfork.org/scripts/545140/Delete_Ticket.user.js",
+    "code_size": 3933,
+    "license": "AGPLv3.0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538058,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-02T06:40:54.000Z",
+    "code_updated_at": "2025-06-02T07:39:17.000Z",
+    "namespace": "https://greasyfork.org/users/1419751",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "NAT_highlight_ticket_rows",
+    "description": "highlight_ticket_rows",
+    "url": "https://greasyfork.org/scripts/538058-nat-highlight-ticket-rows",
+    "code_url": "https://update.greasyfork.org/scripts/538058/NAT_highlight_ticket_rows.user.js",
+    "code_size": 2802,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530605,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-23T08:52:33.000Z",
+    "code_updated_at": "2025-03-23T08:52:49.000Z",
+    "namespace": "https://clients.netafraz.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "NA_Common_File",
+    "description": "Common objects needed in other modules",
+    "url": "https://greasyfork.org/scripts/530605-na-common-file",
+    "code_url": "https://update.greasyfork.org/scripts/530605/NA_Common_File.user.js",
+    "code_size": 1534,
+    "license": "AGPLv.3",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530603,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-23T08:32:09.000Z",
+    "code_updated_at": "2025-03-23T08:32:41.000Z",
+    "namespace": "https://clients.netafraz.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "Comparison_of_Phones_In_Profile_Page",
+    "description": "This module compares phone numbers and provides the possibility to copy them with just one click.",
+    "url": "https://greasyfork.org/scripts/530603-comparison-of-phones-in-profile-page",
+    "code_url": "https://update.greasyfork.org/scripts/530603/Comparison_of_Phones_In_Profile_Page.user.js",
+    "code_size": 5346,
+    "license": "AGPLv.3",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530167,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-18T09:00:40.000Z",
+    "code_updated_at": "2025-06-15T19:44:39.000Z",
+    "namespace": "https://clients.netafraz.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "Invoice_Page",
+    "description": "Adding some useful features to the invoice page",
+    "url": "https://greasyfork.org/scripts/530167-invoice-page",
+    "code_url": "https://update.greasyfork.org/scripts/530167/Invoice_Page.user.js",
+    "code_size": 6901,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526271,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T10:49:22.000Z",
+    "code_updated_at": "2026-01-08T07:27:12.000Z",
+    "namespace": "https://clients.netafraz.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "Office_Authentication",
+    "description": "This module customizes the authentication system.",
+    "url": "https://greasyfork.org/scripts/526271-office-authentication",
+    "code_url": "https://update.greasyfork.org/scripts/526271/Office_Authentication.user.js",
+    "code_size": 15711,
+    "license": "AGPLv3.0",
+    "version": "1.3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522881,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-05T07:50:12.000Z",
+    "code_updated_at": "2025-03-23T09:51:43.000Z",
+    "namespace": "https://clients.netafraz.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419751,
+        "name": "Farshad Mehryar",
+        "created_at": "2025-01-05T07:37:22.000Z",
+        "url": "https://greasyfork.org/users/1419751-farshad-mehryar"
+      }
+    ],
+    "name": "Service_OR_Domain_ExpireDate",
+    "description": "show expire date in domain|service page",
+    "url": "https://greasyfork.org/scripts/522881-service-or-domain-expiredate",
+    "code_url": "https://update.greasyfork.org/scripts/522881/Service_OR_Domain_ExpireDate.user.js",
+    "code_size": 5227,
+    "license": "AGPLv3.0",
+    "version": "1.1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

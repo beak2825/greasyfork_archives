@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550480,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-23T16:32:21.000Z",
+    "code_updated_at": "2025-09-23T16:32:21.000Z",
+    "namespace": "https://nikk.agency/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1518602,
+        "name": "NiKK agency",
+        "created_at": "2025-09-23T16:24:26.000Z",
+        "url": "https://greasyfork.org/users/1518602-nikk-agency"
+      }
+    ],
+    "name": "Clean Links + Copy (no UTM)",
+    "description": "Автоочистка ссылок от UTM/трекеров и быстрая копия чистого URL (кнопка 🔗 рядом со ссылкой + меню).",
+    "url": "https://greasyfork.org/scripts/550480-clean-links-copy-no-utm",
+    "code_url": "https://update.greasyfork.org/scripts/550480/Clean%20Links%20%2B%20Copy%20%28no%20UTM%29.user.js",
+    "code_size": 5311,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

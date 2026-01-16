@@ -1,0 +1,59 @@
+{
+  "id": 498102,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-16T16:38:07.000Z",
+  "code_updated_at": "2025-03-07T09:47:40.000Z",
+  "namespace": "https://lpla.github.io/",
+  "support_url": "https://github.com/lpla/userscripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1319181,
+      "name": "lpla",
+      "created_at": "2024-06-16T16:30:21.000Z",
+      "url": "https://greasyfork.org/users/1319181-lpla",
+      "scripts": [
+        {
+          "id": 498102,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-16T16:38:07.000Z",
+          "code_updated_at": "2025-03-07T09:47:40.000Z",
+          "namespace": "https://lpla.github.io/",
+          "support_url": "https://github.com/lpla/userscripts/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ITACA MD2 docent.edu.gva.es - Importador de Calificaciones y Observaciones",
+          "description": "Importa calificaciones y observaciones desde un archivo Excel a la plataforma \"mòdul docent 2\" (MD2) de ITACA.",
+          "url": "https://greasyfork.org/scripts/498102-itaca-md2-docent-edu-gva-es-importador-de-calificaciones-y-observaciones",
+          "code_url": "https://update.greasyfork.org/scripts/498102/ITACA%20MD2%20docentedugvaes%20-%20Importador%20de%20Calificaciones%20y%20Observaciones.user.js",
+          "code_size": 18532,
+          "license": null,
+          "version": "0.3.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ITACA MD2 docent.edu.gva.es - Importador de Calificaciones y Observaciones",
+  "description": "Importa calificaciones y observaciones desde un archivo Excel a la plataforma \"mòdul docent 2\" (MD2) de ITACA.",
+  "url": "https://greasyfork.org/scripts/498102-itaca-md2-docent-edu-gva-es-importador-de-calificaciones-y-observaciones",
+  "code_url": "https://update.greasyfork.org/scripts/498102/ITACA%20MD2%20docentedugvaes%20-%20Importador%20de%20Calificaciones%20y%20Observaciones.user.js",
+  "code_size": 18532,
+  "license": null,
+  "version": "0.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

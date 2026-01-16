@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510452,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T14:47:58.000Z",
+    "code_updated_at": "2024-09-27T14:47:58.000Z",
+    "namespace": "https://github.com/schalkburger/website-enhancements",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 961305,
+        "name": "Darkharden",
+        "created_at": "2022-09-19T18:54:35.000Z",
+        "url": "https://greasyfork.org/users/961305-darkharden"
+      }
+    ],
+    "name": "Hacker News Enhanced",
+    "description": "Hacker News Enhanced adds a [l+c] link that opens the link and comments page in new tabs for you in one click.",
+    "url": "https://greasyfork.org/scripts/510452-hacker-news-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/510452/Hacker%20News%20Enhanced.user.js",
+    "code_size": 3473,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

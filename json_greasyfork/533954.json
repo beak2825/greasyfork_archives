@@ -1,0 +1,34 @@
+{
+  "id": 533954,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-25T15:24:50.000Z",
+  "code_updated_at": "2025-05-26T02:57:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1156238,
+      "name": "飞啊子",
+      "created_at": "2023-08-21T12:50:35.000Z",
+      "url": "https://greasyfork.org/users/1156238-%E9%A3%9E%E5%95%8A%E5%AD%90",
+      "scripts": []
+    }
+  ],
+  "name": "启用yj-select",
+  "description": "启用yj-select22",
+  "url": "https://greasyfork.org/scripts/533954-%E5%90%AF%E7%94%A8yj-select",
+  "code_url": "https://update.greasyfork.org/scripts/533954/%E5%90%AF%E7%94%A8yj-select.user.js",
+  "code_size": 1219,
+  "license": "MIT License",
+  "version": "2025-04-33",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

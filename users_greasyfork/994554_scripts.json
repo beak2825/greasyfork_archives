@@ -30,12 +30,12 @@
     "version": "0.1.1",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 553790,
-    "daily_installs": 1,
-    "total_installs": 18,
+    "daily_installs": 2,
+    "total_installs": 20,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -94,6 +94,72 @@
     "code_size": 3580,
     "license": "MIT License",
     "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526531,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-11T08:42:52.000Z",
+    "code_updated_at": "2025-02-11T08:42:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994554,
+        "name": "Richard Tyson",
+        "created_at": "2022-12-08T12:14:50.000Z",
+        "url": "https://greasyfork.org/users/994554-richard-tyson"
+      }
+    ],
+    "name": "Jira Bug Copier",
+    "description": "在Jira Bug清单页面一键复制Jira Bug信息",
+    "url": "https://greasyfork.org/scripts/526531-jira-bug-copier",
+    "code_url": "https://update.greasyfork.org/scripts/526531/Jira%20Bug%20Copier.user.js",
+    "code_size": 5058,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509825,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-23T14:08:45.000Z",
+    "code_updated_at": "2025-03-16T10:54:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994554,
+        "name": "Richard Tyson",
+        "created_at": "2022-12-08T12:14:50.000Z",
+        "url": "https://greasyfork.org/users/994554-richard-tyson"
+      }
+    ],
+    "name": "DuckDuckGo标签页标题修改",
+    "description": "强制将 DuckDuckGo 主页的标签页标题更改为“New Tab”",
+    "url": "https://greasyfork.org/scripts/509825-duckduckgo%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%A0%87%E9%A2%98%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/509825/DuckDuckGo%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%A0%87%E9%A2%98%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 1480,
+    "license": "MIT License",
+    "version": "2.5",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"

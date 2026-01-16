@@ -1,0 +1,34 @@
+{
+  "id": 548721,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-07T16:07:05.000Z",
+  "code_updated_at": "2025-09-07T16:07:05.000Z",
+  "namespace": "https://greasyfork.org/users/1512755",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1512755,
+      "name": "해난구조대",
+      "created_at": "2025-09-07T16:03:17.000Z",
+      "url": "https://greasyfork.org/users/1512755-%ED%95%B4%EB%82%9C%EA%B5%AC%EC%A1%B0%EB%8C%80",
+      "scripts": []
+    }
+  ],
+  "name": "SOOP (숲) - 현재 방송을 보고 있는 스트리머 (FORK)",
+  "description": "이 방송을 보고 있는 스트리머를 보여줍니다 (FORK)",
+  "url": "https://greasyfork.org/scripts/548721-soop-%EC%88%B2-%ED%98%84%EC%9E%AC-%EB%B0%A9%EC%86%A1%EC%9D%84-%EB%B3%B4%EA%B3%A0-%EC%9E%88%EB%8A%94-%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%A8%B8-fork",
+  "code_url": "https://update.greasyfork.org/scripts/548721/SOOP%20%28%EC%88%B2%29%20-%20%ED%98%84%EC%9E%AC%20%EB%B0%A9%EC%86%A1%EC%9D%84%20%EB%B3%B4%EA%B3%A0%20%EC%9E%88%EB%8A%94%20%EC%8A%A4%ED%8A%B8%EB%A6%AC%EB%A8%B8%20%28FORK%29.user.js",
+  "code_size": 579734,
+  "license": "MIT License",
+  "version": "20250801",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

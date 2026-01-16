@@ -1,0 +1,59 @@
+{
+  "id": 540261,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T22:11:33.000Z",
+  "code_updated_at": "2025-06-20T22:11:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486391,
+      "name": "Icky50",
+      "created_at": "2025-06-20T22:05:40.000Z",
+      "url": "https://greasyfork.org/users/1486391-icky50",
+      "scripts": [
+        {
+          "id": 540261,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-20T22:11:33.000Z",
+          "code_updated_at": "2025-06-20T22:11:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FIX-IT Hackclub Userscript",
+          "description": "A useful userscript that declutters the Roblox homepage. I originally created this with the intention of participation in the FIX-IT Hackclub event, but it took me a while to finish it.",
+          "url": "https://greasyfork.org/scripts/540261-fix-it-hackclub-userscript",
+          "code_url": "https://update.greasyfork.org/scripts/540261/FIX-IT%20Hackclub%20Userscript.user.js",
+          "code_size": 4035,
+          "license": "MIT License",
+          "version": "2025-06-20",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FIX-IT Hackclub Userscript",
+  "description": "A useful userscript that declutters the Roblox homepage. I originally created this with the intention of participation in the FIX-IT Hackclub event, but it took me a while to finish it.",
+  "url": "https://greasyfork.org/scripts/540261-fix-it-hackclub-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/540261/FIX-IT%20Hackclub%20Userscript.user.js",
+  "code_size": 4035,
+  "license": "MIT License",
+  "version": "2025-06-20",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

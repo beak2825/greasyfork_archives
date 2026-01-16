@@ -1,0 +1,33 @@
+{
+  "id": 537641,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-29T15:13:32.000Z",
+  "code_updated_at": "2025-06-19T09:22:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Ed Start 4Rec sp.coach-d@web.de",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/537641-ed-start-4rec-sp-coach-d-web-de",
+  "code_url": "https://update.greasyfork.org/scripts/537641/Ed%20Start%204Rec%20spcoach-d%40webde.user.js",
+  "code_size": 56298,
+  "license": null,
+  "version": "7.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

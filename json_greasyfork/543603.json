@@ -1,0 +1,59 @@
+{
+  "id": 543603,
+  "daily_installs": 3,
+  "total_installs": 1416,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-25T11:24:57.000Z",
+  "code_updated_at": "2025-12-16T15:03:54.000Z",
+  "namespace": "https://github.com/cfpwastaken/wplace-overlay",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1498205,
+      "name": "cfpwastaken",
+      "created_at": "2025-07-25T11:20:04.000Z",
+      "url": "https://greasyfork.org/users/1498205-cfpwastaken",
+      "scripts": [
+        {
+          "id": 543603,
+          "daily_installs": 3,
+          "total_installs": 1416,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-25T11:24:57.000Z",
+          "code_updated_at": "2025-12-16T15:03:54.000Z",
+          "namespace": "https://github.com/cfpwastaken/wplace-overlay",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wplace Overlay",
+          "description": "Overlay for Wplace",
+          "url": "https://greasyfork.org/scripts/543603-wplace-overlay",
+          "code_url": "https://update.greasyfork.org/scripts/543603/Wplace%20Overlay.user.js",
+          "code_size": 16399,
+          "license": "ARR",
+          "version": "3.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wplace Overlay",
+  "description": "Overlay for Wplace",
+  "url": "https://greasyfork.org/scripts/543603-wplace-overlay",
+  "code_url": "https://update.greasyfork.org/scripts/543603/Wplace%20Overlay.user.js",
+  "code_size": 16399,
+  "license": "ARR",
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

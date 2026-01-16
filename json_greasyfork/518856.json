@@ -1,0 +1,59 @@
+{
+  "id": 518856,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-25T21:02:54.000Z",
+  "code_updated_at": "2024-11-25T21:02:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1402434,
+      "name": "DimitrovN",
+      "created_at": "2024-11-25T20:58:17.000Z",
+      "url": "https://greasyfork.org/users/1402434-dimitrovn",
+      "scripts": [
+        {
+          "id": 518856,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-25T21:02:54.000Z",
+          "code_updated_at": "2024-11-25T21:02:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Anilist Remove Hearts for Selected Users",
+          "description": "Removes the heart icon for activities by selected users on the Anilist homepage only.",
+          "url": "https://greasyfork.org/scripts/518856-anilist-remove-hearts-for-selected-users",
+          "code_url": "https://update.greasyfork.org/scripts/518856/Anilist%20Remove%20Hearts%20for%20Selected%20Users.user.js",
+          "code_size": 2863,
+          "license": null,
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Anilist Remove Hearts for Selected Users",
+  "description": "Removes the heart icon for activities by selected users on the Anilist homepage only.",
+  "url": "https://greasyfork.org/scripts/518856-anilist-remove-hearts-for-selected-users",
+  "code_url": "https://update.greasyfork.org/scripts/518856/Anilist%20Remove%20Hearts%20for%20Selected%20Users.user.js",
+  "code_size": 2863,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

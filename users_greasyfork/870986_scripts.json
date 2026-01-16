@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509872,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-23T19:23:13.000Z",
+    "code_updated_at": "2024-09-23T19:50:45.000Z",
+    "namespace": "http://www.sumit.co.il/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870986,
+        "name": "Effy Teva",
+        "created_at": "2022-01-30T05:56:19.000Z",
+        "url": "https://greasyfork.org/users/870986-effy-teva"
+      }
+    ],
+    "name": "Set ClickUp RTL",
+    "description": "Sets ClickUp to RTL",
+    "url": "https://greasyfork.org/scripts/509872-set-clickup-rtl",
+    "code_url": "https://update.greasyfork.org/scripts/509872/Set%20ClickUp%20RTL.user.js",
+    "code_size": 3100,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "hr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

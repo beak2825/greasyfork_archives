@@ -1,0 +1,68 @@
+[
+  {
+    "id": 538136,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T02:55:15.000Z",
+    "code_updated_at": "2025-06-03T02:55:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478125,
+        "name": "Giztoztos rqtisot",
+        "created_at": "2025-06-03T02:29:52.000Z",
+        "url": "https://greasyfork.org/users/1478125-giztoztos-rqtisot"
+      }
+    ],
+    "name": "Agar.io: Subir Imagen con Botón de Borde Personalizado",
+    "description": "Añade un botón para subir imagen en Agar.io debajo del selector de colores y permite elegir el borde.",
+    "url": "https://greasyfork.org/scripts/538136-agar-io-subir-imagen-con-bot%C3%B3n-de-borde-personalizado",
+    "code_url": "https://update.greasyfork.org/scripts/538136/Agario%3A%20Subir%20Imagen%20con%20Bot%C3%B3n%20de%20Borde%20Personalizado.user.js",
+    "code_size": 4600,
+    "license": null,
+    "version": "0.2",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538134,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T02:30:15.000Z",
+    "code_updated_at": "2025-06-03T02:30:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478125,
+        "name": "Giztoztos rqtisot",
+        "created_at": "2025-06-03T02:29:52.000Z",
+        "url": "https://greasyfork.org/users/1478125-giztoztos-rqtisot"
+      }
+    ],
+    "name": "Agar.io: Subir Imagen con Botón de Borde Personalizado",
+    "description": "Añade un botón para subir imagen en Agar.io debajo del selector de colores y permite elegir el borde.",
+    "url": "https://greasyfork.org/scripts/538134-agar-io-subir-imagen-con-bot%C3%B3n-de-borde-personalizado",
+    "code_url": "https://update.greasyfork.org/scripts/538134/Agario%3A%20Subir%20Imagen%20con%20Bot%C3%B3n%20de%20Borde%20Personalizado.user.js",
+    "code_size": 4368,
+    "license": null,
+    "version": "0.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

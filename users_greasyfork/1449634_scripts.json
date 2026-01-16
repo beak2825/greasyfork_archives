@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530696,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-24T09:57:40.000Z",
+    "code_updated_at": "2025-03-24T09:57:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1449634,
+        "name": "Whisperss",
+        "created_at": "2025-03-24T09:54:48.000Z",
+        "url": "https://greasyfork.org/users/1449634-whisperss"
+      }
+    ],
+    "name": "WarBot by Whispers",
+    "description": "WarBot Panel",
+    "url": "https://greasyfork.org/scripts/530696-warbot-by-whispers",
+    "code_url": "https://update.greasyfork.org/scripts/530696/WarBot%20by%20Whispers.user.js",
+    "code_size": 7207,
+    "license": null,
+    "version": "1.5",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

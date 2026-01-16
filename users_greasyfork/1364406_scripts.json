@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507294,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T11:23:16.000Z",
+    "code_updated_at": "2024-09-07T11:23:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1364406,
+        "name": "Ahmad Mohi",
+        "created_at": "2024-09-07T11:14:25.000Z",
+        "url": "https://greasyfork.org/users/1364406-ahmad-mohi"
+      }
+    ],
+    "name": "GeForceNOW Smart Refresh Script by Mohi",
+    "description": "Auto-refresh GeForce Now page & notifies the user if free capacity is available. Fully optimized for accurate countdown even in the background, with a full range of settings to customize your experience as you'd like.",
+    "url": "https://greasyfork.org/scripts/507294-geforcenow-smart-refresh-script-by-mohi",
+    "code_url": "https://update.greasyfork.org/scripts/507294/GeForceNOW%20Smart%20Refresh%20Script%20by%20Mohi.user.js",
+    "code_size": 12262,
+    "license": "GNU GPLv3",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

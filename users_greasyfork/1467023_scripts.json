@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535271,
+    "daily_installs": 1,
+    "total_installs": 320,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-07T19:59:13.000Z",
+    "code_updated_at": "2025-10-02T19:58:06.000Z",
+    "namespace": "https://greasyfork.org/users/1467023",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1467023,
+        "name": "DishantX",
+        "created_at": "2025-05-07T19:53:05.000Z",
+        "url": "https://greasyfork.org/users/1467023-dishantx"
+      }
+    ],
+    "name": "Bye Bye YouTube Ads - Stealth Mode (Safer Patch)",
+    "description": "Stealthy ad-skipper for YouTube with safer ad detection and stricter speed-up safeguards to avoid speeding real videos.",
+    "url": "https://greasyfork.org/scripts/535271-bye-bye-youtube-ads-stealth-mode-safer-patch",
+    "code_url": "https://update.greasyfork.org/scripts/535271/Bye%20Bye%20YouTube%20Ads%20-%20Stealth%20Mode%20%28Safer%20Patch%29.user.js",
+    "code_size": 12586,
+    "license": null,
+    "version": "3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 537318,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-26T11:44:06.000Z",
+    "code_updated_at": "2025-05-26T11:44:06.000Z",
+    "namespace": "https://itch.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46078,
+        "name": "Dimava",
+        "created_at": "2016-05-28T22:57:23.000Z",
+        "url": "https://greasyfork.org/users/46078-dimava"
+      }
+    ],
+    "name": "Open in Itch App Floating Button",
+    "description": "Add an extra floating button that hopefully leads to  the same page in Itch App",
+    "url": "https://greasyfork.org/scripts/537318-open-in-itch-app-floating-button",
+    "code_url": "https://update.greasyfork.org/scripts/537318/Open%20in%20Itch%20App%20Floating%20Button.user.js",
+    "code_size": 804,
+    "license": "MIT License",
+    "version": "2025-05-26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536397,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T13:03:31.000Z",
+    "code_updated_at": "2025-05-18T13:03:31.000Z",
+    "namespace": "http://discuss.eroscripts.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46078,
+        "name": "Dimava",
+        "created_at": "2016-05-28T22:57:23.000Z",
+        "url": "https://greasyfork.org/users/46078-dimava"
+      }
+    ],
+    "name": "Eroscript Enhancements",
+    "description": "Make Eroscripts look better!",
+    "url": "https://greasyfork.org/scripts/536397-eroscript-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/536397/Eroscript%20Enhancements.user.js",
+    "code_size": 81828,
+    "license": null,
+    "version": "2025.05.18.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523976,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-16T20:51:39.000Z",
+    "code_updated_at": "2025-01-16T20:53:30.000Z",
+    "namespace": "https://greasyfork.org/users/46078",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 46078,
+        "name": "Dimava",
+        "created_at": "2016-05-28T22:57:23.000Z",
+        "url": "https://greasyfork.org/users/46078-dimava"
+      }
+    ],
+    "name": "Discourse Done Green",
+    "description": "Press Alt+L to make topic green",
+    "url": "https://greasyfork.org/scripts/523976-discourse-done-green",
+    "code_url": "https://update.greasyfork.org/scripts/523976/Discourse%20Done%20Green.user.js",
+    "code_size": 2047,
+    "license": "MIT License",
+    "version": "2025-01-16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

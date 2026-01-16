@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531230,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T09:37:47.000Z",
+    "code_updated_at": "2025-11-25T17:46:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451594,
+        "name": "henyuer lu",
+        "created_at": "2025-03-29T08:40:04.000Z",
+        "url": "https://greasyfork.org/users/1451594-henyuer-lu"
+      }
+    ],
+    "name": "bilibili调速插件",
+    "description": "bilibili调速插件，可以修改速度菜单栏选项，同时支持键盘操作，c键加速0.1x，x键减速0.1x",
+    "url": "https://greasyfork.org/scripts/531230-bilibili%E8%B0%83%E9%80%9F%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/531230/bilibili%E8%B0%83%E9%80%9F%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 4402,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

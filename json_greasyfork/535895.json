@@ -1,0 +1,33 @@
+{
+  "id": 535895,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-13T14:21:02.000Z",
+  "code_updated_at": "2025-05-13T14:21:02.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1443899,
+      "name": "Hdhdhd Hdhdhcc",
+      "created_at": "2025-03-09T10:28:39.000Z",
+      "url": "https://greasyfork.org/users/1443899-hdhdhd-hdhdhcc"
+    }
+  ],
+  "name": "Быстрый раздел || by G.White",
+  "description": "Быстрый раздел",
+  "url": "https://greasyfork.org/scripts/535895-%D0%B1%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9-%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB-by-g-white",
+  "code_url": "https://update.greasyfork.org/scripts/535895/%D0%91%D1%8B%D1%81%D1%82%D1%80%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB%20%7C%7C%20by%20GWhite.user.js",
+  "code_size": 3219,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

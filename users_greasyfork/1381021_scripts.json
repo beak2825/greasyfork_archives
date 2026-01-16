@@ -1,0 +1,68 @@
+[
+  {
+    "id": 515921,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-05T11:06:25.000Z",
+    "code_updated_at": "2024-11-11T00:57:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381021,
+        "name": "Gapple",
+        "created_at": "2024-10-15T01:51:50.000Z",
+        "url": "https://greasyfork.org/users/1381021-gapple"
+      }
+    ],
+    "name": "Phigros in Luogu (Improved)",
+    "description": "Incorporate Phigros difficulty system into Luogu.",
+    "url": "https://greasyfork.org/scripts/515921-phigros-in-luogu-improved",
+    "code_url": "https://update.greasyfork.org/scripts/515921/Phigros%20in%20Luogu%20%28Improved%29.user.js",
+    "code_size": 43677,
+    "license": "MIT License",
+    "version": "1.1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512663,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T01:55:37.000Z",
+    "code_updated_at": "2024-10-15T01:55:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381021,
+        "name": "Gapple",
+        "created_at": "2024-10-15T01:51:50.000Z",
+        "url": "https://greasyfork.org/users/1381021-gapple"
+      }
+    ],
+    "name": "Luogu User Content Block Remover",
+    "description": "This removes the content blocker on Luogu user homepage.",
+    "url": "https://greasyfork.org/scripts/512663-luogu-user-content-block-remover",
+    "code_url": "https://update.greasyfork.org/scripts/512663/Luogu%20User%20Content%20Block%20Remover.user.js",
+    "code_size": 1139,
+    "license": "MIT License",
+    "version": "2024-01-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

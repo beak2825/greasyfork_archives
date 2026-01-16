@@ -1,0 +1,33 @@
+{
+  "id": 530823,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-25T13:54:21.000Z",
+  "code_updated_at": "2025-03-25T16:05:23.000Z",
+  "namespace": "https://www.leitstellenspiel.de/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450160,
+      "name": "KastenKlaus",
+      "created_at": "2025-03-25T13:47:23.000Z",
+      "url": "https://greasyfork.org/users/1450160-kastenklaus"
+    }
+  ],
+  "name": "LSS Einsätze Einklappen",
+  "description": "Erweiterte Version zum Ein-/Ausklappen von Einsätzen",
+  "url": "https://greasyfork.org/scripts/530823-lss-eins%C3%A4tze-einklappen",
+  "code_url": "https://update.greasyfork.org/scripts/530823/LSS%20Eins%C3%A4tze%20Einklappen.user.js",
+  "code_size": 4888,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

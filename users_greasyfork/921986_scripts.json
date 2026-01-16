@@ -1,0 +1,101 @@
+[
+  {
+    "id": 552161,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-10T14:09:47.000Z",
+    "code_updated_at": "2025-10-10T14:09:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921986,
+        "name": "tenhou_tukuai",
+        "created_at": "2022-06-04T12:56:50.000Z",
+        "url": "https://greasyfork.org/users/921986-tenhou-tukuai"
+      }
+    ],
+    "name": "拜仁慕尼黑风格百度首页美化",
+    "description": "为百度首页注入拜仁慕尼黑主题风格，融入队徽、队照元素，保留核心功能",
+    "url": "https://greasyfork.org/scripts/552161-%E6%8B%9C%E4%BB%81%E6%85%95%E5%B0%BC%E9%BB%91%E9%A3%8E%E6%A0%BC%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E7%BE%8E%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/552161/%E6%8B%9C%E4%BB%81%E6%85%95%E5%B0%BC%E9%BB%91%E9%A3%8E%E6%A0%BC%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E7%BE%8E%E5%8C%96.user.js",
+    "code_size": 6164,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551948,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-08T13:46:22.000Z",
+    "code_updated_at": "2025-10-08T14:08:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921986,
+        "name": "tenhou_tukuai",
+        "created_at": "2022-06-04T12:56:50.000Z",
+        "url": "https://greasyfork.org/users/921986-tenhou-tukuai"
+      }
+    ],
+    "name": "百度文言文批量翻译搜索插件",
+    "description": "中文分号分隔输入+搜索后刷新+本地存储+进度显示",
+    "url": "https://greasyfork.org/scripts/551948-%E7%99%BE%E5%BA%A6%E6%96%87%E8%A8%80%E6%96%87%E6%89%B9%E9%87%8F%E7%BF%BB%E8%AF%91%E6%90%9C%E7%B4%A2%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/551948/%E7%99%BE%E5%BA%A6%E6%96%87%E8%A8%80%E6%96%87%E6%89%B9%E9%87%8F%E7%BF%BB%E8%AF%91%E6%90%9C%E7%B4%A2%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 6708,
+    "license": null,
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540508,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T12:36:02.000Z",
+    "code_updated_at": "2025-07-22T07:16:05.000Z",
+    "namespace": "https://greasyfork.org/users/your-id",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921986,
+        "name": "tenhou_tukuai",
+        "created_at": "2022-06-04T12:56:50.000Z",
+        "url": "https://greasyfork.org/users/921986-tenhou-tukuai"
+      }
+    ],
+    "name": "PCOL-ASSIST",
+    "description": "双人手动计分器，移动端虚拟按键",
+    "url": "https://greasyfork.org/scripts/540508-pcol-assist",
+    "code_url": "https://update.greasyfork.org/scripts/540508/PCOL-ASSIST.user.js",
+    "code_size": 16968,
+    "license": null,
+    "version": "7.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

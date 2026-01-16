@@ -1,0 +1,34 @@
+{
+  "id": 531195,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-29T05:16:12.000Z",
+  "code_updated_at": "2025-03-29T05:37:39.000Z",
+  "namespace": "Test Script-2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451102,
+      "name": "Alain Narcisse Newo Soufo",
+      "created_at": "2025-03-28T01:56:59.000Z",
+      "url": "https://greasyfork.org/users/1451102-alain-narcisse-newo-soufo",
+      "scripts": []
+    }
+  ],
+  "name": "My Test Script-2b",
+  "description": "A test script-2b",
+  "url": "https://greasyfork.org/scripts/531195-my-test-script-2b",
+  "code_url": "https://update.greasyfork.org/scripts/531195/My%20Test%20Script-2b.user.js",
+  "code_size": 343,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

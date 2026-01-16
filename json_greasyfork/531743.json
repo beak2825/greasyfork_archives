@@ -1,0 +1,59 @@
+{
+  "id": 531743,
+  "daily_installs": 2,
+  "total_installs": 134,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T16:40:56.000Z",
+  "code_updated_at": "2025-04-07T16:45:40.000Z",
+  "namespace": "https://github.com/Warma10032/",
+  "support_url": "https://github.com/Warma10032/VideoAdGuard/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451181,
+      "name": "Warma10032",
+      "created_at": "2025-03-28T07:33:37.000Z",
+      "url": "https://greasyfork.org/users/1451181-warma10032",
+      "scripts": [
+        {
+          "id": 531743,
+          "daily_installs": 2,
+          "total_installs": 134,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-03T16:40:56.000Z",
+          "code_updated_at": "2025-04-07T16:45:40.000Z",
+          "namespace": "https://github.com/Warma10032/",
+          "support_url": "https://github.com/Warma10032/VideoAdGuard/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站视频植入广告检测器 VideoAdGuard",
+          "description": "基于大语言模型检测B站视频中的植入广告",
+          "url": "https://greasyfork.org/scripts/531743-b%E7%AB%99%E8%A7%86%E9%A2%91%E6%A4%8D%E5%85%A5%E5%B9%BF%E5%91%8A%E6%A3%80%E6%B5%8B%E5%99%A8-videoadguard",
+          "code_url": "https://update.greasyfork.org/scripts/531743/B%E7%AB%99%E8%A7%86%E9%A2%91%E6%A4%8D%E5%85%A5%E5%B9%BF%E5%91%8A%E6%A3%80%E6%B5%8B%E5%99%A8%20VideoAdGuard.user.js",
+          "code_size": 66150,
+          "license": "GPLv2",
+          "version": "1.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站视频植入广告检测器 VideoAdGuard",
+  "description": "基于大语言模型检测B站视频中的植入广告",
+  "url": "https://greasyfork.org/scripts/531743-b%E7%AB%99%E8%A7%86%E9%A2%91%E6%A4%8D%E5%85%A5%E5%B9%BF%E5%91%8A%E6%A3%80%E6%B5%8B%E5%99%A8-videoadguard",
+  "code_url": "https://update.greasyfork.org/scripts/531743/B%E7%AB%99%E8%A7%86%E9%A2%91%E6%A4%8D%E5%85%A5%E5%B9%BF%E5%91%8A%E6%A3%80%E6%B5%8B%E5%99%A8%20VideoAdGuard.user.js",
+  "code_size": 66150,
+  "license": "GPLv2",
+  "version": "1.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

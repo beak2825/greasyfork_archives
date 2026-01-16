@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548905,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-09T04:08:02.000Z",
+    "code_updated_at": "2026-01-14T17:48:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30298,
+        "name": "川",
+        "created_at": "2016-02-14T11:44:11.000Z",
+        "url": "https://greasyfork.org/users/30298-%E5%B7%9D"
+      }
+    ],
+    "name": "导航面板",
+    "description": "多功能导航面板，支持侧边栏/顶栏/底栏显示，可自定义位置、颜色、搜索引擎。支持收藏管理、镜像站点数据共享、拖拽排序等功能。默认关闭，可在油猴菜单中为任意网站启用。",
+    "url": "https://greasyfork.org/scripts/548905-%E5%AF%BC%E8%88%AA%E9%9D%A2%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/548905/%E5%AF%BC%E8%88%AA%E9%9D%A2%E6%9D%BF.user.js",
+    "code_size": 124287,
+    "license": null,
+    "version": "7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 544929,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-07T13:32:35.000Z",
+  "code_updated_at": "2025-08-07T13:32:35.000Z",
+  "namespace": "https://greasyfork.org/users/1502483",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502483,
+      "name": "Robomonkey",
+      "created_at": "2025-08-07T10:32:41.000Z",
+      "url": "https://greasyfork.org/users/1502483-robomonkey",
+      "scripts": [
+        {
+          "id": 544929,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-07T13:32:35.000Z",
+          "code_updated_at": "2025-08-07T13:32:35.000Z",
+          "namespace": "https://greasyfork.org/users/1502483",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Firebase User Data CSV Exporter",
+          "description": "This userscript adds a convenient **Export CSV** button to the Firebase Authentication console, allowing you to quickly export all user data to a CSV file for analysis, backup, or migration purposes.",
+          "url": "https://greasyfork.org/scripts/544929-firebase-user-data-csv-exporter",
+          "code_url": "https://update.greasyfork.org/scripts/544929/Firebase%20User%20Data%20CSV%20Exporter.user.js",
+          "code_size": 4323,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Firebase User Data CSV Exporter",
+  "description": "This userscript adds a convenient **Export CSV** button to the Firebase Authentication console, allowing you to quickly export all user data to a CSV file for analysis, backup, or migration purposes.",
+  "url": "https://greasyfork.org/scripts/544929-firebase-user-data-csv-exporter",
+  "code_url": "https://update.greasyfork.org/scripts/544929/Firebase%20User%20Data%20CSV%20Exporter.user.js",
+  "code_size": 4323,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

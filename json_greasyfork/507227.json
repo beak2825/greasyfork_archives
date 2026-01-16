@@ -1,0 +1,34 @@
+{
+  "id": 507227,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-07T01:47:46.000Z",
+  "code_updated_at": "2024-09-09T06:50:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1364187,
+      "name": "Henry Chang",
+      "created_at": "2024-09-07T00:57:33.000Z",
+      "url": "https://greasyfork.org/users/1364187-henry-chang",
+      "scripts": []
+    }
+  ],
+  "name": "SHEIN FORM AUTO FILL",
+  "description": "Auto-fill script for SHEIN",
+  "url": "https://greasyfork.org/scripts/507227-shein-form-auto-fill",
+  "code_url": "https://update.greasyfork.org/scripts/507227/SHEIN%20FORM%20AUTO%20FILL.user.js",
+  "code_size": 24835,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 522715,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-03T15:40:42.000Z",
+    "code_updated_at": "2025-01-03T16:28:20.000Z",
+    "namespace": "https://github.com/pusi77",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1009579,
+        "name": "pusi77",
+        "created_at": "2023-01-09T19:59:32.000Z",
+        "url": "https://greasyfork.org/users/1009579-pusi77"
+      }
+    ],
+    "name": "ExamTopics Less Marketing",
+    "description": "I don't care if somone bought a subscription, I just want to see the answers",
+    "url": "https://greasyfork.org/scripts/522715-examtopics-less-marketing",
+    "code_url": "https://update.greasyfork.org/scripts/522715/ExamTopics%20Less%20Marketing.user.js",
+    "code_size": 654,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496940,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-03T09:02:35.000Z",
+    "code_updated_at": "2024-06-05T09:42:14.000Z",
+    "namespace": "https://github.com/pusi77",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1009579,
+        "name": "pusi77",
+        "created_at": "2023-01-09T19:59:32.000Z",
+        "url": "https://greasyfork.org/users/1009579-pusi77"
+      }
+    ],
+    "name": "ExamTopics Circle Remover",
+    "description": "Removes all \"correct answers\" (which are never correct) green circle from the page",
+    "url": "https://greasyfork.org/scripts/496940-examtopics-circle-remover",
+    "code_url": "https://update.greasyfork.org/scripts/496940/ExamTopics%20Circle%20Remover.user.js",
+    "code_size": 724,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

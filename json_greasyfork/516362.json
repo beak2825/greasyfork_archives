@@ -1,0 +1,59 @@
+{
+  "id": 516362,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-08T08:24:22.000Z",
+  "code_updated_at": "2024-11-08T08:26:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1392811,
+      "name": "cumberjie",
+      "created_at": "2024-11-08T07:55:15.000Z",
+      "url": "https://greasyfork.org/users/1392811-cumberjie",
+      "scripts": [
+        {
+          "id": 516362,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-08T08:24:22.000Z",
+          "code_updated_at": "2024-11-08T08:26:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Modify Text Selection Background Color 修改复制选中文字的背景色",
+          "description": "修改网页选中复制文字的背景色为指定的十六进制颜色，并通过设置菜单直接选择颜色",
+          "url": "https://greasyfork.org/scripts/516362-modify-text-selection-background-color-%E4%BF%AE%E6%94%B9%E5%A4%8D%E5%88%B6%E9%80%89%E4%B8%AD%E6%96%87%E5%AD%97%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2",
+          "code_url": "https://update.greasyfork.org/scripts/516362/Modify%20Text%20Selection%20Background%20Color%20%E4%BF%AE%E6%94%B9%E5%A4%8D%E5%88%B6%E9%80%89%E4%B8%AD%E6%96%87%E5%AD%97%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2.user.js",
+          "code_size": 2298,
+          "license": "Skyee",
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Modify Text Selection Background Color 修改复制选中文字的背景色",
+  "description": "修改网页选中复制文字的背景色为指定的十六进制颜色，并通过设置菜单直接选择颜色",
+  "url": "https://greasyfork.org/scripts/516362-modify-text-selection-background-color-%E4%BF%AE%E6%94%B9%E5%A4%8D%E5%88%B6%E9%80%89%E4%B8%AD%E6%96%87%E5%AD%97%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2",
+  "code_url": "https://update.greasyfork.org/scripts/516362/Modify%20Text%20Selection%20Background%20Color%20%E4%BF%AE%E6%94%B9%E5%A4%8D%E5%88%B6%E9%80%89%E4%B8%AD%E6%96%87%E5%AD%97%E7%9A%84%E8%83%8C%E6%99%AF%E8%89%B2.user.js",
+  "code_size": 2298,
+  "license": "Skyee",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

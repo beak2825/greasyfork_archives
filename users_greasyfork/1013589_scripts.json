@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538584,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-06T14:00:54.000Z",
+    "code_updated_at": "2025-06-06T14:00:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1013589,
+        "name": "Yipeng Jiang",
+        "created_at": "2023-01-18T01:22:09.000Z",
+        "url": "https://greasyfork.org/users/1013589-yipeng-jiang"
+      }
+    ],
+    "name": "华电在线视频自动化助手 - 增强版",
+    "description": "自动控制华电在线视频播放，支持2倍速播放、自动点击继续按钮、拖动记录（增强自动播放版）",
+    "url": "https://greasyfork.org/scripts/538584-%E5%8D%8E%E7%94%B5%E5%9C%A8%E7%BA%BF%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%A9%E6%89%8B-%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/538584/%E5%8D%8E%E7%94%B5%E5%9C%A8%E7%BA%BF%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E5%8C%96%E5%8A%A9%E6%89%8B%20-%20%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 34507,
+    "license": "MIT License",
+    "version": "1.6.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

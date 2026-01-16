@@ -1,0 +1,34 @@
+{
+  "id": 545044,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-08T11:50:24.000Z",
+  "code_updated_at": "2025-08-08T11:50:24.000Z",
+  "namespace": "https://greasyfork.org/users/385753",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 385753,
+      "name": "scri P",
+      "created_at": "2019-10-10T18:38:37.000Z",
+      "url": "https://greasyfork.org/users/385753-scri-p",
+      "scripts": []
+    }
+  ],
+  "name": "Delete archive.org blur",
+  "description": "Remove \"Content may be inappropriate\" in archive.org",
+  "url": "https://greasyfork.org/scripts/545044-delete-archive-org-blur",
+  "code_url": "https://update.greasyfork.org/scripts/545044/Delete%20archiveorg%20blur.user.js",
+  "code_size": 1019,
+  "license": null,
+  "version": "0.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

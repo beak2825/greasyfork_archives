@@ -1,0 +1,59 @@
+{
+  "id": 501120,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-19T01:54:40.000Z",
+  "code_updated_at": "2024-07-19T01:54:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1335127,
+      "name": "xflz",
+      "created_at": "2024-07-17T08:25:59.000Z",
+      "url": "https://greasyfork.org/users/1335127-xflz",
+      "scripts": [
+        {
+          "id": 501120,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-19T01:54:40.000Z",
+          "code_updated_at": "2024-07-19T01:54:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "简上羽毛球场地自动检测空场插件",
+          "description": "开发者泡泡",
+          "url": "https://greasyfork.org/scripts/501120-%E7%AE%80%E4%B8%8A%E7%BE%BD%E6%AF%9B%E7%90%83%E5%9C%BA%E5%9C%B0%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B%E7%A9%BA%E5%9C%BA%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/501120/%E7%AE%80%E4%B8%8A%E7%BE%BD%E6%AF%9B%E7%90%83%E5%9C%BA%E5%9C%B0%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B%E7%A9%BA%E5%9C%BA%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 9760,
+          "license": "无",
+          "version": "1.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "简上羽毛球场地自动检测空场插件",
+  "description": "开发者泡泡",
+  "url": "https://greasyfork.org/scripts/501120-%E7%AE%80%E4%B8%8A%E7%BE%BD%E6%AF%9B%E7%90%83%E5%9C%BA%E5%9C%B0%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B%E7%A9%BA%E5%9C%BA%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/501120/%E7%AE%80%E4%B8%8A%E7%BE%BD%E6%AF%9B%E7%90%83%E5%9C%BA%E5%9C%B0%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B%E7%A9%BA%E5%9C%BA%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 9760,
+  "license": "无",
+  "version": "1.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 539429,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-14T21:17:50.000Z",
+  "code_updated_at": "2025-06-14T21:17:50.000Z",
+  "namespace": "https://github.com/DanielZenFlow",
+  "support_url": "https://github.com/DanielZenFlow/Weibo-Blacklist-Enhanced-Lite/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483810,
+      "name": "DanielZenFlow",
+      "created_at": "2025-06-14T21:09:43.000Z",
+      "url": "https://greasyfork.org/users/1483810-danielzenflow",
+      "scripts": [
+        {
+          "id": 539429,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-14T21:17:50.000Z",
+          "code_updated_at": "2025-06-14T21:17:50.000Z",
+          "namespace": "https://github.com/DanielZenFlow",
+          "support_url": "https://github.com/DanielZenFlow/Weibo-Blacklist-Enhanced-Lite/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Weibo Blacklist Enhanced Lite | 微博黑名单增强工具",
+          "description": "轻量版：专注于黑名单功能的微博增强工具。全接口劫持并隐藏黑名单用户所有言论与转发；自动同步黑名单；支持增量更新。",
+          "url": "https://greasyfork.org/scripts/539429-weibo-blacklist-enhanced-lite-%E5%BE%AE%E5%8D%9A%E9%BB%91%E5%90%8D%E5%8D%95%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/539429/Weibo%20Blacklist%20Enhanced%20Lite%20%7C%20%E5%BE%AE%E5%8D%9A%E9%BB%91%E5%90%8D%E5%8D%95%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 23847,
+          "license": "MIT License",
+          "version": "1.0.0-lite",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Weibo Blacklist Enhanced Lite | 微博黑名单增强工具",
+  "description": "轻量版：专注于黑名单功能的微博增强工具。全接口劫持并隐藏黑名单用户所有言论与转发；自动同步黑名单；支持增量更新。",
+  "url": "https://greasyfork.org/scripts/539429-weibo-blacklist-enhanced-lite-%E5%BE%AE%E5%8D%9A%E9%BB%91%E5%90%8D%E5%8D%95%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/539429/Weibo%20Blacklist%20Enhanced%20Lite%20%7C%20%E5%BE%AE%E5%8D%9A%E9%BB%91%E5%90%8D%E5%8D%95%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 23847,
+  "license": "MIT License",
+  "version": "1.0.0-lite",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

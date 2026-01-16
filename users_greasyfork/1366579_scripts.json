@@ -1,0 +1,233 @@
+[
+  {
+    "id": 542477,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-13T17:56:18.000Z",
+    "code_updated_at": "2025-07-13T18:42:51.000Z",
+    "namespace": "https://github.com/JS55CT/",
+    "support_url": null,
+    "contribution_url": "https://github.com/WazeDev/Thank-The-Authors",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "wmeGisLBBOX",
+    "description": "Determines which geographical divisions are in a Viewport intersect with the given BBOX.",
+    "url": "https://greasyfork.org/scripts/542477-wmegislbbox",
+    "code_url": "https://update.greasyfork.org/scripts/542477/1688297/wmeGisLBBOX.js",
+    "code_size": 35604,
+    "license": "MIT License",
+    "version": "2026.07.13.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540764,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T18:26:02.000Z",
+    "code_updated_at": "2025-06-30T22:25:52.000Z",
+    "namespace": "https://github.com/JS55CT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "WME GeoFile",
+    "description": "WME GeoFile is a File Importer that allows you to import various geometry files (supported formats: GeoJSON, KML, WKT, GML, GPX, OSM, shapefiles(SHP,SHX,DBF).ZIP) into the Waze Map Editor (WME).",
+    "url": "https://greasyfork.org/scripts/540764-wme-geofile",
+    "code_url": "https://update.greasyfork.org/scripts/540764/WME%20GeoFile.user.js",
+    "code_size": 146106,
+    "license": "Waze Development and Editing Community License",
+    "version": "2025.06.30.00",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527113,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T16:42:02.000Z",
+    "code_updated_at": "2025-02-16T19:07:02.000Z",
+    "namespace": "https://github.com/JS55CT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "GeoKMZer",
+    "description": "geoKMZer is a JavaScript library designed to convert KMZ into KML files, use with GeoKMLer to convert to GeoJSON.",
+    "url": "https://greasyfork.org/scripts/527113-geokmzer",
+    "code_url": "https://update.greasyfork.org/scripts/527113/1538395/GeoKMZer.js",
+    "code_size": 9195,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526996,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-15T14:17:56.000Z",
+    "code_updated_at": "2025-02-15T14:18:42.000Z",
+    "namespace": "https://github.com/JS55CT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "GeoSHPer",
+    "description": "GeoSHPer is a JavaScript library for converting shapefile data into GeoJSON. It reads ZIP archives containing .shp, .dbf, and .prj files, parses geographic features and attributes, and supports coordinate transformation using Proj4js. The result is a GeoJSON FeatureCollection, enabling easy integration with web mapping libraries.",
+    "url": "https://greasyfork.org/scripts/526996-geoshper",
+    "code_url": "https://update.greasyfork.org/scripts/526996/1614265/GeoSHPer.js",
+    "code_size": 34274,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526229,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-08T00:34:38.000Z",
+    "code_updated_at": "2025-02-15T14:44:22.000Z",
+    "namespace": "https://github.com/JS55CT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "GeoGMLer",
+    "description": "GeoGMLer is a JavaScript library for converting GML data into GeoJSON. It translates FeatureMembers with Points, LineStrings, and Polygons, handling coordinates via gml:coordinates and gml:posList. Supports multi-geometries to ensure conversion to GeoJSON's FeatureCollection.",
+    "url": "https://greasyfork.org/scripts/526229-geogmler",
+    "code_url": "https://update.greasyfork.org/scripts/526229/1537672/GeoGMLer.js",
+    "code_size": 25488,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 524747,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-24T17:48:32.000Z",
+    "code_updated_at": "2025-05-31T04:31:41.000Z",
+    "namespace": "https://github.com/JS55CT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "GeoKMLer",
+    "description": "geoKMLer is a JavaScript library designed to convert KML data into GeoJSON format efficiently. It supports conversion of Placemarks containing Point, LineString, Polygon, and MultiGeometry elements.",
+    "url": "https://greasyfork.org/scripts/524747-geokmler",
+    "code_url": "https://update.greasyfork.org/scripts/524747/1598820/GeoKMLer.js",
+    "code_size": 14087,
+    "license": "MIT License",
+    "version": "2.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523870,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-15T18:42:08.000Z",
+    "code_updated_at": "2025-06-25T22:29:03.000Z",
+    "namespace": "https://github.com/JS55CT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366579,
+        "name": "JS55CT",
+        "created_at": "2024-09-12T13:17:00.000Z",
+        "url": "https://greasyfork.org/users/1366579-js55ct"
+      }
+    ],
+    "name": "GeoGPXer",
+    "description": "GeoGPXer is a JavaScript library designed to convert GPX data into GeoJSON format efficiently. It supports the conversion of waypoints, tracks, and routes, with additional handling for GPX extensions.",
+    "url": "https://greasyfork.org/scripts/523870-geogpxer",
+    "code_url": "https://update.greasyfork.org/scripts/523870/1614123/GeoGPXer.js",
+    "code_size": 8688,
+    "license": "GNU General Public License v3.0",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 547726,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-29T13:09:16.000Z",
+    "code_updated_at": "2025-08-29T13:09:16.000Z",
+    "namespace": "vm-youtube-quick-feedback",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471242,
+        "name": "bingule",
+        "created_at": "2025-05-17T12:53:05.000Z",
+        "url": "https://greasyfork.org/users/1471242-bingule"
+      }
+    ],
+    "name": "Youtube - Easy \"Not interested\" recommended videos (on hover)",
+    "description": "Easily click \"Not interested\" on Youtube homepage recommended videos by hovering - CTRL for \"Not interested\", ALT for \"Don't recommend channel\" and SHIFT+CTRL for \"Not interested because already watched\"",
+    "url": "https://greasyfork.org/scripts/547726-youtube-easy-not-interested-recommended-videos-on-hover",
+    "code_url": "https://update.greasyfork.org/scripts/547726/Youtube%20-%20Easy%20%22Not%20interested%22%20recommended%20videos%20%28on%20hover%29.user.js",
+    "code_size": 10550,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536303,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T13:09:50.000Z",
+    "code_updated_at": "2025-06-19T10:29:10.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471242,
+        "name": "bingule",
+        "created_at": "2025-05-17T12:53:05.000Z",
+        "url": "https://greasyfork.org/users/1471242-bingule"
+      }
+    ],
+    "name": "T3.chat  -  Autofocus message input",
+    "description": "Automatically focuses the message input field when you start writing or pasting.",
+    "url": "https://greasyfork.org/scripts/536303-t3-chat-autofocus-message-input",
+    "code_url": "https://update.greasyfork.org/scripts/536303/T3chat%20%20-%20%20Autofocus%20message%20input.user.js",
+    "code_size": 4357,
+    "license": "MIT License",
+    "version": "2025-05-19_12:27",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

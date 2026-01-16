@@ -1,0 +1,68 @@
+[
+  {
+    "id": 540949,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T15:40:44.000Z",
+    "code_updated_at": "2025-07-03T14:49:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 878248,
+        "name": "松叶萧落",
+        "created_at": "2022-02-19T10:49:56.000Z",
+        "url": "https://greasyfork.org/users/878248-%E6%9D%BE%E5%8F%B6%E8%90%A7%E8%90%BD"
+      }
+    ],
+    "name": "学术科研网页辅助工具",
+    "description": "一款",
+    "url": "https://greasyfork.org/scripts/540949-%E5%AD%A6%E6%9C%AF%E7%A7%91%E7%A0%94%E7%BD%91%E9%A1%B5%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/540949/%E5%AD%A6%E6%9C%AF%E7%A7%91%E7%A0%94%E7%BD%91%E9%A1%B5%E8%BE%85%E5%8A%A9%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 31670,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529155,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-08T04:01:11.000Z",
+    "code_updated_at": "2025-03-08T04:01:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 878248,
+        "name": "松叶萧落",
+        "created_at": "2022-02-19T10:49:56.000Z",
+        "url": "https://greasyfork.org/users/878248-%E6%9D%BE%E5%8F%B6%E8%90%A7%E8%90%BD"
+      }
+    ],
+    "name": "91微信编辑器",
+    "description": "跨维度打击广告元素，实现零帧渲染级清除",
+    "url": "https://greasyfork.org/scripts/529155-91%E5%BE%AE%E4%BF%A1%E7%BC%96%E8%BE%91%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/529155/91%E5%BE%AE%E4%BF%A1%E7%BC%96%E8%BE%91%E5%99%A8.user.js",
+    "code_size": 6202,
+    "license": "MIT License",
+    "version": "3.14",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

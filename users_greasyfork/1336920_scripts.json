@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501235,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-20T04:51:01.000Z",
+    "code_updated_at": "2024-07-20T04:51:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1336920,
+        "name": "AllenChiangCN",
+        "created_at": "2024-07-20T04:47:41.000Z",
+        "url": "https://greasyfork.org/users/1336920-allenchiangcn"
+      }
+    ],
+    "name": "MapLibreApiContentShow",
+    "description": "显示MapLibre安卓api文档内容",
+    "url": "https://greasyfork.org/scripts/501235-maplibreapicontentshow",
+    "code_url": "https://update.greasyfork.org/scripts/501235/MapLibreApiContentShow.user.js",
+    "code_size": 1105,
+    "license": "MIT License",
+    "version": "2024-07-19",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

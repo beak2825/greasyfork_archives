@@ -1,0 +1,33 @@
+{
+  "id": 522746,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-04T01:38:40.000Z",
+  "code_updated_at": "2025-01-04T01:38:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1419254,
+      "name": "Molly Harris",
+      "created_at": "2025-01-04T01:29:54.000Z",
+      "url": "https://greasyfork.org/users/1419254-molly-harris"
+    }
+  ],
+  "name": "YouTube Culture Link Detector",
+  "description": "Adds Kagi search link when *Culture channel links are found",
+  "url": "https://greasyfork.org/scripts/522746-youtube-culture-link-detector",
+  "code_url": "https://update.greasyfork.org/scripts/522746/YouTube%20Culture%20Link%20Detector.user.js",
+  "code_size": 2234,
+  "license": "CC BY-NC-SA 4.0",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 540815,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-26T03:56:03.000Z",
+  "code_updated_at": "2025-06-26T03:56:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453124,
+      "name": "PG122",
+      "created_at": "2025-04-02T07:16:06.000Z",
+      "url": "https://greasyfork.org/users/1453124-pg122",
+      "scripts": []
+    }
+  ],
+  "name": "抖音采集评论",
+  "description": "自动采集上传抖音评论信息到后台",
+  "url": "https://greasyfork.org/scripts/540815-%E6%8A%96%E9%9F%B3%E9%87%87%E9%9B%86%E8%AF%84%E8%AE%BA",
+  "code_url": "https://update.greasyfork.org/scripts/540815/%E6%8A%96%E9%9F%B3%E9%87%87%E9%9B%86%E8%AF%84%E8%AE%BA.user.js",
+  "code_size": 4974,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 518998,
+    "daily_installs": 2,
+    "total_installs": 637,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-27T03:26:18.000Z",
+    "code_updated_at": "2025-02-06T15:00:15.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401839,
+        "name": "DuoSolverGrinder",
+        "created_at": "2024-11-24T15:34:15.000Z",
+        "url": "https://greasyfork.org/users/1401839-duosolvergrinder"
+      }
+    ],
+    "name": "DuoSolver",
+    "description": "It solves practice lessons automatically or manually, to increase xp at different speed use DuoSolverGrinder tool (https://duosolver.is-great.net).",
+    "url": "https://greasyfork.org/scripts/518998-duosolver",
+    "code_url": "https://update.greasyfork.org/scripts/518998/DuoSolver.user.js",
+    "code_size": 19722,
+    "license": null,
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518743,
+    "daily_installs": 1,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T01:50:09.000Z",
+    "code_updated_at": "2024-11-25T04:29:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401839,
+        "name": "DuoSolverGrinder",
+        "created_at": "2024-11-24T15:34:15.000Z",
+        "url": "https://greasyfork.org/users/1401839-duosolvergrinder"
+      }
+    ],
+    "name": "Duolingo Switch Windows",
+    "description": "It switches automatically between learn and league windows with the goal to be online for other users, and they think",
+    "url": "https://greasyfork.org/scripts/518743-duolingo-switch-windows",
+    "code_url": "https://update.greasyfork.org/scripts/518743/Duolingo%20Switch%20Windows.user.js",
+    "code_size": 4026,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

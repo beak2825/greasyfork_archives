@@ -1,0 +1,134 @@
+[
+  {
+    "id": 546311,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-18T16:23:12.000Z",
+    "code_updated_at": "2025-10-04T11:52:37.000Z",
+    "namespace": "zed.city.gymtracker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502578,
+        "name": "MathewPerry",
+        "created_at": "2025-08-07T16:21:54.000Z",
+        "url": "https://greasyfork.org/users/1502578-mathewperry"
+      }
+    ],
+    "name": "Zed Gym Usage Tracker (48h)",
+    "description": "Counts gym uses by stat within a 48h window. Stops on expiry; requires {Restart}",
+    "url": "https://greasyfork.org/scripts/546311-zed-gym-usage-tracker-48h",
+    "code_url": "https://update.greasyfork.org/scripts/546311/Zed%20Gym%20Usage%20Tracker%20%2848h%29.user.js",
+    "code_size": 12939,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545743,
+    "daily_installs": 1,
+    "total_installs": 58,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-13T21:53:19.000Z",
+    "code_updated_at": "2025-11-16T20:06:26.000Z",
+    "namespace": "zed.city.aio",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502578,
+        "name": "MathewPerry",
+        "created_at": "2025-08-07T16:21:54.000Z",
+        "url": "https://greasyfork.org/users/1502578-mathewperry"
+      }
+    ],
+    "name": "Zed.City – QOL Update By MathewPerry",
+    "description": "Could I *BE* any more scripts!? (Market Favs, Profit Helper, Inventory Net Worth, Timer Bar, Exploration Data, Auto fill for selling, Store Remaining Amount + Rad ROI Tracker + Durability converter + Market Buy Tracker + Gym Tracker). Each feature can be toggled from the cog in the header.",
+    "url": "https://greasyfork.org/scripts/545743-zed-city-qol-update-by-mathewperry",
+    "code_url": "https://update.greasyfork.org/scripts/545743/ZedCity%20%E2%80%93%20QOL%20Update%20By%20MathewPerry.user.js",
+    "code_size": 155224,
+    "license": "MIT License",
+    "version": "1.7.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545588,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T16:33:57.000Z",
+    "code_updated_at": "2025-08-12T16:33:57.000Z",
+    "namespace": "zed.city.aio",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502578,
+        "name": "MathewPerry",
+        "created_at": "2025-08-07T16:21:54.000Z",
+        "url": "https://greasyfork.org/users/1502578-mathewperry"
+      }
+    ],
+    "name": "Zed.City – QOL Update (Market Favs + Profit Helper/Networth + Timer Bar) - BETA TEST",
+    "description": "One Script to rule them all, and in the Zombie infested wasteland bind them.",
+    "url": "https://greasyfork.org/scripts/545588-zed-city-qol-update-market-favs-profit-helper-networth-timer-bar-beta-test",
+    "code_url": "https://update.greasyfork.org/scripts/545588/ZedCity%20%E2%80%93%20QOL%20Update%20%28Market%20Favs%20%2B%20Profit%20HelperNetworth%20%2B%20Timer%20Bar%29%20-%20BETA%20TEST.user.js",
+    "code_size": 80105,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545075,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T16:57:50.000Z",
+    "code_updated_at": "2025-08-09T09:56:23.000Z",
+    "namespace": "zed.market.favs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502578,
+        "name": "MathewPerry",
+        "created_at": "2025-08-07T16:21:54.000Z",
+        "url": "https://greasyfork.org/users/1502578-mathewperry"
+      }
+    ],
+    "name": "market Favs",
+    "description": "Pin your favorite items so you can see the price history on any page, includes live updates without visiting the market",
+    "url": "https://greasyfork.org/scripts/545075-market-favs",
+    "code_url": "https://update.greasyfork.org/scripts/545075/market%20Favs.user.js",
+    "code_size": 22584,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,200 @@
+[
+  {
+    "id": 539728,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-17T09:52:14.000Z",
+    "code_updated_at": "2025-07-19T14:51:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694822,
+        "name": "hhzxxx",
+        "created_at": "2020-10-14T02:27:33.000Z",
+        "url": "https://greasyfork.org/users/694822-hhzxxx"
+      }
+    ],
+    "name": "POE1 trade 繁体",
+    "description": "POE1 交易网站繁体以及搜索优化 - 放课后",
+    "url": "https://greasyfork.org/scripts/539728-poe1-trade-%E7%B9%81%E4%BD%93",
+    "code_url": "https://update.greasyfork.org/scripts/539728/POE1%20trade%20%E7%B9%81%E4%BD%93.user.js",
+    "code_size": 2160710,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533886,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T03:07:27.000Z",
+    "code_updated_at": "2025-04-25T03:07:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694822,
+        "name": "hhzxxx",
+        "created_at": "2020-10-14T02:27:33.000Z",
+        "url": "https://greasyfork.org/users/694822-hhzxxx"
+      }
+    ],
+    "name": "Kook Auto Kick",
+    "description": "通过按钮触发踢出七天未活跃成员",
+    "url": "https://greasyfork.org/scripts/533886-kook-auto-kick",
+    "code_url": "https://update.greasyfork.org/scripts/533886/Kook%20Auto%20Kick.user.js",
+    "code_size": 3876,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523118,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-07T12:14:16.000Z",
+    "code_updated_at": "2025-01-07T12:14:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694822,
+        "name": "hhzxxx",
+        "created_at": "2020-10-14T02:27:33.000Z",
+        "url": "https://greasyfork.org/users/694822-hhzxxx"
+      }
+    ],
+    "name": "qq群管理 ef",
+    "description": "1.0",
+    "url": "https://greasyfork.org/scripts/523118-qq%E7%BE%A4%E7%AE%A1%E7%90%86-ef",
+    "code_url": "https://update.greasyfork.org/scripts/523118/qq%E7%BE%A4%E7%AE%A1%E7%90%86%20ef.user.js",
+    "code_size": 48537,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522117,
+    "daily_installs": 1,
+    "total_installs": 648,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-28T15:36:56.000Z",
+    "code_updated_at": "2024-12-28T15:36:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694822,
+        "name": "hhzxxx",
+        "created_at": "2020-10-14T02:27:33.000Z",
+        "url": "https://greasyfork.org/users/694822-hhzxxx"
+      }
+    ],
+    "name": "易刷cookie登陆",
+    "description": "易刷cookie登陆 - 放课后  (国际服 台服)",
+    "url": "https://greasyfork.org/scripts/522117-%E6%98%93%E5%88%B7cookie%E7%99%BB%E9%99%86",
+    "code_url": "https://update.greasyfork.org/scripts/522117/%E6%98%93%E5%88%B7cookie%E7%99%BB%E9%99%86.user.js",
+    "code_size": 5243,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515563,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-03T10:57:36.000Z",
+    "code_updated_at": "2024-11-03T13:42:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694822,
+        "name": "hhzxxx",
+        "created_at": "2020-10-14T02:27:33.000Z",
+        "url": "https://greasyfork.org/users/694822-hhzxxx"
+      }
+    ],
+    "name": "网大复制",
+    "description": "网大复制1",
+    "url": "https://greasyfork.org/scripts/515563-%E7%BD%91%E5%A4%A7%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/515563/%E7%BD%91%E5%A4%A7%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 2273,
+    "license": "MIT License",
+    "version": "2024-09-29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 510143,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-09-25T15:22:27.000Z",
+    "code_updated_at": "2024-09-25T15:22:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 694822,
+        "name": "hhzxxx",
+        "created_at": "2020-10-14T02:27:33.000Z",
+        "url": "https://greasyfork.org/users/694822-hhzxxx"
+      }
+    ],
+    "name": "易刷-pob物品对比",
+    "description": "易刷-pob物品对比_1",
+    "url": "https://greasyfork.org/scripts/510143-%E6%98%93%E5%88%B7-pob%E7%89%A9%E5%93%81%E5%AF%B9%E6%AF%94",
+    "code_url": "https://update.greasyfork.org/scripts/510143/%E6%98%93%E5%88%B7-pob%E7%89%A9%E5%93%81%E5%AF%B9%E6%AF%94.user.js",
+    "code_size": 5036,
+    "license": "MIT License",
+    "version": "2024-09-25",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

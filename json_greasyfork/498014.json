@@ -1,0 +1,34 @@
+{
+  "id": 498014,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-15T17:22:15.000Z",
+  "code_updated_at": "2024-06-15T17:45:20.000Z",
+  "namespace": "https://cartelempire.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1270453,
+      "name": "KPCX",
+      "created_at": "2024-03-05T06:08:41.000Z",
+      "url": "https://greasyfork.org/users/1270453-kpcx",
+      "scripts": []
+    }
+  ],
+  "name": "[KPX] Auto-join expeditions in CartelEmpire",
+  "description": "Automate expedition actions on Cartel Empire",
+  "url": "https://greasyfork.org/scripts/498014-kpx-auto-join-expeditions-in-cartelempire",
+  "code_url": "https://update.greasyfork.org/scripts/498014/%5BKPX%5D%20Auto-join%20expeditions%20in%20CartelEmpire.user.js",
+  "code_size": 2300,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

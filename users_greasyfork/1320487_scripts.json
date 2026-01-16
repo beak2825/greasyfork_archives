@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498340,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-19T08:39:06.000Z",
+    "code_updated_at": "2025-09-12T03:40:17.000Z",
+    "namespace": "http://desire.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1320487,
+        "name": "安于心",
+        "created_at": "2024-06-19T08:35:50.000Z",
+        "url": "https://greasyfork.org/users/1320487-%E5%AE%89%E4%BA%8E%E5%BF%83"
+      }
+    ],
+    "name": "云简平台多行粘贴",
+    "description": "云简平台多行粘贴v1.2h",
+    "url": "https://greasyfork.org/scripts/498340-%E4%BA%91%E7%AE%80%E5%B9%B3%E5%8F%B0%E5%A4%9A%E8%A1%8C%E7%B2%98%E8%B4%B4",
+    "code_url": "https://update.greasyfork.org/scripts/498340/%E4%BA%91%E7%AE%80%E5%B9%B3%E5%8F%B0%E5%A4%9A%E8%A1%8C%E7%B2%98%E8%B4%B4.user.js",
+    "code_size": 6026,
+    "license": "MIT License",
+    "version": "2025-9-12(h)",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

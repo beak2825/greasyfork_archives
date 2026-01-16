@@ -1,0 +1,34 @@
+{
+  "id": 536221,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-16T15:13:52.000Z",
+  "code_updated_at": "2025-05-16T15:15:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294856,
+      "name": "manoflaser",
+      "created_at": "2024-04-29T17:04:20.000Z",
+      "url": "https://greasyfork.org/users/1294856-manoflaser",
+      "scripts": []
+    }
+  ],
+  "name": "4chan Thread Post Time Graph with Quote Arcs + REAL ID Colors",
+  "description": "Graphs the time of posting for all posts in a 4chan thread, shows the post content as a tooltip, draws arcs for quoted posts, and uses actual ID colors from inline styles.",
+  "url": "https://greasyfork.org/scripts/536221-4chan-thread-post-time-graph-with-quote-arcs-real-id-colors",
+  "code_url": "https://update.greasyfork.org/scripts/536221/4chan%20Thread%20Post%20Time%20Graph%20with%20Quote%20Arcs%20%2B%20REAL%20ID%20Colors.user.js",
+  "code_size": 13012,
+  "license": null,
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

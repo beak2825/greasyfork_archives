@@ -1,0 +1,33 @@
+{
+  "id": 504550,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-21T22:21:24.000Z",
+  "code_updated_at": "2024-08-21T22:27:13.000Z",
+  "namespace": "https://github.com/Rsge",
+  "support_url": "https://github.com/Rsge/Payback-Coupon-Activator/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 819640,
+      "name": "Rsge",
+      "created_at": "2021-09-27T17:23:15.000Z",
+      "url": "https://greasyfork.org/users/819640-rsge"
+    }
+  ],
+  "name": "Payback Coupon Activator",
+  "description": "Activates all Payback coupons on a shop's site before continuing to site.",
+  "url": "https://greasyfork.org/scripts/504550-payback-coupon-activator",
+  "code_url": "https://update.greasyfork.org/scripts/504550/Payback%20Coupon%20Activator.user.js",
+  "code_size": 2388,
+  "license": "Mozilla Public License 2.0",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 539199,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T10:22:54.000Z",
+    "code_updated_at": "2025-06-12T10:22:54.000Z",
+    "namespace": "VX：tap19tap",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454046,
+        "name": "Wy Yu",
+        "created_at": "2025-04-04T17:09:07.000Z",
+        "url": "https://greasyfork.org/users/1454046-wy-yu"
+      }
+    ],
+    "name": "🏆 【网课全能助手1.0,】网页继续教育万能自动播放视频倍数，支持国家开放大学|成人本科｜电中｜学起｜弘成｜继续教育｜教师｜会计｜医生｜华医网|好医生|公需课｜专业课｜网课等均部分支持需要尝试",
+    "description": "此助手只有倍速播放，如不满足需求可在这里代学，邀请码是68881（http://wk.xinheng.icu/index/login.php），复制括号里的在浏览器打开。 充值找VX：tap19tap",
+    "url": "https://greasyfork.org/scripts/539199-%E7%BD%91%E8%AF%BE%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B1-0-%E7%BD%91%E9%A1%B5%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%B8%87%E8%83%BD%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91%E5%80%8D%E6%95%B0-%E6%94%AF%E6%8C%81%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91-%E7%94%B5%E4%B8%AD-%E5%AD%A6%E8%B5%B7-%E5%BC%98%E6%88%90-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E6%95%99%E5%B8%88-%E4%BC%9A%E8%AE%A1-%E5%8C%BB%E7%94%9F-%E5%8D%8E%E5%8C%BB%E7%BD%91-%E5%A5%BD%E5%8C%BB%E7%94%9F-%E5%85%AC%E9%9C%80%E8%AF%BE-%E4%B8%93%E4%B8%9A%E8%AF%BE-%E7%BD%91%E8%AF%BE%E7%AD%89%E5%9D%87%E9%83%A8%E5%88%86%E6%94%AF%E6%8C%81%E9%9C%80%E8%A6%81%E5%B0%9D%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/539199/%F0%9F%8F%86%20%E3%80%90%E7%BD%91%E8%AF%BE%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B10%2C%E3%80%91%E7%BD%91%E9%A1%B5%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%B8%87%E8%83%BD%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91%E5%80%8D%E6%95%B0%EF%BC%8C%E6%94%AF%E6%8C%81%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%7C%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91%EF%BD%9C%E7%94%B5%E4%B8%AD%EF%BD%9C%E5%AD%A6%E8%B5%B7%EF%BD%9C%E5%BC%98%E6%88%90%EF%BD%9C%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%EF%BD%9C%E6%95%99%E5%B8%88%EF%BD%9C%E4%BC%9A%E8%AE%A1%EF%BD%9C%E5%8C%BB%E7%94%9F%EF%BD%9C%E5%8D%8E%E5%8C%BB%E7%BD%91%7C%E5%A5%BD%E5%8C%BB%E7%94%9F%7C%E5%85%AC%E9%9C%80%E8%AF%BE%EF%BD%9C%E4%B8%93%E4%B8%9A%E8%AF%BE%EF%BD%9C%E7%BD%91%E8%AF%BE%E7%AD%89.user.js",
+    "code_size": 90686,
+    "license": "MIT License",
+    "version": "1.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531848,
+    "daily_installs": 1,
+    "total_installs": 108,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-04T17:11:23.000Z",
+    "code_updated_at": "2025-04-04T17:11:23.000Z",
+    "namespace": "VX：tap19tap",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454046,
+        "name": "Wy Yu",
+        "created_at": "2025-04-04T17:09:07.000Z",
+        "url": "https://greasyfork.org/users/1454046-wy-yu"
+      }
+    ],
+    "name": "🏆 【网课全能助手1.0,】网页继续教育万能自动播放视频倍数，支持国家开放大学|成人本科｜电中｜学起｜弘成｜继续教育｜教师｜会计｜医生｜华医网|好医生|公需课｜专业课｜网课等均部分支持需要尝试",
+    "description": "此助手只有倍速播放，如不满足需求可找我代学，全网所有培训、所以网课通通都接！vx:tap19tap",
+    "url": "https://greasyfork.org/scripts/531848-%E7%BD%91%E8%AF%BE%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B1-0-%E7%BD%91%E9%A1%B5%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%B8%87%E8%83%BD%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91%E5%80%8D%E6%95%B0-%E6%94%AF%E6%8C%81%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6-%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91-%E7%94%B5%E4%B8%AD-%E5%AD%A6%E8%B5%B7-%E5%BC%98%E6%88%90-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E6%95%99%E5%B8%88-%E4%BC%9A%E8%AE%A1-%E5%8C%BB%E7%94%9F-%E5%8D%8E%E5%8C%BB%E7%BD%91-%E5%A5%BD%E5%8C%BB%E7%94%9F-%E5%85%AC%E9%9C%80%E8%AF%BE-%E4%B8%93%E4%B8%9A%E8%AF%BE-%E7%BD%91%E8%AF%BE%E7%AD%89%E5%9D%87%E9%83%A8%E5%88%86%E6%94%AF%E6%8C%81%E9%9C%80%E8%A6%81%E5%B0%9D%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/531848/%F0%9F%8F%86%20%E3%80%90%E7%BD%91%E8%AF%BE%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B10%2C%E3%80%91%E7%BD%91%E9%A1%B5%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%B8%87%E8%83%BD%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%A7%86%E9%A2%91%E5%80%8D%E6%95%B0%EF%BC%8C%E6%94%AF%E6%8C%81%E5%9B%BD%E5%AE%B6%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%7C%E6%88%90%E4%BA%BA%E6%9C%AC%E7%A7%91%EF%BD%9C%E7%94%B5%E4%B8%AD%EF%BD%9C%E5%AD%A6%E8%B5%B7%EF%BD%9C%E5%BC%98%E6%88%90%EF%BD%9C%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%EF%BD%9C%E6%95%99%E5%B8%88%EF%BD%9C%E4%BC%9A%E8%AE%A1%EF%BD%9C%E5%8C%BB%E7%94%9F%EF%BD%9C%E5%8D%8E%E5%8C%BB%E7%BD%91%7C%E5%A5%BD%E5%8C%BB%E7%94%9F%7C%E5%85%AC%E9%9C%80%E8%AF%BE%EF%BD%9C%E4%B8%93%E4%B8%9A%E8%AF%BE%EF%BD%9C%E7%BD%91%E8%AF%BE%E7%AD%89.user.js",
+    "code_size": 90550,
+    "license": "MIT License",
+    "version": "1.5.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

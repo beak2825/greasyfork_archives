@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518775,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T08:24:48.000Z",
+    "code_updated_at": "2024-11-25T08:31:26.000Z",
+    "namespace": "https://codezhangborui.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 926490,
+        "name": "CodeZhangBorui",
+        "created_at": "2022-06-17T10:35:23.000Z",
+        "url": "https://greasyfork.org/users/926490-codezhangborui"
+      }
+    ],
+    "name": "One Dark Pro for Linux DO",
+    "description": "为 Linux DO 添加 One Dark Pro 配色。基于 One Dark Pro Darker 主题。",
+    "url": "https://greasyfork.org/scripts/518775-one-dark-pro-for-linux-do",
+    "code_url": "https://update.greasyfork.org/scripts/518775/One%20Dark%20Pro%20for%20Linux%20DO.user.css",
+    "code_size": 781,
+    "license": "MIT License",
+    "version": "20241125.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

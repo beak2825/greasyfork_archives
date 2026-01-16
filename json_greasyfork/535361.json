@@ -1,0 +1,33 @@
+{
+  "id": 535361,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T14:35:46.000Z",
+  "code_updated_at": "2025-05-08T14:41:53.000Z",
+  "namespace": "https://github.com/dawn-lc",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 191969,
+      "name": "Dawn lc (Dawn)",
+      "created_at": "2018-06-19T08:37:57.000Z",
+      "url": "https://greasyfork.org/users/191969-dawn-lc-dawn"
+    }
+  ],
+  "name": "Zhihu: Hide Garbage",
+  "description": "Hide spam content under Zhihu questions.",
+  "url": "https://greasyfork.org/scripts/535361-zhihu-hide-garbage",
+  "code_url": "https://update.greasyfork.org/scripts/535361/Zhihu%3A%20Hide%20Garbage.user.js",
+  "code_size": 1637,
+  "license": "MIT License",
+  "version": "1.0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

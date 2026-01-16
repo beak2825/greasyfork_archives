@@ -1,0 +1,134 @@
+[
+  {
+    "id": 531449,
+    "daily_installs": 1,
+    "total_installs": 97,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-31T23:14:55.000Z",
+    "code_updated_at": "2025-04-20T22:29:37.000Z",
+    "namespace": "New Jack redoes agar.io after 10 years",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1049139,
+        "name": "New Jack",
+        "created_at": "2023-03-27T19:36:21.000Z",
+        "url": "https://greasyfork.org/users/1049139-new-jack"
+      }
+    ],
+    "name": "Piccolo's Agario Modded 3.2",
+    "description": "Advanced controls, features, freeze/pause, change everyones skins, vertical split, use urls as skins",
+    "url": "https://greasyfork.org/scripts/531449-piccolo-s-agario-modded-3-2",
+    "code_url": "https://update.greasyfork.org/scripts/531449/Piccolo%27s%20Agario%20Modded%2032.user.js",
+    "code_size": 149677,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517421,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-14T23:12:55.000Z",
+    "code_updated_at": "2024-11-14T23:12:55.000Z",
+    "namespace": "https://my-online-database.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1049139,
+        "name": "New Jack",
+        "created_at": "2023-03-27T19:36:21.000Z",
+        "url": "https://greasyfork.org/users/1049139-new-jack"
+      }
+    ],
+    "name": "Custom Theme Editor",
+    "description": "More theme control for my-online-database.com",
+    "url": "https://greasyfork.org/scripts/517421-custom-theme-editor",
+    "code_url": "https://update.greasyfork.org/scripts/517421/Custom%20Theme%20Editor.user.js",
+    "code_size": 27847,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500348,
+    "daily_installs": 1,
+    "total_installs": 325,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-11T20:33:57.000Z",
+    "code_updated_at": "2024-07-11T20:37:51.000Z",
+    "namespace": "Agartool styling fix",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1049139,
+        "name": "New Jack",
+        "created_at": "2023-03-27T19:36:21.000Z",
+        "url": "https://greasyfork.org/users/1049139-new-jack"
+      }
+    ],
+    "name": "Agartool Fix for Delta",
+    "description": "Redirects a specific CSS to make it work again.",
+    "url": "https://greasyfork.org/scripts/500348-agartool-fix-for-delta",
+    "code_url": "https://update.greasyfork.org/scripts/500348/Agartool%20Fix%20for%20Delta.user.js",
+    "code_size": 1689,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496837,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-02T12:49:32.000Z",
+    "code_updated_at": "2024-06-02T12:49:32.000Z",
+    "namespace": "CSS Clipboard Upload",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1049139,
+        "name": "New Jack",
+        "created_at": "2023-03-27T19:36:21.000Z",
+        "url": "https://greasyfork.org/users/1049139-new-jack"
+      }
+    ],
+    "name": "CSS Gradient Paste Image",
+    "description": "Add a paste image option to CSS Gradient and upload the image using the site's upload button",
+    "url": "https://greasyfork.org/scripts/496837-css-gradient-paste-image",
+    "code_url": "https://update.greasyfork.org/scripts/496837/CSS%20Gradient%20Paste%20Image.user.js",
+    "code_size": 2472,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

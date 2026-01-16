@@ -1,0 +1,33 @@
+{
+  "id": 515640,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-03T21:17:28.000Z",
+  "code_updated_at": "2025-09-12T15:58:47.000Z",
+  "namespace": "https://github.com/Lioncat6/MusicBrainz-UserScripts/",
+  "support_url": "https://github.com/Lioncat6/MusicBrainz-UserScripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1390799,
+      "name": "Lioncat6",
+      "created_at": "2024-11-03T21:14:26.000Z",
+      "url": "https://greasyfork.org/users/1390799-lioncat6"
+    }
+  ],
+  "name": "Musicbrainz Artist SAMBL Button",
+  "description": "Adds a SAMBL Button to compatible artists",
+  "url": "https://greasyfork.org/scripts/515640-musicbrainz-artist-sambl-button",
+  "code_url": "https://update.greasyfork.org/scripts/515640/Musicbrainz%20Artist%20SAMBL%20Button.user.js",
+  "code_size": 2395,
+  "license": "MIT License",
+  "version": "2025-9-12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

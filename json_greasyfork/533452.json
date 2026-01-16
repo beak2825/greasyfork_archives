@@ -1,0 +1,33 @@
+{
+  "id": 533452,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-20T18:06:46.000Z",
+  "code_updated_at": "2025-07-14T08:44:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1318579,
+      "name": "T. Ergo",
+      "created_at": "2024-06-15T15:34:53.000Z",
+      "url": "https://greasyfork.org/users/1318579-t-ergo"
+    }
+  ],
+  "name": "HDRezka Highlight Dark Theme",
+  "description": "Подсвечивает и раскрашивает текст, ссылки и кнопки в Тёмной теме HDRezka",
+  "url": "https://greasyfork.org/scripts/533452-hdrezka-highlight-dark-theme",
+  "code_url": "https://update.greasyfork.org/scripts/533452/HDRezka%20Highlight%20Dark%20Theme.user.js",
+  "code_size": 10714,
+  "license": null,
+  "version": "2.7.5.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

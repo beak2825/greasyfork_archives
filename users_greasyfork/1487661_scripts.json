@@ -1,8 +1,8 @@
 [
   {
     "id": 553925,
-    "daily_installs": 1,
-    "total_installs": 27,
+    "daily_installs": 2,
+    "total_installs": 29,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -28,6 +28,39 @@
     "code_size": 3060,
     "license": "MIT License",
     "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540559,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T23:38:26.000Z",
+    "code_updated_at": "2025-06-23T23:39:58.000Z",
+    "namespace": "https://playklavia.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487661,
+        "name": "Daymare",
+        "created_at": "2025-06-23T23:29:16.000Z",
+        "url": "https://greasyfork.org/users/1487661-daymare"
+      }
+    ],
+    "name": "Klavia Summer Theme",
+    "description": "Klavia Summer themes + On/Off toggle button. (Playklavia.com/Klavia.io)",
+    "url": "https://greasyfork.org/scripts/540559-klavia-summer-theme",
+    "code_url": "https://update.greasyfork.org/scripts/540559/Klavia%20Summer%20Theme.user.js",
+    "code_size": 6037,
+    "license": "MIT License",
+    "version": "9.1",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

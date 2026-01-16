@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509905,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-24T02:35:40.000Z",
+    "code_updated_at": "2024-09-29T09:28:58.000Z",
+    "namespace": "1933987037@qq.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 915536,
+        "name": "傲杰无痕",
+        "created_at": "2022-05-18T02:59:44.000Z",
+        "url": "https://greasyfork.org/users/915536-%E5%82%B2%E6%9D%B0%E6%97%A0%E7%97%95"
+      }
+    ],
+    "name": "美团买药首条接待自动回复",
+    "description": "这是一个刷自动回复率的工具，如果超过指定时间，没有其他客服回复，插件会自动回复指定内容",
+    "url": "https://greasyfork.org/scripts/509905-%E7%BE%8E%E5%9B%A2%E4%B9%B0%E8%8D%AF%E9%A6%96%E6%9D%A1%E6%8E%A5%E5%BE%85%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/509905/%E7%BE%8E%E5%9B%A2%E4%B9%B0%E8%8D%AF%E9%A6%96%E6%9D%A1%E6%8E%A5%E5%BE%85%E8%87%AA%E5%8A%A8%E5%9B%9E%E5%A4%8D.user.js",
+    "code_size": 2586,
+    "license": "MIT License",
+    "version": "1.91",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

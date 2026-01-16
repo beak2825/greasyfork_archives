@@ -1,0 +1,59 @@
+{
+  "id": 540603,
+  "daily_installs": 2,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-24T09:43:38.000Z",
+  "code_updated_at": "2025-11-18T17:21:53.000Z",
+  "namespace": "https://store.steampowered.com/account/licenses/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1487854,
+      "name": "hycosi",
+      "created_at": "2025-06-24T09:05:18.000Z",
+      "url": "https://greasyfork.org/users/1487854-hycosi",
+      "scripts": [
+        {
+          "id": 540603,
+          "daily_installs": 2,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-24T09:43:38.000Z",
+          "code_updated_at": "2025-11-18T17:21:53.000Z",
+          "namespace": "https://store.steampowered.com/account/licenses/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Steam Licenses Remover Ultra Enhanced",
+          "description": "Улучшенное массовое удаление бесплатных игр из Steam с расширенным UI, автоматическим восстановлением, детальным прогрессом, экспортом логов и защитой от ошибок.",
+          "url": "https://greasyfork.org/scripts/540603-steam-licenses-remover-ultra-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/540603/Steam%20Licenses%20Remover%20Ultra%20Enhanced.user.js",
+          "code_size": 19898,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Steam Licenses Remover Ultra Enhanced",
+  "description": "Улучшенное массовое удаление бесплатных игр из Steam с расширенным UI, автоматическим восстановлением, детальным прогрессом, экспортом логов и защитой от ошибок.",
+  "url": "https://greasyfork.org/scripts/540603-steam-licenses-remover-ultra-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/540603/Steam%20Licenses%20Remover%20Ultra%20Enhanced.user.js",
+  "code_size": 19898,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

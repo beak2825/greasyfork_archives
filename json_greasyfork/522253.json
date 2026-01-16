@@ -1,0 +1,33 @@
+{
+  "id": 522253,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-30T01:19:09.000Z",
+  "code_updated_at": "2024-12-30T14:46:43.000Z",
+  "namespace": "YoungYang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1086978,
+      "name": "CN-YoungYang",
+      "created_at": "2023-05-30T00:16:18.000Z",
+      "url": "https://greasyfork.org/users/1086978-cn-youngyang"
+    }
+  ],
+  "name": "快速保存商品",
+  "description": "店小秘快速保存",
+  "url": "https://greasyfork.org/scripts/522253-%E5%BF%AB%E9%80%9F%E4%BF%9D%E5%AD%98%E5%95%86%E5%93%81",
+  "code_url": "https://update.greasyfork.org/scripts/522253/%E5%BF%AB%E9%80%9F%E4%BF%9D%E5%AD%98%E5%95%86%E5%93%81.user.js",
+  "code_size": 213827,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

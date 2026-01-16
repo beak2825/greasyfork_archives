@@ -1,0 +1,59 @@
+{
+  "id": 538055,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-02T05:47:10.000Z",
+  "code_updated_at": "2025-07-07T03:19:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1477778,
+      "name": "Dpri",
+      "created_at": "2025-06-02T05:27:32.000Z",
+      "url": "https://greasyfork.org/users/1477778-dpri",
+      "scripts": [
+        {
+          "id": 538055,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-02T05:47:10.000Z",
+          "code_updated_at": "2025-07-07T03:19:40.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Instagram Sample Bot (Adaptive Scroll, Sample & Like)",
+          "description": "Automates Instagram scrolling: fluid in foreground, jumpy in background. Detects and filters sample offers by popular beauty brands, and auto-likes relevant posts. Includes customizable settings and improved UI. Now with in-app Help and Update options in settings, improved modal visibility, fluid UI panel animations, intelligent loading detection, and draggable UI confined to viewport.",
+          "url": "https://greasyfork.org/scripts/538055-instagram-sample-bot-adaptive-scroll-sample-like",
+          "code_url": "https://update.greasyfork.org/scripts/538055/Instagram%20Sample%20Bot%20%28Adaptive%20Scroll%2C%20Sample%20%20Like%29.user.js",
+          "code_size": 77234,
+          "license": null,
+          "version": "1.43",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Instagram Sample Bot (Adaptive Scroll, Sample & Like)",
+  "description": "Automates Instagram scrolling: fluid in foreground, jumpy in background. Detects and filters sample offers by popular beauty brands, and auto-likes relevant posts. Includes customizable settings and improved UI. Now with in-app Help and Update options in settings, improved modal visibility, fluid UI panel animations, intelligent loading detection, and draggable UI confined to viewport.",
+  "url": "https://greasyfork.org/scripts/538055-instagram-sample-bot-adaptive-scroll-sample-like",
+  "code_url": "https://update.greasyfork.org/scripts/538055/Instagram%20Sample%20Bot%20%28Adaptive%20Scroll%2C%20Sample%20%20Like%29.user.js",
+  "code_size": 77234,
+  "license": null,
+  "version": "1.43",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

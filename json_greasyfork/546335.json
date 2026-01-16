@@ -1,0 +1,59 @@
+{
+  "id": 546335,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-18T21:57:45.000Z",
+  "code_updated_at": "2025-08-21T07:46:26.000Z",
+  "namespace": "https://github.com/Mythos",
+  "support_url": "https://github.com/Mythos/userscripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1506431,
+      "name": "Mythos33",
+      "created_at": "2025-08-18T21:47:28.000Z",
+      "url": "https://greasyfork.org/users/1506431-mythos33",
+      "scripts": [
+        {
+          "id": 546335,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-18T21:57:45.000Z",
+          "code_updated_at": "2025-08-21T07:46:26.000Z",
+          "namespace": "https://github.com/Mythos",
+          "support_url": "https://github.com/Mythos/userscripts/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove ?tl= from Reddit links on Google",
+          "description": "Removes the ?tl= parameter from Reddit search result links on Google",
+          "url": "https://greasyfork.org/scripts/546335-remove-tl-from-reddit-links-on-google",
+          "code_url": "https://update.greasyfork.org/scripts/546335/Remove%20tl%3D%20from%20Reddit%20links%20on%20Google.user.js",
+          "code_size": 1420,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove ?tl= from Reddit links on Google",
+  "description": "Removes the ?tl= parameter from Reddit search result links on Google",
+  "url": "https://greasyfork.org/scripts/546335-remove-tl-from-reddit-links-on-google",
+  "code_url": "https://update.greasyfork.org/scripts/546335/Remove%20tl%3D%20from%20Reddit%20links%20on%20Google.user.js",
+  "code_size": 1420,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 543244,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T18:53:17.000Z",
+    "code_updated_at": "2025-07-21T18:53:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1369638,
+        "name": "joppie",
+        "created_at": "2024-09-18T13:14:09.000Z",
+        "url": "https://greasyfork.org/users/1369638-joppie"
+      }
+    ],
+    "name": "Grepolis Alliance Member Exporter with Timestamp",
+    "description": "Export the in-game alliance member list with activity status, alliance name, and generation timestamp.",
+    "url": "https://greasyfork.org/scripts/543244-grepolis-alliance-member-exporter-with-timestamp",
+    "code_url": "https://update.greasyfork.org/scripts/543244/Grepolis%20Alliance%20Member%20Exporter%20with%20Timestamp.user.js",
+    "code_size": 7485,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512594,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-14T15:19:36.000Z",
+    "code_updated_at": "2024-10-16T16:33:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1369638,
+        "name": "joppie",
+        "created_at": "2024-09-18T13:14:09.000Z",
+        "url": "https://greasyfork.org/users/1369638-joppie"
+      }
+    ],
+    "name": "Grepolis Notepad Forum Template 3",
+    "description": "Generates a forum template for Grepolis with units, building data, town god, and OC.",
+    "url": "https://greasyfork.org/scripts/512594-grepolis-notepad-forum-template-3",
+    "code_url": "https://update.greasyfork.org/scripts/512594/Grepolis%20Notepad%20Forum%20Template%203.user.js",
+    "code_size": 14722,
+    "license": null,
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

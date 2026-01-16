@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 500333,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-11T17:25:40.000Z",
+    "code_updated_at": "2024-07-11T17:28:18.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1280853,
+        "name": "Schaken",
+        "created_at": "2024-03-28T21:47:27.000Z",
+        "url": "https://greasyfork.org/users/1280853-schaken"
+      }
+    ],
+    "name": "Help support Bit-Gamey in the Unity Asset store",
+    "description": "This just checks to see if you have Bit-Gamey code in the url, if you do not, it adds it. this will support our good friend!",
+    "url": "https://greasyfork.org/scripts/500333-help-support-bit-gamey-in-the-unity-asset-store",
+    "code_url": "https://update.greasyfork.org/scripts/500333/Help%20support%20Bit-Gamey%20in%20the%20Unity%20Asset%20store.user.js",
+    "code_size": 1162,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

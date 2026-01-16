@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528937,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-06T03:35:14.000Z",
+    "code_updated_at": "2025-03-11T15:13:05.000Z",
+    "namespace": "Polar",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265877,
+        "name": "琳哒6",
+        "created_at": "2024-02-23T11:15:44.000Z",
+        "url": "https://greasyfork.org/users/1265877-%E7%90%B3%E5%93%926"
+      }
+    ],
+    "name": "bilibili 自动网页全屏",
+    "description": "自动网页全屏",
+    "url": "https://greasyfork.org/scripts/528937-bilibili-%E8%87%AA%E5%8A%A8%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/528937/bilibili%20%E8%87%AA%E5%8A%A8%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.user.js",
+    "code_size": 3806,
+    "license": "Apache License 2.0",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

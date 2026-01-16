@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 542395,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T12:29:24.000Z",
+    "code_updated_at": "2026-01-05T13:29:50.000Z",
+    "namespace": "https://neodb.social/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443475,
+        "name": "ccccccccccccccccccc",
+        "created_at": "2025-03-08T07:39:17.000Z",
+        "url": "https://greasyfork.org/users/1443475-ccccccccccccccccccc"
+      }
+    ],
+    "name": "Neodb + Anna + Libby Quick Redirect",
+    "description": "Quick access buttons for Anna (ISBN/Title) and Libby (copies title)",
+    "url": "https://greasyfork.org/scripts/542395-neodb-anna-libby-quick-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/542395/Neodb%20%2B%20Anna%20%2B%20Libby%20Quick%20Redirect.user.js",
+    "code_size": 3975,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540955,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T17:03:53.000Z",
+    "code_updated_at": "2025-06-27T17:03:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443475,
+        "name": "ccccccccccccccccccc",
+        "created_at": "2025-03-08T07:39:17.000Z",
+        "url": "https://greasyfork.org/users/1443475-ccccccccccccccccccc"
+      }
+    ],
+    "name": "Douban All Photos Grid Layout",
+    "description": "Converts all horizontal swipers in Douban statuses to static 3x3 grid layouts",
+    "url": "https://greasyfork.org/scripts/540955-douban-all-photos-grid-layout",
+    "code_url": "https://update.greasyfork.org/scripts/540955/Douban%20All%20Photos%20Grid%20Layout.user.js",
+    "code_size": 2484,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529176,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-08T08:24:48.000Z",
+    "code_updated_at": "2025-11-10T05:12:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443475,
+        "name": "ccccccccccccccccccc",
+        "created_at": "2025-03-08T07:39:17.000Z",
+        "url": "https://greasyfork.org/users/1443475-ccccccccccccccccccc"
+      }
+    ],
+    "name": "Douban User Blocker",
+    "description": "Add a draggable blocklist management button on Douban.",
+    "url": "https://greasyfork.org/scripts/529176-douban-user-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/529176/Douban%20User%20Blocker.user.js",
+    "code_size": 7559,
+    "license": "MIT License",
+    "version": "2.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

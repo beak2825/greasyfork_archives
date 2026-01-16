@@ -1,0 +1,59 @@
+{
+  "id": 547809,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-30T07:09:48.000Z",
+  "code_updated_at": "2025-08-30T07:09:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508217,
+      "name": "fafddda",
+      "created_at": "2025-08-24T03:36:42.000Z",
+      "url": "https://greasyfork.org/users/1508217-fafddda",
+      "scripts": [
+        {
+          "id": 547809,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-30T07:09:48.000Z",
+          "code_updated_at": "2025-08-30T07:09:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Vscode 交互插件",
+          "description": "请配合 OI File Checker 使用",
+          "url": "https://greasyfork.org/scripts/547809-vscode-%E4%BA%A4%E4%BA%92%E6%8F%92%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/547809/Vscode%20%E4%BA%A4%E4%BA%92%E6%8F%92%E4%BB%B6.user.js",
+          "code_size": 14673,
+          "license": "MIT License",
+          "version": "0.11",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Vscode 交互插件",
+  "description": "请配合 OI File Checker 使用",
+  "url": "https://greasyfork.org/scripts/547809-vscode-%E4%BA%A4%E4%BA%92%E6%8F%92%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/547809/Vscode%20%E4%BA%A4%E4%BA%92%E6%8F%92%E4%BB%B6.user.js",
+  "code_size": 14673,
+  "license": "MIT License",
+  "version": "0.11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

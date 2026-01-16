@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544389,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-02T10:43:38.000Z",
+    "code_updated_at": "2025-08-02T10:43:37.000Z",
+    "namespace": "https://greasyfork.org/en/users/1500856-titouan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500856,
+        "name": "Titouan",
+        "created_at": "2025-08-02T10:12:00.000Z",
+        "url": "https://greasyfork.org/users/1500856-titouan"
+      }
+    ],
+    "name": "Old Reddit Redirect (Nice Hat Fix)",
+    "description": "Redirect to old Reddit except /gallery, /media, /poll paths. Fixes the \"nice hat\" bug where clicking image links opens an unrelated \"nice hat\" post on old Reddit.",
+    "url": "https://greasyfork.org/scripts/544389-old-reddit-redirect-nice-hat-fix",
+    "code_url": "https://update.greasyfork.org/scripts/544389/Old%20Reddit%20Redirect%20%28Nice%20Hat%20Fix%29.user.js",
+    "code_size": 853,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

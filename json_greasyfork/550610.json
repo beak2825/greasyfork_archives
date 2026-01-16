@@ -1,0 +1,34 @@
+{
+  "id": 550610,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-25T03:42:59.000Z",
+  "code_updated_at": "2025-09-25T03:42:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 957634,
+      "name": "feafdeq1",
+      "created_at": "2022-09-11T17:13:56.000Z",
+      "url": "https://greasyfork.org/users/957634-feafdeq1",
+      "scripts": []
+    }
+  ],
+  "name": "B站粉丝与关注变化检测器",
+  "description": "定期存储B站指定用户的粉丝列表和关注列表，并比对得出新增和取关/取关的用户名单。",
+  "url": "https://greasyfork.org/scripts/550610-b%E7%AB%99%E7%B2%89%E4%B8%9D%E4%B8%8E%E5%85%B3%E6%B3%A8%E5%8F%98%E5%8C%96%E6%A3%80%E6%B5%8B%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/550610/B%E7%AB%99%E7%B2%89%E4%B8%9D%E4%B8%8E%E5%85%B3%E6%B3%A8%E5%8F%98%E5%8C%96%E6%A3%80%E6%B5%8B%E5%99%A8.user.js",
+  "code_size": 13930,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

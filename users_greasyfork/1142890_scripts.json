@@ -1,0 +1,68 @@
+[
+  {
+    "id": 553226,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-20T16:47:39.000Z",
+    "code_updated_at": "2025-10-20T17:10:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142890,
+        "name": "kindlychung",
+        "created_at": "2023-08-03T11:39:14.000Z",
+        "url": "https://greasyfork.org/users/1142890-kindlychung"
+      }
+    ],
+    "name": "No hackerrank run button",
+    "description": "Remove the run-code button from hackerrank",
+    "url": "https://greasyfork.org/scripts/553226-no-hackerrank-run-button",
+    "code_url": "https://update.greasyfork.org/scripts/553226/No%20hackerrank%20run%20button.user.js",
+    "code_size": 1754,
+    "license": "MIT License",
+    "version": "20251020.06",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541603,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T07:58:17.000Z",
+    "code_updated_at": "2025-08-16T08:19:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142890,
+        "name": "kindlychung",
+        "created_at": "2023-08-03T11:39:14.000Z",
+        "url": "https://greasyfork.org/users/1142890-kindlychung"
+      }
+    ],
+    "name": "answer-in-my-language-deepseek",
+    "description": "Add a \"answer in my language\" prefix to deepseek textarea",
+    "url": "https://greasyfork.org/scripts/541603-answer-in-my-language-deepseek",
+    "code_url": "https://update.greasyfork.org/scripts/541603/answer-in-my-language-deepseek.user.js",
+    "code_size": 15328,
+    "license": "BSD",
+    "version": "1.11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

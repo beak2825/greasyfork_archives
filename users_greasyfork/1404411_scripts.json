@@ -1,0 +1,101 @@
+[
+  {
+    "id": 519638,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-03T07:51:05.000Z",
+    "code_updated_at": "2024-12-03T07:51:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404411,
+        "name": "Arc Demon Lord",
+        "created_at": "2024-11-30T06:16:13.000Z",
+        "url": "https://greasyfork.org/users/1404411-arc-demon-lord"
+      }
+    ],
+    "name": "WebSocket to Text Display (Opera)",
+    "description": "Receive WebSocket text and display it in a box",
+    "url": "https://greasyfork.org/scripts/519638-websocket-to-text-display-opera",
+    "code_url": "https://update.greasyfork.org/scripts/519638/WebSocket%20to%20Text%20Display%20%28Opera%29.user.js",
+    "code_size": 1680,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519637,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-03T07:48:54.000Z",
+    "code_updated_at": "2024-12-03T08:21:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404411,
+        "name": "Arc Demon Lord",
+        "created_at": "2024-11-30T06:16:13.000Z",
+        "url": "https://greasyfork.org/users/1404411-arc-demon-lord"
+      }
+    ],
+    "name": "Web Speech API to WebSocket (Speech-to-Text)",
+    "description": "Captures speech input using the Web Speech API and sends it to a WebSocket server in real-time",
+    "url": "https://greasyfork.org/scripts/519637-web-speech-api-to-websocket-speech-to-text",
+    "code_url": "https://update.greasyfork.org/scripts/519637/Web%20Speech%20API%20to%20WebSocket%20%28Speech-to-Text%29.user.js",
+    "code_size": 1350,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519410,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-30T23:31:06.000Z",
+    "code_updated_at": "2024-11-30T23:31:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404411,
+        "name": "Arc Demon Lord",
+        "created_at": "2024-11-30T06:16:13.000Z",
+        "url": "https://greasyfork.org/users/1404411-arc-demon-lord"
+      }
+    ],
+    "name": "Gats.io - Mouse Wheel Zoom",
+    "description": "Adds zoom in and out functionality using the mouse wheel.",
+    "url": "https://greasyfork.org/scripts/519410-gats-io-mouse-wheel-zoom",
+    "code_url": "https://update.greasyfork.org/scripts/519410/Gatsio%20-%20Mouse%20Wheel%20Zoom.user.js",
+    "code_size": 1075,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

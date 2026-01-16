@@ -1,0 +1,34 @@
+{
+  "id": 545090,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-08T20:09:55.000Z",
+  "code_updated_at": "2025-08-09T14:54:11.000Z",
+  "namespace": "https://2.gangsterparadise.co.uk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1498885,
+      "name": "ParadoxNG",
+      "created_at": "2025-07-27T14:40:02.000Z",
+      "url": "https://greasyfork.org/users/1498885-paradoxng",
+      "scripts": []
+    }
+  ],
+  "name": "GP2-Revived Full (Mobile Enhanced)",
+  "description": "Full GP2 revamp with integrated mobile support and QoL improvements (no dark mode)",
+  "url": "https://greasyfork.org/scripts/545090-gp2-revived-full-mobile-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/545090/GP2-Revived%20Full%20%28Mobile%20Enhanced%29.user.js",
+  "code_size": 10758,
+  "license": null,
+  "version": "6.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

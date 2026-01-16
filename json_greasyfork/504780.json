@@ -1,0 +1,33 @@
+{
+  "id": 504780,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-23T07:39:07.000Z",
+  "code_updated_at": "2024-08-23T07:39:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1315479,
+      "name": "coder-ME",
+      "created_at": "2024-06-10T05:30:43.000Z",
+      "url": "https://greasyfork.org/users/1315479-coder-me"
+    }
+  ],
+  "name": "哔哩哔哩稍后再看重定向到详情页面",
+  "description": "为哔哩哔哩稍后再看页面的每个视频缩略图添加一个更大的固定位置按钮,点击跳转到新标签页的视频链接",
+  "url": "https://greasyfork.org/scripts/504780-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E8%AF%A6%E6%83%85%E9%A1%B5%E9%9D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/504780/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%E8%AF%A6%E6%83%85%E9%A1%B5%E9%9D%A2.user.js",
+  "code_size": 2647,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 550292,
+  "daily_installs": 0,
+  "total_installs": 290,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-09-22T02:15:28.000Z",
+  "code_updated_at": "2025-09-22T03:07:20.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1517894,
+      "name": "Angesom12",
+      "created_at": "2025-09-22T01:24:18.000Z",
+      "url": "https://greasyfork.org/users/1517894-angesom12",
+      "scripts": [
+        {
+          "id": 550292,
+          "daily_installs": 0,
+          "total_installs": 290,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-09-22T02:15:28.000Z",
+          "code_updated_at": "2025-09-22T03:07:20.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Scribd Material Downloader (Safe PDF)",
+          "description": "Injects Scribd Material Downloader buttons into Scribd pages to view, download TXT, or download PDF safely.",
+          "url": "https://greasyfork.org/scripts/550292-scribd-material-downloader-safe-pdf",
+          "code_url": "https://update.greasyfork.org/scripts/550292/Scribd%20Material%20Downloader%20%28Safe%20PDF%29.user.js",
+          "code_size": 5154,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Scribd Material Downloader (Safe PDF)",
+  "description": "Injects Scribd Material Downloader buttons into Scribd pages to view, download TXT, or download PDF safely.",
+  "url": "https://greasyfork.org/scripts/550292-scribd-material-downloader-safe-pdf",
+  "code_url": "https://update.greasyfork.org/scripts/550292/Scribd%20Material%20Downloader%20%28Safe%20PDF%29.user.js",
+  "code_size": 5154,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

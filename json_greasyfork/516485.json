@@ -1,0 +1,33 @@
+{
+  "id": 516485,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-09T06:45:52.000Z",
+  "code_updated_at": "2024-11-09T07:31:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 167429,
+      "name": "oilpot",
+      "created_at": "2018-01-20T06:25:05.000Z",
+      "url": "https://greasyfork.org/users/167429-oilpot"
+    }
+  ],
+  "name": "哔哩哔哩排版",
+  "description": "哔哩哔重排版",
+  "url": "https://greasyfork.org/scripts/516485-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%8E%92%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/516485/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E6%8E%92%E7%89%88.user.js",
+  "code_size": 5285,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 515601,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-03T16:51:24.000Z",
+  "code_updated_at": "2024-11-03T16:51:24.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": "https://vk.com/exweth",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1388271,
+      "name": "Руслан Салманов",
+      "created_at": "2024-10-29T17:35:13.000Z",
+      "url": "https://greasyfork.org/users/1388271-%D1%80%D1%83%D1%81%D0%BB%D0%B0%D0%BD-%D1%81%D0%B0%D0%BB%D0%BC%D0%B0%D0%BD%D0%BE%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "KF_100",
+  "description": "Suggestions for improving the script write here ---> https://vk.com/exweth",
+  "url": "https://greasyfork.org/scripts/515601-kf-100",
+  "code_url": "https://update.greasyfork.org/scripts/515601/KF_100.user.js",
+  "code_size": 108370,
+  "license": "MIT License",
+  "version": "2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

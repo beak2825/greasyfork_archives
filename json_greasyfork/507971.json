@@ -1,0 +1,59 @@
+{
+  "id": 507971,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-11T14:35:36.000Z",
+  "code_updated_at": "2024-09-11T14:35:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1366197,
+      "name": "manhdt",
+      "created_at": "2024-09-11T14:26:46.000Z",
+      "url": "https://greasyfork.org/users/1366197-manhdt",
+      "scripts": [
+        {
+          "id": 507971,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-11T14:35:36.000Z",
+          "code_updated_at": "2024-09-11T14:35:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Download a vocabulary list",
+          "description": "To download a vocabulary list from a topic on Oxford Learner's Dictionaries.",
+          "url": "https://greasyfork.org/scripts/507971-download-a-vocabulary-list",
+          "code_url": "https://update.greasyfork.org/scripts/507971/Download%20a%20vocabulary%20list.user.js",
+          "code_size": 1444,
+          "license": "Apache License 2.0",
+          "version": "2024-09-11",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Download a vocabulary list",
+  "description": "To download a vocabulary list from a topic on Oxford Learner's Dictionaries.",
+  "url": "https://greasyfork.org/scripts/507971-download-a-vocabulary-list",
+  "code_url": "https://update.greasyfork.org/scripts/507971/Download%20a%20vocabulary%20list.user.js",
+  "code_size": 1444,
+  "license": "Apache License 2.0",
+  "version": "2024-09-11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

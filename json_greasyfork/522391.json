@@ -1,0 +1,33 @@
+{
+  "id": 522391,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-31T11:04:00.000Z",
+  "code_updated_at": "2025-01-11T14:24:07.000Z",
+  "namespace": "https://github.com/smooll-d",
+  "support_url": "https://github.com/smooll-d/sclc/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417907,
+      "name": "smooll-d",
+      "created_at": "2024-12-31T10:51:02.000Z",
+      "url": "https://greasyfork.org/users/1417907-smooll-d"
+    }
+  ],
+  "name": "Steam Community Language Changer",
+  "description": "Changes Steam's language to browser's on community posts",
+  "url": "https://greasyfork.org/scripts/522391-steam-community-language-changer",
+  "code_url": "https://update.greasyfork.org/scripts/522391/Steam%20Community%20Language%20Changer.user.js",
+  "code_size": 1336,
+  "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+  "version": "3.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

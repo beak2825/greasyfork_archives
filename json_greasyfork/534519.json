@@ -1,0 +1,33 @@
+{
+  "id": 534519,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T13:17:29.000Z",
+  "code_updated_at": "2025-04-30T13:17:29.000Z",
+  "namespace": "https://cleanlinks.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464004,
+      "name": "Melkor",
+      "created_at": "2025-04-30T12:42:06.000Z",
+      "url": "https://greasyfork.org/users/1464004-melkor"
+    }
+  ],
+  "name": "Universal Tracker Remover",
+  "description": "Removes common tracking parameters (e.g., utm_source, fbclid, from) from all links and the browser address bar, on all websites.",
+  "url": "https://greasyfork.org/scripts/534519-universal-tracker-remover",
+  "code_url": "https://update.greasyfork.org/scripts/534519/Universal%20Tracker%20Remover.user.js",
+  "code_size": 2383,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

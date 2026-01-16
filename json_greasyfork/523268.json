@@ -1,0 +1,33 @@
+{
+  "id": 523268,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T04:27:27.000Z",
+  "code_updated_at": "2025-01-09T06:38:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421128,
+      "name": "EthanBezz",
+      "created_at": "2025-01-09T04:12:00.000Z",
+      "url": "https://greasyfork.org/users/1421128-ethanbezz"
+    }
+  ],
+  "name": "Floatplane System Theme Sync",
+  "description": "Sync Floatplane theme with system theme based on system changes and page load",
+  "url": "https://greasyfork.org/scripts/523268-floatplane-system-theme-sync",
+  "code_url": "https://update.greasyfork.org/scripts/523268/Floatplane%20System%20Theme%20Sync.user.js",
+  "code_size": 1481,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

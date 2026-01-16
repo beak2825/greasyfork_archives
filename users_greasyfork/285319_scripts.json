@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542372,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T06:07:36.000Z",
+    "code_updated_at": "2025-07-12T06:07:36.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 285319,
+        "name": "Guan Hua",
+        "created_at": "2019-03-22T09:21:39.000Z",
+        "url": "https://greasyfork.org/users/285319-guan-hua"
+      }
+    ],
+    "name": "Wiki zh-cn Mobile Redirect",
+    "description": "自动跳转维基系列到简体中文移动版",
+    "url": "https://greasyfork.org/scripts/542372-wiki-zh-cn-mobile-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/542372/Wiki%20zh-cn%20Mobile%20Redirect.user.js",
+    "code_size": 1174,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

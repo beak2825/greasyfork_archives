@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542925,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-18T14:52:04.000Z",
+    "code_updated_at": "2025-07-18T14:52:04.000Z",
+    "namespace": "-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485911,
+        "name": "Remi Magee",
+        "created_at": "2025-06-19T23:51:57.000Z",
+        "url": "https://greasyfork.org/users/1485911-remi-magee"
+      }
+    ],
+    "name": "MooMoo.io  Dune Mod - AutoHeal, Autobreak, FAST, AND MORE!",
+    "description": "A new MooMoo.io mod with autoheal, autobreak, very fast runtime, AND MORE",
+    "url": "https://greasyfork.org/scripts/542925-moomoo-io-dune-mod-autoheal-autobreak-fast-and-more",
+    "code_url": "https://update.greasyfork.org/scripts/542925/MooMooio%20%20Dune%20Mod%20-%20AutoHeal%2C%20Autobreak%2C%20FAST%2C%20AND%20MORE%21.user.js",
+    "code_size": 671416,
+    "license": null,
+    "version": "1.1.9",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

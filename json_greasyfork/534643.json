@@ -1,0 +1,59 @@
+{
+  "id": 534643,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-01T14:30:43.000Z",
+  "code_updated_at": "2025-05-01T14:30:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431868,
+      "name": "FrandreJoestar",
+      "created_at": "2025-02-05T15:18:28.000Z",
+      "url": "https://greasyfork.org/users/1431868-frandrejoestar",
+      "scripts": [
+        {
+          "id": 534643,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-01T14:30:43.000Z",
+          "code_updated_at": "2025-05-01T14:30:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Phigros谱面信息提取",
+          "description": "提取Phigros谱面信息并导出为JSON",
+          "url": "https://greasyfork.org/scripts/534643-phigros%E8%B0%B1%E9%9D%A2%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96",
+          "code_url": "https://update.greasyfork.org/scripts/534643/Phigros%E8%B0%B1%E9%9D%A2%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96.user.js",
+          "code_size": 5864,
+          "license": "MIT License",
+          "version": "3.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Phigros谱面信息提取",
+  "description": "提取Phigros谱面信息并导出为JSON",
+  "url": "https://greasyfork.org/scripts/534643-phigros%E8%B0%B1%E9%9D%A2%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/534643/Phigros%E8%B0%B1%E9%9D%A2%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96.user.js",
+  "code_size": 5864,
+  "license": "MIT License",
+  "version": "3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

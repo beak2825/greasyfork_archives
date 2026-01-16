@@ -1,0 +1,59 @@
+{
+  "id": 539293,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-13T11:35:41.000Z",
+  "code_updated_at": "2025-06-13T11:49:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483209,
+      "name": "Weinan",
+      "created_at": "2025-06-13T11:02:57.000Z",
+      "url": "https://greasyfork.org/users/1483209-weinan",
+      "scripts": [
+        {
+          "id": 539293,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-13T11:35:41.000Z",
+          "code_updated_at": "2025-06-13T11:49:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星学习通+自定义AI答题脚本 (SiliconFlow完美融合版)",
+          "description": "V1.2: 新增“答案模式”选择器，包括专为简答/论述题优化的“拓展论述”模式，解决答案过短问题！集成更强大的UEditor粘贴解锁方案，解决部分作业无法粘贴的问题。感谢用户反馈！",
+          "url": "https://greasyfork.org/scripts/539293-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89ai%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC-siliconflow%E5%AE%8C%E7%BE%8E%E8%9E%8D%E5%90%88%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/539293/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%2B%E8%87%AA%E5%AE%9A%E4%B9%89AI%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC%20%28SiliconFlow%E5%AE%8C%E7%BE%8E%E8%9E%8D%E5%90%88%E7%89%88%29.user.js",
+          "code_size": 28077,
+          "license": "GNU General Public License v3.0 or later",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星学习通+自定义AI答题脚本 (SiliconFlow完美融合版)",
+  "description": "V1.2: 新增“答案模式”选择器，包括专为简答/论述题优化的“拓展论述”模式，解决答案过短问题！集成更强大的UEditor粘贴解锁方案，解决部分作业无法粘贴的问题。感谢用户反馈！",
+  "url": "https://greasyfork.org/scripts/539293-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A-%E8%87%AA%E5%AE%9A%E4%B9%89ai%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC-siliconflow%E5%AE%8C%E7%BE%8E%E8%9E%8D%E5%90%88%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/539293/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%2B%E8%87%AA%E5%AE%9A%E4%B9%89AI%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC%20%28SiliconFlow%E5%AE%8C%E7%BE%8E%E8%9E%8D%E5%90%88%E7%89%88%29.user.js",
+  "code_size": 28077,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 510391,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-27T06:22:25.000Z",
+  "code_updated_at": "2024-09-27T06:22:25.000Z",
+  "namespace": "https://www.optokingdom.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1373590,
+      "name": "shinsbo",
+      "created_at": "2024-09-27T06:03:06.000Z",
+      "url": "https://greasyfork.org/users/1373590-shinsbo",
+      "scripts": []
+    }
+  ],
+  "name": "optokingdom.com显示产品页隐藏信息",
+  "description": "Specification、Video、 Review等信息",
+  "url": "https://greasyfork.org/scripts/510391-optokingdom-com%E6%98%BE%E7%A4%BA%E4%BA%A7%E5%93%81%E9%A1%B5%E9%9A%90%E8%97%8F%E4%BF%A1%E6%81%AF",
+  "code_url": "https://update.greasyfork.org/scripts/510391/optokingdomcom%E6%98%BE%E7%A4%BA%E4%BA%A7%E5%93%81%E9%A1%B5%E9%9A%90%E8%97%8F%E4%BF%A1%E6%81%AF.user.js",
+  "code_size": 628,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

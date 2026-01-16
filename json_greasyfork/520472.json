@@ -1,0 +1,59 @@
+{
+  "id": 520472,
+  "daily_installs": 0,
+  "total_installs": 68,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-12T03:33:23.000Z",
+  "code_updated_at": "2025-02-03T19:54:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/LuisAlfredo92/copy-fxtwitter-or-fixupx-link-buttons",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1409746,
+      "name": "LuisAlfredo92",
+      "created_at": "2024-12-12T03:15:24.000Z",
+      "url": "https://greasyfork.org/users/1409746-luisalfredo92",
+      "scripts": [
+        {
+          "id": 520472,
+          "daily_installs": 0,
+          "total_installs": 68,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-12T03:33:23.000Z",
+          "code_updated_at": "2025-02-03T19:54:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/LuisAlfredo92/copy-fxtwitter-or-fixupx-link-buttons",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Copy fxtwitter or fixupx link buttons",
+          "description": "Adds buttons at the top of tweets to easily copy Twitter / X proxies",
+          "url": "https://greasyfork.org/scripts/520472-copy-fxtwitter-or-fixupx-link-buttons",
+          "code_url": "https://update.greasyfork.org/scripts/520472/Copy%20fxtwitter%20or%20fixupx%20link%20buttons.user.js",
+          "code_size": 11706,
+          "license": "GPL3",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Copy fxtwitter or fixupx link buttons",
+  "description": "Adds buttons at the top of tweets to easily copy Twitter / X proxies",
+  "url": "https://greasyfork.org/scripts/520472-copy-fxtwitter-or-fixupx-link-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/520472/Copy%20fxtwitter%20or%20fixupx%20link%20buttons.user.js",
+  "code_size": 11706,
+  "license": "GPL3",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

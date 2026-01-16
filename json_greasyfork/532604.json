@@ -1,0 +1,34 @@
+{
+  "id": 532604,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-12T07:16:48.000Z",
+  "code_updated_at": "2025-04-13T06:41:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434037,
+      "name": "팽뚱이",
+      "created_at": "2025-02-11T16:45:16.000Z",
+      "url": "https://greasyfork.org/users/1434037-%ED%8C%BD%EB%9A%B1%EC%9D%B4",
+      "scripts": []
+    }
+  ],
+  "name": "티켓링크 새로고침",
+  "description": "티켓링크 취소표 자동 새로고침",
+  "url": "https://greasyfork.org/scripts/532604-%ED%8B%B0%EC%BC%93%EB%A7%81%ED%81%AC-%EC%83%88%EB%A1%9C%EA%B3%A0%EC%B9%A8",
+  "code_url": "https://update.greasyfork.org/scripts/532604/%ED%8B%B0%EC%BC%93%EB%A7%81%ED%81%AC%20%EC%83%88%EB%A1%9C%EA%B3%A0%EC%B9%A8.user.js",
+  "code_size": 4650,
+  "license": "pangddong",
+  "version": "0.3",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

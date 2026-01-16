@@ -1,0 +1,68 @@
+[
+  {
+    "id": 544312,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T14:39:10.000Z",
+    "code_updated_at": "2025-08-31T06:38:08.000Z",
+    "namespace": "https://github.com/rainniel/tampermonkey-scripts",
+    "support_url": "https://github.com/rainniel/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1349439,
+        "name": "Rainniel",
+        "created_at": "2024-08-11T02:04:33.000Z",
+        "url": "https://greasyfork.org/users/1349439-rainniel"
+      }
+    ],
+    "name": "My Meralco Accounts Table",
+    "description": "Creates a table view of account(s) with selectable and copyable text",
+    "url": "https://greasyfork.org/scripts/544312-my-meralco-accounts-table",
+    "code_url": "https://update.greasyfork.org/scripts/544312/My%20Meralco%20Accounts%20Table.user.js",
+    "code_size": 10734,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527939,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T10:20:20.000Z",
+    "code_updated_at": "2025-02-24T10:20:19.000Z",
+    "namespace": "https://github.com/rainniel/tampermonkey-scripts",
+    "support_url": "https://github.com/rainniel/tampermonkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1349439,
+        "name": "Rainniel",
+        "created_at": "2024-08-11T02:04:33.000Z",
+        "url": "https://greasyfork.org/users/1349439-rainniel"
+      }
+    ],
+    "name": "Genshin Impact Interactive World Map Enhancements",
+    "description": "Makes everything markable, removes right sidebar & more",
+    "url": "https://greasyfork.org/scripts/527939-genshin-impact-interactive-world-map-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/527939/Genshin%20Impact%20Interactive%20World%20Map%20Enhancements.user.js",
+    "code_size": 6794,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

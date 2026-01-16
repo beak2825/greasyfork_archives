@@ -1,0 +1,33 @@
+{
+  "id": 543649,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-25T22:02:34.000Z",
+  "code_updated_at": "2025-09-05T17:58:31.000Z",
+  "namespace": "CBI_P44_Plugins",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456457,
+      "name": "Tomas Morales",
+      "created_at": "2025-04-11T05:39:46.000Z",
+      "url": "https://greasyfork.org/users/1456457-tomas-morales"
+    }
+  ],
+  "name": "OBG-Formulario para arribo de unidades",
+  "description": "Permite realizar el ingreso de las unidades de transporte con cita con la información como se necesita para los requerimientos de CT-PAT y OEA.",
+  "url": "https://greasyfork.org/scripts/543649-obg-formulario-para-arribo-de-unidades",
+  "code_url": "https://update.greasyfork.org/scripts/543649/OBG-Formulario%20para%20arribo%20de%20unidades.user.js",
+  "code_size": 74792,
+  "license": "MIT License",
+  "version": "1.2.3",
+  "locale": "es-419",
+  "deleted": false,
+  "visibility": "public"
+}

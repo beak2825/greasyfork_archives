@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530701,
+    "daily_installs": 1,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-24T10:50:29.000Z",
+    "code_updated_at": "2025-03-25T00:48:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1449639,
+        "name": "Orolses",
+        "created_at": "2025-03-24T10:17:04.000Z",
+        "url": "https://greasyfork.org/users/1449639-orolses"
+      }
+    ],
+    "name": "视频分辨率检测显示器",
+    "description": "实时显示视频分辨率，支持快捷键和右键菜单控制",
+    "url": "https://greasyfork.org/scripts/530701-%E8%A7%86%E9%A2%91%E5%88%86%E8%BE%A8%E7%8E%87%E6%A3%80%E6%B5%8B%E6%98%BE%E7%A4%BA%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/530701/%E8%A7%86%E9%A2%91%E5%88%86%E8%BE%A8%E7%8E%87%E6%A3%80%E6%B5%8B%E6%98%BE%E7%A4%BA%E5%99%A8.user.js",
+    "code_size": 7571,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

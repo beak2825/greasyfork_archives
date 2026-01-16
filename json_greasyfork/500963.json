@@ -1,0 +1,34 @@
+{
+  "id": 500963,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-17T14:58:22.000Z",
+  "code_updated_at": "2024-07-17T14:58:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed WM Sp Start Manfred Kurz",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/500963-ed-wm-sp-start-manfred-kurz",
+  "code_url": "https://update.greasyfork.org/scripts/500963/Ed%20WM%20Sp%20Start%20Manfred%20Kurz.user.js",
+  "code_size": 44831,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

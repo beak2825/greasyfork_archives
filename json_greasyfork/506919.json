@@ -1,0 +1,34 @@
+{
+  "id": 506919,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-05T09:16:04.000Z",
+  "code_updated_at": "2025-01-12T11:37:32.000Z",
+  "namespace": "wgb_jdy_daka",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1274321,
+      "name": "958516732",
+      "created_at": "2024-03-14T06:44:17.000Z",
+      "url": "https://greasyfork.org/users/1274321-958516732",
+      "scripts": []
+    }
+  ],
+  "name": "完工办_简道云打卡注入",
+  "description": "取消仅拍照限制和修改GPS定位！",
+  "url": "https://greasyfork.org/scripts/506919-%E5%AE%8C%E5%B7%A5%E5%8A%9E-%E7%AE%80%E9%81%93%E4%BA%91%E6%89%93%E5%8D%A1%E6%B3%A8%E5%85%A5",
+  "code_url": "https://update.greasyfork.org/scripts/506919/%E5%AE%8C%E5%B7%A5%E5%8A%9E_%E7%AE%80%E9%81%93%E4%BA%91%E6%89%93%E5%8D%A1%E6%B3%A8%E5%85%A5.user.js",
+  "code_size": 901,
+  "license": "MIT License",
+  "version": "1.3.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

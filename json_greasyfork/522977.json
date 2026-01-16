@@ -1,0 +1,59 @@
+{
+  "id": 522977,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-01-06T04:44:37.000Z",
+  "code_updated_at": "2025-06-18T06:35:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420091,
+      "name": "Drifter",
+      "created_at": "2025-01-06T04:33:52.000Z",
+      "url": "https://greasyfork.org/users/1420091-drifter",
+      "scripts": [
+        {
+          "id": 522977,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-01-06T04:44:37.000Z",
+          "code_updated_at": "2025-06-18T06:35:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HQU 评教脚本",
+          "description": "hqu一键评教",
+          "url": "https://greasyfork.org/scripts/522977-hqu-%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/522977/HQU%20%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 8127,
+          "license": null,
+          "version": "1.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HQU 评教脚本",
+  "description": "hqu一键评教",
+  "url": "https://greasyfork.org/scripts/522977-hqu-%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/522977/HQU%20%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 8127,
+  "license": null,
+  "version": "1.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

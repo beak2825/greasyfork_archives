@@ -1,0 +1,33 @@
+{
+  "id": 537720,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-30T05:58:10.000Z",
+  "code_updated_at": "2025-05-30T13:04:49.000Z",
+  "namespace": "https://greasyfork.org/users/1476609",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476609,
+      "name": "重音",
+      "created_at": "2025-05-30T05:42:12.000Z",
+      "url": "https://greasyfork.org/users/1476609-%E9%87%8D%E9%9F%B3"
+    }
+  ],
+  "name": "B站/Youtube 倍速快捷键（Z/X/C）+ 宽屏提示（中下方居中）",
+  "description": "分段倍速调节，提示显示在播放器底部中间，支持B站宽屏切换，YouTube字幕键屏蔽等功能。",
+  "url": "https://greasyfork.org/scripts/537720-b%E7%AB%99-youtube-%E5%80%8D%E9%80%9F%E5%BF%AB%E6%8D%B7%E9%94%AE-z-x-c-%E5%AE%BD%E5%B1%8F%E6%8F%90%E7%A4%BA-%E4%B8%AD%E4%B8%8B%E6%96%B9%E5%B1%85%E4%B8%AD",
+  "code_url": "https://update.greasyfork.org/scripts/537720/B%E7%AB%99Youtube%20%E5%80%8D%E9%80%9F%E5%BF%AB%E6%8D%B7%E9%94%AE%EF%BC%88ZXC%EF%BC%89%2B%20%E5%AE%BD%E5%B1%8F%E6%8F%90%E7%A4%BA%EF%BC%88%E4%B8%AD%E4%B8%8B%E6%96%B9%E5%B1%85%E4%B8%AD%EF%BC%89.user.js",
+  "code_size": 4638,
+  "license": "GPL",
+  "version": "1.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

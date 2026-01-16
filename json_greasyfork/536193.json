@@ -1,0 +1,33 @@
+{
+  "id": 536193,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-16T08:54:58.000Z",
+  "code_updated_at": "2025-05-16T08:54:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber"
+    }
+  ],
+  "name": "Ed Start 4Rec sp.Knut.Pfeiffer@t-online.de",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/536193-ed-start-4rec-sp-knut-pfeiffer-t-online-de",
+  "code_url": "https://update.greasyfork.org/scripts/536193/Ed%20Start%204Rec%20spKnutPfeiffer%40t-onlinede.user.js",
+  "code_size": 3902,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

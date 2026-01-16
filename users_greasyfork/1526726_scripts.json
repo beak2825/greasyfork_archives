@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552598,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-14T20:50:56.000Z",
+    "code_updated_at": "2025-10-14T20:50:56.000Z",
+    "namespace": "http://userscripts.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1526726,
+        "name": "Rojs Spiks",
+        "created_at": "2025-10-14T20:45:11.000Z",
+        "url": "https://greasyfork.org/users/1526726-rojs-spiks"
+      }
+    ],
+    "name": "Roblox Account Generator by DAN",
+    "description": "Generates Roblox accounts with Sourcehub usernames, skips email if possible, works on iPad with free userscript managers",
+    "url": "https://greasyfork.org/scripts/552598-roblox-account-generator-by-dan",
+    "code_url": "https://update.greasyfork.org/scripts/552598/Roblox%20Account%20Generator%20by%20DAN.user.js",
+    "code_size": 6976,
+    "license": null,
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

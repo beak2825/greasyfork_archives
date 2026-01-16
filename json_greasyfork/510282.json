@@ -1,0 +1,33 @@
+{
+  "id": 510282,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-26T13:35:02.000Z",
+  "code_updated_at": "2024-09-26T13:35:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369638,
+      "name": "joppie",
+      "created_at": "2024-09-18T13:14:09.000Z",
+      "url": "https://greasyfork.org/users/1369638-joppie"
+    }
+  ],
+  "name": "Grepolis Notepad Rood Forum testen draggable",
+  "description": "Adds a draggable notepad with template and a custom image button in Grepolis",
+  "url": "https://greasyfork.org/scripts/510282-grepolis-notepad-rood-forum-testen-draggable",
+  "code_url": "https://update.greasyfork.org/scripts/510282/Grepolis%20Notepad%20Rood%20Forum%20testen%20draggable.user.js",
+  "code_size": 12576,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

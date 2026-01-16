@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551187,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T21:43:58.000Z",
+    "code_updated_at": "2025-09-30T21:45:54.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/551187-tampergram",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TamperGram",
+    "description": "Telegram multi-channel reader with folders, unread counters and discussions",
+    "url": "https://greasyfork.org/scripts/551187-tampergram",
+    "code_url": "https://update.greasyfork.org/scripts/551187/TamperGram.user.js",
+    "code_size": 82861,
+    "license": "GPL v.3 or any later version.",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 548703,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-07T14:02:52.000Z",
+    "code_updated_at": "2025-09-07T14:18:58.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/548703-feedtube",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "FeedTube",
+    "description": "Userscript that renders YouTube channel RSS as a fast, full‑page feed — subscriptions, caching, source fallbacks, Shorts filter, playlists, and quick playback.",
+    "url": "https://greasyfork.org/scripts/548703-feedtube",
+    "code_url": "https://update.greasyfork.org/scripts/548703/FeedTube.user.js",
+    "code_size": 77357,
+    "license": "GPL v.3 or any later version.",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517334,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-14T12:47:30.000Z",
+    "code_updated_at": "2024-11-21T19:24:06.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/517334-testertv-amazoncamel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_AmazonCamel",
+    "description": "Embeds CamelCamelCamel price chart in Amazon and adds centered click zoom effect on images",
+    "url": "https://greasyfork.org/scripts/517334-testertv-amazoncamel",
+    "code_url": "https://update.greasyfork.org/scripts/517334/TesterTV_AmazonCamel.user.js",
+    "code_size": 6780,
+    "license": "GPL version 3 or any later version for my code part !!!",
+    "version": "2024.11.21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500759,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T23:04:57.000Z",
+    "code_updated_at": "2024-07-16T22:20:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1194621,
+        "name": "testertv",
+        "created_at": "2023-10-12T22:13:59.000Z",
+        "url": "https://greasyfork.org/users/1194621-testertv"
+      }
+    ],
+    "name": "TesterTV_Emoji",
+    "description": "Get emojis in few clicks",
+    "url": "https://greasyfork.org/scripts/500759-testertv-emoji",
+    "code_url": "https://update.greasyfork.org/scripts/500759/TesterTV_Emoji.user.js",
+    "code_size": 165123,
+    "license": "GPL version 3 or any later version",
+    "version": "2024.07.17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

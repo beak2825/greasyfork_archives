@@ -1,0 +1,33 @@
+{
+  "id": 533735,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-04-23T14:43:03.000Z",
+  "code_updated_at": "2025-04-23T14:43:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1077401,
+      "name": "Ashish Agarwal",
+      "created_at": "2023-05-11T16:00:00.000Z",
+      "url": "https://greasyfork.org/users/1077401-ashish-agarwal"
+    }
+  ],
+  "name": "Florr.io Rebinds",
+  "description": "Customizable key rebinding interface for Florr.io",
+  "url": "https://greasyfork.org/scripts/533735-florr-io-rebinds",
+  "code_url": "https://update.greasyfork.org/scripts/533735/Florrio%20Rebinds.user.js",
+  "code_size": 21237,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

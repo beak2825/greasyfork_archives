@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503856,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-16T14:09:05.000Z",
+    "code_updated_at": "2024-08-17T02:43:05.000Z",
+    "namespace": "https://laftel.net/",
+    "support_url": "https://gist.github.com/sh-cho/53bc2fc880ebba0d1a6f9b430d010449",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1352858,
+        "name": "sh-cho",
+        "created_at": "2024-08-16T13:53:01.000Z",
+        "url": "https://greasyfork.org/users/1352858-sh-cho"
+      }
+    ],
+    "name": "Laftel collapsible comments",
+    "description": "Make Laftel comments collapsible",
+    "url": "https://greasyfork.org/scripts/503856-laftel-collapsible-comments",
+    "code_url": "https://update.greasyfork.org/scripts/503856/Laftel%20collapsible%20comments.user.js",
+    "code_size": 2480,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

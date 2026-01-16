@@ -1,0 +1,68 @@
+[
+  {
+    "id": 537701,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-30T01:55:09.000Z",
+    "code_updated_at": "2025-05-30T01:55:09.000Z",
+    "namespace": "https://github.com/adamlui",
+    "support_url": "https://support.chatgptinfinity.com",
+    "contribution_url": "https://github.com/sponsors/adamlui",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450822,
+        "name": "Nguyễn Vũ Nam",
+        "created_at": "2025-03-27T06:59:24.000Z",
+        "url": "https://greasyfork.org/users/1450822-nguy%E1%BB%85n-v%C5%A9-nam"
+      }
+    ],
+    "name": "Chat GPT ( Nguyễn Vũ Nam)",
+    "description": "Generate endless answers from all-knowing ChatGPT (in any language!)",
+    "url": "https://greasyfork.org/scripts/537701-chat-gpt-nguy%E1%BB%85n-v%C5%A9-nam",
+    "code_url": "https://update.greasyfork.org/scripts/537701/1598244/Chat%20GPT%20%28%20Nguy%E1%BB%85n%20V%C5%A9%20Nam%29.js",
+    "code_size": 52379,
+    "license": "MIT License",
+    "version": "2024.8.29.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530999,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-27T07:01:27.000Z",
+    "code_updated_at": "2025-03-27T07:01:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450822,
+        "name": "Nguyễn Vũ Nam",
+        "created_at": "2025-03-27T06:59:24.000Z",
+        "url": "https://greasyfork.org/users/1450822-nguy%E1%BB%85n-v%C5%A9-nam"
+      }
+    ],
+    "name": "Chess.com Ultimate Automation Suite",
+    "description": "Comprehensive automation tool for Chess.com with auto-rematch, move suggestions, and analytics",
+    "url": "https://greasyfork.org/scripts/530999-chess-com-ultimate-automation-suite",
+    "code_url": "https://update.greasyfork.org/scripts/530999/Chesscom%20Ultimate%20Automation%20Suite.user.js",
+    "code_size": 8668,
+    "license": null,
+    "version": "3.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

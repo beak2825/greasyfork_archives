@@ -1,0 +1,59 @@
+{
+  "id": 550106,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-19T21:32:00.000Z",
+  "code_updated_at": "2025-10-01T21:52:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453712,
+      "name": "Ovidiu Vaduva",
+      "created_at": "2025-04-03T19:11:23.000Z",
+      "url": "https://greasyfork.org/users/1453712-ovidiu-vaduva",
+      "scripts": [
+        {
+          "id": 536979,
+          "daily_installs": 0,
+          "total_installs": 32,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-23T13:03:04.000Z",
+          "code_updated_at": "2025-05-23T13:03:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Overseas Bounty Highlighter",
+          "description": "Color RED bounty players",
+          "url": "https://greasyfork.org/scripts/536979-torn-overseas-bounty-highlighter",
+          "code_url": "https://update.greasyfork.org/scripts/536979/Torn%20Overseas%20Bounty%20Highlighter.user.js",
+          "code_size": 1067,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Advanced Search User Filter",
+  "description": "Inline Torn stats for Advanced Search. Company/Faction toggle. Multi-key round-robin. 1 req/sec global queue. v2 NetWorth + TimePlayed averages.",
+  "url": "https://greasyfork.org/scripts/550106-advanced-search-user-filter",
+  "code_url": "https://update.greasyfork.org/scripts/550106/Advanced%20Search%20User%20Filter.user.js",
+  "code_size": 38516,
+  "license": "MIT License",
+  "version": "2.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

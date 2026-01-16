@@ -1,0 +1,59 @@
+{
+  "id": 539893,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-18T15:26:32.000Z",
+  "code_updated_at": "2025-06-18T15:26:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052375,
+      "name": "keney Me",
+      "created_at": "2023-04-03T09:35:34.000Z",
+      "url": "https://greasyfork.org/users/1052375-keney-me",
+      "scripts": [
+        {
+          "id": 537864,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-31T14:55:59.000Z",
+          "code_updated_at": "2025-05-31T14:58:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Remove Datacaciques Ad",
+          "description": "DataCaciques 广告屏蔽脚本",
+          "url": "https://greasyfork.org/scripts/537864-auto-remove-datacaciques-ad",
+          "code_url": "https://update.greasyfork.org/scripts/537864/Auto%20Remove%20Datacaciques%20Ad.user.js",
+          "code_size": 17669,
+          "license": "MIT License",
+          "version": "1.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "linux.do 板块活动雷达图",
+  "description": "linux.do 活动雷达图，展示7个板块在不同时间段的活动数据，界面炫彩，富含科技感，并根据发帖和回帖赋予不同权重。",
+  "url": "https://greasyfork.org/scripts/539893-linux-do-%E6%9D%BF%E5%9D%97%E6%B4%BB%E5%8A%A8%E9%9B%B7%E8%BE%BE%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/539893/linuxdo%20%E6%9D%BF%E5%9D%97%E6%B4%BB%E5%8A%A8%E9%9B%B7%E8%BE%BE%E5%9B%BE.user.js",
+  "code_size": 27679,
+  "license": "MIT License",
+  "version": "2025-06-18",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

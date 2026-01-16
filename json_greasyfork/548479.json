@@ -1,0 +1,33 @@
+{
+  "id": 548479,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-05T13:48:38.000Z",
+  "code_updated_at": "2025-12-03T11:01:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461531,
+      "name": "루션",
+      "created_at": "2025-04-24T03:50:16.000Z",
+      "url": "https://greasyfork.org/users/1461531-%EB%A3%A8%EC%85%98"
+    }
+  ],
+  "name": "애니라이프 MediaSession TMDB (디버그 상세)",
+  "description": "anilife.app/watch 전용 — TMDB 검색, 매핑, 포스터, MediaSession 설정 + 세부 로그 강화",
+  "url": "https://greasyfork.org/scripts/548479-%EC%95%A0%EB%8B%88%EB%9D%BC%EC%9D%B4%ED%94%84-mediasession-tmdb-%EB%94%94%EB%B2%84%EA%B7%B8-%EC%83%81%EC%84%B8",
+  "code_url": "https://update.greasyfork.org/scripts/548479/%EC%95%A0%EB%8B%88%EB%9D%BC%EC%9D%B4%ED%94%84%20MediaSession%20TMDB%20%28%EB%94%94%EB%B2%84%EA%B7%B8%20%EC%83%81%EC%84%B8%29.user.js",
+  "code_size": 15874,
+  "license": "MIT License",
+  "version": "2.46",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

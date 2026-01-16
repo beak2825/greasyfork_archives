@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545851,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-14T18:33:19.000Z",
+    "code_updated_at": "2025-08-19T20:30:32.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/545851-wallapop-cdn-upgrade-smaller-w-sizes-to-w1024",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 506420,
+        "name": "nooobye",
+        "created_at": "2020-04-13T11:49:07.000Z",
+        "url": "https://greasyfork.org/users/506420-nooobye"
+      }
+    ],
+    "name": "[Wallapop] CDN: request individual images of articles of the highest resolution possible",
+    "description": "On cdn.wallapop.com, whenever pictureSize=W<number> and number < 1024, replace with W1024, to view individual pictures of items at higher resolution than provided by default.",
+    "url": "https://greasyfork.org/scripts/545851-wallapop-cdn-request-individual-images-of-articles-of-the-highest-resolution-possible",
+    "code_url": "https://update.greasyfork.org/scripts/545851/%5BWallapop%5D%20CDN%3A%20request%20individual%20images%20of%20articles%20of%20the%20highest%20resolution%20possible.user.js",
+    "code_size": 1273,
+    "license": "MIT License",
+    "version": "2025-08-18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

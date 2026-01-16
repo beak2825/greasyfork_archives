@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536525,
+    "daily_installs": 0,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T17:55:51.000Z",
+    "code_updated_at": "2025-05-19T17:55:51.000Z",
+    "namespace": "https://github.com/tungdo0602/Blooket-stuffs",
+    "support_url": "https://github.com/tungdo0602/Blooket-stuffs/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1472141,
+        "name": "mick1982!",
+        "created_at": "2025-05-19T17:33:47.000Z",
+        "url": "https://greasyfork.org/users/1472141-mick1982"
+      }
+    ],
+    "name": "Blooket Utilities",
+    "description": "Some Useful Blooket Hacks.",
+    "url": "https://greasyfork.org/scripts/536525-blooket-utilities",
+    "code_url": "https://update.greasyfork.org/scripts/536525/Blooket%20Utilities.user.js",
+    "code_size": 13662,
+    "license": "MIT License",
+    "version": "1.2.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 541038,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-28T13:50:41.000Z",
+    "code_updated_at": "2025-06-28T14:13:02.000Z",
+    "namespace": "https://github.com/OlisDevSpot",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489393,
+        "name": "OlisDevSpot",
+        "created_at": "2025-06-27T21:11:31.000Z",
+        "url": "https://greasyfork.org/users/1489393-olisdevspot"
+      }
+    ],
+    "name": "Testing Stay extension",
+    "description": "Inject some javascript into these websites",
+    "url": "https://greasyfork.org/scripts/541038-testing-stay-extension",
+    "code_url": "https://update.greasyfork.org/scripts/541038/Testing%20Stay%20extension.user.js",
+    "code_size": 614,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540974,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T21:18:30.000Z",
+    "code_updated_at": "2025-06-27T21:45:23.000Z",
+    "namespace": "https://github.com/OlisDevSpot",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489393,
+        "name": "OlisDevSpot",
+        "created_at": "2025-06-27T21:11:31.000Z",
+        "url": "https://greasyfork.org/users/1489393-olisdevspot"
+      }
+    ],
+    "name": "Testing outside scripts",
+    "description": "Test them scripts, boi",
+    "url": "https://greasyfork.org/scripts/540974-testing-outside-scripts",
+    "code_url": "https://update.greasyfork.org/scripts/540974/Testing%20outside%20scripts.user.js",
+    "code_size": 1407,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521321,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-20T20:06:50.000Z",
+    "code_updated_at": "2025-06-17T03:04:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1227576,
+        "name": "Kamikadashi",
+        "created_at": "2023-12-03T15:35:54.000Z",
+        "url": "https://greasyfork.org/users/1227576-kamikadashi"
+      }
+    ],
+    "name": "VNDB Friends List",
+    "description": "Add friends list and friend votes display for VNDB",
+    "url": "https://greasyfork.org/scripts/521321-vndb-friends-list",
+    "code_url": "https://update.greasyfork.org/scripts/521321/VNDB%20Friends%20List.user.js",
+    "code_size": 134270,
+    "license": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "version": "1.77",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

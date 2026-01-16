@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541020,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-28T09:40:39.000Z",
+    "code_updated_at": "2025-06-28T09:40:39.000Z",
+    "namespace": "https://greasyfork.org/users/1489574",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489574,
+        "name": "YuhangHere",
+        "created_at": "2025-06-28T09:25:00.000Z",
+        "url": "https://greasyfork.org/users/1489574-yuhanghere"
+      }
+    ],
+    "name": "BIT-AutoLogin",
+    "description": "通过脚本实现BIT网站自动登录，可在任意学校网站页面通过一个总菜单管理所有操作。",
+    "url": "https://greasyfork.org/scripts/541020-bit-autologin",
+    "code_url": "https://update.greasyfork.org/scripts/541020/BIT-AutoLogin.user.js",
+    "code_size": 15548,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516290,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-07T18:36:43.000Z",
+    "code_updated_at": "2024-11-07T18:36:43.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 695867,
+        "name": "Zamro",
+        "created_at": "2020-10-17T09:52:22.000Z",
+        "url": "https://greasyfork.org/users/695867-zamro"
+      }
+    ],
+    "name": "Day length on calendar.zoznam.sk/sunset-*",
+    "description": "Adding day length",
+    "url": "https://greasyfork.org/scripts/516290-day-length-on-calendar-zoznam-sk-sunset",
+    "code_url": "https://update.greasyfork.org/scripts/516290/Day%20length%20on%20calendarzoznamsksunset-%2A.user.js",
+    "code_size": 1146,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

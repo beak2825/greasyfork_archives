@@ -1,0 +1,34 @@
+{
+  "id": 497719,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-12T10:24:06.000Z",
+  "code_updated_at": "2024-06-12T10:35:44.000Z",
+  "namespace": "http://fios-colantraigh.ru.swtest.ru",
+  "support_url": "https://vk.com/vanya_sedinkin",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1043432,
+      "name": "Vanya_Sedinkin",
+      "created_at": "2023-03-17T05:40:50.000Z",
+      "url": "https://greasyfork.org/users/1043432-vanya-sedinkin",
+      "scripts": []
+    }
+  ],
+  "name": "𝙵𝚒𝚘𝚜 𝚌𝚘𝚕𝚊𝚗𝚝𝚛𝚊𝚒𝚍𝚑 || Скрипт для Руководства/Администраторорам.",
+  "description": "Специально для  Fio𝚜 colantraidh || by V.Sedinkin",
+  "url": "https://greasyfork.org/scripts/497719-%F0%9D%99%B5%F0%9D%9A%92%F0%9D%9A%98%F0%9D%9A%9C-%F0%9D%9A%8C%F0%9D%9A%98%F0%9D%9A%95%F0%9D%9A%8A%F0%9D%9A%97%F0%9D%9A%9D%F0%9D%9A%9B%F0%9D%9A%8A%F0%9D%9A%92%F0%9D%9A%8D%F0%9D%9A%91-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D1%80%D0%B0%D0%BC",
+  "code_url": "https://update.greasyfork.org/scripts/497719/%F0%9D%99%B5%F0%9D%9A%92%F0%9D%9A%98%F0%9D%9A%9C%20%F0%9D%9A%8C%F0%9D%9A%98%F0%9D%9A%95%F0%9D%9A%8A%F0%9D%9A%97%F0%9D%9A%9D%F0%9D%9A%9B%F0%9D%9A%8A%F0%9D%9A%92%F0%9D%9A%8D%F0%9D%9A%91%20%7C%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D1%80%D0%B0%D0%BC.user.js",
+  "code_size": 107064,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -64,5 +64,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 542516,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-14T05:25:29.000Z",
+    "code_updated_at": "2025-07-14T05:25:29.000Z",
+    "namespace": "qxj",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397374,
+        "name": "brady-wang",
+        "created_at": "2019-11-13T00:58:30.000Z",
+        "url": "https://greasyfork.org/users/397374-brady-wang"
+      }
+    ],
+    "name": "闪电快速查询 手动版本",
+    "description": "修复按钮挤压问题，移除多余尺寸样式，保持自然布局，设置时间查询区域宽度为430px",
+    "url": "https://greasyfork.org/scripts/542516-%E9%97%AA%E7%94%B5%E5%BF%AB%E9%80%9F%E6%9F%A5%E8%AF%A2-%E6%89%8B%E5%8A%A8%E7%89%88%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/542516/%E9%97%AA%E7%94%B5%E5%BF%AB%E9%80%9F%E6%9F%A5%E8%AF%A2%20%E6%89%8B%E5%8A%A8%E7%89%88%E6%9C%AC.user.js",
+    "code_size": 11395,
+    "license": "MIT License",
+    "version": "2.8.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539226,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T15:02:00.000Z",
+    "code_updated_at": "2025-06-12T15:02:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397374,
+        "name": "brady-wang",
+        "created_at": "2019-11-13T00:58:30.000Z",
+        "url": "https://greasyfork.org/users/397374-brady-wang"
+      }
+    ],
+    "name": "气象工具集成包（完整版）",
+    "description": "完整整合三个独立脚本功能（最终版）",
+    "url": "https://greasyfork.org/scripts/539226-%E6%B0%94%E8%B1%A1%E5%B7%A5%E5%85%B7%E9%9B%86%E6%88%90%E5%8C%85-%E5%AE%8C%E6%95%B4%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/539226/%E6%B0%94%E8%B1%A1%E5%B7%A5%E5%85%B7%E9%9B%86%E6%88%90%E5%8C%85%EF%BC%88%E5%AE%8C%E6%95%B4%E7%89%88%EF%BC%89.user.js",
+    "code_size": 17779,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502248,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-31T08:51:35.000Z",
+    "code_updated_at": "2024-08-08T15:16:23.000Z",
+    "namespace": "qxj",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397374,
+        "name": "brady-wang",
+        "created_at": "2019-11-13T00:58:30.000Z",
+        "url": "https://greasyfork.org/users/397374-brady-wang"
+      }
+    ],
+    "name": "雷电刷新",
+    "description": "截屏",
+    "url": "https://greasyfork.org/scripts/502248-%E9%9B%B7%E7%94%B5%E5%88%B7%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/502248/%E9%9B%B7%E7%94%B5%E5%88%B7%E6%96%B0.user.js",
+    "code_size": 3461,
+    "license": "MIT License",
+    "version": "2024-07-34",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502231,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-31T01:09:49.000Z",
+    "code_updated_at": "2024-08-08T15:19:10.000Z",
+    "namespace": "qxj",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397374,
+        "name": "brady-wang",
+        "created_at": "2019-11-13T00:58:30.000Z",
+        "url": "https://greasyfork.org/users/397374-brady-wang"
+      }
+    ],
+    "name": "回波图",
+    "description": "截屏",
+    "url": "https://greasyfork.org/scripts/502231-%E5%9B%9E%E6%B3%A2%E5%9B%BE",
+    "code_url": "https://update.greasyfork.org/scripts/502231/%E5%9B%9E%E6%B3%A2%E5%9B%BE.user.js",
+    "code_size": 4845,
+    "license": "MIT License",
+    "version": "2024-07-40",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500388,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-12T05:06:45.000Z",
+    "code_updated_at": "2024-11-29T01:52:33.000Z",
+    "namespace": "lixianqxj",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397374,
+        "name": "brady-wang",
+        "created_at": "2019-11-13T00:58:30.000Z",
+        "url": "https://greasyfork.org/users/397374-brady-wang"
+      }
+    ],
+    "name": "天气预报-rain",
+    "description": "自动化温度雨量填写",
+    "url": "https://greasyfork.org/scripts/500388-%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5-rain",
+    "code_url": "https://update.greasyfork.org/scripts/500388/%E5%A4%A9%E6%B0%94%E9%A2%84%E6%8A%A5-rain.user.js",
+    "code_size": 195081,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

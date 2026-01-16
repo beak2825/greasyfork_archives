@@ -1,0 +1,134 @@
+[
+  {
+    "id": 529117,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-07T17:59:26.000Z",
+    "code_updated_at": "2025-03-07T17:59:26.000Z",
+    "namespace": "roman.is-a.dev",
+    "support_url": "https://roman.is-a.dev/discord",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381856,
+        "name": "GameRoMan",
+        "created_at": "2024-10-16T16:48:09.000Z",
+        "url": "https://greasyfork.org/users/1381856-gameroman"
+      }
+    ],
+    "name": "Download alive 5-letter elements from Infinite Craft",
+    "description": "Download alive 5-letter elements from Infinite Craft Userscript",
+    "url": "https://greasyfork.org/scripts/529117-download-alive-5-letter-elements-from-infinite-craft",
+    "code_url": "https://update.greasyfork.org/scripts/529117/Download%20alive%205-letter%20elements%20from%20Infinite%20Craft.user.js",
+    "code_size": 2710,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 514152,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-26T13:01:48.000Z",
+    "code_updated_at": "2024-10-26T13:01:48.000Z",
+    "namespace": "GameRoMan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381856,
+        "name": "GameRoMan",
+        "created_at": "2024-10-16T16:48:09.000Z",
+        "url": "https://greasyfork.org/users/1381856-gameroman"
+      }
+    ],
+    "name": "Cheat for What Beats Rock Royale",
+    "description": "What Beats Rock Royale Cheat",
+    "url": "https://greasyfork.org/scripts/514152-cheat-for-what-beats-rock-royale",
+    "code_url": "https://update.greasyfork.org/scripts/514152/Cheat%20for%20What%20Beats%20Rock%20Royale.user.js",
+    "code_size": 9056,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 513442,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-21T18:10:32.000Z",
+    "code_updated_at": "2024-10-21T18:10:32.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381856,
+        "name": "GameRoMan",
+        "created_at": "2024-10-16T16:48:09.000Z",
+        "url": "https://greasyfork.org/users/1381856-gameroman"
+      }
+    ],
+    "name": "Dark Mode",
+    "description": "Dark Mode for Emoji Arena",
+    "url": "https://greasyfork.org/scripts/513442-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/513442/Dark%20Mode.user.js",
+    "code_size": 2908,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512876,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-16T16:51:04.000Z",
+    "code_updated_at": "2024-10-17T15:05:56.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381856,
+        "name": "GameRoMan",
+        "created_at": "2024-10-16T16:48:09.000Z",
+        "url": "https://greasyfork.org/users/1381856-gameroman"
+      }
+    ],
+    "name": "Emoji Arena hack",
+    "description": "Cheat for Emoji Arena",
+    "url": "https://greasyfork.org/scripts/512876-emoji-arena-hack",
+    "code_url": "https://update.greasyfork.org/scripts/512876/Emoji%20Arena%20hack.user.js",
+    "code_size": 3068,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

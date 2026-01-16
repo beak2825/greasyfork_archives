@@ -1,0 +1,33 @@
+{
+  "id": 541077,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-28T23:41:24.000Z",
+  "code_updated_at": "2025-06-28T23:45:08.000Z",
+  "namespace": "https://forum.liverussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1489768,
+      "name": "HELLIX",
+      "created_at": "2025-06-28T23:37:14.000Z",
+      "url": "https://greasyfork.org/users/1489768-hellix"
+    }
+  ],
+  "name": "Admins Response Templates (Forum LIVE RUSSIA)",
+  "description": "Расширенные настройки: сортировка, редактирование, автоотправка, автоочистка и др. Автор: HELLIX",
+  "url": "https://greasyfork.org/scripts/541077-admins-response-templates-forum-live-russia",
+  "code_url": "https://update.greasyfork.org/scripts/541077/Admins%20Response%20Templates%20%28Forum%20LIVE%20RUSSIA%29.user.js",
+  "code_size": 33570,
+  "license": null,
+  "version": "4.3.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

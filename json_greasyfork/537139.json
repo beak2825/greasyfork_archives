@@ -1,0 +1,59 @@
+{
+  "id": 537139,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-24T18:04:17.000Z",
+  "code_updated_at": "2025-05-25T19:56:16.000Z",
+  "namespace": "https://viayoo.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474407,
+      "name": "Jc2000",
+      "created_at": "2025-05-24T17:57:02.000Z",
+      "url": "https://greasyfork.org/users/1474407-jc2000",
+      "scripts": [
+        {
+          "id": 537139,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-24T18:04:17.000Z",
+          "code_updated_at": "2025-05-25T19:56:16.000Z",
+          "namespace": "https://viayoo.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube enhancer for Via",
+          "description": "NewPipe button, force H.264 ≤30FPS, persistent quality lock, HW acceleration and opening videos and shorts in new tab so that pressing back gets you to previous tab without reloading.",
+          "url": "https://greasyfork.org/scripts/537139-youtube-enhancer-for-via",
+          "code_url": "https://update.greasyfork.org/scripts/537139/YouTube%20enhancer%20for%20Via.user.js",
+          "code_size": 5341,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube enhancer for Via",
+  "description": "NewPipe button, force H.264 ≤30FPS, persistent quality lock, HW acceleration and opening videos and shorts in new tab so that pressing back gets you to previous tab without reloading.",
+  "url": "https://greasyfork.org/scripts/537139-youtube-enhancer-for-via",
+  "code_url": "https://update.greasyfork.org/scripts/537139/YouTube%20enhancer%20for%20Via.user.js",
+  "code_size": 5341,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

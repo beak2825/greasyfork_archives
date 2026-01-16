@@ -1,0 +1,59 @@
+{
+  "id": 511597,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-05T17:41:18.000Z",
+  "code_updated_at": "2024-10-05T17:41:18.000Z",
+  "namespace": "com.stash.apps.greasemonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1377154,
+      "name": "stashtastic",
+      "created_at": "2024-10-05T17:19:00.000Z",
+      "url": "https://greasyfork.org/users/1377154-stashtastic",
+      "scripts": [
+        {
+          "id": 511597,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-05T17:41:18.000Z",
+          "code_updated_at": "2024-10-05T17:41:18.000Z",
+          "namespace": "com.stash.apps.greasemonkey",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Stash Explorer",
+          "description": "Open galleries/images in Windows Explorer. Requires included stashExplorer.py to be running locally.",
+          "url": "https://greasyfork.org/scripts/511597-stash-explorer",
+          "code_url": "https://update.greasyfork.org/scripts/511597/Stash%20Explorer.user.js",
+          "code_size": 6982,
+          "license": "MIT License",
+          "version": "2024-09-13",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Stash Explorer",
+  "description": "Open galleries/images in Windows Explorer. Requires included stashExplorer.py to be running locally.",
+  "url": "https://greasyfork.org/scripts/511597-stash-explorer",
+  "code_url": "https://update.greasyfork.org/scripts/511597/Stash%20Explorer.user.js",
+  "code_size": 6982,
+  "license": "MIT License",
+  "version": "2024-09-13",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

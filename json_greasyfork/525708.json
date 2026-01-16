@@ -1,0 +1,34 @@
+{
+  "id": 525708,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T07:31:47.000Z",
+  "code_updated_at": "2025-02-03T07:31:47.000Z",
+  "namespace": "https://www.tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 911317,
+      "name": "th26561007",
+      "created_at": "2022-05-07T05:58:28.000Z",
+      "url": "https://greasyfork.org/users/911317-th26561007",
+      "scripts": []
+    }
+  ],
+  "name": "更新中",
+  "description": "*",
+  "url": "https://greasyfork.org/scripts/525708-%E6%9B%B4%E6%96%B0%E4%B8%AD",
+  "code_url": "https://update.greasyfork.org/scripts/525708/%E6%9B%B4%E6%96%B0%E4%B8%AD.user.js",
+  "code_size": 75182,
+  "license": "*",
+  "version": "0.0.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

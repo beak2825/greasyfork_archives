@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513456,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-21T20:31:03.000Z",
+    "code_updated_at": "2024-11-14T09:05:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1384260,
+        "name": "ragavpr",
+        "created_at": "2024-10-21T20:18:34.000Z",
+        "url": "https://greasyfork.org/users/1384260-ragavpr"
+      }
+    ],
+    "name": "wings.io Patches",
+    "description": "| Dark Mode | Profanity Filter | and more... patches are designed to run on load, make required edits and reload",
+    "url": "https://greasyfork.org/scripts/513456-wings-io-patches",
+    "code_url": "https://update.greasyfork.org/scripts/513456/wingsio%20Patches.user.js",
+    "code_size": 5567,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "3.9-(14/Nov/2024)",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

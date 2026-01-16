@@ -1,0 +1,68 @@
+[
+  {
+    "id": 548416,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-05T05:23:13.000Z",
+    "code_updated_at": "2025-09-26T05:38:20.000Z",
+    "namespace": "wikipedia-redirector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 224162,
+        "name": "akiirui",
+        "created_at": "2018-11-06T22:18:24.000Z",
+        "url": "https://greasyfork.org/users/224162-akiirui"
+      }
+    ],
+    "name": "Wikipedia Redirector",
+    "description": "Automatically redirect Wikipedia language variants",
+    "url": "https://greasyfork.org/scripts/548416-wikipedia-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/548416/Wikipedia%20Redirector.user.js",
+    "code_size": 1479,
+    "license": "MIT License",
+    "version": "2025.09.26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509770,
+    "daily_installs": 1,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-23T07:01:57.000Z",
+    "code_updated_at": "2025-09-08T01:31:49.000Z",
+    "namespace": "use-my-fonts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 224162,
+        "name": "akiirui",
+        "created_at": "2018-11-06T22:18:24.000Z",
+        "url": "https://greasyfork.org/users/224162-akiirui"
+      }
+    ],
+    "name": "Use My Fonts",
+    "description": "Use my custom fonts on the pages",
+    "url": "https://greasyfork.org/scripts/509770-use-my-fonts",
+    "code_url": "https://update.greasyfork.org/scripts/509770/Use%20My%20Fonts.user.js",
+    "code_size": 34552,
+    "license": "MIT License",
+    "version": "2025.09.08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

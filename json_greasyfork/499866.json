@@ -1,0 +1,33 @@
+{
+  "id": 499866,
+  "daily_installs": 0,
+  "total_installs": 125,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-06T18:16:53.000Z",
+  "code_updated_at": "2024-07-07T02:31:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1329353,
+      "name": "zhan jx",
+      "created_at": "2024-07-06T17:53:48.000Z",
+      "url": "https://greasyfork.org/users/1329353-zhan-jx"
+    }
+  ],
+  "name": "GPT互动脚本",
+  "description": "GPT互动脚本,避免gpt断开连接，导致需要反复刷新验证",
+  "url": "https://greasyfork.org/scripts/499866-gpt%E4%BA%92%E5%8A%A8%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/499866/GPT%E4%BA%92%E5%8A%A8%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 2071,
+  "license": "All Rights Reserved",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

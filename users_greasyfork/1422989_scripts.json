@@ -1,0 +1,101 @@
+[
+  {
+    "id": 533090,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T05:24:46.000Z",
+    "code_updated_at": "2025-04-17T05:34:49.000Z",
+    "namespace": "RORNB",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1422989,
+        "name": "tarsierscripter",
+        "created_at": "2025-01-14T00:08:02.000Z",
+        "url": "https://greasyfork.org/users/1422989-tarsierscripter"
+      }
+    ],
+    "name": "Remove Old Reddit Notifications Badge",
+    "description": "Removes the ugly new notifications badge from old Reddit.",
+    "url": "https://greasyfork.org/scripts/533090-remove-old-reddit-notifications-badge",
+    "code_url": "https://update.greasyfork.org/scripts/533090/Remove%20Old%20Reddit%20Notifications%20Badge.user.css",
+    "code_size": 390,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532497,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T06:44:44.000Z",
+    "code_updated_at": "2025-04-11T07:41:31.000Z",
+    "namespace": "RORNB",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1422989,
+        "name": "tarsierscripter",
+        "created_at": "2025-01-14T00:08:02.000Z",
+        "url": "https://greasyfork.org/users/1422989-tarsierscripter"
+      }
+    ],
+    "name": "Remove Old Reddit Notifications Badge",
+    "description": "Removes the ugly new notifications badge from old reddit.",
+    "url": "https://greasyfork.org/scripts/532497-remove-old-reddit-notifications-badge",
+    "code_url": "https://update.greasyfork.org/scripts/532497/Remove%20Old%20Reddit%20Notifications%20Badge.user.js",
+    "code_size": 1419,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523877,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-15T23:33:43.000Z",
+    "code_updated_at": "2025-01-18T02:57:33.000Z",
+    "namespace": "FMRIA",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1422989,
+        "name": "tarsierscripter",
+        "created_at": "2025-01-14T00:08:02.000Z",
+        "url": "https://greasyfork.org/users/1422989-tarsierscripter"
+      }
+    ],
+    "name": "Facebook Mobile Remove Install App",
+    "description": "Removes the \"Get the best experience on the app\" popup from the Facebook mobile website.",
+    "url": "https://greasyfork.org/scripts/523877-facebook-mobile-remove-install-app",
+    "code_url": "https://update.greasyfork.org/scripts/523877/Facebook%20Mobile%20Remove%20Install%20App.user.js",
+    "code_size": 1231,
+    "license": "MIT License",
+    "version": "0.0.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

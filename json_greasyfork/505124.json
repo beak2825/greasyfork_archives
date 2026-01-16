@@ -1,0 +1,33 @@
+{
+  "id": 505124,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-25T11:29:49.000Z",
+  "code_updated_at": "2024-08-25T11:29:49.000Z",
+  "namespace": "https://github.com/Losketch",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1356910,
+      "name": "Losketch",
+      "created_at": "2024-08-24T07:04:03.000Z",
+      "url": "https://greasyfork.org/users/1356910-losketch"
+    }
+  ],
+  "name": "fontra汉化(文本替换)",
+  "description": "实时替换页面中的文本，包括 shadow-root 内的文本",
+  "url": "https://greasyfork.org/scripts/505124-fontra%E6%B1%89%E5%8C%96-%E6%96%87%E6%9C%AC%E6%9B%BF%E6%8D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/505124/fontra%E6%B1%89%E5%8C%96%28%E6%96%87%E6%9C%AC%E6%9B%BF%E6%8D%A2%29.user.js",
+  "code_size": 9323,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

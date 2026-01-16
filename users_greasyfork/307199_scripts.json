@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543707,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T14:13:53.000Z",
+    "code_updated_at": "2025-08-17T05:46:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 307199,
+        "name": "KevinGreasy",
+        "created_at": "2019-06-05T02:56:07.000Z",
+        "url": "https://greasyfork.org/users/307199-kevingreasy"
+      }
+    ],
+    "name": "423down链接统一",
+    "description": "确保423down显示的链接与点击、复制的链接完全一致",
+    "url": "https://greasyfork.org/scripts/543707-423down%E9%93%BE%E6%8E%A5%E7%BB%9F%E4%B8%80",
+    "code_url": "https://update.greasyfork.org/scripts/543707/423down%E9%93%BE%E6%8E%A5%E7%BB%9F%E4%B8%80.user.js",
+    "code_size": 495,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

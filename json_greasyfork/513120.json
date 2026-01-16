@@ -1,0 +1,59 @@
+{
+  "id": 513120,
+  "daily_installs": 1,
+  "total_installs": 801,
+  "fan_score": "30.0",
+  "good_ratings": 3,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2024-10-19T02:22:56.000Z",
+  "code_updated_at": "2024-12-16T03:53:38.000Z",
+  "namespace": "https://github.com/hyx00000000007",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1382223,
+      "name": "shimmer00000000007",
+      "created_at": "2024-10-17T12:24:23.000Z",
+      "url": "https://greasyfork.org/users/1382223-shimmer00000000007",
+      "scripts": [
+        {
+          "id": 513120,
+          "daily_installs": 1,
+          "total_installs": 801,
+          "fan_score": "30.0",
+          "good_ratings": 3,
+          "ok_ratings": 2,
+          "bad_ratings": 1,
+          "created_at": "2024-10-19T02:22:56.000Z",
+          "code_updated_at": "2024-12-16T03:53:38.000Z",
+          "namespace": "https://github.com/hyx00000000007",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度网盘文件转存助手",
+          "description": "使用百度网盘的时候经常要将别人分享的文件（夹）转存到自己网盘里。对于非会员用户有每次500个文件的限制，超过500个文件只能自己手动弄，比较麻烦，因此有了这个工具，希望能帮到需要的人，不喜轻喷。(目前支持保存到根目录)",
+          "url": "https://greasyfork.org/scripts/513120-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/513120/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 18365,
+          "license": "BSD",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度网盘文件转存助手",
+  "description": "使用百度网盘的时候经常要将别人分享的文件（夹）转存到自己网盘里。对于非会员用户有每次500个文件的限制，超过500个文件只能自己手动弄，比较麻烦，因此有了这个工具，希望能帮到需要的人，不喜轻喷。(目前支持保存到根目录)",
+  "url": "https://greasyfork.org/scripts/513120-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/513120/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%96%87%E4%BB%B6%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 18365,
+  "license": "BSD",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

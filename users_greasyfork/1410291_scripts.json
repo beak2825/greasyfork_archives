@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520580,
+    "daily_installs": 1,
+    "total_installs": 177,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-13T09:33:49.000Z",
+    "code_updated_at": "2025-07-31T09:39:50.000Z",
+    "namespace": "https://github.com/landrarwolf/youtube-speed-control",
+    "support_url": "https://github.com/landrarwolf/youtube-speed-control/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1410291,
+        "name": "WoLF Landrar (Landrarwolf)",
+        "created_at": "2024-12-13T09:30:50.000Z",
+        "url": "https://greasyfork.org/users/1410291-wolf-landrar-landrarwolf"
+      }
+    ],
+    "name": "YouTube Speed Control",
+    "description": "Hold right arrow key to speed up YouTube video to 2.5x, without interfering with the forward function",
+    "url": "https://greasyfork.org/scripts/520580-youtube-speed-control",
+    "code_url": "https://update.greasyfork.org/scripts/520580/YouTube%20%E6%8C%89%E9%94%AE%E5%8A%A0%E9%80%9F%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 10748,
+    "license": "MIT License",
+    "version": "0.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

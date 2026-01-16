@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525526,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-01T12:14:24.000Z",
+    "code_updated_at": "2025-02-01T12:14:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1429885,
+        "name": "MidnightKittenCat",
+        "created_at": "2025-02-01T12:11:54.000Z",
+        "url": "https://greasyfork.org/users/1429885-midnightkittencat"
+      }
+    ],
+    "name": "Milk Man",
+    "description": "Milk man's package",
+    "url": "https://greasyfork.org/scripts/525526-milk-man",
+    "code_url": "https://update.greasyfork.org/scripts/525526/Milk%20Man.user.js",
+    "code_size": 673,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

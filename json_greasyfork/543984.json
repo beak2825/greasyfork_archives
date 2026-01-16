@@ -1,0 +1,33 @@
+{
+  "id": 543984,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-29T12:31:51.000Z",
+  "code_updated_at": "2025-09-17T22:25:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451053,
+      "name": "Dan Kwame",
+      "created_at": "2025-03-27T20:12:40.000Z",
+      "url": "https://greasyfork.org/users/1451053-dan-kwame"
+    }
+  ],
+  "name": "Mestre das Masmorras",
+  "description": "Faz as masmorras de fantasia automaticamente.",
+  "url": "https://greasyfork.org/scripts/543984-mestre-das-masmorras",
+  "code_url": "https://update.greasyfork.org/scripts/543984/Mestre%20das%20Masmorras.user.js",
+  "code_size": 51876,
+  "license": null,
+  "version": "17.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

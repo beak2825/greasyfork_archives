@@ -1,0 +1,59 @@
+{
+  "id": 497290,
+  "daily_installs": 0,
+  "total_installs": 132,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-07T13:26:21.000Z",
+  "code_updated_at": "2025-06-24T10:51:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/loveseoul9900/NamuSide/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1313973,
+      "name": "loveseoul9900",
+      "created_at": "2024-06-07T13:03:52.000Z",
+      "url": "https://greasyfork.org/users/1313973-loveseoul9900",
+      "scripts": [
+        {
+          "id": 497290,
+          "daily_installs": 0,
+          "total_installs": 132,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-07T13:26:21.000Z",
+          "code_updated_at": "2025-06-24T10:51:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/loveseoul9900/NamuSide/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NamuSide",
+          "description": "NamuSide blocks the side Navagation Bar on NamuWiki.",
+          "url": "https://greasyfork.org/scripts/497290-namuside",
+          "code_url": "https://update.greasyfork.org/scripts/497290/NamuSide.user.js",
+          "code_size": 1606,
+          "license": null,
+          "version": "2025-06-24",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NamuSide",
+  "description": "NamuSide blocks the side Navagation Bar on NamuWiki.",
+  "url": "https://greasyfork.org/scripts/497290-namuside",
+  "code_url": "https://update.greasyfork.org/scripts/497290/NamuSide.user.js",
+  "code_size": 1606,
+  "license": null,
+  "version": "2025-06-24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

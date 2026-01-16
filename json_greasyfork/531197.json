@@ -1,0 +1,59 @@
+{
+  "id": 531197,
+  "daily_installs": 2,
+  "total_installs": 344,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-29T05:59:24.000Z",
+  "code_updated_at": "2025-07-12T08:48:22.000Z",
+  "namespace": "kene",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1336841,
+      "name": "かみしらさわけーね",
+      "created_at": "2024-07-20T01:32:54.000Z",
+      "url": "https://greasyfork.org/users/1336841-%E3%81%8B%E3%81%BF%E3%81%97%E3%82%89%E3%81%95%E3%82%8F%E3%81%91%E3%83%BC%E3%81%AD",
+      "scripts": [
+        {
+          "id": 531197,
+          "daily_installs": 2,
+          "total_installs": 344,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-29T05:59:24.000Z",
+          "code_updated_at": "2025-07-12T08:48:22.000Z",
+          "namespace": "kene",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Comment Scroller Revised Version",
+          "description": "OPENREC.tv KICK のコメントをニコニコ風にスクロールさせます。",
+          "url": "https://greasyfork.org/scripts/531197-comment-scroller-revised-version",
+          "code_url": "https://update.greasyfork.org/scripts/531197/Comment%20Scroller%20Revised%20Version.user.js",
+          "code_size": 7558,
+          "license": null,
+          "version": "1.0.3",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Comment Scroller Revised Version",
+  "description": "OPENREC.tv KICK のコメントをニコニコ風にスクロールさせます。",
+  "url": "https://greasyfork.org/scripts/531197-comment-scroller-revised-version",
+  "code_url": "https://update.greasyfork.org/scripts/531197/Comment%20Scroller%20Revised%20Version.user.js",
+  "code_size": 7558,
+  "license": null,
+  "version": "1.0.3",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

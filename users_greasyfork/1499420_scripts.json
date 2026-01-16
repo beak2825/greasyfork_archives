@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543979,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T11:54:31.000Z",
+    "code_updated_at": "2025-07-29T11:54:31.000Z",
+    "namespace": "https://github.com/Rubenisme/Azure-DevOps-Branch-Author-Filter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499420,
+        "name": "Rubenisme",
+        "created_at": "2025-07-29T09:13:47.000Z",
+        "url": "https://greasyfork.org/users/1499420-rubenisme"
+      }
+    ],
+    "name": "Azure DevOps In-Page Branch Author Filter",
+    "description": "Adds a native-looking, text-input to the Azure DevOps branches page to filter by author",
+    "url": "https://greasyfork.org/scripts/543979-azure-devops-in-page-branch-author-filter",
+    "code_url": "https://update.greasyfork.org/scripts/543979/Azure%20DevOps%20In-Page%20Branch%20Author%20Filter.user.js",
+    "code_size": 5673,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

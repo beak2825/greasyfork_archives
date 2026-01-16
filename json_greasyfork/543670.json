@@ -1,0 +1,33 @@
+{
+  "id": 543670,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-26T05:48:19.000Z",
+  "code_updated_at": "2025-07-26T05:59:45.000Z",
+  "namespace": "https://t.me/forestarmy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453962,
+      "name": "itsmesatyavir",
+      "created_at": "2025-04-04T12:59:12.000Z",
+      "url": "https://greasyfork.org/users/1453962-itsmesatyavir"
+    }
+  ],
+  "name": "B7 Auth Token Tool (BLESS)",
+  "description": "Extract B7S_AUTH_TOKEN from localStorage",
+  "url": "https://greasyfork.org/scripts/543670-b7-auth-token-tool-bless",
+  "code_url": "https://update.greasyfork.org/scripts/543670/B7%20Auth%20Token%20Tool%20%28BLESS%29.user.js",
+  "code_size": 4093,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

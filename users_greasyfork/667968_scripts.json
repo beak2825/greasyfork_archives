@@ -30,6 +30,171 @@
     "version": "0.0.1.20251203143903",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539514,
+    "daily_installs": 4,
+    "total_installs": 382,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-15T13:07:11.000Z",
+    "code_updated_at": "2026-01-06T06:53:12.000Z",
+    "namespace": "https://greasyfork.org/users/667968-pyudng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "轻小说文库+",
+    "description": "轻小说文库全方位体验改善，涵盖阅读、下载、书架、推荐、书评、账号、页面个性化等各种方面，你能想到的这里都有。没有？欢迎提出你的点子。",
+    "url": "https://greasyfork.org/scripts/539514-%E8%BD%BB%E5%B0%8F%E8%AF%B4%E6%96%87%E5%BA%93",
+    "code_url": "https://update.greasyfork.org/scripts/539514/%E8%BD%BB%E5%B0%8F%E8%AF%B4%E6%96%87%E5%BA%93%2B.user.js",
+    "code_size": 1298178,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "2.31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528191,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-27T03:09:01.000Z",
+    "code_updated_at": "2025-02-27T03:31:00.000Z",
+    "namespace": "https://greasyfork.org/users/667968-pyudng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "Aria2 RPC Edit 2",
+    "description": "Aria2 RPC Library 维护，源脚本 https://greasyfork.org/zh-CN/scripts/402652",
+    "url": "https://greasyfork.org/scripts/528191-aria2-rpc-edit-2",
+    "code_url": "https://update.greasyfork.org/scripts/528191/1543992/Aria2%20RPC%20Edit%202.js",
+    "code_size": 10086,
+    "license": "MIT License",
+    "version": "0.4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523792,
+    "daily_installs": 2,
+    "total_installs": 172,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-14T21:33:32.000Z",
+    "code_updated_at": "2025-03-22T03:06:21.000Z",
+    "namespace": "https://greasyfork.org/users/667968-pyudng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "浏览器控制台防检测",
+    "description": "根据 https://github.com/AEPKILL/devtools-detector 的检测方法进行了一个逆向反检测...需要在哪些网站上运行，自己添加到脚本编辑器-设置-用户包括里面去",
+    "url": "https://greasyfork.org/scripts/523792-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A7%E5%88%B6%E5%8F%B0%E9%98%B2%E6%A3%80%E6%B5%8B",
+    "code_url": "https://update.greasyfork.org/scripts/523792/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A7%E5%88%B6%E5%8F%B0%E9%98%B2%E6%A3%80%E6%B5%8B.user.js",
+    "code_size": 17274,
+    "license": "MIT License",
+    "version": "0.10.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523676,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T19:08:21.000Z",
+    "code_updated_at": "2025-09-05T07:42:37.000Z",
+    "namespace": "https://greasyfork.org/users/667968-pyudng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "行动代号工具",
+    "description": "行动代号游戏描述词编辑工具",
+    "url": "https://greasyfork.org/scripts/523676-%E8%A1%8C%E5%8A%A8%E4%BB%A3%E5%8F%B7%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/523676/%E8%A1%8C%E5%8A%A8%E4%BB%A3%E5%8F%B7%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 74568,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507461,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-08T12:26:40.000Z",
+    "code_updated_at": "2025-12-17T05:02:39.000Z",
+    "namespace": "https://greasyfork.org/users/667968-pyudng",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667968,
+        "name": "PYUDNG",
+        "created_at": "2020-07-18T13:45:24.000Z",
+        "url": "https://greasyfork.org/users/667968-pyudng"
+      }
+    ],
+    "name": "Webpage mask",
+    "description": "A customizable mask layer above any webpage. You can use it as a privacy mask, a screensaver, a nightmode filter... and so on.",
+    "url": "https://greasyfork.org/scripts/507461-webpage-mask",
+    "code_url": "https://update.greasyfork.org/scripts/507461/Webpage%20mask.user.js",
+    "code_size": 26869,
+    "license": "MIT License",
+    "version": "0.4.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

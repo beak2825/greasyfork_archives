@@ -1,0 +1,68 @@
+[
+  {
+    "id": 537252,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T21:48:45.000Z",
+    "code_updated_at": "2025-05-25T21:48:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/yourusername/youtube-neon-revolution/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474833,
+        "name": "l (Tom Gerters)",
+        "created_at": "2025-05-25T21:32:54.000Z",
+        "url": "https://greasyfork.org/users/1474833-l-tom-gerters"
+      }
+    ],
+    "name": "YouTube Neon Revolution - Ultimate Futuristic Redesign",
+    "description": "Complete YouTube transformation with neon-red minimalistic UI and infinite futuristic features",
+    "url": "https://greasyfork.org/scripts/537252-youtube-neon-revolution-ultimate-futuristic-redesign",
+    "code_url": "https://update.greasyfork.org/scripts/537252/YouTube%20Neon%20Revolution%20-%20Ultimate%20Futuristic%20Redesign.user.js",
+    "code_size": 27212,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537251,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T21:33:25.000Z",
+    "code_updated_at": "2025-05-25T21:33:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474833,
+        "name": "l (Tom Gerters)",
+        "created_at": "2025-05-25T21:32:54.000Z",
+        "url": "https://greasyfork.org/users/1474833-l-tom-gerters"
+      }
+    ],
+    "name": "YouTube Neon Interactive Effects",
+    "description": "Neon Glow nur beim Hover/Klick + Konfetti Like + Neon Puls bei Subscribe auf YouTube",
+    "url": "https://greasyfork.org/scripts/537251-youtube-neon-interactive-effects",
+    "code_url": "https://update.greasyfork.org/scripts/537251/YouTube%20Neon%20Interactive%20Effects.user.js",
+    "code_size": 4089,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

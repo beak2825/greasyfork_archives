@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547696,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-29T06:11:43.000Z",
+    "code_updated_at": "2025-08-29T06:15:07.000Z",
+    "namespace": "https://github.com/hpuglia/",
+    "support_url": "https://github.com/hpuglia/redecanais-cleaner/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1509862,
+        "name": "hpuglia",
+        "created_at": "2025-08-29T06:08:23.000Z",
+        "url": "https://greasyfork.org/users/1509862-hpuglia"
+      }
+    ],
+    "name": "RedeCanaisTV Cleaner",
+    "description": "Script customizado para limpar anúncios, domínios e elementos indesejados no site RedeCanaisTV.",
+    "url": "https://greasyfork.org/scripts/547696-redecanaistv-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/547696/RedeCanaisTV%20Cleaner.user.js",
+    "code_size": 7908,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

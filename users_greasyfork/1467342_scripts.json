@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535337,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T10:34:54.000Z",
+    "code_updated_at": "2025-05-08T12:23:19.000Z",
+    "namespace": "https://leakedmaster.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1467342,
+        "name": "Salvador Acin",
+        "created_at": "2025-05-08T10:16:31.000Z",
+        "url": "https://greasyfork.org/users/1467342-salvador-acin"
+      }
+    ],
+    "name": "Enhancement and assistance script for LeakedMaster",
+    "description": "Tailored enhancements for XenForo 2.3.3 on leakedmaster.com: dark mode, infinite scroll, highlighting, quick search, back-to-top, hide ads, keyboard nav, code-copy, inline images, collapse signatures, plus auto-refresh threads, relative timestamps, spoiler toggle, attachment collapse, user-filter, subforum jumper, quick-reply.",
+    "url": "https://greasyfork.org/scripts/535337-enhancement-and-assistance-script-for-leakedmaster",
+    "code_url": "https://update.greasyfork.org/scripts/535337/Enhancement%20and%20assistance%20script%20for%20LeakedMaster.user.js",
+    "code_size": 9984,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

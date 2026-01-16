@@ -1,0 +1,34 @@
+{
+  "id": 534054,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-26T10:52:25.000Z",
+  "code_updated_at": "2025-05-06T13:13:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440358,
+      "name": "Anne Belle",
+      "created_at": "2025-02-26T18:08:43.000Z",
+      "url": "https://greasyfork.org/users/1440358-anne-belle",
+      "scripts": []
+    }
+  ],
+  "name": "Chain alert",
+  "description": "Alert when time left under set times",
+  "url": "https://greasyfork.org/scripts/534054-chain-alert",
+  "code_url": "https://update.greasyfork.org/scripts/534054/Chain%20alert.user.js",
+  "code_size": 3667,
+  "license": "MIT License",
+  "version": "0.8.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

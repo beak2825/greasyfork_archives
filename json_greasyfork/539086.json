@@ -1,0 +1,59 @@
+{
+  "id": 539086,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T07:39:34.000Z",
+  "code_updated_at": "2025-06-12T04:36:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1482041,
+      "name": "metrovoc",
+      "created_at": "2025-06-11T07:36:24.000Z",
+      "url": "https://greasyfork.org/users/1482041-metrovoc",
+      "scripts": [
+        {
+          "id": 539086,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-11T07:39:34.000Z",
+          "code_updated_at": "2025-06-12T04:36:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google AI Studio auto-continue helper",
+          "description": "auto-continue helper for Google AI Studio with Agent mode",
+          "url": "https://greasyfork.org/scripts/539086-google-ai-studio-auto-continue-helper",
+          "code_url": "https://update.greasyfork.org/scripts/539086/Google%20AI%20Studio%20auto-continue%20helper.user.js",
+          "code_size": 41631,
+          "license": "MIT License",
+          "version": "5.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google AI Studio auto-continue helper",
+  "description": "auto-continue helper for Google AI Studio with Agent mode",
+  "url": "https://greasyfork.org/scripts/539086-google-ai-studio-auto-continue-helper",
+  "code_url": "https://update.greasyfork.org/scripts/539086/Google%20AI%20Studio%20auto-continue%20helper.user.js",
+  "code_size": 41631,
+  "license": "MIT License",
+  "version": "5.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

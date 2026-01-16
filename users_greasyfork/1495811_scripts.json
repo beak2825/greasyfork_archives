@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542839,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-17T15:47:21.000Z",
+    "code_updated_at": "2025-08-22T06:21:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495811,
+        "name": "Bugcokaka",
+        "created_at": "2025-07-17T15:43:15.000Z",
+        "url": "https://greasyfork.org/users/1495811-bugcokaka"
+      }
+    ],
+    "name": "贝壳房源信息收集器 (成交/在售三模式)",
+    "description": "在浏览贝壳(ke.com)时，自动收集成交列表页、在售列表页和在售详情页的房源信息，并提供独立的、动态命名的CSV下载功能。",
+    "url": "https://greasyfork.org/scripts/542839-%E8%B4%9D%E5%A3%B3%E6%88%BF%E6%BA%90%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%99%A8-%E6%88%90%E4%BA%A4-%E5%9C%A8%E5%94%AE%E4%B8%89%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/542839/%E8%B4%9D%E5%A3%B3%E6%88%BF%E6%BA%90%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86%E5%99%A8%20%28%E6%88%90%E4%BA%A4%E5%9C%A8%E5%94%AE%E4%B8%89%E6%A8%A1%E5%BC%8F%29.user.js",
+    "code_size": 27744,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

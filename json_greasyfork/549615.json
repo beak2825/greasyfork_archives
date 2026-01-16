@@ -1,0 +1,33 @@
+{
+  "id": 549615,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-15T11:38:58.000Z",
+  "code_updated_at": "2025-12-29T12:10:52.000Z",
+  "namespace": "https://linux.do/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1051229,
+      "name": "stevessr",
+      "created_at": "2023-04-01T03:04:14.000Z",
+      "url": "https://greasyfork.org/users/1051229-stevessr"
+    }
+  ],
+  "name": "Market Emoji Picker for Linux.do",
+  "description": "从云端市场加载表情包并允许用户组合分组，注入表情选择器到 Linux.do 论坛",
+  "url": "https://greasyfork.org/scripts/549615-market-emoji-picker-for-linux-do",
+  "code_url": "https://update.greasyfork.org/scripts/549615/Market%20Emoji%20Picker%20for%20Linuxdo.user.js",
+  "code_size": 54688,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540121,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T10:13:49.000Z",
+    "code_updated_at": "2025-06-20T10:13:49.000Z",
+    "namespace": "http://yourdomain.example",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486134,
+        "name": "Sameer Kulhari",
+        "created_at": "2025-06-20T10:09:24.000Z",
+        "url": "https://greasyfork.org/users/1486134-sameer-kulhari"
+      }
+    ],
+    "name": "Speech-to-Text for Textareas",
+    "description": "Adds a microphone button to textareas for speech-to-text input",
+    "url": "https://greasyfork.org/scripts/540121-speech-to-text-for-textareas",
+    "code_url": "https://update.greasyfork.org/scripts/540121/Speech-to-Text%20for%20Textareas.user.js",
+    "code_size": 1786,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

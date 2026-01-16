@@ -1,0 +1,34 @@
+{
+  "id": 543261,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-21T23:07:44.000Z",
+  "code_updated_at": "2025-08-06T19:04:12.000Z",
+  "namespace": "CBI_P44_Plugins",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456457,
+      "name": "Tomas Morales",
+      "created_at": "2025-04-11T05:39:46.000Z",
+      "url": "https://greasyfork.org/users/1456457-tomas-morales",
+      "scripts": []
+    }
+  ],
+  "name": "OBG-Ventana de capacidad de rampas",
+  "description": "Permite visualizar de manera sencilla la capacidad de las rampas basado en el tipo de material, se actualiza de manera automática.",
+  "url": "https://greasyfork.org/scripts/543261-obg-ventana-de-capacidad-de-rampas",
+  "code_url": "https://update.greasyfork.org/scripts/543261/OBG-Ventana%20de%20capacidad%20de%20rampas.user.js",
+  "code_size": 22730,
+  "license": "MIT License",
+  "version": "2.1.4",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

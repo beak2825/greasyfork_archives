@@ -1,0 +1,33 @@
+{
+  "id": 551137,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-30T10:46:57.000Z",
+  "code_updated_at": "2025-09-30T10:57:20.000Z",
+  "namespace": "electroknight22_youtube_premium_lite_squared_namespace",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490608,
+      "name": "Jhonloyd Aldave",
+      "created_at": "2025-07-01T10:00:26.000Z",
+      "url": "https://greasyfork.org/users/1490608-jhonloyd-aldave"
+    }
+  ],
+  "name": "YouTube Premium Ad blocker",
+  "description": "Features: Logo Swap: Replaces the standard YouTube logo with the Premium version. Ad Blocking: Removes banner and pre-roll ads for a cleaner look. The Goal: Convince anyone glancing at your screen that you're a Premium subscriber. Perfect for a laugh or just to enjoy the aesthetic. Status: Early Beta - Please report any bugs you find!",
+  "url": "https://greasyfork.org/scripts/551137-youtube-premium-ad-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/551137/YouTube%20Premium%20Ad%20blocker.user.js",
+  "code_size": 6442,
+  "license": "MIT License",
+  "version": "0.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

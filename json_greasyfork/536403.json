@@ -1,0 +1,59 @@
+{
+  "id": 536403,
+  "daily_installs": 1,
+  "total_installs": 406,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-18T13:50:18.000Z",
+  "code_updated_at": "2025-12-07T10:50:49.000Z",
+  "namespace": "helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 444828,
+      "name": "lqxzjyg",
+      "created_at": "2020-02-14T02:23:13.000Z",
+      "url": "https://greasyfork.org/users/444828-lqxzjyg",
+      "scripts": [
+        {
+          "id": 536403,
+          "daily_installs": 1,
+          "total_installs": 406,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-18T13:50:18.000Z",
+          "code_updated_at": "2025-12-07T10:50:49.000Z",
+          "namespace": "helper",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "超星学习通助手，自动跳转任务点，自动答题超全题库ai答题，视频，章节测试，考试自动处理",
+          "description": "学习助手-支持学习通，目前已完成：视频自动播放，自动切换任务点，deepseek智能AI赋能，章节测试，作业自动完成，期末考试处理，自动保存",
+          "url": "https://greasyfork.org/scripts/536403-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E4%BB%BB%E5%8A%A1%E7%82%B9-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93ai%E7%AD%94%E9%A2%98-%E8%A7%86%E9%A2%91-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E5%A4%84%E7%90%86",
+          "code_url": "https://update.greasyfork.org/scripts/536403/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%EF%BC%8C%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E4%BB%BB%E5%8A%A1%E7%82%B9%EF%BC%8C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93ai%E7%AD%94%E9%A2%98%EF%BC%8C%E8%A7%86%E9%A2%91%EF%BC%8C%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%EF%BC%8C%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E5%A4%84%E7%90%86.user.js",
+          "code_size": 179549,
+          "license": "MIT License",
+          "version": "2.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "超星学习通助手，自动跳转任务点，自动答题超全题库ai答题，视频，章节测试，考试自动处理",
+  "description": "学习助手-支持学习通，目前已完成：视频自动播放，自动切换任务点，deepseek智能AI赋能，章节测试，作业自动完成，期末考试处理，自动保存",
+  "url": "https://greasyfork.org/scripts/536403-%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E4%BB%BB%E5%8A%A1%E7%82%B9-%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93ai%E7%AD%94%E9%A2%98-%E8%A7%86%E9%A2%91-%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95-%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E5%A4%84%E7%90%86",
+  "code_url": "https://update.greasyfork.org/scripts/536403/%E8%B6%85%E6%98%9F%E5%AD%A6%E4%B9%A0%E9%80%9A%E5%8A%A9%E6%89%8B%EF%BC%8C%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E4%BB%BB%E5%8A%A1%E7%82%B9%EF%BC%8C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%B6%85%E5%85%A8%E9%A2%98%E5%BA%93ai%E7%AD%94%E9%A2%98%EF%BC%8C%E8%A7%86%E9%A2%91%EF%BC%8C%E7%AB%A0%E8%8A%82%E6%B5%8B%E8%AF%95%EF%BC%8C%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E5%A4%84%E7%90%86.user.js",
+  "code_size": 179549,
+  "license": "MIT License",
+  "version": "2.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

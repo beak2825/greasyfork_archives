@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543193,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T08:53:21.000Z",
+    "code_updated_at": "2025-07-21T11:31:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1189464,
+        "name": "ManitaDeCerdo",
+        "created_at": "2023-10-06T10:11:13.000Z",
+        "url": "https://greasyfork.org/users/1189464-manitadecerdo"
+      }
+    ],
+    "name": "Backloggd ➜ Botones: Gameplay YouTube + HowLongToBeat",
+    "description": "Añade botones de gameplay en YouTube y duración en HowLongToBeat en el sidebar de Backloggd",
+    "url": "https://greasyfork.org/scripts/543193-backloggd-botones-gameplay-youtube-howlongtobeat",
+    "code_url": "https://update.greasyfork.org/scripts/543193/Backloggd%20%E2%9E%9C%20Botones%3A%20Gameplay%20YouTube%20%2B%20HowLongToBeat.user.js",
+    "code_size": 1981,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

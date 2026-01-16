@@ -1,0 +1,59 @@
+{
+  "id": 550937,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-28T07:54:01.000Z",
+  "code_updated_at": "2025-09-28T07:54:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1520242,
+      "name": "sevenv1",
+      "created_at": "2025-09-28T07:12:13.000Z",
+      "url": "https://greasyfork.org/users/1520242-sevenv1",
+      "scripts": [
+        {
+          "id": 550937,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-28T07:54:01.000Z",
+          "code_updated_at": "2025-09-28T07:54:01.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Block Gambling Sites",
+          "description": "Prevent access to known gambling websites",
+          "url": "https://greasyfork.org/scripts/550937-block-gambling-sites",
+          "code_url": "https://update.greasyfork.org/scripts/550937/Block%20Gambling%20Sites.user.js",
+          "code_size": 5435,
+          "license": "MIT License",
+          "version": "2025.09.28",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Block Gambling Sites",
+  "description": "Prevent access to known gambling websites",
+  "url": "https://greasyfork.org/scripts/550937-block-gambling-sites",
+  "code_url": "https://update.greasyfork.org/scripts/550937/Block%20Gambling%20Sites.user.js",
+  "code_size": 5435,
+  "license": "MIT License",
+  "version": "2025.09.28",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501872,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-26T20:10:46.000Z",
+    "code_updated_at": "2025-05-19T19:12:24.000Z",
+    "namespace": "http://axelsparkster.gg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1340423,
+        "name": "AxelSparkster",
+        "created_at": "2024-07-26T20:02:34.000Z",
+        "url": "https://greasyfork.org/users/1340423-axelsparkster"
+      }
+    ],
+    "name": "SoundCloud Hide Reposts (OBSOLETE)",
+    "description": "Remove reposts from your SoundCloud stream. Loosely based off of ABS's \"SoundCloud Hide Reposts\" script (v1.2), modified to work with Chrome > v127.0.",
+    "url": "https://greasyfork.org/scripts/501872-soundcloud-hide-reposts-obsolete",
+    "code_url": "https://update.greasyfork.org/scripts/501872/SoundCloud%20Hide%20Reposts%20%28OBSOLETE%29.user.js",
+    "code_size": 1360,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

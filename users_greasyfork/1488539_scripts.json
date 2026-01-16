@@ -30,6 +30,39 @@
     "version": "6.10x",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540787,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T22:36:51.000Z",
+    "code_updated_at": "2025-06-25T22:36:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488539,
+        "name": "Damian Berti",
+        "created_at": "2025-06-25T22:28:57.000Z",
+        "url": "https://greasyfork.org/users/1488539-damian-berti"
+      }
+    ],
+    "name": "WebsiteFucker (VISUAL)",
+    "description": "Escalating glitch payloads, 2.5 s tween-chaos, vivid Matrix rain, and working Scanline text corruption. Use menu to start/stop.",
+    "url": "https://greasyfork.org/scripts/540787-website-visual",
+    "code_url": "https://update.greasyfork.org/scripts/540787/WebsiteFucker%20%28VISUAL%29.user.js",
+    "code_size": 25144,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

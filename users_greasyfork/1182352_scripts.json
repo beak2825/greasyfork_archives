@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525083,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-27T18:25:20.000Z",
+    "code_updated_at": "2025-08-01T15:32:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1182352,
+        "name": "bajsa001",
+        "created_at": "2023-09-27T18:25:20.000Z",
+        "url": "https://greasyfork.org/users/1182352-bajsa001"
+      }
+    ],
+    "name": "Team Capacity",
+    "description": "The script is used to extract app info to display it on the page",
+    "url": "https://greasyfork.org/scripts/525083-team-capacity",
+    "code_url": "https://update.greasyfork.org/scripts/525083/Team%20Capacity.user.js",
+    "code_size": 13402,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

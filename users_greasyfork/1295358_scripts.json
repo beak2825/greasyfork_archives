@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541648,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T18:27:44.000Z",
+    "code_updated_at": "2025-07-04T18:27:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1295358,
+        "name": "Splxff",
+        "created_at": "2024-04-30T22:01:53.000Z",
+        "url": "https://greasyfork.org/users/1295358-splxff"
+      }
+    ],
+    "name": "Blooket Get Max Rewards",
+    "description": "When you earn any exp or tokens, this script turns it into the max possible amount earnable daily (tokens: 500, exp: 300).",
+    "url": "https://greasyfork.org/scripts/541648-blooket-get-max-rewards",
+    "code_url": "https://update.greasyfork.org/scripts/541648/Blooket%20Get%20Max%20Rewards.user.js",
+    "code_size": 1501,
+    "license": null,
+    "version": "Beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

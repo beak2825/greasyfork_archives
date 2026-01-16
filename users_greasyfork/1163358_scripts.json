@@ -1,0 +1,167 @@
+[
+  {
+    "id": 547693,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-29T05:13:52.000Z",
+    "code_updated_at": "2025-08-29T11:09:09.000Z",
+    "namespace": "https://jirehlov.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163358,
+        "name": "Jirehlov",
+        "created_at": "2023-08-31T07:59:15.000Z",
+        "url": "https://greasyfork.org/users/1163358-jirehlov"
+      }
+    ],
+    "name": "剧集列表（页）显示评论中“神回”的次数",
+    "description": "列表页用评论数做缓存判定，详情页始终直接统计，评论计数范围限制在指定div",
+    "url": "https://greasyfork.org/scripts/547693-%E5%89%A7%E9%9B%86%E5%88%97%E8%A1%A8-%E9%A1%B5-%E6%98%BE%E7%A4%BA%E8%AF%84%E8%AE%BA%E4%B8%AD-%E7%A5%9E%E5%9B%9E-%E7%9A%84%E6%AC%A1%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/547693/%E5%89%A7%E9%9B%86%E5%88%97%E8%A1%A8%EF%BC%88%E9%A1%B5%EF%BC%89%E6%98%BE%E7%A4%BA%E8%AF%84%E8%AE%BA%E4%B8%AD%E2%80%9C%E7%A5%9E%E5%9B%9E%E2%80%9D%E7%9A%84%E6%AC%A1%E6%95%B0.user.js",
+    "code_size": 3645,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506183,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-01T04:26:56.000Z",
+    "code_updated_at": "2024-09-01T04:26:56.000Z",
+    "namespace": "https://jirehlov.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163358,
+        "name": "Jirehlov",
+        "created_at": "2023-08-31T07:59:15.000Z",
+        "url": "https://greasyfork.org/users/1163358-jirehlov"
+      }
+    ],
+    "name": "Ukagaka Shell Title Notifier",
+    "description": "检测#robot_speech_js 中包含\"你有\"时闪烁网页标题，提醒用户有新消息。",
+    "url": "https://greasyfork.org/scripts/506183-ukagaka-shell-title-notifier",
+    "code_url": "https://update.greasyfork.org/scripts/506183/Ukagaka%20Shell%20Title%20Notifier.user.js",
+    "code_size": 998,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504462,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-21T06:36:28.000Z",
+    "code_updated_at": "2024-08-28T11:26:42.000Z",
+    "namespace": "https://jirehlov.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163358,
+        "name": "Jirehlov",
+        "created_at": "2023-08-31T07:59:15.000Z",
+        "url": "https://greasyfork.org/users/1163358-jirehlov"
+      }
+    ],
+    "name": "Toggle Button for Non-sep Items",
+    "description": "Hide li elements without \"sep\" class and add toggle button",
+    "url": "https://greasyfork.org/scripts/504462-toggle-button-for-non-sep-items",
+    "code_url": "https://update.greasyfork.org/scripts/504462/Toggle%20Button%20for%20Non-sep%20Items.user.js",
+    "code_size": 4920,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500762,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-16T01:05:18.000Z",
+    "code_updated_at": "2025-02-10T04:42:13.000Z",
+    "namespace": "https://jirehlov.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163358,
+        "name": "Jirehlov",
+        "created_at": "2023-08-31T07:59:15.000Z",
+        "url": "https://greasyfork.org/users/1163358-jirehlov"
+      }
+    ],
+    "name": "AttachHowOldtoUserinPosts",
+    "description": "Show how old a user is in posts",
+    "url": "https://greasyfork.org/scripts/500762-attachhowoldtouserinposts",
+    "code_url": "https://update.greasyfork.org/scripts/500762/AttachHowOldtoUserinPosts.user.js",
+    "code_size": 13896,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500690,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T07:16:04.000Z",
+    "code_updated_at": "2024-07-15T21:54:16.000Z",
+    "namespace": "https://jirehlov.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1163358,
+        "name": "Jirehlov",
+        "created_at": "2023-08-31T07:59:15.000Z",
+        "url": "https://greasyfork.org/users/1163358-jirehlov"
+      }
+    ],
+    "name": "AvoidAddictiontoBangumi",
+    "description": "Track visits to bangumi domains' root directory and alert after a configurable number of visits in a day",
+    "url": "https://greasyfork.org/scripts/500690-avoidaddictiontobangumi",
+    "code_url": "https://update.greasyfork.org/scripts/500690/AvoidAddictiontoBangumi.user.js",
+    "code_size": 1486,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

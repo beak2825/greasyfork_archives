@@ -1,0 +1,101 @@
+[
+  {
+    "id": 543669,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T04:46:59.000Z",
+    "code_updated_at": "2025-07-26T04:46:59.000Z",
+    "namespace": "https://github.com/your-username-here",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483205,
+        "name": "Camellia895",
+        "created_at": "2025-06-13T10:53:51.000Z",
+        "url": "https://greasyfork.org/users/1483205-camellia895"
+      }
+    ],
+    "name": "Fandom 图片下载器（选悬浮标识）",
+    "description": "在 Fandom wiki 网站上，当鼠标悬停在图片上时显示一个下载按钮，点击即可下载原图。采用JS动态计算尺寸，彻底修复图标变形问题。",
+    "url": "https://greasyfork.org/scripts/543669-fandom-%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8-%E9%80%89%E6%82%AC%E6%B5%AE%E6%A0%87%E8%AF%86",
+    "code_url": "https://update.greasyfork.org/scripts/543669/Fandom%20%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD%E5%99%A8%EF%BC%88%E9%80%89%E6%82%AC%E6%B5%AE%E6%A0%87%E8%AF%86%EF%BC%89.user.js",
+    "code_size": 6702,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543334,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-07-22T14:23:26.000Z",
+    "code_updated_at": "2025-07-24T05:52:21.000Z",
+    "namespace": "https://github.com/Camellia895",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483205,
+        "name": "Camellia895",
+        "created_at": "2025-06-13T10:53:51.000Z",
+        "url": "https://greasyfork.org/users/1483205-camellia895"
+      }
+    ],
+    "name": "X 媒体批量下载器",
+    "description": "采用事件驱动的悬浮下载按钮，解决了图标出现迟缓的问题。",
+    "url": "https://greasyfork.org/scripts/543334-x-%E5%AA%92%E4%BD%93%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/543334/X%20%E5%AA%92%E4%BD%93%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 13365,
+    "license": "MIT License",
+    "version": "2.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539298,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T14:19:03.000Z",
+    "code_updated_at": "2025-06-14T07:17:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483205,
+        "name": "Camellia895",
+        "created_at": "2025-06-13T10:53:51.000Z",
+        "url": "https://greasyfork.org/users/1483205-camellia895"
+      }
+    ],
+    "name": "Civitai Image Downloader and Metadata Extractor",
+    "description": "FINAL VERSION. Reliably works with Civitai's SPA navigation. No more refresh needed.",
+    "url": "https://greasyfork.org/scripts/539298-civitai-image-downloader-and-metadata-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/539298/Civitai%20Image%20Downloader%20and%20Metadata%20Extractor.user.js",
+    "code_size": 12376,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

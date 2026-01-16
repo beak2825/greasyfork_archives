@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528518,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-02T10:40:19.000Z",
+    "code_updated_at": "2025-03-02T10:40:19.000Z",
+    "namespace": "https://greasyfork.org/users/1441531",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441531,
+        "name": "Gog Rythm",
+        "created_at": "2025-03-02T10:36:43.000Z",
+        "url": "https://greasyfork.org/users/1441531-gog-rythm"
+      }
+    ],
+    "name": "AutoMS-Rewards",
+    "description": "This lets you search random words or sentences on Bing. It adds a circular Orange icon on Microsoft rewards section. You can choose the number of searches & source of the words/sentences (Either predefined or random from English dictionary), and the code will open search tabs. After 30 seconds, all tabs will be closed automatically. This script is originally made by Potaper & I added some more features like searching random words from English dictionary & change number of searches.",
+    "url": "https://greasyfork.org/scripts/528518-automs-rewards",
+    "code_url": "https://update.greasyfork.org/scripts/528518/AutoMS-Rewards.user.js",
+    "code_size": 8568,
+    "license": "GPL-3.0 license",
+    "version": "3.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

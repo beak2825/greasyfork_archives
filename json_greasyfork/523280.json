@@ -1,0 +1,59 @@
+{
+  "id": 523280,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T06:24:27.000Z",
+  "code_updated_at": "2025-01-09T06:39:43.000Z",
+  "namespace": "https://greasyfork.org/users/[daluo]",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421143,
+      "name": "hongwei luo",
+      "created_at": "2025-01-09T05:44:07.000Z",
+      "url": "https://greasyfork.org/users/1421143-hongwei-luo",
+      "scripts": [
+        {
+          "id": 523280,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-09T06:24:27.000Z",
+          "code_updated_at": "2025-01-09T06:39:43.000Z",
+          "namespace": "https://greasyfork.org/users/[daluo]",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OCFacilitation",
+          "description": "Make OC 2.0 easier for regular players",
+          "url": "https://greasyfork.org/scripts/523280-ocfacilitation",
+          "code_url": "https://update.greasyfork.org/scripts/523280/OCFacilitation.user.js",
+          "code_size": 38658,
+          "license": "MIT License",
+          "version": "1.0.2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OCFacilitation",
+  "description": "Make OC 2.0 easier for regular players",
+  "url": "https://greasyfork.org/scripts/523280-ocfacilitation",
+  "code_url": "https://update.greasyfork.org/scripts/523280/OCFacilitation.user.js",
+  "code_size": 38658,
+  "license": "MIT License",
+  "version": "1.0.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

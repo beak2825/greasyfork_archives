@@ -1,0 +1,34 @@
+{
+  "id": 548057,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-01T18:19:05.000Z",
+  "code_updated_at": "2025-09-01T18:19:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1504274,
+      "name": "Md Araf",
+      "created_at": "2025-08-12T19:30:10.000Z",
+      "url": "https://greasyfork.org/users/1504274-md-araf",
+      "scripts": []
+    }
+  ],
+  "name": "Binance BTC Fixed Display",
+  "description": "Показва фиксирано BTC количество и смята реална USD стойност",
+  "url": "https://greasyfork.org/scripts/548057-binance-btc-fixed-display",
+  "code_url": "https://update.greasyfork.org/scripts/548057/1652988/Binance%20BTC%20Fixed%20Display.js",
+  "code_size": 4807,
+  "license": null,
+  "version": "1.1",
+  "locale": "bg",
+  "deleted": false,
+  "visibility": "public"
+}

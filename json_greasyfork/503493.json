@@ -1,0 +1,59 @@
+{
+  "id": 503493,
+  "daily_installs": 0,
+  "total_installs": 59,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-13T06:08:35.000Z",
+  "code_updated_at": "2024-08-13T06:08:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1350821,
+      "name": "Mahesh324",
+      "created_at": "2024-08-13T05:59:42.000Z",
+      "url": "https://greasyfork.org/users/1350821-mahesh324",
+      "scripts": [
+        {
+          "id": 503493,
+          "daily_installs": 0,
+          "total_installs": 59,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-13T06:08:35.000Z",
+          "code_updated_at": "2024-08-13T06:08:35.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AI Studio Prompts Auto-Configure",
+          "description": "Configures AI Studio Prompts settings automatically",
+          "url": "https://greasyfork.org/scripts/503493-ai-studio-prompts-auto-configure",
+          "code_url": "https://update.greasyfork.org/scripts/503493/AI%20Studio%20Prompts%20Auto-Configure.user.js",
+          "code_size": 5304,
+          "license": "MIT License",
+          "version": "2024-04-08",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AI Studio Prompts Auto-Configure",
+  "description": "Configures AI Studio Prompts settings automatically",
+  "url": "https://greasyfork.org/scripts/503493-ai-studio-prompts-auto-configure",
+  "code_url": "https://update.greasyfork.org/scripts/503493/AI%20Studio%20Prompts%20Auto-Configure.user.js",
+  "code_size": 5304,
+  "license": "MIT License",
+  "version": "2024-04-08",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

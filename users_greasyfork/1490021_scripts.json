@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541115,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T15:35:27.000Z",
+    "code_updated_at": "2025-06-29T15:40:08.000Z",
+    "namespace": "SteamGifts Key Prices from Deals.GG",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490021,
+        "name": "Taurus9534",
+        "created_at": "2025-06-29T15:28:27.000Z",
+        "url": "https://greasyfork.org/users/1490021-taurus9534"
+      }
+    ],
+    "name": "SteamGifts Key Prices",
+    "description": "A customizable web extension for SteamGifts that displays the lowest keyshop prices from GG.deals directly on all giveaway pages",
+    "url": "https://greasyfork.org/scripts/541115-steamgifts-key-prices",
+    "code_url": "https://update.greasyfork.org/scripts/541115/SteamGifts%20Key%20Prices.user.js",
+    "code_size": 30293,
+    "license": "https://github.com/MapperTaurus/SteamGifts-Key-Prices/blob/master/LICENSE",
+    "version": "3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

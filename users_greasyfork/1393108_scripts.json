@@ -1,0 +1,134 @@
+[
+  {
+    "id": 535038,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T17:35:33.000Z",
+    "code_updated_at": "2025-05-05T17:35:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393108,
+        "name": "Rafael123213",
+        "created_at": "2024-11-08T23:11:43.000Z",
+        "url": "https://greasyfork.org/users/1393108-rafael123213"
+      }
+    ],
+    "name": "CDN Image to Base64 Title",
+    "description": "Convierte la primera imagen de la página en Base64 usando fetch y FileReader, guarda en el title del iframe padre; luego redirige a devox.re",
+    "url": "https://greasyfork.org/scripts/535038-cdn-image-to-base64-title",
+    "code_url": "https://update.greasyfork.org/scripts/535038/CDN%20Image%20to%20Base64%20Title.user.js",
+    "code_size": 1727,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523978,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-16T21:22:07.000Z",
+    "code_updated_at": "2025-01-16T23:22:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393108,
+        "name": "Rafael123213",
+        "created_at": "2024-11-08T23:11:43.000Z",
+        "url": "https://greasyfork.org/users/1393108-rafael123213"
+      }
+    ],
+    "name": "Pequeño manager para personalizar y hacer mas agradable la lectura de Mangas.",
+    "description": "Se puede cambiar el tamaño de las imagenes del Manga y establecer un tamaño por defecto(desde el codigo), se añaden los atajos del teclado: \"flecha arriba\" para arrastrar la barra hacia arriba y \"flecha abajo\" para lo contrario, \"flecha izquierda\" para capitulo anterior y \"flecha derecha\" para el siguiente, tambien añade un boton de lupa.",
+    "url": "https://greasyfork.org/scripts/523978-peque%C3%B1o-manager-para-personalizar-y-hacer-mas-agradable-la-lectura-de-mangas",
+    "code_url": "https://update.greasyfork.org/scripts/523978/Peque%C3%B1o%20manager%20para%20personalizar%20y%20hacer%20mas%20agradable%20la%20lectura%20de%20Mangas.user.js",
+    "code_size": 21830,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 516470,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-09T03:16:31.000Z",
+    "code_updated_at": "2024-11-10T02:39:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393108,
+        "name": "Rafael123213",
+        "created_at": "2024-11-08T23:11:43.000Z",
+        "url": "https://greasyfork.org/users/1393108-rafael123213"
+      }
+    ],
+    "name": "Captura de articulo",
+    "description": "Añade un botón para copiar la imagen del artículo completo al portapapeles usando Canvas",
+    "url": "https://greasyfork.org/scripts/516470-captura-de-articulo",
+    "code_url": "https://update.greasyfork.org/scripts/516470/Captura%20de%20articulo.user.js",
+    "code_size": 7889,
+    "license": null,
+    "version": "2.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516451,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-08T23:16:01.000Z",
+    "code_updated_at": "2025-05-05T17:40:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393108,
+        "name": "Rafael123213",
+        "created_at": "2024-11-08T23:11:43.000Z",
+        "url": "https://greasyfork.org/users/1393108-rafael123213"
+      }
+    ],
+    "name": "Captura de Post (Iframe)",
+    "description": "Añade un botón para gestionar las capturas de los posts usando iframe y polling.",
+    "url": "https://greasyfork.org/scripts/516451-captura-de-post-iframe",
+    "code_url": "https://update.greasyfork.org/scripts/516451/Captura%20de%20Post%20%28Iframe%29.user.js",
+    "code_size": 8740,
+    "license": "MIT License",
+    "version": "5.4",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512062,
+    "daily_installs": 1,
+    "total_installs": 80,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-10-10T02:21:13.000Z",
+    "code_updated_at": "2024-10-10T02:21:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378812,
+        "name": "Toluwa Oyerinde",
+        "created_at": "2024-10-10T01:54:55.000Z",
+        "url": "https://greasyfork.org/users/1378812-toluwa-oyerinde"
+      }
+    ],
+    "name": "Gobattle.io Noclip and Fly",
+    "description": "Enable noclip and flying in Gobattle.io",
+    "url": "https://greasyfork.org/scripts/512062-gobattle-io-noclip-and-fly",
+    "code_url": "https://update.greasyfork.org/scripts/512062/Gobattleio%20Noclip%20and%20Fly.user.js",
+    "code_size": 3217,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

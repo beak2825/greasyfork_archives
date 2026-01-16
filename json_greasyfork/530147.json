@@ -1,0 +1,59 @@
+{
+  "id": 530147,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-18T03:31:43.000Z",
+  "code_updated_at": "2025-03-18T03:31:43.000Z",
+  "namespace": "checknbuySv2.apphub.ga",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 40022,
+      "name": "Mafia",
+      "created_at": "2016-04-22T19:21:17.000Z",
+      "url": "https://greasyfork.org/users/40022-mafia",
+      "scripts": [
+        {
+          "id": 529394,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-10T12:25:29.000Z",
+          "code_updated_at": "2025-03-10T12:25:28.000Z",
+          "namespace": "tisadremoval",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Time.is Ad-Removal",
+          "description": "remove annoying ad and banner",
+          "url": "https://greasyfork.org/scripts/529394-time-is-ad-removal",
+          "code_url": "https://update.greasyfork.org/scripts/529394/Timeis%20Ad-Removal.user.js",
+          "code_size": 496,
+          "license": null,
+          "version": "0.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ShopeeLAB: COMBO cnb & hosted",
+  "description": "Check Product until stock available and immediately checkout at cart page",
+  "url": "https://greasyfork.org/scripts/530147-shopeelab-combo-cnb-hosted",
+  "code_url": "https://update.greasyfork.org/scripts/530147/ShopeeLAB%3A%20COMBO%20cnb%20%20hosted.user.js",
+  "code_size": 119598,
+  "license": null,
+  "version": "2.9.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

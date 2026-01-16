@@ -1,0 +1,101 @@
+[
+  {
+    "id": 542654,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-15T18:11:52.000Z",
+    "code_updated_at": "2025-07-15T18:11:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487021,
+        "name": "mangoboy1",
+        "created_at": "2025-06-22T11:59:43.000Z",
+        "url": "https://greasyfork.org/users/1487021-mangoboy1"
+      }
+    ],
+    "name": "Copy Album Track Listings",
+    "description": "tCopy the fuckin traqck list idk shut up",
+    "url": "https://greasyfork.org/scripts/542654-copy-album-track-listings",
+    "code_url": "https://update.greasyfork.org/scripts/542654/Copy%20Album%20Track%20Listings.user.js",
+    "code_size": 2184,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 541446,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T13:59:03.000Z",
+    "code_updated_at": "2026-01-14T18:00:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487021,
+        "name": "mangoboy1",
+        "created_at": "2025-06-22T11:59:43.000Z",
+        "url": "https://greasyfork.org/users/1487021-mangoboy1"
+      }
+    ],
+    "name": "Alias Helper",
+    "description": "Makes adding aliases easier.",
+    "url": "https://greasyfork.org/scripts/541446-alias-helper",
+    "code_url": "https://update.greasyfork.org/scripts/541446/Alias%20Helper.user.js",
+    "code_size": 23706,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540403,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-22T12:31:10.000Z",
+    "code_updated_at": "2025-06-22T12:31:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487021,
+        "name": "mangoboy1",
+        "created_at": "2025-06-22T11:59:43.000Z",
+        "url": "https://greasyfork.org/users/1487021-mangoboy1"
+      }
+    ],
+    "name": "Rule PM Helper",
+    "description": "Helpful functions to notify violators.",
+    "url": "https://greasyfork.org/scripts/540403-rule-pm-helper",
+    "code_url": "https://update.greasyfork.org/scripts/540403/Rule%20PM%20Helper.user.js",
+    "code_size": 15465,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

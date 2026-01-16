@@ -1,0 +1,34 @@
+{
+  "id": 497058,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-04T19:21:47.000Z",
+  "code_updated_at": "2024-06-04T19:24:25.000Z",
+  "namespace": "remove-tumblr-app-prompt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1310765,
+      "name": "screwingaroundwithsyd",
+      "created_at": "2024-06-01T11:04:09.000Z",
+      "url": "https://greasyfork.org/users/1310765-screwingaroundwithsyd",
+      "scripts": []
+    }
+  ],
+  "name": "Remove Tumblr App Prompt",
+  "description": "Removes the prompt to open Tumblr in the app from the top of the page.",
+  "url": "https://greasyfork.org/scripts/497058-remove-tumblr-app-prompt",
+  "code_url": "https://update.greasyfork.org/scripts/497058/Remove%20Tumblr%20App%20Prompt.user.js",
+  "code_size": 763,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521610,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T00:16:54.000Z",
+    "code_updated_at": "2024-12-24T00:16:54.000Z",
+    "namespace": "https://www.octt.eu.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1186332,
+        "name": "octt",
+        "created_at": "2023-10-02T18:49:11.000Z",
+        "url": "https://greasyfork.org/users/1186332-octt"
+      }
+    ],
+    "name": "NodeBB Print & Save",
+    "description": "Export full topics from any NodeBB forum to PDF and HTML",
+    "url": "https://greasyfork.org/scripts/521610-nodebb-print-save",
+    "code_url": "https://update.greasyfork.org/scripts/521610/NodeBB%20Print%20%20Save.user.js",
+    "code_size": 4131,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

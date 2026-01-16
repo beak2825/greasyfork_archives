@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502670,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-05T07:51:53.000Z",
+    "code_updated_at": "2024-08-05T07:51:53.000Z",
+    "namespace": "https://172hk.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 167485,
+        "name": "172hk.top",
+        "created_at": "2018-01-20T14:56:06.000Z",
+        "url": "https://greasyfork.org/users/167485-172hk-top"
+      }
+    ],
+    "name": "双击显示密码明文 dbclick show password",
+    "description": "双击密码输入框显示密码明文，5秒后或者点击其他地方恢复加密 Double-click the password input box to display the password plaintext, after 5 seconds, or click elsewhere to restore the encryption",
+    "url": "https://greasyfork.org/scripts/502670-%E5%8F%8C%E5%87%BB%E6%98%BE%E7%A4%BA%E5%AF%86%E7%A0%81%E6%98%8E%E6%96%87-dbclick-show-password",
+    "code_url": "https://update.greasyfork.org/scripts/502670/%E5%8F%8C%E5%87%BB%E6%98%BE%E7%A4%BA%E5%AF%86%E7%A0%81%E6%98%8E%E6%96%87%20dbclick%20show%20password.user.js",
+    "code_size": 1228,
+    "license": "MIT License",
+    "version": "2024.03.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

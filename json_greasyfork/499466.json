@@ -1,0 +1,33 @@
+{
+  "id": 499466,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-02T07:50:25.000Z",
+  "code_updated_at": "2024-07-02T07:50:25.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1326420-wuxin0012",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326420,
+      "name": "wuxin0012",
+      "created_at": "2024-07-01T02:06:38.000Z",
+      "url": "https://greasyfork.org/users/1326420-wuxin0012"
+    }
+  ],
+  "name": "0x3f-problem-solution",
+  "description": "配合灵神题单解题",
+  "url": "https://greasyfork.org/scripts/499466-0x3f-problem-solution",
+  "code_url": "https://update.greasyfork.org/scripts/499466/0x3f-problem-solution.user.js",
+  "code_size": 26097,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529825,
+    "daily_installs": 2,
+    "total_installs": 350,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-14T15:45:42.000Z",
+    "code_updated_at": "2025-03-14T15:45:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1445702,
+        "name": "Gxvn",
+        "created_at": "2025-03-14T15:37:07.000Z",
+        "url": "https://greasyfork.org/users/1445702-gxvn"
+      }
+    ],
+    "name": "SampleFocus Direct API Downloader",
+    "description": "Download samples from SampleFocus without using credits by accessing the API directly",
+    "url": "https://greasyfork.org/scripts/529825-samplefocus-direct-api-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/529825/SampleFocus%20Direct%20API%20Downloader.user.js",
+    "code_size": 13109,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

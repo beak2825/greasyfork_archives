@@ -1,0 +1,33 @@
+{
+  "id": 547847,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-30T14:10:16.000Z",
+  "code_updated_at": "2025-08-30T14:10:16.000Z",
+  "namespace": "pepe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1079350,
+      "name": "genericusername133",
+      "created_at": "2023-05-15T06:30:25.000Z",
+      "url": "https://greasyfork.org/users/1079350-genericusername133"
+    }
+  ],
+  "name": "MAL forum - collapse quotes",
+  "description": "conversation will be easier to follow by collapsing long quote chains into smaller preview snippets",
+  "url": "https://greasyfork.org/scripts/547847-mal-forum-collapse-quotes",
+  "code_url": "https://update.greasyfork.org/scripts/547847/MAL%20forum%20-%20collapse%20quotes.user.js",
+  "code_size": 2047,
+  "license": null,
+  "version": "2025-08-30",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

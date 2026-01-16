@@ -1,0 +1,68 @@
+[
+  {
+    "id": 520911,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T14:36:20.000Z",
+    "code_updated_at": "2024-12-16T14:36:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1307514,
+        "name": "Ilya Redkin",
+        "created_at": "2024-05-26T14:41:11.000Z",
+        "url": "https://greasyfork.org/users/1307514-ilya-redkin"
+      }
+    ],
+    "name": "AutoProblem. Группа поддержки курьеров",
+    "description": "Автоматически заполняет обязательные поля создаваемой проблемы",
+    "url": "https://greasyfork.org/scripts/520911-autoproblem-%D0%B3%D1%80%D1%83%D0%BF%D0%BF%D0%B0-%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B8-%D0%BA%D1%83%D1%80%D1%8C%D0%B5%D1%80%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/520911/AutoProblem%20%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B0%20%D0%BF%D0%BE%D0%B4%D0%B4%D0%B5%D1%80%D0%B6%D0%BA%D0%B8%20%D0%BA%D1%83%D1%80%D1%8C%D0%B5%D1%80%D0%BE%D0%B2.user.js",
+    "code_size": 13648,
+    "license": "MIT License",
+    "version": "0.3.11",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511754,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T11:44:01.000Z",
+    "code_updated_at": "2024-12-03T19:04:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1307514,
+        "name": "Ilya Redkin",
+        "created_at": "2024-05-26T14:41:11.000Z",
+        "url": "https://greasyfork.org/users/1307514-ilya-redkin"
+      }
+    ],
+    "name": "Dostavista. Админка +",
+    "description": "Дополнительные возможности для внутренней административной панели",
+    "url": "https://greasyfork.org/scripts/511754-dostavista-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%BA%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/511754/Dostavista%20%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%BA%D0%B0%20%2B.user.js",
+    "code_size": 22445,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

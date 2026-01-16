@@ -1,0 +1,167 @@
+[
+  {
+    "id": 526733,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-13T05:07:08.000Z",
+    "code_updated_at": "2025-04-08T17:37:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434162,
+        "name": "Animaker",
+        "created_at": "2025-02-12T04:59:32.000Z",
+        "url": "https://greasyfork.org/users/1434162-animaker"
+      }
+    ],
+    "name": "GGn Control Panel",
+    "description": "A beautiful control panel that displays advanced capabilities you won't find on the site.",
+    "url": "https://greasyfork.org/scripts/526733-ggn-control-panel",
+    "code_url": "https://update.greasyfork.org/scripts/526733/GGn%20Control%20Panel.user.js",
+    "code_size": 164031,
+    "license": "MIT License",
+    "version": "0.42",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526721,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-13T02:28:46.000Z",
+    "code_updated_at": "2025-02-13T02:51:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434162,
+        "name": "Animaker",
+        "created_at": "2025-02-12T04:59:32.000Z",
+        "url": "https://greasyfork.org/users/1434162-animaker"
+      }
+    ],
+    "name": "Pet Whipper 2.1",
+    "description": "Whip GIF animation and continuous exclamation marks on avatar click.",
+    "url": "https://greasyfork.org/scripts/526721-pet-whipper-2-1",
+    "code_url": "https://update.greasyfork.org/scripts/526721/Pet%20Whipper%2021.user.js",
+    "code_size": 4894,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526626,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T05:38:20.000Z",
+    "code_updated_at": "2025-04-09T06:00:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434162,
+        "name": "Animaker",
+        "created_at": "2025-02-12T04:59:32.000Z",
+        "url": "https://greasyfork.org/users/1434162-animaker"
+      }
+    ],
+    "name": "GGn Inventory Safe Mode",
+    "description": "Add toggles to remove trash icons and use buttons in inventory.",
+    "url": "https://greasyfork.org/scripts/526626-ggn-inventory-safe-mode",
+    "code_url": "https://update.greasyfork.org/scripts/526626/GGn%20Inventory%20Safe%20Mode.user.js",
+    "code_size": 3389,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526624,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T05:26:09.000Z",
+    "code_updated_at": "2025-02-12T05:26:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434162,
+        "name": "Animaker",
+        "created_at": "2025-02-12T04:59:32.000Z",
+        "url": "https://greasyfork.org/users/1434162-animaker"
+      }
+    ],
+    "name": "GGn Advanced Torrent Filters",
+    "description": "Adds a filter for snatched/seeded/external linked torrents in ggn's torrent browse.",
+    "url": "https://greasyfork.org/scripts/526624-ggn-advanced-torrent-filters",
+    "code_url": "https://update.greasyfork.org/scripts/526624/GGn%20Advanced%20Torrent%20Filters.user.js",
+    "code_size": 4151,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 526622,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T05:18:23.000Z",
+    "code_updated_at": "2025-02-13T04:29:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434162,
+        "name": "Animaker",
+        "created_at": "2025-02-12T04:59:32.000Z",
+        "url": "https://greasyfork.org/users/1434162-animaker"
+      }
+    ],
+    "name": "GGn Forum Mute Manager",
+    "description": "Adds customizable dropdowns to filter forum posts by username with \"∇\" suffix and filter by selected threads (filtered by Thread Id)",
+    "url": "https://greasyfork.org/scripts/526622-ggn-forum-mute-manager",
+    "code_url": "https://update.greasyfork.org/scripts/526622/GGn%20Forum%20Mute%20Manager.user.js",
+    "code_size": 19518,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

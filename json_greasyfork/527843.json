@@ -1,0 +1,59 @@
+{
+  "id": 527843,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-23T14:52:14.000Z",
+  "code_updated_at": "2025-02-23T14:52:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1438959,
+      "name": "DrSexo",
+      "created_at": "2025-02-23T14:12:26.000Z",
+      "url": "https://greasyfork.org/users/1438959-drsexo",
+      "scripts": [
+        {
+          "id": 527843,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-23T14:52:14.000Z",
+          "code_updated_at": "2025-02-23T14:52:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google English Language + No SafeSearch",
+          "description": "English interface with any-language results and SafeSearch off",
+          "url": "https://greasyfork.org/scripts/527843-google-english-language-no-safesearch",
+          "code_url": "https://update.greasyfork.org/scripts/527843/Google%20English%20Language%20%2B%20No%20SafeSearch.user.js",
+          "code_size": 1186,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google English Language + No SafeSearch",
+  "description": "English interface with any-language results and SafeSearch off",
+  "url": "https://greasyfork.org/scripts/527843-google-english-language-no-safesearch",
+  "code_url": "https://update.greasyfork.org/scripts/527843/Google%20English%20Language%20%2B%20No%20SafeSearch.user.js",
+  "code_size": 1186,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

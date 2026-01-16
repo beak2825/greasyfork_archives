@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548060,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T18:30:10.000Z",
+    "code_updated_at": "2025-09-01T18:30:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1508161,
+        "name": "iFleey",
+        "created_at": "2025-08-23T20:48:35.000Z",
+        "url": "https://greasyfork.org/users/1508161-ifleey"
+      }
+    ],
+    "name": "AI Studio - 聊天风格",
+    "description": "修改 AI Studio 的风格像是聊天，支持深浅色模式。",
+    "url": "https://greasyfork.org/scripts/548060-ai-studio-%E8%81%8A%E5%A4%A9%E9%A3%8E%E6%A0%BC",
+    "code_url": "https://update.greasyfork.org/scripts/548060/AI%20Studio%20-%20%E8%81%8A%E5%A4%A9%E9%A3%8E%E6%A0%BC.user.js",
+    "code_size": 18654,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -31,5 +31,104 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 524606,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T05:46:43.000Z",
+    "code_updated_at": "2025-01-23T05:48:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 912151,
+        "name": "Agent-0808",
+        "created_at": "2022-05-09T07:36:53.000Z",
+        "url": "https://greasyfork.org/users/912151-agent-0808"
+      }
+    ],
+    "name": "Bilibili 列表随机播放",
+    "description": "自动获取播放列表并随机播放视频",
+    "url": "https://greasyfork.org/scripts/524606-bilibili-%E5%88%97%E8%A1%A8%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/524606/Bilibili%20%E5%88%97%E8%A1%A8%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 10084,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522717,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-03T16:08:51.000Z",
+    "code_updated_at": "2025-01-03T16:27:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 912151,
+        "name": "Agent-0808",
+        "created_at": "2022-05-09T07:36:53.000Z",
+        "url": "https://greasyfork.org/users/912151-agent-0808"
+      }
+    ],
+    "name": "Bilibili 分享链接优化",
+    "description": "简化Bilibili分享链接，移除多余的赛博狗屎并优化显示格式。",
+    "url": "https://greasyfork.org/scripts/522717-bilibili-%E5%88%86%E4%BA%AB%E9%93%BE%E6%8E%A5%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/522717/Bilibili%20%E5%88%86%E4%BA%AB%E9%93%BE%E6%8E%A5%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 4443,
+    "license": "MIT License",
+    "version": "0.8.0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522597,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-02T13:07:15.000Z",
+    "code_updated_at": "2025-01-23T06:06:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 912151,
+        "name": "Agent-0808",
+        "created_at": "2022-05-09T07:36:53.000Z",
+        "url": "https://greasyfork.org/users/912151-agent-0808"
+      }
+    ],
+    "name": "Bilibili 视频截图按钮",
+    "description": "在投稿时间之后显示一个截屏按钮，点击后复制到粘贴板",
+    "url": "https://greasyfork.org/scripts/522597-bilibili-%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/522597/Bilibili%20%E8%A7%86%E9%A2%91%E6%88%AA%E5%9B%BE%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 4550,
+    "license": "MIT License",
+    "version": "0.8.0.8.0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

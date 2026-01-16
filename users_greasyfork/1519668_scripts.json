@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550765,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-26T14:55:46.000Z",
+    "code_updated_at": "2025-09-26T16:07:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519668,
+        "name": "久夏",
+        "created_at": "2025-09-26T14:42:22.000Z",
+        "url": "https://greasyfork.org/users/1519668-%E4%B9%85%E5%A4%8F"
+      }
+    ],
+    "name": "校园网自动登录",
+    "description": "自动登录校园网：支持浏览器记住密码，自动尝试接口方式；登录成功自动停止",
+    "url": "https://greasyfork.org/scripts/550765-%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/550765/%E6%A0%A1%E5%9B%AD%E7%BD%91%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 4392,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

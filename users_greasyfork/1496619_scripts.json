@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543107,
+    "daily_installs": 1,
+    "total_installs": 611,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T10:05:53.000Z",
+    "code_updated_at": "2025-07-20T10:05:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496619,
+        "name": "hacker regedit",
+        "created_at": "2025-07-20T10:00:11.000Z",
+        "url": "https://greasyfork.org/users/1496619-hacker-regedit"
+      }
+    ],
+    "name": "Work.ink Auto Access Script",
+    "description": "Automatically clicks through access/skip buttons on work.ink",
+    "url": "https://greasyfork.org/scripts/543107-work-ink-auto-access-script",
+    "code_url": "https://update.greasyfork.org/scripts/543107/Workink%20Auto%20Access%20Script.user.js",
+    "code_size": 2166,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

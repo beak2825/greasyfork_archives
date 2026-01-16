@@ -1,0 +1,59 @@
+{
+  "id": 540341,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-21T18:37:24.000Z",
+  "code_updated_at": "2025-06-21T18:37:24.000Z",
+  "namespace": "ukrmuz-net-player-fixxx",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486680,
+      "name": "jawa1000rera",
+      "created_at": "2025-06-21T14:25:54.000Z",
+      "url": "https://greasyfork.org/users/1486680-jawa1000rera",
+      "scripts": [
+        {
+          "id": 540341,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-21T18:37:24.000Z",
+          "code_updated_at": "2025-06-21T18:37:24.000Z",
+          "namespace": "ukrmuz-net-player-fixxx",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "height player Fix ukrmuz.net",
+          "description": "Increasing the height of the music player slider on ukrmuz.net",
+          "url": "https://greasyfork.org/scripts/540341-height-player-fix-ukrmuz-net",
+          "code_url": "https://update.greasyfork.org/scripts/540341/height%20player%20Fix%20ukrmuznet.user.js",
+          "code_size": 1476,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "height player Fix ukrmuz.net",
+  "description": "Increasing the height of the music player slider on ukrmuz.net",
+  "url": "https://greasyfork.org/scripts/540341-height-player-fix-ukrmuz-net",
+  "code_url": "https://update.greasyfork.org/scripts/540341/height%20player%20Fix%20ukrmuznet.user.js",
+  "code_size": 1476,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

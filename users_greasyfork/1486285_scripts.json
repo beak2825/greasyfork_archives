@@ -1,0 +1,200 @@
+[
+  {
+    "id": 550734,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-26T07:58:00.000Z",
+    "code_updated_at": "2025-10-02T16:45:04.000Z",
+    "namespace": "https://greasyfork.org/users/1486285",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486285,
+        "name": "Роман Владимирович",
+        "created_at": "2025-06-20T15:47:08.000Z",
+        "url": "https://greasyfork.org/users/1486285-%D1%80%D0%BE%D0%BC%D0%B0%D0%BD-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "AI Studio Prompter",
+    "description": "A fast and optimized version that ensures instructions are set and the panel is closed without delay.",
+    "url": "https://greasyfork.org/scripts/550734-ai-studio-prompter",
+    "code_url": "https://update.greasyfork.org/scripts/550734/AI%20Studio%20Prompter.user.js",
+    "code_size": 7288,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 548536,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T01:33:06.000Z",
+    "code_updated_at": "2025-12-26T11:11:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486285,
+        "name": "Роман Владимирович",
+        "created_at": "2025-06-20T15:47:08.000Z",
+        "url": "https://greasyfork.org/users/1486285-%D1%80%D0%BE%D0%BC%D0%B0%D0%BD-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Chub AI Gemini Stats Tracker (DLC)",
+    "description": "Adds a pro RPG panel.",
+    "url": "https://greasyfork.org/scripts/548536-chub-ai-gemini-stats-tracker-dlc",
+    "code_url": "https://update.greasyfork.org/scripts/548536/Chub%20AI%20Gemini%20Stats%20Tracker%20%28DLC%29.user.js",
+    "code_size": 101571,
+    "license": "MIT License",
+    "version": "6.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 547841,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-30T13:21:32.000Z",
+    "code_updated_at": "2025-08-30T13:21:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486285,
+        "name": "Роман Владимирович",
+        "created_at": "2025-06-20T15:47:08.000Z",
+        "url": "https://greasyfork.org/users/1486285-%D1%80%D0%BE%D0%BC%D0%B0%D0%BD-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Видеоссылка с тайм-кодом и QR-кодом",
+    "description": "Копирует ссылку на сайт с таймкодом видео.",
+    "url": "https://greasyfork.org/scripts/547841-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B0-%D1%81-%D1%82%D0%B0%D0%B9%D0%BC-%D0%BA%D0%BE%D0%B4%D0%BE%D0%BC-%D0%B8-qr-%D0%BA%D0%BE%D0%B4%D0%BE%D0%BC",
+    "code_url": "https://update.greasyfork.org/scripts/547841/%D0%92%D0%B8%D0%B4%D0%B5%D0%BE%D1%81%D1%81%D1%8B%D0%BB%D0%BA%D0%B0%20%D1%81%20%D1%82%D0%B0%D0%B9%D0%BC-%D0%BA%D0%BE%D0%B4%D0%BE%D0%BC%20%D0%B8%20QR-%D0%BA%D0%BE%D0%B4%D0%BE%D0%BC.user.js",
+    "code_size": 10036,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 547840,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-30T13:20:17.000Z",
+    "code_updated_at": "2025-10-02T16:44:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486285,
+        "name": "Роман Владимирович",
+        "created_at": "2025-06-20T15:47:08.000Z",
+        "url": "https://greasyfork.org/users/1486285-%D1%80%D0%BE%D0%BC%D0%B0%D0%BD-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Chub.ai Копирование данных персонажа",
+    "description": "Копирует данные персонажа с префиксом, суффиксом и форматированием Lore Book.",
+    "url": "https://greasyfork.org/scripts/547840-chub-ai-%D0%BA%D0%BE%D0%BF%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%B6%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/547840/Chubai%20%D0%9A%D0%BE%D0%BF%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85%20%D0%BF%D0%B5%D1%80%D1%81%D0%BE%D0%BD%D0%B0%D0%B6%D0%B0.user.js",
+    "code_size": 9573,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545452,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-11T17:42:50.000Z",
+    "code_updated_at": "2025-08-11T17:42:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486285,
+        "name": "Роман Владимирович",
+        "created_at": "2025-06-20T15:47:08.000Z",
+        "url": "https://greasyfork.org/users/1486285-%D1%80%D0%BE%D0%BC%D0%B0%D0%BD-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Video Link with Timestamp and QR Code",
+    "description": "Copies a link to the website with the video's timestamp.",
+    "url": "https://greasyfork.org/scripts/545452-video-link-with-timestamp-and-qr-code",
+    "code_url": "https://update.greasyfork.org/scripts/545452/Video%20Link%20with%20Timestamp%20and%20QR%20Code.user.js",
+    "code_size": 9575,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540180,
+    "daily_installs": 1,
+    "total_installs": 194,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T15:49:15.000Z",
+    "code_updated_at": "2025-12-26T11:23:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486285,
+        "name": "Роман Владимирович",
+        "created_at": "2025-06-20T15:47:08.000Z",
+        "url": "https://greasyfork.org/users/1486285-%D1%80%D0%BE%D0%BC%D0%B0%D0%BD-%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Chub AI Gem1ni Model Enhancer (Refactored)",
+    "description": "Gemini Settings Panel: API version/model selection, parameters, presets, tooltips, export/import, enhanced safety settings, thinking mode options (incl. Gemini 3 support), Jailbreak, Debug Mode, and advanced Image Generation controls with Character Description injection.",
+    "url": "https://greasyfork.org/scripts/540180-chub-ai-gem1ni-model-enhancer-refactored",
+    "code_url": "https://update.greasyfork.org/scripts/540180/Chub%20AI%20Gem1ni%20Model%20Enhancer%20%28Refactored%29.user.js",
+    "code_size": 103587,
+    "license": "MIT License",
+    "version": "11.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

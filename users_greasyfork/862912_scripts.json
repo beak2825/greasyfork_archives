@@ -1,0 +1,68 @@
+[
+  {
+    "id": 540556,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T21:26:09.000Z",
+    "code_updated_at": "2025-06-23T21:26:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862912,
+        "name": "Starmania",
+        "created_at": "2022-01-09T17:29:43.000Z",
+        "url": "https://greasyfork.org/users/862912-starmania"
+      }
+    ],
+    "name": "MIUIROM Pseudo-Link Fixer",
+    "description": "Replaces pseudo-link spans with real clickable links on miuirom.org while preserving formatting.",
+    "url": "https://greasyfork.org/scripts/540556-miuirom-pseudo-link-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/540556/MIUIROM%20Pseudo-Link%20Fixer.user.js",
+    "code_size": 1454,
+    "license": "MIT License",
+    "version": "2025-06-23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528924,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-05T23:27:13.000Z",
+    "code_updated_at": "2025-03-05T23:27:13.000Z",
+    "namespace": "http://github.com/Starmania",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 862912,
+        "name": "Starmania",
+        "created_at": "2022-01-09T17:29:43.000Z",
+        "url": "https://greasyfork.org/users/862912-starmania"
+      }
+    ],
+    "name": "Disable Reddit Auto-Translation",
+    "description": "Prevents Reddit from auto-translating subreddit content by removing the 'tl' parameter from the URL.",
+    "url": "https://greasyfork.org/scripts/528924-disable-reddit-auto-translation",
+    "code_url": "https://update.greasyfork.org/scripts/528924/Disable%20Reddit%20Auto-Translation.user.js",
+    "code_size": 695,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

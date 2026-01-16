@@ -1,0 +1,101 @@
+[
+  {
+    "id": 538907,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-09T09:27:30.000Z",
+    "code_updated_at": "2025-06-09T13:57:53.000Z",
+    "namespace": "https://greasyfork.org/users/814315",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814315,
+        "name": "Artin Lin",
+        "created_at": "2021-09-11T07:49:17.000Z",
+        "url": "https://greasyfork.org/users/814315-artin-lin"
+      }
+    ],
+    "name": "YouTube 強制留言顯示由新到舊",
+    "description": "YouTube show hidden comments",
+    "url": "https://greasyfork.org/scripts/538907-youtube-%E5%BC%B7%E5%88%B6%E7%95%99%E8%A8%80%E9%A1%AF%E7%A4%BA%E7%94%B1%E6%96%B0%E5%88%B0%E8%88%8A",
+    "code_url": "https://update.greasyfork.org/scripts/538907/YouTube%20%E5%BC%B7%E5%88%B6%E7%95%99%E8%A8%80%E9%A1%AF%E7%A4%BA%E7%94%B1%E6%96%B0%E5%88%B0%E8%88%8A.user.js",
+    "code_size": 13415,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520793,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-15T13:56:13.000Z",
+    "code_updated_at": "2025-01-10T18:06:36.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814315,
+        "name": "Artin Lin",
+        "created_at": "2021-09-11T07:49:17.000Z",
+        "url": "https://greasyfork.org/users/814315-artin-lin"
+      }
+    ],
+    "name": "Gemini force 2.0 Flash",
+    "description": "Auto change 1.5 to 2.0 (Google may change it later)",
+    "url": "https://greasyfork.org/scripts/520793-gemini-force-2-0-flash",
+    "code_url": "https://update.greasyfork.org/scripts/520793/Gemini%20force%2020%20Flash.user.js",
+    "code_size": 3834,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512419,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T06:14:38.000Z",
+    "code_updated_at": "2024-10-19T04:25:05.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814315,
+        "name": "Artin Lin",
+        "created_at": "2021-09-11T07:49:17.000Z",
+        "url": "https://greasyfork.org/users/814315-artin-lin"
+      }
+    ],
+    "name": "YouTube通知回報工具",
+    "description": "截圖通知欄變空白的畫面",
+    "url": "https://greasyfork.org/scripts/512419-youtube%E9%80%9A%E7%9F%A5%E5%9B%9E%E5%A0%B1%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/512419/YouTube%E9%80%9A%E7%9F%A5%E5%9B%9E%E5%A0%B1%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 1576,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

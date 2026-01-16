@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509010,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-18T09:33:01.000Z",
+    "code_updated_at": "2024-09-23T02:14:54.000Z",
+    "namespace": "https://example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1232101,
+        "name": "cyan-io",
+        "created_at": "2023-12-11T08:42:04.000Z",
+        "url": "https://greasyfork.org/users/1232101-cyan-io"
+      }
+    ],
+    "name": "四方坪职院学术重定向",
+    "description": "「重要更新」Update 1.4 切换图书馆API；通过重定向至图书馆包库，解锁期刊访问权限",
+    "url": "https://greasyfork.org/scripts/509010-%E5%9B%9B%E6%96%B9%E5%9D%AA%E8%81%8C%E9%99%A2%E5%AD%A6%E6%9C%AF%E9%87%8D%E5%AE%9A%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/509010/%E5%9B%9B%E6%96%B9%E5%9D%AA%E8%81%8C%E9%99%A2%E5%AD%A6%E6%9C%AF%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+    "code_size": 6699,
+    "license": "Mozilla Public License 2.0",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 542850,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-17T17:15:58.000Z",
+  "code_updated_at": "2025-07-31T01:46:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1220727,
+      "name": "wutim111",
+      "created_at": "2023-11-20T13:59:00.000Z",
+      "url": "https://greasyfork.org/users/1220727-wutim111",
+      "scripts": []
+    }
+  ],
+  "name": "轟印者帳密輸完點完機器人驗證就登入開遊",
+  "description": "通過驗證後自動登入，登入成功自動啟動遊戲（只執行一次），支援自動填密碼與多子網域！",
+  "url": "https://greasyfork.org/scripts/542850-%E8%BD%9F%E5%8D%B0%E8%80%85%E5%B8%B3%E5%AF%86%E8%BC%B8%E5%AE%8C%E9%BB%9E%E5%AE%8C%E6%A9%9F%E5%99%A8%E4%BA%BA%E9%A9%97%E8%AD%89%E5%B0%B1%E7%99%BB%E5%85%A5%E9%96%8B%E9%81%8A",
+  "code_url": "https://update.greasyfork.org/scripts/542850/%E8%BD%9F%E5%8D%B0%E8%80%85%E5%B8%B3%E5%AF%86%E8%BC%B8%E5%AE%8C%E9%BB%9E%E5%AE%8C%E6%A9%9F%E5%99%A8%E4%BA%BA%E9%A9%97%E8%AD%89%E5%B0%B1%E7%99%BB%E5%85%A5%E9%96%8B%E9%81%8A.user.js",
+  "code_size": 5463,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

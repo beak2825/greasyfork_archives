@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539295,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T13:44:46.000Z",
+    "code_updated_at": "2025-06-13T13:44:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483269,
+        "name": "Ian Sean Oden",
+        "created_at": "2025-06-13T13:24:52.000Z",
+        "url": "https://greasyfork.org/users/1483269-ian-sean-oden"
+      }
+    ],
+    "name": "GC Spacebar Autoclicker",
+    "description": "Automates spacebar presses for GC slots that accept simulated input. Works especially well with BGaming titles.",
+    "url": "https://greasyfork.org/scripts/539295-gc-spacebar-autoclicker",
+    "code_url": "https://update.greasyfork.org/scripts/539295/GC%20Spacebar%20Autoclicker.user.js",
+    "code_size": 2371,
+    "license": "CC BY-NC 4.0; https://creativecommons.org/licenses/by-nc/4.0/",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

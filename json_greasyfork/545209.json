@@ -1,0 +1,33 @@
+{
+  "id": 545209,
+  "daily_installs": 0,
+  "total_installs": 57,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-09T20:38:18.000Z",
+  "code_updated_at": "2025-08-09T20:38:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503305,
+      "name": "Bryan Bryan",
+      "created_at": "2025-08-09T20:28:07.000Z",
+      "url": "https://greasyfork.org/users/1503305-bryan-bryan"
+    }
+  ],
+  "name": "Krunker Fun Pack — Full (Crosshair + Glow + Visuals)",
+  "description": "Visual-only enhancements for Krunker.io — expanded crosshair, neon/invert, kill flash, and a configurable visible-enemy glow (on-screen only). Saves settings locally.",
+  "url": "https://greasyfork.org/scripts/545209-krunker-fun-pack-full-crosshair-glow-visuals",
+  "code_url": "https://update.greasyfork.org/scripts/545209/Krunker%20Fun%20Pack%20%E2%80%94%20Full%20%28Crosshair%20%2B%20Glow%20%2B%20Visuals%29.user.js",
+  "code_size": 24314,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

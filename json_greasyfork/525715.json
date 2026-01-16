@@ -1,0 +1,59 @@
+{
+  "id": 525715,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T08:14:23.000Z",
+  "code_updated_at": "2025-02-15T11:54:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1430692,
+      "name": "Ace_",
+      "created_at": "2025-02-03T08:09:52.000Z",
+      "url": "https://greasyfork.org/users/1430692-ace",
+      "scripts": [
+        {
+          "id": 525715,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-03T08:14:23.000Z",
+          "code_updated_at": "2025-02-15T11:54:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Open_Genius_For_YoutubeMusic",
+          "description": "// @description  Automatically opens Genius page according to your present Youtube tab dynamically while the mapping is stored on Github: www.github.com/188751671/Open_Genius_For_YoutubeMusic. And adjusts the Genius layout and adds a dark mode toggle for Genius.",
+          "url": "https://greasyfork.org/scripts/525715-open-genius-for-youtubemusic",
+          "code_url": "https://update.greasyfork.org/scripts/525715/Open_Genius_For_YoutubeMusic.user.js",
+          "code_size": 7477,
+          "license": null,
+          "version": "3.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Open_Genius_For_YoutubeMusic",
+  "description": "// @description  Automatically opens Genius page according to your present Youtube tab dynamically while the mapping is stored on Github: www.github.com/188751671/Open_Genius_For_YoutubeMusic. And adjusts the Genius layout and adds a dark mode toggle for Genius.",
+  "url": "https://greasyfork.org/scripts/525715-open-genius-for-youtubemusic",
+  "code_url": "https://update.greasyfork.org/scripts/525715/Open_Genius_For_YoutubeMusic.user.js",
+  "code_size": 7477,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

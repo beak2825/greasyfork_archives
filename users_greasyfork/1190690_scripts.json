@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 503367,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-12T03:44:39.000Z",
+    "code_updated_at": "2024-08-12T03:44:39.000Z",
+    "namespace": "yoke",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1190690,
+        "name": "yoke0104x",
+        "created_at": "2023-10-08T02:16:32.000Z",
+        "url": "https://greasyfork.org/users/1190690-yoke0104x"
+      }
+    ],
+    "name": "swagger查看Vo",
+    "description": "实现swagger查看Vo",
+    "url": "https://greasyfork.org/scripts/503367-swagger%E6%9F%A5%E7%9C%8Bvo",
+    "code_url": "https://update.greasyfork.org/scripts/503367/swagger%E6%9F%A5%E7%9C%8BVo.user.js",
+    "code_size": 71915,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

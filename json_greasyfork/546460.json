@@ -1,0 +1,33 @@
+{
+  "id": 546460,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-20T01:41:49.000Z",
+  "code_updated_at": "2025-08-23T17:02:48.000Z",
+  "namespace": "https://orteil.dashnet.org/cookieclicker/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1506830,
+      "name": "Listfromcoinbase",
+      "created_at": "2025-08-20T01:32:32.000Z",
+      "url": "https://greasyfork.org/users/1506830-listfromcoinbase"
+    }
+  ],
+  "name": "Cookie Clicker Multiplayer",
+  "description": "A Clean Ui MP Mod for cookie clicker!",
+  "url": "https://greasyfork.org/scripts/546460-cookie-clicker-multiplayer",
+  "code_url": "https://update.greasyfork.org/scripts/546460/Cookie%20Clicker%20Multiplayer.user.js",
+  "code_size": 800,
+  "license": "MIT License",
+  "version": "AutoUpdates-v1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

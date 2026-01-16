@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501614,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-23T21:10:09.000Z",
+    "code_updated_at": "2024-07-23T21:27:58.000Z",
+    "namespace": "jlpt-dashboard-wanikani",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 924927,
+        "name": "LabMember-001",
+        "created_at": "2022-06-12T14:49:55.000Z",
+        "url": "https://greasyfork.org/users/924927-labmember-001"
+      }
+    ],
+    "name": "JLPT Dashboard for WaniKani",
+    "description": "Adds a JLPT dashboard to the WaniKani userpage for kanji progression tracking and forecasting",
+    "url": "https://greasyfork.org/scripts/501614-jlpt-dashboard-for-wanikani",
+    "code_url": "https://update.greasyfork.org/scripts/501614/JLPT%20Dashboard%20for%20WaniKani.user.js",
+    "code_size": 57462,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

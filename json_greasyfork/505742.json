@@ -1,0 +1,59 @@
+{
+  "id": 505742,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-29T11:13:39.000Z",
+  "code_updated_at": "2024-08-29T11:13:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1359835,
+      "name": "alihakanarslan",
+      "created_at": "2024-08-29T11:05:43.000Z",
+      "url": "https://greasyfork.org/users/1359835-alihakanarslan",
+      "scripts": [
+        {
+          "id": 505742,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-29T11:13:39.000Z",
+          "code_updated_at": "2024-08-29T11:13:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Vercel Project Deletion Form Filler",
+          "description": "Automatically fills in project deletion form fields on Vercel. This script extracts the project name from the page and fills it into the appropriate input field, along with the verification text. Use with caution as it automates deletion form filling.",
+          "url": "https://greasyfork.org/scripts/505742-vercel-project-deletion-form-filler",
+          "code_url": "https://update.greasyfork.org/scripts/505742/Vercel%20Project%20Deletion%20Form%20Filler.user.js",
+          "code_size": 3128,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Vercel Project Deletion Form Filler",
+  "description": "Automatically fills in project deletion form fields on Vercel. This script extracts the project name from the page and fills it into the appropriate input field, along with the verification text. Use with caution as it automates deletion form filling.",
+  "url": "https://greasyfork.org/scripts/505742-vercel-project-deletion-form-filler",
+  "code_url": "https://update.greasyfork.org/scripts/505742/Vercel%20Project%20Deletion%20Form%20Filler.user.js",
+  "code_size": 3128,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

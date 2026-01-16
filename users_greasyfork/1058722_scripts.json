@@ -1,0 +1,101 @@
+[
+  {
+    "id": 552861,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T03:11:02.000Z",
+    "code_updated_at": "2025-10-17T03:11:02.000Z",
+    "namespace": "https://greasyfork.org/users/1479633",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058722,
+        "name": "龙少c",
+        "created_at": "2023-04-12T09:53:54.000Z",
+        "url": "https://greasyfork.org/users/1058722-%E9%BE%99%E5%B0%91c"
+      }
+    ],
+    "name": "ChatGPT Universal Exporter Enhanced (Fixed)",
+    "description": "Robust ZIP exporter with JSON/Markdown/HTML, safer intercept, full-thread export, and retries.",
+    "url": "https://greasyfork.org/scripts/552861-chatgpt-universal-exporter-enhanced-fixed",
+    "code_url": "https://update.greasyfork.org/scripts/552861/ChatGPT%20Universal%20Exporter%20Enhanced%20%28Fixed%29.user.js",
+    "code_size": 27850,
+    "license": "MIT License",
+    "version": "8.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523035,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-06T16:02:26.000Z",
+    "code_updated_at": "2025-12-21T14:52:05.000Z",
+    "namespace": "https://yaohuo.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058722,
+        "name": "龙少c",
+        "created_at": "2023-04-12T09:53:54.000Z",
+        "url": "https://greasyfork.org/users/1058722-%E9%BE%99%E5%B0%91c"
+      }
+    ],
+    "name": "【赞助版】🔥拓展增强🔥妖火网插件",
+    "description": "发帖ubb增强、回帖ubb增强、查看贴子显示用户等级增强、半自动吃肉增强、全自动吃肉增强、自动加载更多帖子、自动加载更多回复、支持个性化菜单配置",
+    "url": "https://greasyfork.org/scripts/523035-%E8%B5%9E%E5%8A%A9%E7%89%88-%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA-%E5%A6%96%E7%81%AB%E7%BD%91%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/523035/%E3%80%90%E8%B5%9E%E5%8A%A9%E7%89%88%E3%80%91%F0%9F%94%A5%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA%F0%9F%94%A5%E5%A6%96%E7%81%AB%E7%BD%91%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 259498,
+    "license": "MIT License",
+    "version": "6.3.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501835,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-26T09:14:54.000Z",
+    "code_updated_at": "2024-10-23T00:53:03.000Z",
+    "namespace": "https://yaohuo.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1058722,
+        "name": "龙少c",
+        "created_at": "2023-04-12T09:53:54.000Z",
+        "url": "https://greasyfork.org/users/1058722-%E9%BE%99%E5%B0%91c"
+      }
+    ],
+    "name": "【自用版】🔥拓展增强🔥妖火网插件R3Knos8Ccd",
+    "description": "发帖ubb增强、回帖ubb增强、查看贴子显示用户等级增强、半自动吃肉增强、全自动吃肉增强、自动加载更多帖子、自动加载更多回复、支持个性化菜单配置",
+    "url": "https://greasyfork.org/scripts/501835-%E8%87%AA%E7%94%A8%E7%89%88-%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA-%E5%A6%96%E7%81%AB%E7%BD%91%E6%8F%92%E4%BB%B6r3knos8ccd",
+    "code_url": "https://update.greasyfork.org/scripts/501835/%E3%80%90%E8%87%AA%E7%94%A8%E7%89%88%E3%80%91%F0%9F%94%A5%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA%F0%9F%94%A5%E5%A6%96%E7%81%AB%E7%BD%91%E6%8F%92%E4%BB%B6R3Knos8Ccd.user.js",
+    "code_size": 248520,
+    "license": "MIT License",
+    "version": "5.9.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

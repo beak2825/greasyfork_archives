@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534974,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T02:34:19.000Z",
+    "code_updated_at": "2025-05-05T03:04:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460309,
+        "name": "Intern Admin",
+        "created_at": "2025-04-21T02:21:23.000Z",
+        "url": "https://greasyfork.org/users/1460309-intern-admin"
+      }
+    ],
+    "name": "Printer App Popup",
+    "description": "Draggable, collapsible popup with printer cost info and a \"Set Price\" popup to set creditAmount to RM1, RM2, RM3. Now with Auto Submit and keystroke functionality for setting amount.",
+    "url": "https://greasyfork.org/scripts/534974-printer-app-popup",
+    "code_url": "https://update.greasyfork.org/scripts/534974/Printer%20App%20Popup.user.js",
+    "code_size": 12846,
+    "license": "GNU GPLv3",
+    "version": "1.6.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

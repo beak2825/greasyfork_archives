@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521831,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-26T06:21:06.000Z",
+    "code_updated_at": "2025-11-28T03:30:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1415905,
+        "name": "eeblue",
+        "created_at": "2024-12-26T05:56:32.000Z",
+        "url": "https://greasyfork.org/users/1415905-eeblue"
+      }
+    ],
+    "name": "CPQ",
+    "description": "Auto get critical speed range",
+    "url": "https://greasyfork.org/scripts/521831-cpq",
+    "code_url": "https://update.greasyfork.org/scripts/521831/CPQ.user.js",
+    "code_size": 1850,
+    "license": null,
+    "version": "3.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

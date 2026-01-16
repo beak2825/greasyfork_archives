@@ -1,0 +1,34 @@
+{
+  "id": 517360,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-14T15:02:47.000Z",
+  "code_updated_at": "2024-11-14T15:02:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1395903,
+      "name": "2876458619",
+      "created_at": "2024-11-14T02:31:10.000Z",
+      "url": "https://greasyfork.org/users/1395903-2876458619",
+      "scripts": []
+    }
+  ],
+  "name": "检索(内网)",
+  "description": "新开选课窗口",
+  "url": "https://greasyfork.org/scripts/517360-%E6%A3%80%E7%B4%A2-%E5%86%85%E7%BD%91",
+  "code_url": "https://update.greasyfork.org/scripts/517360/%E6%A3%80%E7%B4%A2%28%E5%86%85%E7%BD%91%29.user.js",
+  "code_size": 3467,
+  "license": null,
+  "version": "9.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

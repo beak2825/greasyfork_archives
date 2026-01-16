@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520240,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-09T12:23:40.000Z",
+    "code_updated_at": "2024-12-09T12:23:40.000Z",
+    "namespace": "raina",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1828,
+        "name": "raina",
+        "created_at": "2014-05-21T11:21:12.000Z",
+        "url": "https://greasyfork.org/users/1828-raina"
+      }
+    ],
+    "name": "Finna Hold Identifier Helper",
+    "description": "Displays your Hold Identifier on your Holds and Recalls page by fetching it from your Profile page",
+    "url": "https://greasyfork.org/scripts/520240-finna-hold-identifier-helper",
+    "code_url": "https://update.greasyfork.org/scripts/520240/Finna%20Hold%20Identifier%20Helper.user.js",
+    "code_size": 1228,
+    "license": null,
+    "version": "1.2.20241209",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 531853,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-04T18:48:39.000Z",
+  "code_updated_at": "2025-04-04T18:48:39.000Z",
+  "namespace": "https://gazellegames.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354731,
+      "name": "tesnon wan",
+      "created_at": "2024-08-19T20:58:09.000Z",
+      "url": "https://greasyfork.org/users/1354731-tesnon-wan",
+      "scripts": []
+    }
+  ],
+  "name": "Incomplete GGn itch.io Uploady",
+  "description": "Fills upload form with itch.io info.",
+  "url": "https://greasyfork.org/scripts/531853-incomplete-ggn-itch-io-uploady",
+  "code_url": "https://update.greasyfork.org/scripts/531853/Incomplete%20GGn%20itchio%20Uploady.user.js",
+  "code_size": 17164,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

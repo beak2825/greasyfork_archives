@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522825,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T14:27:34.000Z",
+    "code_updated_at": "2025-12-08T04:34:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 550089,
+        "name": "shandianchengzi",
+        "created_at": "2020-05-03T11:13:17.000Z",
+        "url": "https://greasyfork.org/users/550089-shandianchengzi"
+      }
+    ],
+    "name": "标题批量导出DBLP的BibTeX",
+    "description": "在网页左下角生成一个按钮，从dblp中获取选定文本的BibTeX并复制到剪贴板。支持批量获取，支持从剪贴板读取，支持随时下载，支持导出URL和CSV。",
+    "url": "https://greasyfork.org/scripts/522825-%E6%A0%87%E9%A2%98%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BAdblp%E7%9A%84bibtex",
+    "code_url": "https://update.greasyfork.org/scripts/522825/%E6%A0%87%E9%A2%98%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BADBLP%E7%9A%84BibTeX.user.js",
+    "code_size": 18298,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

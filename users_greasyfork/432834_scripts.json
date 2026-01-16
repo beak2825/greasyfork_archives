@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551677,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T15:06:07.000Z",
+    "code_updated_at": "2025-10-05T15:06:07.000Z",
+    "namespace": "https://downsub.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 432834,
+        "name": "zelda0079",
+        "created_at": "2020-01-06T10:52:55.000Z",
+        "url": "https://greasyfork.org/users/432834-zelda0079"
+      }
+    ],
+    "name": "Youtube Subtitle Downloader（Downsub）",
+    "description": "在 YouTube 影片標題下方自動加入「下載字幕」按鈕，一鍵跳轉到 downsub.com 下載字幕。",
+    "url": "https://greasyfork.org/scripts/551677-youtube-subtitle-downloader-downsub",
+    "code_url": "https://update.greasyfork.org/scripts/551677/Youtube%20Subtitle%20Downloader%EF%BC%88Downsub%EF%BC%89.user.js",
+    "code_size": 1899,
+    "license": "Zelda & ChatGPT",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

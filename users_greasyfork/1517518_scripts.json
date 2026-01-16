@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551565,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-04T18:32:42.000Z",
+    "code_updated_at": "2025-10-04T18:33:29.000Z",
+    "namespace": "https://greasyfork.org/users/1517518",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1517518,
+        "name": "lunagus",
+        "created_at": "2025-09-20T23:55:47.000Z",
+        "url": "https://greasyfork.org/users/1517518-lunagus"
+      }
+    ],
+    "name": "Top and Down Scroll Buttons",
+    "description": "Smooth scroll buttons for top and bottom of page",
+    "url": "https://greasyfork.org/scripts/551565-top-and-down-scroll-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/551565/Top%20and%20Down%20Scroll%20Buttons.user.js",
+    "code_size": 8390,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550191,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T23:59:38.000Z",
+    "code_updated_at": "2025-09-20T23:59:38.000Z",
+    "namespace": "https://github.com/lunagus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1517518,
+        "name": "lunagus",
+        "created_at": "2025-09-20T23:55:47.000Z",
+        "url": "https://greasyfork.org/users/1517518-lunagus"
+      }
+    ],
+    "name": "Reddit Translation Remover",
+    "description": "Automatically removes translation parameters (?tl=xx-xxx) from Reddit URLs and redirects to clean URL",
+    "url": "https://greasyfork.org/scripts/550191-reddit-translation-remover",
+    "code_url": "https://update.greasyfork.org/scripts/550191/Reddit%20Translation%20Remover.user.js",
+    "code_size": 1862,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

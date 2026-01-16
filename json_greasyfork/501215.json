@@ -1,0 +1,59 @@
+{
+  "id": 501215,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-19T22:10:29.000Z",
+  "code_updated_at": "2024-11-13T23:25:18.000Z",
+  "namespace": "https://greasyfork.org/users/1336798",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1336798,
+      "name": "jreyes",
+      "created_at": "2024-07-19T22:05:56.000Z",
+      "url": "https://greasyfork.org/users/1336798-jreyes",
+      "scripts": [
+        {
+          "id": 501215,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-19T22:10:29.000Z",
+          "code_updated_at": "2024-11-13T23:25:18.000Z",
+          "namespace": "https://greasyfork.org/users/1336798",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Unspoil matches in Cagematch",
+          "description": "Unspoils matches in cards and wrestler pages",
+          "url": "https://greasyfork.org/scripts/501215-unspoil-matches-in-cagematch",
+          "code_url": "https://update.greasyfork.org/scripts/501215/Unspoil%20matches%20in%20Cagematch.user.js",
+          "code_size": 1874,
+          "license": "GPL-3",
+          "version": "1.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Unspoil matches in Cagematch",
+  "description": "Unspoils matches in cards and wrestler pages",
+  "url": "https://greasyfork.org/scripts/501215-unspoil-matches-in-cagematch",
+  "code_url": "https://update.greasyfork.org/scripts/501215/Unspoil%20matches%20in%20Cagematch.user.js",
+  "code_size": 1874,
+  "license": "GPL-3",
+  "version": "1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

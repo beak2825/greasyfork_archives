@@ -1,0 +1,68 @@
+[
+  {
+    "id": 531466,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T03:32:05.000Z",
+    "code_updated_at": "2025-04-08T10:23:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175593,
+        "name": "Yich Lin",
+        "created_at": "2018-03-20T03:04:08.000Z",
+        "url": "https://greasyfork.org/users/175593-yich-lin"
+      }
+    ],
+    "name": "LeetCode",
+    "description": "set leetcode img opacity",
+    "url": "https://greasyfork.org/scripts/531466-leetcode",
+    "code_url": "https://update.greasyfork.org/scripts/531466/LeetCode.user.js",
+    "code_size": 1193,
+    "license": null,
+    "version": "2025-01-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520331,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-10T16:36:39.000Z",
+    "code_updated_at": "2024-12-10T16:47:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175593,
+        "name": "Yich Lin",
+        "created_at": "2018-03-20T03:04:08.000Z",
+        "url": "https://greasyfork.org/users/175593-yich-lin"
+      }
+    ],
+    "name": "搭伙",
+    "description": "快速點餐",
+    "url": "https://greasyfork.org/scripts/520331-%E6%90%AD%E4%BC%99",
+    "code_url": "https://update.greasyfork.org/scripts/520331/%E6%90%AD%E4%BC%99.user.js",
+    "code_size": 4655,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

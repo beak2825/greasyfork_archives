@@ -1,0 +1,34 @@
+{
+  "id": 513523,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-22T12:51:44.000Z",
+  "code_updated_at": "2024-12-03T13:55:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1351797,
+      "name": "Dccc3",
+      "created_at": "2024-08-14T15:45:12.000Z",
+      "url": "https://greasyfork.org/users/1351797-dccc3",
+      "scripts": []
+    }
+  ],
+  "name": "录取",
+  "description": "try to take over the world!",
+  "url": "https://greasyfork.org/scripts/513523-%E5%BD%95%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/513523/%E5%BD%95%E5%8F%96.user.js",
+  "code_size": 4170,
+  "license": "MIT License",
+  "version": "2024-12-3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

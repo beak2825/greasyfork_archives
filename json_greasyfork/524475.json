@@ -1,0 +1,59 @@
+{
+  "id": 524475,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-22T01:29:50.000Z",
+  "code_updated_at": "2025-01-22T01:29:49.000Z",
+  "namespace": "https://github.com/ghsjulian",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1425927,
+      "name": "ghsjulian",
+      "created_at": "2025-01-22T01:06:27.000Z",
+      "url": "https://greasyfork.org/users/1425927-ghsjulian",
+      "scripts": [
+        {
+          "id": 524475,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-22T01:29:50.000Z",
+          "code_updated_at": "2025-01-22T01:29:49.000Z",
+          "namespace": "https://github.com/ghsjulian",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Game Attack",
+          "description": "This script will automatically set number to your casino game. Let's try to do it.",
+          "url": "https://greasyfork.org/scripts/524475-game-attack",
+          "code_url": "https://update.greasyfork.org/scripts/524475/Game%20Attack.user.js",
+          "code_size": 2517,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Game Attack",
+  "description": "This script will automatically set number to your casino game. Let's try to do it.",
+  "url": "https://greasyfork.org/scripts/524475-game-attack",
+  "code_url": "https://update.greasyfork.org/scripts/524475/Game%20Attack.user.js",
+  "code_size": 2517,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

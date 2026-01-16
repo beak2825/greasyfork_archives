@@ -1,0 +1,59 @@
+{
+  "id": 527140,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-16T22:01:07.000Z",
+  "code_updated_at": "2025-02-16T22:01:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 986996,
+      "name": "EmperorHeyman",
+      "created_at": "2022-11-23T15:11:16.000Z",
+      "url": "https://greasyfork.org/users/986996-emperorheyman",
+      "scripts": [
+        {
+          "id": 455299,
+          "daily_installs": 0,
+          "total_installs": 183,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-11-23T15:15:04.000Z",
+          "code_updated_at": "2022-11-23T15:15:03.000Z",
+          "namespace": "https://greasyfork.org/users/986996",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Facebook Autopoke",
+          "description": "Automatically pokes back people listed on your home page. Make sure to be on this page https://www.facebook.com/pokes/?notif_t=poke",
+          "url": "https://greasyfork.org/scripts/455299-facebook-autopoke",
+          "code_url": "https://update.greasyfork.org/scripts/455299/Facebook%20Autopoke.user.js",
+          "code_size": 1827,
+          "license": null,
+          "version": "Last Updated 23/11/2022",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Proste Prehraj to",
+  "description": "Prehraj.to free script",
+  "url": "https://greasyfork.org/scripts/527140-proste-prehraj-to",
+  "code_url": "https://update.greasyfork.org/scripts/527140/Proste%20Prehraj%20to.user.js",
+  "code_size": 1290,
+  "license": "MIT License",
+  "version": "2025-02-16",
+  "locale": "sk",
+  "deleted": false,
+  "visibility": "public"
+}

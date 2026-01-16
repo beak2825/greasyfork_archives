@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529221,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-08T17:47:55.000Z",
+    "code_updated_at": "2025-10-04T02:31:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443635,
+        "name": "qklg",
+        "created_at": "2025-03-08T17:36:10.000Z",
+        "url": "https://greasyfork.org/users/1443635-qklg"
+      }
+    ],
+    "name": "NodeSeek-PicGo图床（支持deepflood.com）",
+    "description": "在nodeseek.com与deepflood.com的论坛中自动上传图片到PicGo并插入Markdown链接",
+    "url": "https://greasyfork.org/scripts/529221-nodeseek-picgo%E5%9B%BE%E5%BA%8A-%E6%94%AF%E6%8C%81deepflood-com",
+    "code_url": "https://update.greasyfork.org/scripts/529221/NodeSeek-PicGo%E5%9B%BE%E5%BA%8A%EF%BC%88%E6%94%AF%E6%8C%81deepfloodcom%EF%BC%89.user.js",
+    "code_size": 2878,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "et",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

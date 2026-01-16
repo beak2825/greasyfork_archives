@@ -1,0 +1,34 @@
+{
+  "id": 514109,
+  "daily_installs": 0,
+  "total_installs": 22,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-26T06:50:42.000Z",
+  "code_updated_at": "2024-10-26T06:50:42.000Z",
+  "namespace": "https://greasyfork.org/users/1386489",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1386489,
+      "name": "atottil-rin",
+      "created_at": "2024-10-26T06:42:59.000Z",
+      "url": "https://greasyfork.org/users/1386489-atottil-rin",
+      "scripts": []
+    }
+  ],
+  "name": "Herramientas telecentro",
+  "description": "Conjunto de herramientas utililes para el dia a dia 1- tabulado rapido para queuemetrics 2- liberacion de boton venta",
+  "url": "https://greasyfork.org/scripts/514109-herramientas-telecentro",
+  "code_url": "https://update.greasyfork.org/scripts/514109/Herramientas%20telecentro.user.js",
+  "code_size": 17341,
+  "license": null,
+  "version": "32",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

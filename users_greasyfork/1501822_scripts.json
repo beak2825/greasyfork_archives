@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544717,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-05T11:46:37.000Z",
+    "code_updated_at": "2025-08-05T11:46:37.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501822,
+        "name": "Willcattt",
+        "created_at": "2025-08-05T10:54:08.000Z",
+        "url": "https://greasyfork.org/users/1501822-willcattt"
+      }
+    ],
+    "name": "剪贴板守护 (v30.0 终极版)",
+    "description": "Protects clipboard access with permission prompts and enhanced UI",
+    "url": "https://greasyfork.org/scripts/544717-%E5%89%AA%E8%B4%B4%E6%9D%BF%E5%AE%88%E6%8A%A4-v30-0-%E7%BB%88%E6%9E%81%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/544717/%E5%89%AA%E8%B4%B4%E6%9D%BF%E5%AE%88%E6%8A%A4%20%28v300%20%E7%BB%88%E6%9E%81%E7%89%88%29.user.js",
+    "code_size": 36246,
+    "license": "MIT License",
+    "version": "30.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

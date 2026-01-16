@@ -1,0 +1,59 @@
+{
+  "id": 540148,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T12:58:19.000Z",
+  "code_updated_at": "2025-06-20T12:58:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786702,
+      "name": "guo iaoang",
+      "created_at": "2021-06-24T01:12:25.000Z",
+      "url": "https://greasyfork.org/users/786702-guo-iaoang",
+      "scripts": [
+        {
+          "id": 540148,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-20T12:58:19.000Z",
+          "code_updated_at": "2025-06-20T12:58:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "解除微信、腾讯客服页面文本选择限制",
+          "description": "解除kf.qq.com、mp.weixin.qq.com页面的文本选择限制，允许自由选择和复制文本。内容来自deepseek。",
+          "url": "https://greasyfork.org/scripts/540148-%E8%A7%A3%E9%99%A4%E5%BE%AE%E4%BF%A1-%E8%85%BE%E8%AE%AF%E5%AE%A2%E6%9C%8D%E9%A1%B5%E9%9D%A2%E6%96%87%E6%9C%AC%E9%80%89%E6%8B%A9%E9%99%90%E5%88%B6",
+          "code_url": "https://update.greasyfork.org/scripts/540148/%E8%A7%A3%E9%99%A4%E5%BE%AE%E4%BF%A1%E3%80%81%E8%85%BE%E8%AE%AF%E5%AE%A2%E6%9C%8D%E9%A1%B5%E9%9D%A2%E6%96%87%E6%9C%AC%E9%80%89%E6%8B%A9%E9%99%90%E5%88%B6.user.js",
+          "code_size": 1896,
+          "license": "MIT License",
+          "version": "2025-06-20",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "解除微信、腾讯客服页面文本选择限制",
+  "description": "解除kf.qq.com、mp.weixin.qq.com页面的文本选择限制，允许自由选择和复制文本。内容来自deepseek。",
+  "url": "https://greasyfork.org/scripts/540148-%E8%A7%A3%E9%99%A4%E5%BE%AE%E4%BF%A1-%E8%85%BE%E8%AE%AF%E5%AE%A2%E6%9C%8D%E9%A1%B5%E9%9D%A2%E6%96%87%E6%9C%AC%E9%80%89%E6%8B%A9%E9%99%90%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/540148/%E8%A7%A3%E9%99%A4%E5%BE%AE%E4%BF%A1%E3%80%81%E8%85%BE%E8%AE%AF%E5%AE%A2%E6%9C%8D%E9%A1%B5%E9%9D%A2%E6%96%87%E6%9C%AC%E9%80%89%E6%8B%A9%E9%99%90%E5%88%B6.user.js",
+  "code_size": 1896,
+  "license": "MIT License",
+  "version": "2025-06-20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

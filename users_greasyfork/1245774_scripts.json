@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542188,
+    "daily_installs": 1,
+    "total_installs": 178,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T10:36:43.000Z",
+    "code_updated_at": "2025-09-25T09:04:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1245774,
+        "name": "春秋_CQ",
+        "created_at": "2024-01-10T02:15:19.000Z",
+        "url": "https://greasyfork.org/users/1245774-%E6%98%A5%E7%A7%8B-cq"
+      }
+    ],
+    "name": "AI对话导出word/json/md - DeepSeek/纳米/腾讯元宝/Kimi/通义千问/讯飞星火/豆包",
+    "description": "支持DeepSeek，纳米AI,腾讯元宝,kimi，通义千问和讯飞星火的对话导出功能，支持JSON、Markdown和word格式，豆包中的图片也能保存",
+    "url": "https://greasyfork.org/scripts/542188-ai%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BAword-json-md-deepseek-%E7%BA%B3%E7%B1%B3-%E8%85%BE%E8%AE%AF%E5%85%83%E5%AE%9D-kimi-%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE-%E8%AE%AF%E9%A3%9E%E6%98%9F%E7%81%AB-%E8%B1%86%E5%8C%85",
+    "code_url": "https://update.greasyfork.org/scripts/542188/AI%E5%AF%B9%E8%AF%9D%E5%AF%BC%E5%87%BAwordjsonmd%20-%20DeepSeek%E7%BA%B3%E7%B1%B3%E8%85%BE%E8%AE%AF%E5%85%83%E5%AE%9DKimi%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE%E8%AE%AF%E9%A3%9E%E6%98%9F%E7%81%AB%E8%B1%86%E5%8C%85.user.js",
+    "code_size": 71059,
+    "license": "MIT License",
+    "version": "2025.9.25-1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

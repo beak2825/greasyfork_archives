@@ -1,0 +1,34 @@
+{
+  "id": 500245,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-11T02:32:09.000Z",
+  "code_updated_at": "2024-07-11T02:32:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1331569,
+      "name": "calmwolf",
+      "created_at": "2024-07-11T02:27:18.000Z",
+      "url": "https://greasyfork.org/users/1331569-calmwolf",
+      "scripts": []
+    }
+  ],
+  "name": "小狼多多跟价功能监测提醒",
+  "description": "监测拼多多商家网站上是否有\"开启自动跟价功能\"文字并弹窗提醒",
+  "url": "https://greasyfork.org/scripts/500245-%E5%B0%8F%E7%8B%BC%E5%A4%9A%E5%A4%9A%E8%B7%9F%E4%BB%B7%E5%8A%9F%E8%83%BD%E7%9B%91%E6%B5%8B%E6%8F%90%E9%86%92",
+  "code_url": "https://update.greasyfork.org/scripts/500245/%E5%B0%8F%E7%8B%BC%E5%A4%9A%E5%A4%9A%E8%B7%9F%E4%BB%B7%E5%8A%9F%E8%83%BD%E7%9B%91%E6%B5%8B%E6%8F%90%E9%86%92.user.js",
+  "code_size": 813,
+  "license": "calmwolf",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

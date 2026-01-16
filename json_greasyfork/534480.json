@@ -1,0 +1,59 @@
+{
+  "id": 534480,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-30T07:25:15.000Z",
+  "code_updated_at": "2025-05-08T03:11:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463505,
+      "name": "唐纳德特没谱",
+      "created_at": "2025-04-29T07:05:33.000Z",
+      "url": "https://greasyfork.org/users/1463505-%E5%94%90%E7%BA%B3%E5%BE%B7%E7%89%B9%E6%B2%A1%E8%B0%B1",
+      "scripts": [
+        {
+          "id": 534480,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-30T07:25:15.000Z",
+          "code_updated_at": "2025-05-08T03:11:37.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浪潮大学“爱学习”自动课程学习助手",
+          "description": "自动点击浪潮大学“爱学习”平台课程的课件学习，课件学习完成后自动切换至下一个未完成的课件",
+          "url": "https://greasyfork.org/scripts/534480-%E6%B5%AA%E6%BD%AE%E5%A4%A7%E5%AD%A6-%E7%88%B1%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/534480/%E6%B5%AA%E6%BD%AE%E5%A4%A7%E5%AD%A6%E2%80%9C%E7%88%B1%E5%AD%A6%E4%B9%A0%E2%80%9D%E8%87%AA%E5%8A%A8%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 3785,
+          "license": "MIT License",
+          "version": "0.1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "浪潮大学“爱学习”自动课程学习助手",
+  "description": "自动点击浪潮大学“爱学习”平台课程的课件学习，课件学习完成后自动切换至下一个未完成的课件",
+  "url": "https://greasyfork.org/scripts/534480-%E6%B5%AA%E6%BD%AE%E5%A4%A7%E5%AD%A6-%E7%88%B1%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/534480/%E6%B5%AA%E6%BD%AE%E5%A4%A7%E5%AD%A6%E2%80%9C%E7%88%B1%E5%AD%A6%E4%B9%A0%E2%80%9D%E8%87%AA%E5%8A%A8%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 3785,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

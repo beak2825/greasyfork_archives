@@ -1,0 +1,33 @@
+{
+  "id": 528907,
+  "daily_installs": 4,
+  "total_installs": 866,
+  "fan_score": "30.3",
+  "good_ratings": 3,
+  "ok_ratings": 3,
+  "bad_ratings": 1,
+  "created_at": "2025-03-05T18:27:21.000Z",
+  "code_updated_at": "2025-05-22T12:39:59.000Z",
+  "namespace": "https://github.com/GameSketchers/Kawaii-Helper",
+  "support_url": "https://github.com/GameSketchers/Kawaii-Helper/issues/new?labels=bug&type=bug&template=bug_report.md&title=Bug+Report",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1442666,
+      "name": "anonimbiri_IsBack",
+      "created_at": "2025-03-05T18:20:27.000Z",
+      "url": "https://greasyfork.org/users/1442666-anonimbiri-isback"
+    }
+  ],
+  "name": "Kawaii Helper & Drawing Bot for Gartic.io",
+  "description": "Helper for Gartic.io with auto-guess, drawing assistance, and drawing bot",
+  "url": "https://greasyfork.org/scripts/528907-kawaii-helper-drawing-bot-for-gartic-io",
+  "code_url": "https://update.greasyfork.org/scripts/528907/Kawaii%20Helper%20%20Drawing%20Bot%20for%20Garticio.user.js",
+  "code_size": 81192,
+  "license": "MIT License",
+  "version": "2025-05-22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

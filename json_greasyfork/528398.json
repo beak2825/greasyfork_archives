@@ -1,0 +1,59 @@
+{
+  "id": 528398,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-28T23:47:42.000Z",
+  "code_updated_at": "2025-10-18T20:05:41.000Z",
+  "namespace": "sammniisan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441089,
+      "name": "samniisan",
+      "created_at": "2025-02-28T23:46:35.000Z",
+      "url": "https://greasyfork.org/users/1441089-samniisan",
+      "scripts": [
+        {
+          "id": 528398,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-28T23:47:42.000Z",
+          "code_updated_at": "2025-10-18T20:05:41.000Z",
+          "namespace": "sammniisan",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Buyee link checker",
+          "description": "Displays already visited auction links in red in Buyee",
+          "url": "https://greasyfork.org/scripts/528398-buyee-link-checker",
+          "code_url": "https://update.greasyfork.org/scripts/528398/Buyee%20link%20checker.user.js",
+          "code_size": 5273,
+          "license": "ISC License",
+          "version": "1.0.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Buyee link checker",
+  "description": "Displays already visited auction links in red in Buyee",
+  "url": "https://greasyfork.org/scripts/528398-buyee-link-checker",
+  "code_url": "https://update.greasyfork.org/scripts/528398/Buyee%20link%20checker.user.js",
+  "code_size": 5273,
+  "license": "ISC License",
+  "version": "1.0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 539465,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-15T03:14:03.000Z",
+  "code_updated_at": "2025-06-15T03:14:03.000Z",
+  "namespace": "kooba-helper@goobergoblin",
+  "support_url": "https://abook.link/book/index.php?topic=54768",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483874,
+      "name": "goobergoblin",
+      "created_at": "2025-06-15T02:38:39.000Z",
+      "url": "https://greasyfork.org/users/1483874-goobergoblin",
+      "scripts": [
+        {
+          "id": 539465,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-15T03:14:03.000Z",
+          "code_updated_at": "2025-06-15T03:14:03.000Z",
+          "namespace": "kooba-helper@goobergoblin",
+          "support_url": "https://abook.link/book/index.php?topic=54768",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "kooba-helper",
+          "description": "For a better kooba<=>abook experience. This adds search links to Abook forums code boxes.",
+          "url": "https://greasyfork.org/scripts/539465-kooba-helper",
+          "code_url": "https://update.greasyfork.org/scripts/539465/kooba-helper.user.js",
+          "code_size": 13839,
+          "license": "MIT License",
+          "version": "2025.06.06.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "kooba-helper",
+  "description": "For a better kooba<=>abook experience. This adds search links to Abook forums code boxes.",
+  "url": "https://greasyfork.org/scripts/539465-kooba-helper",
+  "code_url": "https://update.greasyfork.org/scripts/539465/kooba-helper.user.js",
+  "code_size": 13839,
+  "license": "MIT License",
+  "version": "2025.06.06.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

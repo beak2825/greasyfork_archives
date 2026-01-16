@@ -1,0 +1,33 @@
+{
+  "id": 502211,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-30T17:03:16.000Z",
+  "code_updated_at": "2024-07-31T10:59:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1339884,
+      "name": "bo chan",
+      "created_at": "2024-07-26T01:01:09.000Z",
+      "url": "https://greasyfork.org/users/1339884-bo-chan"
+    }
+  ],
+  "name": "低价抢购/智能出售/自动领邮件/任务委托获取单价,计算总开销",
+  "description": "拦截并修改Play Pixels网站的JavaScript文件，添加低价抢购显示低价总数量和滞销价格，并自动领取邮件，智能出售, 任务委托获取单价,计算总开销",
+  "url": "https://greasyfork.org/scripts/502211-%E4%BD%8E%E4%BB%B7%E6%8A%A2%E8%B4%AD-%E6%99%BA%E8%83%BD%E5%87%BA%E5%94%AE-%E8%87%AA%E5%8A%A8%E9%A2%86%E9%82%AE%E4%BB%B6-%E4%BB%BB%E5%8A%A1%E5%A7%94%E6%89%98%E8%8E%B7%E5%8F%96%E5%8D%95%E4%BB%B7-%E8%AE%A1%E7%AE%97%E6%80%BB%E5%BC%80%E9%94%80",
+  "code_url": "https://update.greasyfork.org/scripts/502211/%E4%BD%8E%E4%BB%B7%E6%8A%A2%E8%B4%AD%E6%99%BA%E8%83%BD%E5%87%BA%E5%94%AE%E8%87%AA%E5%8A%A8%E9%A2%86%E9%82%AE%E4%BB%B6%E4%BB%BB%E5%8A%A1%E5%A7%94%E6%89%98%E8%8E%B7%E5%8F%96%E5%8D%95%E4%BB%B7%2C%E8%AE%A1%E7%AE%97%E6%80%BB%E5%BC%80%E9%94%80.user.js",
+  "code_size": 67351,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

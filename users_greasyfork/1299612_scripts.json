@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514453,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-28T08:53:54.000Z",
+    "code_updated_at": "2024-10-30T06:52:08.000Z",
+    "namespace": "https://bbs.tampermonkey.net.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1299612,
+        "name": "mcitem",
+        "created_at": "2024-05-10T16:55:57.000Z",
+        "url": "https://greasyfork.org/users/1299612-mcitem"
+      }
+    ],
+    "name": "商汤教育 / SenseStudy / 人工智能基础素养 / 202.192.143.160 允许复制",
+    "description": "商汤教育 / SenseStudy / 人工智能基础素养 / 202.192.143.160 允许复制工具、点击code控件可自动复制，若无效请尝试刷新页面",
+    "url": "https://greasyfork.org/scripts/514453-%E5%95%86%E6%B1%A4%E6%95%99%E8%82%B2-sensestudy-%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E7%A1%80%E7%B4%A0%E5%85%BB-202-192-143-160-%E5%85%81%E8%AE%B8%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/514453/%E5%95%86%E6%B1%A4%E6%95%99%E8%82%B2%20%20SenseStudy%20%20%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%9F%BA%E7%A1%80%E7%B4%A0%E5%85%BB%20%20202192143160%20%E5%85%81%E8%AE%B8%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 1715,
+    "license": null,
+    "version": "0.2.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 523221,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T17:13:56.000Z",
+    "code_updated_at": "2025-01-08T17:13:55.000Z",
+    "namespace": "github.com/hmjz100",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380046,
+        "name": "iddabing",
+        "created_at": "2024-10-12T17:15:43.000Z",
+        "url": "https://greasyfork.org/users/1380046-iddabing"
+      }
+    ],
+    "name": "123 云盘会员青春版",
+    "description": "《也许同类型中最好用？》系列 - 显示 123 云盘身份信息为会员，支持超过 1GB 上限下载文件（基于【123云盘下载辅助】修改），支持使用视频倍速、关闭广告、修改头像、修改用户名等功能，自定义程度超高！需要修改头部代码来配置显示内容（非常简单！）",
+    "url": "https://greasyfork.org/scripts/523221-123-%E4%BA%91%E7%9B%98%E4%BC%9A%E5%91%98%E9%9D%92%E6%98%A5%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/523221/123%20%E4%BA%91%E7%9B%98%E4%BC%9A%E5%91%98%E9%9D%92%E6%98%A5%E7%89%88.user.js",
+    "code_size": 36512,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 523219,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T17:11:21.000Z",
+    "code_updated_at": "2025-01-08T17:11:21.000Z",
+    "namespace": "https://github.com/QingJ01/123pan_unlock",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380046,
+        "name": "iddabing",
+        "created_at": "2024-10-12T17:15:43.000Z",
+        "url": "https://greasyfork.org/users/1380046-iddabing"
+      }
+    ],
+    "name": "123云盘解锁",
+    "description": "专业的123云盘增强脚本 - 完美解锁会员功能、突破下载限制、去广告、支持自定义用户信息。支持个人网盘与分享页面，可在线配置，界面精美，功能强大，让你的123云盘体验更美好！",
+    "url": "https://greasyfork.org/scripts/523219-123%E4%BA%91%E7%9B%98%E8%A7%A3%E9%94%81",
+    "code_url": "https://update.greasyfork.org/scripts/523219/123%E4%BA%91%E7%9B%98%E8%A7%A3%E9%94%81.user.js",
+    "code_size": 49712,
+    "license": "Apache Licence 2.0",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 548494,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-05T15:46:24.000Z",
+    "code_updated_at": "2025-09-05T15:46:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512171,
+        "name": "TeRs Yüz",
+        "created_at": "2025-09-05T15:19:04.000Z",
+        "url": "https://greasyfork.org/users/1512171-ters-y%C3%BCz"
+      }
+    ],
+    "name": "Gartic Phone Auto Bot",
+    "description": "Violent Monkey compatible script for Gartic Phone with menu toggled by F2, auto draw from image URL, and auto opinion with random phrases.",
+    "url": "https://greasyfork.org/scripts/548494-gartic-phone-auto-bot",
+    "code_url": "https://update.greasyfork.org/scripts/548494/Gartic%20Phone%20Auto%20Bot.user.js",
+    "code_size": 9202,
+    "license": null,
+    "version": "0.1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 548492,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-05T15:32:21.000Z",
+    "code_updated_at": "2025-09-05T15:32:21.000Z",
+    "namespace": "https://github.com/GameSketchers/Kawaii-Helper",
+    "support_url": "https://github.com/GameSketchers/Kawaii-Helper/issues/new?labels=bug&type=bug&template=bug_report.md&title=Bug+Report",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512171,
+        "name": "TeRs Yüz",
+        "created_at": "2025-09-05T15:19:04.000Z",
+        "url": "https://greasyfork.org/users/1512171-ters-y%C3%BCz"
+      }
+    ],
+    "name": "Alp Helper & Drawing Bot for Gartic Phone",
+    "description": "Helper for Gartic Phone with drawing assistance and drawing bot",
+    "url": "https://greasyfork.org/scripts/548492-alp-helper-drawing-bot-for-gartic-phone",
+    "code_url": "https://update.greasyfork.org/scripts/548492/Alp%20Helper%20%20Drawing%20Bot%20for%20Gartic%20Phone.user.js",
+    "code_size": 57176,
+    "license": "MIT License",
+    "version": "2025-09-05",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

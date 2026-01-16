@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528428,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T09:54:47.000Z",
+    "code_updated_at": "2025-03-01T09:54:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928708,
+        "name": "ALKAM",
+        "created_at": "2022-06-24T04:25:57.000Z",
+        "url": "https://greasyfork.org/users/928708-alkam"
+      }
+    ],
+    "name": "极简隐私保护",
+    "description": "无背景文字按钮+英文提示",
+    "url": "https://greasyfork.org/scripts/528428-%E6%9E%81%E7%AE%80%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4",
+    "code_url": "https://update.greasyfork.org/scripts/528428/%E6%9E%81%E7%AE%80%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4.user.js",
+    "code_size": 3522,
+    "license": null,
+    "version": "4.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

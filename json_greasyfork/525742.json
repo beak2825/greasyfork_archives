@@ -1,0 +1,59 @@
+{
+  "id": 525742,
+  "daily_installs": 1,
+  "total_installs": 156,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T12:01:02.000Z",
+  "code_updated_at": "2025-12-09T18:38:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1430834,
+      "name": "Devrill",
+      "created_at": "2025-02-03T11:53:23.000Z",
+      "url": "https://greasyfork.org/users/1430834-devrill",
+      "scripts": [
+        {
+          "id": 525742,
+          "daily_installs": 1,
+          "total_installs": 156,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-02-03T12:01:02.000Z",
+          "code_updated_at": "2025-12-09T18:38:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bypass Tab Switch Detection",
+          "description": "Prevents websites from detecting tab switches by overriding visibility and focus events.",
+          "url": "https://greasyfork.org/scripts/525742-bypass-tab-switch-detection",
+          "code_url": "https://update.greasyfork.org/scripts/525742/Bypass%20Tab%20Switch%20Detection.user.js",
+          "code_size": 1913,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bypass Tab Switch Detection",
+  "description": "Prevents websites from detecting tab switches by overriding visibility and focus events.",
+  "url": "https://greasyfork.org/scripts/525742-bypass-tab-switch-detection",
+  "code_url": "https://update.greasyfork.org/scripts/525742/Bypass%20Tab%20Switch%20Detection.user.js",
+  "code_size": 1913,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

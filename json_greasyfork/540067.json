@@ -1,0 +1,33 @@
+{
+  "id": 540067,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T00:18:43.000Z",
+  "code_updated_at": "2025-06-20T00:18:43.000Z",
+  "namespace": "https://greasyfork.org/users/yourusername",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1449308,
+      "name": "fdslalkad",
+      "created_at": "2025-03-23T12:53:46.000Z",
+      "url": "https://greasyfork.org/users/1449308-fdslalkad"
+    }
+  ],
+  "name": "Discord DVD Cam Toggle",
+  "description": "Adds a button on your discord bar thing that if you are in vc turns on, then enable your camera and it will replace it with a dvd thing!!!",
+  "url": "https://greasyfork.org/scripts/540067-discord-dvd-cam-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/540067/Discord%20DVD%20Cam%20Toggle.user.js",
+  "code_size": 9729,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

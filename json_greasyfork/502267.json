@@ -1,0 +1,34 @@
+{
+  "id": 502267,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-31T13:01:57.000Z",
+  "code_updated_at": "2024-12-29T20:24:08.000Z",
+  "namespace": "flav.torn.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1293353,
+      "name": "FlavTorn",
+      "created_at": "2024-04-26T09:48:27.000Z",
+      "url": "https://greasyfork.org/users/1293353-flavtorn",
+      "scripts": []
+    }
+  ],
+  "name": "Extra Attacking Info Flav",
+  "description": "Show hospital time, online status and more attack buttons on the attacking page",
+  "url": "https://greasyfork.org/scripts/502267-extra-attacking-info-flav",
+  "code_url": "https://update.greasyfork.org/scripts/502267/Extra%20Attacking%20Info%20Flav.user.js",
+  "code_size": 23444,
+  "license": null,
+  "version": "1.2.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

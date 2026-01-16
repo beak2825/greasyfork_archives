@@ -1,0 +1,68 @@
+[
+  {
+    "id": 507632,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-09T10:24:21.000Z",
+    "code_updated_at": "2024-12-23T17:10:18.000Z",
+    "namespace": "https://shikimori.one/Librake",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1313920,
+        "name": "Librake",
+        "created_at": "2024-06-07T10:54:11.000Z",
+        "url": "https://greasyfork.org/users/1313920-librake"
+      }
+    ],
+    "name": "Shiki Comments Score",
+    "description": "Показывает оценку аниме каждого из комментаторов",
+    "url": "https://greasyfork.org/scripts/507632-shiki-comments-score",
+    "code_url": "https://update.greasyfork.org/scripts/507632/Shiki%20Comments%20Score.user.js",
+    "code_size": 10986,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507548,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-08T23:42:47.000Z",
+    "code_updated_at": "2024-09-08T23:42:46.000Z",
+    "namespace": "https://shikimori.one/Librake",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1313920,
+        "name": "Librake",
+        "created_at": "2024-06-07T10:54:11.000Z",
+        "url": "https://greasyfork.org/users/1313920-librake"
+      }
+    ],
+    "name": "Shiki comments score",
+    "description": "Shows each commenter's score of the anime",
+    "url": "https://greasyfork.org/scripts/507548-shiki-comments-score",
+    "code_url": "https://update.greasyfork.org/scripts/507548/Shiki%20comments%20score.user.js",
+    "code_size": 10402,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

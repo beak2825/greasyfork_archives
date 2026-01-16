@@ -1,0 +1,68 @@
+[
+  {
+    "id": 504834,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-23T15:10:25.000Z",
+    "code_updated_at": "2024-08-26T07:32:39.000Z",
+    "namespace": "https://archiveofourown.org/works/58390339",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356576,
+        "name": "ghostupload",
+        "created_at": "2024-08-23T13:35:25.000Z",
+        "url": "https://greasyfork.org/users/1356576-ghostupload"
+      }
+    ],
+    "name": "AO3 自用",
+    "description": "自用",
+    "url": "https://greasyfork.org/scripts/504834-ao3-%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/504834/AO3%20%E8%87%AA%E7%94%A8.user.js",
+    "code_size": 18354,
+    "license": "MIT License",
+    "version": "0.6.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504826,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-23T13:49:00.000Z",
+    "code_updated_at": "2024-08-26T07:21:28.000Z",
+    "namespace": "urovom@游快贴贴",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356576,
+        "name": "ghostupload",
+        "created_at": "2024-08-23T13:35:25.000Z",
+        "url": "https://greasyfork.org/users/1356576-ghostupload"
+      }
+    ],
+    "name": "AO3 关键词检测&折叠 | AO3 Keyword Detection & Collapse",
+    "description": "在指定位置检测关键词，折叠对应内容，并显示相应代替语句。v0.6支持开关大小写匹配、支持关键词正则表达式。",
+    "url": "https://greasyfork.org/scripts/504826-ao3-%E5%85%B3%E9%94%AE%E8%AF%8D%E6%A3%80%E6%B5%8B-%E6%8A%98%E5%8F%A0-ao3-keyword-detection-collapse",
+    "code_url": "https://update.greasyfork.org/scripts/504826/AO3%20%E5%85%B3%E9%94%AE%E8%AF%8D%E6%A3%80%E6%B5%8B%E6%8A%98%E5%8F%A0%20%7C%20AO3%20Keyword%20Detection%20%20Collapse.user.js",
+    "code_size": 11884,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

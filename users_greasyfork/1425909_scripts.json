@@ -1,0 +1,101 @@
+[
+  {
+    "id": 526036,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-05T23:15:18.000Z",
+    "code_updated_at": "2025-02-05T23:16:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425909,
+        "name": "Tiro",
+        "created_at": "2025-01-21T22:28:36.000Z",
+        "url": "https://greasyfork.org/users/1425909-tiro"
+      }
+    ],
+    "name": "Xat Bigger Chat, No Ads, Or Bottom of chat",
+    "description": "Adjust the navbar to simplify and add images to Help and Trade links",
+    "url": "https://greasyfork.org/scripts/526036-xat-bigger-chat-no-ads-or-bottom-of-chat",
+    "code_url": "https://update.greasyfork.org/scripts/526036/Xat%20Bigger%20Chat%2C%20No%20Ads%2C%20Or%20Bottom%20of%20chat.user.js",
+    "code_size": 4386,
+    "license": null,
+    "version": "2.69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 525942,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-05T03:38:01.000Z",
+    "code_updated_at": "2025-02-05T03:38:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425909,
+        "name": "Tiro",
+        "created_at": "2025-01-21T22:28:36.000Z",
+        "url": "https://greasyfork.org/users/1425909-tiro"
+      }
+    ],
+    "name": "Casino",
+    "description": "Extract UserID and control game actions via API.",
+    "url": "https://greasyfork.org/scripts/525942-casino",
+    "code_url": "https://update.greasyfork.org/scripts/525942/Casino.user.js",
+    "code_size": 4796,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 524486,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-22T05:42:07.000Z",
+    "code_updated_at": "2025-01-22T05:42:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425909,
+        "name": "Tiro",
+        "created_at": "2025-01-21T22:28:36.000Z",
+        "url": "https://greasyfork.org/users/1425909-tiro"
+      }
+    ],
+    "name": "PGO",
+    "description": "Autograb PGO on xat.com",
+    "url": "https://greasyfork.org/scripts/524486-pgo",
+    "code_url": "https://update.greasyfork.org/scripts/524486/PGO.user.js",
+    "code_size": 3746,
+    "license": "MIT License",
+    "version": "1.69",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

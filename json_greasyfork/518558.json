@@ -1,0 +1,33 @@
+{
+  "id": 518558,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-23T09:03:17.000Z",
+  "code_updated_at": "2024-11-23T09:03:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1064854,
+      "name": "xuming212",
+      "created_at": "2023-04-21T12:35:44.000Z",
+      "url": "https://greasyfork.org/users/1064854-xuming212"
+    }
+  ],
+  "name": "GPT账号批量管理助手",
+  "description": "批量化添加和管理GPT账号",
+  "url": "https://greasyfork.org/scripts/518558-gpt%E8%B4%A6%E5%8F%B7%E6%89%B9%E9%87%8F%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/518558/GPT%E8%B4%A6%E5%8F%B7%E6%89%B9%E9%87%8F%E7%AE%A1%E7%90%86%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 12434,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -231,6 +231,39 @@
     "visibility": "public"
   },
   {
+    "id": 552891,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T09:51:52.000Z",
+    "code_updated_at": "2025-10-17T09:53:23.000Z",
+    "namespace": "WarSoul-Tools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1017434,
+        "name": "Chikit-L",
+        "created_at": "2023-01-27T13:45:31.000Z",
+        "url": "https://greasyfork.org/users/1017434-chikit-l"
+      }
+    ],
+    "name": "WarSoul-Tools",
+    "description": "WarSoul实用工具",
+    "url": "https://greasyfork.org/scripts/552891-warsoul-tools",
+    "code_url": "https://update.greasyfork.org/scripts/552891/WarSoul-Tools.user.js",
+    "code_size": 106380,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 552887,
     "daily_installs": 0,
     "total_installs": 0,
@@ -262,5 +295,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 552855,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-17T01:24:18.000Z",
+    "code_updated_at": "2026-01-16T02:48:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1017434,
+        "name": "Chikit-L",
+        "created_at": "2023-01-27T13:45:31.000Z",
+        "url": "https://greasyfork.org/users/1017434-chikit-l"
+      }
+    ],
+    "name": "WarSoul Daily Tasks",
+    "description": "自动完成每日祈福、每日挑战和每月1号大荒野",
+    "url": "https://greasyfork.org/scripts/552855-warsoul-daily-tasks",
+    "code_url": "https://update.greasyfork.org/scripts/552855/WarSoul%20Daily%20Tasks.user.js",
+    "code_size": 19325,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549785,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-17T02:59:04.000Z",
+    "code_updated_at": "2025-10-15T13:00:49.000Z",
+    "namespace": "https://aring.cc/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1017434,
+        "name": "Chikit-L",
+        "created_at": "2023-01-27T13:45:31.000Z",
+        "url": "https://greasyfork.org/users/1017434-chikit-l"
+      }
+    ],
+    "name": "WarSoul AutoBattle",
+    "description": "为战魂觉醒游戏组队添加自动战斗功能，等待队员加入后自动开始战斗",
+    "url": "https://greasyfork.org/scripts/549785-warsoul-autobattle",
+    "code_url": "https://update.greasyfork.org/scripts/549785/WarSoul%20AutoBattle.user.js",
+    "code_size": 15715,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 545355,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-11T01:48:28.000Z",
+    "code_updated_at": "2025-09-11T01:18:00.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274778,
+        "name": "Jianhua Ye",
+        "created_at": "2024-03-15T09:08:44.000Z",
+        "url": "https://greasyfork.org/users/1274778-jianhua-ye"
+      }
+    ],
+    "name": "金额二次确认",
+    "description": "2025/8/11 09:46:25",
+    "url": "https://greasyfork.org/scripts/545355-%E9%87%91%E9%A2%9D%E4%BA%8C%E6%AC%A1%E7%A1%AE%E8%AE%A4",
+    "code_url": "https://update.greasyfork.org/scripts/545355/%E9%87%91%E9%A2%9D%E4%BA%8C%E6%AC%A1%E7%A1%AE%E8%AE%A4.user.js",
+    "code_size": 39524,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 529480,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-11T09:06:51.000Z",
+    "code_updated_at": "2025-03-11T09:06:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274778,
+        "name": "Jianhua Ye",
+        "created_at": "2024-03-15T09:08:44.000Z",
+        "url": "https://greasyfork.org/users/1274778-jianhua-ye"
+      }
+    ],
+    "name": "黑猫批量复制",
+    "description": "用来批量复制单号和复制查询结果",
+    "url": "https://greasyfork.org/scripts/529480-%E9%BB%91%E7%8C%AB%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/529480/%E9%BB%91%E7%8C%AB%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 4276,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519503,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-02T01:11:18.000Z",
+    "code_updated_at": "2025-01-07T12:43:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274778,
+        "name": "Jianhua Ye",
+        "created_at": "2024-03-15T09:08:44.000Z",
+        "url": "https://greasyfork.org/users/1274778-jianhua-ye"
+      }
+    ],
+    "name": "电商平台页面增强",
+    "description": "通过用户粘贴的json来高亮指定的商品属性",
+    "url": "https://greasyfork.org/scripts/519503-%E7%94%B5%E5%95%86%E5%B9%B3%E5%8F%B0%E9%A1%B5%E9%9D%A2%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/519503/%E7%94%B5%E5%95%86%E5%B9%B3%E5%8F%B0%E9%A1%B5%E9%9D%A2%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 28279,
+    "license": "MIT License",
+    "version": "0.16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500391,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-12T05:44:14.000Z",
+    "code_updated_at": "2024-09-11T05:07:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274778,
+        "name": "Jianhua Ye",
+        "created_at": "2024-03-15T09:08:44.000Z",
+        "url": "https://greasyfork.org/users/1274778-jianhua-ye"
+      }
+    ],
+    "name": "替换空格符",
+    "description": "在金山文档粘贴时，替换掉不可见的分隔符",
+    "url": "https://greasyfork.org/scripts/500391-%E6%9B%BF%E6%8D%A2%E7%A9%BA%E6%A0%BC%E7%AC%A6",
+    "code_url": "https://update.greasyfork.org/scripts/500391/%E6%9B%BF%E6%8D%A2%E7%A9%BA%E6%A0%BC%E7%AC%A6.user.js",
+    "code_size": 896,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 497998,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-15T13:51:13.000Z",
+    "code_updated_at": "2025-08-26T03:01:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1274778,
+        "name": "Jianhua Ye",
+        "created_at": "2024-03-15T09:08:44.000Z",
+        "url": "https://greasyfork.org/users/1274778-jianhua-ye"
+      }
+    ],
+    "name": "taobaoWorld导出采购信息",
+    "description": "导出新淘宝的采购信息",
+    "url": "https://greasyfork.org/scripts/497998-taobaoworld%E5%AF%BC%E5%87%BA%E9%87%87%E8%B4%AD%E4%BF%A1%E6%81%AF",
+    "code_url": "https://update.greasyfork.org/scripts/497998/taobaoWorld%E5%AF%BC%E5%87%BA%E9%87%87%E8%B4%AD%E4%BF%A1%E6%81%AF.user.js",
+    "code_size": 15749,
+    "license": "MIT License",
+    "version": "0.16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 504232,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-19T08:42:05.000Z",
+  "code_updated_at": "2025-10-29T21:10:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354405,
+      "name": "Chengchen",
+      "created_at": "2024-08-19T08:24:19.000Z",
+      "url": "https://greasyfork.org/users/1354405-chengchen",
+      "scripts": []
+    }
+  ],
+  "name": "德米萨扩展脚本",
+  "description": "Grace的魔法键!",
+  "url": "https://greasyfork.org/scripts/504232-%E5%BE%B7%E7%B1%B3%E8%90%A8%E6%89%A9%E5%B1%95%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/504232/%E5%BE%B7%E7%B1%B3%E8%90%A8%E6%89%A9%E5%B1%95%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 14523,
+  "license": "MIT License",
+  "version": "2025103001",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

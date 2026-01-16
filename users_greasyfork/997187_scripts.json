@@ -1,0 +1,167 @@
+[
+  {
+    "id": 540943,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T14:46:13.000Z",
+    "code_updated_at": "2025-06-30T09:33:21.000Z",
+    "namespace": "https://github.com/Thibb1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 997187,
+        "name": "Thibb1",
+        "created_at": "2022-12-13T22:25:16.000Z",
+        "url": "https://greasyfork.org/users/997187-thibb1"
+      }
+    ],
+    "name": "Auto leveling - discord.com",
+    "description": "Bare bone tool to auto level up on Discord servers, send messages automatically",
+    "url": "https://greasyfork.org/scripts/540943-auto-leveling-discord-com",
+    "code_url": "https://update.greasyfork.org/scripts/540943/Auto%20leveling%20-%20discordcom.user.js",
+    "code_size": 3283,
+    "license": "GPL",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539204,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T11:45:06.000Z",
+    "code_updated_at": "2025-06-12T11:45:06.000Z",
+    "namespace": "https://github.com/Thibb1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 997187,
+        "name": "Thibb1",
+        "created_at": "2022-12-13T22:25:16.000Z",
+        "url": "https://greasyfork.org/users/997187-thibb1"
+      }
+    ],
+    "name": "Songsterr Premium - songsterr.com",
+    "description": "Unlock all premium features on Songsterr",
+    "url": "https://greasyfork.org/scripts/539204-songsterr-premium-songsterr-com",
+    "code_url": "https://update.greasyfork.org/scripts/539204/Songsterr%20Premium%20-%20songsterrcom.user.js",
+    "code_size": 1082,
+    "license": "GPL",
+    "version": "1.3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538223,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T14:19:26.000Z",
+    "code_updated_at": "2025-06-03T14:19:26.000Z",
+    "namespace": "https://github.com/Thibb1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 997187,
+        "name": "Thibb1",
+        "created_at": "2022-12-13T22:25:16.000Z",
+        "url": "https://greasyfork.org/users/997187-thibb1"
+      }
+    ],
+    "name": "Lamucal Premium - lamucal.com",
+    "description": "Unlock premium features on Lamucal",
+    "url": "https://greasyfork.org/scripts/538223-lamucal-premium-lamucal-com",
+    "code_url": "https://update.greasyfork.org/scripts/538223/Lamucal%20Premium%20-%20lamucalcom.user.js",
+    "code_size": 1199,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510411,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T09:21:01.000Z",
+    "code_updated_at": "2025-02-04T14:21:10.000Z",
+    "namespace": "https://github.com/Thibb1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 997187,
+        "name": "Thibb1",
+        "created_at": "2022-12-13T22:25:16.000Z",
+        "url": "https://greasyfork.org/users/997187-thibb1"
+      }
+    ],
+    "name": "Adblock - cuberealm.io",
+    "description": "Remove cuberealm ads :D Works with Ublock Origin / adblocker enabled",
+    "url": "https://greasyfork.org/scripts/510411-adblock-cuberealm-io",
+    "code_url": "https://update.greasyfork.org/scripts/510411/Adblock%20-%20cuberealmio.user.js",
+    "code_size": 632,
+    "license": "GPL",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503593,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-08-14T02:19:51.000Z",
+    "code_updated_at": "2024-08-14T02:21:57.000Z",
+    "namespace": "https://github.com/Thibb1",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 997187,
+        "name": "Thibb1",
+        "created_at": "2022-12-13T22:25:16.000Z",
+        "url": "https://greasyfork.org/users/997187-thibb1"
+      }
+    ],
+    "name": "Crop helper - cuberealm.io",
+    "description": "Helps you plant crops",
+    "url": "https://greasyfork.org/scripts/503593-crop-helper-cuberealm-io",
+    "code_url": "https://update.greasyfork.org/scripts/503593/Crop%20helper%20-%20cuberealmio.user.js",
+    "code_size": 865,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 538292,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-04T10:07:11.000Z",
+  "code_updated_at": "2025-06-05T05:47:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1343550,
+      "name": "tuncaycan",
+      "created_at": "2024-08-01T07:33:01.000Z",
+      "url": "https://greasyfork.org/users/1343550-tuncaycan",
+      "scripts": [
+        {
+          "id": 542702,
+          "daily_installs": 0,
+          "total_installs": 55,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-16T09:32:48.000Z",
+          "code_updated_at": "2026-01-15T07:44:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MZone Advanced: Table, Stats & Play-off / MZone Gelişmiş: Tablo, İstatistik & Play-off",
+          "description": "A powerful suite combining the Advanced League Table (live scores, FD), Player Stat Averages, and the new Play-off/Play-out Predictor. Now with Excel export, Shortlist Filtering and Transfer Tracker with charts.",
+          "url": "https://greasyfork.org/scripts/542702-mzone-advanced-table-stats-play-off-mzone-geli%C5%9Fmi%C5%9F-tablo-i-statistik-play-off",
+          "code_url": "https://update.greasyfork.org/scripts/542702/MZone%20Advanced%3A%20Table%2C%20Stats%20%20Play-off%20%20MZone%20Geli%C5%9Fmi%C5%9F%3A%20Tablo%2C%20%C4%B0statistik%20%20Play-off.user.js",
+          "code_size": 472294,
+          "license": null,
+          "version": "2.92",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ManagerZone Event Zaman Sıfırlayıcı",
+  "description": "ManagerZone etkinlik sayfasındaki \"Talep et\" butonunu süre 0m 0s olduğunda otomatik tıklar ve süreyi sıfırlar. Konsolda sayaç takibini gösterir ve döngüyü sürdürür. Ek olarak, oturumun kapanmaması için sayfayı her 2 dakikada bir otomatik yeniler.",
+  "url": "https://greasyfork.org/scripts/538292-managerzone-event-zaman-s%C4%B1f%C4%B1rlay%C4%B1c%C4%B1",
+  "code_url": "https://update.greasyfork.org/scripts/538292/ManagerZone%20Event%20Zaman%20S%C4%B1f%C4%B1rlay%C4%B1c%C4%B1.user.js",
+  "code_size": 5036,
+  "license": null,
+  "version": "1.7",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 512871,
+  "daily_installs": 1,
+  "total_installs": 11,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-10-16T16:31:35.000Z",
+  "code_updated_at": "2024-10-16T16:31:35.000Z",
+  "namespace": "https://github.com/Koishi0425/chrome-extension-Pixiv-Artwork-Opener",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1380020,
+      "name": "Koishi0425",
+      "created_at": "2024-10-12T16:26:07.000Z",
+      "url": "https://greasyfork.org/users/1380020-koishi0425",
+      "scripts": [
+        {
+          "id": 512871,
+          "daily_installs": 1,
+          "total_installs": 11,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2024-10-16T16:31:35.000Z",
+          "code_updated_at": "2024-10-16T16:31:35.000Z",
+          "namespace": "https://github.com/Koishi0425/chrome-extension-Pixiv-Artwork-Opener",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pixiv Artwork Opener (Tampermonkey)",
+          "description": "自动读取剪切板打开Pixiv作品。/ Prompt user to open Pixiv artwork from clipboard.",
+          "url": "https://greasyfork.org/scripts/512871-pixiv-artwork-opener-tampermonkey",
+          "code_url": "https://update.greasyfork.org/scripts/512871/Pixiv%20Artwork%20Opener%20%28Tampermonkey%29.user.js",
+          "code_size": 5295,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pixiv Artwork Opener (Tampermonkey)",
+  "description": "自动读取剪切板打开Pixiv作品。/ Prompt user to open Pixiv artwork from clipboard.",
+  "url": "https://greasyfork.org/scripts/512871-pixiv-artwork-opener-tampermonkey",
+  "code_url": "https://update.greasyfork.org/scripts/512871/Pixiv%20Artwork%20Opener%20%28Tampermonkey%29.user.js",
+  "code_size": 5295,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

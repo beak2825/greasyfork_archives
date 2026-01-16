@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531430,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-31T16:00:44.000Z",
+    "code_updated_at": "2025-11-04T08:40:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1283972,
+        "name": "Lyn Rayy",
+        "created_at": "2024-04-04T20:20:30.000Z",
+        "url": "https://greasyfork.org/users/1283972-lyn-rayy"
+      }
+    ],
+    "name": "Youtube \"Remove From Playlist\" Button",
+    "description": "Adds a button next to the three dots menu to remove videos from a playlist with one click on YouTube",
+    "url": "https://greasyfork.org/scripts/531430-youtube-remove-from-playlist-button",
+    "code_url": "https://update.greasyfork.org/scripts/531430/Youtube%20%22Remove%20From%20Playlist%22%20Button.user.js",
+    "code_size": 4482,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

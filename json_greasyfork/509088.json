@@ -1,0 +1,59 @@
+{
+  "id": 509088,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-18T20:15:41.000Z",
+  "code_updated_at": "2024-09-18T20:15:41.000Z",
+  "namespace": "https://your-website.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369371,
+      "name": "RYKER DUNBAR",
+      "created_at": "2024-09-17T23:46:07.000Z",
+      "url": "https://greasyfork.org/users/1369371-ryker-dunbar",
+      "scripts": [
+        {
+          "id": 509088,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-18T20:15:41.000Z",
+          "code_updated_at": "2024-09-18T20:15:41.000Z",
+          "namespace": "https://your-website.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Where in fortnite In google classroom",
+          "description": "Embeds Where in fortnite into Google Classroom",
+          "url": "https://greasyfork.org/scripts/509088-where-in-fortnite-in-google-classroom",
+          "code_url": "https://update.greasyfork.org/scripts/509088/Where%20in%20fortnite%20In%20google%20classroom.user.js",
+          "code_size": 1357,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Where in fortnite In google classroom",
+  "description": "Embeds Where in fortnite into Google Classroom",
+  "url": "https://greasyfork.org/scripts/509088-where-in-fortnite-in-google-classroom",
+  "code_url": "https://update.greasyfork.org/scripts/509088/Where%20in%20fortnite%20In%20google%20classroom.user.js",
+  "code_size": 1357,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 534209,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-28T00:59:42.000Z",
+  "code_updated_at": "2025-05-21T05:46:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462972,
+      "name": "Argenticle",
+      "created_at": "2025-04-28T00:56:29.000Z",
+      "url": "https://greasyfork.org/users/1462972-argenticle",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube Chat Mod Action Icons (All Timeout Durations + Channel Activity)",
+  "description": "If user is mod, insert 🗑️, 🔗, ⏱️, 5️⃣, 🕞, 🕛, 📊 before avatar for each chat message. Each timeout icon triggers the correct duration in the dialog. 📊 opens channel activity.",
+  "url": "https://greasyfork.org/scripts/534209-youtube-chat-mod-action-icons-all-timeout-durations-channel-activity",
+  "code_url": "https://update.greasyfork.org/scripts/534209/YouTube%20Chat%20Mod%20Action%20Icons%20%28All%20Timeout%20Durations%20%2B%20Channel%20Activity%29.user.js",
+  "code_size": 15816,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

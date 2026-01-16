@@ -1,0 +1,74 @@
+[
+  {
+    "id": 545903,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T04:05:11.000Z",
+    "code_updated_at": "2025-08-15T04:05:11.000Z",
+    "namespace": "competitive-companion-customized",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223216,
+        "name": "znpdco",
+        "created_at": "2023-11-25T08:55:23.000Z",
+        "url": "https://greasyfork.org/users/1223216-znpdco"
+      }
+    ],
+    "name": "Vjudge example for custom name in Competitive Companion Customized",
+    "description": "This is an example for vjudge, more details in https://github.com/lnw143/competitive-companion-customized",
+    "url": "https://greasyfork.org/scripts/545903-vjudge-example-for-custom-name-in-competitive-companion-customized",
+    "code_url": "https://update.greasyfork.org/scripts/545903/Vjudge%20example%20for%20custom%20name%20in%20Competitive%20Companion%20Customized.user.js",
+    "code_size": 781,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502185,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-30T13:08:35.000Z",
+    "code_updated_at": "2024-11-21T08:16:56.000Z",
+    "namespace": "https://atcoder.jp",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223216,
+        "name": "znpdco",
+        "created_at": "2023-11-25T08:55:23.000Z",
+        "url": "https://greasyfork.org/users/1223216-znpdco"
+      },
+      {
+        "id": 1342573,
+        "name": "lnw143",
+        "created_at": "2024-07-30T13:05:49.000Z",
+        "url": "https://greasyfork.org/users/1342573-lnw143"
+      }
+    ],
+    "name": "AT版卷王监视器",
+    "description": "在题目界面显示关注的人的通过情况",
+    "url": "https://greasyfork.org/scripts/502185-at%E7%89%88%E5%8D%B7%E7%8E%8B%E7%9B%91%E8%A7%86%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/502185/AT%E7%89%88%E5%8D%B7%E7%8E%8B%E7%9B%91%E8%A7%86%E5%99%A8.user.js",
+    "code_size": 5319,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538816,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T12:05:00.000Z",
+    "code_updated_at": "2025-06-08T12:10:22.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1186377,
+        "name": "fsffs fsfsfsf",
+        "created_at": "2023-10-02T21:06:54.000Z",
+        "url": "https://greasyfork.org/users/1186377-fsffs-fsfsfsf"
+      }
+    ],
+    "name": "CLN PixelRadar",
+    "description": "CL.NET PixelRadar",
+    "url": "https://greasyfork.org/scripts/538816-cln-pixelradar",
+    "code_url": "https://update.greasyfork.org/scripts/538816/CLN%20PixelRadar.user.js",
+    "code_size": 12783,
+    "license": null,
+    "version": "0.1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

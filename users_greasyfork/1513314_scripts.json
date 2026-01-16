@@ -1,0 +1,68 @@
+[
+  {
+    "id": 549471,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-14T02:59:29.000Z",
+    "code_updated_at": "2025-09-14T03:15:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513314,
+        "name": "an vu an",
+        "created_at": "2025-09-09T12:52:33.000Z",
+        "url": "https://greasyfork.org/users/1513314-an-vu-an"
+      }
+    ],
+    "name": "Universal Web Edit Mode",
+    "description": "Cho phép bật/tắt chế độ chỉnh sửa trên tất cả website",
+    "url": "https://greasyfork.org/scripts/549471-universal-web-edit-mode",
+    "code_url": "https://update.greasyfork.org/scripts/549471/Universal%20Web%20Edit%20Mode.user.js",
+    "code_size": 2374,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549139,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T12:40:05.000Z",
+    "code_updated_at": "2025-09-11T13:32:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513314,
+        "name": "an vu an",
+        "created_at": "2025-09-09T12:52:33.000Z",
+        "url": "https://greasyfork.org/users/1513314-an-vu-an"
+      }
+    ],
+    "name": "Read the section highlight (Transparent Menu)",
+    "description": "Read highlighted text with speech synthesis",
+    "url": "https://greasyfork.org/scripts/549139-read-the-section-highlight-transparent-menu",
+    "code_url": "https://update.greasyfork.org/scripts/549139/Read%20the%20section%20highlight%20%28Transparent%20Menu%29.user.js",
+    "code_size": 3210,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

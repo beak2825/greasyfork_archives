@@ -1,0 +1,33 @@
+{
+  "id": 517632,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-16T11:40:13.000Z",
+  "code_updated_at": "2024-11-16T11:40:13.000Z",
+  "namespace": "https://greasyfork.org/users/217495-eric-toombs",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 217495,
+      "name": "Eric Toombs",
+      "created_at": "2018-10-04T22:11:11.000Z",
+      "url": "https://greasyfork.org/users/217495-eric-toombs"
+    }
+  ],
+  "name": "kiwix-wiktionary-toggle-navcontent",
+  "description": "Fixes toggling of all NavContent instances in kiwix wiktionary.",
+  "url": "https://greasyfork.org/scripts/517632-kiwix-wiktionary-toggle-navcontent",
+  "code_url": "https://update.greasyfork.org/scripts/517632/kiwix-wiktionary-toggle-navcontent.user.js",
+  "code_size": 579,
+  "license": null,
+  "version": "0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -30,6 +30,105 @@
     "version": "2025-12-08",
     "locale": "ru",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 536063,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T09:09:22.000Z",
+    "code_updated_at": "2025-05-15T09:09:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864546,
+        "name": "Андрей Коуров",
+        "created_at": "2022-01-13T22:35:44.000Z",
+        "url": "https://greasyfork.org/users/864546-%D0%B0%D0%BD%D0%B4%D1%80%D0%B5%D0%B9-%D0%BA%D0%BE%D1%83%D1%80%D0%BE%D0%B2"
+      }
+    ],
+    "name": "Insales Select All Variants",
+    "description": "Insales Select All Variants!",
+    "url": "https://greasyfork.org/scripts/536063-insales-select-all-variants",
+    "code_url": "https://update.greasyfork.org/scripts/536063/Insales%20Select%20All%20Variants.user.js",
+    "code_size": 3609,
+    "license": "MIT License",
+    "version": "2025-05-15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532464,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T21:24:17.000Z",
+    "code_updated_at": "2025-04-10T21:24:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864546,
+        "name": "Андрей Коуров",
+        "created_at": "2022-01-13T22:35:44.000Z",
+        "url": "https://greasyfork.org/users/864546-%D0%B0%D0%BD%D0%B4%D1%80%D0%B5%D0%B9-%D0%BA%D0%BE%D1%83%D1%80%D0%BE%D0%B2"
+      }
+    ],
+    "name": "Cardplace Card Grid + Firefox image fix",
+    "description": "Добавляет вид сетки на каталог синглов юзера, сохраняет состояние + фиксит путь до картинок так как в фф с этим бывает проблема.",
+    "url": "https://greasyfork.org/scripts/532464-cardplace-card-grid-firefox-image-fix",
+    "code_url": "https://update.greasyfork.org/scripts/532464/Cardplace%20Card%20Grid%20%2B%20Firefox%20image%20fix.user.js",
+    "code_size": 6387,
+    "license": "MIT License",
+    "version": "2025-04-11",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 501422,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-21T22:52:09.000Z",
+    "code_updated_at": "2025-01-28T00:23:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 864546,
+        "name": "Андрей Коуров",
+        "created_at": "2022-01-13T22:35:44.000Z",
+        "url": "https://greasyfork.org/users/864546-%D0%B0%D0%BD%D0%B4%D1%80%D0%B5%D0%B9-%D0%BA%D0%BE%D1%83%D1%80%D0%BE%D0%B2"
+      }
+    ],
+    "name": "Insales Orders Quantity Color",
+    "description": "Красит строку товара, если количество товара более 1шт.",
+    "url": "https://greasyfork.org/scripts/501422-insales-orders-quantity-color",
+    "code_url": "https://update.greasyfork.org/scripts/501422/Insales%20Orders%20Quantity%20Color.user.js",
+    "code_size": 2323,
+    "license": "MIT License",
+    "version": "v1.4",
+    "locale": "ru",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

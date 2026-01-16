@@ -1,0 +1,33 @@
+{
+  "id": 548954,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-09T16:03:09.000Z",
+  "code_updated_at": "2025-09-09T16:03:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499234,
+      "name": "dabendan123",
+      "created_at": "2025-07-28T16:35:35.000Z",
+      "url": "https://greasyfork.org/users/1499234-dabendan123"
+    }
+  ],
+  "name": "TikTok Ads - FULL AUTO V35.3: Decoupled Save-Check",
+  "description": "[V35.3] Decoupled the 'Save Settings' and 'Instant Check' buttons. Save now only saves without triggering an immediate re-scan.",
+  "url": "https://greasyfork.org/scripts/548954-tiktok-ads-full-auto-v35-3-decoupled-save-check",
+  "code_url": "https://update.greasyfork.org/scripts/548954/TikTok%20Ads%20-%20FULL%20AUTO%20V353%3A%20Decoupled%20Save-Check.user.js",
+  "code_size": 14876,
+  "license": null,
+  "version": "35.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

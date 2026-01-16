@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503165,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T06:30:08.000Z",
+    "code_updated_at": "2024-08-25T02:45:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1348767,
+        "name": "beiqh",
+        "created_at": "2024-08-10T03:11:39.000Z",
+        "url": "https://greasyfork.org/users/1348767-beiqh"
+      }
+    ],
+    "name": "吾爱破解美化 - 暗黑模式 精简元素 优化体验",
+    "description": "更改颜色、隐藏冗杂的元素、加入暗黑模式、享受更好的浏览体验。",
+    "url": "https://greasyfork.org/scripts/503165-%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E7%BE%8E%E5%8C%96-%E6%9A%97%E9%BB%91%E6%A8%A1%E5%BC%8F-%E7%B2%BE%E7%AE%80%E5%85%83%E7%B4%A0-%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C",
+    "code_url": "https://update.greasyfork.org/scripts/503165/%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E7%BE%8E%E5%8C%96%20-%20%E6%9A%97%E9%BB%91%E6%A8%A1%E5%BC%8F%20%E7%B2%BE%E7%AE%80%E5%85%83%E7%B4%A0%20%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C.user.js",
+    "code_size": 26338,
+    "license": "GNU GPLv3",
+    "version": "2024-08-25",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

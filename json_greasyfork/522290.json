@@ -1,0 +1,59 @@
+{
+  "id": 522290,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-30T11:13:09.000Z",
+  "code_updated_at": "2025-01-18T02:06:53.000Z",
+  "namespace": "https://greasyfork.org/users/1417526",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417526,
+      "name": "Weichenleeeee123",
+      "created_at": "2024-12-30T10:12:33.000Z",
+      "url": "https://greasyfork.org/users/1417526-weichenleeeee123",
+      "scripts": [
+        {
+          "id": 522290,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-30T11:13:09.000Z",
+          "code_updated_at": "2025-01-18T02:06:53.000Z",
+          "namespace": "https://greasyfork.org/users/1417526",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Izyz-Helper",
+          "description": "Help you to use izyz easier!",
+          "url": "https://greasyfork.org/scripts/522290-izyz-helper",
+          "code_url": "https://update.greasyfork.org/scripts/522290/Izyz-Helper.user.js",
+          "code_size": 27271,
+          "license": null,
+          "version": "0.1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Izyz-Helper",
+  "description": "Help you to use izyz easier!",
+  "url": "https://greasyfork.org/scripts/522290-izyz-helper",
+  "code_url": "https://update.greasyfork.org/scripts/522290/Izyz-Helper.user.js",
+  "code_size": 27271,
+  "license": null,
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

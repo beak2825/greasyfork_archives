@@ -1,0 +1,233 @@
+[
+  {
+    "id": 546147,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-17T11:18:58.000Z",
+    "code_updated_at": "2025-08-17T11:18:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "ERP近7天销售数据展示（简化版）",
+    "description": "Fetch and display sales report data as ECharts line chart in a floating window with enhanced UI/UX, fixed button, loading animation, confined tooltip, totalCount-sorted tooltip with 0 display fix, caching disabled, fullscreen toggle, fixed duplicate button issue, syntax errors, and button not displaying in Chrome",
+    "url": "https://greasyfork.org/scripts/546147-erp%E8%BF%917%E5%A4%A9%E9%94%80%E5%94%AE%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA-%E7%AE%80%E5%8C%96%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/546147/ERP%E8%BF%917%E5%A4%A9%E9%94%80%E5%94%AE%E6%95%B0%E6%8D%AE%E5%B1%95%E7%A4%BA%EF%BC%88%E7%AE%80%E5%8C%96%E7%89%88%EF%BC%89.user.js",
+    "code_size": 42288,
+    "license": "MIT License",
+    "version": "2.1.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 546146,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-17T11:14:57.000Z",
+    "code_updated_at": "2025-08-17T11:14:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "ERP Remove Watermark",
+    "description": "Removes fixed watermark div with specified styles",
+    "url": "https://greasyfork.org/scripts/546146-erp-remove-watermark",
+    "code_url": "https://update.greasyfork.org/scripts/546146/ERP%20Remove%20Watermark.user.js",
+    "code_size": 1628,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 541803,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-06T10:07:40.000Z",
+    "code_updated_at": "2025-07-06T10:07:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "网易云音乐",
+    "description": "解锁网页完全歌单，来自公开音源.更改权限",
+    "url": "https://greasyfork.org/scripts/541803-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90",
+    "code_url": "https://update.greasyfork.org/scripts/541803/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90.user.js",
+    "code_size": 34450,
+    "license": "MIT License",
+    "version": "29.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 541234,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-30T14:59:37.000Z",
+    "code_updated_at": "2025-06-30T14:59:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "网易云音乐网页版脚本",
+    "description": "解锁网页完全歌单，来自公开音源.更改权限",
+    "url": "https://greasyfork.org/scripts/541234-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5%E7%89%88%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/541234/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E7%BD%91%E9%A1%B5%E7%89%88%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 34465,
+    "license": "MIT License",
+    "version": "29.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539894,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T15:33:18.000Z",
+    "code_updated_at": "2025-06-18T15:33:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "linux.do activity graph (Manual Build)",
+    "description": "linux.do activity graph manually built with native JS/CSS",
+    "url": "https://greasyfork.org/scripts/539894-linux-do-activity-graph-manual-build",
+    "code_url": "https://update.greasyfork.org/scripts/539894/linuxdo%20activity%20graph%20%28Manual%20Build%29.user.js",
+    "code_size": 26834,
+    "license": "MIT License",
+    "version": "2025-05-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539893,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T15:26:32.000Z",
+    "code_updated_at": "2025-06-18T15:26:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "linux.do 板块活动雷达图",
+    "description": "linux.do 活动雷达图，展示7个板块在不同时间段的活动数据，界面炫彩，富含科技感，并根据发帖和回帖赋予不同权重。",
+    "url": "https://greasyfork.org/scripts/539893-linux-do-%E6%9D%BF%E5%9D%97%E6%B4%BB%E5%8A%A8%E9%9B%B7%E8%BE%BE%E5%9B%BE",
+    "code_url": "https://update.greasyfork.org/scripts/539893/linuxdo%20%E6%9D%BF%E5%9D%97%E6%B4%BB%E5%8A%A8%E9%9B%B7%E8%BE%BE%E5%9B%BE.user.js",
+    "code_size": 27679,
+    "license": "MIT License",
+    "version": "2025-06-18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 537864,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-31T14:55:59.000Z",
+    "code_updated_at": "2025-05-31T14:58:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1052375,
+        "name": "keney Me",
+        "created_at": "2023-04-03T09:35:34.000Z",
+        "url": "https://greasyfork.org/users/1052375-keney-me"
+      }
+    ],
+    "name": "Auto Remove Datacaciques Ad",
+    "description": "DataCaciques 广告屏蔽脚本",
+    "url": "https://greasyfork.org/scripts/537864-auto-remove-datacaciques-ad",
+    "code_url": "https://update.greasyfork.org/scripts/537864/Auto%20Remove%20Datacaciques%20Ad.user.js",
+    "code_size": 17669,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

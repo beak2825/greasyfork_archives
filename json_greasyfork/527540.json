@@ -1,0 +1,33 @@
+{
+  "id": 527540,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-20T09:24:21.000Z",
+  "code_updated_at": "2025-05-19T09:38:40.000Z",
+  "namespace": "r-a-y/browser/screen",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1195210,
+      "name": "lock3d",
+      "created_at": "2023-10-13T13:33:07.000Z",
+      "url": "https://greasyfork.org/users/1195210-lock3d"
+    }
+  ],
+  "name": "ZMIENNE_NOWE",
+  "description": "Alters attempts at fingerprinting your screen resolution.",
+  "url": "https://greasyfork.org/scripts/527540-zmienne-nowe",
+  "code_url": "https://update.greasyfork.org/scripts/527540/ZMIENNE_NOWE.user.js",
+  "code_size": 5239,
+  "license": null,
+  "version": "1.1.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

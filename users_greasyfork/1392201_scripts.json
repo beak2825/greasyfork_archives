@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516115,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-06T19:38:26.000Z",
+    "code_updated_at": "2024-11-06T23:02:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392201,
+        "name": "carterlasalle",
+        "created_at": "2024-11-06T19:37:16.000Z",
+        "url": "https://greasyfork.org/users/1392201-carterlasalle"
+      }
+    ],
+    "name": "Auto LaTeX Renderer",
+    "description": "Converts LaTeX on web pages into formatted math using MathJax",
+    "url": "https://greasyfork.org/scripts/516115-auto-latex-renderer",
+    "code_url": "https://update.greasyfork.org/scripts/516115/Auto%20LaTeX%20Renderer.user.js",
+    "code_size": 4069,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

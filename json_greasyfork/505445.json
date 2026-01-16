@@ -1,0 +1,33 @@
+{
+  "id": 505445,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-27T15:39:10.000Z",
+  "code_updated_at": "2024-08-28T16:50:59.000Z",
+  "namespace": "https://ani.gamer.com.tw/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1041101,
+      "name": "weiwei mov",
+      "created_at": "2023-03-12T15:40:30.000Z",
+      "url": "https://greasyfork.org/users/1041101-weiwei-mov"
+    }
+  ],
+  "name": "動畫瘋 避免跳集觀看",
+  "description": "如果點擊的集數比最後觀看的集數還要高，會自動跳轉到最後觀看的下一集。若當前集數在最後觀看集數之前，則不跳轉，若無法找到最後觀看的集數，則跳轉到第一集，並在跳轉後檢查是否最後觀看集數為最新一集，若是，則跳回最新一集。",
+  "url": "https://greasyfork.org/scripts/505445-%E5%8B%95%E7%95%AB%E7%98%8B-%E9%81%BF%E5%85%8D%E8%B7%B3%E9%9B%86%E8%A7%80%E7%9C%8B",
+  "code_url": "https://update.greasyfork.org/scripts/505445/%E5%8B%95%E7%95%AB%E7%98%8B%20%E9%81%BF%E5%85%8D%E8%B7%B3%E9%9B%86%E8%A7%80%E7%9C%8B.user.js",
+  "code_size": 3087,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

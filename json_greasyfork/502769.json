@@ -1,0 +1,59 @@
+{
+  "id": 502769,
+  "daily_installs": 0,
+  "total_installs": 1195,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-06T10:37:40.000Z",
+  "code_updated_at": "2025-09-26T06:20:45.000Z",
+  "namespace": "https://www.benmao.site",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1346212,
+      "name": "Stupid-Cat-Station",
+      "created_at": "2024-08-06T03:31:43.000Z",
+      "url": "https://greasyfork.org/users/1346212-stupid-cat-station",
+      "scripts": [
+        {
+          "id": 502769,
+          "daily_installs": 0,
+          "total_installs": 1195,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-06T10:37:40.000Z",
+          "code_updated_at": "2025-09-26T06:20:45.000Z",
+          "namespace": "https://www.benmao.site",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "搞定水印 RemoveWatermark（搞定设计、创客贴、比格设计、爱设计、易企秀、标小智、标智客等）",
+          "description": "🔥搞定水印 RemoveWatermark插件是由笨猫小站开发的一款去水印工具，支持去除在线图文设计平台水印，包括有搞定设计、创客贴、比格设计、爱设计、易企秀、标小智、标智客图片水印。",
+          "url": "https://greasyfork.org/scripts/502769-%E6%90%9E%E5%AE%9A%E6%B0%B4%E5%8D%B0-removewatermark-%E6%90%9E%E5%AE%9A%E8%AE%BE%E8%AE%A1-%E5%88%9B%E5%AE%A2%E8%B4%B4-%E6%AF%94%E6%A0%BC%E8%AE%BE%E8%AE%A1-%E7%88%B1%E8%AE%BE%E8%AE%A1-%E6%98%93%E4%BC%81%E7%A7%80-%E6%A0%87%E5%B0%8F%E6%99%BA-%E6%A0%87%E6%99%BA%E5%AE%A2%E7%AD%89",
+          "code_url": "https://update.greasyfork.org/scripts/502769/%E6%90%9E%E5%AE%9A%E6%B0%B4%E5%8D%B0%20RemoveWatermark%EF%BC%88%E6%90%9E%E5%AE%9A%E8%AE%BE%E8%AE%A1%E3%80%81%E5%88%9B%E5%AE%A2%E8%B4%B4%E3%80%81%E6%AF%94%E6%A0%BC%E8%AE%BE%E8%AE%A1%E3%80%81%E7%88%B1%E8%AE%BE%E8%AE%A1%E3%80%81%E6%98%93%E4%BC%81%E7%A7%80%E3%80%81%E6%A0%87%E5%B0%8F%E6%99%BA%E3%80%81%E6%A0%87%E6%99%BA%E5%AE%A2%E7%AD%89%EF%BC%89.user.js",
+          "code_size": 14568,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "2.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "搞定水印 RemoveWatermark（搞定设计、创客贴、比格设计、爱设计、易企秀、标小智、标智客等）",
+  "description": "🔥搞定水印 RemoveWatermark插件是由笨猫小站开发的一款去水印工具，支持去除在线图文设计平台水印，包括有搞定设计、创客贴、比格设计、爱设计、易企秀、标小智、标智客图片水印。",
+  "url": "https://greasyfork.org/scripts/502769-%E6%90%9E%E5%AE%9A%E6%B0%B4%E5%8D%B0-removewatermark-%E6%90%9E%E5%AE%9A%E8%AE%BE%E8%AE%A1-%E5%88%9B%E5%AE%A2%E8%B4%B4-%E6%AF%94%E6%A0%BC%E8%AE%BE%E8%AE%A1-%E7%88%B1%E8%AE%BE%E8%AE%A1-%E6%98%93%E4%BC%81%E7%A7%80-%E6%A0%87%E5%B0%8F%E6%99%BA-%E6%A0%87%E6%99%BA%E5%AE%A2%E7%AD%89",
+  "code_url": "https://update.greasyfork.org/scripts/502769/%E6%90%9E%E5%AE%9A%E6%B0%B4%E5%8D%B0%20RemoveWatermark%EF%BC%88%E6%90%9E%E5%AE%9A%E8%AE%BE%E8%AE%A1%E3%80%81%E5%88%9B%E5%AE%A2%E8%B4%B4%E3%80%81%E6%AF%94%E6%A0%BC%E8%AE%BE%E8%AE%A1%E3%80%81%E7%88%B1%E8%AE%BE%E8%AE%A1%E3%80%81%E6%98%93%E4%BC%81%E7%A7%80%E3%80%81%E6%A0%87%E5%B0%8F%E6%99%BA%E3%80%81%E6%A0%87%E6%99%BA%E5%AE%A2%E7%AD%89%EF%BC%89.user.js",
+  "code_size": 14568,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "2.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

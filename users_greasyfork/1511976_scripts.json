@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548411,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-05T03:42:37.000Z",
+    "code_updated_at": "2025-09-07T05:13:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511976,
+        "name": "pu kaa",
+        "created_at": "2025-09-05T03:29:41.000Z",
+        "url": "https://greasyfork.org/users/1511976-pu-kaa"
+      }
+    ],
+    "name": "Linux.do 自动点赞 V10.3",
+    "description": "[v10.3 终极优化版] 引入UI更新缓存机制，解决倒计时显示跳动问题并提升性能。增加Cloudflare Turnstile错误过滤器，增强脚本在复杂网络环境下的稳定性。",
+    "url": "https://greasyfork.org/scripts/548411-linux-do-%E8%87%AA%E5%8A%A8%E7%82%B9%E8%B5%9E-v10-3",
+    "code_url": "https://update.greasyfork.org/scripts/548411/Linuxdo%20%E8%87%AA%E5%8A%A8%E7%82%B9%E8%B5%9E%20V103.user.js",
+    "code_size": 20440,
+    "license": "MIT License",
+    "version": "10.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

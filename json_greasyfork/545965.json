@@ -1,0 +1,34 @@
+{
+  "id": 545965,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T12:54:18.000Z",
+  "code_updated_at": "2025-08-16T19:35:18.000Z",
+  "namespace": "comfy.torn.tools.allinone",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1380516,
+      "name": "Dirt-fairy",
+      "created_at": "2024-10-13T18:56:35.000Z",
+      "url": "https://greasyfork.org/users/1380516-dirt-fairy",
+      "scripts": []
+    }
+  ],
+  "name": "Discord↔Torn Reviver (All-in-One v1.3.5 — Lean UI, blocklist only)",
+  "description": "Lean UI: block by faction phrases (bots only, case-insensitive, exact phrase w/ flexible whitespace). Keeps Doctor-once, per-message/XID dedupe, 2s coalesce, and Torn auto-close.",
+  "url": "https://greasyfork.org/scripts/545965-discord-torn-reviver-all-in-one-v1-3-5-lean-ui-blocklist-only",
+  "code_url": "https://update.greasyfork.org/scripts/545965/Discord%E2%86%94Torn%20Reviver%20%28All-in-One%20v135%20%E2%80%94%20Lean%20UI%2C%20blocklist%20only%29.user.js",
+  "code_size": 31474,
+  "license": "MIT License",
+  "version": "1.3.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

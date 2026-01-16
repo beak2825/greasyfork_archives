@@ -1,0 +1,59 @@
+{
+  "id": 502420,
+  "daily_installs": 4,
+  "total_installs": 3595,
+  "fan_score": "66.9",
+  "good_ratings": 16,
+  "ok_ratings": 3,
+  "bad_ratings": 1,
+  "created_at": "2024-08-02T08:05:29.000Z",
+  "code_updated_at": "2025-08-18T02:02:37.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1344035-leng-y",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1344035,
+      "name": "LENG_Y",
+      "created_at": "2024-08-02T07:43:37.000Z",
+      "url": "https://greasyfork.org/users/1344035-leng-y",
+      "scripts": [
+        {
+          "id": 502420,
+          "daily_installs": 4,
+          "total_installs": 3595,
+          "fan_score": "66.9",
+          "good_ratings": 16,
+          "ok_ratings": 3,
+          "bad_ratings": 1,
+          "created_at": "2024-08-02T08:05:29.000Z",
+          "code_updated_at": "2025-08-18T02:02:37.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1344035-leng-y",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "稿定设计去水印1.9",
+          "description": "2025.08.18最新一键去稿定设计水印的脚本，自用分享。",
+          "url": "https://greasyfork.org/scripts/502420-%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%8E%BB%E6%B0%B4%E5%8D%B01-9",
+          "code_url": "https://update.greasyfork.org/scripts/502420/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%8E%BB%E6%B0%B4%E5%8D%B019.user.js",
+          "code_size": 2820,
+          "license": null,
+          "version": "1.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "稿定设计去水印1.9",
+  "description": "2025.08.18最新一键去稿定设计水印的脚本，自用分享。",
+  "url": "https://greasyfork.org/scripts/502420-%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%8E%BB%E6%B0%B4%E5%8D%B01-9",
+  "code_url": "https://update.greasyfork.org/scripts/502420/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%8E%BB%E6%B0%B4%E5%8D%B019.user.js",
+  "code_size": 2820,
+  "license": null,
+  "version": "1.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

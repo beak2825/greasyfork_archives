@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547359,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-26T12:58:11.000Z",
+    "code_updated_at": "2025-08-26T12:58:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282274,
+        "name": "新手小白",
+        "created_at": "2024-04-01T01:56:05.000Z",
+        "url": "https://greasyfork.org/users/1282274-%E6%96%B0%E6%89%8B%E5%B0%8F%E7%99%BD"
+      }
+    ],
+    "name": "图片爬虫 V9 修正版",
+    "description": "收集/下载图片，缩略图预览，大图查看，全选/反选，原文件名压缩下载",
+    "url": "https://greasyfork.org/scripts/547359-%E5%9B%BE%E7%89%87%E7%88%AC%E8%99%AB-v9-%E4%BF%AE%E6%AD%A3%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/547359/%E5%9B%BE%E7%89%87%E7%88%AC%E8%99%AB%20V9%20%E4%BF%AE%E6%AD%A3%E7%89%88.user.js",
+    "code_size": 10034,
+    "license": null,
+    "version": "9.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

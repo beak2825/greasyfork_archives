@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542751,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-16T20:38:15.000Z",
+    "code_updated_at": "2025-07-16T20:38:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495555,
+        "name": "John Doe2",
+        "created_at": "2025-07-16T20:35:50.000Z",
+        "url": "https://greasyfork.org/users/1495555-john-doe2"
+      }
+    ],
+    "name": "Hide Reddit Notification Bell Icon and Count",
+    "description": "Hides the bell icon and its following separator on old Reddit",
+    "url": "https://greasyfork.org/scripts/542751-hide-reddit-notification-bell-icon-and-count",
+    "code_url": "https://update.greasyfork.org/scripts/542751/Hide%20Reddit%20Notification%20Bell%20Icon%20and%20Count.user.js",
+    "code_size": 1047,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

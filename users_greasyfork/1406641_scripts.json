@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519781,
+    "daily_installs": 0,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-04T18:18:38.000Z",
+    "code_updated_at": "2024-12-04T18:18:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406641,
+        "name": "atamg",
+        "created_at": "2024-12-04T18:08:14.000Z",
+        "url": "https://greasyfork.org/users/1406641-atamg"
+      }
+    ],
+    "name": "P2P Trade on Telegram Web app PC unlocker",
+    "description": "include *:* is necessary because mini applications in Telegram are displayed within an IFRAME and have their own distinct addresses, separate from Telegram.This code bypasses the verification of these applications, making them believe you are using an Android device, thereby enabling their functionality on a PC.",
+    "url": "https://greasyfork.org/scripts/519781-p2p-trade-on-telegram-web-app-pc-unlocker",
+    "code_url": "https://update.greasyfork.org/scripts/519781/P2P%20Trade%20on%20Telegram%20Web%20app%20PC%20unlocker.user.js",
+    "code_size": 3942,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534797,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-03T09:59:21.000Z",
+    "code_updated_at": "2025-05-04T10:27:41.000Z",
+    "namespace": "dendenmushi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465132,
+        "name": "dendenmushi",
+        "created_at": "2025-05-03T09:36:58.000Z",
+        "url": "https://greasyfork.org/users/1465132-dendenmushi"
+      }
+    ],
+    "name": "비디오 배속 조절 (개인용 특정사이트만 기능)",
+    "description": "비디오 배속 조절 제한을 해제하고 최대 16배까지 조절 가능한 파란색 버튼을 제공합니다.",
+    "url": "https://greasyfork.org/scripts/534797-%EB%B9%84%EB%94%94%EC%98%A4-%EB%B0%B0%EC%86%8D-%EC%A1%B0%EC%A0%88-%EA%B0%9C%EC%9D%B8%EC%9A%A9-%ED%8A%B9%EC%A0%95%EC%82%AC%EC%9D%B4%ED%8A%B8%EB%A7%8C-%EA%B8%B0%EB%8A%A5",
+    "code_url": "https://update.greasyfork.org/scripts/534797/%EB%B9%84%EB%94%94%EC%98%A4%20%EB%B0%B0%EC%86%8D%20%EC%A1%B0%EC%A0%88%20%28%EA%B0%9C%EC%9D%B8%EC%9A%A9%20%ED%8A%B9%EC%A0%95%EC%82%AC%EC%9D%B4%ED%8A%B8%EB%A7%8C%20%EA%B8%B0%EB%8A%A5%29.user.js",
+    "code_size": 8090,
+    "license": "MIT License",
+    "version": "2.5.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

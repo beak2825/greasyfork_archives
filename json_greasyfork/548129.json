@@ -1,0 +1,59 @@
+{
+  "id": 548129,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-02T11:15:56.000Z",
+  "code_updated_at": "2025-09-02T11:20:24.000Z",
+  "namespace": "https://greasyfork.org/en/users/1511116-smallgamedev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511116,
+      "name": "smallgamedev",
+      "created_at": "2025-09-02T11:13:02.000Z",
+      "url": "https://greasyfork.org/users/1511116-smallgamedev",
+      "scripts": [
+        {
+          "id": 548129,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-02T11:15:56.000Z",
+          "code_updated_at": "2025-09-02T11:20:24.000Z",
+          "namespace": "https://greasyfork.org/en/users/1511116-smallgamedev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GC - Hide Non-Battlers",
+          "description": "In the dropdown which allows you to select a pet to battle with, hides every pet except your battler.",
+          "url": "https://greasyfork.org/scripts/548129-gc-hide-non-battlers",
+          "code_url": "https://update.greasyfork.org/scripts/548129/GC%20-%20Hide%20Non-Battlers.user.js",
+          "code_size": 1048,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GC - Hide Non-Battlers",
+  "description": "In the dropdown which allows you to select a pet to battle with, hides every pet except your battler.",
+  "url": "https://greasyfork.org/scripts/548129-gc-hide-non-battlers",
+  "code_url": "https://update.greasyfork.org/scripts/548129/GC%20-%20Hide%20Non-Battlers.user.js",
+  "code_size": 1048,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

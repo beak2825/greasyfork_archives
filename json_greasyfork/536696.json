@@ -1,0 +1,59 @@
+{
+  "id": 536696,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-21T12:47:43.000Z",
+  "code_updated_at": "2025-06-19T04:51:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472974,
+      "name": "xuxu0910",
+      "created_at": "2025-05-21T12:42:46.000Z",
+      "url": "https://greasyfork.org/users/1472974-xuxu0910",
+      "scripts": [
+        {
+          "id": 536696,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-21T12:47:43.000Z",
+          "code_updated_at": "2025-06-19T04:51:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "号码数据自动提交助手 (城市选择更新版)",
+          "description": "【重大修复】修复了因页面自动刷新导致的无限循环提交同一号码的严重BUG；修复了CSV状态面板的滚动条和溢出问题。",
+          "url": "https://greasyfork.org/scripts/536696-%E5%8F%B7%E7%A0%81%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E5%8A%A9%E6%89%8B-%E5%9F%8E%E5%B8%82%E9%80%89%E6%8B%A9%E6%9B%B4%E6%96%B0%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/536696/%E5%8F%B7%E7%A0%81%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E5%8A%A9%E6%89%8B%20%28%E5%9F%8E%E5%B8%82%E9%80%89%E6%8B%A9%E6%9B%B4%E6%96%B0%E7%89%88%29.user.js",
+          "code_size": 62430,
+          "license": null,
+          "version": "2.2.10",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "号码数据自动提交助手 (城市选择更新版)",
+  "description": "【重大修复】修复了因页面自动刷新导致的无限循环提交同一号码的严重BUG；修复了CSV状态面板的滚动条和溢出问题。",
+  "url": "https://greasyfork.org/scripts/536696-%E5%8F%B7%E7%A0%81%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E5%8A%A9%E6%89%8B-%E5%9F%8E%E5%B8%82%E9%80%89%E6%8B%A9%E6%9B%B4%E6%96%B0%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/536696/%E5%8F%B7%E7%A0%81%E6%95%B0%E6%8D%AE%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4%E5%8A%A9%E6%89%8B%20%28%E5%9F%8E%E5%B8%82%E9%80%89%E6%8B%A9%E6%9B%B4%E6%96%B0%E7%89%88%29.user.js",
+  "code_size": 62430,
+  "license": null,
+  "version": "2.2.10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

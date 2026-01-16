@@ -1,0 +1,101 @@
+[
+  {
+    "id": 543645,
+    "daily_installs": 0,
+    "total_installs": 390,
+    "fan_score": "56.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-25T21:15:27.000Z",
+    "code_updated_at": "2025-07-25T21:16:10.000Z",
+    "namespace": "https://greasyfork.org/users/1446999",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446999,
+        "name": "Axelx983iub",
+        "created_at": "2025-03-17T22:08:16.000Z",
+        "url": "https://greasyfork.org/users/1446999-axelx983iub"
+      }
+    ],
+    "name": "Force DeepSqueak Model",
+    "description": "Force the current chat's model to newer deepsqueak model",
+    "url": "https://greasyfork.org/scripts/543645-force-deepsqueak-model",
+    "code_url": "https://update.greasyfork.org/scripts/543645/Force%20DeepSqueak%20Model.user.js",
+    "code_size": 5563,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533360,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T20:22:27.000Z",
+    "code_updated_at": "2025-04-19T20:22:27.000Z",
+    "namespace": "https://greasyfork.org/users/1446999",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446999,
+        "name": "Axelx983iub",
+        "created_at": "2025-03-17T22:08:16.000Z",
+        "url": "https://greasyfork.org/users/1446999-axelx983iub"
+      }
+    ],
+    "name": "Force Nyan Model",
+    "description": "Force the current chat's model to nyan/smart model",
+    "url": "https://greasyfork.org/scripts/533360-force-nyan-model",
+    "code_url": "https://update.greasyfork.org/scripts/533360/Force%20Nyan%20Model.user.js",
+    "code_size": 5490,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530128,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-17T22:11:49.000Z",
+    "code_updated_at": "2025-04-13T02:48:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446999,
+        "name": "Axelx983iub",
+        "created_at": "2025-03-17T22:08:16.000Z",
+        "url": "https://greasyfork.org/users/1446999-axelx983iub"
+      }
+    ],
+    "name": "Persona Impersonator",
+    "description": "Impersonation. (RYW-Style)",
+    "url": "https://greasyfork.org/scripts/530128-persona-impersonator",
+    "code_url": "https://update.greasyfork.org/scripts/530128/Persona%20Impersonator.user.js",
+    "code_size": 35943,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

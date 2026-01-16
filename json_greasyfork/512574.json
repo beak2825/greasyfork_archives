@@ -1,0 +1,33 @@
+{
+  "id": 512574,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-14T11:44:51.000Z",
+  "code_updated_at": "2024-10-14T11:44:51.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 675901,
+      "name": "DD1969",
+      "created_at": "2020-08-13T12:22:09.000Z",
+      "url": "https://greasyfork.org/users/675901-dd1969"
+    }
+  ],
+  "name": "inject-bilibili-comment-style",
+  "description": "Stylesheet for comments in bilibili.com",
+  "url": "https://greasyfork.org/scripts/512574-inject-bilibili-comment-style",
+  "code_url": "https://update.greasyfork.org/scripts/512574/1464548/inject-bilibili-comment-style.js",
+  "code_size": 79123,
+  "license": null,
+  "version": "0.0.1.20241014114451",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

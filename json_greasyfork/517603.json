@@ -1,0 +1,59 @@
+{
+  "id": 517603,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-16T04:08:33.000Z",
+  "code_updated_at": "2024-11-16T04:08:32.000Z",
+  "namespace": "namespaceforthis",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1397209,
+      "name": "shenli99",
+      "created_at": "2024-11-16T03:57:35.000Z",
+      "url": "https://greasyfork.org/users/1397209-shenli99",
+      "scripts": [
+        {
+          "id": 517603,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-16T04:08:33.000Z",
+          "code_updated_at": "2024-11-16T04:08:32.000Z",
+          "namespace": "namespaceforthis",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "西南交通大学 一键评价",
+          "description": "用于一键评价课程，快速查看成绩",
+          "url": "https://greasyfork.org/scripts/517603-%E8%A5%BF%E5%8D%97%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6-%E4%B8%80%E9%94%AE%E8%AF%84%E4%BB%B7",
+          "code_url": "https://update.greasyfork.org/scripts/517603/%E8%A5%BF%E5%8D%97%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6%20%E4%B8%80%E9%94%AE%E8%AF%84%E4%BB%B7.user.js",
+          "code_size": 4128,
+          "license": "GPL",
+          "version": "2024-11-15",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "西南交通大学 一键评价",
+  "description": "用于一键评价课程，快速查看成绩",
+  "url": "https://greasyfork.org/scripts/517603-%E8%A5%BF%E5%8D%97%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6-%E4%B8%80%E9%94%AE%E8%AF%84%E4%BB%B7",
+  "code_url": "https://update.greasyfork.org/scripts/517603/%E8%A5%BF%E5%8D%97%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6%20%E4%B8%80%E9%94%AE%E8%AF%84%E4%BB%B7.user.js",
+  "code_size": 4128,
+  "license": "GPL",
+  "version": "2024-11-15",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

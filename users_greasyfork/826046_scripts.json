@@ -1,0 +1,68 @@
+[
+  {
+    "id": 519099,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-28T03:08:37.000Z",
+    "code_updated_at": "2025-10-31T04:25:06.000Z",
+    "namespace": "https://github.com/CandyTek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 826046,
+        "name": "CandyTek",
+        "created_at": "2021-10-17T07:59:33.000Z",
+        "url": "https://greasyfork.org/users/826046-candytek"
+      }
+    ],
+    "name": "GitCode 重定向智能匹配版",
+    "description": "GitCode 重定向智能匹配版1",
+    "url": "https://greasyfork.org/scripts/519099-gitcode-%E9%87%8D%E5%AE%9A%E5%90%91%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/519099/GitCode%20%E9%87%8D%E5%AE%9A%E5%90%91%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D%E7%89%88.user.js",
+    "code_size": 961,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503370,
+    "daily_installs": 0,
+    "total_installs": 84,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-12T04:01:07.000Z",
+    "code_updated_at": "2025-05-29T11:45:14.000Z",
+    "namespace": "https://github.com/CandyTek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 826046,
+        "name": "CandyTek",
+        "created_at": "2021-10-17T07:59:33.000Z",
+        "url": "https://greasyfork.org/users/826046-candytek"
+      }
+    ],
+    "name": "粗糙阅读模式｜持续更新",
+    "description": "使用简单的方法对这些网页进行处理，开启粗糙的信纸阅读模式",
+    "url": "https://greasyfork.org/scripts/503370-%E7%B2%97%E7%B3%99%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/503370/%E7%B2%97%E7%B3%99%E9%98%85%E8%AF%BB%E6%A8%A1%E5%BC%8F%EF%BD%9C%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 39740,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

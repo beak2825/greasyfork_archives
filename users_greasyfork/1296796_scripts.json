@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545325,
+    "daily_installs": 1,
+    "total_installs": 152,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-08-10T17:35:01.000Z",
+    "code_updated_at": "2025-08-10T17:35:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1296796,
+        "name": "Arlo Annesley",
+        "created_at": "2024-05-04T10:12:04.000Z",
+        "url": "https://greasyfork.org/users/1296796-arlo-annesley"
+      }
+    ],
+    "name": "TTRS Auto Answer Bot",
+    "description": "Auto answers TTRS questions with speed control and toggle menu",
+    "url": "https://greasyfork.org/scripts/545325-ttrs-auto-answer-bot",
+    "code_url": "https://update.greasyfork.org/scripts/545325/TTRS%20Auto%20Answer%20Bot.user.js",
+    "code_size": 5677,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

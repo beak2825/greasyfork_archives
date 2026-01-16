@@ -1,0 +1,34 @@
+{
+  "id": 518841,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-25T17:13:41.000Z",
+  "code_updated_at": "2024-11-26T18:17:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1402382,
+      "name": "unnamed199cz",
+      "created_at": "2024-11-25T17:11:17.000Z",
+      "url": "https://greasyfork.org/users/1402382-unnamed199cz",
+      "scripts": []
+    }
+  ],
+  "name": "RW Rewards Value for Mobile",
+  "description": "Display the value of RW rewards on both PC and Mobile in Kiwi browser via Tampermonkey.",
+  "url": "https://greasyfork.org/scripts/518841-rw-rewards-value-for-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/518841/RW%20Rewards%20Value%20for%20Mobile.user.js",
+  "code_size": 5769,
+  "license": "No Editing",
+  "version": "3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

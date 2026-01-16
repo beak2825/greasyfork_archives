@@ -1,0 +1,101 @@
+[
+  {
+    "id": 525986,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-05T13:29:07.000Z",
+    "code_updated_at": "2025-02-08T23:58:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1036645,
+        "name": "MagMateoo",
+        "created_at": "2023-03-04T22:06:00.000Z",
+        "url": "https://greasyfork.org/users/1036645-magmateoo"
+      }
+    ],
+    "name": "LL do Purple NI",
+    "description": "Motyw NI",
+    "url": "https://greasyfork.org/scripts/525986-ll-do-purple-ni",
+    "code_url": "https://update.greasyfork.org/scripts/525986/LL%20do%20Purple%20NI.user.js",
+    "code_size": 2371,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 524661,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T17:39:12.000Z",
+    "code_updated_at": "2025-09-01T17:38:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1036645,
+        "name": "MagMateoo",
+        "created_at": "2023-03-04T22:06:00.000Z",
+        "url": "https://greasyfork.org/users/1036645-magmateoo"
+      }
+    ],
+    "name": "Dark Margonem Forum",
+    "description": "Motyw Margonem Dark Site by Mateoo",
+    "url": "https://greasyfork.org/scripts/524661-dark-margonem-forum",
+    "code_url": "https://update.greasyfork.org/scripts/524661/Dark%20Margonem%20Forum.user.js",
+    "code_size": 21880,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523689,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T20:20:38.000Z",
+    "code_updated_at": "2025-12-11T18:42:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1036645,
+        "name": "MagMateoo",
+        "created_at": "2023-03-04T22:06:00.000Z",
+        "url": "https://greasyfork.org/users/1036645-magmateoo"
+      }
+    ],
+    "name": "Isolation -  Cosmic Aqua Green",
+    "description": "Motyw NI",
+    "url": "https://greasyfork.org/scripts/523689-isolation-cosmic-aqua-green",
+    "code_url": "https://update.greasyfork.org/scripts/523689/Isolation%20-%20%20Cosmic%20Aqua%20Green.user.js",
+    "code_size": 156354,
+    "license": null,
+    "version": "1.60",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

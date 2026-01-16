@@ -1,0 +1,41 @@
+[
+  {
+    "id": 523995,
+    "daily_installs": 2,
+    "total_installs": 300,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-01-17T01:04:30.000Z",
+    "code_updated_at": "2025-01-22T04:00:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 803374,
+        "name": "looo loo",
+        "created_at": "2021-08-11T08:04:29.000Z",
+        "url": "https://greasyfork.org/users/803374-looo-loo"
+      },
+      {
+        "id": 1424098,
+        "name": "martjay",
+        "created_at": "2025-01-17T00:34:19.000Z",
+        "url": "https://greasyfork.org/users/1424098-martjay"
+      }
+    ],
+    "name": "Web2PDF 网页转PDF",
+    "description": "Convert web pages to PDF with support for reading mode, editing, and custom styles.将网页转换为PDF，支持阅读模式、编辑和自定义样式。",
+    "url": "https://greasyfork.org/scripts/523995-web2pdf-%E7%BD%91%E9%A1%B5%E8%BD%ACpdf",
+    "code_url": "https://update.greasyfork.org/scripts/523995/Web2PDF%20%E7%BD%91%E9%A1%B5%E8%BD%ACPDF.user.js",
+    "code_size": 60157,
+    "license": "GPL-3.0 License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

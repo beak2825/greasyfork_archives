@@ -1,0 +1,59 @@
+{
+  "id": 543033,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-19T15:51:13.000Z",
+  "code_updated_at": "2025-11-01T04:41:13.000Z",
+  "namespace": "http://example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 808940,
+      "name": "srczhang",
+      "created_at": "2021-08-26T16:25:01.000Z",
+      "url": "https://greasyfork.org/users/808940-srczhang",
+      "scripts": [
+        {
+          "id": 543033,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-19T15:51:13.000Z",
+          "code_updated_at": "2025-11-01T04:41:13.000Z",
+          "namespace": "http://example.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "前缀转发",
+          "description": "使用 JSON 格式配置规则，支持多条规则、独立开关",
+          "url": "https://greasyfork.org/scripts/543033-%E5%89%8D%E7%BC%80%E8%BD%AC%E5%8F%91",
+          "code_url": "https://update.greasyfork.org/scripts/543033/%E5%89%8D%E7%BC%80%E8%BD%AC%E5%8F%91.user.js",
+          "code_size": 8176,
+          "license": "GPL3",
+          "version": "3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "前缀转发",
+  "description": "使用 JSON 格式配置规则，支持多条规则、独立开关",
+  "url": "https://greasyfork.org/scripts/543033-%E5%89%8D%E7%BC%80%E8%BD%AC%E5%8F%91",
+  "code_url": "https://update.greasyfork.org/scripts/543033/%E5%89%8D%E7%BC%80%E8%BD%AC%E5%8F%91.user.js",
+  "code_size": 8176,
+  "license": "GPL3",
+  "version": "3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

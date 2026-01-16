@@ -1,0 +1,33 @@
+{
+  "id": 543973,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-29T11:06:19.000Z",
+  "code_updated_at": "2025-08-11T08:58:01.000Z",
+  "namespace": "https://example.com/youtube-chat-jump",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499455,
+      "name": "rrrriki",
+      "created_at": "2025-07-29T10:52:14.000Z",
+      "url": "https://greasyfork.org/users/1499455-rrrriki"
+    }
+  ],
+  "name": "YouTube Chat Jump Button",
+  "description": "🔼 クリックでチャットのタイムスタンプ ±OFFSET 秒へシーク。右クリックでその位置の URL をコピー。（ライブではジャンプ無効／順位ボタンは常時消去）",
+  "url": "https://greasyfork.org/scripts/543973-youtube-chat-jump-button",
+  "code_url": "https://update.greasyfork.org/scripts/543973/YouTube%20Chat%20Jump%20Button.user.js",
+  "code_size": 16251,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

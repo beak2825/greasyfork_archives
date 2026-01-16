@@ -1,0 +1,34 @@
+{
+  "id": 547562,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T06:34:36.000Z",
+  "code_updated_at": "2025-09-07T22:53:16.000Z",
+  "namespace": "https://blog.valley.town/@zeronox",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508973,
+      "name": "ambiguous435",
+      "created_at": "2025-08-26T09:31:45.000Z",
+      "url": "https://greasyfork.org/users/1508973-ambiguous435",
+      "scripts": []
+    }
+  ],
+  "name": "AI Markdown Bold Formatter",
+  "description": "정확한 스트리밍 완료 감지 및 복잡한 DOM 구조에서 ** 태그 변환",
+  "url": "https://greasyfork.org/scripts/547562-ai-markdown-bold-formatter",
+  "code_url": "https://update.greasyfork.org/scripts/547562/AI%20Markdown%20Bold%20Formatter.user.js",
+  "code_size": 5157,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

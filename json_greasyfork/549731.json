@@ -1,0 +1,34 @@
+{
+  "id": 549731,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-16T12:27:13.000Z",
+  "code_updated_at": "2025-09-16T12:27:13.000Z",
+  "namespace": "ogoo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1515828,
+      "name": "ogoo _",
+      "created_at": "2025-09-16T12:01:36.000Z",
+      "url": "https://greasyfork.org/users/1515828-ogoo",
+      "scripts": []
+    }
+  ],
+  "name": "WTF Healer Discord Open (new tab)",
+  "description": "在指定的 Discord 頻道(revive ping) 偵測 Torn profiles 連結，若有 於【新分頁】開啟",
+  "url": "https://greasyfork.org/scripts/549731-wtf-healer-discord-open-new-tab",
+  "code_url": "https://update.greasyfork.org/scripts/549731/WTF%20Healer%20Discord%20Open%20%28new%20tab%29.user.js",
+  "code_size": 1737,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

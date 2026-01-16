@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551376,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-02T17:41:05.000Z",
+    "code_updated_at": "2025-10-04T18:13:02.000Z",
+    "namespace": "reforger_preset_maker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521677,
+        "name": "jjayrex",
+        "created_at": "2025-10-02T17:32:03.000Z",
+        "url": "https://greasyfork.org/users/1521677-jjayrex"
+      }
+    ],
+    "name": "ArmA Reforger Workshop - Preset Maker",
+    "description": "Create mod presets to use with Reforger server configs.",
+    "url": "https://greasyfork.org/scripts/551376-arma-reforger-workshop-preset-maker",
+    "code_url": "https://update.greasyfork.org/scripts/551376/ArmA%20Reforger%20Workshop%20-%20Preset%20Maker.user.js",
+    "code_size": 13206,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

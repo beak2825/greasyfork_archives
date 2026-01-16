@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515772,
+    "daily_installs": 1,
+    "total_installs": 5149,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-04T12:28:57.000Z",
+    "code_updated_at": "2024-11-04T18:50:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391127,
+        "name": "부농한농부",
+        "created_at": "2024-11-04T12:27:12.000Z",
+        "url": "https://greasyfork.org/users/1391127-%EB%B6%80%EB%86%8D%ED%95%9C%EB%86%8D%EB%B6%80"
+      }
+    ],
+    "name": "치지직 1080p 고정 + 광고 팝업 삭제 +치직치지직 광고 차단 로그 제거",
+    "description": "치지직 1080p 고정 및 광고 팝업 삭제, 치직치지직 광고 차단 로그 제거 각 기능 별도로 실행 후 종료",
+    "url": "https://greasyfork.org/scripts/515772-%EC%B9%98%EC%A7%80%EC%A7%81-1080p-%EA%B3%A0%EC%A0%95-%EA%B4%91%EA%B3%A0-%ED%8C%9D%EC%97%85-%EC%82%AD%EC%A0%9C-%EC%B9%98%EC%A7%81%EC%B9%98%EC%A7%80%EC%A7%81-%EA%B4%91%EA%B3%A0-%EC%B0%A8%EB%8B%A8-%EB%A1%9C%EA%B7%B8-%EC%A0%9C%EA%B1%B0",
+    "code_url": "https://update.greasyfork.org/scripts/515772/%EC%B9%98%EC%A7%80%EC%A7%81%201080p%20%EA%B3%A0%EC%A0%95%20%2B%20%EA%B4%91%EA%B3%A0%20%ED%8C%9D%EC%97%85%20%EC%82%AD%EC%A0%9C%20%2B%EC%B9%98%EC%A7%81%EC%B9%98%EC%A7%80%EC%A7%81%20%EA%B4%91%EA%B3%A0%20%EC%B0%A8%EB%8B%A8%20%EB%A1%9C%EA%B7%B8%20%EC%A0%9C%EA%B1%B0.user.js",
+    "code_size": 5257,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,7 +1,7 @@
 [
   {
     "id": 552245,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 20,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -34,8 +34,8 @@
   },
   {
     "id": 552244,
-    "daily_installs": 0,
-    "total_installs": 24,
+    "daily_installs": 1,
+    "total_installs": 25,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -64,5 +64,104 @@
     "locale": "ko",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 536277,
+    "daily_installs": 1,
+    "total_installs": 31,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T09:58:18.000Z",
+    "code_updated_at": "2025-11-12T12:03:21.000Z",
+    "namespace": "Chzzk_L&V: Third Party Iframe Viewer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884324,
+        "name": "DOGJIP",
+        "created_at": "2022-03-08T05:34:48.000Z",
+        "url": "https://greasyfork.org/users/884324-dogjip"
+      }
+    ],
+    "name": "Chzzk_L&V: Dal.wiki & WWME Viewer",
+    "description": "치지직에서 Dal.wiki 일정 확인 및 추가기능 + WWME 뷰어 기능 추가 (다크모드 지원)",
+    "url": "https://greasyfork.org/scripts/536277-chzzk-l-v-dal-wiki-wwme-viewer",
+    "code_url": "https://update.greasyfork.org/scripts/536277/Chzzk_LV%3A%20Dalwiki%20%20WWME%20Viewer.user.js",
+    "code_size": 16354,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534351,
+    "daily_installs": 1,
+    "total_installs": 43,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-29T08:12:01.000Z",
+    "code_updated_at": "2025-05-19T07:34:44.000Z",
+    "namespace": "Chzzk_Clips: Unblock & Unmute",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884324,
+        "name": "DOGJIP",
+        "created_at": "2022-03-08T05:34:48.000Z",
+        "url": "https://greasyfork.org/users/884324-dogjip"
+      }
+    ],
+    "name": "Chzzk_Clips: Unblock & Unmute",
+    "description": "차단한 유저의 클립 우회 시청 및 음소거 해제",
+    "url": "https://greasyfork.org/scripts/534351-chzzk-clips-unblock-unmute",
+    "code_url": "https://update.greasyfork.org/scripts/534351/Chzzk_Clips%3A%20Unblock%20%20Unmute.user.js",
+    "code_size": 2958,
+    "license": "MIT License",
+    "version": "1.1.4",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534128,
+    "daily_installs": 0,
+    "total_installs": 166,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-27T04:11:14.000Z",
+    "code_updated_at": "2025-04-27T04:11:14.000Z",
+    "namespace": "Chzzk_Live&VOD: AdGuard 팝업 충돌 해결",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884324,
+        "name": "DOGJIP",
+        "created_at": "2022-03-08T05:34:48.000Z",
+        "url": "https://greasyfork.org/users/884324-dogjip"
+      }
+    ],
+    "name": "Chzzk_L&V: AdGuard 팝업 충돌 해결",
+    "description": "AdGuard prevent-xhr로 차단된 Veta 요청을 xhook으로 빈 JSON 응답 처리해 페이지 오류 방지",
+    "url": "https://greasyfork.org/scripts/534128-chzzk-l-v-adguard-%ED%8C%9D%EC%97%85-%EC%B6%A9%EB%8F%8C-%ED%95%B4%EA%B2%B0",
+    "code_url": "https://update.greasyfork.org/scripts/534128/Chzzk_LV%3A%20AdGuard%20%ED%8C%9D%EC%97%85%20%EC%B6%A9%EB%8F%8C%20%ED%95%B4%EA%B2%B0.user.js",
+    "code_size": 1488,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

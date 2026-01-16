@@ -1,0 +1,34 @@
+{
+  "id": 536660,
+  "daily_installs": 0,
+  "total_installs": 118,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-21T05:01:53.000Z",
+  "code_updated_at": "2025-05-28T16:07:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1472675,
+      "name": "山茶",
+      "created_at": "2025-05-21T05:00:45.000Z",
+      "url": "https://greasyfork.org/users/1472675-%E5%B1%B1%E8%8C%B6",
+      "scripts": []
+    }
+  ],
+  "name": "123云盘秒传链接",
+  "description": "123FastLink是一款适用于123网盘（123Pan）的用户脚本，可以从您选中的文件/文件夹或分享链接链接中生成秒传信息，并支持通过秒传信息或导入JSON数据快速转存文件/文件夹到您的网盘。支持过滤元数据文件。修复指定文件夹转存问题。",
+  "url": "https://greasyfork.org/scripts/536660-123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5",
+  "code_url": "https://update.greasyfork.org/scripts/536660/123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5.user.js",
+  "code_size": 133410,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

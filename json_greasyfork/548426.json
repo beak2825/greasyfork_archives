@@ -1,0 +1,34 @@
+{
+  "id": 548426,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-05T07:28:37.000Z",
+  "code_updated_at": "2025-09-05T07:28:37.000Z",
+  "namespace": "local.watchlite",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511650,
+      "name": "해인",
+      "created_at": "2025-09-04T04:34:25.000Z",
+      "url": "https://greasyfork.org/users/1511650-%ED%95%B4%EC%9D%B8",
+      "scripts": []
+    }
+  ],
+  "name": "WatchLite — Soop",
+  "description": "자동 감지(WebSocket+ChatLayer)",
+  "url": "https://greasyfork.org/scripts/548426-watchlite-soop",
+  "code_url": "https://update.greasyfork.org/scripts/548426/WatchLite%20%E2%80%94%20Soop.user.js",
+  "code_size": 21454,
+  "license": "All rights reserved",
+  "version": "1.7.4-play-global-stable+close",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

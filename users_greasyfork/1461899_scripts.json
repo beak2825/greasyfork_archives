@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534110,
+    "daily_installs": 1,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-27T00:23:58.000Z",
+    "code_updated_at": "2025-04-27T00:23:58.000Z",
+    "namespace": "http://violentmonkey.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461899,
+        "name": "Virtual DMNS",
+        "created_at": "2025-04-25T05:30:43.000Z",
+        "url": "https://greasyfork.org/users/1461899-virtual-dmns"
+      }
+    ],
+    "name": "Grok.com Theme Switcher",
+    "description": "Adds a theme switcher to grok.com with dark, cyberpunk, light, blood red, midnight, deep ocean, celestial, and divine modes, foldable picker with animations, draggable, and script editor compatibility. Enhanced query-bar opacity fix to 75% with broader selectors and debug logging.",
+    "url": "https://greasyfork.org/scripts/534110-grok-com-theme-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/534110/Grokcom%20Theme%20Switcher.user.js",
+    "code_size": 13789,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533892,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T05:45:00.000Z",
+    "code_updated_at": "2025-04-25T05:45:00.000Z",
+    "namespace": "http://fuckdebuggers.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461899,
+        "name": "Virtual DMNS",
+        "created_at": "2025-04-25T05:30:43.000Z",
+        "url": "https://greasyfork.org/users/1461899-virtual-dmns"
+      }
+    ],
+    "name": "Ultimate Eval Enabler v3",
+    "description": "Bypasses SES/Lockdown and CSP to enable eval() and console access.",
+    "url": "https://greasyfork.org/scripts/533892-ultimate-eval-enabler-v3",
+    "code_url": "https://update.greasyfork.org/scripts/533892/Ultimate%20Eval%20Enabler%20v3.user.js",
+    "code_size": 4889,
+    "license": "MIT License",
+    "version": "3.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 543012,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-19T13:04:03.000Z",
+  "code_updated_at": "2025-07-19T13:11:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1494597,
+      "name": "Asif Malik",
+      "created_at": "2025-07-13T21:12:37.000Z",
+      "url": "https://greasyfork.org/users/1494597-asif-malik"
+    }
+  ],
+  "name": "Quiz (Asif) HG Refine Exam",
+  "description": "MDS quiz",
+  "url": "https://greasyfork.org/scripts/543012-quiz-asif-hg-refine-exam",
+  "code_url": "https://update.greasyfork.org/scripts/543012/Quiz%20%28Asif%29%20HG%20Refine%20Exam.user.js",
+  "code_size": 139268,
+  "license": "MIT License",
+  "version": "3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

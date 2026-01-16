@@ -1,0 +1,34 @@
+{
+  "id": 505974,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-31T03:29:40.000Z",
+  "code_updated_at": "2024-08-31T03:36:45.000Z",
+  "namespace": "https://sstm.moe/profile/197610-367ddd/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1356964,
+      "name": "367ddd(叫我牛顿吧)",
+      "created_at": "2024-08-24T08:36:45.000Z",
+      "url": "https://greasyfork.org/users/1356964-367ddd-%E5%8F%AB%E6%88%91%E7%89%9B%E9%A1%BF%E5%90%A7",
+      "scripts": []
+    }
+  ],
+  "name": "三阶勋章用公糖查询",
+  "description": "查询180天内，自己得到的含有一次性30节操以上且总节操数大于30的公糖记录",
+  "url": "https://greasyfork.org/scripts/505974-%E4%B8%89%E9%98%B6%E5%8B%8B%E7%AB%A0%E7%94%A8%E5%85%AC%E7%B3%96%E6%9F%A5%E8%AF%A2",
+  "code_url": "https://update.greasyfork.org/scripts/505974/%E4%B8%89%E9%98%B6%E5%8B%8B%E7%AB%A0%E7%94%A8%E5%85%AC%E7%B3%96%E6%9F%A5%E8%AF%A2.user.js",
+  "code_size": 6028,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

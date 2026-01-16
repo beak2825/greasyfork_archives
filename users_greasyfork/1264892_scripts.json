@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517648,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-16T14:18:45.000Z",
+    "code_updated_at": "2024-11-16T14:18:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264892,
+        "name": "Борис Писаренко",
+        "created_at": "2024-02-21T13:02:12.000Z",
+        "url": "https://greasyfork.org/users/1264892-%D0%B1%D0%BE%D1%80%D0%B8%D1%81-%D0%BF%D0%B8%D1%81%D0%B0%D1%80%D0%B5%D0%BD%D0%BA%D0%BE"
+      }
+    ],
+    "name": "Disable Trello KEY",
+    "description": "Отключить горячие клавиши в Trello",
+    "url": "https://greasyfork.org/scripts/517648-disable-trello-key",
+    "code_url": "https://update.greasyfork.org/scripts/517648/Disable%20Trello%20KEY.user.js",
+    "code_size": 607,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

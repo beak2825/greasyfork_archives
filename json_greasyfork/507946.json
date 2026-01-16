@@ -1,0 +1,34 @@
+{
+  "id": 507946,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-11T10:40:00.000Z",
+  "code_updated_at": "2024-09-11T11:17:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265334,
+      "name": "Lukáš Malec",
+      "created_at": "2024-02-22T10:27:03.000Z",
+      "url": "https://greasyfork.org/users/1265334-luk%C3%A1%C5%A1-malec",
+      "scripts": []
+    }
+  ],
+  "name": "ITF - Výpis URL",
+  "description": "Scrape ITF tournament calendar and create a table with live URLs",
+  "url": "https://greasyfork.org/scripts/507946-itf-v%C3%BDpis-url",
+  "code_url": "https://update.greasyfork.org/scripts/507946/ITF%20-%20V%C3%BDpis%20URL.user.js",
+  "code_size": 3230,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

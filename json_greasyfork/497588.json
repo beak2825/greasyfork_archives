@@ -1,0 +1,59 @@
+{
+  "id": 497588,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-11T05:51:36.000Z",
+  "code_updated_at": "2024-06-14T02:50:47.000Z",
+  "namespace": "https://www.iklfy.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1316039,
+      "name": "yxly33126",
+      "created_at": "2024-06-11T05:40:16.000Z",
+      "url": "https://greasyfork.org/users/1316039-yxly33126",
+      "scripts": [
+        {
+          "id": 497588,
+          "daily_installs": 0,
+          "total_installs": 38,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-11T05:51:36.000Z",
+          "code_updated_at": "2024-06-14T02:50:47.000Z",
+          "namespace": "https://www.iklfy.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Simple Search Engines",
+          "description": "简洁的适配国内地区的搜索切换脚本.",
+          "url": "https://greasyfork.org/scripts/497588-simple-search-engines",
+          "code_url": "https://update.greasyfork.org/scripts/497588/Simple%20Search%20Engines.user.js",
+          "code_size": 7698,
+          "license": "MIT License",
+          "version": "0.2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Simple Search Engines",
+  "description": "简洁的适配国内地区的搜索切换脚本.",
+  "url": "https://greasyfork.org/scripts/497588-simple-search-engines",
+  "code_url": "https://update.greasyfork.org/scripts/497588/Simple%20Search%20Engines.user.js",
+  "code_size": 7698,
+  "license": "MIT License",
+  "version": "0.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

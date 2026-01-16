@@ -1,0 +1,34 @@
+{
+  "id": 532333,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-09T14:50:40.000Z",
+  "code_updated_at": "2025-04-09T15:32:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444380,
+      "name": "renjianjike",
+      "created_at": "2025-03-10T17:32:12.000Z",
+      "url": "https://greasyfork.org/users/1444380-renjianjike",
+      "scripts": []
+    }
+  ],
+  "name": "油管切换“已看视频”状态",
+  "description": "Hides the YouTube Create button, replaces it with a \"隐藏\" button with a red border, toggles watched video visibility (homepage, subscriptions, search), and persists state",
+  "url": "https://greasyfork.org/scripts/532333-%E6%B2%B9%E7%AE%A1%E5%88%87%E6%8D%A2-%E5%B7%B2%E7%9C%8B%E8%A7%86%E9%A2%91-%E7%8A%B6%E6%80%81",
+  "code_url": "https://update.greasyfork.org/scripts/532333/%E6%B2%B9%E7%AE%A1%E5%88%87%E6%8D%A2%E2%80%9C%E5%B7%B2%E7%9C%8B%E8%A7%86%E9%A2%91%E2%80%9D%E7%8A%B6%E6%80%81.user.js",
+  "code_size": 7368,
+  "license": null,
+  "version": "2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 533375,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T04:40:40.000Z",
+    "code_updated_at": "2025-12-15T18:28:24.000Z",
+    "namespace": "https://github.com/strangeZombies/PractiseCode",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1030037,
+        "name": "strangeZombies",
+        "created_at": "2023-02-20T02:07:40.000Z",
+        "url": "https://greasyfork.org/users/1030037-strangezombies"
+      }
+    ],
+    "name": "Auto Scroll with Dynamic Loading",
+    "description": "Automatically scrolls up or down with customizable settings for speed, interval, and behavior (smooth, auto, instant, linear). Supports dynamic content loading with configurable timeout at page boundaries, panel positioning (top-left, top-right, bottom-left, bottom-right), and hide/show panel with saved state. Multilingual UI (English, Chinese, Spanish, Japanese) for enhanced usability and SEO. Ideal for web scraping, content browsing, and automation. / 自动向上或向下滚动，支持动态内容加载，带可配置的页面边界超时。可自定义滚动速度、间隔",
+    "url": "https://greasyfork.org/scripts/533375-auto-scroll-with-dynamic-loading",
+    "code_url": "https://update.greasyfork.org/scripts/533375/Auto%20Scroll%20with%20Dynamic%20Loading.user.js",
+    "code_size": 32755,
+    "license": "MIT License",
+    "version": "2025.12.16.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522057,
+    "daily_installs": 3,
+    "total_installs": 1817,
+    "fan_score": "23.1",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2024-12-28T03:00:17.000Z",
+    "code_updated_at": "2025-04-04T12:34:08.000Z",
+    "namespace": "https://github.com/strangeZombies",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1030037,
+        "name": "strangeZombies",
+        "created_at": "2023-02-20T02:07:40.000Z",
+        "url": "https://greasyfork.org/users/1030037-strangezombies"
+      }
+    ],
+    "name": "Remove YouTube Shorts",
+    "description": "Remove YouTube Shorts tags, dismissible elements, Shorts links, and Reel Shelf",
+    "url": "https://greasyfork.org/scripts/522057-remove-youtube-shorts",
+    "code_url": "https://update.greasyfork.org/scripts/522057/Remove%20YouTube%20Shorts.user.js",
+    "code_size": 8477,
+    "license": null,
+    "version": "2025.4.4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

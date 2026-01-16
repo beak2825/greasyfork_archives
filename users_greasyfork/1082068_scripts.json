@@ -216,5 +216,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 518580,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-23T12:45:30.000Z",
+    "code_updated_at": "2025-05-14T12:13:20.000Z",
+    "namespace": "dekleinekobini.rr-mugger-detect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1082068,
+        "name": "No1IrishStig",
+        "created_at": "2023-05-20T13:36:10.000Z",
+        "url": "https://greasyfork.org/users/1082068-no1irishstig"
+      }
+    ],
+    "name": "Sore Foot Club - RR Mugger Detection",
+    "description": "Sore Foot Club Scripts - RR Mugger Detection & Watcher Requests",
+    "url": "https://greasyfork.org/scripts/518580-sore-foot-club-rr-mugger-detection",
+    "code_url": "https://update.greasyfork.org/scripts/518580/Sore%20Foot%20Club%20-%20RR%20Mugger%20Detection.user.js",
+    "code_size": 19307,
+    "license": null,
+    "version": "1.1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 514395,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-27T23:05:56.000Z",
+    "code_updated_at": "2024-10-28T00:17:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1082068,
+        "name": "No1IrishStig",
+        "created_at": "2023-05-20T13:36:10.000Z",
+        "url": "https://greasyfork.org/users/1082068-no1irishstig"
+      }
+    ],
+    "name": "Revive Button to Attack Page",
+    "description": "Change the Revive Button on the Hospital Page to an Attack Button",
+    "url": "https://greasyfork.org/scripts/514395-revive-button-to-attack-page",
+    "code_url": "https://update.greasyfork.org/scripts/514395/Revive%20Button%20to%20Attack%20Page.user.js",
+    "code_size": 4237,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499295,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-30T13:14:51.000Z",
+    "code_updated_at": "2024-06-30T13:14:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1082068,
+        "name": "No1IrishStig",
+        "created_at": "2023-05-20T13:36:10.000Z",
+        "url": "https://greasyfork.org/users/1082068-no1irishstig"
+      }
+    ],
+    "name": "Renewal Helper",
+    "description": "Automatically Set Renewal Cost & Days",
+    "url": "https://greasyfork.org/scripts/499295-renewal-helper",
+    "code_url": "https://update.greasyfork.org/scripts/499295/Renewal%20Helper.user.js",
+    "code_size": 2024,
+    "license": null,
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

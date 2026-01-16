@@ -1,0 +1,34 @@
+{
+  "id": 507750,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-10T07:19:49.000Z",
+  "code_updated_at": "2024-09-10T10:49:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1363840,
+      "name": "dasdafadgd hghdfhd",
+      "created_at": "2024-09-06T07:52:08.000Z",
+      "url": "https://greasyfork.org/users/1363840-dasdafadgd-hghdfhd",
+      "scripts": []
+    }
+  ],
+  "name": "偷偷学习",
+  "description": "在网课界面点击“偷偷学习”，开启你的刷课之旅吧。脚本自动点击“开始学习、继续学习”，后台播放功能不稳定。",
+  "url": "https://greasyfork.org/scripts/507750-%E5%81%B7%E5%81%B7%E5%AD%A6%E4%B9%A0",
+  "code_url": "https://update.greasyfork.org/scripts/507750/%E5%81%B7%E5%81%B7%E5%AD%A6%E4%B9%A0.user.js",
+  "code_size": 2561,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

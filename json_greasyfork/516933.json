@@ -1,0 +1,34 @@
+{
+  "id": 516933,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-12T03:13:34.000Z",
+  "code_updated_at": "2024-11-12T03:13:34.000Z",
+  "namespace": "and970",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 751213,
+      "name": "and970",
+      "created_at": "2021-03-25T10:35:38.000Z",
+      "url": "https://greasyfork.org/users/751213-and970",
+      "scripts": []
+    }
+  ],
+  "name": "and9702",
+  "description": "this time with 100% zoom",
+  "url": "https://greasyfork.org/scripts/516933-and9702",
+  "code_url": "https://update.greasyfork.org/scripts/516933/and9702.user.js",
+  "code_size": 38919,
+  "license": null,
+  "version": "0.0.1.20241112031334",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

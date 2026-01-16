@@ -1,0 +1,59 @@
+{
+  "id": 544904,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-07T07:23:33.000Z",
+  "code_updated_at": "2025-08-07T07:59:03.000Z",
+  "namespace": "https://example.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448796,
+      "name": "wanghai6733",
+      "created_at": "2025-03-22T07:00:51.000Z",
+      "url": "https://greasyfork.org/users/1448796-wanghai6733",
+      "scripts": [
+        {
+          "id": 544904,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-07T07:23:33.000Z",
+          "code_updated_at": "2025-08-07T07:59:03.000Z",
+          "namespace": "https://example.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "赛氪英语 AI 答题助手",
+          "description": "自动解析并填写赛氪英语题目，支持单选 / 填空 / 阅读理解 / 选词填空。新增「使用说明」按钮，面向小白用户提供一步一步的简明指南。",
+          "url": "https://greasyfork.org/scripts/544904-%E8%B5%9B%E6%B0%AA%E8%8B%B1%E8%AF%AD-ai-%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/544904/%E8%B5%9B%E6%B0%AA%E8%8B%B1%E8%AF%AD%20AI%20%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 26393,
+          "license": "MIT License",
+          "version": "2.2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "赛氪英语 AI 答题助手",
+  "description": "自动解析并填写赛氪英语题目，支持单选 / 填空 / 阅读理解 / 选词填空。新增「使用说明」按钮，面向小白用户提供一步一步的简明指南。",
+  "url": "https://greasyfork.org/scripts/544904-%E8%B5%9B%E6%B0%AA%E8%8B%B1%E8%AF%AD-ai-%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/544904/%E8%B5%9B%E6%B0%AA%E8%8B%B1%E8%AF%AD%20AI%20%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 26393,
+  "license": "MIT License",
+  "version": "2.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

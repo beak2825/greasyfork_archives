@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535129,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-06T13:15:49.000Z",
+    "code_updated_at": "2025-05-06T13:15:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 298217,
+        "name": "成传浩",
+        "created_at": "2019-05-04T16:29:24.000Z",
+        "url": "https://greasyfork.org/users/298217-%E6%88%90%E4%BC%A0%E6%B5%A9"
+      }
+    ],
+    "name": "B站沉浸式观影：隐藏接下来播放推荐",
+    "description": "自动隐藏B站视频页的“接下来播放”推荐区，打造极致沉浸体验",
+    "url": "https://greasyfork.org/scripts/535129-b%E7%AB%99%E6%B2%89%E6%B5%B8%E5%BC%8F%E8%A7%82%E5%BD%B1-%E9%9A%90%E8%97%8F%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%92%AD%E6%94%BE%E6%8E%A8%E8%8D%90",
+    "code_url": "https://update.greasyfork.org/scripts/535129/B%E7%AB%99%E6%B2%89%E6%B5%B8%E5%BC%8F%E8%A7%82%E5%BD%B1%EF%BC%9A%E9%9A%90%E8%97%8F%E6%8E%A5%E4%B8%8B%E6%9D%A5%E6%92%AD%E6%94%BE%E6%8E%A8%E8%8D%90.user.js",
+    "code_size": 1335,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

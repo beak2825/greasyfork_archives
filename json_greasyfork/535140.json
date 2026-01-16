@@ -1,0 +1,34 @@
+{
+  "id": 535140,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-06T14:48:19.000Z",
+  "code_updated_at": "2025-05-06T14:48:18.000Z",
+  "namespace": "seintz.torn.nst",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1425893,
+      "name": "Fourzees",
+      "created_at": "2025-01-21T20:59:27.000Z",
+      "url": "https://greasyfork.org/users/1425893-fourzees",
+      "scripts": []
+    }
+  ],
+  "name": "nst_cracked",
+  "description": "usefull scripts packed as one",
+  "url": "https://greasyfork.org/scripts/535140-nst-cracked",
+  "code_url": "https://update.greasyfork.org/scripts/535140/nst_cracked.user.js",
+  "code_size": 142749,
+  "license": null,
+  "version": "1.3.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

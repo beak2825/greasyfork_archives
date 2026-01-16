@@ -1,0 +1,33 @@
+{
+  "id": 541280,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-30T21:57:45.000Z",
+  "code_updated_at": "2025-06-30T21:57:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490438,
+      "name": "ndzk",
+      "created_at": "2025-06-30T21:46:44.000Z",
+      "url": "https://greasyfork.org/users/1490438-ndzk"
+    }
+  ],
+  "name": "pr*ca",
+  "description": "Automatycznie cenzuruje słowa wrażliwe dla bezrobotnych.",
+  "url": "https://greasyfork.org/scripts/541280-pr-ca",
+  "code_url": "https://update.greasyfork.org/scripts/541280/pr%2Aca.user.js",
+  "code_size": 6421,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

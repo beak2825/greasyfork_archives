@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535174,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-07T01:00:04.000Z",
+    "code_updated_at": "2025-05-07T01:02:48.000Z",
+    "namespace": "https://jvdl.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268228,
+        "name": "John VDL",
+        "created_at": "2024-02-29T01:42:53.000Z",
+        "url": "https://greasyfork.org/users/1268228-john-vdl"
+      }
+    ],
+    "name": "_blank sanity preserver",
+    "description": "Prevent sites from opening links in a new tab.",
+    "url": "https://greasyfork.org/scripts/535174-blank-sanity-preserver",
+    "code_url": "https://update.greasyfork.org/scripts/535174/_blank%20sanity%20preserver.user.js",
+    "code_size": 623,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518761,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T06:07:59.000Z",
+    "code_updated_at": "2024-11-25T06:07:59.000Z",
+    "namespace": "http://jvdl.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268228,
+        "name": "John VDL",
+        "created_at": "2024-02-29T01:42:53.000Z",
+        "url": "https://greasyfork.org/users/1268228-john-vdl"
+      }
+    ],
+    "name": "Slackmojis Darkmode",
+    "description": "Make Slackmojis dark",
+    "url": "https://greasyfork.org/scripts/518761-slackmojis-darkmode",
+    "code_url": "https://update.greasyfork.org/scripts/518761/Slackmojis%20Darkmode.user.js",
+    "code_size": 512,
+    "license": "MIT License",
+    "version": "2024-11-25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

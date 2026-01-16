@@ -1,0 +1,33 @@
+{
+  "id": 548783,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-08T07:04:23.000Z",
+  "code_updated_at": "2025-09-08T07:37:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1167336,
+      "name": "Liu E2",
+      "created_at": "2023-09-06T10:17:02.000Z",
+      "url": "https://greasyfork.org/users/1167336-liu-e2"
+    }
+  ],
+  "name": "WX-内框滑动",
+  "description": "检测商品ID变化，点击内框空白并聚焦，空格键滑动作用于内框",
+  "url": "https://greasyfork.org/scripts/548783-wx-%E5%86%85%E6%A1%86%E6%BB%91%E5%8A%A8",
+  "code_url": "https://update.greasyfork.org/scripts/548783/WX-%E5%86%85%E6%A1%86%E6%BB%91%E5%8A%A8.user.js",
+  "code_size": 1964,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

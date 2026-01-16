@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515317,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T02:36:54.000Z",
+    "code_updated_at": "2024-11-02T02:36:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389861,
+        "name": "BrendanMyers88",
+        "created_at": "2024-11-02T02:27:15.000Z",
+        "url": "https://greasyfork.org/users/1389861-brendanmyers88"
+      }
+    ],
+    "name": "Remove Tooltips on Yahoo Fantasy Football for Domes and Fair Weather",
+    "description": "Removes the .tooltip class from elements with domes/fair weather on Yahoo Fantasy Football",
+    "url": "https://greasyfork.org/scripts/515317-remove-tooltips-on-yahoo-fantasy-football-for-domes-and-fair-weather",
+    "code_url": "https://update.greasyfork.org/scripts/515317/Remove%20Tooltips%20on%20Yahoo%20Fantasy%20Football%20for%20Domes%20and%20Fair%20Weather.user.js",
+    "code_size": 1005,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

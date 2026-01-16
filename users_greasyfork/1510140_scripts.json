@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547797,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-30T03:45:35.000Z",
+    "code_updated_at": "2025-12-13T05:15:07.000Z",
+    "namespace": "https://your.namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510140,
+        "name": "Nasimul Hasan Maruf",
+        "created_at": "2025-08-30T03:19:45.000Z",
+        "url": "https://greasyfork.org/users/1510140-nasimul-hasan-maruf"
+      }
+    ],
+    "name": "Mobile Video Controller (Media Card & Persistent Menu)",
+    "description": "User-friendly \"Card\" UI, persistent skip menu, and battery optimized.",
+    "url": "https://greasyfork.org/scripts/547797-mobile-video-controller-media-card-persistent-menu",
+    "code_url": "https://update.greasyfork.org/scripts/547797/Mobile%20Video%20Controller%20%28Media%20Card%20%20Persistent%20Menu%29.user.js",
+    "code_size": 76155,
+    "license": null,
+    "version": "21.0.0-media-card",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512920,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-17T03:32:03.000Z",
+    "code_updated_at": "2024-10-17T03:32:03.000Z",
+    "namespace": "https://github.com/Bao-qing/123pan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381604,
+        "name": "xianfeng0777",
+        "created_at": "2024-10-16T07:30:12.000Z",
+        "url": "https://greasyfork.org/users/1381604-xianfeng0777"
+      }
+    ],
+    "name": "123云盘下载辅助",
+    "description": "123 Cloud Drive Unlimited Flow",
+    "url": "https://greasyfork.org/scripts/512920-123%E4%BA%91%E7%9B%98%E4%B8%8B%E8%BD%BD%E8%BE%85%E5%8A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/512920/123%E4%BA%91%E7%9B%98%E4%B8%8B%E8%BD%BD%E8%BE%85%E5%8A%A9.user.js",
+    "code_size": 3640,
+    "license": null,
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

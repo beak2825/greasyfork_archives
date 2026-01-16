@@ -1,0 +1,34 @@
+{
+  "id": 529290,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-09T12:29:46.000Z",
+  "code_updated_at": "2025-03-09T12:31:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1443946,
+      "name": "Mnemoria",
+      "created_at": "2025-03-09T12:23:32.000Z",
+      "url": "https://greasyfork.org/users/1443946-mnemoria",
+      "scripts": []
+    }
+  ],
+  "name": "[DC] Copy Paste All - Forum",
+  "description": "Ajoute un bouton \"Tout copier\" en haut à gauche de votre écran qui vous permet de copier tous les posts d'une page forum dans votre presse-papier.",
+  "url": "https://greasyfork.org/scripts/529290-dc-copy-paste-all-forum",
+  "code_url": "https://update.greasyfork.org/scripts/529290/%5BDC%5D%20Copy%20Paste%20All%20-%20Forum.user.js",
+  "code_size": 4541,
+  "license": null,
+  "version": "1.5",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

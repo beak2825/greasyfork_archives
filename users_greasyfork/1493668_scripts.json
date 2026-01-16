@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542268,
+    "daily_installs": 1,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T06:07:09.000Z",
+    "code_updated_at": "2025-07-11T06:07:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493668,
+        "name": "水音",
+        "created_at": "2025-07-11T05:43:52.000Z",
+        "url": "https://greasyfork.org/users/1493668-%E6%B0%B4%E9%9F%B3"
+      }
+    ],
+    "name": "Arcaea中国大陆登录、下载修复",
+    "description": "修复下载按钮并替换Play商店链接为c版安装包，同时启用账号登录。",
+    "url": "https://greasyfork.org/scripts/542268-arcaea%E4%B8%AD%E5%9B%BD%E5%A4%A7%E9%99%86%E7%99%BB%E5%BD%95-%E4%B8%8B%E8%BD%BD%E4%BF%AE%E5%A4%8D",
+    "code_url": "https://update.greasyfork.org/scripts/542268/Arcaea%E4%B8%AD%E5%9B%BD%E5%A4%A7%E9%99%86%E7%99%BB%E5%BD%95%E3%80%81%E4%B8%8B%E8%BD%BD%E4%BF%AE%E5%A4%8D.user.js",
+    "code_size": 8656,
+    "license": "AGPL License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

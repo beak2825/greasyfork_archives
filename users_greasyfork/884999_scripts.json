@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509333,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T06:38:26.000Z",
+    "code_updated_at": "2024-09-20T06:42:20.000Z",
+    "namespace": "https://greasyfork.org/en/users/884999-l%C3%A6ge-manden",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 884999,
+        "name": "Læge manden",
+        "created_at": "2022-03-09T14:33:09.000Z",
+        "url": "https://greasyfork.org/users/884999-l%C3%A6ge-manden"
+      }
+    ],
+    "name": "virtualmanager.com - Show rating importance based on position",
+    "description": "Important skills are highlighted with different colors to show their importance level (e.g., very high, high, medium, low, very low).",
+    "url": "https://greasyfork.org/scripts/509333-virtualmanager-com-show-rating-importance-based-on-position",
+    "code_url": "https://update.greasyfork.org/scripts/509333/virtualmanagercom%20-%20Show%20rating%20importance%20based%20on%20position.user.js",
+    "code_size": 5210,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

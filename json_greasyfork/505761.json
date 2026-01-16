@@ -1,0 +1,34 @@
+{
+  "id": 505761,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-29T14:49:42.000Z",
+  "code_updated_at": "2024-08-29T14:49:41.000Z",
+  "namespace": "jabiddle",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305454,
+      "name": "kyhfoizs<gvuzg",
+      "created_at": "2024-05-22T11:02:48.000Z",
+      "url": "https://greasyfork.org/users/1305454-kyhfoizs-gvuzg",
+      "scripts": []
+    }
+  ],
+  "name": "KRUNKER.IO MODS,HACKS,CHEATS UNBLOCKED KRUNKERIO BY IO-MODS! GODMODE-AUTO AIM-ESP-AIMBOT",
+  "description": "krunker.io hack,Auto Aim,Auto Heal,Auto Block,Auto Fire,Aimbot",
+  "url": "https://greasyfork.org/scripts/505761-krunker-io-mods-hacks-cheats-unblocked-krunkerio-by-io-mods-godmode-auto-aim-esp-aimbot",
+  "code_url": "https://update.greasyfork.org/scripts/505761/KRUNKERIO%20MODS%2CHACKS%2CCHEATS%20UNBLOCKED%20KRUNKERIO%20BY%20IO-MODS%21%20GODMODE-AUTO%20AIM-ESP-AIMBOT.user.js",
+  "code_size": 41372,
+  "license": null,
+  "version": "1.5.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

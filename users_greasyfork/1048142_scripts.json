@@ -1,0 +1,101 @@
+[
+  {
+    "id": 538720,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T15:34:41.000Z",
+    "code_updated_at": "2025-06-07T16:48:00.000Z",
+    "namespace": "nohope-nl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1048142,
+        "name": "cmd1152",
+        "created_at": "2023-03-26T00:55:22.000Z",
+        "url": "https://greasyfork.org/users/1048142-cmd1152"
+      }
+    ],
+    "name": "[N合1 优化版] NoHopeL - Nodeloc 最快刷 阅读话题数/阅读时长/阅读帖子数 工具 （青铜 -> 黄金 -> 钻石 一路无忧！）",
+    "description": "在任何时候用肉眼可见的速度增加 阅读话题数/阅读时长/阅读帖子数",
+    "url": "https://greasyfork.org/scripts/538720-n%E5%90%881-%E4%BC%98%E5%8C%96%E7%89%88-nohopel-nodeloc-%E6%9C%80%E5%BF%AB%E5%88%B7-%E9%98%85%E8%AF%BB%E8%AF%9D%E9%A2%98%E6%95%B0-%E9%98%85%E8%AF%BB%E6%97%B6%E9%95%BF-%E9%98%85%E8%AF%BB%E5%B8%96%E5%AD%90%E6%95%B0-%E5%B7%A5%E5%85%B7-%E9%9D%92%E9%93%9C-%E9%BB%84%E9%87%91-%E9%92%BB%E7%9F%B3-%E4%B8%80%E8%B7%AF%E6%97%A0%E5%BF%A7",
+    "code_url": "https://update.greasyfork.org/scripts/538720/%5BN%E5%90%881%20%E4%BC%98%E5%8C%96%E7%89%88%5D%20NoHopeL%20-%20Nodeloc%20%E6%9C%80%E5%BF%AB%E5%88%B7%20%E9%98%85%E8%AF%BB%E8%AF%9D%E9%A2%98%E6%95%B0%E9%98%85%E8%AF%BB%E6%97%B6%E9%95%BF%E9%98%85%E8%AF%BB%E5%B8%96%E5%AD%90%E6%95%B0%20%E5%B7%A5%E5%85%B7%20%EF%BC%88%E9%9D%92%E9%93%9C%20-%3E%20%E9%BB%84%E9%87%91%20-%3E%20%E9%92%BB%E7%9F%B3%20%E4%B8%80%E8%B7%AF%E6%97%A0%E5%BF%A7%EF%BC%81%EF%BC%89.user.js",
+    "code_size": 4381,
+    "license": "MIT License",
+    "version": "2025-06-07",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517724,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T04:11:12.000Z",
+    "code_updated_at": "2025-03-21T15:39:36.000Z",
+    "namespace": "nodeloc++",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1048142,
+        "name": "cmd1152",
+        "created_at": "2023-03-26T00:55:22.000Z",
+        "url": "https://greasyfork.org/users/1048142-cmd1152"
+      }
+    ],
+    "name": "NodeLoc 增强脚本",
+    "description": "https://www.nodeloc.com/d/16398/",
+    "url": "https://greasyfork.org/scripts/517724-nodeloc-%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/517724/NodeLoc%20%E5%A2%9E%E5%BC%BA%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 57975,
+    "license": "MIT License",
+    "version": "0.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 505976,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-31T04:06:33.000Z",
+    "code_updated_at": "2024-08-31T04:06:33.000Z",
+    "namespace": "anti_clientname_spam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1048142,
+        "name": "cmd1152",
+        "created_at": "2023-03-26T00:55:22.000Z",
+        "url": "https://greasyfork.org/users/1048142-cmd1152"
+      }
+    ],
+    "name": "阻止十字街聊天室客户端名称过长刷屏",
+    "description": "阻止恶意用户通过将client参数设置得很长来刷屏，这个脚本可以限制显示的客户端名称长度，阻止刷屏",
+    "url": "https://greasyfork.org/scripts/505976-%E9%98%BB%E6%AD%A2%E5%8D%81%E5%AD%97%E8%A1%97%E8%81%8A%E5%A4%A9%E5%AE%A4%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%90%8D%E7%A7%B0%E8%BF%87%E9%95%BF%E5%88%B7%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/505976/%E9%98%BB%E6%AD%A2%E5%8D%81%E5%AD%97%E8%A1%97%E8%81%8A%E5%A4%A9%E5%AE%A4%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%90%8D%E7%A7%B0%E8%BF%87%E9%95%BF%E5%88%B7%E5%B1%8F.user.js",
+    "code_size": 839,
+    "license": "MIT License",
+    "version": "2024-01-02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

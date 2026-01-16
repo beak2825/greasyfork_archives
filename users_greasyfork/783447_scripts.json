@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535069,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T23:25:14.000Z",
+    "code_updated_at": "2025-05-05T23:27:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783447,
+        "name": "Logzilla6",
+        "created_at": "2021-06-14T18:56:15.000Z",
+        "url": "https://greasyfork.org/users/783447-logzilla6"
+      }
+    ],
+    "name": "sugar2",
+    "description": "sugar",
+    "url": "https://greasyfork.org/scripts/535069-sugar2",
+    "code_url": "https://update.greasyfork.org/scripts/535069/sugar2.user.js",
+    "code_size": 4188,
+    "license": null,
+    "version": "2025-03-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 510192,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T00:11:41.000Z",
+    "code_updated_at": "2025-01-28T06:07:06.000Z",
+    "namespace": "https://greasyfork.org/users/783447",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783447,
+        "name": "Logzilla6",
+        "created_at": "2021-06-14T18:56:15.000Z",
+        "url": "https://greasyfork.org/users/783447-logzilla6"
+      }
+    ],
+    "name": "KhanHack Beta",
+    "description": "Khan Academy Answer Hack",
+    "url": "https://greasyfork.org/scripts/510192-khanhack-beta",
+    "code_url": "https://update.greasyfork.org/scripts/510192/KhanHack%20Beta.user.js",
+    "code_size": 28454,
+    "license": null,
+    "version": "6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

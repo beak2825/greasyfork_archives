@@ -1,0 +1,59 @@
+{
+  "id": 531760,
+  "daily_installs": 0,
+  "total_installs": 93,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T19:56:49.000Z",
+  "code_updated_at": "2025-07-25T01:00:25.000Z",
+  "namespace": "https://github.com/SlippingGitty",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453423,
+      "name": "SlippingGitty",
+      "created_at": "2025-04-03T03:20:06.000Z",
+      "url": "https://greasyfork.org/users/1453423-slippinggitty",
+      "scripts": [
+        {
+          "id": 531760,
+          "daily_installs": 0,
+          "total_installs": 93,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-03T19:56:49.000Z",
+          "code_updated_at": "2025-07-25T01:00:25.000Z",
+          "namespace": "https://github.com/SlippingGitty",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Classic Reddit++",
+          "description": "Tools that restore and introduce new functionalities in the old.reddit interface (Views, vote tallies, etc.)",
+          "url": "https://greasyfork.org/scripts/531760-classic-reddit",
+          "code_url": "https://update.greasyfork.org/scripts/531760/Classic%20Reddit%2B%2B.user.js",
+          "code_size": 80788,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "1.6.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Classic Reddit++",
+  "description": "Tools that restore and introduce new functionalities in the old.reddit interface (Views, vote tallies, etc.)",
+  "url": "https://greasyfork.org/scripts/531760-classic-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/531760/Classic%20Reddit%2B%2B.user.js",
+  "code_size": 80788,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.6.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

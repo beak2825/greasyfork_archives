@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519468,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-01T17:00:38.000Z",
+    "code_updated_at": "2025-07-16T13:58:49.000Z",
+    "namespace": "https://greasyfork.org/users/1342111",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342111,
+        "name": "resykano",
+        "created_at": "2024-07-29T17:48:28.000Z",
+        "url": "https://greasyfork.org/users/1342111-resykano"
+      }
+    ],
+    "name": "Matrix Element Media Navigation",
+    "description": "Enables navigation through images and videos in timeline (up/down & left/right & a/Space keys) and lightbox (same keys + mousewheel) view. Its also a workaround helping against the jumps on timeline pagination/scrolling issue #8565",
+    "url": "https://greasyfork.org/scripts/519468-matrix-element-media-navigation",
+    "code_url": "https://update.greasyfork.org/scripts/519468/Matrix%20Element%20Media%20Navigation.user.js",
+    "code_size": 19103,
+    "license": "GPL3",
+    "version": "20250716",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

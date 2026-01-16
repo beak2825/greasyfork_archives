@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536766,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-22T01:02:35.000Z",
+    "code_updated_at": "2025-05-22T01:02:35.000Z",
+    "namespace": "https://greasyfork.org/users/1473014",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473014,
+        "name": "Gabriel de Paula",
+        "created_at": "2025-05-21T14:09:54.000Z",
+        "url": "https://greasyfork.org/users/1473014-gabriel-de-paula"
+      }
+    ],
+    "name": "Modify YouTube Homepage Layout",
+    "description": "Change the number of recommended videos per row on the YouTube homepage",
+    "url": "https://greasyfork.org/scripts/536766-modify-youtube-homepage-layout",
+    "code_url": "https://update.greasyfork.org/scripts/536766/Modify%20YouTube%20Homepage%20Layout.user.js",
+    "code_size": 3786,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

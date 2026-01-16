@@ -1,0 +1,59 @@
+{
+  "id": 551570,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-04T19:17:21.000Z",
+  "code_updated_at": "2025-10-31T19:25:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522268,
+      "name": "Mostofa Tanim Anik",
+      "created_at": "2025-10-04T19:10:18.000Z",
+      "url": "https://greasyfork.org/users/1522268-mostofa-tanim-anik",
+      "scripts": [
+        {
+          "id": 551570,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-04T19:17:21.000Z",
+          "code_updated_at": "2025-10-31T19:25:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Parimango Task Timer (Blink Background Negative)",
+          "description": "20s countdown with styled preview, resets on task change, background blinks when negative. Developed by Mostofa Tanim Anik",
+          "url": "https://greasyfork.org/scripts/551570-parimango-task-timer-blink-background-negative",
+          "code_url": "https://update.greasyfork.org/scripts/551570/Parimango%20Task%20Timer%20%28Blink%20Background%20Negative%29.user.js",
+          "code_size": 4597,
+          "license": null,
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Parimango Task Timer (Blink Background Negative)",
+  "description": "20s countdown with styled preview, resets on task change, background blinks when negative. Developed by Mostofa Tanim Anik",
+  "url": "https://greasyfork.org/scripts/551570-parimango-task-timer-blink-background-negative",
+  "code_url": "https://update.greasyfork.org/scripts/551570/Parimango%20Task%20Timer%20%28Blink%20Background%20Negative%29.user.js",
+  "code_size": 4597,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

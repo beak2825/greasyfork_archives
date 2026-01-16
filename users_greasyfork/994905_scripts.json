@@ -1,0 +1,68 @@
+[
+  {
+    "id": 503949,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-17T10:52:19.000Z",
+    "code_updated_at": "2024-08-17T10:52:19.000Z",
+    "namespace": "https://greasyfork.org/users/994905",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994905,
+        "name": "Unicorn88b",
+        "created_at": "2022-12-09T08:17:44.000Z",
+        "url": "https://greasyfork.org/users/994905-unicorn88b"
+      }
+    ],
+    "name": "【test】🦄百度文库下载器·精简版（个人版）by Unicorn",
+    "description": "保持源文件排版格式导出文件，解除继续阅读限制，净化弹窗、广告，开启文库VIP。",
+    "url": "https://greasyfork.org/scripts/503949-test-%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%E4%B8%8B%E8%BD%BD%E5%99%A8-%E7%B2%BE%E7%AE%80%E7%89%88-%E4%B8%AA%E4%BA%BA%E7%89%88-by-unicorn",
+    "code_url": "https://update.greasyfork.org/scripts/503949/%E3%80%90test%E3%80%91%F0%9F%A6%84%E7%99%BE%E5%BA%A6%E6%96%87%E5%BA%93%E4%B8%8B%E8%BD%BD%E5%99%A8%C2%B7%E7%B2%BE%E7%AE%80%E7%89%88%EF%BC%88%E4%B8%AA%E4%BA%BA%E7%89%88%EF%BC%89by%20Unicorn.user.js",
+    "code_size": 46897,
+    "license": "End-User License Agreement",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503948,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-17T10:51:04.000Z",
+    "code_updated_at": "2024-08-27T07:35:42.000Z",
+    "namespace": "https://greasyfork.org/users/994905",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994905,
+        "name": "Unicorn88b",
+        "created_at": "2022-12-09T08:17:44.000Z",
+        "url": "https://greasyfork.org/users/994905-unicorn88b"
+      }
+    ],
+    "name": "🦄Microsoft Rewards每日任务脚本",
+    "description": "自动完成微软Rewards每日搜索任务,每次运行时获取抖音/微博/哔哩哔哩/百度/头条热门词,避免使用同样的搜索词被封号。",
+    "url": "https://greasyfork.org/scripts/503948-microsoft-rewards%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/503948/%F0%9F%A6%84Microsoft%20Rewards%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 21955,
+    "license": "GNU GPLv3",
+    "version": "1.1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

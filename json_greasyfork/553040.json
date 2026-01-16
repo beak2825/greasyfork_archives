@@ -1,0 +1,33 @@
+{
+  "id": 553040,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-18T20:39:32.000Z",
+  "code_updated_at": "2025-10-18T21:02:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 979339,
+      "name": "Torch light",
+      "created_at": "2022-11-04T19:37:57.000Z",
+      "url": "https://greasyfork.org/users/979339-torch-light"
+    }
+  ],
+  "name": "Lazy Load Images and Videos",
+  "description": "Lazily loads images, iframes, and videos on websites.",
+  "url": "https://greasyfork.org/scripts/553040-lazy-load-images-and-videos",
+  "code_url": "https://update.greasyfork.org/scripts/553040/Lazy%20Load%20Images%20and%20Videos.user.js",
+  "code_size": 579,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

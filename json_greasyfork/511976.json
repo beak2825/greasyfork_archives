@@ -1,0 +1,33 @@
+{
+  "id": 511976,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-09T08:36:10.000Z",
+  "code_updated_at": "2024-10-09T08:36:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1231432,
+      "name": "Cookie316",
+      "created_at": "2023-12-10T05:13:55.000Z",
+      "url": "https://greasyfork.org/users/1231432-cookie316"
+    }
+  ],
+  "name": "YouTube Controls Toggle",
+  "description": "Press ctrl+i to toggle on and off the YouTube playback controls.",
+  "url": "https://greasyfork.org/scripts/511976-youtube-controls-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/511976/YouTube%20Controls%20Toggle.user.js",
+  "code_size": 817,
+  "license": null,
+  "version": "2024-10-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

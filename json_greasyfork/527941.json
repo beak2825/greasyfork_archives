@@ -1,0 +1,59 @@
+{
+  "id": 527941,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-24T11:27:33.000Z",
+  "code_updated_at": "2025-02-24T11:33:26.000Z",
+  "namespace": "https://www.f-list.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1439357,
+      "name": "ghck-cmyk",
+      "created_at": "2025-02-24T11:16:48.000Z",
+      "url": "https://greasyfork.org/users/1439357-ghck-cmyk",
+      "scripts": [
+        {
+          "id": 527941,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-24T11:27:33.000Z",
+          "code_updated_at": "2025-02-24T11:33:26.000Z",
+          "namespace": "https://www.f-list.net",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "F-list inverted color theme with auto-detection.",
+          "description": "Depends on \"light\" theme being the default one in f-list. Adds two buttons to TamperMonkey menu itself to switch and auto-detect light/dark.",
+          "url": "https://greasyfork.org/scripts/527941-f-list-inverted-color-theme-with-auto-detection",
+          "code_url": "https://update.greasyfork.org/scripts/527941/F-list%20inverted%20color%20theme%20with%20auto-detection.user.js",
+          "code_size": 6607,
+          "license": "MIT License",
+          "version": "2025-02-24",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "F-list inverted color theme with auto-detection.",
+  "description": "Depends on \"light\" theme being the default one in f-list. Adds two buttons to TamperMonkey menu itself to switch and auto-detect light/dark.",
+  "url": "https://greasyfork.org/scripts/527941-f-list-inverted-color-theme-with-auto-detection",
+  "code_url": "https://update.greasyfork.org/scripts/527941/F-list%20inverted%20color%20theme%20with%20auto-detection.user.js",
+  "code_size": 6607,
+  "license": "MIT License",
+  "version": "2025-02-24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

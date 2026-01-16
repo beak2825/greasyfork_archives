@@ -1,0 +1,33 @@
+{
+  "id": 535341,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T11:14:11.000Z",
+  "code_updated_at": "2025-05-08T11:14:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1467361,
+      "name": "oasido",
+      "created_at": "2025-05-08T11:12:08.000Z",
+      "url": "https://greasyfork.org/users/1467361-oasido"
+    }
+  ],
+  "name": "Force LTR on KaTeX (ChatGPT/OpenAI)",
+  "description": "Add dir=\"ltr\" to all .katex-html elements on ChatGPT/OpenAI",
+  "url": "https://greasyfork.org/scripts/535341-force-ltr-on-katex-chatgpt-openai",
+  "code_url": "https://update.greasyfork.org/scripts/535341/Force%20LTR%20on%20KaTeX%20%28ChatGPTOpenAI%29.user.js",
+  "code_size": 683,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

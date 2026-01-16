@@ -1,0 +1,34 @@
+{
+  "id": 498840,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-25T09:50:33.000Z",
+  "code_updated_at": "2025-12-19T06:54:49.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1323660,
+      "name": "snandye",
+      "created_at": "2024-06-25T09:40:13.000Z",
+      "url": "https://greasyfork.org/users/1323660-snandye",
+      "scripts": []
+    }
+  ],
+  "name": "Amazon 数据采集整合版·自动推送（订单/库存/广告）",
+  "description": "自动监听元素加载完成后采集并POST；订单(date/asin/count/orderNum/price)、库存(asin/price/available/reserved)、广告(date/name/spend)；移除分批+取消重复限制+自定义按钮位置+修复所有按钮重复创建问题+等待页面加载完成后再推送",
+  "url": "https://greasyfork.org/scripts/498840-amazon-%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E6%95%B4%E5%90%88%E7%89%88-%E8%87%AA%E5%8A%A8%E6%8E%A8%E9%80%81-%E8%AE%A2%E5%8D%95-%E5%BA%93%E5%AD%98-%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/498840/Amazon%20%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E6%95%B4%E5%90%88%E7%89%88%C2%B7%E8%87%AA%E5%8A%A8%E6%8E%A8%E9%80%81%EF%BC%88%E8%AE%A2%E5%8D%95%E5%BA%93%E5%AD%98%E5%B9%BF%E5%91%8A%EF%BC%89.user.js",
+  "code_size": 37716,
+  "license": null,
+  "version": "1.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

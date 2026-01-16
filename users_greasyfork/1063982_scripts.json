@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538956,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T02:06:40.000Z",
+    "code_updated_at": "2025-06-10T02:08:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1063982,
+        "name": "San Atear",
+        "created_at": "2023-04-20T06:36:09.000Z",
+        "url": "https://greasyfork.org/users/1063982-san-atear"
+      }
+    ],
+    "name": "微信素材库复制图片链接",
+    "description": "在微信公众号素材库页面，添加“复制链接”按钮，点击后复制图片URL到剪贴板",
+    "url": "https://greasyfork.org/scripts/538956-%E5%BE%AE%E4%BF%A1%E7%B4%A0%E6%9D%90%E5%BA%93%E5%A4%8D%E5%88%B6%E5%9B%BE%E7%89%87%E9%93%BE%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/538956/%E5%BE%AE%E4%BF%A1%E7%B4%A0%E6%9D%90%E5%BA%93%E5%A4%8D%E5%88%B6%E5%9B%BE%E7%89%87%E9%93%BE%E6%8E%A5.user.js",
+    "code_size": 3387,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

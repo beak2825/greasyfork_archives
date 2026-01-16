@@ -1,0 +1,34 @@
+{
+  "id": 501078,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-18T12:58:57.000Z",
+  "code_updated_at": "2024-07-20T07:47:08.000Z",
+  "namespace": "https://forum.russia-game.ru/*",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1334139,
+      "name": "maestro",
+      "created_at": "2024-07-16T06:48:56.000Z",
+      "url": "https://greasyfork.org/users/1334139-maestro",
+      "scripts": []
+    }
+  ],
+  "name": "Команда Rus Mobile",
+  "description": "Работа с форумом",
+  "url": "https://greasyfork.org/scripts/501078-%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%B0-rus-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/501078/%D0%9A%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%B0%20Rus%20Mobile.user.js",
+  "code_size": 91098,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "sr",
+  "deleted": false,
+  "visibility": "public"
+}

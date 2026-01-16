@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542747,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-16T18:44:12.000Z",
+    "code_updated_at": "2025-07-16T18:44:11.000Z",
+    "namespace": "https://devcoderx.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495398,
+        "name": "Trending Flash News",
+        "created_at": "2025-07-16T09:45:01.000Z",
+        "url": "https://greasyfork.org/users/1495398-trending-flash-news"
+      }
+    ],
+    "name": "Auto Login Tool",
+    "description": "Automatically logs into websites you specify",
+    "url": "https://greasyfork.org/scripts/542747-auto-login-tool",
+    "code_url": "https://update.greasyfork.org/scripts/542747/Auto%20Login%20Tool.user.js",
+    "code_size": 763,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

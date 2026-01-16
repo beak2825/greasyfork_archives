@@ -1,0 +1,101 @@
+[
+  {
+    "id": 520682,
+    "daily_installs": 0,
+    "total_installs": 158,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-14T08:56:14.000Z",
+    "code_updated_at": "2024-12-14T08:56:14.000Z",
+    "namespace": "https://greasyfork.org/users/YOUR_USERNAME",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408236,
+        "name": "Nguyễn thi thư Bao",
+        "created_at": "2024-12-08T11:31:29.000Z",
+        "url": "https://greasyfork.org/users/1408236-nguy%E1%BB%85n-thi-th%C6%B0-bao"
+      }
+    ],
+    "name": "Duolingo KN Points Increment",
+    "description": "A simple script to increment and display KN points in Duolingo style every second.",
+    "url": "https://greasyfork.org/scripts/520682-duolingo-kn-points-increment",
+    "code_url": "https://update.greasyfork.org/scripts/520682/Duolingo%20KN%20Points%20Increment.user.js",
+    "code_size": 1142,
+    "license": null,
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520227,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-09T11:08:48.000Z",
+    "code_updated_at": "2024-12-09T11:08:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408236,
+        "name": "Nguyễn thi thư Bao",
+        "created_at": "2024-12-08T11:31:29.000Z",
+        "url": "https://greasyfork.org/users/1408236-nguy%E1%BB%85n-thi-th%C6%B0-bao"
+      }
+    ],
+    "name": "Auto Increment Streaks",
+    "description": "Tăng streaks tự động mỗi giây",
+    "url": "https://greasyfork.org/scripts/520227-auto-increment-streaks",
+    "code_url": "https://update.greasyfork.org/scripts/520227/Auto%20Increment%20Streaks.user.js",
+    "code_size": 684,
+    "license": null,
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520131,
+    "daily_installs": 1,
+    "total_installs": 259,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-08T11:45:21.000Z",
+    "code_updated_at": "2024-12-08T11:45:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408236,
+        "name": "Nguyễn thi thư Bao",
+        "created_at": "2024-12-08T11:31:29.000Z",
+        "url": "https://greasyfork.org/users/1408236-nguy%E1%BB%85n-thi-th%C6%B0-bao"
+      }
+    ],
+    "name": "Duolingo Streak Saver",
+    "description": "Tự động duy trì streak hàng ngày trên Duolingo",
+    "url": "https://greasyfork.org/scripts/520131-duolingo-streak-saver",
+    "code_url": "https://update.greasyfork.org/scripts/520131/Duolingo%20Streak%20Saver.user.js",
+    "code_size": 1188,
+    "license": null,
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

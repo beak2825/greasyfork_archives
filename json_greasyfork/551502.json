@@ -1,0 +1,59 @@
+{
+  "id": 551502,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-04T00:54:23.000Z",
+  "code_updated_at": "2025-10-04T00:54:23.000Z",
+  "namespace": "fixThisAmazonSeriously",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522016,
+      "name": "Max Lemkin",
+      "created_at": "2025-10-04T00:40:02.000Z",
+      "url": "https://greasyfork.org/users/1522016-max-lemkin",
+      "scripts": [
+        {
+          "id": 551502,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-04T00:54:23.000Z",
+          "code_updated_at": "2025-10-04T00:54:23.000Z",
+          "namespace": "fixThisAmazonSeriously",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amazon Search Bar Highlight Fix",
+          "description": "Keep Amazon's search bar active and allow proper text highlighting/editing, using a lightweight self-healing observer only when needed.",
+          "url": "https://greasyfork.org/scripts/551502-amazon-search-bar-highlight-fix",
+          "code_url": "https://update.greasyfork.org/scripts/551502/Amazon%20Search%20Bar%20Highlight%20Fix.user.js",
+          "code_size": 2288,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Amazon Search Bar Highlight Fix",
+  "description": "Keep Amazon's search bar active and allow proper text highlighting/editing, using a lightweight self-healing observer only when needed.",
+  "url": "https://greasyfork.org/scripts/551502-amazon-search-bar-highlight-fix",
+  "code_url": "https://update.greasyfork.org/scripts/551502/Amazon%20Search%20Bar%20Highlight%20Fix.user.js",
+  "code_size": 2288,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

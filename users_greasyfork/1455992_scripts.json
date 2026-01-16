@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542194,
+    "daily_installs": 1,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T11:55:47.000Z",
+    "code_updated_at": "2025-07-10T11:56:45.000Z",
+    "namespace": "BottleOrg Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1455992,
+        "name": "Ryan Brown",
+        "created_at": "2025-04-09T23:11:57.000Z",
+        "url": "https://greasyfork.org/users/1455992-ryan-brown"
+      }
+    ],
+    "name": "Chess.com Stockfish Bot",
+    "description": "Chess.com Stockfish Bot with decent stability(will keep on fixing!)",
+    "url": "https://greasyfork.org/scripts/542194-chess-com-stockfish-bot",
+    "code_url": "https://update.greasyfork.org/scripts/542194/Chesscom%20Stockfish%20Bot.user.js",
+    "code_size": 22587,
+    "license": "Chess.com Bot/Cheat by BottleOrg(bottleorg.1@gmail.com) and its rightful owner!",
+    "version": "1.7.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

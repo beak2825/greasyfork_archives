@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550942,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-28T08:31:56.000Z",
+    "code_updated_at": "2025-09-28T08:31:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519658,
+        "name": "CassiopeiaCode",
+        "created_at": "2025-09-26T14:06:45.000Z",
+        "url": "https://greasyfork.org/users/1519658-cassiopeiacode"
+      }
+    ],
+    "name": "Cute-ify All Web Pages (V7.8.2 \"Viewport Aware\")",
+    "description": "The 100% complete, unabridged version of the Cache-First architecture. Now only processes visible elements in the viewport.",
+    "url": "https://greasyfork.org/scripts/550942-cute-ify-all-web-pages-v7-8-2-viewport-aware",
+    "code_url": "https://update.greasyfork.org/scripts/550942/Cute-ify%20All%20Web%20Pages%20%28V782%20%22Viewport%20Aware%22%29.user.js",
+    "code_size": 14115,
+    "license": "MIT License",
+    "version": "7.8.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

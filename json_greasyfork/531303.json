@@ -1,0 +1,34 @@
+{
+  "id": 531303,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-30T07:20:21.000Z",
+  "code_updated_at": "2025-10-23T02:17:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 217424,
+      "name": "Ckopoer",
+      "created_at": "2018-10-04T12:02:10.000Z",
+      "url": "https://greasyfork.org/users/217424-ckopoer",
+      "scripts": []
+    }
+  ],
+  "name": "LLM Search",
+  "description": "为 LLM 网页版增加 query string 的搜索功能，q 是 keyword , r=true 是否开启深度思考, o=true 是否开启联网搜索",
+  "url": "https://greasyfork.org/scripts/531303-llm-search",
+  "code_url": "https://update.greasyfork.org/scripts/531303/LLM%20Search.user.js",
+  "code_size": 13612,
+  "license": "MIT License",
+  "version": "1.4.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

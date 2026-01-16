@@ -1,0 +1,33 @@
+{
+  "id": 544286,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-01T10:54:37.000Z",
+  "code_updated_at": "2025-08-01T10:54:36.000Z",
+  "namespace": "Faucet Rotator - Claim Free Coins",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 158923,
+      "name": "STELLAR STELS",
+      "created_at": "2017-11-12T09:07:32.000Z",
+      "url": "https://greasyfork.org/users/158923-stellar-stels"
+    }
+  ],
+  "name": "Faucet Rotator - Claim Free Coins",
+  "description": "Earn free crypto using this script instantly",
+  "url": "https://greasyfork.org/scripts/544286-faucet-rotator-claim-free-coins",
+  "code_url": "https://update.greasyfork.org/scripts/544286/Faucet%20Rotator%20-%20Claim%20Free%20Coins.user.js",
+  "code_size": 18661,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

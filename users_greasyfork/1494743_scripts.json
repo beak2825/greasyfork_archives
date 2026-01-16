@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542537,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-14T09:11:08.000Z",
+    "code_updated_at": "2025-07-14T09:11:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1494743,
+        "name": "Will S.",
+        "created_at": "2025-07-14T08:39:51.000Z",
+        "url": "https://greasyfork.org/users/1494743-will-s"
+      }
+    ],
+    "name": "PSF Price Optimizer Enhanced compact",
+    "description": "Suggests optimal prices for PSF contracts based on company data",
+    "url": "https://greasyfork.org/scripts/542537-psf-price-optimizer-enhanced-compact",
+    "code_url": "https://update.greasyfork.org/scripts/542537/PSF%20Price%20Optimizer%20Enhanced%20compact.user.js",
+    "code_size": 28391,
+    "license": null,
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

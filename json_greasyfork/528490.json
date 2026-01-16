@@ -1,0 +1,33 @@
+{
+  "id": 528490,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-02T02:23:39.000Z",
+  "code_updated_at": "2025-03-02T02:39:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441422,
+      "name": "Yui-Koi",
+      "created_at": "2025-03-02T02:03:59.000Z",
+      "url": "https://greasyfork.org/users/1441422-yui-koi"
+    }
+  ],
+  "name": "Always focus",
+  "description": "Always keeps page in a focused/active state",
+  "url": "https://greasyfork.org/scripts/528490-always-focus",
+  "code_url": "https://update.greasyfork.org/scripts/528490/Always%20focus.user.js",
+  "code_size": 1359,
+  "license": "GNU GPLv3",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

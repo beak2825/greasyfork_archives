@@ -1,0 +1,33 @@
+{
+  "id": 549434,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-13T20:00:01.000Z",
+  "code_updated_at": "2025-09-13T20:00:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514687,
+      "name": "devHenrik123",
+      "created_at": "2025-09-13T19:55:56.000Z",
+      "url": "https://greasyfork.org/users/1514687-devhenrik123"
+    }
+  ],
+  "name": "Quest Search Bar",
+  "description": "Search your quests.",
+  "url": "https://greasyfork.org/scripts/549434-quest-search-bar",
+  "code_url": "https://update.greasyfork.org/scripts/549434/Quest%20Search%20Bar.user.js",
+  "code_size": 1947,
+  "license": "MIT License",
+  "version": "2025-09-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

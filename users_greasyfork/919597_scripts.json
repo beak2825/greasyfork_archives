@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534769,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-02T23:29:43.000Z",
+    "code_updated_at": "2025-05-02T23:31:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 919597,
+        "name": "NES",
+        "created_at": "2022-05-28T16:41:52.000Z",
+        "url": "https://greasyfork.org/users/919597-nes"
+      }
+    ],
+    "name": "YouTube Music URL Link Copy Button",
+    "description": "Adds a button to copy the current song URL, works even on YouTube Music homepage",
+    "url": "https://greasyfork.org/scripts/534769-youtube-music-url-link-copy-button",
+    "code_url": "https://update.greasyfork.org/scripts/534769/YouTube%20Music%20URL%20Link%20Copy%20Button.user.js",
+    "code_size": 14516,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

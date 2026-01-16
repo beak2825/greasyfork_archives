@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539326,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T19:31:50.000Z",
+    "code_updated_at": "2025-06-13T19:45:19.000Z",
+    "namespace": "https://github.com/danield4n13l",
+    "support_url": "https://github.com/danield4n13l",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483386,
+        "name": "danield4n13l",
+        "created_at": "2025-06-13T18:35:37.000Z",
+        "url": "https://greasyfork.org/users/1483386-danield4n13l"
+      }
+    ],
+    "name": "Wallhaven Enhance+",
+    "description": "Some More Wallhaven Enhancements, based on New Wallhaven Enhance",
+    "url": "https://greasyfork.org/scripts/539326-wallhaven-enhance",
+    "code_url": "https://update.greasyfork.org/scripts/539326/Wallhaven%20Enhance%2B.user.js",
+    "code_size": 5671,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

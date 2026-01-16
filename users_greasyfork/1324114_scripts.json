@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498948,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-26T08:18:56.000Z",
+    "code_updated_at": "2024-06-26T08:18:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1324114,
+        "name": "Commander Shepard",
+        "created_at": "2024-06-26T07:40:07.000Z",
+        "url": "https://greasyfork.org/users/1324114-commander-shepard"
+      }
+    ],
+    "name": "Swinburne University Canvas Assignment Checker",
+    "description": "Check for uncompleted assignments on Swinburne University's Canvas with enhanced UI, dark/light mode toggle, draggable popup, and loading indicator",
+    "url": "https://greasyfork.org/scripts/498948-swinburne-university-canvas-assignment-checker",
+    "code_url": "https://update.greasyfork.org/scripts/498948/Swinburne%20University%20Canvas%20Assignment%20Checker.user.js",
+    "code_size": 14189,
+    "license": "MIT License",
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

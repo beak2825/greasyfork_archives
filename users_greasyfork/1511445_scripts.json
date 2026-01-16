@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548249,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-03T13:50:07.000Z",
+    "code_updated_at": "2025-09-03T15:14:06.000Z",
+    "namespace": "https://greasyfork.org/users/1511445",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511445,
+        "name": "JulySheep",
+        "created_at": "2025-09-03T13:19:53.000Z",
+        "url": "https://greasyfork.org/users/1511445-julysheep"
+      }
+    ],
+    "name": "更简洁的Bing搜索主页",
+    "description": "让bing搜索更简洁，隐藏热点、新闻、菜单栏、测验、页脚信息模块和锁定页面滑动。",
+    "url": "https://greasyfork.org/scripts/548249-%E6%9B%B4%E7%AE%80%E6%B4%81%E7%9A%84bing%E6%90%9C%E7%B4%A2%E4%B8%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/548249/%E6%9B%B4%E7%AE%80%E6%B4%81%E7%9A%84Bing%E6%90%9C%E7%B4%A2%E4%B8%BB%E9%A1%B5.user.js",
+    "code_size": 4022,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

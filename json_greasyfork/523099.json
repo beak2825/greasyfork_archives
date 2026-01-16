@@ -1,0 +1,59 @@
+{
+  "id": 523099,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-07T07:53:20.000Z",
+  "code_updated_at": "2025-01-23T00:24:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420502,
+      "name": "zouyonghe",
+      "created_at": "2025-01-07T07:44:20.000Z",
+      "url": "https://greasyfork.org/users/1420502-zouyonghe",
+      "scripts": [
+        {
+          "id": 523099,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-07T07:53:20.000Z",
+          "code_updated_at": "2025-01-23T00:24:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "屏蔽bilibili直播间",
+          "description": "屏蔽选定直播间并记录该房间号和昵称，后续可恢复屏蔽的直播间",
+          "url": "https://greasyfork.org/scripts/523099-%E5%B1%8F%E8%94%BDbilibili%E7%9B%B4%E6%92%AD%E9%97%B4",
+          "code_url": "https://update.greasyfork.org/scripts/523099/%E5%B1%8F%E8%94%BDbilibili%E7%9B%B4%E6%92%AD%E9%97%B4.user.js",
+          "code_size": 9515,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "屏蔽bilibili直播间",
+  "description": "屏蔽选定直播间并记录该房间号和昵称，后续可恢复屏蔽的直播间",
+  "url": "https://greasyfork.org/scripts/523099-%E5%B1%8F%E8%94%BDbilibili%E7%9B%B4%E6%92%AD%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/523099/%E5%B1%8F%E8%94%BDbilibili%E7%9B%B4%E6%92%AD%E9%97%B4.user.js",
+  "code_size": 9515,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

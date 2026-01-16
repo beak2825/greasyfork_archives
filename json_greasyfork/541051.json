@@ -1,0 +1,33 @@
+{
+  "id": 541051,
+  "daily_installs": 4,
+  "total_installs": 381,
+  "fan_score": "9.2",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 2,
+  "created_at": "2025-06-28T15:05:01.000Z",
+  "code_updated_at": "2025-08-02T14:23:54.000Z",
+  "namespace": "https://github.com/revivalstack/chatgpt-exporter",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1489021,
+      "name": "Mic Mejia",
+      "created_at": "2025-06-27T01:00:36.000Z",
+      "url": "https://greasyfork.org/users/1489021-mic-mejia"
+    }
+  ],
+  "name": "ChatGPT / Claude / Copilot / Gemini AI Chat Exporter by RevivalStack",
+  "description": "Export your ChatGPT, Claude, Copilot or Gemini chat into a properly and elegantly formatted Markdown or JSON.",
+  "url": "https://greasyfork.org/scripts/541051-chatgpt-claude-copilot-gemini-ai-chat-exporter-by-revivalstack",
+  "code_url": "https://update.greasyfork.org/scripts/541051/ChatGPT%20%20Claude%20%20Copilot%20%20Gemini%20AI%20Chat%20Exporter%20by%20RevivalStack.user.js",
+  "code_size": 101475,
+  "license": "MIT License",
+  "version": "2.7.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

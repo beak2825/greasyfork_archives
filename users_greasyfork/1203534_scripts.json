@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523328,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-09T21:12:15.000Z",
+    "code_updated_at": "2025-01-09T21:12:15.000Z",
+    "namespace": "https://your-website.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203534,
+        "name": "Johnson Ari",
+        "created_at": "2023-10-25T01:30:00.000Z",
+        "url": "https://greasyfork.org/users/1203534-johnson-ari"
+      }
+    ],
+    "name": "Embed Jetpunk",
+    "description": "Embed Jetpunk into whatever site (change the @match)",
+    "url": "https://greasyfork.org/scripts/523328-embed-jetpunk",
+    "code_url": "https://update.greasyfork.org/scripts/523328/Embed%20Jetpunk.user.js",
+    "code_size": 7279,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

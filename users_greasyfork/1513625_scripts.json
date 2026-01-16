@@ -30,6 +30,72 @@
     "version": "48.0",
     "locale": "ja",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 550140,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T09:14:15.000Z",
+    "code_updated_at": "2025-09-20T09:14:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513625,
+        "name": "tofuuu",
+        "created_at": "2025-09-10T12:26:08.000Z",
+        "url": "https://greasyfork.org/users/1513625-tofuuu"
+      }
+    ],
+    "name": "全站终极解锁脚本 V48 - 宗师完全体",
+    "description": "【V48 宗师完全体】最终完美版！",
+    "url": "https://greasyfork.org/scripts/550140-%E5%85%A8%E7%AB%99%E7%BB%88%E6%9E%81%E8%A7%A3%E9%94%81%E8%84%9A%E6%9C%AC-v48-%E5%AE%97%E5%B8%88%E5%AE%8C%E5%85%A8%E4%BD%93",
+    "code_url": "https://update.greasyfork.org/scripts/550140/%E5%85%A8%E7%AB%99%E7%BB%88%E6%9E%81%E8%A7%A3%E9%94%81%E8%84%9A%E6%9C%AC%20V48%20-%20%E5%AE%97%E5%B8%88%E5%AE%8C%E5%85%A8%E4%BD%93.user.js",
+    "code_size": 17528,
+    "license": "MIT License",
+    "version": "48.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549024,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-10T12:30:46.000Z",
+    "code_updated_at": "2025-09-12T15:42:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513625,
+        "name": "tofuuu",
+        "created_at": "2025-09-10T12:26:08.000Z",
+        "url": "https://greasyfork.org/users/1513625-tofuuu"
+      }
+    ],
+    "name": "NLP Part-of-Speech Highlighter (Structure-Preserving)",
+    "description": "Highlights parts of speech while preserving the original HTML structure. Works on dynamic sites.",
+    "url": "https://greasyfork.org/scripts/549024-nlp-part-of-speech-highlighter-structure-preserving",
+    "code_url": "https://update.greasyfork.org/scripts/549024/NLP%20Part-of-Speech%20Highlighter%20%28Structure-Preserving%29.user.js",
+    "code_size": 6023,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 497060,
+  "daily_installs": 0,
+  "total_installs": 23,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-04T20:50:23.000Z",
+  "code_updated_at": "2024-11-27T19:40:22.000Z",
+  "namespace": "AichiChikuwa",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1312530,
+      "name": "AichiChikuwa",
+      "created_at": "2024-06-04T20:36:43.000Z",
+      "url": "https://greasyfork.org/users/1312530-aichichikuwa"
+    }
+  ],
+  "name": "Better Curseforge Legacy/New Switch Button",
+  "description": "Instead of the useless home pages, \"change to legacy/new site\" button now redirects to the current page of the legacy or new site.",
+  "url": "https://greasyfork.org/scripts/497060-better-curseforge-legacy-new-switch-button",
+  "code_url": "https://update.greasyfork.org/scripts/497060/Better%20Curseforge%20LegacyNew%20Switch%20Button.user.js",
+  "code_size": 5281,
+  "license": "CC BY 4.0",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

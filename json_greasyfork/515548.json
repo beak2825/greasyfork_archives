@@ -1,0 +1,33 @@
+{
+  "id": 515548,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-03T09:20:03.000Z",
+  "code_updated_at": "2024-11-12T13:38:45.000Z",
+  "namespace": "http://quhou.top/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1083212,
+      "name": "xygodcyx",
+      "created_at": "2023-05-23T01:07:36.000Z",
+      "url": "https://greasyfork.org/users/1083212-xygodcyx"
+    }
+  ],
+  "name": "copy",
+  "description": "开源破解一些网站的禁止复制，免登录/vip复制",
+  "url": "https://greasyfork.org/scripts/515548-copy",
+  "code_url": "https://update.greasyfork.org/scripts/515548/copy.user.js",
+  "code_size": 3612,
+  "license": "MIT License",
+  "version": "2024-11-04/1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 504286,
+  "daily_installs": 0,
+  "total_installs": 275,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-19T17:08:44.000Z",
+  "code_updated_at": "2024-12-03T07:58:48.000Z",
+  "namespace": "https://greasyfork.org/users/1354671",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354671,
+      "name": "Rubey",
+      "created_at": "2024-08-19T17:05:28.000Z",
+      "url": "https://greasyfork.org/users/1354671-rubey",
+      "scripts": [
+        {
+          "id": 504286,
+          "daily_installs": 0,
+          "total_installs": 275,
+          "fan_score": "43.8",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-19T17:08:44.000Z",
+          "code_updated_at": "2024-12-03T07:58:48.000Z",
+          "namespace": "https://greasyfork.org/users/1354671",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "IThome Pro",
+          "description": "优化ithome网页端浏览效果",
+          "url": "https://greasyfork.org/scripts/504286-ithome-pro",
+          "code_url": "https://update.greasyfork.org/scripts/504286/IThome%20Pro.user.js",
+          "code_size": 15337,
+          "license": null,
+          "version": "4.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "IThome Pro",
+  "description": "优化ithome网页端浏览效果",
+  "url": "https://greasyfork.org/scripts/504286-ithome-pro",
+  "code_url": "https://update.greasyfork.org/scripts/504286/IThome%20Pro.user.js",
+  "code_size": 15337,
+  "license": null,
+  "version": "4.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

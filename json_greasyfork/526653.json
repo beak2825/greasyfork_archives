@@ -1,0 +1,34 @@
+{
+  "id": 526653,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-12T09:00:29.000Z",
+  "code_updated_at": "2025-02-27T21:26:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257681,
+      "name": "Virág Attila",
+      "created_at": "2024-02-05T09:36:10.000Z",
+      "url": "https://greasyfork.org/users/1257681-vir%C3%A1g-attila",
+      "scripts": []
+    }
+  ],
+  "name": "Marfeel Monitoring CSS Fix",
+  "description": "CSS módosítás a Marfeel Monitoring oldalakon",
+  "url": "https://greasyfork.org/scripts/526653-marfeel-monitoring-css-fix",
+  "code_url": "https://update.greasyfork.org/scripts/526653/Marfeel%20Monitoring%20CSS%20Fix.user.js",
+  "code_size": 674,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

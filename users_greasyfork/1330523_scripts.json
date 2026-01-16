@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500103,
+    "daily_installs": 0,
+    "total_installs": 4701,
+    "fan_score": "39.6",
+    "good_ratings": 3,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-07-09T12:08:26.000Z",
+    "code_updated_at": "2025-06-01T08:39:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1330523,
+        "name": "dai_ke",
+        "created_at": "2024-07-09T03:52:51.000Z",
+        "url": "https://greasyfork.org/users/1330523-dai-ke"
+      }
+    ],
+    "name": "🥇【华医网助手】huayiwang_完全免费_无人值守_自动播放|另有代挂_全自动_安全可靠_过人脸_全网最低价",
+    "description": "huayiwang, 华医网，自动播放，自动静音，屏蔽答题，调整视频质量为最低，当前视频播放结束自动进入下一个视频，播放结束清理无用定时器",
+    "url": "https://greasyfork.org/scripts/500103-%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%8A%A9%E6%89%8B-huayiwang-%E5%AE%8C%E5%85%A8%E5%85%8D%E8%B4%B9-%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88-%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E5%8F%A6%E6%9C%89%E4%BB%A3%E6%8C%82-%E5%85%A8%E8%87%AA%E5%8A%A8-%E5%AE%89%E5%85%A8%E5%8F%AF%E9%9D%A0-%E8%BF%87%E4%BA%BA%E8%84%B8-%E5%85%A8%E7%BD%91%E6%9C%80%E4%BD%8E%E4%BB%B7",
+    "code_url": "https://update.greasyfork.org/scripts/500103/%F0%9F%A5%87%E3%80%90%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%8A%A9%E6%89%8B%E3%80%91huayiwang_%E5%AE%8C%E5%85%A8%E5%85%8D%E8%B4%B9_%E6%97%A0%E4%BA%BA%E5%80%BC%E5%AE%88_%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%7C%E5%8F%A6%E6%9C%89%E4%BB%A3%E6%8C%82_%E5%85%A8%E8%87%AA%E5%8A%A8_%E5%AE%89%E5%85%A8%E5%8F%AF%E9%9D%A0_%E8%BF%87%E4%BA%BA%E8%84%B8_%E5%85%A8%E7%BD%91%E6%9C%80%E4%BD%8E%E4%BB%B7.user.js",
+    "code_size": 6934,
+    "license": "AGPL License",
+    "version": "1.6.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

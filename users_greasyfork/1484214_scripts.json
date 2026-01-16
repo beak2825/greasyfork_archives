@@ -1,0 +1,200 @@
+[
+  {
+    "id": 543066,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T01:21:09.000Z",
+    "code_updated_at": "2025-07-20T01:23:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484214,
+        "name": "Bazooka Joe",
+        "created_at": "2025-06-15T16:25:10.000Z",
+        "url": "https://greasyfork.org/users/1484214-bazooka-joe"
+      }
+    ],
+    "name": "Torn Drug Cooldown Warning PC version",
+    "description": "Uses your Torn API key to display a countdown timer and a flashing warning when your drug cooldown has expired. Includes a 5-minute snooze for the warning.",
+    "url": "https://greasyfork.org/scripts/543066-torn-drug-cooldown-warning-pc-version",
+    "code_url": "https://update.greasyfork.org/scripts/543066/Torn%20Drug%20Cooldown%20Warning%20PC%20version.user.js",
+    "code_size": 13342,
+    "license": null,
+    "version": "3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542103,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-09T08:45:30.000Z",
+    "code_updated_at": "2025-07-10T08:32:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484214,
+        "name": "Bazooka Joe",
+        "created_at": "2025-06-15T16:25:10.000Z",
+        "url": "https://greasyfork.org/users/1484214-bazooka-joe"
+      }
+    ],
+    "name": "BJ's Torn Market Highlighter PDA + PC",
+    "description": "Highlights items on the market. Corrected initialization to ensure UI always loads.",
+    "url": "https://greasyfork.org/scripts/542103-bj-s-torn-market-highlighter-pda-pc",
+    "code_url": "https://update.greasyfork.org/scripts/542103/BJ%27s%20Torn%20Market%20Highlighter%20PDA%20%2B%20PC.user.js",
+    "code_size": 16663,
+    "license": null,
+    "version": "8.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540918,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T06:51:47.000Z",
+    "code_updated_at": "2025-07-10T08:38:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484214,
+        "name": "Bazooka Joe",
+        "created_at": "2025-06-15T16:25:10.000Z",
+        "url": "https://greasyfork.org/users/1484214-bazooka-joe"
+      }
+    ],
+    "name": "BJ's Torn PDA - Notes & To-Do List",
+    "description": "A simple, persistent notepad and to-do list in a slide-out panel for Torn PDA.",
+    "url": "https://greasyfork.org/scripts/540918-bj-s-torn-pda-notes-to-do-list",
+    "code_url": "https://update.greasyfork.org/scripts/540918/BJ%27s%20Torn%20PDA%20-%20Notes%20%20To-Do%20List.user.js",
+    "code_size": 9541,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540859,
+    "daily_installs": 1,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-26T15:49:57.000Z",
+    "code_updated_at": "2025-07-10T08:39:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484214,
+        "name": "Bazooka Joe",
+        "created_at": "2025-06-15T16:25:10.000Z",
+        "url": "https://greasyfork.org/users/1484214-bazooka-joe"
+      }
+    ],
+    "name": "BJ's Torn Travel OC Warning PDA & PC Compatible",
+    "description": "A smart OC timer that works on both Tampermonkey and Torn PDA, auto-detecting the environment.",
+    "url": "https://greasyfork.org/scripts/540859-bj-s-torn-travel-oc-warning-pda-pc-compatible",
+    "code_url": "https://update.greasyfork.org/scripts/540859/BJ%27s%20Torn%20Travel%20OC%20Warning%20PDA%20%20PC%20Compatible.user.js",
+    "code_size": 17604,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540634,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-24T13:22:10.000Z",
+    "code_updated_at": "2025-06-26T15:42:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484214,
+        "name": "Bazooka Joe",
+        "created_at": "2025-06-15T16:25:10.000Z",
+        "url": "https://greasyfork.org/users/1484214-bazooka-joe"
+      }
+    ],
+    "name": "Torn Travel OC Warning - PDA",
+    "description": "A reliable OC timer for Torn PDA with a toggle and manual entry for the warning buffer.",
+    "url": "https://greasyfork.org/scripts/540634-torn-travel-oc-warning-pda",
+    "code_url": "https://update.greasyfork.org/scripts/540634/Torn%20Travel%20OC%20Warning%20-%20PDA.user.js",
+    "code_size": 15072,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540632,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-24T13:19:47.000Z",
+    "code_updated_at": "2025-06-26T12:58:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484214,
+        "name": "Bazooka Joe",
+        "created_at": "2025-06-15T16:25:10.000Z",
+        "url": "https://greasyfork.org/users/1484214-bazooka-joe"
+      }
+    ],
+    "name": "Torn Travel OC Warning",
+    "description": "A reliable OC flight timer with a right-side toggle panel and manual entry for the warning buffer.",
+    "url": "https://greasyfork.org/scripts/540632-torn-travel-oc-warning",
+    "code_url": "https://update.greasyfork.org/scripts/540632/Torn%20Travel%20OC%20Warning.user.js",
+    "code_size": 15586,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

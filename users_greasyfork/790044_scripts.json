@@ -1,0 +1,68 @@
+[
+  {
+    "id": 505159,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-25T17:36:29.000Z",
+    "code_updated_at": "2024-08-25T17:48:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790044,
+        "name": "KangNian",
+        "created_at": "2021-07-03T19:36:52.000Z",
+        "url": "https://greasyfork.org/users/790044-kangnian"
+      }
+    ],
+    "name": "show_message",
+    "description": "创建一个自定义透明提示框，并支持显示位置、自动关闭时间、透明度、是否显示关闭按钮、背景颜色和文字颜色",
+    "url": "https://greasyfork.org/scripts/505159-show-message",
+    "code_url": "https://update.greasyfork.org/scripts/505159/1434644/show_message.js",
+    "code_size": 7811,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499895,
+    "daily_installs": 0,
+    "total_installs": 227,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-07T07:00:23.000Z",
+    "code_updated_at": "2024-07-24T17:20:53.000Z",
+    "namespace": "http://your.namespace.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 790044,
+        "name": "KangNian",
+        "created_at": "2021-07-03T19:36:52.000Z",
+        "url": "https://greasyfork.org/users/790044-kangnian"
+      }
+    ],
+    "name": "图片放大油猴脚本（悬浮按钮，拖动，旋转，翻页）",
+    "description": "点击图片放大到屏幕显示的最大尺寸，并支持滚轮放大、拖动和旋转，点击关闭放大显示的图片，并增加切换上一张或下一张图片的功能。",
+    "url": "https://greasyfork.org/scripts/499895-%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC-%E6%82%AC%E6%B5%AE%E6%8C%89%E9%92%AE-%E6%8B%96%E5%8A%A8-%E6%97%8B%E8%BD%AC-%E7%BF%BB%E9%A1%B5",
+    "code_url": "https://update.greasyfork.org/scripts/499895/%E5%9B%BE%E7%89%87%E6%94%BE%E5%A4%A7%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%EF%BC%88%E6%82%AC%E6%B5%AE%E6%8C%89%E9%92%AE%EF%BC%8C%E6%8B%96%E5%8A%A8%EF%BC%8C%E6%97%8B%E8%BD%AC%EF%BC%8C%E7%BF%BB%E9%A1%B5%EF%BC%89.user.js",
+    "code_size": 23241,
+    "license": null,
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

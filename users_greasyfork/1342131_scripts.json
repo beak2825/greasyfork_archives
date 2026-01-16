@@ -1,0 +1,134 @@
+[
+  {
+    "id": 533975,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T17:44:03.000Z",
+    "code_updated_at": "2025-04-25T17:44:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342131,
+        "name": "LePluB",
+        "created_at": "2024-07-29T19:09:17.000Z",
+        "url": "https://greasyfork.org/users/1342131-leplub"
+      }
+    ],
+    "name": "dibs chat spam",
+    "description": "Write to clipboard upcoming out of hosp from yata",
+    "url": "https://greasyfork.org/scripts/533975-dibs-chat-spam",
+    "code_url": "https://update.greasyfork.org/scripts/533975/dibs%20chat%20spam.user.js",
+    "code_size": 1361,
+    "license": null,
+    "version": "2025-04-25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518215,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T14:13:43.000Z",
+    "code_updated_at": "2024-12-03T00:48:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342131,
+        "name": "LePluB",
+        "created_at": "2024-07-29T19:09:17.000Z",
+        "url": "https://greasyfork.org/users/1342131-leplub"
+      }
+    ],
+    "name": "Stock selling script",
+    "description": "Sell stocks without needing a PHD in math",
+    "url": "https://greasyfork.org/scripts/518215-stock-selling-script",
+    "code_url": "https://update.greasyfork.org/scripts/518215/Stock%20selling%20script.user.js",
+    "code_size": 3070,
+    "license": null,
+    "version": "2024-11-29.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516720,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-10T14:44:27.000Z",
+    "code_updated_at": "2024-11-23T14:40:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342131,
+        "name": "LePluB",
+        "created_at": "2024-07-29T19:09:17.000Z",
+        "url": "https://greasyfork.org/users/1342131-leplub"
+      }
+    ],
+    "name": "IM2.0 Price Difference",
+    "description": "Shows the price increase in IM2.0 listings",
+    "url": "https://greasyfork.org/scripts/516720-im2-0-price-difference",
+    "code_url": "https://update.greasyfork.org/scripts/516720/IM20%20Price%20Difference.user.js",
+    "code_size": 4345,
+    "license": null,
+    "version": "2024-11-23.01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502107,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T19:10:07.000Z",
+    "code_updated_at": "2024-07-29T19:17:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1342131,
+        "name": "LePluB",
+        "created_at": "2024-07-29T19:09:17.000Z",
+        "url": "https://greasyfork.org/users/1342131-leplub"
+      }
+    ],
+    "name": "Defend Attack Switcher",
+    "description": "Saves and loads defend settings. Make sure you click on \"Update Settings\" after loading.",
+    "url": "https://greasyfork.org/scripts/502107-defend-attack-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/502107/Defend%20Attack%20Switcher.user.js",
+    "code_size": 5634,
+    "license": "MIT License",
+    "version": "1.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

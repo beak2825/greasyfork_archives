@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543352,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-22T17:14:34.000Z",
+    "code_updated_at": "2025-08-05T09:23:27.000Z",
+    "namespace": "https://greasyfork.org/users/119029",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 119029,
+        "name": "MC Chu",
+        "created_at": "2017-04-24T17:04:10.000Z",
+        "url": "https://greasyfork.org/users/119029-mc-chu"
+      }
+    ],
+    "name": "Scribd Downloader",
+    "description": "在 Scribd 文件頁面逐頁抓取高解析度圖片並組成 PDF，自動滾動並去除模糊遮罩",
+    "url": "https://greasyfork.org/scripts/543352-scribd-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/543352/Scribd%20Downloader.user.js",
+    "code_size": 3971,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

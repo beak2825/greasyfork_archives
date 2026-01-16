@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498560,
+    "daily_installs": 1,
+    "total_installs": 598,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-22T00:05:11.000Z",
+    "code_updated_at": "2024-06-22T00:05:10.000Z",
+    "namespace": "//www.github.com/VORAPIS",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321851,
+        "name": "Jaxon Jarvis",
+        "created_at": "2024-06-21T23:58:22.000Z",
+        "url": "https://greasyfork.org/users/1321851-jaxon-jarvis"
+      }
+    ],
+    "name": "Project VORAPIS",
+    "description": "V3 is the alternative solution to a fast and responsive YouTube frontend which combines performance with beauty, bringing back Google's best web layout.",
+    "url": "https://greasyfork.org/scripts/498560-project-vorapis",
+    "code_url": "https://update.greasyfork.org/scripts/498560/Project%20VORAPIS.user.js",
+    "code_size": 1111619,
+    "license": null,
+    "version": "0.8.6.16",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

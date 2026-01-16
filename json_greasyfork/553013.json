@@ -1,0 +1,34 @@
+{
+  "id": 553013,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-18T14:37:27.000Z",
+  "code_updated_at": "2025-10-19T10:41:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451448,
+      "name": "Mohammad Alaa",
+      "created_at": "2025-03-29T01:00:49.000Z",
+      "url": "https://greasyfork.org/users/1451448-mohammad-alaa",
+      "scripts": []
+    }
+  ],
+  "name": "Arson FlamesPrefetch Visualizer (Mobile)",
+  "description": "Mobile-optimized visualizer for torn arson crime",
+  "url": "https://greasyfork.org/scripts/553013-arson-flamesprefetch-visualizer-mobile",
+  "code_url": "https://update.greasyfork.org/scripts/553013/Arson%20FlamesPrefetch%20Visualizer%20%28Mobile%29.user.js",
+  "code_size": 16926,
+  "license": null,
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

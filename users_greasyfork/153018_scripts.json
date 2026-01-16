@@ -1,0 +1,68 @@
+[
+  {
+    "id": 543653,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-25T23:01:08.000Z",
+    "code_updated_at": "2025-07-25T23:01:08.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 153018,
+        "name": "Drigtime",
+        "created_at": "2017-09-17T15:46:24.000Z",
+        "url": "https://greasyfork.org/users/153018-drigtime"
+      }
+    ],
+    "name": "Auto-Submit Forms on Hostingzbuzz and Oii",
+    "description": "Automatically submits forms on hostingzbuzz.com and oii.la, checks getmylink and nextpage for FORM tag, and handles go-link via XMLHttpRequest with custom headers and retries every 2 seconds",
+    "url": "https://greasyfork.org/scripts/543653-auto-submit-forms-on-hostingzbuzz-and-oii",
+    "code_url": "https://update.greasyfork.org/scripts/543653/Auto-Submit%20Forms%20on%20Hostingzbuzz%20and%20Oii.user.js",
+    "code_size": 3674,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530021,
+    "daily_installs": 2,
+    "total_installs": 168,
+    "fan_score": "61.0",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-16T21:58:49.000Z",
+    "code_updated_at": "2025-04-07T20:48:11.000Z",
+    "namespace": "NDWM",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 153018,
+        "name": "Drigtime",
+        "created_at": "2017-09-17T15:46:24.000Z",
+        "url": "https://greasyfork.org/users/153018-drigtime"
+      }
+    ],
+    "name": "Nexus Download Wabbajack Modlist",
+    "description": "Download all mods from NexusMods for a Wabbajack Modlist with a single click",
+    "url": "https://greasyfork.org/scripts/530021-nexus-download-wabbajack-modlist",
+    "code_url": "https://update.greasyfork.org/scripts/530021/Nexus%20Download%20Wabbajack%20Modlist.user.js",
+    "code_size": 92237,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

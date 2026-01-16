@@ -1,0 +1,33 @@
+{
+  "id": 548833,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-08T14:52:29.000Z",
+  "code_updated_at": "2025-10-06T15:34:28.000Z",
+  "namespace": "https://github.com/0H4S",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464180,
+      "name": "OHAS",
+      "created_at": "2025-04-30T22:57:27.000Z",
+      "url": "https://greasyfork.org/users/1464180-ohas"
+    }
+  ],
+  "name": "Assistente",
+  "description": "Automatiza ações repetitivas na plataforma de compras públicas Oxy, como expandir seções, confirmar diálogos de forma invisível, salvar arquivos, preencher datas e selecionar opções de formulário, melhorando a eficiência do usuário.",
+  "url": "https://greasyfork.org/scripts/548833-assistente",
+  "code_url": "https://update.greasyfork.org/scripts/548833/Assistente.user.js",
+  "code_size": 19564,
+  "license": "Copyright (c) 2025 OHAS - Todos os direitos reservados.",
+  "version": "1.3",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

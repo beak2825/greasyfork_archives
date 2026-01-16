@@ -1,0 +1,33 @@
+{
+  "id": 500805,
+  "daily_installs": 0,
+  "total_installs": 64,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-16T11:56:02.000Z",
+  "code_updated_at": "2025-01-22T03:43:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1334065,
+      "name": "czr2012",
+      "created_at": "2024-07-16T03:11:10.000Z",
+      "url": "https://greasyfork.org/users/1334065-czr2012"
+    }
+  ],
+  "name": "luogu 插件集合",
+  "description": "非常好的 luogu 插件集合",
+  "url": "https://greasyfork.org/scripts/500805-luogu-%E6%8F%92%E4%BB%B6%E9%9B%86%E5%90%88",
+  "code_url": "https://update.greasyfork.org/scripts/500805/luogu%20%E6%8F%92%E4%BB%B6%E9%9B%86%E5%90%88.user.js",
+  "code_size": 43405,
+  "license": "MIT License",
+  "version": "1.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

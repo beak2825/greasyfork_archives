@@ -1,0 +1,33 @@
+{
+  "id": 537105,
+  "daily_installs": 1,
+  "total_installs": 404,
+  "fan_score": "36.5",
+  "good_ratings": 3,
+  "ok_ratings": 3,
+  "bad_ratings": 0,
+  "created_at": "2025-05-24T11:46:30.000Z",
+  "code_updated_at": "2026-01-01T11:04:11.000Z",
+  "namespace": "HWHhuntFragmentExt",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1168888,
+      "name": "dimaka1256",
+      "created_at": "2023-09-08T14:30:16.000Z",
+      "url": "https://greasyfork.org/users/1168888-dimaka1256"
+    }
+  ],
+  "name": "HWHhuntFragmentExt",
+  "description": "HWH extension to farm item fragments",
+  "url": "https://greasyfork.org/scripts/537105-hwhhuntfragmentext",
+  "code_url": "https://update.greasyfork.org/scripts/537105/HWHhuntFragmentExt.user.js",
+  "code_size": 28487,
+  "license": "Copyright dimaka1256",
+  "version": "0.131",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

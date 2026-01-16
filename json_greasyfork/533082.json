@@ -1,0 +1,33 @@
+{
+  "id": 533082,
+  "daily_installs": 0,
+  "total_installs": 36,
+  "fan_score": "43.8",
+  "good_ratings": 3,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-17T03:50:28.000Z",
+  "code_updated_at": "2025-11-02T17:15:32.000Z",
+  "namespace": "https://gist.github.com/4lrick/89f4efb2fb0a3c48cc3411edeb6a7339",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1153549,
+      "name": "4lrick",
+      "created_at": "2023-08-17T14:06:26.000Z",
+      "url": "https://greasyfork.org/users/1153549-4lrick"
+    }
+  ],
+  "name": "YouTube - Volume Badge",
+  "description": "Displays a badge on the volume button showing the current volume percentage.",
+  "url": "https://greasyfork.org/scripts/533082-youtube-volume-badge",
+  "code_url": "https://update.greasyfork.org/scripts/533082/YouTube%20-%20Volume%20Badge.user.js",
+  "code_size": 4080,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

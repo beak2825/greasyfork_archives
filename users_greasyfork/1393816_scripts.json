@@ -1,0 +1,167 @@
+[
+  {
+    "id": 517773,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T13:18:36.000Z",
+    "code_updated_at": "2024-12-15T09:09:44.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393816,
+        "name": "rtxnovay",
+        "created_at": "2024-11-10T09:07:33.000Z",
+        "url": "https://greasyfork.org/users/1393816-rtxnovay"
+      }
+    ],
+    "name": "Технические Чоколадки",
+    "description": "скрипт для феры калашникава",
+    "url": "https://greasyfork.org/scripts/517773-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/517773/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8.user.js",
+    "code_size": 93203,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516698,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-10T13:19:43.000Z",
+    "code_updated_at": "2024-11-10T13:19:43.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393816,
+        "name": "rtxnovay",
+        "created_at": "2024-11-10T09:07:33.000Z",
+        "url": "https://greasyfork.org/users/1393816-rtxnovay"
+      }
+    ],
+    "name": "Технические Чоколадки",
+    "description": "el scripto для Павляшика",
+    "url": "https://greasyfork.org/scripts/516698-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/516698/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8.user.js",
+    "code_size": 3093,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516695,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-10T12:54:48.000Z",
+    "code_updated_at": "2024-11-10T12:54:48.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393816,
+        "name": "rtxnovay",
+        "created_at": "2024-11-10T09:07:33.000Z",
+        "url": "https://greasyfork.org/users/1393816-rtxnovay"
+      }
+    ],
+    "name": "Технические Чоколадки",
+    "description": "el scripto для Павляшика",
+    "url": "https://greasyfork.org/scripts/516695-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/516695/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8.user.js",
+    "code_size": 3090,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516676,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-10T10:52:06.000Z",
+    "code_updated_at": "2024-11-10T10:52:05.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393816,
+        "name": "rtxnovay",
+        "created_at": "2024-11-10T09:07:33.000Z",
+        "url": "https://greasyfork.org/users/1393816-rtxnovay"
+      }
+    ],
+    "name": "Технические Чоколадки",
+    "description": "Скрипт для тру слонов",
+    "url": "https://greasyfork.org/scripts/516676-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/516676/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8.user.js",
+    "code_size": 93394,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516667,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-10T10:21:26.000Z",
+    "code_updated_at": "2024-11-17T13:31:35.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393816,
+        "name": "rtxnovay",
+        "created_at": "2024-11-10T09:07:33.000Z",
+        "url": "https://greasyfork.org/users/1393816-rtxnovay"
+      }
+    ],
+    "name": "Технические Чоколадки",
+    "description": "el scripto для Павляшика",
+    "url": "https://greasyfork.org/scripts/516667-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/516667/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8.user.js",
+    "code_size": 103226,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

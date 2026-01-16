@@ -1,0 +1,200 @@
+[
+  {
+    "id": 539506,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-15T11:40:57.000Z",
+    "code_updated_at": "2025-06-15T11:40:56.000Z",
+    "namespace": "com.zlef.idlepixel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180643,
+        "name": "Ryan (Zlef)",
+        "created_at": "2023-09-25T11:20:19.000Z",
+        "url": "https://greasyfork.org/users/1180643-ryan-zlef"
+      }
+    ],
+    "name": "IdlePixel  - Breeding Slayerless Kill All",
+    "description": "Kill all button - Only triggers if Slayerless orb is absorbed and will not permanently kill anything.",
+    "url": "https://greasyfork.org/scripts/539506-idlepixel-breeding-slayerless-kill-all",
+    "code_url": "https://update.greasyfork.org/scripts/539506/IdlePixel%20%20-%20Breeding%20Slayerless%20Kill%20All.user.js",
+    "code_size": 3043,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538225,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T14:31:26.000Z",
+    "code_updated_at": "2025-06-07T06:19:05.000Z",
+    "namespace": "com.zlef.modal",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180643,
+        "name": "Ryan (Zlef)",
+        "created_at": "2023-09-25T11:20:19.000Z",
+        "url": "https://greasyfork.org/users/1180643-ryan-zlef"
+      }
+    ],
+    "name": "Zlef's modal and settings",
+    "description": "Modal and settings framework, designed with Idle Pixel in mind but expanded beyond that scope.",
+    "url": "https://greasyfork.org/scripts/538225-zlef-s-modal-and-settings",
+    "code_url": "https://update.greasyfork.org/scripts/538225/1603175/Zlef%27s%20modal%20and%20settings.js",
+    "code_size": 30606,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538103,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-02T18:08:50.000Z",
+    "code_updated_at": "2025-06-07T11:58:22.000Z",
+    "namespace": "com.Zlef.flatmmo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180643,
+        "name": "Ryan (Zlef)",
+        "created_at": "2023-09-25T11:20:19.000Z",
+        "url": "https://greasyfork.org/users/1180643-ryan-zlef"
+      }
+    ],
+    "name": "Flatmmo+",
+    "description": "FlatMMO plugin framework (Heavily inspired by & copied from Anwinity's IdlePixel+)",
+    "url": "https://greasyfork.org/scripts/538103-flatmmo",
+    "code_url": "https://update.greasyfork.org/scripts/538103/1603307/Flatmmo%2B.js",
+    "code_size": 22471,
+    "license": null,
+    "version": "0.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500701,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T09:11:11.000Z",
+    "code_updated_at": "2024-07-15T09:12:08.000Z",
+    "namespace": "lbtechnology.info",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180643,
+        "name": "Ryan (Zlef)",
+        "created_at": "2023-09-25T11:20:19.000Z",
+        "url": "https://greasyfork.org/users/1180643-ryan-zlef"
+      }
+    ],
+    "name": "IdlePixel Filtered Yoink!",
+    "description": "Based on Yoink v1.2.1",
+    "url": "https://greasyfork.org/scripts/500701-idlepixel-filtered-yoink",
+    "code_url": "https://update.greasyfork.org/scripts/500701/IdlePixel%20Filtered%20Yoink%21.user.js",
+    "code_size": 8582,
+    "license": "MIT License",
+    "version": "1.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499228,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-29T14:59:30.000Z",
+    "code_updated_at": "2024-07-01T20:18:00.000Z",
+    "namespace": "com.zlef.popupframework",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180643,
+        "name": "Ryan (Zlef)",
+        "created_at": "2023-09-25T11:20:19.000Z",
+        "url": "https://greasyfork.org/users/1180643-ryan-zlef"
+      }
+    ],
+    "name": "Popup Work In Progress",
+    "description": "Example of a popup framework with sections and dynamic IDs",
+    "url": "https://greasyfork.org/scripts/499228-popup-work-in-progress",
+    "code_url": "https://update.greasyfork.org/scripts/499228/Popup%20Work%20In%20Progress.user.js",
+    "code_size": 35728,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498552,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-21T20:11:46.000Z",
+    "code_updated_at": "2024-07-06T08:09:40.000Z",
+    "namespace": "com.zlef.idlepixel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1180643,
+        "name": "Ryan (Zlef)",
+        "created_at": "2023-09-25T11:20:19.000Z",
+        "url": "https://greasyfork.org/users/1180643-ryan-zlef"
+      }
+    ],
+    "name": "IdlePixel+ Teams QoL",
+    "description": "Various teams quality of life additions, quick deposit/withdraw fight points, better interface when clicking on stored items, storage organisation",
+    "url": "https://greasyfork.org/scripts/498552-idlepixel-teams-qol",
+    "code_url": "https://update.greasyfork.org/scripts/498552/IdlePixel%2B%20Teams%20QoL.user.js",
+    "code_size": 66108,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

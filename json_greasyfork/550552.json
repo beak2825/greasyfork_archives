@@ -1,0 +1,33 @@
+{
+  "id": 550552,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-24T12:46:52.000Z",
+  "code_updated_at": "2025-09-24T12:46:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510796,
+      "name": "자막",
+      "created_at": "2025-09-01T09:55:39.000Z",
+      "url": "https://greasyfork.org/users/1510796-%EC%9E%90%EB%A7%89"
+    }
+  ],
+  "name": "SOOP 구글 드라이브 이미지 업로드 서비스",
+  "description": "구글 드라이브에서 썸네일 링크 자동 변환 + 웹사이트에서 이미지로 변환",
+  "url": "https://greasyfork.org/scripts/550552-soop-%EA%B5%AC%EA%B8%80-%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B8%8C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C-%EC%84%9C%EB%B9%84%EC%8A%A4",
+  "code_url": "https://update.greasyfork.org/scripts/550552/SOOP%20%EA%B5%AC%EA%B8%80%20%EB%93%9C%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%EC%9D%B4%EB%AF%B8%EC%A7%80%20%EC%97%85%EB%A1%9C%EB%93%9C%20%EC%84%9C%EB%B9%84%EC%8A%A4.user.js",
+  "code_size": 7760,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

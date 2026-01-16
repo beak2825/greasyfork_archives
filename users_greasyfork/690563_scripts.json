@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 534052,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T09:56:26.000Z",
+    "code_updated_at": "2025-07-29T05:44:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 690563,
+        "name": "何小何",
+        "created_at": "2020-09-26T11:22:35.000Z",
+        "url": "https://greasyfork.org/users/690563-%E4%BD%95%E5%B0%8F%E4%BD%95"
+      }
+    ],
+    "name": "Amazon ASIN 市场价标记（List Price2025年7月29日）",
+    "description": "自动跳转 ASIN 页面，提取市场价 List Price（避免重复显示）+ 当前价 + Excel 导入 + 智能跳转 + 导出结果 CSV",
+    "url": "https://greasyfork.org/scripts/534052-amazon-asin-%E5%B8%82%E5%9C%BA%E4%BB%B7%E6%A0%87%E8%AE%B0-list-price2025%E5%B9%B47%E6%9C%8829%E6%97%A5",
+    "code_url": "https://update.greasyfork.org/scripts/534052/Amazon%20ASIN%20%E5%B8%82%E5%9C%BA%E4%BB%B7%E6%A0%87%E8%AE%B0%EF%BC%88List%20Price2025%E5%B9%B47%E6%9C%8829%E6%97%A5%EF%BC%89.user.js",
+    "code_size": 9003,
+    "license": null,
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

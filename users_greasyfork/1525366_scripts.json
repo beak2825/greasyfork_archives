@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552316,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T23:04:19.000Z",
+    "code_updated_at": "2025-10-18T23:44:04.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1525366,
+        "name": "ainofeet",
+        "created_at": "2025-10-11T22:16:48.000Z",
+        "url": "https://greasyfork.org/users/1525366-ainofeet"
+      }
+    ],
+    "name": "Fix bullshit upload timeout in Matrix Element",
+    "description": "10/11/2025, 9:48:28 PM",
+    "url": "https://greasyfork.org/scripts/552316-fix-bull-upload-timeout-in-matrix-element",
+    "code_url": "https://update.greasyfork.org/scripts/552316/Fix%20bullshit%20upload%20timeout%20in%20Matrix%20Element.user.js",
+    "code_size": 2509,
+    "license": "GPLv2",
+    "version": "1.0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

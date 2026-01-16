@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518809,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T14:15:20.000Z",
+    "code_updated_at": "2024-11-25T15:09:50.000Z",
+    "namespace": "http://your.homepage/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 725984,
+        "name": "S q u e e z e",
+        "created_at": "2021-01-11T02:14:57.000Z",
+        "url": "https://greasyfork.org/users/725984-s-q-u-e-e-z-e"
+      }
+    ],
+    "name": "HWM_Redirect_Roulette by SqZ",
+    "description": "Блочит рулетку",
+    "url": "https://greasyfork.org/scripts/518809-hwm-redirect-roulette-by-sqz",
+    "code_url": "https://update.greasyfork.org/scripts/518809/HWM_Redirect_Roulette%20by%20SqZ.user.js",
+    "code_size": 1333,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503230,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T19:42:34.000Z",
+    "code_updated_at": "2024-08-18T15:40:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905449,
+        "name": "Zhangsq37_",
+        "created_at": "2022-04-22T07:09:58.000Z",
+        "url": "https://greasyfork.org/users/905449-zhangsq37"
+      }
+    ],
+    "name": "B站直播间去除马赛克",
+    "description": "使用【Alt+M】切换模式(正常, 隐藏, 外框线)",
+    "url": "https://greasyfork.org/scripts/503230-b%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E5%8E%BB%E9%99%A4%E9%A9%AC%E8%B5%9B%E5%85%8B",
+    "code_url": "https://update.greasyfork.org/scripts/503230/B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E5%8E%BB%E9%99%A4%E9%A9%AC%E8%B5%9B%E5%85%8B.user.js",
+    "code_size": 2425,
+    "license": "MIT License",
+    "version": "2024-08-18",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

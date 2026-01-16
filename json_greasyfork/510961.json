@@ -1,0 +1,59 @@
+{
+  "id": 510961,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-30T22:17:56.000Z",
+  "code_updated_at": "2024-09-30T22:17:56.000Z",
+  "namespace": "aux",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1344889,
+      "name": "bruh3396",
+      "created_at": "2024-08-03T18:45:20.000Z",
+      "url": "https://greasyfork.org/users/1344889-bruh3396",
+      "scripts": [
+        {
+          "id": 504184,
+          "daily_installs": 14,
+          "total_installs": 1538,
+          "fan_score": "82.5",
+          "good_ratings": 31,
+          "ok_ratings": 1,
+          "bad_ratings": 1,
+          "created_at": "2024-08-19T00:15:33.000Z",
+          "code_updated_at": "2025-12-08T19:55:52.000Z",
+          "namespace": "bruh3396",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Rule34 Favorites Search Gallery",
+          "description": "Search, View, and Play Rule34 Favorites (Desktop/Android/iOS)",
+          "url": "https://greasyfork.org/scripts/504184-rule34-favorites-search-gallery",
+          "code_url": "https://update.greasyfork.org/scripts/504184/Rule34%20Favorites%20Search%20Gallery.user.js",
+          "code_size": 478418,
+          "license": null,
+          "version": "1.20.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Video Groups",
+  "description": "Create video  tab groups",
+  "url": "https://greasyfork.org/scripts/510961-video-groups",
+  "code_url": "https://update.greasyfork.org/scripts/510961/Video%20Groups.user.js",
+  "code_size": 189,
+  "license": null,
+  "version": "0.0.1.20240930221756",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

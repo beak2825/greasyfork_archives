@@ -1,0 +1,34 @@
+{
+  "id": 513289,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-20T12:04:37.000Z",
+  "code_updated_at": "2026-01-09T06:32:57.000Z",
+  "namespace": "http://www.wukui.fun",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1328110,
+      "name": "最佳原创",
+      "created_at": "2024-07-04T09:36:21.000Z",
+      "url": "https://greasyfork.org/users/1328110-%E6%9C%80%E4%BD%B3%E5%8E%9F%E5%88%9B",
+      "scripts": []
+    }
+  ],
+  "name": "FBA状态标记",
+  "description": "在新版fba货件界面显示自定义的额外信息",
+  "url": "https://greasyfork.org/scripts/513289-fba%E7%8A%B6%E6%80%81%E6%A0%87%E8%AE%B0",
+  "code_url": "https://update.greasyfork.org/scripts/513289/FBA%E7%8A%B6%E6%80%81%E6%A0%87%E8%AE%B0.user.js",
+  "code_size": 13704,
+  "license": "MIT License",
+  "version": "202601091432",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 521120,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-18T12:52:40.000Z",
+  "code_updated_at": "2024-12-25T07:01:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1412110,
+      "name": "超级猫猫头",
+      "created_at": "2024-12-17T11:46:46.000Z",
+      "url": "https://greasyfork.org/users/1412110-%E8%B6%85%E7%BA%A7%E7%8C%AB%E7%8C%AB%E5%A4%B4",
+      "scripts": [
+        {
+          "id": 521120,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-18T12:52:40.000Z",
+          "code_updated_at": "2024-12-25T07:01:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "北大青鸟云题库解析",
+          "description": "启动!",
+          "url": "https://greasyfork.org/scripts/521120-%E5%8C%97%E5%A4%A7%E9%9D%92%E9%B8%9F%E4%BA%91%E9%A2%98%E5%BA%93%E8%A7%A3%E6%9E%90",
+          "code_url": "https://update.greasyfork.org/scripts/521120/%E5%8C%97%E5%A4%A7%E9%9D%92%E9%B8%9F%E4%BA%91%E9%A2%98%E5%BA%93%E8%A7%A3%E6%9E%90.user.js",
+          "code_size": 8456,
+          "license": "GNU GPLv3",
+          "version": "0.0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "北大青鸟云题库解析",
+  "description": "启动!",
+  "url": "https://greasyfork.org/scripts/521120-%E5%8C%97%E5%A4%A7%E9%9D%92%E9%B8%9F%E4%BA%91%E9%A2%98%E5%BA%93%E8%A7%A3%E6%9E%90",
+  "code_url": "https://update.greasyfork.org/scripts/521120/%E5%8C%97%E5%A4%A7%E9%9D%92%E9%B8%9F%E4%BA%91%E9%A2%98%E5%BA%93%E8%A7%A3%E6%9E%90.user.js",
+  "code_size": 8456,
+  "license": "GNU GPLv3",
+  "version": "0.0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523790,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-14T20:57:22.000Z",
+    "code_updated_at": "2025-01-15T22:56:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1423352,
+        "name": "whmcfg",
+        "created_at": "2025-01-14T20:49:11.000Z",
+        "url": "https://greasyfork.org/users/1423352-whmcfg"
+      }
+    ],
+    "name": "Remove Prime Video Watch History",
+    "description": "Adds a floating interface to remove all or a specified number of items from your Prime Video watch history.",
+    "url": "https://greasyfork.org/scripts/523790-remove-prime-video-watch-history",
+    "code_url": "https://update.greasyfork.org/scripts/523790/Remove%20Prime%20Video%20Watch%20History.user.js",
+    "code_size": 10185,
+    "license": "GNU GPLv3",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 544433,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-02T19:32:06.000Z",
+  "code_updated_at": "2025-08-02T19:47:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 755907,
+      "name": "jarsang010",
+      "created_at": "2021-04-07T09:31:36.000Z",
+      "url": "https://greasyfork.org/users/755907-jarsang010",
+      "scripts": [
+        {
+          "id": 544433,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-02T19:32:06.000Z",
+          "code_updated_at": "2025-08-02T19:47:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pixiv Auto Expand Multiple Images",
+          "description": "Auto Expand Pixiv multiple images without clicking. Works for both illustrations and manga.",
+          "url": "https://greasyfork.org/scripts/544433-pixiv-auto-expand-multiple-images",
+          "code_url": "https://update.greasyfork.org/scripts/544433/Pixiv%20Auto%20Expand%20Multiple%20Images.user.js",
+          "code_size": 5504,
+          "license": "None",
+          "version": "1.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pixiv Auto Expand Multiple Images",
+  "description": "Auto Expand Pixiv multiple images without clicking. Works for both illustrations and manga.",
+  "url": "https://greasyfork.org/scripts/544433-pixiv-auto-expand-multiple-images",
+  "code_url": "https://update.greasyfork.org/scripts/544433/Pixiv%20Auto%20Expand%20Multiple%20Images.user.js",
+  "code_size": 5504,
+  "license": "None",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

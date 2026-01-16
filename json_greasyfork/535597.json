@@ -1,0 +1,34 @@
+{
+  "id": 535597,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-10T23:44:44.000Z",
+  "code_updated_at": "2025-05-10T23:44:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468447,
+      "name": "overhung1180",
+      "created_at": "2025-05-10T23:35:11.000Z",
+      "url": "https://greasyfork.org/users/1468447-overhung1180",
+      "scripts": []
+    }
+  ],
+  "name": "심층제보 알리미",
+  "description": "기본 게시판에서 ON/OFF 토글·입력창·상태원·30분 카운트다운 타이머 적용, 상태·타이머 유지",
+  "url": "https://greasyfork.org/scripts/535597-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+  "code_url": "https://update.greasyfork.org/scripts/535597/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+  "code_size": 6405,
+  "license": null,
+  "version": "1.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

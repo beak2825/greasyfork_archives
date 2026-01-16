@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536481,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T09:55:38.000Z",
+    "code_updated_at": "2025-05-19T10:22:32.000Z",
+    "namespace": "https://greasyfork.org/users/819402",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819402,
+        "name": "simple-ice",
+        "created_at": "2021-09-27T04:21:15.000Z",
+        "url": "https://greasyfork.org/users/819402-simple-ice"
+      }
+    ],
+    "name": "简道云草稿箱统计数量",
+    "description": "在简道云页面上加了一个点击按钮，点开草稿箱后点击按钮统计第三行的值，并log在控制他，这个值在我们项目里是工时，用于计算今天用了多少工时，避免八小时班写日志写了九小时/doge",
+    "url": "https://greasyfork.org/scripts/536481-%E7%AE%80%E9%81%93%E4%BA%91%E8%8D%89%E7%A8%BF%E7%AE%B1%E7%BB%9F%E8%AE%A1%E6%95%B0%E9%87%8F",
+    "code_url": "https://update.greasyfork.org/scripts/536481/%E7%AE%80%E9%81%93%E4%BA%91%E8%8D%89%E7%A8%BF%E7%AE%B1%E7%BB%9F%E8%AE%A1%E6%95%B0%E9%87%8F.user.js",
+    "code_size": 2252,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

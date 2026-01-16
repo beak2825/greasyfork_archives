@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527687,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-21T20:48:38.000Z",
+    "code_updated_at": "2025-02-25T05:44:37.000Z",
+    "namespace": "bilibili-replayer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438262,
+        "name": "Doooo",
+        "created_at": "2025-02-21T16:40:49.000Z",
+        "url": "https://greasyfork.org/users/1438262-doooo"
+      }
+    ],
+    "name": "B站循环助手-增强版",
+    "description": "稳定可靠的AB点循环工具，适配最新B站页面结构",
+    "url": "https://greasyfork.org/scripts/527687-b%E7%AB%99%E5%BE%AA%E7%8E%AF%E5%8A%A9%E6%89%8B-%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/527687/B%E7%AB%99%E5%BE%AA%E7%8E%AF%E5%8A%A9%E6%89%8B-%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 20057,
+    "license": null,
+    "version": "1.64",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527675,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-21T17:37:39.000Z",
+    "code_updated_at": "2025-02-22T04:19:07.000Z",
+    "namespace": "bilibili-replayer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438262,
+        "name": "Doooo",
+        "created_at": "2025-02-21T16:40:49.000Z",
+        "url": "https://greasyfork.org/users/1438262-doooo"
+      }
+    ],
+    "name": "B站循环助手-精简版",
+    "description": "稳定可靠的AB点循环工具，适配最新B站页面结构",
+    "url": "https://greasyfork.org/scripts/527675-b%E7%AB%99%E5%BE%AA%E7%8E%AF%E5%8A%A9%E6%89%8B-%E7%B2%BE%E7%AE%80%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/527675/B%E7%AB%99%E5%BE%AA%E7%8E%AF%E5%8A%A9%E6%89%8B-%E7%B2%BE%E7%AE%80%E7%89%88.user.js",
+    "code_size": 9235,
+    "license": null,
+    "version": "1.46",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

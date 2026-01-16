@@ -1,0 +1,167 @@
+[
+  {
+    "id": 548023,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T11:10:27.000Z",
+    "code_updated_at": "2025-09-01T11:10:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419627,
+        "name": "dogedoge",
+        "created_at": "2025-01-04T21:41:50.000Z",
+        "url": "https://greasyfork.org/users/1419627-dogedoge"
+      }
+    ],
+    "name": "lanis 자동사냥 3.8",
+    "description": "화면 좌측에 ON/OFF 버튼, 레벨제한 입력창, 골드제한 입력창, 숙련도제한 입력창, 버튼 텍스트 입력창, 제외 버튼 텍스트 입력창을 추가. 레벨제한 또는 숙련도제한 도달 시 버튼 클릭을 일시 중지하고 조건 변화 시 재개. 입력된 텍스트가 포함된 버튼을 골드제한 이하일 때 0.3초 간격으로 자동 클릭. 제외 버튼 텍스트가 포함된 버튼이나 '내구도 0' 경고 아이콘이 있으면 자동 클릭 중지. 입력창 크기 드래그로 조절 가능.",
+    "url": "https://greasyfork.org/scripts/548023-lanis-%EC%9E%90%EB%8F%99%EC%82%AC%EB%83%A5-3-8",
+    "code_url": "https://update.greasyfork.org/scripts/548023/lanis%20%EC%9E%90%EB%8F%99%EC%82%AC%EB%83%A5%2038.user.js",
+    "code_size": 17150,
+    "license": "MIT License",
+    "version": "3.8",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543115,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T11:26:27.000Z",
+    "code_updated_at": "2025-07-20T11:26:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419627,
+        "name": "dogedoge",
+        "created_at": "2025-01-04T21:41:50.000Z",
+        "url": "https://greasyfork.org/users/1419627-dogedoge"
+      }
+    ],
+    "name": "관청 데이터 저장하기. 300 페이지까지",
+    "description": "웹페이지의 특정 데이터를 추출하고, 누적해서 저장하며, 300 페이지까지 반복하여 하나의 CSV 파일로 내보내는 기능",
+    "url": "https://greasyfork.org/scripts/543115-%EA%B4%80%EC%B2%AD-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A0%80%EC%9E%A5%ED%95%98%EA%B8%B0-300-%ED%8E%98%EC%9D%B4%EC%A7%80%EA%B9%8C%EC%A7%80",
+    "code_url": "https://update.greasyfork.org/scripts/543115/%EA%B4%80%EC%B2%AD%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%EC%A0%80%EC%9E%A5%ED%95%98%EA%B8%B0%20300%20%ED%8E%98%EC%9D%B4%EC%A7%80%EA%B9%8C%EC%A7%80.user.js",
+    "code_size": 6201,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 543114,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T11:25:06.000Z",
+    "code_updated_at": "2025-07-20T11:25:06.000Z",
+    "namespace": "https://rpg.kr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419627,
+        "name": "dogedoge",
+        "created_at": "2025-01-04T21:41:50.000Z",
+        "url": "https://greasyfork.org/users/1419627-dogedoge"
+      }
+    ],
+    "name": "1. rpg.kr 협동 오토 메크로 최종 UI버전",
+    "description": "특정 조건에 맞는 보스를 자동으로 클릭하는 스크립트 (키보드 단축키 사용, ID 기준 정렬, UI ON/OFF 토글 추가)",
+    "url": "https://greasyfork.org/scripts/543114-1-rpg-kr-%ED%98%91%EB%8F%99-%EC%98%A4%ED%86%A0-%EB%A9%94%ED%81%AC%EB%A1%9C-%EC%B5%9C%EC%A2%85-ui%EB%B2%84%EC%A0%84",
+    "code_url": "https://update.greasyfork.org/scripts/543114/1%20rpgkr%20%ED%98%91%EB%8F%99%20%EC%98%A4%ED%86%A0%20%EB%A9%94%ED%81%AC%EB%A1%9C%20%EC%B5%9C%EC%A2%85%20UI%EB%B2%84%EC%A0%84.user.js",
+    "code_size": 10039,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543113,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T11:24:02.000Z",
+    "code_updated_at": "2025-09-07T10:52:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419627,
+        "name": "dogedoge",
+        "created_at": "2025-01-04T21:41:50.000Z",
+        "url": "https://greasyfork.org/users/1419627-dogedoge"
+      }
+    ],
+    "name": "lanis 자동사냥 3.7.1",
+    "description": "화면 좌측에 ON/OFF 버튼, 레벨제한 입력창, 골드제한 입력창, 숙련도제한 입력창, 버튼 텍스트 입력창, 제외 버튼 텍스트 입력창을 추가. 레벨제한 또는 숙련도제한 도달 시 버튼 클릭을 일시 중지하고 조건 변화 시 재개. 입력된 텍스트가 포함된 버튼을 골드제한 이하일 때 0.3초 간격으로 자동 클릭. 제외 버튼 텍스트가 포함된 버튼이 있으면 자동 클릭 중지. 입력창 크기 드래그로 조절 가능.",
+    "url": "https://greasyfork.org/scripts/543113-lanis-%EC%9E%90%EB%8F%99%EC%82%AC%EB%83%A5-3-7-1",
+    "code_url": "https://update.greasyfork.org/scripts/543113/lanis%20%EC%9E%90%EB%8F%99%EC%82%AC%EB%83%A5%20371.user.js",
+    "code_size": 16787,
+    "license": "MIT License",
+    "version": "3.7.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543112,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T11:19:25.000Z",
+    "code_updated_at": "2025-07-20T11:19:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419627,
+        "name": "dogedoge",
+        "created_at": "2025-01-04T21:41:50.000Z",
+        "url": "https://greasyfork.org/users/1419627-dogedoge"
+      }
+    ],
+    "name": "아이템 감정 백분율 표시",
+    "description": "아이템의 감정된 위력/무게가 감정 범위 내에서 하위 몇 %인지 표시합니다.",
+    "url": "https://greasyfork.org/scripts/543112-%EC%95%84%EC%9D%B4%ED%85%9C-%EA%B0%90%EC%A0%95-%EB%B0%B1%EB%B6%84%EC%9C%A8-%ED%91%9C%EC%8B%9C",
+    "code_url": "https://update.greasyfork.org/scripts/543112/%EC%95%84%EC%9D%B4%ED%85%9C%20%EA%B0%90%EC%A0%95%20%EB%B0%B1%EB%B6%84%EC%9C%A8%20%ED%91%9C%EC%8B%9C.user.js",
+    "code_size": 6399,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

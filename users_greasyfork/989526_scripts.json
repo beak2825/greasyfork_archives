@@ -1,0 +1,233 @@
+[
+  {
+    "id": 543578,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-25T06:11:02.000Z",
+    "code_updated_at": "2025-07-30T01:55:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "掘金签到辅助提醒助手",
+    "description": "未签到时仅打开签到页并保持单例；在签到页用户点击后更新签到日期；当天已签则不做任何事。",
+    "url": "https://greasyfork.org/scripts/543578-%E6%8E%98%E9%87%91%E7%AD%BE%E5%88%B0%E8%BE%85%E5%8A%A9%E6%8F%90%E9%86%92%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/543578/%E6%8E%98%E9%87%91%E7%AD%BE%E5%88%B0%E8%BE%85%E5%8A%A9%E6%8F%90%E9%86%92%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 3696,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542087,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-09T06:02:10.000Z",
+    "code_updated_at": "2025-07-09T06:02:10.000Z",
+    "namespace": "npm/vite-plugin-monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "任意元素实现画中画",
+    "description": "注册右键菜单;脚本运行后,鼠标hover到元素上时,出现切换画中画提示",
+    "url": "https://greasyfork.org/scripts/542087-%E4%BB%BB%E6%84%8F%E5%85%83%E7%B4%A0%E5%AE%9E%E7%8E%B0%E7%94%BB%E4%B8%AD%E7%94%BB",
+    "code_url": "https://update.greasyfork.org/scripts/542087/%E4%BB%BB%E6%84%8F%E5%85%83%E7%B4%A0%E5%AE%9E%E7%8E%B0%E7%94%BB%E4%B8%AD%E7%94%BB.user.js",
+    "code_size": 5901,
+    "license": "MIT License",
+    "version": "0.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539526,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-15T15:28:08.000Z",
+    "code_updated_at": "2025-06-15T15:28:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "💀 鸡汤来了",
+    "description": "毒鸡汤语录",
+    "url": "https://greasyfork.org/scripts/539526-%E9%B8%A1%E6%B1%A4%E6%9D%A5%E4%BA%86",
+    "code_url": "https://update.greasyfork.org/scripts/539526/%F0%9F%92%80%20%E9%B8%A1%E6%B1%A4%E6%9D%A5%E4%BA%86.user.js",
+    "code_size": 3627,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535725,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T02:18:37.000Z",
+    "code_updated_at": "2025-05-12T02:18:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "主题切换",
+    "description": "支持每个网站独立记忆主题状态的暗黑模式切换脚本，含管理面板。",
+    "url": "https://greasyfork.org/scripts/535725-%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/535725/%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2.user.js",
+    "code_size": 6115,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535102,
+    "daily_installs": 1,
+    "total_installs": 247,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-06T08:31:02.000Z",
+    "code_updated_at": "2025-05-06T08:31:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "元素属性复制",
+    "description": "右键复制网页元素内容（类名、文本、HTML、Markdown），支持下载为 Markdown，使用 Vue + Element Plus + Turndown 实现。Markdown下载功能目前只做了掘金、CSDN的兼容（有瑕疵），其余网站没特意试过。",
+    "url": "https://greasyfork.org/scripts/535102-%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/535102/%E5%85%83%E7%B4%A0%E5%B1%9E%E6%80%A7%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 7608,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533962,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T16:11:17.000Z",
+    "code_updated_at": "2025-04-25T16:11:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "console日志过滤脚本",
+    "description": "开发环境脚本console过滤!",
+    "url": "https://greasyfork.org/scripts/533962-console%E6%97%A5%E5%BF%97%E8%BF%87%E6%BB%A4%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/533962/console%E6%97%A5%E5%BF%97%E8%BF%87%E6%BB%A4%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 778,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504239,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-19T09:32:31.000Z",
+    "code_updated_at": "2024-08-19T10:12:18.000Z",
+    "namespace": "x-frame-devTool",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989526,
+        "name": "shixiaoshi",
+        "created_at": "2022-11-29T06:29:06.000Z",
+        "url": "https://greasyfork.org/users/989526-shixiaoshi"
+      }
+    ],
+    "name": "Token自动更新",
+    "description": "本地开发token自动更新脚本,填写账号密码即可",
+    "url": "https://greasyfork.org/scripts/504239-token%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/504239/Token%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 318486,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

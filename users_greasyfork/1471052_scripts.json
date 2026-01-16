@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536255,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T04:36:34.000Z",
+    "code_updated_at": "2025-05-17T04:40:29.000Z",
+    "namespace": "https://greasyfork.org/users/YOUR_USERNAME",
+    "support_url": "https://github.com/YOUR_USERNAME/weibo-sidebar-hider/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471052,
+        "name": "white lin",
+        "created_at": "2025-05-17T04:34:46.000Z",
+        "url": "https://greasyfork.org/users/1471052-white-lin"
+      }
+    ],
+    "name": "微博热搜隐藏",
+    "description": "隐藏新浪微博右侧边栏，热搜，推荐博主，让界面更清爽",
+    "url": "https://greasyfork.org/scripts/536255-%E5%BE%AE%E5%8D%9A%E7%83%AD%E6%90%9C%E9%9A%90%E8%97%8F",
+    "code_url": "https://update.greasyfork.org/scripts/536255/%E5%BE%AE%E5%8D%9A%E7%83%AD%E6%90%9C%E9%9A%90%E8%97%8F.user.js",
+    "code_size": 1450,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

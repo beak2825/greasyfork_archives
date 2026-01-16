@@ -1,0 +1,59 @@
+{
+  "id": 528554,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-02T15:49:29.000Z",
+  "code_updated_at": "2025-03-03T08:44:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 94385,
+      "name": "Andy King",
+      "created_at": "2017-01-13T07:01:28.000Z",
+      "url": "https://greasyfork.org/users/94385-andy-king",
+      "scripts": [
+        {
+          "id": 528554,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-02T15:49:29.000Z",
+          "code_updated_at": "2025-03-03T08:44:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站稍后再看边栏显示视频时长",
+          "description": "在Bilibili稍后再看的侧边栏中，为每个视频显现播放时长",
+          "url": "https://greasyfork.org/scripts/528554-b%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E8%BE%B9%E6%A0%8F%E6%98%BE%E7%A4%BA%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF",
+          "code_url": "https://update.greasyfork.org/scripts/528554/B%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E8%BE%B9%E6%A0%8F%E6%98%BE%E7%A4%BA%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF.user.js",
+          "code_size": 6220,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站稍后再看边栏显示视频时长",
+  "description": "在Bilibili稍后再看的侧边栏中，为每个视频显现播放时长",
+  "url": "https://greasyfork.org/scripts/528554-b%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E8%BE%B9%E6%A0%8F%E6%98%BE%E7%A4%BA%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF",
+  "code_url": "https://update.greasyfork.org/scripts/528554/B%E7%AB%99%E7%A8%8D%E5%90%8E%E5%86%8D%E7%9C%8B%E8%BE%B9%E6%A0%8F%E6%98%BE%E7%A4%BA%E8%A7%86%E9%A2%91%E6%97%B6%E9%95%BF.user.js",
+  "code_size": 6220,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

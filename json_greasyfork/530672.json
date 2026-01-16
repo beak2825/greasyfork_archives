@@ -1,0 +1,59 @@
+{
+  "id": 530672,
+  "daily_installs": 0,
+  "total_installs": 193,
+  "fan_score": "23.1",
+  "good_ratings": 2,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2025-03-24T01:44:45.000Z",
+  "code_updated_at": "2025-07-13T04:01:17.000Z",
+  "namespace": "fentify",
+  "support_url": "https://github.com/crackbob/Fentify",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440353,
+      "name": "wowwwww",
+      "created_at": "2025-02-26T17:42:40.000Z",
+      "url": "https://greasyfork.org/users/1440353-wowwwww",
+      "scripts": [
+        {
+          "id": 530672,
+          "daily_installs": 0,
+          "total_installs": 193,
+          "fan_score": "23.1",
+          "good_ratings": 2,
+          "ok_ratings": 2,
+          "bad_ratings": 1,
+          "created_at": "2025-03-24T01:44:45.000Z",
+          "code_updated_at": "2025-07-13T04:01:17.000Z",
+          "namespace": "fentify",
+          "support_url": "https://github.com/crackbob/Fentify",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fentify",
+          "description": "we do a little trolling",
+          "url": "https://greasyfork.org/scripts/530672-fentify",
+          "code_url": "https://update.greasyfork.org/scripts/530672/Fentify.user.js",
+          "code_size": 112777,
+          "license": "GNU General Public License v3.0 or later",
+          "version": "0.0.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fentify",
+  "description": "we do a little trolling",
+  "url": "https://greasyfork.org/scripts/530672-fentify",
+  "code_url": "https://update.greasyfork.org/scripts/530672/Fentify.user.js",
+  "code_size": 112777,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "0.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

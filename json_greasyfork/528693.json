@@ -1,0 +1,33 @@
+{
+  "id": 528693,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-04T02:17:46.000Z",
+  "code_updated_at": "2025-05-03T17:33:14.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1441970-%E5%8D%97%E7%AB%B9",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441970,
+      "name": "南竹",
+      "created_at": "2025-03-03T17:26:50.000Z",
+      "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+    }
+  ],
+  "name": "搜书小组(404吧)-刘备小说版块 帖子过滤器",
+  "description": "通过编辑脚本代码管理黑/白名单。增加过滤历史窗口（Ctrl+Shift+Q 或右下角按钮触发）。优化观察器性能。",
+  "url": "https://greasyfork.org/scripts/528693-%E6%90%9C%E4%B9%A6%E5%B0%8F%E7%BB%84-404%E5%90%A7-%E5%88%98%E5%A4%87%E5%B0%8F%E8%AF%B4%E7%89%88%E5%9D%97-%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/528693/%E6%90%9C%E4%B9%A6%E5%B0%8F%E7%BB%84%28404%E5%90%A7%29-%E5%88%98%E5%A4%87%E5%B0%8F%E8%AF%B4%E7%89%88%E5%9D%97%20%E5%B8%96%E5%AD%90%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+  "code_size": 18317,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

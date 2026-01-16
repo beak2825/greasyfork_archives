@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517009,
+    "daily_installs": 0,
+    "total_installs": 176,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-12T12:47:12.000Z",
+    "code_updated_at": "2024-12-24T00:33:34.000Z",
+    "namespace": "https://github.com/BaeKey/smartedu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394808,
+        "name": "BaeKey",
+        "created_at": "2024-11-12T11:56:41.000Z",
+        "url": "https://greasyfork.org/users/1394808-baekey"
+      }
+    ],
+    "name": "国家中小学智慧教育平台电子课本下载",
+    "description": "在国家中小学智慧教育平台网站中添加电子课本下载按钮，下载电子课本",
+    "url": "https://greasyfork.org/scripts/517009-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E7%94%B5%E5%AD%90%E8%AF%BE%E6%9C%AC%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/517009/%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%E7%94%B5%E5%AD%90%E8%AF%BE%E6%9C%AC%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 7330,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

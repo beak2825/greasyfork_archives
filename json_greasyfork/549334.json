@@ -1,0 +1,34 @@
+{
+  "id": 549334,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-13T00:37:32.000Z",
+  "code_updated_at": "2025-09-13T00:37:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510816,
+      "name": "Moneymann",
+      "created_at": "2025-09-01T11:24:11.000Z",
+      "url": "https://greasyfork.org/users/1510816-moneymann",
+      "scripts": []
+    }
+  ],
+  "name": "Ísland.is Kennitala Fix (SPA-safe) (Arnar Alberto Ágústsson Orellana | 250807-2950)",
+  "description": "Works with React routing on island.is and safely replaces Kennitala without breaking layout or styles.",
+  "url": "https://greasyfork.org/scripts/549334-%C3%ADsland-is-kennitala-fix-spa-safe-arnar-alberto-%C3%A1g%C3%BAstsson-orellana-250807-2950",
+  "code_url": "https://update.greasyfork.org/scripts/549334/%C3%8Dslandis%20Kennitala%20Fix%20%28SPA-safe%29%20%28Arnar%20Alberto%20%C3%81g%C3%BAstsson%20Orellana%20%7C%20250807-2950%29.user.js",
+  "code_size": 1372,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

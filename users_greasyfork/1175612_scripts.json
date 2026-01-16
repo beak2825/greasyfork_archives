@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535559,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T12:26:03.000Z",
+    "code_updated_at": "2025-05-10T12:26:03.000Z",
+    "namespace": "https://space.bilibili.com/346631924",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1175612,
+        "name": "sydowlle",
+        "created_at": "2023-09-18T08:29:21.000Z",
+        "url": "https://greasyfork.org/users/1175612-sydowlle"
+      }
+    ],
+    "name": "【Sydowlle】B 站多功能菜单 SyBili",
+    "description": "B 站页面多功能",
+    "url": "https://greasyfork.org/scripts/535559-sydowlle-b-%E7%AB%99%E5%A4%9A%E5%8A%9F%E8%83%BD%E8%8F%9C%E5%8D%95-sybili",
+    "code_url": "https://update.greasyfork.org/scripts/535559/%E3%80%90Sydowlle%E3%80%91B%20%E7%AB%99%E5%A4%9A%E5%8A%9F%E8%83%BD%E8%8F%9C%E5%8D%95%20SyBili.user.js",
+    "code_size": 19015,
+    "license": "MIT License",
+    "version": "2024-12-09",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

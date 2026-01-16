@@ -1,0 +1,34 @@
+{
+  "id": 542026,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-08T15:36:25.000Z",
+  "code_updated_at": "2025-07-08T15:50:27.000Z",
+  "namespace": "https://greasyfork.org/en/users/1492764-differential",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492764,
+      "name": "differential",
+      "created_at": "2025-07-08T08:49:35.000Z",
+      "url": "https://greasyfork.org/users/1492764-differential",
+      "scripts": []
+    }
+  ],
+  "name": "Glowfic diff viewer",
+  "description": "Show diffs between versions on a tag's history page",
+  "url": "https://greasyfork.org/scripts/542026-glowfic-diff-viewer",
+  "code_url": "https://update.greasyfork.org/scripts/542026/Glowfic%20diff%20viewer.user.js",
+  "code_size": 4744,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

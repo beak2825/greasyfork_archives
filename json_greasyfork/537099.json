@@ -1,0 +1,34 @@
+{
+  "id": 537099,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-24T11:03:25.000Z",
+  "code_updated_at": "2025-05-24T11:35:59.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1470469,
+      "name": "someoneX9",
+      "created_at": "2025-05-15T13:00:58.000Z",
+      "url": "https://greasyfork.org/users/1470469-someonex9",
+      "scripts": []
+    }
+  ],
+  "name": "GREEN Theme V2.2 :D",
+  "description": "GREEN Theme FOR SHELL",
+  "url": "https://greasyfork.org/scripts/537099-green-theme-v2-2-d",
+  "code_url": "https://update.greasyfork.org/scripts/537099/1595002/GREEN%20Theme%20V22%20%3AD.js",
+  "code_size": 6084,
+  "license": null,
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

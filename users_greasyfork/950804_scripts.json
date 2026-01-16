@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528936,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-06T03:28:19.000Z",
+    "code_updated_at": "2025-03-06T13:37:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 950804,
+        "name": "Allen Zone",
+        "created_at": "2022-08-25T23:58:51.000Z",
+        "url": "https://greasyfork.org/users/950804-allen-zone"
+      }
+    ],
+    "name": "mobile game remover（Netflix）",
+    "description": "Remove Netflix mobile game ads",
+    "url": "https://greasyfork.org/scripts/528936-mobile-game-remover-netflix",
+    "code_url": "https://update.greasyfork.org/scripts/528936/mobile%20game%20remover%EF%BC%88Netflix%EF%BC%89.user.js",
+    "code_size": 1909,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

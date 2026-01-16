@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509093,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-18T21:29:16.000Z",
+    "code_updated_at": "2024-09-18T21:29:16.000Z",
+    "namespace": "https://github.com/Haris00911/GoogleSearchViewCounter/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1369796,
+        "name": "Haris Patel",
+        "created_at": "2024-09-18T19:38:33.000Z",
+        "url": "https://greasyfork.org/users/1369796-haris-patel"
+      }
+    ],
+    "name": "YouTube View Count in Google Search Results",
+    "description": "Displays YouTube video view counts directly in Google search results",
+    "url": "https://greasyfork.org/scripts/509093-youtube-view-count-in-google-search-results",
+    "code_url": "https://update.greasyfork.org/scripts/509093/YouTube%20View%20Count%20in%20Google%20Search%20Results.user.js",
+    "code_size": 5666,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

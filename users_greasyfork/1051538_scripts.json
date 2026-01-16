@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497236,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-06T17:27:21.000Z",
+    "code_updated_at": "2024-11-24T01:31:14.000Z",
+    "namespace": "https://greasyfork.org/en/users/1051538",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1051538,
+        "name": "uicnmpymhc",
+        "created_at": "2023-04-01T15:12:34.000Z",
+        "url": "https://greasyfork.org/users/1051538-uicnmpymhc"
+      }
+    ],
+    "name": "Gazelle Artist Navigation Card",
+    "description": "Provide an overview with links on artist pages",
+    "url": "https://greasyfork.org/scripts/497236-gazelle-artist-navigation-card",
+    "code_url": "https://update.greasyfork.org/scripts/497236/Gazelle%20Artist%20Navigation%20Card.user.js",
+    "code_size": 9674,
+    "license": null,
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

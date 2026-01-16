@@ -1,0 +1,34 @@
+{
+  "id": 505144,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-25T14:38:41.000Z",
+  "code_updated_at": "2024-08-27T15:29:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1305083,
+      "name": "111145646584869",
+      "created_at": "2024-05-21T13:25:14.000Z",
+      "url": "https://greasyfork.org/users/1305083-111145646584869",
+      "scripts": []
+    }
+  ],
+  "name": "纠错脚本（自动版带手动按钮）",
+  "description": "在答案页面自动收集需要修正的答案并返回，同时保留手动按钮",
+  "url": "https://greasyfork.org/scripts/505144-%E7%BA%A0%E9%94%99%E8%84%9A%E6%9C%AC-%E8%87%AA%E5%8A%A8%E7%89%88%E5%B8%A6%E6%89%8B%E5%8A%A8%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/505144/%E7%BA%A0%E9%94%99%E8%84%9A%E6%9C%AC%EF%BC%88%E8%87%AA%E5%8A%A8%E7%89%88%E5%B8%A6%E6%89%8B%E5%8A%A8%E6%8C%89%E9%92%AE%EF%BC%89.user.js",
+  "code_size": 2598,
+  "license": null,
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

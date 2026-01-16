@@ -1,0 +1,59 @@
+{
+  "id": 505350,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-27T01:17:31.000Z",
+  "code_updated_at": "2024-08-27T01:17:30.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 973369,
+      "name": "coldarra",
+      "created_at": "2022-10-21T06:34:43.000Z",
+      "url": "https://greasyfork.org/users/973369-coldarra",
+      "scripts": [
+        {
+          "id": 472879,
+          "daily_installs": 3,
+          "total_installs": 6501,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-08-11T03:49:54.000Z",
+          "code_updated_at": "2023-12-18T03:43:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "视频加速",
+          "description": "网页内视频内容加速播放。使用方法：右键-Tampermonkey-视频加速-点击修改",
+          "url": "https://greasyfork.org/scripts/472879-%E8%A7%86%E9%A2%91%E5%8A%A0%E9%80%9F",
+          "code_url": "https://update.greasyfork.org/scripts/472879/%E8%A7%86%E9%A2%91%E5%8A%A0%E9%80%9F.user.js",
+          "code_size": 4139,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bootstrap.js 5.2.3",
+  "description": "https://cdn.bootcdn.net/ajax/libs/bootstrap/5.2.3/js/bootstrap.js",
+  "url": "https://greasyfork.org/scripts/505350-bootstrap-js-5-2-3",
+  "code_url": "https://update.greasyfork.org/scripts/505350/1435418/bootstrapjs%20523.js",
+  "code_size": 145543,
+  "license": null,
+  "version": "0.0.1.20240827011730",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

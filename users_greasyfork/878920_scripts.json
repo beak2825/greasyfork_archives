@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535181,
+    "daily_installs": 1,
+    "total_installs": 777,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-07T02:42:03.000Z",
+    "code_updated_at": "2025-11-06T06:49:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 878920,
+        "name": "Artintel (Artintel)",
+        "created_at": "2022-02-21T09:32:34.000Z",
+        "url": "https://greasyfork.org/users/878920-artintel-artintel"
+      }
+    ],
+    "name": "MWI-Hit-Tracker",
+    "description": "战斗过程中实时显示攻击/治疗命中目标",
+    "url": "https://greasyfork.org/scripts/535181-mwi-hit-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/535181/MWI-Hit-Tracker.user.js",
+    "code_size": 41558,
+    "license": "MIT License",
+    "version": "1.2.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

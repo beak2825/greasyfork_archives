@@ -31,5 +31,137 @@
     "locale": "ko",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 524379,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-21T08:05:19.000Z",
+    "code_updated_at": "2025-01-21T08:05:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406703,
+        "name": "떱_",
+        "created_at": "2024-12-05T00:57:57.000Z",
+        "url": "https://greasyfork.org/users/1406703-%EB%96%B1"
+      }
+    ],
+    "name": "ZOD.KR 핫딜게시판 리스트 가독성 개선",
+    "description": "핫딜게시판(https://zod.kr/deal) 목록에서 제목을 최대 2줄까지 표시(...), 댓글수 영역 고정 크기 유지",
+    "url": "https://greasyfork.org/scripts/524379-zod-kr-%ED%95%AB%EB%94%9C%EA%B2%8C%EC%8B%9C%ED%8C%90-%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EA%B0%80%EB%8F%85%EC%84%B1-%EA%B0%9C%EC%84%A0",
+    "code_url": "https://update.greasyfork.org/scripts/524379/ZODKR%20%ED%95%AB%EB%94%9C%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A6%AC%EC%8A%A4%ED%8A%B8%20%EA%B0%80%EB%8F%85%EC%84%B1%20%EA%B0%9C%EC%84%A0.user.js",
+    "code_size": 9653,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523807,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-15T04:27:13.000Z",
+    "code_updated_at": "2025-01-15T04:27:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406703,
+        "name": "떱_",
+        "created_at": "2024-12-05T00:57:57.000Z",
+        "url": "https://greasyfork.org/users/1406703-%EB%96%B1"
+      }
+    ],
+    "name": "Shift+Wheel to Swiper Bullet for ZOD.kr",
+    "description": "Shift + 마우스휠로 Swiper 페이지 이동",
+    "url": "https://greasyfork.org/scripts/523807-shift-wheel-to-swiper-bullet-for-zod-kr",
+    "code_url": "https://update.greasyfork.org/scripts/523807/Shift%2BWheel%20to%20Swiper%20Bullet%20for%20ZODkr.user.js",
+    "code_size": 3048,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521859,
+    "daily_installs": 0,
+    "total_installs": 90,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-26T12:04:21.000Z",
+    "code_updated_at": "2024-12-26T12:04:21.000Z",
+    "namespace": "https://chzzk.naver.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406703,
+        "name": "떱_",
+        "created_at": "2024-12-05T00:57:57.000Z",
+        "url": "https://greasyfork.org/users/1406703-%EB%96%B1"
+      }
+    ],
+    "name": "CHZZK.Naver.com 해상도 설정 버튼 추가",
+    "description": "채널 이동 시 자동 버튼 생성, 해상도 메뉴가 자동으로 닫히도록 개선",
+    "url": "https://greasyfork.org/scripts/521859-chzzk-naver-com-%ED%95%B4%EC%83%81%EB%8F%84-%EC%84%A4%EC%A0%95-%EB%B2%84%ED%8A%BC-%EC%B6%94%EA%B0%80",
+    "code_url": "https://update.greasyfork.org/scripts/521859/CHZZKNavercom%20%ED%95%B4%EC%83%81%EB%8F%84%20%EC%84%A4%EC%A0%95%20%EB%B2%84%ED%8A%BC%20%EC%B6%94%EA%B0%80.user.js",
+    "code_size": 4559,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521271,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-20T06:44:28.000Z",
+    "code_updated_at": "2025-01-21T08:18:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406703,
+        "name": "떱_",
+        "created_at": "2024-12-05T00:57:57.000Z",
+        "url": "https://greasyfork.org/users/1406703-%EB%96%B1"
+      }
+    ],
+    "name": "ZOD.KR 뉴스게시판 리스트 가독성 개선",
+    "description": "뉴스게시판에서 댓글이 0개여도 레이아웃이 달라지지 않고, 썸네일 높이에 맞춰 상단(제목)과 하단(메타) 정렬",
+    "url": "https://greasyfork.org/scripts/521271-zod-kr-%EB%89%B4%EC%8A%A4%EA%B2%8C%EC%8B%9C%ED%8C%90-%EB%A6%AC%EC%8A%A4%ED%8A%B8-%EA%B0%80%EB%8F%85%EC%84%B1-%EA%B0%9C%EC%84%A0",
+    "code_url": "https://update.greasyfork.org/scripts/521271/ZODKR%20%EB%89%B4%EC%8A%A4%EA%B2%8C%EC%8B%9C%ED%8C%90%20%EB%A6%AC%EC%8A%A4%ED%8A%B8%20%EA%B0%80%EB%8F%85%EC%84%B1%20%EA%B0%9C%EC%84%A0.user.js",
+    "code_size": 6627,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

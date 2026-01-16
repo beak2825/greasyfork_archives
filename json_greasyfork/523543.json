@@ -1,0 +1,59 @@
+{
+  "id": 523543,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-12T12:59:50.000Z",
+  "code_updated_at": "2025-01-12T12:59:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1422441,
+      "name": "Justitia",
+      "created_at": "2025-01-12T12:53:42.000Z",
+      "url": "https://greasyfork.org/users/1422441-justitia",
+      "scripts": [
+        {
+          "id": 523543,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-12T12:59:50.000Z",
+          "code_updated_at": "2025-01-12T12:59:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bangumi哀悼模式",
+          "description": "为Bangumi启用哀悼模式",
+          "url": "https://greasyfork.org/scripts/523543-bangumi%E5%93%80%E6%82%BC%E6%A8%A1%E5%BC%8F",
+          "code_url": "https://update.greasyfork.org/scripts/523543/Bangumi%E5%93%80%E6%82%BC%E6%A8%A1%E5%BC%8F.user.js",
+          "code_size": 1459,
+          "license": "MIT License",
+          "version": "2025-01-09",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bangumi哀悼模式",
+  "description": "为Bangumi启用哀悼模式",
+  "url": "https://greasyfork.org/scripts/523543-bangumi%E5%93%80%E6%82%BC%E6%A8%A1%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/523543/Bangumi%E5%93%80%E6%82%BC%E6%A8%A1%E5%BC%8F.user.js",
+  "code_size": 1459,
+  "license": "MIT License",
+  "version": "2025-01-09",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 531504,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-01T13:18:54.000Z",
+  "code_updated_at": "2025-04-26T18:56:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1452832,
+      "name": "bingbong",
+      "created_at": "2025-04-01T13:16:32.000Z",
+      "url": "https://greasyfork.org/users/1452832-bingbong",
+      "scripts": []
+    }
+  ],
+  "name": "MWI calculator automate thing",
+  "description": "dont install this",
+  "url": "https://greasyfork.org/scripts/531504-mwi-calculator-automate-thing",
+  "code_url": "https://update.greasyfork.org/scripts/531504/MWI%20calculator%20automate%20thing.user.js",
+  "code_size": 33817,
+  "license": "i dont care",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 515068,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-31T15:47:12.000Z",
+    "code_updated_at": "2024-10-31T16:26:40.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389026,
+        "name": "JonFox",
+        "created_at": "2024-10-31T09:10:23.000Z",
+        "url": "https://greasyfork.org/users/1389026-jonfox"
+      }
+    ],
+    "name": "Fixit Menu Manga's",
+    "description": "Сдвигает меню в лево - Правильное расположение меню. И главное теперь не налезает на картинку.",
+    "url": "https://greasyfork.org/scripts/515068-fixit-menu-manga-s",
+    "code_url": "https://update.greasyfork.org/scripts/515068/Fixit%20Menu%20Manga%27s.user.js",
+    "code_size": 1338,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515019,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-31T09:25:48.000Z",
+    "code_updated_at": "2024-11-01T14:22:08.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389026,
+        "name": "JonFox",
+        "created_at": "2024-10-31T09:10:23.000Z",
+        "url": "https://greasyfork.org/users/1389026-jonfox"
+      }
+    ],
+    "name": "YouTube Speed Booster х2 on/off",
+    "description": "Добавляет кнопку изменения скорости на YouTube возле Аккаунта.",
+    "url": "https://greasyfork.org/scripts/515019-youtube-speed-booster-%D1%852-on-off",
+    "code_url": "https://update.greasyfork.org/scripts/515019/YouTube%20Speed%20Booster%20%D1%852%20onoff.user.js",
+    "code_size": 4251,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

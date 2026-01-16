@@ -1,0 +1,33 @@
+{
+  "id": 549287,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-12T16:55:31.000Z",
+  "code_updated_at": "2025-11-13T02:42:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514317,
+      "name": "CrystallizedV",
+      "created_at": "2025-09-12T15:13:50.000Z",
+      "url": "https://greasyfork.org/users/1514317-crystallizedv"
+    }
+  ],
+  "name": "CRYSTAL'S PAWS OC Highlighter",
+  "description": "Highlights empty OC roles; shows pass/fail badges",
+  "url": "https://greasyfork.org/scripts/549287-crystal-s-paws-oc-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/549287/CRYSTAL%27S%20PAWS%20OC%20Highlighter.user.js",
+  "code_size": 34423,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

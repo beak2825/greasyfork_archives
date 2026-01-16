@@ -1,0 +1,134 @@
+[
+  {
+    "id": 533200,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T05:11:23.000Z",
+    "code_updated_at": "2025-04-18T05:11:22.000Z",
+    "namespace": "http://anthonywong.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395681,
+        "name": "anthonywong",
+        "created_at": "2024-11-13T15:01:52.000Z",
+        "url": "https://greasyfork.org/users/1395681-anthonywong"
+      }
+    ],
+    "name": "Open Launchpad Kernel SRU Verification Bugs",
+    "description": "Adds a button to open verification bugs in new windows on Launchpad bug pages, excluding the current bug ID",
+    "url": "https://greasyfork.org/scripts/533200-open-launchpad-kernel-sru-verification-bugs",
+    "code_url": "https://update.greasyfork.org/scripts/533200/Open%20Launchpad%20Kernel%20SRU%20Verification%20Bugs.user.js",
+    "code_size": 6602,
+    "license": "GPLv2",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533120,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T11:43:51.000Z",
+    "code_updated_at": "2025-04-17T11:43:51.000Z",
+    "namespace": "http://anthonywong.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395681,
+        "name": "anthonywong",
+        "created_at": "2024-11-13T15:01:52.000Z",
+        "url": "https://greasyfork.org/users/1395681-anthonywong"
+      }
+    ],
+    "name": "Generate Launchpad Bug Links from tags",
+    "description": "Parse tags, create buttons for originate-from bug links and JIRA links",
+    "url": "https://greasyfork.org/scripts/533120-generate-launchpad-bug-links-from-tags",
+    "code_url": "https://update.greasyfork.org/scripts/533120/Generate%20Launchpad%20Bug%20Links%20from%20tags.user.js",
+    "code_size": 2893,
+    "license": "GPLv2",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530552,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-22T16:06:10.000Z",
+    "code_updated_at": "2025-03-22T16:06:10.000Z",
+    "namespace": "http://anthonywong.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395681,
+        "name": "anthonywong",
+        "created_at": "2024-11-13T15:01:52.000Z",
+        "url": "https://greasyfork.org/users/1395681-anthonywong"
+      }
+    ],
+    "name": "Show Number of Days instead of dots in Jira tickets",
+    "description": "Replace Jira \"Days in Column\" dots with exact numbers",
+    "url": "https://greasyfork.org/scripts/530552-show-number-of-days-instead-of-dots-in-jira-tickets",
+    "code_url": "https://update.greasyfork.org/scripts/530552/Show%20Number%20of%20Days%20instead%20of%20dots%20in%20Jira%20tickets.user.js",
+    "code_size": 2647,
+    "license": "GPLv2",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517180,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-13T15:12:42.000Z",
+    "code_updated_at": "2025-03-22T16:01:02.000Z",
+    "namespace": "http://anthonywong.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395681,
+        "name": "anthonywong",
+        "created_at": "2024-11-13T15:01:52.000Z",
+        "url": "https://greasyfork.org/users/1395681-anthonywong"
+      }
+    ],
+    "name": "Highlight differences in Launchpad bug history",
+    "description": "Highlights differences between two columns in the Launchpad bug activity log",
+    "url": "https://greasyfork.org/scripts/517180-highlight-differences-in-launchpad-bug-history",
+    "code_url": "https://update.greasyfork.org/scripts/517180/Highlight%20differences%20in%20Launchpad%20bug%20history.user.js",
+    "code_size": 2225,
+    "license": "GPLv2",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

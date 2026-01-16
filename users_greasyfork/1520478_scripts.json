@@ -34,8 +34,8 @@
   },
   {
     "id": 552300,
-    "daily_installs": 0,
-    "total_installs": 22,
+    "daily_installs": 1,
+    "total_installs": 23,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -62,6 +62,72 @@
     "license": "MIT License",
     "version": "0.4",
     "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551093,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-30T00:23:45.000Z",
+    "code_updated_at": "2025-09-30T00:23:45.000Z",
+    "namespace": "MZTools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520478,
+        "name": "Emanuel Neves",
+        "created_at": "2025-09-28T21:40:59.000Z",
+        "url": "https://greasyfork.org/users/1520478-emanuel-neves"
+      }
+    ],
+    "name": "MZ - Exportar Transferências (CSV)",
+    "description": "Exporta jogadores no mercado (todas as páginas) em CSV com atributos e metadados. Robusto a temas/idiomas, ignora Forma.",
+    "url": "https://greasyfork.org/scripts/551093-mz-exportar-transfer%C3%AAncias-csv",
+    "code_url": "https://update.greasyfork.org/scripts/551093/MZ%20-%20Exportar%20Transfer%C3%AAncias%20%28CSV%29.user.js",
+    "code_size": 19187,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550999,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-28T21:45:17.000Z",
+    "code_updated_at": "2025-09-28T21:48:43.000Z",
+    "namespace": "https://greasyfork.org/users/1520478-emanuel-neves   // troque pelo seu ID no GreasyFork",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520478,
+        "name": "Emanuel Neves",
+        "created_at": "2025-09-28T21:40:59.000Z",
+        "url": "https://greasyfork.org/users/1520478-emanuel-neves"
+      }
+    ],
+    "name": "ManagerZone - Treino % na Tabela",
+    "description": "Exibe, em cada atributo do jogador, a porcentagem estimada até o próximo ganho de ponto (bolinha). A informação é mostrada em uma coluna extra, no final da linha da tabela de habilidades, com destaque por cores de acordo com a faixa de progresso. Script baseado em: van.mz.playerAdvanced",
+    "url": "https://greasyfork.org/scripts/550999-managerzone-treino-na-tabela",
+    "code_url": "https://update.greasyfork.org/scripts/550999/ManagerZone%20-%20Treino%20%25%20na%20Tabela.user.js",
+    "code_size": 9971,
+    "license": "MIT License",
+    "version": "0.0.6",
+    "locale": "pt",
     "deleted": false,
     "visibility": "public"
   }

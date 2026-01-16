@@ -1,0 +1,59 @@
+{
+  "id": 546025,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-16T03:02:08.000Z",
+  "code_updated_at": "2025-08-30T12:11:35.000Z",
+  "namespace": "https://github.com/quan-ge/vercel-chinese-pro",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502808,
+      "name": "quan-ge",
+      "created_at": "2025-08-08T10:15:28.000Z",
+      "url": "https://greasyfork.org/users/1502808-quan-ge",
+      "scripts": [
+        {
+          "id": 546025,
+          "daily_installs": 0,
+          "total_installs": 34,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-16T03:02:08.000Z",
+          "code_updated_at": "2025-08-30T12:11:35.000Z",
+          "namespace": "https://github.com/quan-ge/vercel-chinese-pro",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Vercel 汉化 PRO",
+          "description": "汉化 Vercel 界面",
+          "url": "https://greasyfork.org/scripts/546025-vercel-%E6%B1%89%E5%8C%96-pro",
+          "code_url": "https://update.greasyfork.org/scripts/546025/Vercel%20Chinese%20PRO.user.js",
+          "code_size": 62491,
+          "license": "GNU General Public License v3.0 only",
+          "version": "0.3.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Vercel 汉化 PRO",
+  "description": "汉化 Vercel 界面",
+  "url": "https://greasyfork.org/scripts/546025-vercel-%E6%B1%89%E5%8C%96-pro",
+  "code_url": "https://update.greasyfork.org/scripts/546025/Vercel%20Chinese%20PRO.user.js",
+  "code_size": 62491,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.3.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

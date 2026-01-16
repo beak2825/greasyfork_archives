@@ -1,0 +1,33 @@
+{
+  "id": 542540,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-14T10:47:29.000Z",
+  "code_updated_at": "2026-01-07T11:27:11.000Z",
+  "namespace": "https://bsky.app/profile/neon-ai.art",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1494762,
+      "name": "ねおん",
+      "created_at": "2025-07-14T09:29:11.000Z",
+      "url": "https://greasyfork.org/users/1494762-%E3%81%AD%E3%81%8A%E3%82%93"
+    }
+  ],
+  "name": "Auto Tags Filler for chichi-pui & iromirai",
+  "description": "Auto-fills tags for chichi-pui & iromirai.",
+  "url": "https://greasyfork.org/scripts/542540-auto-tags-filler-for-chichi-pui-iromirai",
+  "code_url": "https://update.greasyfork.org/scripts/542540/Auto%20Tags%20Filler%20for%20chichi-pui%20%20iromirai.user.js",
+  "code_size": 42707,
+  "license": "CC BY-NC 4.0",
+  "version": "7.3",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

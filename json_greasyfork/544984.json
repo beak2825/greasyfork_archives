@@ -1,0 +1,33 @@
+{
+  "id": 544984,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-08T02:25:32.000Z",
+  "code_updated_at": "2025-08-08T02:25:31.000Z",
+  "namespace": "muhammad.imdb.bulk.rate",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502674,
+      "name": "Muhammad Osman",
+      "created_at": "2025-08-08T02:20:54.000Z",
+      "url": "https://greasyfork.org/users/1502674-muhammad-osman"
+    }
+  ],
+  "name": "IMDb: Bulk Rate Episodes (custom rating + auto-load)",
+  "description": "Type any rating (1–10) and apply to all episodes on the page. Optional auto-scroll loads the whole season first.",
+  "url": "https://greasyfork.org/scripts/544984-imdb-bulk-rate-episodes-custom-rating-auto-load",
+  "code_url": "https://update.greasyfork.org/scripts/544984/IMDb%3A%20Bulk%20Rate%20Episodes%20%28custom%20rating%20%2B%20auto-load%29.user.js",
+  "code_size": 10277,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

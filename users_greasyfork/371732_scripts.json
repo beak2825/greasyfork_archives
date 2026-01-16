@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503259,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-11T03:25:54.000Z",
+    "code_updated_at": "2024-08-11T03:25:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 371732,
+        "name": "Peace Love",
+        "created_at": "2019-09-16T01:55:10.000Z",
+        "url": "https://greasyfork.org/users/371732-peace-love"
+      }
+    ],
+    "name": "Coursera Custom Subtitles with Video and Mouse Control",
+    "description": "Customize subtitles on Coursera videos with line breaks and video control shortcuts (command+left/right for rewind/forward 5 seconds, command+up/down for speed control, space for play/pause, mouse buttons for control)",
+    "url": "https://greasyfork.org/scripts/503259-coursera-custom-subtitles-with-video-and-mouse-control",
+    "code_url": "https://update.greasyfork.org/scripts/503259/Coursera%20Custom%20Subtitles%20with%20Video%20and%20Mouse%20Control.user.js",
+    "code_size": 6971,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

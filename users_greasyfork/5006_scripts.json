@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539256,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T05:21:44.000Z",
+    "code_updated_at": "2025-06-13T05:25:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5006,
+        "name": "ccms",
+        "created_at": "2014-09-04T06:21:26.000Z",
+        "url": "https://greasyfork.org/users/5006-ccms"
+      }
+    ],
+    "name": "jlgbjy-helper",
+    "description": "make your life easier",
+    "url": "https://greasyfork.org/scripts/539256-jlgbjy-helper",
+    "code_url": "https://update.greasyfork.org/scripts/539256/jlgbjy-helper.user.js",
+    "code_size": 3715,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

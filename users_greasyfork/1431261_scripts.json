@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525857,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-04T11:13:01.000Z",
+    "code_updated_at": "2025-12-28T10:06:44.000Z",
+    "namespace": "https://www.gamemale.com/space-uid-679233.html",
+    "support_url": "https://www.gamemale.com/thread-144398-1-1.html",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431261,
+        "name": "immtazh",
+        "created_at": "2025-02-04T09:00:22.000Z",
+        "url": "https://greasyfork.org/users/1431261-immtazh"
+      }
+    ],
+    "name": "博物馆传送门",
+    "description": "Click to jump!",
+    "url": "https://greasyfork.org/scripts/525857-%E5%8D%9A%E7%89%A9%E9%A6%86%E4%BC%A0%E9%80%81%E9%97%A8",
+    "code_url": "https://update.greasyfork.org/scripts/525857/%E5%8D%9A%E7%89%A9%E9%A6%86%E4%BC%A0%E9%80%81%E9%97%A8.user.js",
+    "code_size": 59798,
+    "license": "GPL",
+    "version": "2025.12.28",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

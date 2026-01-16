@@ -1,0 +1,34 @@
+{
+  "id": 523726,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-14T05:14:28.000Z",
+  "code_updated_at": "2025-01-14T05:20:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1423067,
+      "name": "XWang20",
+      "created_at": "2025-01-14T05:06:59.000Z",
+      "url": "https://greasyfork.org/users/1423067-xwang20",
+      "scripts": []
+    }
+  ],
+  "name": "TFT Chinese Translation Helper",
+  "description": "Replace TFT terms with translations using advanced DOM traversal",
+  "url": "https://greasyfork.org/scripts/523726-tft-chinese-translation-helper",
+  "code_url": "https://update.greasyfork.org/scripts/523726/TFT%20Chinese%20Translation%20Helper.user.js",
+  "code_size": 38048,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

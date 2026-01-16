@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538419,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-05T11:07:06.000Z",
+    "code_updated_at": "2025-10-01T05:13:02.000Z",
+    "namespace": "dedeman",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 226933,
+        "name": "Dragoș Nechita",
+        "created_at": "2018-11-19T12:49:33.000Z",
+        "url": "https://greasyfork.org/users/226933-drago%C8%99-nechita"
+      }
+    ],
+    "name": "Magento 2 frontend for ME",
+    "description": "cautare id produs si accesare pagina de editare",
+    "url": "https://greasyfork.org/scripts/538419-magento-2-frontend-for-me",
+    "code_url": "https://update.greasyfork.org/scripts/538419/Magento%202%20frontend%20for%20ME.user.js",
+    "code_size": 71993,
+    "license": null,
+    "version": "1.5",
+    "locale": "ro",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

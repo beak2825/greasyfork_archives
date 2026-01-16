@@ -1,0 +1,34 @@
+{
+  "id": 528256,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-27T14:32:11.000Z",
+  "code_updated_at": "2025-04-29T11:54:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1359352,
+      "name": "Vladyslav Svitlyi",
+      "created_at": "2024-08-28T14:00:42.000Z",
+      "url": "https://greasyfork.org/users/1359352-vladyslav-svitlyi",
+      "scripts": []
+    }
+  ],
+  "name": "Zendesk Chat Timer PDFAid",
+  "description": "Timer for Zendesk chats with color indicator and inactivity warning",
+  "url": "https://greasyfork.org/scripts/528256-zendesk-chat-timer-pdfaid",
+  "code_url": "https://update.greasyfork.org/scripts/528256/Zendesk%20Chat%20Timer%20PDFAid.user.js",
+  "code_size": 7293,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

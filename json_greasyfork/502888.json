@@ -1,0 +1,59 @@
+{
+  "id": 502888,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-07T17:01:57.000Z",
+  "code_updated_at": "2024-08-09T18:24:55.000Z",
+  "namespace": "https://www.elevenwarriors.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1347218,
+      "name": "Domenic Matesic",
+      "created_at": "2024-08-07T16:04:10.000Z",
+      "url": "https://greasyfork.org/users/1347218-domenic-matesic",
+      "scripts": [
+        {
+          "id": 502888,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-07T17:01:57.000Z",
+          "code_updated_at": "2024-08-09T18:24:55.000Z",
+          "namespace": "https://www.elevenwarriors.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Eleven Warriors Comment Highlighter",
+          "description": "Highlight comments on Eleven Warriors Forum",
+          "url": "https://greasyfork.org/scripts/502888-eleven-warriors-comment-highlighter",
+          "code_url": "https://update.greasyfork.org/scripts/502888/Eleven%20Warriors%20Comment%20Highlighter.user.js",
+          "code_size": 2063,
+          "license": "MIT License",
+          "version": "2024-08-09",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Eleven Warriors Comment Highlighter",
+  "description": "Highlight comments on Eleven Warriors Forum",
+  "url": "https://greasyfork.org/scripts/502888-eleven-warriors-comment-highlighter",
+  "code_url": "https://update.greasyfork.org/scripts/502888/Eleven%20Warriors%20Comment%20Highlighter.user.js",
+  "code_size": 2063,
+  "license": "MIT License",
+  "version": "2024-08-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

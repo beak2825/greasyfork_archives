@@ -1,0 +1,59 @@
+{
+  "id": 533103,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-17T08:26:46.000Z",
+  "code_updated_at": "2025-04-17T08:26:46.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1458898-foxxoccino",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458898,
+      "name": "Foxxoccino",
+      "created_at": "2025-04-17T08:20:10.000Z",
+      "url": "https://greasyfork.org/users/1458898-foxxoccino",
+      "scripts": [
+        {
+          "id": 533103,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-17T08:26:46.000Z",
+          "code_updated_at": "2025-04-17T08:26:46.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1458898-foxxoccino",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Modify Copied Twitter/X Links to fixupx.com",
+          "description": "Modify copied twitter.com/x.com links to fixupx.com",
+          "url": "https://greasyfork.org/scripts/533103-modify-copied-twitter-x-links-to-fixupx-com",
+          "code_url": "https://update.greasyfork.org/scripts/533103/Modify%20Copied%20TwitterX%20Links%20to%20fixupxcom.user.js",
+          "code_size": 1093,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Modify Copied Twitter/X Links to fixupx.com",
+  "description": "Modify copied twitter.com/x.com links to fixupx.com",
+  "url": "https://greasyfork.org/scripts/533103-modify-copied-twitter-x-links-to-fixupx-com",
+  "code_url": "https://update.greasyfork.org/scripts/533103/Modify%20Copied%20TwitterX%20Links%20to%20fixupxcom.user.js",
+  "code_size": 1093,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

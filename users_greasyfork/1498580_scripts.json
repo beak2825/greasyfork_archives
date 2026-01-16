@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543714,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T15:52:19.000Z",
+    "code_updated_at": "2025-07-26T15:52:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498580,
+        "name": "マリポーサマリポーサ",
+        "created_at": "2025-07-26T15:48:45.000Z",
+        "url": "https://greasyfork.org/users/1498580-%E3%83%9E%E3%83%AA%E3%83%9D%E3%83%BC%E3%82%B5%E3%83%9E%E3%83%AA%E3%83%9D%E3%83%BC%E3%82%B5"
+      }
+    ],
+    "name": "カクヨム平均スコア表示（数値だけ色と太字・精密比較）",
+    "description": "平均スコアの数値のみ色分け（2.80・2.90含め正確に対応）",
+    "url": "https://greasyfork.org/scripts/543714-%E3%82%AB%E3%82%AF%E3%83%A8%E3%83%A0%E5%B9%B3%E5%9D%87%E3%82%B9%E3%82%B3%E3%82%A2%E8%A1%A8%E7%A4%BA-%E6%95%B0%E5%80%A4%E3%81%A0%E3%81%91%E8%89%B2%E3%81%A8%E5%A4%AA%E5%AD%97-%E7%B2%BE%E5%AF%86%E6%AF%94%E8%BC%83",
+    "code_url": "https://update.greasyfork.org/scripts/543714/%E3%82%AB%E3%82%AF%E3%83%A8%E3%83%A0%E5%B9%B3%E5%9D%87%E3%82%B9%E3%82%B3%E3%82%A2%E8%A1%A8%E7%A4%BA%EF%BC%88%E6%95%B0%E5%80%A4%E3%81%A0%E3%81%91%E8%89%B2%E3%81%A8%E5%A4%AA%E5%AD%97%E3%83%BB%E7%B2%BE%E5%AF%86%E6%AF%94%E8%BC%83%EF%BC%89.user.js",
+    "code_size": 3311,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

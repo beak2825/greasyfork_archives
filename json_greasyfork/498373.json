@@ -1,0 +1,34 @@
+{
+  "id": 498373,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-19T17:08:16.000Z",
+  "code_updated_at": "2024-06-26T19:15:12.000Z",
+  "namespace": "http://roblox.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320710,
+      "name": "tresk",
+      "created_at": "2024-06-19T17:03:45.000Z",
+      "url": "https://greasyfork.org/users/1320710-tresk",
+      "scripts": []
+    }
+  ],
+  "name": "Bypass Roblox TOS agreement",
+  "description": "Remove Roblox TOS Agreement dialog",
+  "url": "https://greasyfork.org/scripts/498373-bypass-roblox-tos-agreement",
+  "code_url": "https://update.greasyfork.org/scripts/498373/Bypass%20Roblox%20TOS%20agreement.user.js",
+  "code_size": 999,
+  "license": "MIT License",
+  "version": "1.02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

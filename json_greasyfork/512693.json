@@ -1,0 +1,34 @@
+{
+  "id": 512693,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-15T06:11:50.000Z",
+  "code_updated_at": "2024-10-15T06:36:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1299046,
+      "name": "lewin_GF",
+      "created_at": "2024-05-09T15:30:49.000Z",
+      "url": "https://greasyfork.org/users/1299046-lewin-gf",
+      "scripts": []
+    }
+  ],
+  "name": "通用视频信息显示3.0",
+  "description": "显示任意网页中的视频分辨率、播放时间等信息",
+  "url": "https://greasyfork.org/scripts/512693-%E9%80%9A%E7%94%A8%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF%E6%98%BE%E7%A4%BA3-0",
+  "code_url": "https://update.greasyfork.org/scripts/512693/%E9%80%9A%E7%94%A8%E8%A7%86%E9%A2%91%E4%BF%A1%E6%81%AF%E6%98%BE%E7%A4%BA30.user.js",
+  "code_size": 2369,
+  "license": null,
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

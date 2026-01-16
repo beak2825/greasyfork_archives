@@ -1,0 +1,34 @@
+{
+  "id": 510572,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-28T09:34:29.000Z",
+  "code_updated_at": "2024-10-10T06:58:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 880743,
+      "name": "cyek",
+      "created_at": "2022-02-26T09:33:54.000Z",
+      "url": "https://greasyfork.org/users/880743-cyek",
+      "scripts": []
+    }
+  ],
+  "name": "商品视频采集",
+  "description": "\"商品视频采集\"",
+  "url": "https://greasyfork.org/scripts/510572-%E5%95%86%E5%93%81%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86",
+  "code_url": "https://update.greasyfork.org/scripts/510572/%E5%95%86%E5%93%81%E8%A7%86%E9%A2%91%E9%87%87%E9%9B%86.user.js",
+  "code_size": 44780,
+  "license": "End-User License Agreement",
+  "version": "1.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

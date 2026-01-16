@@ -1,0 +1,59 @@
+{
+  "id": 535351,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T13:13:26.000Z",
+  "code_updated_at": "2025-07-26T15:57:33.000Z",
+  "namespace": "https://github.com/rpdl-net/userscripts/",
+  "support_url": "https://github.com/rpdl-net/userscripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1204084,
+      "name": "k968254q",
+      "created_at": "2023-10-25T20:16:21.000Z",
+      "url": "https://greasyfork.org/users/1204084-k968254q",
+      "scripts": [
+        {
+          "id": 535351,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-08T13:13:26.000Z",
+          "code_updated_at": "2025-07-26T15:57:33.000Z",
+          "namespace": "https://github.com/rpdl-net/userscripts/",
+          "support_url": "https://github.com/rpdl-net/userscripts/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RPDL Uploader Enhancements",
+          "description": "Provides various enhancements to uploading workflow.",
+          "url": "https://greasyfork.org/scripts/535351-rpdl-uploader-enhancements",
+          "code_url": "https://update.greasyfork.org/scripts/535351/RPDL%20Uploader%20Enhancements.user.js",
+          "code_size": 16479,
+          "license": null,
+          "version": "1.4-alpha.10",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RPDL Uploader Enhancements",
+  "description": "Provides various enhancements to uploading workflow.",
+  "url": "https://greasyfork.org/scripts/535351-rpdl-uploader-enhancements",
+  "code_url": "https://update.greasyfork.org/scripts/535351/RPDL%20Uploader%20Enhancements.user.js",
+  "code_size": 16479,
+  "license": null,
+  "version": "1.4-alpha.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

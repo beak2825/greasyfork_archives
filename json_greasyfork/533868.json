@@ -1,0 +1,59 @@
+{
+  "id": 533868,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-24T20:36:32.000Z",
+  "code_updated_at": "2025-04-24T20:36:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461817,
+      "name": "Me1anty",
+      "created_at": "2025-04-24T20:35:27.000Z",
+      "url": "https://greasyfork.org/users/1461817-me1anty",
+      "scripts": [
+        {
+          "id": 533868,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-24T20:36:32.000Z",
+          "code_updated_at": "2025-04-24T20:36:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PreviewCart",
+          "description": "предпросмотр корзины",
+          "url": "https://greasyfork.org/scripts/533868-previewcart",
+          "code_url": "https://update.greasyfork.org/scripts/533868/PreviewCart.user.js",
+          "code_size": 24787,
+          "license": "DDM",
+          "version": "1.5",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PreviewCart",
+  "description": "предпросмотр корзины",
+  "url": "https://greasyfork.org/scripts/533868-previewcart",
+  "code_url": "https://update.greasyfork.org/scripts/533868/PreviewCart.user.js",
+  "code_size": 24787,
+  "license": "DDM",
+  "version": "1.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

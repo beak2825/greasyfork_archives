@@ -1,0 +1,34 @@
+{
+  "id": 533787,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-24T02:53:12.000Z",
+  "code_updated_at": "2025-04-24T02:53:12.000Z",
+  "namespace": "https://github.com/你的Github账号",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461511,
+      "name": "hyeri",
+      "created_at": "2025-04-24T02:43:18.000Z",
+      "url": "https://greasyfork.org/users/1461511-hyeri",
+      "scripts": []
+    }
+  ],
+  "name": "广告加速器 & 数据清理（大号悬浮版）",
+  "description": "【强力推荐】自动2倍速跳过广告 + 一键清理数据并刷新，永久免费无广告！",
+  "url": "https://greasyfork.org/scripts/533787-%E5%B9%BF%E5%91%8A%E5%8A%A0%E9%80%9F%E5%99%A8-%E6%95%B0%E6%8D%AE%E6%B8%85%E7%90%86-%E5%A4%A7%E5%8F%B7%E6%82%AC%E6%B5%AE%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/533787/%E5%B9%BF%E5%91%8A%E5%8A%A0%E9%80%9F%E5%99%A8%20%20%E6%95%B0%E6%8D%AE%E6%B8%85%E7%90%86%EF%BC%88%E5%A4%A7%E5%8F%B7%E6%82%AC%E6%B5%AE%E7%89%88%EF%BC%89.user.js",
+  "code_size": 3845,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

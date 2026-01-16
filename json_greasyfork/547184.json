@@ -1,0 +1,34 @@
+{
+  "id": 547184,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-25T02:17:15.000Z",
+  "code_updated_at": "2025-08-25T02:17:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448395,
+      "name": "Smallfireworks",
+      "created_at": "2025-03-21T07:13:27.000Z",
+      "url": "https://greasyfork.org/users/1448395-smallfireworks",
+      "scripts": []
+    }
+  ],
+  "name": "浙江大学转专业申请须知自动关闭",
+  "description": "自动关闭浙江大学教务系统转专业申请页面的\"申请须知\"弹窗，无需等待5秒倒计时",
+  "url": "https://greasyfork.org/scripts/547184-%E6%B5%99%E6%B1%9F%E5%A4%A7%E5%AD%A6%E8%BD%AC%E4%B8%93%E4%B8%9A%E7%94%B3%E8%AF%B7%E9%A1%BB%E7%9F%A5%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD",
+  "code_url": "https://update.greasyfork.org/scripts/547184/%E6%B5%99%E6%B1%9F%E5%A4%A7%E5%AD%A6%E8%BD%AC%E4%B8%93%E4%B8%9A%E7%94%B3%E8%AF%B7%E9%A1%BB%E7%9F%A5%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD.user.js",
+  "code_size": 2599,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

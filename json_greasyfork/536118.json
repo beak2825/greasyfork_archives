@@ -1,0 +1,59 @@
+{
+  "id": 536118,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T19:20:57.000Z",
+  "code_updated_at": "2025-05-15T19:20:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1470477,
+      "name": "XmonkeyXnutsX",
+      "created_at": "2025-05-15T13:23:41.000Z",
+      "url": "https://greasyfork.org/users/1470477-xmonkeyxnutsx",
+      "scripts": [
+        {
+          "id": 536120,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-15T19:26:06.000Z",
+          "code_updated_at": "2025-05-15T19:26:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Farm RPG Auto Fish Confirmation",
+          "description": "Automatically confirms caught fish with randomized delays.",
+          "url": "https://greasyfork.org/scripts/536120-farm-rpg-auto-fish-confirmation",
+          "code_url": "https://update.greasyfork.org/scripts/536120/Farm%20RPG%20Auto%20Fish%20Confirmation.user.js",
+          "code_size": 1029,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Click Moving Blue Ball",
+  "description": "Clicks a moving blue ball when detected on the screen",
+  "url": "https://greasyfork.org/scripts/536118-auto-click-moving-blue-ball",
+  "code_url": "https://update.greasyfork.org/scripts/536118/Auto%20Click%20Moving%20Blue%20Ball.user.js",
+  "code_size": 652,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526389,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-09T13:34:01.000Z",
+    "code_updated_at": "2025-02-09T13:34:00.000Z",
+    "namespace": "https://github.com/llm-sec/deepseek-helper-userscript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 715051,
+        "name": "CC11001100 CC11001100",
+        "created_at": "2020-12-09T15:11:25.000Z",
+        "url": "https://greasyfork.org/users/715051-cc11001100-cc11001100"
+      }
+    ],
+    "name": "deepseek-helper-userscript",
+    "description": "this is userscript's description",
+    "url": "https://greasyfork.org/scripts/526389-deepseek-helper-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/526389/deepseek-helper-userscript.user.js",
+    "code_size": 33507,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

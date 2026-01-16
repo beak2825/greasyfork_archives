@@ -1,0 +1,34 @@
+{
+  "id": 521088,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-18T05:36:41.000Z",
+  "code_updated_at": "2024-12-18T05:36:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1412391,
+      "name": "Maia Hebron",
+      "created_at": "2024-12-18T05:36:00.000Z",
+      "url": "https://greasyfork.org/users/1412391-maia-hebron",
+      "scripts": []
+    }
+  ],
+  "name": "妖火功能增强",
+  "description": "其他人用户操作的管理按钮替换成感谢，对资源帖发送感谢分享；将Enter键替换为快速回复；点击帖子链接时在新窗口打开。",
+  "url": "https://greasyfork.org/scripts/521088-%E5%A6%96%E7%81%AB%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/521088/%E5%A6%96%E7%81%AB%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 4020,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

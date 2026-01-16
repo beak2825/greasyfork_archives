@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531320,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-30T10:31:31.000Z",
+    "code_updated_at": "2025-11-29T06:36:22.000Z",
+    "namespace": "https://github.com/zcteo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451980,
+        "name": "Eric Teo",
+        "created_at": "2025-03-30T09:48:08.000Z",
+        "url": "https://greasyfork.org/users/1451980-eric-teo"
+      }
+    ],
+    "name": "Geely VDI Assistant",
+    "description": "自动填写 Geely VDI 一次性验证码。使用唯一设备密钥加密 TOTP 密钥，并存储在 localStorage, 支持通过菜单重新输入 TOTP 密钥。仅供学习研究使用，作者不对该脚本产生的任何行为负责。",
+    "url": "https://greasyfork.org/scripts/531320-geely-vdi-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/531320/Geely%20VDI%20Assistant.user.js",
+    "code_size": 10284,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

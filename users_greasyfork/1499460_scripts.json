@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543989,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T12:45:35.000Z",
+    "code_updated_at": "2025-07-29T12:45:35.000Z",
+    "namespace": "https://greasyfork.org/users/1499460",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499460,
+        "name": "10CM",
+        "created_at": "2025-07-29T11:28:09.000Z",
+        "url": "https://greasyfork.org/users/1499460-10cm"
+      }
+    ],
+    "name": "谁™取关了我",
+    "description": "一键导出取关你的人。",
+    "url": "https://greasyfork.org/scripts/543989-%E8%B0%81-%E5%8F%96%E5%85%B3%E4%BA%86%E6%88%91",
+    "code_url": "https://update.greasyfork.org/scripts/543989/%E8%B0%81%E2%84%A2%E5%8F%96%E5%85%B3%E4%BA%86%E6%88%91.user.js",
+    "code_size": 4215,
+    "license": null,
+    "version": "250709",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

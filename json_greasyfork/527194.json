@@ -1,0 +1,33 @@
+{
+  "id": 527194,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-17T10:25:04.000Z",
+  "code_updated_at": "2025-02-18T01:33:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1339404,
+      "name": "Wenston W",
+      "created_at": "2024-07-25T02:18:01.000Z",
+      "url": "https://greasyfork.org/users/1339404-wenston-w"
+    }
+  ],
+  "name": "知识星球图片保存（支持原图）",
+  "description": "在知识星球帖子的大图和小图右上角添加保存按钮，优先下载原图，否则下载高质量图片，文件名包含作者、日期和序号。",
+  "url": "https://greasyfork.org/scripts/527194-%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%9B%BE%E7%89%87%E4%BF%9D%E5%AD%98-%E6%94%AF%E6%8C%81%E5%8E%9F%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/527194/%E7%9F%A5%E8%AF%86%E6%98%9F%E7%90%83%E5%9B%BE%E7%89%87%E4%BF%9D%E5%AD%98%EF%BC%88%E6%94%AF%E6%8C%81%E5%8E%9F%E5%9B%BE%EF%BC%89.user.js",
+  "code_size": 11251,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

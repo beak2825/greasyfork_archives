@@ -1,0 +1,59 @@
+{
+  "id": 500417,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-12T09:45:00.000Z",
+  "code_updated_at": "2024-07-13T02:02:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1332200,
+      "name": "p3tr1ck",
+      "created_at": "2024-07-12T08:45:24.000Z",
+      "url": "https://greasyfork.org/users/1332200-p3tr1ck",
+      "scripts": [
+        {
+          "id": 500417,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-12T09:45:00.000Z",
+          "code_updated_at": "2024-07-13T02:02:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "检测图哥防止尴尬-过早客",
+          "description": "访问过早客论坛时，在当前页面中检测图哥是否回帖。自动模糊图哥回复中的图片，并进行提示，防止尴尬。",
+          "url": "https://greasyfork.org/scripts/500417-%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%93%A5%E9%98%B2%E6%AD%A2%E5%B0%B4%E5%B0%AC-%E8%BF%87%E6%97%A9%E5%AE%A2",
+          "code_url": "https://update.greasyfork.org/scripts/500417/%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%93%A5%E9%98%B2%E6%AD%A2%E5%B0%B4%E5%B0%AC-%E8%BF%87%E6%97%A9%E5%AE%A2.user.js",
+          "code_size": 5014,
+          "license": "MIT License",
+          "version": "0.1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "检测图哥防止尴尬-过早客",
+  "description": "访问过早客论坛时，在当前页面中检测图哥是否回帖。自动模糊图哥回复中的图片，并进行提示，防止尴尬。",
+  "url": "https://greasyfork.org/scripts/500417-%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%93%A5%E9%98%B2%E6%AD%A2%E5%B0%B4%E5%B0%AC-%E8%BF%87%E6%97%A9%E5%AE%A2",
+  "code_url": "https://update.greasyfork.org/scripts/500417/%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%93%A5%E9%98%B2%E6%AD%A2%E5%B0%B4%E5%B0%AC-%E8%BF%87%E6%97%A9%E5%AE%A2.user.js",
+  "code_size": 5014,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 502480,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-03T03:04:57.000Z",
+  "code_updated_at": "2025-11-17T01:26:46.000Z",
+  "namespace": "http://your.namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1328246,
+      "name": "X hr",
+      "created_at": "2024-07-04T14:42:31.000Z",
+      "url": "https://greasyfork.org/users/1328246-x-hr"
+    }
+  ],
+  "name": "抖音直播间显示人数",
+  "description": "显示抖音直播间人数 @陈泽开播了吗",
+  "url": "https://greasyfork.org/scripts/502480-%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E9%97%B4%E6%98%BE%E7%A4%BA%E4%BA%BA%E6%95%B0",
+  "code_url": "https://update.greasyfork.org/scripts/502480/%E6%8A%96%E9%9F%B3%E7%9B%B4%E6%92%AD%E9%97%B4%E6%98%BE%E7%A4%BA%E4%BA%BA%E6%95%B0.user.js",
+  "code_size": 4919,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

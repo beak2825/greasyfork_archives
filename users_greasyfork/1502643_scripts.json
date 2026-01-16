@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544970,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-07T22:33:00.000Z",
+    "code_updated_at": "2025-08-07T22:33:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502643,
+        "name": "Owl kay",
+        "created_at": "2025-08-07T22:22:18.000Z",
+        "url": "https://greasyfork.org/users/1502643-owl-kay"
+      }
+    ],
+    "name": "Education Perfect ESL Answer Automator",
+    "description": "Fills ESL answer questions with specific text, marks 4 stars, and clicks \"Got It\" ONLY when the manual trigger button is clicked.",
+    "url": "https://greasyfork.org/scripts/544970-education-perfect-esl-answer-automator",
+    "code_url": "https://update.greasyfork.org/scripts/544970/Education%20Perfect%20ESL%20Answer%20Automator.user.js",
+    "code_size": 12575,
+    "license": "MIT License",
+    "version": "2.1 // Updated textbox selector to target ProseMirror div",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

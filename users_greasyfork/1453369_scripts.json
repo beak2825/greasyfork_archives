@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531640,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-02T22:20:31.000Z",
+    "code_updated_at": "2025-04-02T22:20:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453369,
+        "name": "Flying Poo",
+        "created_at": "2025-04-02T22:17:16.000Z",
+        "url": "https://greasyfork.org/users/1453369-flying-poo"
+      }
+    ],
+    "name": "nxbrew_noads_always_search",
+    "description": "remove ad blocker warning page, ad jump, and make search expand visible",
+    "url": "https://greasyfork.org/scripts/531640-nxbrew-noads-always-search",
+    "code_url": "https://update.greasyfork.org/scripts/531640/nxbrew_noads_always_search.user.js",
+    "code_size": 1349,
+    "license": "MIT License",
+    "version": "20250401",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 538522,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-06T06:50:21.000Z",
+    "code_updated_at": "2025-06-06T10:03:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375620,
+        "name": "Enokawa",
+        "created_at": "2024-10-02T03:50:38.000Z",
+        "url": "https://greasyfork.org/users/1375620-enokawa"
+      }
+    ],
+    "name": "LINE Chat Biz Note Enhancement",
+    "description": "Adds a note-taking feature to LINE Chat Biz, storing data in Google Sheets, with ChatID, auto-header, caching, and icon fix.",
+    "url": "https://greasyfork.org/scripts/538522-line-chat-biz-note-enhancement",
+    "code_url": "https://update.greasyfork.org/scripts/538522/LINE%20Chat%20Biz%20Note%20Enhancement.user.js",
+    "code_size": 40162,
+    "license": null,
+    "version": "1.5 // バージョンを更新",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511653,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-06T07:40:04.000Z",
+    "code_updated_at": "2024-10-06T07:40:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375620,
+        "name": "Enokawa",
+        "created_at": "2024-10-02T03:50:38.000Z",
+        "url": "https://greasyfork.org/users/1375620-enokawa"
+      }
+    ],
+    "name": "配送STOPボタンスクリプト",
+    "description": "Add a new \"配送STOP\" button next to the \"保存\" button and toggle input value on click",
+    "url": "https://greasyfork.org/scripts/511653-%E9%85%8D%E9%80%81stop%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/511653/%E9%85%8D%E9%80%81STOP%E3%83%9C%E3%82%BF%E3%83%B3%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88.user.js",
+    "code_size": 2791,
+    "license": null,
+    "version": "0.5",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511130,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T04:01:31.000Z",
+    "code_updated_at": "2024-10-02T04:01:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375620,
+        "name": "Enokawa",
+        "created_at": "2024-10-02T03:50:38.000Z",
+        "url": "https://greasyfork.org/users/1375620-enokawa"
+      }
+    ],
+    "name": "入荷データ参照画面 合計金額計算スクリプト",
+    "description": "合計金額を計算し、表示するスクリプト",
+    "url": "https://greasyfork.org/scripts/511130-%E5%85%A5%E8%8D%B7%E3%83%87%E3%83%BC%E3%82%BF%E5%8F%82%E7%85%A7%E7%94%BB%E9%9D%A2-%E5%90%88%E8%A8%88%E9%87%91%E9%A1%8D%E8%A8%88%E7%AE%97%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88",
+    "code_url": "https://update.greasyfork.org/scripts/511130/%E5%85%A5%E8%8D%B7%E3%83%87%E3%83%BC%E3%82%BF%E5%8F%82%E7%85%A7%E7%94%BB%E9%9D%A2%20%E5%90%88%E8%A8%88%E9%87%91%E9%A1%8D%E8%A8%88%E7%AE%97%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88.user.js",
+    "code_size": 1992,
+    "license": null,
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511128,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T03:52:50.000Z",
+    "code_updated_at": "2024-12-10T05:06:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375620,
+        "name": "Enokawa",
+        "created_at": "2024-10-02T03:50:38.000Z",
+        "url": "https://greasyfork.org/users/1375620-enokawa"
+      }
+    ],
+    "name": "スマレジ取引履歴 自動で1年遡る（オフ機能付き）",
+    "description": "\"transactionDateTo\"が変更されたら、\"transactionDateFrom\"を自動で1年（364日）遡って設定。チェックボックスで機能のオン/オフを切り替え、スタイルと連動を実装。状態はローカルストレージに保存。",
+    "url": "https://greasyfork.org/scripts/511128-%E3%82%B9%E3%83%9E%E3%83%AC%E3%82%B8%E5%8F%96%E5%BC%95%E5%B1%A5%E6%AD%B4-%E8%87%AA%E5%8B%95%E3%81%A71%E5%B9%B4%E9%81%A1%E3%82%8B-%E3%82%AA%E3%83%95%E6%A9%9F%E8%83%BD%E4%BB%98%E3%81%8D",
+    "code_url": "https://update.greasyfork.org/scripts/511128/%E3%82%B9%E3%83%9E%E3%83%AC%E3%82%B8%E5%8F%96%E5%BC%95%E5%B1%A5%E6%AD%B4%20%E8%87%AA%E5%8B%95%E3%81%A71%E5%B9%B4%E9%81%A1%E3%82%8B%EF%BC%88%E3%82%AA%E3%83%95%E6%A9%9F%E8%83%BD%E4%BB%98%E3%81%8D%EF%BC%89.user.js",
+    "code_size": 6501,
+    "license": null,
+    "version": "2.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

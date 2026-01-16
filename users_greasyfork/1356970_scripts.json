@@ -1,0 +1,35 @@
+[
+  {
+    "id": 504941,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-24T08:54:58.000Z",
+    "code_updated_at": "2024-08-26T07:40:59.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356970,
+        "name": "haitt2381",
+        "created_at": "2024-08-24T08:52:05.000Z",
+        "url": "https://greasyfork.org/users/1356970-haitt2381"
+      }
+    ],
+    "name": "TVU Tools",
+    "description": "6/13/2024, 9:21:30 AM",
+    "url": "https://greasyfork.org/scripts/504941-tvu-tools",
+    "code_url": "https://update.greasyfork.org/scripts/504941/TVU%20Tools.user.js",
+    "code_size": 6708,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

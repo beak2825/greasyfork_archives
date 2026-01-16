@@ -1,0 +1,34 @@
+{
+  "id": 507328,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-07T14:25:39.000Z",
+  "code_updated_at": "2024-09-07T14:25:39.000Z",
+  "namespace": "https://github.com/adolanium",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1364492,
+      "name": "Adolanium",
+      "created_at": "2024-09-07T14:23:06.000Z",
+      "url": "https://greasyfork.org/users/1364492-adolanium",
+      "scripts": []
+    }
+  ],
+  "name": "Reddit Search on Google",
+  "description": "Adds a 'Reddit' button to Google Search for instant Reddit-only results",
+  "url": "https://greasyfork.org/scripts/507328-reddit-search-on-google",
+  "code_url": "https://update.greasyfork.org/scripts/507328/Reddit%20Search%20on%20Google.user.js",
+  "code_size": 1840,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

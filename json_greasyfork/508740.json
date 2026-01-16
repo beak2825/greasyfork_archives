@@ -1,0 +1,59 @@
+{
+  "id": 508740,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-16T19:57:13.000Z",
+  "code_updated_at": "2024-09-16T19:57:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1368737,
+      "name": "DavidVentura",
+      "created_at": "2024-09-16T19:55:44.000Z",
+      "url": "https://greasyfork.org/users/1368737-davidventura",
+      "scripts": [
+        {
+          "id": 508740,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-16T19:57:13.000Z",
+          "code_updated_at": "2024-09-16T19:57:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove notification dot from slack",
+          "description": "Remove notification dot from slack favicon",
+          "url": "https://greasyfork.org/scripts/508740-remove-notification-dot-from-slack",
+          "code_url": "https://update.greasyfork.org/scripts/508740/Remove%20notification%20dot%20from%20slack.user.js",
+          "code_size": 2735,
+          "license": "MIT License",
+          "version": "2024-09-16",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove notification dot from slack",
+  "description": "Remove notification dot from slack favicon",
+  "url": "https://greasyfork.org/scripts/508740-remove-notification-dot-from-slack",
+  "code_url": "https://update.greasyfork.org/scripts/508740/Remove%20notification%20dot%20from%20slack.user.js",
+  "code_size": 2735,
+  "license": "MIT License",
+  "version": "2024-09-16",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

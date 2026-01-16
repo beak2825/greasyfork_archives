@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 523249,
+    "daily_installs": 0,
+    "total_installs": 94,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T22:21:54.000Z",
+    "code_updated_at": "2025-08-14T04:46:16.000Z",
+    "namespace": "https://github.com/pabli24",
+    "support_url": "https://github.com/pabli24/twitch-chatters-count/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "Twitch [Chatters Count]",
+    "description": "Shows the amount of people in the chat",
+    "url": "https://greasyfork.org/scripts/523249-twitch-chatters-count",
+    "code_url": "https://update.greasyfork.org/scripts/523249/Twitch%20%5BChatters%20Count%5D.user.js",
+    "code_size": 11129,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522039,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T20:45:44.000Z",
+    "code_updated_at": "2024-12-27T20:45:44.000Z",
+    "namespace": "https://github.com/pabli24",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "GitLab Dark Mode When Not Logged In",
+    "description": "For some reason you can't enable dark theme if you are not logged in, but with this script you can!",
+    "url": "https://greasyfork.org/scripts/522039-gitlab-dark-mode-when-not-logged-in",
+    "code_url": "https://update.greasyfork.org/scripts/522039/GitLab%20Dark%20Mode%20When%20Not%20Logged%20In.user.js",
+    "code_size": 1486,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518121,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-19T20:53:16.000Z",
+    "code_updated_at": "2025-11-09T18:14:49.000Z",
+    "namespace": "https://github.com/pabli24",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 124677,
+        "name": "Pabli",
+        "created_at": "2017-05-16T14:22:42.000Z",
+        "url": "https://greasyfork.org/users/124677-pabli"
+      }
+    ],
+    "name": "Poorchat na kick.com/wonziu",
+    "description": "Podmienia czat Kicka na Poorchat u Wonzia (poorchat.net jadisco.pl pancernik.info Wonziu)",
+    "url": "https://greasyfork.org/scripts/518121-poorchat-na-kick-com-wonziu",
+    "code_url": "https://update.greasyfork.org/scripts/518121/Poorchat%20na%20kickcomwonziu.user.js",
+    "code_size": 3596,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

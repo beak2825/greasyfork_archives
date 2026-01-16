@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500924,
+    "daily_installs": 1,
+    "total_installs": 83,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-17T08:04:42.000Z",
+    "code_updated_at": "2024-07-17T08:04:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1332801,
+        "name": "Genshin114513",
+        "created_at": "2024-07-13T13:00:29.000Z",
+        "url": "https://greasyfork.org/users/1332801-genshin114513"
+      }
+    ],
+    "name": "[防检测]图寻pro插件pro max",
+    "description": "按下1、2、3时有惊喜",
+    "url": "https://greasyfork.org/scripts/500924-%E9%98%B2%E6%A3%80%E6%B5%8B-%E5%9B%BE%E5%AF%BBpro%E6%8F%92%E4%BB%B6pro-max",
+    "code_url": "https://update.greasyfork.org/scripts/500924/%5B%E9%98%B2%E6%A3%80%E6%B5%8B%5D%E5%9B%BE%E5%AF%BBpro%E6%8F%92%E4%BB%B6pro%20max.user.js",
+    "code_size": 1415,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

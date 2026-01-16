@@ -1,0 +1,134 @@
+[
+  {
+    "id": 533239,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T11:48:10.000Z",
+    "code_updated_at": "2025-06-26T12:38:17.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161354,
+        "name": "Playrough",
+        "created_at": "2023-08-28T08:13:27.000Z",
+        "url": "https://greasyfork.org/users/1161354-playrough"
+      }
+    ],
+    "name": "Cleaner Pro S Special Limited Edition",
+    "description": "Clean and format text",
+    "url": "https://greasyfork.org/scripts/533239-cleaner-pro-s-special-limited-edition",
+    "code_url": "https://update.greasyfork.org/scripts/533239/Cleaner%20Pro%20S%20Special%20Limited%20Edition.user.js",
+    "code_size": 22073,
+    "license": "MIT License",
+    "version": "2.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511782,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T15:36:57.000Z",
+    "code_updated_at": "2024-10-07T16:08:49.000Z",
+    "namespace": "sangtaviet",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161354,
+        "name": "Playrough",
+        "created_at": "2023-08-28T08:13:27.000Z",
+        "url": "https://greasyfork.org/users/1161354-playrough"
+      }
+    ],
+    "name": "Dark STV",
+    "description": "Remake item for SangTacViet",
+    "url": "https://greasyfork.org/scripts/511782-dark-stv",
+    "code_url": "https://update.greasyfork.org/scripts/511782/Dark%20STV.user.js",
+    "code_size": 10264,
+    "license": "GNU General Public License v3.0 only",
+    "version": "4.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507406,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-08T05:12:46.000Z",
+    "code_updated_at": "2025-08-24T18:03:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161354,
+        "name": "Playrough",
+        "created_at": "2023-08-28T08:13:27.000Z",
+        "url": "https://greasyfork.org/users/1161354-playrough"
+      }
+    ],
+    "name": "Pokédex Edge for SangTacViet",
+    "description": "Pokedex for SangTacViet pokemon novels.",
+    "url": "https://greasyfork.org/scripts/507406-pok%C3%A9dex-edge-for-sangtacviet",
+    "code_url": "https://update.greasyfork.org/scripts/507406/Pok%C3%A9dex%20Edge%20for%20SangTacViet.user.js",
+    "code_size": 18159,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502509,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-03T10:27:16.000Z",
+    "code_updated_at": "2024-09-02T13:21:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1161354,
+        "name": "Playrough",
+        "created_at": "2023-08-28T08:13:27.000Z",
+        "url": "https://greasyfork.org/users/1161354-playrough"
+      }
+    ],
+    "name": "Image Names",
+    "description": "Load Image Pokemon Name By HyperBeam and RenjiYuusei",
+    "url": "https://greasyfork.org/scripts/502509-image-names",
+    "code_url": "https://update.greasyfork.org/scripts/502509/Image%20Names.user.js",
+    "code_size": 10149,
+    "license": "GNU General Public License v3.0 only",
+    "version": "5.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

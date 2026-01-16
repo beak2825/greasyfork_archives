@@ -64,5 +64,137 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550564,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T14:03:56.000Z",
+    "code_updated_at": "2025-10-02T06:19:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1475272,
+        "name": "miximixi",
+        "created_at": "2025-05-27T01:37:21.000Z",
+        "url": "https://greasyfork.org/users/1475272-miximixi"
+      }
+    ],
+    "name": "页面限制解除 (可见性/焦点/复制/右键/调试)",
+    "description": "使页面始终“可见”和“激活”，解除复制和右键限制，允许打开开发者工具。可用于绕过在线考试、文档网站的各种限制。通过MutationObserver适配动态加载内容的页面。",
+    "url": "https://greasyfork.org/scripts/550564-%E9%A1%B5%E9%9D%A2%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4-%E5%8F%AF%E8%A7%81%E6%80%A7-%E7%84%A6%E7%82%B9-%E5%A4%8D%E5%88%B6-%E5%8F%B3%E9%94%AE-%E8%B0%83%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/550564/%E9%A1%B5%E9%9D%A2%E9%99%90%E5%88%B6%E8%A7%A3%E9%99%A4%20%28%E5%8F%AF%E8%A7%81%E6%80%A7%E7%84%A6%E7%82%B9%E5%A4%8D%E5%88%B6%E5%8F%B3%E9%94%AE%E8%B0%83%E8%AF%95%29.user.js",
+    "code_size": 8790,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 548991,
+    "daily_installs": 0,
+    "total_installs": 166,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-10T05:03:04.000Z",
+    "code_updated_at": "2025-09-10T06:12:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1475272,
+        "name": "miximixi",
+        "created_at": "2025-05-27T01:37:21.000Z",
+        "url": "https://greasyfork.org/users/1475272-miximixi"
+      }
+    ],
+    "name": "12306自动抢票",
+    "description": "已登录后自动查询->点预订->勾选乘客->优先席别->提交订单。不会绕过登录或验证码。",
+    "url": "https://greasyfork.org/scripts/548991-12306%E8%87%AA%E5%8A%A8%E6%8A%A2%E7%A5%A8",
+    "code_url": "https://update.greasyfork.org/scripts/548991/12306%E8%87%AA%E5%8A%A8%E6%8A%A2%E7%A5%A8.user.js",
+    "code_size": 49419,
+    "license": "MIT License",
+    "version": "2025-09-12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537398,
+    "daily_installs": 1,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-27T05:34:05.000Z",
+    "code_updated_at": "2025-10-02T06:29:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1475272,
+        "name": "miximixi",
+        "created_at": "2025-05-27T01:37:21.000Z",
+        "url": "https://greasyfork.org/users/1475272-miximixi"
+      }
+    ],
+    "name": "一键导出Cookies",
+    "description": "获取当前网页的Cookies，一键复制到剪贴板",
+    "url": "https://greasyfork.org/scripts/537398-%E4%B8%80%E9%94%AE%E5%AF%BC%E5%87%BAcookies",
+    "code_url": "https://update.greasyfork.org/scripts/537398/%E4%B8%80%E9%94%AE%E5%AF%BC%E5%87%BACookies.user.js",
+    "code_size": 2614,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537386,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-05-27T01:56:20.000Z",
+    "code_updated_at": "2026-01-05T07:03:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1475272,
+        "name": "miximixi",
+        "created_at": "2025-05-27T01:37:21.000Z",
+        "url": "https://greasyfork.org/users/1475272-miximixi"
+      }
+    ],
+    "name": "深圳大学体育场馆自动预约",
+    "description": "深圳大学体育场馆自动预约脚本 - iOS、安卓、移动端、桌面端完全兼容",
+    "url": "https://greasyfork.org/scripts/537386-%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E4%BD%93%E8%82%B2%E5%9C%BA%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6",
+    "code_url": "https://update.greasyfork.org/scripts/537386/%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6%E4%BD%93%E8%82%B2%E5%9C%BA%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6.user.js",
+    "code_size": 72700,
+    "license": "MIT License",
+    "version": "1.2.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

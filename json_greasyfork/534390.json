@@ -1,0 +1,33 @@
+{
+  "id": 534390,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-29T14:44:58.000Z",
+  "code_updated_at": "2025-04-29T14:44:58.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 162434,
+      "name": "fthvgb1",
+      "created_at": "2017-12-09T12:32:28.000Z",
+      "url": "https://greasyfork.org/users/162434-fthvgb1"
+    }
+  ],
+  "name": "imageresize",
+  "description": "图片放缩",
+  "url": "https://greasyfork.org/scripts/534390-imageresize",
+  "code_url": "https://update.greasyfork.org/scripts/534390/1580075/imageresize.js",
+  "code_size": 8550,
+  "license": null,
+  "version": "0.0.1.20250429144458",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

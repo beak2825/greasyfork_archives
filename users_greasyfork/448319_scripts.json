@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 539957,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T07:17:32.000Z",
+    "code_updated_at": "2025-06-23T08:32:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448319,
+        "name": "jがすdygk",
+        "created_at": "2020-02-22T08:01:07.000Z",
+        "url": "https://greasyfork.org/users/448319-j%E3%81%8C%E3%81%99dygk"
+      }
+    ],
+    "name": "Discord Image NSFW Mask",
+    "description": "Add NSFW mask over images in Discord Web, reveal on hover. Ignore emoji-sized images.",
+    "url": "https://greasyfork.org/scripts/539957-discord-image-nsfw-mask",
+    "code_url": "https://update.greasyfork.org/scripts/539957/Discord%20Image%20NSFW%20Mask.user.js",
+    "code_size": 4741,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539956,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T07:15:23.000Z",
+    "code_updated_at": "2025-06-19T07:15:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 448319,
+        "name": "jがすdygk",
+        "created_at": "2020-02-22T08:01:07.000Z",
+        "url": "https://greasyfork.org/users/448319-j%E3%81%8C%E3%81%99dygk"
+      }
+    ],
+    "name": "Hide Discord Sidebar",
+    "description": "Hides the Discord server and/or channel list for a cleaner interface. Provides auto-hiding modes and manual override buttons.",
+    "url": "https://greasyfork.org/scripts/539956-hide-discord-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/539956/Hide%20Discord%20Sidebar.user.js",
+    "code_size": 8075,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

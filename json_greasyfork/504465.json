@@ -1,0 +1,34 @@
+{
+  "id": 504465,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-21T07:06:18.000Z",
+  "code_updated_at": "2024-08-21T07:06:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1355392,
+      "name": "EviL.TBD",
+      "created_at": "2024-08-21T07:00:02.000Z",
+      "url": "https://greasyfork.org/users/1355392-evil-tbd",
+      "scripts": []
+    }
+  ],
+  "name": "Stop redirect to TBD home and use custom main domain",
+  "description": "This script will stop the redirect to the home page if TBD is loaded from any other website With a Main domain feature.",
+  "url": "https://greasyfork.org/scripts/504465-stop-redirect-to-tbd-home-and-use-custom-main-domain",
+  "code_url": "https://update.greasyfork.org/scripts/504465/Stop%20redirect%20to%20TBD%20home%20and%20use%20custom%20main%20domain.user.js",
+  "code_size": 1938,
+  "license": null,
+  "version": "6.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

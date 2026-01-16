@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518852,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T20:11:31.000Z",
+    "code_updated_at": "2024-11-27T19:43:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1402425,
+        "name": "M. Hebert",
+        "created_at": "2024-11-25T20:04:43.000Z",
+        "url": "https://greasyfork.org/users/1402425-m-hebert"
+      }
+    ],
+    "name": "Reverse Table Columns on WikiTree",
+    "description": "Reverse the order of family tree columns on WikiTree profiles when \"Hide Ancestors\" --> \"Show Ancestors\" is clicked",
+    "url": "https://greasyfork.org/scripts/518852-reverse-table-columns-on-wikitree",
+    "code_url": "https://update.greasyfork.org/scripts/518852/Reverse%20Table%20Columns%20on%20WikiTree.user.js",
+    "code_size": 1410,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

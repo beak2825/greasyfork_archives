@@ -1,0 +1,59 @@
+{
+  "id": 542486,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-13T19:07:14.000Z",
+  "code_updated_at": "2025-07-17T15:03:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1494583,
+      "name": "YuvalHir",
+      "created_at": "2025-07-13T19:02:40.000Z",
+      "url": "https://greasyfork.org/users/1494583-yuvalhir",
+      "scripts": [
+        {
+          "id": 542486,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-13T19:07:14.000Z",
+          "code_updated_at": "2025-07-17T15:03:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google AI Studio - Ultimate Hebrew Alignment & Tools (v3.2)",
+          "description": "Adds full Hebrew support to the AI Studio interface and a dynamic prompt menu. Fixes injection and prompt stacking bugs.",
+          "url": "https://greasyfork.org/scripts/542486-google-ai-studio-ultimate-hebrew-alignment-tools-v3-2",
+          "code_url": "https://update.greasyfork.org/scripts/542486/Google%20AI%20Studio%20-%20Ultimate%20Hebrew%20Alignment%20%20Tools%20%28v32%29.user.js",
+          "code_size": 22737,
+          "license": "MIT License",
+          "version": "3.2",
+          "locale": "he",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google AI Studio - Ultimate Hebrew Alignment & Tools (v3.2)",
+  "description": "Adds full Hebrew support to the AI Studio interface and a dynamic prompt menu. Fixes injection and prompt stacking bugs.",
+  "url": "https://greasyfork.org/scripts/542486-google-ai-studio-ultimate-hebrew-alignment-tools-v3-2",
+  "code_url": "https://update.greasyfork.org/scripts/542486/Google%20AI%20Studio%20-%20Ultimate%20Hebrew%20Alignment%20%20Tools%20%28v32%29.user.js",
+  "code_size": 22737,
+  "license": "MIT License",
+  "version": "3.2",
+  "locale": "he",
+  "deleted": false,
+  "visibility": "public"
+}

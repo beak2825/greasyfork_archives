@@ -1,0 +1,59 @@
+{
+  "id": 515153,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-01T05:32:24.000Z",
+  "code_updated_at": "2024-11-01T06:51:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1389383,
+      "name": "CLA",
+      "created_at": "2024-11-01T05:29:55.000Z",
+      "url": "https://greasyfork.org/users/1389383-cla",
+      "scripts": [
+        {
+          "id": 515153,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-01T05:32:24.000Z",
+          "code_updated_at": "2024-11-01T06:51:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hostloc自动添加特定后缀",
+          "description": "发帖或回复时在尾部添加特定后缀",
+          "url": "https://greasyfork.org/scripts/515153-hostloc%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E7%89%B9%E5%AE%9A%E5%90%8E%E7%BC%80",
+          "code_url": "https://update.greasyfork.org/scripts/515153/Hostloc%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E7%89%B9%E5%AE%9A%E5%90%8E%E7%BC%80.user.js",
+          "code_size": 2992,
+          "license": "MIT License",
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hostloc自动添加特定后缀",
+  "description": "发帖或回复时在尾部添加特定后缀",
+  "url": "https://greasyfork.org/scripts/515153-hostloc%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E7%89%B9%E5%AE%9A%E5%90%8E%E7%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/515153/Hostloc%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E7%89%B9%E5%AE%9A%E5%90%8E%E7%BC%80.user.js",
+  "code_size": 2992,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

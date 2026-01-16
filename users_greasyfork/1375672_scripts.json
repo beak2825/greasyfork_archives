@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 532865,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-15T00:22:44.000Z",
+    "code_updated_at": "2025-04-16T04:11:48.000Z",
+    "namespace": "https://greasyfork.org/users/1375672",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375672,
+        "name": "기나ᅡᄂ",
+        "created_at": "2024-10-02T06:04:13.000Z",
+        "url": "https://greasyfork.org/users/1375672-%EA%B8%B0%EB%82%98%E1%85%A1%E1%84%82"
+      }
+    ],
+    "name": "Global rename queue",
+    "description": "글로벌리네임큐",
+    "url": "https://greasyfork.org/scripts/532865-global-rename-queue",
+    "code_url": "https://update.greasyfork.org/scripts/532865/Global%20rename%20queue.user.js",
+    "code_size": 5156,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "v1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511141,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T06:16:01.000Z",
+    "code_updated_at": "2024-10-04T05:02:10.000Z",
+    "namespace": "https://greasyfork.org/users/1375672",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375672,
+        "name": "기나ᅡᄂ",
+        "created_at": "2024-10-02T06:04:13.000Z",
+        "url": "https://greasyfork.org/users/1375672-%EA%B8%B0%EB%82%98%E1%85%A1%E1%84%82"
+      }
+    ],
+    "name": "massRollmove",
+    "description": "문서 훼손 방지 스크립트입니다. 위험한 스크립트입니다. 절대 공개적으로 게시하지 마십시오. 사용 순서는 massRollback을 사용한 후 massRollmove를 활용하는 것이 맞습니다. 특수:기록 문서에서 사용하세요.",
+    "url": "https://greasyfork.org/scripts/511141-massrollmove",
+    "code_url": "https://update.greasyfork.org/scripts/511141/massRollmove.user.js",
+    "code_size": 8327,
+    "license": "CC BY-SA 4.0; https://creativecommons.org/licenses/by-sa/4.0/",
+    "version": "2024-10-04",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 539476,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-15T04:51:28.000Z",
+  "code_updated_at": "2025-06-15T04:51:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1269374,
+      "name": "隐藏",
+      "created_at": "2024-03-02T14:11:19.000Z",
+      "url": "https://greasyfork.org/users/1269374-%E9%9A%90%E8%97%8F",
+      "scripts": [
+        {
+          "id": 539476,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-15T04:51:28.000Z",
+          "code_updated_at": "2025-06-15T04:51:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube & Udemy 同声传译：字幕文本转语音TTS（适用于沉浸式翻译）",
+          "description": "将YouTube和Udemy上的字幕转换为语音播放，支持更改音色和调整语音速度，支持多语言",
+          "url": "https://greasyfork.org/scripts/539476-youtube-udemy-%E5%90%8C%E5%A3%B0%E4%BC%A0%E8%AF%91-%E5%AD%97%E5%B9%95%E6%96%87%E6%9C%AC%E8%BD%AC%E8%AF%AD%E9%9F%B3tts-%E9%80%82%E7%94%A8%E4%BA%8E%E6%B2%89%E6%B5%B8%E5%BC%8F%E7%BF%BB%E8%AF%91",
+          "code_url": "https://update.greasyfork.org/scripts/539476/YouTube%20%20Udemy%20%E5%90%8C%E5%A3%B0%E4%BC%A0%E8%AF%91%EF%BC%9A%E5%AD%97%E5%B9%95%E6%96%87%E6%9C%AC%E8%BD%AC%E8%AF%AD%E9%9F%B3TTS%EF%BC%88%E9%80%82%E7%94%A8%E4%BA%8E%E6%B2%89%E6%B5%B8%E5%BC%8F%E7%BF%BB%E8%AF%91%EF%BC%89.user.js",
+          "code_size": 57383,
+          "license": "MIT License",
+          "version": "1.13.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube & Udemy 同声传译：字幕文本转语音TTS（适用于沉浸式翻译）",
+  "description": "将YouTube和Udemy上的字幕转换为语音播放，支持更改音色和调整语音速度，支持多语言",
+  "url": "https://greasyfork.org/scripts/539476-youtube-udemy-%E5%90%8C%E5%A3%B0%E4%BC%A0%E8%AF%91-%E5%AD%97%E5%B9%95%E6%96%87%E6%9C%AC%E8%BD%AC%E8%AF%AD%E9%9F%B3tts-%E9%80%82%E7%94%A8%E4%BA%8E%E6%B2%89%E6%B5%B8%E5%BC%8F%E7%BF%BB%E8%AF%91",
+  "code_url": "https://update.greasyfork.org/scripts/539476/YouTube%20%20Udemy%20%E5%90%8C%E5%A3%B0%E4%BC%A0%E8%AF%91%EF%BC%9A%E5%AD%97%E5%B9%95%E6%96%87%E6%9C%AC%E8%BD%AC%E8%AF%AD%E9%9F%B3TTS%EF%BC%88%E9%80%82%E7%94%A8%E4%BA%8E%E6%B2%89%E6%B5%B8%E5%BC%8F%E7%BF%BB%E8%AF%91%EF%BC%89.user.js",
+  "code_size": 57383,
+  "license": "MIT License",
+  "version": "1.13.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527065,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T04:49:04.000Z",
+    "code_updated_at": "2025-02-16T05:37:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435557,
+        "name": "eggarlic",
+        "created_at": "2025-02-16T03:30:19.000Z",
+        "url": "https://greasyfork.org/users/1435557-eggarlic"
+      }
+    ],
+    "name": "양도끼 좋아요!",
+    "description": "유튜브 양도끼 채널 영상에서 자동으로 좋아요를 눌러주는 스크립트입니다.",
+    "url": "https://greasyfork.org/scripts/527065-%EC%96%91%EB%8F%84%EB%81%BC-%EC%A2%8B%EC%95%84%EC%9A%94",
+    "code_url": "https://update.greasyfork.org/scripts/527065/%EC%96%91%EB%8F%84%EB%81%BC%20%EC%A2%8B%EC%95%84%EC%9A%94%21.user.js",
+    "code_size": 5048,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527058,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T03:34:31.000Z",
+    "code_updated_at": "2025-02-16T04:44:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435557,
+        "name": "eggarlic",
+        "created_at": "2025-02-16T03:30:19.000Z",
+        "url": "https://greasyfork.org/users/1435557-eggarlic"
+      }
+    ],
+    "name": "양도끼 좋아요!",
+    "description": "유튜브 자동 좋아요 (번호 입력 방식 + 자동 좋아요 복원)",
+    "url": "https://greasyfork.org/scripts/527058-%EC%96%91%EB%8F%84%EB%81%BC-%EC%A2%8B%EC%95%84%EC%9A%94",
+    "code_url": "https://update.greasyfork.org/scripts/527058/%EC%96%91%EB%8F%84%EB%81%BC%20%EC%A2%8B%EC%95%84%EC%9A%94%21.user.js",
+    "code_size": 6140,
+    "license": "MIT License",
+    "version": "1.171",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

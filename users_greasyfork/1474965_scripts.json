@@ -34,8 +34,8 @@
   },
   {
     "id": 552804,
-    "daily_installs": 0,
-    "total_installs": 14,
+    "daily_installs": 1,
+    "total_installs": 15,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -100,6 +100,39 @@
     "code_size": 2217,
     "license": "MIT License",
     "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551836,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-07T10:25:18.000Z",
+    "code_updated_at": "2025-10-16T09:25:59.000Z",
+    "namespace": "https://greasyfork.org/en/users/1474965/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474965,
+        "name": "thisisks",
+        "created_at": "2025-05-26T06:35:32.000Z",
+        "url": "https://greasyfork.org/users/1474965-thisisks"
+      }
+    ],
+    "name": "OWOP Follower",
+    "description": "Teleports you wherever the last pixel was placed",
+    "url": "https://greasyfork.org/scripts/551836-owop-follower",
+    "code_url": "https://update.greasyfork.org/scripts/551836/OWOP%20Follower.user.js",
+    "code_size": 1440,
+    "license": "MIT License",
+    "version": "2.0",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

@@ -1,0 +1,34 @@
+{
+  "id": 548187,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-03T03:15:09.000Z",
+  "code_updated_at": "2025-09-03T03:15:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 150088,
+      "name": "Name Unknown",
+      "created_at": "2017-08-22T20:24:48.000Z",
+      "url": "https://greasyfork.org/users/150088-name-unknown",
+      "scripts": []
+    }
+  ],
+  "name": "Kick.com Live Chat Link Opener",
+  "description": "Monitor Kick live chat for links and open them in new tabs automatically (use responsibly!) 🟢",
+  "url": "https://greasyfork.org/scripts/548187-kick-com-live-chat-link-opener",
+  "code_url": "https://update.greasyfork.org/scripts/548187/Kickcom%20Live%20Chat%20Link%20Opener.user.js",
+  "code_size": 2128,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

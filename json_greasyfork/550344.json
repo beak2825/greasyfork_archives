@@ -1,0 +1,33 @@
+{
+  "id": 550344,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-22T10:01:29.000Z",
+  "code_updated_at": "2026-01-09T08:46:50.000Z",
+  "namespace": "http://52shell.ltd/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 321639,
+      "name": "1592363624",
+      "created_at": "2019-07-29T03:52:31.000Z",
+      "url": "https://greasyfork.org/users/321639-1592363624"
+    }
+  ],
+  "name": "linux.do Obsidian Callouts 回复（支持 None）",
+  "description": "自动为 Discourse 回复插入 Obsidian Callout，支持 None / 原生回复",
+  "url": "https://greasyfork.org/scripts/550344-linux-do-obsidian-callouts-%E5%9B%9E%E5%A4%8D-%E6%94%AF%E6%8C%81-none",
+  "code_url": "https://update.greasyfork.org/scripts/550344/linuxdo%20Obsidian%20Callouts%20%E5%9B%9E%E5%A4%8D%EF%BC%88%E6%94%AF%E6%8C%81%20None%EF%BC%89.user.js",
+  "code_size": 8262,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

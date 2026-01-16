@@ -1,0 +1,101 @@
+[
+  {
+    "id": 534784,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-03T05:58:53.000Z",
+    "code_updated_at": "2025-05-03T05:58:53.000Z",
+    "namespace": "43vn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459634,
+        "name": "43vn",
+        "created_at": "2025-04-19T06:40:04.000Z",
+        "url": "https://greasyfork.org/users/1459634-43vn"
+      }
+    ],
+    "name": "Hiển thị thông tin tài khoản VOZ",
+    "description": "Hiển  thị Joined, Last Seen, và Reaction Score cho tải khoản voz khi xem bài viết mà không cần rê vào tên tài khoản",
+    "url": "https://greasyfork.org/scripts/534784-hi%E1%BB%83n-th%E1%BB%8B-th%C3%B4ng-tin-t%C3%A0i-kho%E1%BA%A3n-voz",
+    "code_url": "https://update.greasyfork.org/scripts/534784/Hi%E1%BB%83n%20th%E1%BB%8B%20th%C3%B4ng%20tin%20t%C3%A0i%20kho%E1%BA%A3n%20VOZ.user.js",
+    "code_size": 3717,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533603,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T07:03:50.000Z",
+    "code_updated_at": "2025-04-22T07:03:50.000Z",
+    "namespace": "43vn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459634,
+        "name": "43vn",
+        "created_at": "2025-04-19T06:40:04.000Z",
+        "url": "https://greasyfork.org/users/1459634-43vn"
+      }
+    ],
+    "name": "Nhập danh sách denylist nhanh cho nextdns",
+    "description": "Nhập danh sách denylist nhanh cho nextdns. Miễn trừ trách nhiệm khi sử dụng userscript này",
+    "url": "https://greasyfork.org/scripts/533603-nh%E1%BA%ADp-danh-s%C3%A1ch-denylist-nhanh-cho-nextdns",
+    "code_url": "https://update.greasyfork.org/scripts/533603/Nh%E1%BA%ADp%20danh%20s%C3%A1ch%20denylist%20nhanh%20cho%20nextdns.user.js",
+    "code_size": 3145,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533304,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T06:43:44.000Z",
+    "code_updated_at": "2025-04-19T06:43:44.000Z",
+    "namespace": "43vn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459634,
+        "name": "43vn",
+        "created_at": "2025-04-19T06:40:04.000Z",
+        "url": "https://greasyfork.org/users/1459634-43vn"
+      }
+    ],
+    "name": "Xem ThapCam-XoiLac-VeBo với MPV",
+    "description": "1 userscript đơn giản để xem ThapCam-XoiLac-VeBo với MPV",
+    "url": "https://greasyfork.org/scripts/533304-xem-thapcam-xoilac-vebo-v%E1%BB%9Bi-mpv",
+    "code_url": "https://update.greasyfork.org/scripts/533304/Xem%20ThapCam-XoiLac-VeBo%20v%E1%BB%9Bi%20MPV.user.js",
+    "code_size": 4326,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

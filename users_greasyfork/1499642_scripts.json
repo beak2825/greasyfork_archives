@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544046,
+    "daily_installs": 0,
+    "total_installs": 93,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T21:45:36.000Z",
+    "code_updated_at": "2025-07-29T21:45:36.000Z",
+    "namespace": "http://krisbies.neocities.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499642,
+        "name": "Kristi White",
+        "created_at": "2025-07-29T21:28:18.000Z",
+        "url": "https://greasyfork.org/users/1499642-kristi-white"
+      }
+    ],
+    "name": "Roblox 2011-2015 Favicon",
+    "description": "Replaces the current Roblox Favicon the one from 2011",
+    "url": "https://greasyfork.org/scripts/544046-roblox-2011-2015-favicon",
+    "code_url": "https://update.greasyfork.org/scripts/544046/Roblox%202011-2015%20Favicon.user.js",
+    "code_size": 143579,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531117,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-28T13:19:39.000Z",
+    "code_updated_at": "2025-03-28T13:36:39.000Z",
+    "namespace": "https://github.com/shadowwingz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451273,
+        "name": "shadowwingz",
+        "created_at": "2025-03-28T12:20:41.000Z",
+        "url": "https://greasyfork.org/users/1451273-shadowwingz"
+      }
+    ],
+    "name": "Perfetto Pin 区域高度调整",
+    "description": "调整 Perfetto Viewer 的 Pinned 区域高度，提供可视化控制按钮和实时比例显示",
+    "url": "https://greasyfork.org/scripts/531117-perfetto-pin-%E5%8C%BA%E5%9F%9F%E9%AB%98%E5%BA%A6%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/531117/Perfetto%20Pin%20%E5%8C%BA%E5%9F%9F%E9%AB%98%E5%BA%A6%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 5789,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533943,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-04-25T13:32:11.000Z",
+    "code_updated_at": "2025-04-25T13:32:11.000Z",
+    "namespace": "https://websim.ai/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459911,
+        "name": "Trey6383",
+        "created_at": "2025-04-19T20:55:16.000Z",
+        "url": "https://greasyfork.org/users/1459911-trey6383"
+      }
+    ],
+    "name": "Websim Multiplayer Admin",
+    "description": "Multiplayer admin panel for Websim projects",
+    "url": "https://greasyfork.org/scripts/533943-websim-multiplayer-admin",
+    "code_url": "https://update.greasyfork.org/scripts/533943/Websim%20Multiplayer%20Admin.user.js",
+    "code_size": 70577,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533362,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T20:58:07.000Z",
+    "code_updated_at": "2025-04-19T20:58:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459911,
+        "name": "Trey6383",
+        "created_at": "2025-04-19T20:55:16.000Z",
+        "url": "https://greasyfork.org/users/1459911-trey6383"
+      }
+    ],
+    "name": "Websim Essentials Plugin",
+    "description": "Advanced tools for websim.ai - database, multiplayer, trending, user search, and more",
+    "url": "https://greasyfork.org/scripts/533362-websim-essentials-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/533362/Websim%20Essentials%20Plugin.user.js",
+    "code_size": 44148,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

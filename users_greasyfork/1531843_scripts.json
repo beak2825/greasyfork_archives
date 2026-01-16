@@ -64,5 +64,38 @@
     "locale": "ko",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 554046,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T06:58:58.000Z",
+    "code_updated_at": "2025-11-01T10:15:18.000Z",
+    "namespace": "https://greasyfork.org/users/your-username",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1531843,
+        "name": "유수",
+        "created_at": "2025-10-29T06:52:18.000Z",
+        "url": "https://greasyfork.org/users/1531843-%EC%9C%A0%EC%88%98"
+      }
+    ],
+    "name": "TR Height 초기화 및 Padding 수정 + OK 기준 숨기기 (패션·대기 자료실 전용)",
+    "description": "tr[height=\"128\"] 초기화, #read_profile_td padding 수정, 댓글 숨기기, OK 수 기준 게시글 숨기기 (패션·pdswait 게시판, ㅇㅎ·ㅎㅂ 예외 처리)",
+    "url": "https://greasyfork.org/scripts/554046-tr-height-%EC%B4%88%EA%B8%B0%ED%99%94-%EB%B0%8F-padding-%EC%88%98%EC%A0%95-ok-%EA%B8%B0%EC%A4%80-%EC%88%A8%EA%B8%B0%EA%B8%B0-%ED%8C%A8%EC%85%98-%EB%8C%80%EA%B8%B0-%EC%9E%90%EB%A3%8C%EC%8B%A4-%EC%A0%84%EC%9A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/554046/TR%20Height%20%EC%B4%88%EA%B8%B0%ED%99%94%20%EB%B0%8F%20Padding%20%EC%88%98%EC%A0%95%20%2B%20OK%20%EA%B8%B0%EC%A4%80%20%EC%88%A8%EA%B8%B0%EA%B8%B0%20%28%ED%8C%A8%EC%85%98%C2%B7%EB%8C%80%EA%B8%B0%20%EC%9E%90%EB%A3%8C%EC%8B%A4%20%EC%A0%84%EC%9A%A9%29.user.js",
+    "code_size": 2222,
+    "license": null,
+    "version": "1.0.6",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

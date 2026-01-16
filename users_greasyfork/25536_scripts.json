@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545130,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-09T03:49:23.000Z",
+    "code_updated_at": "2025-08-09T03:49:23.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/369630-wme-route-speeds-mapomatic-fork",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 25536,
+        "name": "tonestertm",
+        "created_at": "2015-12-31T07:55:03.000Z",
+        "url": "https://greasyfork.org/users/25536-tonestertm"
+      }
+    ],
+    "name": "WME Route Speeds (MapOMatic fork)extrainfo July2025",
+    "description": "Shows segment speeds in a route.",
+    "url": "https://greasyfork.org/scripts/545130-wme-route-speeds-mapomatic-fork-extrainfo-july2025",
+    "code_url": "https://update.greasyfork.org/scripts/545130/WME%20Route%20Speeds%20%28MapOMatic%20fork%29extrainfo%20July2025.user.js",
+    "code_size": 104734,
+    "license": null,
+    "version": "2025.07.09.000.tm",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

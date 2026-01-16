@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517798,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T17:35:21.000Z",
+    "code_updated_at": "2025-05-18T10:55:01.000Z",
+    "namespace": "江西干部学院自动刷课脚本",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 933269,
+        "name": "hchengx",
+        "created_at": "2022-07-07T07:13:59.000Z",
+        "url": "https://greasyfork.org/users/933269-hchengx"
+      }
+    ],
+    "name": "江西干部学院自动刷课脚本",
+    "description": "把页面挂在“我的必修课”或“我的选修课”即可，可自动完成相应页面的课程学习",
+    "url": "https://greasyfork.org/scripts/517798-%E6%B1%9F%E8%A5%BF%E5%B9%B2%E9%83%A8%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/517798/%E6%B1%9F%E8%A5%BF%E5%B9%B2%E9%83%A8%E5%AD%A6%E9%99%A2%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3112,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

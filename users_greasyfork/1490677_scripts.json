@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541349,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T14:43:17.000Z",
+    "code_updated_at": "2025-07-01T14:43:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490677,
+        "name": "delkz",
+        "created_at": "2025-07-01T14:41:58.000Z",
+        "url": "https://greasyfork.org/users/1490677-delkz"
+      }
+    ],
+    "name": "Auto Like Lives TRIBO",
+    "description": "Dá like automaticamente em lives de canais da Tribo",
+    "url": "https://greasyfork.org/scripts/541349-auto-like-lives-tribo",
+    "code_url": "https://update.greasyfork.org/scripts/541349/Auto%20Like%20Lives%20TRIBO.user.js",
+    "code_size": 2505,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

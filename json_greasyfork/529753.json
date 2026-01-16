@@ -1,0 +1,59 @@
+{
+  "id": 529753,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-13T20:44:39.000Z",
+  "code_updated_at": "2025-03-13T20:44:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1445400,
+      "name": "KokoTheHand",
+      "created_at": "2025-03-13T20:27:50.000Z",
+      "url": "https://greasyfork.org/users/1445400-kokothehand",
+      "scripts": [
+        {
+          "id": 529753,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-13T20:44:39.000Z",
+          "code_updated_at": "2025-03-13T20:44:39.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FREEDOM from Anti-Filter (no censorship)",
+          "description": "Enjoy it without the gartic.io filter. The disadvantage is that the number of letters has been reduced from 100 to 50.",
+          "url": "https://greasyfork.org/scripts/529753-freedom-from-anti-filter-no-censorship",
+          "code_url": "https://update.greasyfork.org/scripts/529753/FREEDOM%20from%20Anti-Filter%20%28no%20censorship%29.user.js",
+          "code_size": 1538,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FREEDOM from Anti-Filter (no censorship)",
+  "description": "Enjoy it without the gartic.io filter. The disadvantage is that the number of letters has been reduced from 100 to 50.",
+  "url": "https://greasyfork.org/scripts/529753-freedom-from-anti-filter-no-censorship",
+  "code_url": "https://update.greasyfork.org/scripts/529753/FREEDOM%20from%20Anti-Filter%20%28no%20censorship%29.user.js",
+  "code_size": 1538,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

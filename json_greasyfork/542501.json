@@ -1,0 +1,34 @@
+{
+  "id": 542501,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-14T00:10:02.000Z",
+  "code_updated_at": "2025-07-14T00:10:02.000Z",
+  "namespace": "yandex.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1494617,
+      "name": "nareman",
+      "created_at": "2025-07-14T00:08:22.000Z",
+      "url": "https://greasyfork.org/users/1494617-nareman",
+      "scripts": []
+    }
+  ],
+  "name": "Yandex.com ➜ Yandex.ru redirect",
+  "description": "Redirect alles van yandex.com naar yandex.ru",
+  "url": "https://greasyfork.org/scripts/542501-yandex-com-yandex-ru-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/542501/Yandexcom%20%E2%9E%9C%20Yandexru%20redirect.user.js",
+  "code_size": 581,
+  "license": "MIT License",
+  "version": "2025-06-28",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521365,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-21T08:09:23.000Z",
+    "code_updated_at": "2024-12-21T08:21:50.000Z",
+    "namespace": "https://greasyfork.org/users/779030",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 779030,
+        "name": "Lucas Santilli",
+        "created_at": "2021-06-02T16:08:56.000Z",
+        "url": "https://greasyfork.org/users/779030-lucas-santilli"
+      }
+    ],
+    "name": "YouTube MUSIC",
+    "description": "This script uses CSS to get rid of the video player and frees the visual space to be occupied by the playlist. It also increases the font of the song lyrics and puts it at the center of the tab.",
+    "url": "https://greasyfork.org/scripts/521365-youtube-music",
+    "code_url": "https://update.greasyfork.org/scripts/521365/YouTube%20MUSIC.user.js",
+    "code_size": 1419,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

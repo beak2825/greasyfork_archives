@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499100,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-28T04:17:12.000Z",
+    "code_updated_at": "2024-06-28T04:18:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 928209,
+        "name": "AstRatJP",
+        "created_at": "2022-06-22T12:02:30.000Z",
+        "url": "https://greasyfork.org/users/928209-astratjp"
+      }
+    ],
+    "name": "tallent+rotate+yy+range",
+    "description": "only for my environment [,.\\ f vbn]",
+    "url": "https://greasyfork.org/scripts/499100-tallent-rotate-yy-range",
+    "code_url": "https://update.greasyfork.org/scripts/499100/tallent%2Brotate%2Byy%2Brange.user.js",
+    "code_size": 17278,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

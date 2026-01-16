@@ -1,0 +1,33 @@
+{
+  "id": 550823,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-27T04:40:48.000Z",
+  "code_updated_at": "2025-09-27T04:41:55.000Z",
+  "namespace": "xihale.top",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1272200,
+      "name": "xihale",
+      "created_at": "2024-03-09T10:42:52.000Z",
+      "url": "https://greasyfork.org/users/1272200-xihale"
+    }
+  ],
+  "name": "GM_fetch",
+  "description": "CORS Bypass script",
+  "url": "https://greasyfork.org/scripts/550823-gm-fetch",
+  "code_url": "https://update.greasyfork.org/scripts/550823/GM_fetch.user.js",
+  "code_size": 5985,
+  "license": "GPL version 3",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

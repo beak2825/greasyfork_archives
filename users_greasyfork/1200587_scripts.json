@@ -1,0 +1,101 @@
+[
+  {
+    "id": 534569,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-30T22:33:34.000Z",
+    "code_updated_at": "2025-04-30T22:33:34.000Z",
+    "namespace": "https://greasyfork.org/en/users/1200587-trilla-g",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1200587,
+        "name": "Trilla_G",
+        "created_at": "2023-10-20T19:38:58.000Z",
+        "url": "https://greasyfork.org/users/1200587-trilla-g"
+      }
+    ],
+    "name": "Change Background Color for All Sites (dark red)",
+    "description": "Change background color while preserving other styles",
+    "url": "https://greasyfork.org/scripts/534569-change-background-color-for-all-sites-dark-red",
+    "code_url": "https://update.greasyfork.org/scripts/534569/Change%20Background%20Color%20for%20All%20Sites%20%28dark%20red%29.user.js",
+    "code_size": 2255,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534108,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T23:14:27.000Z",
+    "code_updated_at": "2025-04-26T23:14:27.000Z",
+    "namespace": "https://greasyfork.org/en/users/1200587-trilla-g",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1200587,
+        "name": "Trilla_G",
+        "created_at": "2023-10-20T19:38:58.000Z",
+        "url": "https://greasyfork.org/users/1200587-trilla-g"
+      }
+    ],
+    "name": "Hide Paid Promotion Warning YouTube Videos",
+    "description": "Hide .ytInlinePlayerControlsTopLeftControls and .ytp-paid-content-overlay on YouTube videos and thumbnails",
+    "url": "https://greasyfork.org/scripts/534108-hide-paid-promotion-warning-youtube-videos",
+    "code_url": "https://update.greasyfork.org/scripts/534108/Hide%20Paid%20Promotion%20Warning%20YouTube%20Videos.user.js",
+    "code_size": 1068,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499800,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T20:47:12.000Z",
+    "code_updated_at": "2024-10-30T04:49:04.000Z",
+    "namespace": "https://greasyfork.org/en/users/1200587-trilla-g",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1200587,
+        "name": "Trilla_G",
+        "created_at": "2023-10-20T19:38:58.000Z",
+        "url": "https://greasyfork.org/users/1200587-trilla-g"
+      }
+    ],
+    "name": "Infinite Scroll Spotify Episodes",
+    "description": "Automatically clicks the \"Load More Episodes\" button when visible on Spotify using IntersectionObserver for improved efficiency",
+    "url": "https://greasyfork.org/scripts/499800-infinite-scroll-spotify-episodes",
+    "code_url": "https://update.greasyfork.org/scripts/499800/Infinite%20Scroll%20Spotify%20Episodes.user.js",
+    "code_size": 1575,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

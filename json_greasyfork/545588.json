@@ -1,0 +1,34 @@
+{
+  "id": 545588,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-12T16:33:57.000Z",
+  "code_updated_at": "2025-08-12T16:33:57.000Z",
+  "namespace": "zed.city.aio",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502578,
+      "name": "MathewPerry",
+      "created_at": "2025-08-07T16:21:54.000Z",
+      "url": "https://greasyfork.org/users/1502578-mathewperry",
+      "scripts": []
+    }
+  ],
+  "name": "Zed.City – QOL Update (Market Favs + Profit Helper/Networth + Timer Bar) - BETA TEST",
+  "description": "One Script to rule them all, and in the Zombie infested wasteland bind them.",
+  "url": "https://greasyfork.org/scripts/545588-zed-city-qol-update-market-favs-profit-helper-networth-timer-bar-beta-test",
+  "code_url": "https://update.greasyfork.org/scripts/545588/ZedCity%20%E2%80%93%20QOL%20Update%20%28Market%20Favs%20%2B%20Profit%20HelperNetworth%20%2B%20Timer%20Bar%29%20-%20BETA%20TEST.user.js",
+  "code_size": 80105,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

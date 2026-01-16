@@ -1,0 +1,33 @@
+{
+  "id": 505308,
+  "daily_installs": 0,
+  "total_installs": 208,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-26T16:30:04.000Z",
+  "code_updated_at": "2024-12-31T03:34:24.000Z",
+  "namespace": "http://jb.zhanyc.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1343763,
+      "name": "ccUp",
+      "created_at": "2024-08-01T15:49:52.000Z",
+      "url": "https://greasyfork.org/users/1343763-ccup"
+    }
+  ],
+  "name": "🌱【免费版】东奥时代教育+晋中市专业技术人员继续教育|如需自动下一集、自动换课程、验证码识别、考试答题、防掉线高级功能见收费版本：https://doc.zhanyc.cn/pages/0d561d/",
+  "description": "当前是免费版本，只包含了视频页面自动播放、解除播放暂停限制功能。如需自动下一集、自动换课程、防掉线、验证码识别、考试答题、全自动无人值守高级功能可升级付费版本，一杯咖啡钱，保你无忧学习，且永久使用|接各类脚本开发、代挂工作，微信：zhanyc_cn 备用微信:zhanfengkuo 个人网站：http://doc.zhanyc.cn",
+  "url": "https://greasyfork.org/scripts/505308-%E5%85%8D%E8%B4%B9%E7%89%88-%E4%B8%9C%E5%A5%A5%E6%97%B6%E4%BB%A3%E6%95%99%E8%82%B2-%E6%99%8B%E4%B8%AD%E5%B8%82%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2-%E5%A6%82%E9%9C%80%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%9B%86-%E8%87%AA%E5%8A%A8%E6%8D%A2%E8%AF%BE%E7%A8%8B-%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB-%E8%80%83%E8%AF%95%E7%AD%94%E9%A2%98-%E9%98%B2%E6%8E%89%E7%BA%BF%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD%E8%A7%81%E6%94%B6%E8%B4%B9%E7%89%88%E6%9C%AC-https-doc-zhanyc-cn-pages-0d561d",
+  "code_url": "https://update.greasyfork.org/scripts/505308/%F0%9F%8C%B1%E3%80%90%E5%85%8D%E8%B4%B9%E7%89%88%E3%80%91%E4%B8%9C%E5%A5%A5%E6%97%B6%E4%BB%A3%E6%95%99%E8%82%B2%2B%E6%99%8B%E4%B8%AD%E5%B8%82%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%7C%E5%A6%82%E9%9C%80%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E9%9B%86%E3%80%81%E8%87%AA%E5%8A%A8%E6%8D%A2%E8%AF%BE%E7%A8%8B%E3%80%81%E9%AA%8C%E8%AF%81%E7%A0%81%E8%AF%86%E5%88%AB%E3%80%81%E8%80%83%E8%AF%95%E7%AD%94%E9%A2%98%E3%80%81%E9%98%B2%E6%8E%89%E7%BA%BF%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD%E8%A7%81%E6%94%B6%E8%B4%B9%E7%89%88%E6%9C%AC%EF%BC%9Ahttps%3Adoczhanyccnpages0d561d.user.js",
+  "code_size": 48507,
+  "license": "GPL",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

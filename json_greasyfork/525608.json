@@ -1,0 +1,33 @@
+{
+  "id": 525608,
+  "daily_installs": 2,
+  "total_installs": 312,
+  "fan_score": "20.8",
+  "good_ratings": 1,
+  "ok_ratings": 2,
+  "bad_ratings": 0,
+  "created_at": "2025-02-02T05:25:56.000Z",
+  "code_updated_at": "2026-01-08T05:51:02.000Z",
+  "namespace": "https://github.com/qt-kaneko/DeepSeeker",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1430136,
+      "name": "qt-kaneko",
+      "created_at": "2025-02-02T05:20:02.000Z",
+      "url": "https://greasyfork.org/users/1430136-qt-kaneko"
+    }
+  ],
+  "name": "DeepSeeker",
+  "description": "Prevents deletion of filtered/censored responses on DeepSeek. This is purely visual change. FILTERED RESPONSES WILL PERSIST ONLY UNTIL THE PAGE IS RELOADED.",
+  "url": "https://greasyfork.org/scripts/525608-deepseeker",
+  "code_url": "https://update.greasyfork.org/scripts/525608/DeepSeeker.user.js",
+  "code_size": 3078,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "1.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

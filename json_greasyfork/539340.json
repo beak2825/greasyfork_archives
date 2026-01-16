@@ -1,0 +1,33 @@
+{
+  "id": 539340,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-13T23:55:57.000Z",
+  "code_updated_at": "2025-06-28T14:20:54.000Z",
+  "namespace": "https://autotrader.co.uk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483438,
+      "name": "iMarko",
+      "created_at": "2025-06-13T23:47:52.000Z",
+      "url": "https://greasyfork.org/users/1483438-imarko"
+    }
+  ],
+  "name": "Autotrader Cleaner",
+  "description": "Fully removes ads, leasing offers, and \"you may also like\" junk from Autotrader UK search results. Stable, fast, safe, and (hopefully) future-proof.",
+  "url": "https://greasyfork.org/scripts/539340-autotrader-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/539340/Autotrader%20Cleaner.user.js",
+  "code_size": 2101,
+  "license": "Custom: Free for personal use, commercial use prohibited.",
+  "version": "1.3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

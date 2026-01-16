@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535910,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-13T18:32:29.000Z",
+    "code_updated_at": "2025-05-14T04:23:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1469760,
+        "name": "Rooooooy",
+        "created_at": "2025-05-13T18:24:37.000Z",
+        "url": "https://greasyfork.org/users/1469760-rooooooy"
+      }
+    ],
+    "name": "微伴信息提取器",
+    "description": "提取 x-token、userId、userProjectId，并导出 txt 文件",
+    "url": "https://greasyfork.org/scripts/535910-%E5%BE%AE%E4%BC%B4%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/535910/%E5%BE%AE%E4%BC%B4%E4%BF%A1%E6%81%AF%E6%8F%90%E5%8F%96%E5%99%A8.user.js",
+    "code_size": 4066,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

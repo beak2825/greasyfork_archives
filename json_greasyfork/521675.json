@@ -1,0 +1,59 @@
+{
+  "id": 521675,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-12-24T14:33:02.000Z",
+  "code_updated_at": "2024-12-24T15:07:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1415184,
+      "name": "LostFelix",
+      "created_at": "2024-12-24T14:02:39.000Z",
+      "url": "https://greasyfork.org/users/1415184-lostfelix",
+      "scripts": [
+        {
+          "id": 521675,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-12-24T14:33:02.000Z",
+          "code_updated_at": "2024-12-24T15:07:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google Block Website Results",
+          "description": "Adds the option to hide search results from the google search. A new block icon is visible next to the search result. When clicked you are promted to confirm the blocking of the domain. The amount of search results will not be adjusted, so if you block all websites on page 1, then page 1 will be empty. You can remove websites right now only by editing the script storage,",
+          "url": "https://greasyfork.org/scripts/521675-google-block-website-results",
+          "code_url": "https://update.greasyfork.org/scripts/521675/Google%20Block%20Website%20Results.user.js",
+          "code_size": 4349,
+          "license": "MIT License",
+          "version": "0.1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Block Website Results",
+  "description": "Adds the option to hide search results from the google search. A new block icon is visible next to the search result. When clicked you are promted to confirm the blocking of the domain. The amount of search results will not be adjusted, so if you block all websites on page 1, then page 1 will be empty. You can remove websites right now only by editing the script storage,",
+  "url": "https://greasyfork.org/scripts/521675-google-block-website-results",
+  "code_url": "https://update.greasyfork.org/scripts/521675/Google%20Block%20Website%20Results.user.js",
+  "code_size": 4349,
+  "license": "MIT License",
+  "version": "0.1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 547185,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-25T02:17:28.000Z",
+  "code_updated_at": "2025-08-25T02:17:28.000Z",
+  "namespace": "faucetadskiller",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076216,
+      "name": "Nummer so",
+      "created_at": "2023-05-09T16:31:11.000Z",
+      "url": "https://greasyfork.org/users/1076216-nummer-so",
+      "scripts": []
+    }
+  ],
+  "name": "SCRIPT ADS KILLER",
+  "description": "limpar todos os anúncios de faucets",
+  "url": "https://greasyfork.org/scripts/547185-script-ads-killer",
+  "code_url": "https://update.greasyfork.org/scripts/547185/SCRIPT%20ADS%20KILLER.user.js",
+  "code_size": 2594,
+  "license": null,
+  "version": "0.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

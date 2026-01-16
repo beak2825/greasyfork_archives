@@ -1,0 +1,59 @@
+{
+  "id": 545780,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-14T07:21:45.000Z",
+  "code_updated_at": "2025-08-14T10:44:54.000Z",
+  "namespace": "gg-friends-flag-stable",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1504880,
+      "name": "MatrixTrixter",
+      "created_at": "2025-08-14T07:08:19.000Z",
+      "url": "https://greasyfork.org/users/1504880-matrixtrixter",
+      "scripts": [
+        {
+          "id": 545780,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-14T07:21:45.000Z",
+          "code_updated_at": "2025-08-14T10:44:54.000Z",
+          "namespace": "gg-friends-flag-stable",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GeoGuessr Friends: Tiny Flag by Name",
+          "description": "Adds a small country flag next to every visible player name across the GeoGuessr interface — from friends lists and the side panel to leaderboards, search results, and more — making it easy to see where players are from at a glance.",
+          "url": "https://greasyfork.org/scripts/545780-geoguessr-friends-tiny-flag-by-name",
+          "code_url": "https://update.greasyfork.org/scripts/545780/GeoGuessr%20Friends%3A%20Tiny%20Flag%20by%20Name.user.js",
+          "code_size": 5824,
+          "license": "MIT License",
+          "version": "3.4.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GeoGuessr Friends: Tiny Flag by Name",
+  "description": "Adds a small country flag next to every visible player name across the GeoGuessr interface — from friends lists and the side panel to leaderboards, search results, and more — making it easy to see where players are from at a glance.",
+  "url": "https://greasyfork.org/scripts/545780-geoguessr-friends-tiny-flag-by-name",
+  "code_url": "https://update.greasyfork.org/scripts/545780/GeoGuessr%20Friends%3A%20Tiny%20Flag%20by%20Name.user.js",
+  "code_size": 5824,
+  "license": "MIT License",
+  "version": "3.4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

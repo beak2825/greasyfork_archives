@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547663,
+    "daily_installs": 1,
+    "total_installs": 292,
+    "fan_score": "57.8",
+    "good_ratings": 11,
+    "ok_ratings": 0,
+    "bad_ratings": 2,
+    "created_at": "2025-08-28T23:45:59.000Z",
+    "code_updated_at": "2025-11-08T22:15:14.000Z",
+    "namespace": "burak-tools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1509793,
+        "name": "BK K",
+        "created_at": "2025-08-28T23:39:11.000Z",
+        "url": "https://greasyfork.org/users/1509793-bk-k"
+      }
+    ],
+    "name": "YouTube Restore Scrollable Fullscreen",
+    "description": "Restores scrollable fullscreen mode to show title, comments, likes, and related videos. Disables new UI's bottom recommendations.",
+    "url": "https://greasyfork.org/scripts/547663-youtube-restore-scrollable-fullscreen",
+    "code_url": "https://update.greasyfork.org/scripts/547663/YouTube%20Restore%20Scrollable%20Fullscreen.user.js",
+    "code_size": 4313,
+    "license": "MIT License",
+    "version": "1.91",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

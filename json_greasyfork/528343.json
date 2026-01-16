@@ -1,0 +1,34 @@
+{
+  "id": 528343,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-28T09:55:04.000Z",
+  "code_updated_at": "2025-02-28T13:30:39.000Z",
+  "namespace": "https://greasyfork.org/users/843175",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 843175,
+      "name": "ptixed",
+      "created_at": "2021-11-23T12:46:36.000Z",
+      "url": "https://greasyfork.org/users/843175-ptixed",
+      "scripts": []
+    }
+  ],
+  "name": "MS Teams changes",
+  "description": "change Teams emoji to old (skype) version",
+  "url": "https://greasyfork.org/scripts/528343-ms-teams-changes",
+  "code_url": "https://update.greasyfork.org/scripts/528343/MS%20Teams%20changes.user.js",
+  "code_size": 2707,
+  "license": null,
+  "version": "0.0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 525798,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-03T23:15:56.000Z",
+    "code_updated_at": "2025-02-04T11:28:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321133,
+        "name": "mr-d-r",
+        "created_at": "2024-06-20T13:34:05.000Z",
+        "url": "https://greasyfork.org/users/1321133-mr-d-r"
+      }
+    ],
+    "name": "MDA kinopoisk add google, rezka, imdb search",
+    "description": "adds extra links to useful sites",
+    "url": "https://greasyfork.org/scripts/525798-mda-kinopoisk-add-google-rezka-imdb-search",
+    "code_url": "https://update.greasyfork.org/scripts/525798/MDA%20kinopoisk%20add%20google%2C%20rezka%2C%20imdb%20search.user.js",
+    "code_size": 17053,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524560,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-22T19:09:36.000Z",
+    "code_updated_at": "2025-01-28T06:11:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321133,
+        "name": "mr-d-r",
+        "created_at": "2024-06-20T13:34:05.000Z",
+        "url": "https://greasyfork.org/users/1321133-mr-d-r"
+      }
+    ],
+    "name": "MDA linkedin improvements",
+    "description": "my linkedin improvements started 2025-01-11",
+    "url": "https://greasyfork.org/scripts/524560-mda-linkedin-improvements",
+    "code_url": "https://update.greasyfork.org/scripts/524560/MDA%20linkedin%20improvements.user.js",
+    "code_size": 7592,
+    "license": "MIT License",
+    "version": "1.5.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524553,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-22T18:34:19.000Z",
+    "code_updated_at": "2025-01-22T18:34:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321133,
+        "name": "mr-d-r",
+        "created_at": "2024-06-20T13:34:05.000Z",
+        "url": "https://greasyfork.org/users/1321133-mr-d-r"
+      }
+    ],
+    "name": "MDA library",
+    "description": "my JS library",
+    "url": "https://greasyfork.org/scripts/524553-mda-library",
+    "code_url": "https://update.greasyfork.org/scripts/524553/1525219/MDA%20library.js",
+    "code_size": 26852,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

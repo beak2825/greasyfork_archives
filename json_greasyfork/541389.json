@@ -1,0 +1,33 @@
+{
+  "id": 541389,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-02T02:27:03.000Z",
+  "code_updated_at": "2025-07-02T02:27:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1447936,
+      "name": "mcbaoge",
+      "created_at": "2025-03-20T04:51:27.000Z",
+      "url": "https://greasyfork.org/users/1447936-mcbaoge"
+    }
+  ],
+  "name": "模拟地理位置",
+  "description": "模拟指定位置，支持地图选点、手动输入经纬度和快捷键隐藏/显示（Ctrl+；）",
+  "url": "https://greasyfork.org/scripts/541389-%E6%A8%A1%E6%8B%9F%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE",
+  "code_url": "https://update.greasyfork.org/scripts/541389/%E6%A8%A1%E6%8B%9F%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE.user.js",
+  "code_size": 6536,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

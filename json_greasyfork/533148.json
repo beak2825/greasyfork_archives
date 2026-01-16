@@ -1,0 +1,34 @@
+{
+  "id": 533148,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-17T15:34:21.000Z",
+  "code_updated_at": "2025-05-13T10:52:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1459066,
+      "name": "Yorge-M",
+      "created_at": "2025-04-17T14:55:58.000Z",
+      "url": "https://greasyfork.org/users/1459066-yorge-m",
+      "scripts": []
+    }
+  ],
+  "name": "Chaoxing Mouseout Force Clean",
+  "description": "超星允许鼠标移出脚本",
+  "url": "https://greasyfork.org/scripts/533148-chaoxing-mouseout-force-clean",
+  "code_url": "https://update.greasyfork.org/scripts/533148/Chaoxing%20Mouseout%20Force%20Clean.user.js",
+  "code_size": 2593,
+  "license": "Apache",
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

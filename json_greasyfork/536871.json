@@ -1,0 +1,59 @@
+{
+  "id": 536871,
+  "daily_installs": 2,
+  "total_installs": 43,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-22T16:39:13.000Z",
+  "code_updated_at": "2025-05-22T16:39:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1361167,
+      "name": "yuemian",
+      "created_at": "2024-09-01T04:03:44.000Z",
+      "url": "https://greasyfork.org/users/1361167-yuemian",
+      "scripts": [
+        {
+          "id": 536871,
+          "daily_installs": 2,
+          "total_installs": 43,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-22T16:39:13.000Z",
+          "code_updated_at": "2025-05-22T16:39:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微博收藏备份工具(HTML导出增强版)",
+          "description": "备份微博收藏内容，支持导出HTML格式，优化图片显示，支持Live Photo播放",
+          "url": "https://greasyfork.org/scripts/536871-%E5%BE%AE%E5%8D%9A%E6%94%B6%E8%97%8F%E5%A4%87%E4%BB%BD%E5%B7%A5%E5%85%B7-html%E5%AF%BC%E5%87%BA%E5%A2%9E%E5%BC%BA%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/536871/%E5%BE%AE%E5%8D%9A%E6%94%B6%E8%97%8F%E5%A4%87%E4%BB%BD%E5%B7%A5%E5%85%B7%28HTML%E5%AF%BC%E5%87%BA%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+          "code_size": 426828,
+          "license": "All Rights Reserved",
+          "version": "2.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微博收藏备份工具(HTML导出增强版)",
+  "description": "备份微博收藏内容，支持导出HTML格式，优化图片显示，支持Live Photo播放",
+  "url": "https://greasyfork.org/scripts/536871-%E5%BE%AE%E5%8D%9A%E6%94%B6%E8%97%8F%E5%A4%87%E4%BB%BD%E5%B7%A5%E5%85%B7-html%E5%AF%BC%E5%87%BA%E5%A2%9E%E5%BC%BA%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/536871/%E5%BE%AE%E5%8D%9A%E6%94%B6%E8%97%8F%E5%A4%87%E4%BB%BD%E5%B7%A5%E5%85%B7%28HTML%E5%AF%BC%E5%87%BA%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+  "code_size": 426828,
+  "license": "All Rights Reserved",
+  "version": "2.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

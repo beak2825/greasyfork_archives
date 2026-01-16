@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554057,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T07:42:20.000Z",
+    "code_updated_at": "2025-10-29T09:06:26.000Z",
+    "namespace": "https://www.colamanga.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1531862,
+        "name": "Ti kai",
+        "created_at": "2025-10-29T07:37:13.000Z",
+        "url": "https://greasyfork.org/users/1531862-ti-kai"
+      }
+    ],
+    "name": "ColaManga 双页并排",
+    "description": "双页排列 + 方向键翻章 + 底部自动翻章 + 图片加载失败自动点击重试（仅适用浏览传统日漫），双页并排以外的其他功能让ai参照了“ColaManga 浏览增强”，但我是纯纯小白，ai是到底是参照还是照搬我分不清哈哈，是因为它俩冲突我才选择复制功能。如果您觉得有被侵害到权益，可以联系我删除，我就不公开自己留着用啦。",
+    "url": "https://greasyfork.org/scripts/554057-colamanga-%E5%8F%8C%E9%A1%B5%E5%B9%B6%E6%8E%92",
+    "code_url": "https://update.greasyfork.org/scripts/554057/ColaManga%20%E5%8F%8C%E9%A1%B5%E5%B9%B6%E6%8E%92.user.js",
+    "code_size": 8100,
+    "license": "MIT License",
+    "version": "8.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538313,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-04T13:03:54.000Z",
+    "code_updated_at": "2025-06-06T18:27:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478856,
+        "name": "No Purpose",
+        "created_at": "2025-06-04T12:53:54.000Z",
+        "url": "https://greasyfork.org/users/1478856-no-purpose"
+      }
+    ],
+    "name": "AWS Complete Auto Login (Email + Password + MFA)",
+    "description": "Complete AWS login automation with email, password, and MFA TOTP",
+    "url": "https://greasyfork.org/scripts/538313-aws-complete-auto-login-email-password-mfa",
+    "code_url": "https://update.greasyfork.org/scripts/538313/AWS%20Complete%20Auto%20Login%20%28Email%20%2B%20Password%20%2B%20MFA%29.user.js",
+    "code_size": 19136,
+    "license": null,
+    "version": "9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

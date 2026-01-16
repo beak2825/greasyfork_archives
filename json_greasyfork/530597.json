@@ -1,0 +1,34 @@
+{
+  "id": 530597,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-23T07:52:20.000Z",
+  "code_updated_at": "2025-03-23T07:52:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448870,
+      "name": "KevinHuHanwen",
+      "created_at": "2025-03-22T10:24:33.000Z",
+      "url": "https://greasyfork.org/users/1448870-kevinhuhanwen",
+      "scripts": []
+    }
+  ],
+  "name": "高级指纹防护专家模式",
+  "description": "激进模式防护浏览器指纹识别(实验性)",
+  "url": "https://greasyfork.org/scripts/530597-%E9%AB%98%E7%BA%A7%E6%8C%87%E7%BA%B9%E9%98%B2%E6%8A%A4%E4%B8%93%E5%AE%B6%E6%A8%A1%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/530597/%E9%AB%98%E7%BA%A7%E6%8C%87%E7%BA%B9%E9%98%B2%E6%8A%A4%E4%B8%93%E5%AE%B6%E6%A8%A1%E5%BC%8F.user.js",
+  "code_size": 5345,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

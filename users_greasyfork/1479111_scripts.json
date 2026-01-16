@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539253,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T05:02:00.000Z",
+    "code_updated_at": "2025-06-13T05:02:00.000Z",
+    "namespace": "tv.bgm.windwindwind",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479111,
+        "name": "Dsouth",
+        "created_at": "2025-06-05T03:57:01.000Z",
+        "url": "https://greasyfork.org/users/1479111-dsouth"
+      }
+    ],
+    "name": "反IP属地与签名栏",
+    "description": "屏蔽班固米讨论贴中的IP属地与签名栏",
+    "url": "https://greasyfork.org/scripts/539253-%E5%8F%8Dip%E5%B1%9E%E5%9C%B0%E4%B8%8E%E7%AD%BE%E5%90%8D%E6%A0%8F",
+    "code_url": "https://update.greasyfork.org/scripts/539253/%E5%8F%8DIP%E5%B1%9E%E5%9C%B0%E4%B8%8E%E7%AD%BE%E5%90%8D%E6%A0%8F.user.js",
+    "code_size": 2482,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

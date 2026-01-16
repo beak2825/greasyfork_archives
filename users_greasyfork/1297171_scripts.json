@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500113,
+    "daily_installs": 0,
+    "total_installs": 192,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-07-09T14:34:20.000Z",
+    "code_updated_at": "2024-07-09T14:34:20.000Z",
+    "namespace": "https://greasyfork.org/users/1084087-fermion",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1297171,
+        "name": "Ashley Miltenberger",
+        "created_at": "2024-05-05T09:40:43.000Z",
+        "url": "https://greasyfork.org/users/1297171-ashley-miltenberger"
+      }
+    ],
+    "name": "c.Ai Search Expander",
+    "description": "Automatically expands search results on c.Ai",
+    "url": "https://greasyfork.org/scripts/500113-c-ai-search-expander",
+    "code_url": "https://update.greasyfork.org/scripts/500113/cAi%20Search%20Expander.user.js",
+    "code_size": 1197,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

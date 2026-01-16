@@ -1,0 +1,59 @@
+{
+  "id": 523963,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-16T18:42:10.000Z",
+  "code_updated_at": "2025-01-21T15:11:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244,
+      "name": "ScottAllyn",
+      "created_at": "2014-05-16T05:17:59.000Z",
+      "url": "https://greasyfork.org/users/1244-scottallyn",
+      "scripts": [
+        {
+          "id": 372887,
+          "daily_installs": 1,
+          "total_installs": 3300,
+          "fan_score": "30.1",
+          "good_ratings": 3,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2018-10-05T16:15:25.000Z",
+          "code_updated_at": "2018-10-09T10:54:04.000Z",
+          "namespace": "https://www.greasyfork.org/en/scripts/372887-dd-wrt-pia-vpn-server-list",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DD-WRT PIA VPN Server List",
+          "description": "Replaces DD-WRT's Services->VPN->Server IP/Name textbox with a drop-down list of current PIA servers",
+          "url": "https://greasyfork.org/scripts/372887-dd-wrt-pia-vpn-server-list",
+          "code_url": "https://update.greasyfork.org/scripts/372887/DD-WRT%20PIA%20VPN%20Server%20List.user.js",
+          "code_size": 5320,
+          "license": null,
+          "version": "0.8.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Add Following, Trash, and Profile Menu Items to Suno AI",
+  "description": "Add 'Following', 'Trash', and 'Profile' menu items to the Suno AI navigation column",
+  "url": "https://greasyfork.org/scripts/523963-add-following-trash-and-profile-menu-items-to-suno-ai",
+  "code_url": "https://update.greasyfork.org/scripts/523963/Add%20Following%2C%20Trash%2C%20and%20Profile%20Menu%20Items%20to%20Suno%20AI.user.js",
+  "code_size": 5307,
+  "license": "MIT License",
+  "version": "4.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

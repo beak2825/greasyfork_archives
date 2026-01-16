@@ -1,0 +1,167 @@
+[
+  {
+    "id": 550475,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-23T15:38:12.000Z",
+    "code_updated_at": "2025-09-23T15:38:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267163,
+        "name": "iamnobody",
+        "created_at": "2024-02-26T10:55:25.000Z",
+        "url": "https://greasyfork.org/users/1267163-iamnobody"
+      }
+    ],
+    "name": "pomodoro timer (Full-Screen Timer Watermark with Add Button)",
+    "description": "Full-screen timer watermark with a button to add custom time in minutes",
+    "url": "https://greasyfork.org/scripts/550475-pomodoro-timer-full-screen-timer-watermark-with-add-button",
+    "code_url": "https://update.greasyfork.org/scripts/550475/pomodoro%20timer%20%28Full-Screen%20Timer%20Watermark%20with%20Add%20Button%29.user.js",
+    "code_size": 3310,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550473,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-23T15:14:34.000Z",
+    "code_updated_at": "2025-09-23T15:14:34.000Z",
+    "namespace": "https://github.com/exyezed/cobalt-tools/",
+    "support_url": "https://github.com/exyezed/cobalt-tools/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267163,
+        "name": "iamnobody",
+        "created_at": "2024-02-26T10:55:25.000Z",
+        "url": "https://greasyfork.org/users/1267163-iamnobody"
+      }
+    ],
+    "name": "Cobalt Tools (YouTube Playlist Downloader)",
+    "description": "Adds a cobalt.tools button to YouTube playlists, redirecting users to a playlist download page.",
+    "url": "https://greasyfork.org/scripts/550473-cobalt-tools-youtube-playlist-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/550473/Cobalt%20Tools%20%28YouTube%20Playlist%20Downloader%29.user.js",
+    "code_size": 4601,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550430,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-23T06:32:24.000Z",
+    "code_updated_at": "2025-09-23T06:32:23.000Z",
+    "namespace": "https://example.com/iamnobody",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267163,
+        "name": "iamnobody",
+        "created_at": "2024-02-26T10:55:25.000Z",
+        "url": "https://greasyfork.org/users/1267163-iamnobody"
+      }
+    ],
+    "name": "Silent Article Printer (Readability intercept)",
+    "description": "Silently replace page content with the parsed main article when user invokes Print. Keeps selectable text, constrains layout to A4 with 0 visual margins where possible, scales wide media to fit A4. Opens native print dialog for user confirmation. Works on most websites; excludes common search engines. MIT License. Author: iamnobody",
+    "url": "https://greasyfork.org/scripts/550430-silent-article-printer-readability-intercept",
+    "code_url": "https://update.greasyfork.org/scripts/550430/Silent%20Article%20Printer%20%28Readability%20intercept%29.user.js",
+    "code_size": 14184,
+    "license": "MIT License",
+    "version": "2.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549916,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-18T05:10:17.000Z",
+    "code_updated_at": "2025-09-18T05:10:17.000Z",
+    "namespace": "https://example.com/tm/syllabus-mcq-helper-advanced",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267163,
+        "name": "iamnobody",
+        "created_at": "2024-02-26T10:55:25.000Z",
+        "url": "https://greasyfork.org/users/1267163-iamnobody"
+      }
+    ],
+    "name": "Syllabus MCQ Helper — Advanced (UPSC / SSC CGL) — Panel stays open fix",
+    "description": "Advanced Study Boost: keyword scan, accordion links, per-site mute, dark-mode, custom keywords, daily quiz, highlight, rescan. Panel remains open until user minimizes. Responsive/mobile-friendly.",
+    "url": "https://greasyfork.org/scripts/549916-syllabus-mcq-helper-advanced-upsc-ssc-cgl-panel-stays-open-fix",
+    "code_url": "https://update.greasyfork.org/scripts/549916/Syllabus%20MCQ%20Helper%20%E2%80%94%20Advanced%20%28UPSC%20%20SSC%20CGL%29%20%E2%80%94%20Panel%20stays%20open%20fix.user.js",
+    "code_size": 33702,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549363,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-13T06:18:41.000Z",
+    "code_updated_at": "2025-09-13T06:18:41.000Z",
+    "namespace": "https://greasyfork.org/users/iamnobodybaba",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1267163,
+        "name": "iamnobody",
+        "created_at": "2024-02-26T10:55:25.000Z",
+        "url": "https://greasyfork.org/users/1267163-iamnobody"
+      }
+    ],
+    "name": "Wikipedia Citation Scraper for Zotero",
+    "description": "Extract all citations from Wikipedia articles and copy them as BibTeX format for Zotero import.",
+    "url": "https://greasyfork.org/scripts/549363-wikipedia-citation-scraper-for-zotero",
+    "code_url": "https://update.greasyfork.org/scripts/549363/Wikipedia%20Citation%20Scraper%20for%20Zotero.user.js",
+    "code_size": 1876,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

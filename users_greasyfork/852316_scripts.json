@@ -1,0 +1,101 @@
+[
+  {
+    "id": 544943,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-07T16:28:19.000Z",
+    "code_updated_at": "2025-08-07T16:28:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 852316,
+        "name": "听说你很会玩",
+        "created_at": "2021-12-12T13:53:31.000Z",
+        "url": "https://greasyfork.org/users/852316-%E5%90%AC%E8%AF%B4%E4%BD%A0%E5%BE%88%E4%BC%9A%E7%8E%A9"
+      }
+    ],
+    "name": "建行学习刷课脚本1.1版本",
+    "description": "一键静音，一键加速，一键评论",
+    "url": "https://greasyfork.org/scripts/544943-%E5%BB%BA%E8%A1%8C%E5%AD%A6%E4%B9%A0%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC1-1%E7%89%88%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/544943/1637367/%E5%BB%BA%E8%A1%8C%E5%AD%A6%E4%B9%A0%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC11%E7%89%88%E6%9C%AC.js",
+    "code_size": 6164,
+    "license": null,
+    "version": "2025-08-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518453,
+    "daily_installs": 0,
+    "total_installs": 72,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T08:37:18.000Z",
+    "code_updated_at": "2024-11-22T08:37:18.000Z",
+    "namespace": "https://greasyfork.org/users/852316",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 852316,
+        "name": "听说你很会玩",
+        "created_at": "2021-12-12T13:53:31.000Z",
+        "url": "https://greasyfork.org/users/852316-%E5%90%AC%E8%AF%B4%E4%BD%A0%E5%BE%88%E4%BC%9A%E7%8E%A9"
+      }
+    ],
+    "name": "基金从业人员远程培训系统工具",
+    "description": "zh-cn",
+    "url": "https://greasyfork.org/scripts/518453-%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E4%BA%BA%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/518453/%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E4%BA%BA%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 2030,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518451,
+    "daily_installs": 0,
+    "total_installs": 173,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T08:31:06.000Z",
+    "code_updated_at": "2024-11-22T08:31:06.000Z",
+    "namespace": "https://greasyfork.org/users/852316",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 852316,
+        "name": "听说你很会玩",
+        "created_at": "2021-12-12T13:53:31.000Z",
+        "url": "https://greasyfork.org/users/852316-%E5%90%AC%E8%AF%B4%E4%BD%A0%E5%BE%88%E4%BC%9A%E7%8E%A9"
+      }
+    ],
+    "name": "基金从业人员远程培训系统工具",
+    "description": "zh-cn",
+    "url": "https://greasyfork.org/scripts/518451-%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E4%BA%BA%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/518451/%E5%9F%BA%E9%87%91%E4%BB%8E%E4%B8%9A%E4%BA%BA%E5%91%98%E8%BF%9C%E7%A8%8B%E5%9F%B9%E8%AE%AD%E7%B3%BB%E7%BB%9F%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 2031,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

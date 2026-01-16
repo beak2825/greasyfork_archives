@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513099,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T19:34:54.000Z",
+    "code_updated_at": "2024-10-18T19:34:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1382896,
+        "name": "youssef elmasri",
+        "created_at": "2024-10-18T19:24:12.000Z",
+        "url": "https://greasyfork.org/users/1382896-youssef-elmasri"
+      }
+    ],
+    "name": "YouTube Video Brightness and Volume",
+    "description": "Control YouTube video brightness and volume (up to 200%) with sliders and a reset button",
+    "url": "https://greasyfork.org/scripts/513099-youtube-video-brightness-and-volume",
+    "code_url": "https://update.greasyfork.org/scripts/513099/YouTube%20Video%20Brightness%20and%20Volume.user.js",
+    "code_size": 5699,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513098,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T19:31:37.000Z",
+    "code_updated_at": "2024-10-18T19:31:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1382896,
+        "name": "youssef elmasri",
+        "created_at": "2024-10-18T19:24:12.000Z",
+        "url": "https://greasyfork.org/users/1382896-youssef-elmasri"
+      }
+    ],
+    "name": "YouTube Video Brightness and Volume Control with Over 100% Volume",
+    "description": "Control YouTube video brightness and volume (up to 200%) with sliders and a reset button",
+    "url": "https://greasyfork.org/scripts/513098-youtube-video-brightness-and-volume-control-with-over-100-volume",
+    "code_url": "https://update.greasyfork.org/scripts/513098/YouTube%20Video%20Brightness%20and%20Volume%20Control%20with%20Over%20100%25%20Volume.user.js",
+    "code_size": 5729,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

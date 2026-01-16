@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535306,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T05:12:46.000Z",
+    "code_updated_at": "2025-05-08T05:12:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1467179,
+        "name": "Bvck22",
+        "created_at": "2025-05-08T04:59:12.000Z",
+        "url": "https://greasyfork.org/users/1467179-bvck22"
+      }
+    ],
+    "name": "Cursor-Sheerid-Bypass",
+    "description": "拦截指定 Fetch 请求并修改URL中的 country=XXX 为 CN",
+    "url": "https://greasyfork.org/scripts/535306-cursor-sheerid-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/535306/Cursor-Sheerid-Bypass.user.js",
+    "code_size": 2274,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

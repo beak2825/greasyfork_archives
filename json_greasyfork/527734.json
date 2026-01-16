@@ -1,0 +1,34 @@
+{
+  "id": 527734,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-22T10:41:55.000Z",
+  "code_updated_at": "2025-02-22T10:41:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1262723,
+      "name": "李天能",
+      "created_at": "2024-02-17T21:35:47.000Z",
+      "url": "https://greasyfork.org/users/1262723-%E6%9D%8E%E5%A4%A9%E8%83%BD",
+      "scripts": []
+    }
+  ],
+  "name": "视频倍速播放增强版",
+  "description": "长按右方向键倍速播放，松开恢复原速。按+/-键调整倍速，按]/[键快速调整倍速，按P键恢复1.0倍速。上/下方向键调节音量，回车键切换全屏。左/右方向键快退/快进5秒。支持YouTube、Bilibili等大多数视频网站（可通过修改脚本的 @match 规则扩展支持的网站）。",
+  "url": "https://greasyfork.org/scripts/527734-%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%E5%A2%9E%E5%BC%BA%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/527734/%E8%A7%86%E9%A2%91%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+  "code_size": 11676,
+  "license": "MIT License",
+  "version": "1.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

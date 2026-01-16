@@ -1,5 +1,38 @@
 [
   {
+    "id": 553328,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-22T00:28:44.000Z",
+    "code_updated_at": "2025-10-22T00:45:45.000Z",
+    "namespace": "fmp.tools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024463,
+        "name": "simsem",
+        "created_at": "2023-02-09T16:03:06.000Z",
+        "url": "https://greasyfork.org/users/1024463-simsem"
+      }
+    ],
+    "name": "FMP Stadiums → CSV (IDs scanner)",
+    "description": "يجمع بيانات الإستاد من صفحات /Team/Board?id=.. لمدى IDs ويصدّرها CSV",
+    "url": "https://greasyfork.org/scripts/553328-fmp-stadiums-csv-ids-scanner",
+    "code_url": "https://update.greasyfork.org/scripts/553328/FMP%20Stadiums%20%E2%86%92%20CSV%20%28IDs%20scanner%29.user.js",
+    "code_size": 6327,
+    "license": null,
+    "version": "1.1",
+    "locale": "ar",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 552842,
     "daily_installs": 0,
     "total_installs": 0,
@@ -99,6 +132,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 552307,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-11T20:51:38.000Z",
+    "code_updated_at": "2025-10-12T21:26:08.000Z",
+    "namespace": "https://greasyfork.org/users/1024463",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024463,
+        "name": "simsem",
+        "created_at": "2023-02-09T16:03:06.000Z",
+        "url": "https://greasyfork.org/users/1024463-simsem"
+      }
+    ],
+    "name": "FMP Working Player Info",
+    "description": "Instantly display all 14 position ratings (2 columns) and weekly training results under the player name",
+    "url": "https://greasyfork.org/scripts/552307-fmp-working-player-info",
+    "code_url": "https://update.greasyfork.org/scripts/552307/FMP%20Working%20Player%20Info.user.js",
+    "code_size": 5420,
+    "license": null,
+    "version": "4.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 552072,
     "daily_installs": 0,
     "total_installs": 1,
@@ -160,6 +226,39 @@
     "code_size": 13037,
     "license": null,
     "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 552044,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T12:49:50.000Z",
+    "code_updated_at": "2025-10-09T18:01:09.000Z",
+    "namespace": "https://greasyfork.org/users/1024463",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024463,
+        "name": "simsem",
+        "created_at": "2023-02-09T16:03:06.000Z",
+        "url": "https://greasyfork.org/users/1024463-simsem"
+      }
+    ],
+    "name": "FMP Player Position Ratings",
+    "description": "Show all 14 position ratings for players from ANY team",
+    "url": "https://greasyfork.org/scripts/552044-fmp-player-position-ratings",
+    "code_url": "https://update.greasyfork.org/scripts/552044/FMP%20Player%20Position%20Ratings.user.js",
+    "code_size": 10345,
+    "license": null,
+    "version": "2.0",
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
@@ -228,6 +327,72 @@
     "version": "1.2.4",
     "locale": "ar",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538302,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-04T11:18:56.000Z",
+    "code_updated_at": "2025-06-04T11:49:42.000Z",
+    "namespace": "https://osama.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024463,
+        "name": "simsem",
+        "created_at": "2023-02-09T16:03:06.000Z",
+        "url": "https://greasyfork.org/users/1024463-simsem"
+      }
+    ],
+    "name": "FMP Player Training Insight Box",
+    "description": "Show GI + latest increased skills from training in player page",
+    "url": "https://greasyfork.org/scripts/538302-fmp-player-training-insight-box",
+    "code_url": "https://update.greasyfork.org/scripts/538302/FMP%20Player%20Training%20Insight%20Box.user.js",
+    "code_size": 3868,
+    "license": null,
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 537896,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-31T21:25:12.000Z",
+    "code_updated_at": "2025-05-31T21:41:34.000Z",
+    "namespace": "https://osama.dev",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1024463,
+        "name": "simsem",
+        "created_at": "2023-02-09T16:03:06.000Z",
+        "url": "https://greasyfork.org/users/1024463-simsem"
+      }
+    ],
+    "name": "FMP Player Stats Summary (Red Styled)",
+    "description": "Show totals & average rating in red, auto-update on competition change",
+    "url": "https://greasyfork.org/scripts/537896-fmp-player-stats-summary-red-styled",
+    "code_url": "https://update.greasyfork.org/scripts/537896/FMP%20Player%20Stats%20Summary%20%28Red%20Styled%29.user.js",
+    "code_size": 3140,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534017,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T01:21:08.000Z",
+    "code_updated_at": "2025-04-26T01:21:08.000Z",
+    "namespace": "com.anwinity.weewoo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665604,
+        "name": "Anwinity",
+        "created_at": "2020-07-11T00:15:39.000Z",
+        "url": "https://greasyfork.org/users/665604-anwinity"
+      }
+    ],
+    "name": "Amazon Wee Checkout Confirm",
+    "description": "This is a private script for my wife. This should not be public. It will prompt confirm on amazon checkout.",
+    "url": "https://greasyfork.org/scripts/534017-amazon-wee-checkout-confirm",
+    "code_url": "https://update.greasyfork.org/scripts/534017/Amazon%20Wee%20Checkout%20Confirm.user.js",
+    "code_size": 4593,
+    "license": "MIT License",
+    "version": "2025-04-25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 524784,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-25T00:59:20.000Z",
+    "code_updated_at": "2025-01-25T00:59:20.000Z",
+    "namespace": "com.anwinity.idlepixel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 665604,
+        "name": "Anwinity",
+        "created_at": "2020-07-11T00:15:39.000Z",
+        "url": "https://greasyfork.org/users/665604-anwinity"
+      }
+    ],
+    "name": "IdlePixel Quick Fight Go Brrrrr",
+    "description": "Adds space hotkey for \"Collect Loot & Fight Again\" button when quick fighting.",
+    "url": "https://greasyfork.org/scripts/524784-idlepixel-quick-fight-go-brrrrr",
+    "code_url": "https://update.greasyfork.org/scripts/524784/IdlePixel%20Quick%20Fight%20Go%20Brrrrr.user.js",
+    "code_size": 1992,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

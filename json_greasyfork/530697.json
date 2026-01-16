@@ -1,0 +1,34 @@
+{
+  "id": 530697,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-24T10:06:44.000Z",
+  "code_updated_at": "2025-03-25T01:30:59.000Z",
+  "namespace": "https://yww52.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444899,
+      "name": "jaslli",
+      "created_at": "2025-03-12T09:37:50.000Z",
+      "url": "https://greasyfork.org/users/1444899-jaslli",
+      "scripts": []
+    }
+  ],
+  "name": "B站视频增添倍速选项",
+  "description": "B站的倍速选项太少了，所以提供了一个按钮，以0.1为步长，增加视频倍速选项",
+  "url": "https://greasyfork.org/scripts/530697-b%E7%AB%99%E8%A7%86%E9%A2%91%E5%A2%9E%E6%B7%BB%E5%80%8D%E9%80%9F%E9%80%89%E9%A1%B9",
+  "code_url": "https://update.greasyfork.org/scripts/530697/B%E7%AB%99%E8%A7%86%E9%A2%91%E5%A2%9E%E6%B7%BB%E5%80%8D%E9%80%9F%E9%80%89%E9%A1%B9.user.js",
+  "code_size": 47176,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

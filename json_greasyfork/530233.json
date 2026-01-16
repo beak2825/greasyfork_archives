@@ -1,0 +1,59 @@
+{
+  "id": 530233,
+  "daily_installs": 0,
+  "total_installs": 140,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-19T02:29:43.000Z",
+  "code_updated_at": "2025-03-19T02:29:43.000Z",
+  "namespace": "GoodtimeswithEno",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1447481,
+      "name": "Good times with Eno",
+      "created_at": "2025-03-19T02:24:59.000Z",
+      "url": "https://greasyfork.org/users/1447481-good-times-with-eno",
+      "scripts": [
+        {
+          "id": 530233,
+          "daily_installs": 0,
+          "total_installs": 140,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-19T02:29:43.000Z",
+          "code_updated_at": "2025-03-19T02:29:43.000Z",
+          "namespace": "GoodtimeswithEno",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chess.com Bot/Cheata",
+          "description": "Chess.com Bot/Cheat that finds the best move!",
+          "url": "https://greasyfork.org/scripts/530233-chess-com-bot-cheata",
+          "code_url": "https://update.greasyfork.org/scripts/530233/Chesscom%20BotCheata.user.js",
+          "code_size": 21470,
+          "license": "Chess.com Bot/Cheat © 2025 by GoodtimeswithEno, © All Rights Reserved",
+          "version": "1.2.9.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chess.com Bot/Cheata",
+  "description": "Chess.com Bot/Cheat that finds the best move!",
+  "url": "https://greasyfork.org/scripts/530233-chess-com-bot-cheata",
+  "code_url": "https://update.greasyfork.org/scripts/530233/Chesscom%20BotCheata.user.js",
+  "code_size": 21470,
+  "license": "Chess.com Bot/Cheat © 2025 by GoodtimeswithEno, © All Rights Reserved",
+  "version": "1.2.9.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

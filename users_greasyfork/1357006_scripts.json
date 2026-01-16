@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510730,
+    "daily_installs": 0,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-29T10:13:45.000Z",
+    "code_updated_at": "2024-09-29T10:13:45.000Z",
+    "namespace": "https://vanyauhalin.me/",
+    "support_url": null,
+    "contribution_url": "https://github.com/vanyauhalin/userscript-redirect-from-reddit-to-old-reddit/",
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357006,
+        "name": "vanyauhalin",
+        "created_at": "2024-08-24T10:05:47.000Z",
+        "url": "https://greasyfork.org/users/1357006-vanyauhalin"
+      }
+    ],
+    "name": "Redirect From Reddit To Old Reddit",
+    "description": "Userscript that redirects from Reddit to old Reddit",
+    "url": "https://greasyfork.org/scripts/510730-redirect-from-reddit-to-old-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/510730/Redirect%20From%20Reddit%20To%20Old%20Reddit.user.js",
+    "code_size": 1028,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

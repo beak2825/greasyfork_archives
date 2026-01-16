@@ -1,0 +1,59 @@
+{
+  "id": 512519,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-14T00:25:27.000Z",
+  "code_updated_at": "2024-10-26T01:29:13.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/512519-new-old-notifications-neopets",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1378381,
+      "name": "GrarrlMunch",
+      "created_at": "2024-10-08T20:12:03.000Z",
+      "url": "https://greasyfork.org/users/1378381-grarrlmunch",
+      "scripts": [
+        {
+          "id": 512519,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-14T00:25:27.000Z",
+          "code_updated_at": "2024-10-26T01:29:13.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/512519-new-old-notifications-neopets",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "New Old Notifications - Neopets",
+          "description": "Displays notifications on the new layout's nav bar. Based on the script by JustDownloadin",
+          "url": "https://greasyfork.org/scripts/512519-new-old-notifications-neopets",
+          "code_url": "https://update.greasyfork.org/scripts/512519/New%20Old%20Notifications%20-%20Neopets.user.js",
+          "code_size": 6827,
+          "license": "GNU GPLv3",
+          "version": "1.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "New Old Notifications - Neopets",
+  "description": "Displays notifications on the new layout's nav bar. Based on the script by JustDownloadin",
+  "url": "https://greasyfork.org/scripts/512519-new-old-notifications-neopets",
+  "code_url": "https://update.greasyfork.org/scripts/512519/New%20Old%20Notifications%20-%20Neopets.user.js",
+  "code_size": 6827,
+  "license": "GNU GPLv3",
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

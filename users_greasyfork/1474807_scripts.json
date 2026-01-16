@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537241,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T19:48:03.000Z",
+    "code_updated_at": "2025-05-25T20:06:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474807,
+        "name": "jei_hyun",
+        "created_at": "2025-05-25T19:44:58.000Z",
+        "url": "https://greasyfork.org/users/1474807-jei-hyun"
+      }
+    ],
+    "name": "Cartel Empire Blackjack Pro Assistant",
+    "description": "Blackjack based on basic strategy + dynamic betting + stats tracking + training AI mode + reset/toggle controls",
+    "url": "https://greasyfork.org/scripts/537241-cartel-empire-blackjack-pro-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/537241/Cartel%20Empire%20Blackjack%20Pro%20Assistant.user.js",
+    "code_size": 7122,
+    "license": null,
+    "version": "4.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

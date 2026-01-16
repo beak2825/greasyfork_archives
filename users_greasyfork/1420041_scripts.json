@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522966,
+    "daily_installs": 0,
+    "total_installs": 88,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-06T01:56:43.000Z",
+    "code_updated_at": "2025-12-15T18:02:24.000Z",
+    "namespace": "https://github.com/Daminator4113/Twitter-UI-Cleanup",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1420041,
+        "name": "Daminator4113",
+        "created_at": "2025-01-06T01:36:14.000Z",
+        "url": "https://greasyfork.org/users/1420041-daminator4113"
+      }
+    ],
+    "name": "Twitter UI Cleanup",
+    "description": "Remove unwanted buttons and sections on Twitter",
+    "url": "https://greasyfork.org/scripts/522966-twitter-ui-cleanup",
+    "code_url": "https://update.greasyfork.org/scripts/522966/Twitter%20UI%20Cleanup.user.js",
+    "code_size": 2503,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

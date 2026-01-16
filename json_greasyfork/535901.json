@@ -1,0 +1,34 @@
+{
+  "id": 535901,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-13T16:33:14.000Z",
+  "code_updated_at": "2025-05-13T16:33:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469731,
+      "name": "Paulius Šulskis",
+      "created_at": "2025-05-13T16:31:33.000Z",
+      "url": "https://greasyfork.org/users/1469731-paulius-%C5%A1ulskis",
+      "scripts": []
+    }
+  ],
+  "name": "BaseTao Image Downloader",
+  "description": "Adds download buttons to BaseTao order image pages",
+  "url": "https://greasyfork.org/scripts/535901-basetao-image-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/535901/BaseTao%20Image%20Downloader.user.js",
+  "code_size": 6340,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

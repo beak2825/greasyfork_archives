@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516091,
+    "daily_installs": 0,
+    "total_installs": 107,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-06T16:13:06.000Z",
+    "code_updated_at": "2024-11-06T16:13:06.000Z",
+    "namespace": "https://github.com/YeesterPlus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392152,
+        "name": "Ashton Drye",
+        "created_at": "2024-11-06T16:11:23.000Z",
+        "url": "https://greasyfork.org/users/1392152-ashton-drye"
+      }
+    ],
+    "name": "Paste Essays(editable) (Acellus)",
+    "description": "Essays are kinda dead to me",
+    "url": "https://greasyfork.org/scripts/516091-paste-essays-editable-acellus",
+    "code_url": "https://update.greasyfork.org/scripts/516091/Paste%20Essays%28editable%29%20%28Acellus%29.user.js",
+    "code_size": 2083,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

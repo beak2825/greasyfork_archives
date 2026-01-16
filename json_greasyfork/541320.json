@@ -1,0 +1,33 @@
+{
+  "id": 541320,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-01T07:39:38.000Z",
+  "code_updated_at": "2025-07-01T07:39:38.000Z",
+  "namespace": "https://jwgl.webvpn.nepu.edu.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1279095,
+      "name": "cat3399",
+      "created_at": "2024-03-25T05:11:25.000Z",
+      "url": "https://greasyfork.org/users/1279095-cat3399"
+    }
+  ],
+  "name": "东油教务系统预览下学期课表",
+  "description": "在东油教务系统课程主页面，点击悬浮按钮，在独立的弹窗面板中一键获取并生成可视化课程表。支持按周次查看，自动处理时间冲突，界面美化，固定显示无法排入的课程（并显示其周次）。",
+  "url": "https://greasyfork.org/scripts/541320-%E4%B8%9C%E6%B2%B9%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%A2%84%E8%A7%88%E4%B8%8B%E5%AD%A6%E6%9C%9F%E8%AF%BE%E8%A1%A8",
+  "code_url": "https://update.greasyfork.org/scripts/541320/%E4%B8%9C%E6%B2%B9%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%A2%84%E8%A7%88%E4%B8%8B%E5%AD%A6%E6%9C%9F%E8%AF%BE%E8%A1%A8.user.js",
+  "code_size": 27066,
+  "license": "MIT License",
+  "version": "4.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

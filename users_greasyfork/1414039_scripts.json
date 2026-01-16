@@ -64,5 +64,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 528494,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-02T03:30:18.000Z",
+    "code_updated_at": "2026-01-08T11:15:51.000Z",
+    "namespace": "xiaohuohumax/userscripts/common-right-click-tab",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414039,
+        "name": "xiaohuohumax",
+        "created_at": "2024-12-22T06:17:53.000Z",
+        "url": "https://greasyfork.org/users/1414039-xiaohuohumax"
+      }
+    ],
+    "name": "右键超链接快速打开新标签页（Common Right Click Tab）",
+    "description": "用户可以通过右键点击【普通链接、鼠标选中带链接的文字】等方式快速打开新标签页。效果类似于【Ctrl+左键】点击链接。",
+    "url": "https://greasyfork.org/scripts/528494-%E5%8F%B3%E9%94%AE%E8%B6%85%E9%93%BE%E6%8E%A5%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5-common-right-click-tab",
+    "code_url": "https://update.greasyfork.org/scripts/528494/%E5%8F%B3%E9%94%AE%E8%B6%85%E9%93%BE%E6%8E%A5%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%EF%BC%88Common%20Right%20Click%20Tab%EF%BC%89.user.js",
+    "code_size": 36926,
+    "license": "MIT License",
+    "version": "1.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522087,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-28T11:16:14.000Z",
+    "code_updated_at": "2025-12-15T12:28:41.000Z",
+    "namespace": "xiaohuohumax/userscripts/bilibili-dynamic-block",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414039,
+        "name": "xiaohuohumax",
+        "created_at": "2024-12-22T06:17:53.000Z",
+        "url": "https://greasyfork.org/users/1414039-xiaohuohumax"
+      }
+    ],
+    "name": "Bilibili 动态卡片拦截（Bilibili Dynamic Block）",
+    "description": "此脚本可以依据规则拦截 Bilibili 动态卡片。",
+    "url": "https://greasyfork.org/scripts/522087-bilibili-%E5%8A%A8%E6%80%81%E5%8D%A1%E7%89%87%E6%8B%A6%E6%88%AA-bilibili-dynamic-block",
+    "code_url": "https://update.greasyfork.org/scripts/522087/Bilibili%20%E5%8A%A8%E6%80%81%E5%8D%A1%E7%89%87%E6%8B%A6%E6%88%AA%EF%BC%88Bilibili%20Dynamic%20Block%EF%BC%89.user.js",
+    "code_size": 15352,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522083,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-28T09:35:28.000Z",
+    "code_updated_at": "2025-12-15T12:28:41.000Z",
+    "namespace": "xiaohuohumax/userscripts/github-commit-sort",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1414039,
+        "name": "xiaohuohumax",
+        "created_at": "2024-12-22T06:17:53.000Z",
+        "url": "https://greasyfork.org/users/1414039-xiaohuohumax"
+      }
+    ],
+    "name": "GitHub 仓库文件按提交时间排序（GitHub Commit Sort）",
+    "description": "GitHub 仓库无法快速查看最新的变更文件？试试这个 GitHub 仓库文件按提交时间排序的用户脚本吧！",
+    "url": "https://greasyfork.org/scripts/522083-github-%E4%BB%93%E5%BA%93%E6%96%87%E4%BB%B6%E6%8C%89%E6%8F%90%E4%BA%A4%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F-github-commit-sort",
+    "code_url": "https://update.greasyfork.org/scripts/522083/GitHub%20%E4%BB%93%E5%BA%93%E6%96%87%E4%BB%B6%E6%8C%89%E6%8F%90%E4%BA%A4%E6%97%B6%E9%97%B4%E6%8E%92%E5%BA%8F%EF%BC%88GitHub%20Commit%20Sort%EF%BC%89.user.js",
+    "code_size": 6814,
+    "license": "MIT License",
+    "version": "1.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 530583,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-23T03:48:05.000Z",
+  "code_updated_at": "2025-03-23T04:21:37.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1446508,
+      "name": "nocommas",
+      "created_at": "2025-03-16T18:05:27.000Z",
+      "url": "https://greasyfork.org/users/1446508-nocommas",
+      "scripts": [
+        {
+          "id": 535972,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-14T12:21:10.000Z",
+          "code_updated_at": "2025-05-14T12:21:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Photon Pro Ultra",
+          "description": "Adds Pro Features to Photon",
+          "url": "https://greasyfork.org/scripts/535972-photon-pro-ultra",
+          "code_url": "https://update.greasyfork.org/scripts/535972/Photon%20Pro%20Ultra.user.js",
+          "code_size": 8851,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GMGN Pro",
+  "description": "Adds color indicators to wallet tracker for gmgn and highlights rows with >5% ownership, except for Four.Meme LP",
+  "url": "https://greasyfork.org/scripts/530583-gmgn-pro",
+  "code_url": "https://update.greasyfork.org/scripts/530583/GMGN%20Pro.user.js",
+  "code_size": 6171,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

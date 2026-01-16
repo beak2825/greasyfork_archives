@@ -1,0 +1,34 @@
+{
+  "id": 513629,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-23T05:45:19.000Z",
+  "code_updated_at": "2024-10-23T06:52:07.000Z",
+  "namespace": "https://greasyfork.org/users/976225",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 976225,
+      "name": "extract",
+      "created_at": "2022-10-28T08:06:46.000Z",
+      "url": "https://greasyfork.org/users/976225-extract",
+      "scripts": []
+    }
+  ],
+  "name": "Web Translate",
+  "description": "웹페이지에 구글 웹 번역 기능 추가",
+  "url": "https://greasyfork.org/scripts/513629-web-translate",
+  "code_url": "https://update.greasyfork.org/scripts/513629/Web%20Translate.user.js",
+  "code_size": 8495,
+  "license": null,
+  "version": "0.0.1.20241023065207",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

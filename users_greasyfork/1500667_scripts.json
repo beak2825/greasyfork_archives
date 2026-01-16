@@ -1,0 +1,101 @@
+[
+  {
+    "id": 551503,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-04T01:17:45.000Z",
+    "code_updated_at": "2026-01-12T00:01:13.000Z",
+    "namespace": "waiter7",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500667,
+        "name": "W 7",
+        "created_at": "2025-08-01T21:19:45.000Z",
+        "url": "https://greasyfork.org/users/1500667-w-7"
+      }
+    ],
+    "name": "ReCover: Magically Rehost Album Covers to ptpimg",
+    "description": "Magically Rehost album covers and artist images to ptpimg on RED and PTP torrent and artist pages",
+    "url": "https://greasyfork.org/scripts/551503-recover-magically-rehost-album-covers-to-ptpimg",
+    "code_url": "https://update.greasyfork.org/scripts/551503/ReCover%3A%20Magically%20Rehost%20Album%20Covers%20to%20ptpimg.user.js",
+    "code_size": 105544,
+    "license": "MIT License",
+    "version": "1.10.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550777,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-26T17:04:37.000Z",
+    "code_updated_at": "2025-12-01T02:36:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500667,
+        "name": "W 7",
+        "created_at": "2025-08-01T21:19:45.000Z",
+        "url": "https://greasyfork.org/users/1500667-w-7"
+      }
+    ],
+    "name": "DEEZ Notes",
+    "description": "Drops DEEZ NOTES on the album page to easily view metadata like label, UPC, genres, release dates, BBCode tracklist export, and ptpimg cover rehosting",
+    "url": "https://greasyfork.org/scripts/550777-deez-notes",
+    "code_url": "https://update.greasyfork.org/scripts/550777/DEEZ%20Notes.user.js",
+    "code_size": 69732,
+    "license": "MIT License",
+    "version": "3.3.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544342,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T21:24:28.000Z",
+    "code_updated_at": "2025-08-03T23:30:45.000Z",
+    "namespace": "waiter7",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500667,
+        "name": "W 7",
+        "created_at": "2025-08-01T21:19:45.000Z",
+        "url": "https://greasyfork.org/users/1500667-w-7"
+      }
+    ],
+    "name": "Red Dead Resolver - Forum Report Resolver",
+    "description": "Ready, aim, fire! Quickly resolve and report editing threads.",
+    "url": "https://greasyfork.org/scripts/544342-red-dead-resolver-forum-report-resolver",
+    "code_url": "https://update.greasyfork.org/scripts/544342/Red%20Dead%20Resolver%20-%20Forum%20Report%20Resolver.user.js",
+    "code_size": 19964,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

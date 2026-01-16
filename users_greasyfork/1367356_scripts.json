@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508405,
+    "daily_installs": 0,
+    "total_installs": 170,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-14T09:13:36.000Z",
+    "code_updated_at": "2024-09-14T10:46:21.000Z",
+    "namespace": "http://violentmonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1367356,
+        "name": "hirnovanto 96",
+        "created_at": "2024-09-14T09:08:38.000Z",
+        "url": "https://greasyfork.org/users/1367356-hirnovanto-96"
+      }
+    ],
+    "name": "Auto Blum natural",
+    "description": "click like a real person",
+    "url": "https://greasyfork.org/scripts/508405-auto-blum-natural",
+    "code_url": "https://update.greasyfork.org/scripts/508405/Auto%20Blum%20natural.user.js",
+    "code_size": 7869,
+    "license": null,
+    "version": "3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

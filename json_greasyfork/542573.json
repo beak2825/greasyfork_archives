@@ -1,0 +1,59 @@
+{
+  "id": 542573,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-14T21:46:34.000Z",
+  "code_updated_at": "2025-07-14T21:49:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1387875,
+      "name": "Joaquin Bonilla Suez",
+      "created_at": "2024-10-29T02:13:28.000Z",
+      "url": "https://greasyfork.org/users/1387875-joaquin-bonilla-suez",
+      "scripts": [
+        {
+          "id": 542573,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-14T21:46:34.000Z",
+          "code_updated_at": "2025-07-14T21:49:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Untranslate Reddit Results on Google",
+          "description": "Add \"-inurl:?tl=\" suffix to search queries with Shift+T by modifying URL",
+          "url": "https://greasyfork.org/scripts/542573-untranslate-reddit-results-on-google",
+          "code_url": "https://update.greasyfork.org/scripts/542573/Untranslate%20Reddit%20Results%20on%20Google.user.js",
+          "code_size": 2112,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Untranslate Reddit Results on Google",
+  "description": "Add \"-inurl:?tl=\" suffix to search queries with Shift+T by modifying URL",
+  "url": "https://greasyfork.org/scripts/542573-untranslate-reddit-results-on-google",
+  "code_url": "https://update.greasyfork.org/scripts/542573/Untranslate%20Reddit%20Results%20on%20Google.user.js",
+  "code_size": 2112,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

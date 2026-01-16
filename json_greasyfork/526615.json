@@ -1,0 +1,33 @@
+{
+  "id": 526615,
+  "daily_installs": 0,
+  "total_installs": 122,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-12T04:27:05.000Z",
+  "code_updated_at": "2025-02-25T00:42:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1434151,
+      "name": "lustmch",
+      "created_at": "2025-02-12T04:11:41.000Z",
+      "url": "https://greasyfork.org/users/1434151-lustmch"
+    }
+  ],
+  "name": "Jerkmate Cheat",
+  "description": "Auto-clicker and auto-upgrader for JerkMate",
+  "url": "https://greasyfork.org/scripts/526615-jerkmate-cheat",
+  "code_url": "https://update.greasyfork.org/scripts/526615/Jerkmate%20Cheat.user.js",
+  "code_size": 4896,
+  "license": "MIT; No Redistribution (see description)",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547991,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T05:30:42.000Z",
+    "code_updated_at": "2025-09-01T18:23:46.000Z",
+    "namespace": "https://github.com/onetwohour/Block-YouTube-Shorts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510598,
+        "name": "onetwohour",
+        "created_at": "2025-08-31T16:17:31.000Z",
+        "url": "https://greasyfork.org/users/1510598-onetwohour"
+      }
+    ],
+    "name": "Block Youtube Shorts",
+    "description": "Protect from brain breaker",
+    "url": "https://greasyfork.org/scripts/547991-block-youtube-shorts",
+    "code_url": "https://update.greasyfork.org/scripts/547991/Block%20Youtube%20Shorts.user.js",
+    "code_size": 13536,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

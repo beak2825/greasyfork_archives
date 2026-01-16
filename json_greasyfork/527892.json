@@ -1,0 +1,33 @@
+{
+  "id": 527892,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-24T03:39:40.000Z",
+  "code_updated_at": "2025-02-24T03:39:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088100,
+      "name": "YouTubeDrawaria",
+      "created_at": "2023-05-31T23:20:20.000Z",
+      "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+    }
+  ],
+  "name": "Drawaria Sky Sanctuary Zone",
+  "description": "Professional recreation of Sky Sanctuary Zone with detailed elements",
+  "url": "https://greasyfork.org/scripts/527892-drawaria-sky-sanctuary-zone",
+  "code_url": "https://update.greasyfork.org/scripts/527892/Drawaria%20Sky%20Sanctuary%20Zone.user.js",
+  "code_size": 30427,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

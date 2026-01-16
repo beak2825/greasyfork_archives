@@ -1,0 +1,68 @@
+[
+  {
+    "id": 517772,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T13:18:03.000Z",
+    "code_updated_at": "2024-11-17T13:18:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1398064,
+        "name": "陈开达",
+        "created_at": "2024-11-17T13:11:38.000Z",
+        "url": "https://greasyfork.org/users/1398064-%E9%99%88%E5%BC%80%E8%BE%BE"
+      }
+    ],
+    "name": "获取VMware官方ESXI版本发布所有的URL",
+    "description": "Extract all URLs with a specific prefix and convert them to full URLs, add a button to display them",
+    "url": "https://greasyfork.org/scripts/517772-%E8%8E%B7%E5%8F%96vmware%E5%AE%98%E6%96%B9esxi%E7%89%88%E6%9C%AC%E5%8F%91%E5%B8%83%E6%89%80%E6%9C%89%E7%9A%84url",
+    "code_url": "https://update.greasyfork.org/scripts/517772/%E8%8E%B7%E5%8F%96VMware%E5%AE%98%E6%96%B9ESXI%E7%89%88%E6%9C%AC%E5%8F%91%E5%B8%83%E6%89%80%E6%9C%89%E7%9A%84URL.user.js",
+    "code_size": 2663,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517771,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T13:17:11.000Z",
+    "code_updated_at": "2024-11-17T13:17:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1398064,
+        "name": "陈开达",
+        "created_at": "2024-11-17T13:11:38.000Z",
+        "url": "https://greasyfork.org/users/1398064-%E9%99%88%E5%BC%80%E8%BE%BE"
+      }
+    ],
+    "name": "Horizon官网检查是否包含PDF",
+    "description": "Automate the process of clicking the PDF download button and close the tab after 5 seconds if the button is found and clicked",
+    "url": "https://greasyfork.org/scripts/517771-horizon%E5%AE%98%E7%BD%91%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%ABpdf",
+    "code_url": "https://update.greasyfork.org/scripts/517771/Horizon%E5%AE%98%E7%BD%91%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E5%8C%85%E5%90%ABPDF.user.js",
+    "code_size": 1694,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

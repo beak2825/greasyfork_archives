@@ -1,0 +1,33 @@
+{
+  "id": 510019,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-24T16:58:07.000Z",
+  "code_updated_at": "2024-09-24T16:58:07.000Z",
+  "namespace": "https://github.com/Airazone",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972453,
+      "name": "Airazon Lynott",
+      "created_at": "2022-10-18T17:57:49.000Z",
+      "url": "https://greasyfork.org/users/972453-airazon-lynott"
+    }
+  ],
+  "name": "Stay Open",
+  "description": "Keep Rows Maximized; Neopets Hospital Volunteer Centre.",
+  "url": "https://greasyfork.org/scripts/510019-stay-open",
+  "code_url": "https://update.greasyfork.org/scripts/510019/Stay%20Open.user.js",
+  "code_size": 735,
+  "license": "GNU GPLv3",
+  "version": "v1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

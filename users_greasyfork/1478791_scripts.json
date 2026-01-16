@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538296,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-04T10:22:33.000Z",
+    "code_updated_at": "2025-07-17T01:13:53.000Z",
+    "namespace": "steam.raah",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478791,
+        "name": "Alyx AKA mobs2r",
+        "created_at": "2025-06-04T10:18:27.000Z",
+        "url": "https://greasyfork.org/users/1478791-alyx-aka-mobs2r"
+      }
+    ],
+    "name": "Reverse Alias Arrow Handler (for Steam)",
+    "description": "An automatic toggle for a Steam username exploit.",
+    "url": "https://greasyfork.org/scripts/538296-reverse-alias-arrow-handler-for-steam",
+    "code_url": "https://update.greasyfork.org/scripts/538296/Reverse%20Alias%20Arrow%20Handler%20%28for%20Steam%29.user.js",
+    "code_size": 7477,
+    "license": null,
+    "version": "1337",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

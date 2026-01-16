@@ -1,0 +1,59 @@
+{
+  "id": 498709,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-24T01:17:25.000Z",
+  "code_updated_at": "2024-08-17T22:52:59.000Z",
+  "namespace": "https://greasyfork.org/en/users/1322876-keladry",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1322876,
+      "name": "keladry",
+      "created_at": "2024-06-24T01:08:31.000Z",
+      "url": "https://greasyfork.org/users/1322876-keladry",
+      "scripts": [
+        {
+          "id": 498709,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-24T01:17:25.000Z",
+          "code_updated_at": "2024-08-17T22:52:59.000Z",
+          "namespace": "https://greasyfork.org/en/users/1322876-keladry",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AO3: [Wrangling] Exclude Subtags and Synonyms",
+          "description": "Link to works for a canonical tag, excluding all sub tags and syns",
+          "url": "https://greasyfork.org/scripts/498709-ao3-wrangling-exclude-subtags-and-synonyms",
+          "code_url": "https://update.greasyfork.org/scripts/498709/AO3%3A%20%5BWrangling%5D%20Exclude%20Subtags%20and%20Synonyms.user.js",
+          "code_size": 3956,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AO3: [Wrangling] Exclude Subtags and Synonyms",
+  "description": "Link to works for a canonical tag, excluding all sub tags and syns",
+  "url": "https://greasyfork.org/scripts/498709-ao3-wrangling-exclude-subtags-and-synonyms",
+  "code_url": "https://update.greasyfork.org/scripts/498709/AO3%3A%20%5BWrangling%5D%20Exclude%20Subtags%20and%20Synonyms.user.js",
+  "code_size": 3956,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

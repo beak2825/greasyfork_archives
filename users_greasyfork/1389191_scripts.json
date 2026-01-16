@@ -1,0 +1,134 @@
+[
+  {
+    "id": 517776,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T13:35:23.000Z",
+    "code_updated_at": "2024-11-17T13:35:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389191,
+        "name": "Ali Zeynalov",
+        "created_at": "2024-10-31T15:25:55.000Z",
+        "url": "https://greasyfork.org/users/1389191-ali-zeynalov"
+      }
+    ],
+    "name": "A L Z E~Mesaj spamer",
+    "description": "Otomatik olarak mesaj gönderir. Gartic.io",
+    "url": "https://greasyfork.org/scripts/517776-a-l-z-e-mesaj-spamer",
+    "code_url": "https://update.greasyfork.org/scripts/517776/A%20L%20Z%20E~Mesaj%20spamer.user.js",
+    "code_size": 5897,
+    "license": "MIT License",
+    "version": "1,0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517194,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-13T17:10:12.000Z",
+    "code_updated_at": "2024-11-13T17:14:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389191,
+        "name": "Ali Zeynalov",
+        "created_at": "2024-10-31T15:25:55.000Z",
+        "url": "https://greasyfork.org/users/1389191-ali-zeynalov"
+      }
+    ],
+    "name": "A L Z E~ROOMS VIEWER",
+    "description": "Odaların üzerine bir watch buttonu ekler.(gartic.io)",
+    "url": "https://greasyfork.org/scripts/517194-a-l-z-e-rooms-viewer",
+    "code_url": "https://update.greasyfork.org/scripts/517194/A%20L%20Z%20E~ROOMS%20VIEWER.user.js",
+    "code_size": 1411,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 516588,
+    "daily_installs": 0,
+    "total_installs": 91,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-09T18:29:15.000Z",
+    "code_updated_at": "2025-09-10T17:28:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389191,
+        "name": "Ali Zeynalov",
+        "created_at": "2024-10-31T15:25:55.000Z",
+        "url": "https://greasyfork.org/users/1389191-ali-zeynalov"
+      }
+    ],
+    "name": "A L Z E~WHOWHERE 2.0",
+    "description": "Odalardaki kullanıcıları gösterir (AZE)",
+    "url": "https://greasyfork.org/scripts/516588-a-l-z-e-whowhere-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/516588/A%20L%20Z%20E~WHOWHERE%2020.user.js",
+    "code_size": 8962,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515583,
+    "daily_installs": 0,
+    "total_installs": 157,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-03T13:45:22.000Z",
+    "code_updated_at": "2025-04-20T17:37:28.000Z",
+    "namespace": "ALZE",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389191,
+        "name": "Ali Zeynalov",
+        "created_at": "2024-10-31T15:25:55.000Z",
+        "url": "https://greasyfork.org/users/1389191-ali-zeynalov"
+      }
+    ],
+    "name": "A L Z E ~ P R O X Y 2.0",
+    "description": "EN İYİ CROXY AÇICI",
+    "url": "https://greasyfork.org/scripts/515583-a-l-z-e-p-r-o-x-y-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/515583/A%20L%20Z%20E%20~%20P%20R%20O%20X%20Y%2020.user.js",
+    "code_size": 2181,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

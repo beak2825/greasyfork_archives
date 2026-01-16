@@ -1,0 +1,59 @@
+{
+  "id": 527375,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-18T21:11:05.000Z",
+  "code_updated_at": "2025-11-09T12:50:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1380451,
+      "name": "rwhrsbh",
+      "created_at": "2024-10-13T15:35:18.000Z",
+      "url": "https://greasyfork.org/users/1380451-rwhrsbh",
+      "scripts": [
+        {
+          "id": 512480,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-13T15:38:08.000Z",
+          "code_updated_at": "2024-10-14T13:42:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Dream MessageHistory with photo",
+          "description": "MessageHistory with photo",
+          "url": "https://greasyfork.org/scripts/512480-dream-messagehistory-with-photo",
+          "code_url": "https://update.greasyfork.org/scripts/512480/Dream%20MessageHistory%20with%20photo.user.js",
+          "code_size": 3307,
+          "license": "MIT License",
+          "version": "2024-10-15",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Dream Singles Message Sender",
+  "description": "Enhanced message sender for Dream Singles with multiple sending modes and features",
+  "url": "https://greasyfork.org/scripts/527375-dream-singles-message-sender",
+  "code_url": "https://update.greasyfork.org/scripts/527375/Dream%20Singles%20Message%20Sender.user.js",
+  "code_size": 92936,
+  "license": "MIT License",
+  "version": "1.5.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

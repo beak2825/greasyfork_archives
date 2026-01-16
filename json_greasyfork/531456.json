@@ -1,0 +1,59 @@
+{
+  "id": 531456,
+  "daily_installs": 1,
+  "total_installs": 1192,
+  "fan_score": "39.6",
+  "good_ratings": 3,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-04-01T02:04:28.000Z",
+  "code_updated_at": "2025-04-03T09:45:27.000Z",
+  "namespace": "manongwuma@163.com",
+  "support_url": "https://docs.fireape.cn/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 858790,
+      "name": "码农无码",
+      "created_at": "2021-12-29T05:43:50.000Z",
+      "url": "https://greasyfork.org/users/858790-%E7%A0%81%E5%86%9C%E6%97%A0%E7%A0%81",
+      "scripts": [
+        {
+          "id": 531456,
+          "daily_installs": 1,
+          "total_installs": 1192,
+          "fan_score": "39.6",
+          "good_ratings": 3,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-04-01T02:04:28.000Z",
+          "code_updated_at": "2025-04-03T09:45:27.000Z",
+          "namespace": "manongwuma@163.com",
+          "support_url": "https://docs.fireape.cn/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "方丈影视-全会员版-【腾讯】【爱奇艺】【优酷】【芒果】",
+          "description": "全会员版本VIP解析脚本，支持腾讯、爱奇艺、芒果、优酷，VIP电影、视频、超前点播等。界面布局完美，体验极好！",
+          "url": "https://greasyfork.org/scripts/531456-%E6%96%B9%E4%B8%88%E5%BD%B1%E8%A7%86-%E5%85%A8%E4%BC%9A%E5%91%98%E7%89%88-%E8%85%BE%E8%AE%AF-%E7%88%B1%E5%A5%87%E8%89%BA-%E4%BC%98%E9%85%B7-%E8%8A%92%E6%9E%9C",
+          "code_url": "https://update.greasyfork.org/scripts/531456/%E6%96%B9%E4%B8%88%E5%BD%B1%E8%A7%86-%E5%85%A8%E4%BC%9A%E5%91%98%E7%89%88-%E3%80%90%E8%85%BE%E8%AE%AF%E3%80%91%E3%80%90%E7%88%B1%E5%A5%87%E8%89%BA%E3%80%91%E3%80%90%E4%BC%98%E9%85%B7%E3%80%91%E3%80%90%E8%8A%92%E6%9E%9C%E3%80%91.user.js",
+          "code_size": 386596,
+          "license": "MIT License",
+          "version": "1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "方丈影视-全会员版-【腾讯】【爱奇艺】【优酷】【芒果】",
+  "description": "全会员版本VIP解析脚本，支持腾讯、爱奇艺、芒果、优酷，VIP电影、视频、超前点播等。界面布局完美，体验极好！",
+  "url": "https://greasyfork.org/scripts/531456-%E6%96%B9%E4%B8%88%E5%BD%B1%E8%A7%86-%E5%85%A8%E4%BC%9A%E5%91%98%E7%89%88-%E8%85%BE%E8%AE%AF-%E7%88%B1%E5%A5%87%E8%89%BA-%E4%BC%98%E9%85%B7-%E8%8A%92%E6%9E%9C",
+  "code_url": "https://update.greasyfork.org/scripts/531456/%E6%96%B9%E4%B8%88%E5%BD%B1%E8%A7%86-%E5%85%A8%E4%BC%9A%E5%91%98%E7%89%88-%E3%80%90%E8%85%BE%E8%AE%AF%E3%80%91%E3%80%90%E7%88%B1%E5%A5%87%E8%89%BA%E3%80%91%E3%80%90%E4%BC%98%E9%85%B7%E3%80%91%E3%80%90%E8%8A%92%E6%9E%9C%E3%80%91.user.js",
+  "code_size": 386596,
+  "license": "MIT License",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

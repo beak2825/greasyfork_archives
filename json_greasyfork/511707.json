@@ -1,0 +1,59 @@
+{
+  "id": 511707,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-06T22:59:04.000Z",
+  "code_updated_at": "2024-10-09T19:49:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1377596,
+      "name": "Bert Claes",
+      "created_at": "2024-10-06T22:48:31.000Z",
+      "url": "https://greasyfork.org/users/1377596-bert-claes",
+      "scripts": [
+        {
+          "id": 511707,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-06T22:59:04.000Z",
+          "code_updated_at": "2024-10-09T19:49:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Add Plex Link to Letterboxd",
+          "description": "Adds a Plex link to Letterboxd watch section",
+          "url": "https://greasyfork.org/scripts/511707-add-plex-link-to-letterboxd",
+          "code_url": "https://update.greasyfork.org/scripts/511707/Add%20Plex%20Link%20to%20Letterboxd.user.js",
+          "code_size": 7672,
+          "license": "MIT License",
+          "version": "3.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Add Plex Link to Letterboxd",
+  "description": "Adds a Plex link to Letterboxd watch section",
+  "url": "https://greasyfork.org/scripts/511707-add-plex-link-to-letterboxd",
+  "code_url": "https://update.greasyfork.org/scripts/511707/Add%20Plex%20Link%20to%20Letterboxd.user.js",
+  "code_size": 7672,
+  "license": "MIT License",
+  "version": "3.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

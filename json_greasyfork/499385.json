@@ -1,0 +1,34 @@
+{
+  "id": 499385,
+  "daily_installs": 0,
+  "total_installs": 55,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-01T10:53:04.000Z",
+  "code_updated_at": "2024-07-01T11:41:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326638,
+      "name": "knurecco",
+      "created_at": "2024-07-01T10:46:29.000Z",
+      "url": "https://greasyfork.org/users/1326638-knurecco",
+      "scripts": []
+    }
+  ],
+  "name": "KNU Timetable Preview Script",
+  "description": "<수업시간표 및 강의계획서 조회> 페이지에 미리보기 버튼을 추가합니다.",
+  "url": "https://greasyfork.org/scripts/499385-knu-timetable-preview-script",
+  "code_url": "https://update.greasyfork.org/scripts/499385/KNU%20Timetable%20Preview%20Script.user.js",
+  "code_size": 2229,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

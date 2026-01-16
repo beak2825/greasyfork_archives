@@ -1,0 +1,59 @@
+{
+  "id": 544915,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-07T09:10:52.000Z",
+  "code_updated_at": "2026-01-06T00:50:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502181,
+      "name": "WJH-makers",
+      "created_at": "2025-08-06T12:00:38.000Z",
+      "url": "https://greasyfork.org/users/1502181-wjh-makers",
+      "scripts": [
+        {
+          "id": 544915,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-07T09:10:52.000Z",
+          "code_updated_at": "2026-01-06T00:50:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bing Zen & Clean - 深度去广与极简美化 (修复版 v18.9)",
+          "description": "移除广告/垃圾内容；修复背景不显示；修复搜索框文字无法居中；新增“链接级”精确置顶。",
+          "url": "https://greasyfork.org/scripts/544915-bing-zen-clean-%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96-%E4%BF%AE%E5%A4%8D%E7%89%88-v18-9",
+          "code_url": "https://update.greasyfork.org/scripts/544915/Bing%20Zen%20%20Clean%20-%20%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96%20%28%E4%BF%AE%E5%A4%8D%E7%89%88%20v189%29.user.js",
+          "code_size": 21869,
+          "license": null,
+          "version": "18.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bing Zen & Clean - 深度去广与极简美化 (修复版 v18.9)",
+  "description": "移除广告/垃圾内容；修复背景不显示；修复搜索框文字无法居中；新增“链接级”精确置顶。",
+  "url": "https://greasyfork.org/scripts/544915-bing-zen-clean-%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96-%E4%BF%AE%E5%A4%8D%E7%89%88-v18-9",
+  "code_url": "https://update.greasyfork.org/scripts/544915/Bing%20Zen%20%20Clean%20-%20%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96%20%28%E4%BF%AE%E5%A4%8D%E7%89%88%20v189%29.user.js",
+  "code_size": 21869,
+  "license": null,
+  "version": "18.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

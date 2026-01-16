@@ -1,0 +1,59 @@
+{
+  "id": 532664,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-13T00:28:00.000Z",
+  "code_updated_at": "2025-04-13T00:28:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1457145,
+      "name": "JKCHSTR",
+      "created_at": "2025-04-13T00:24:09.000Z",
+      "url": "https://greasyfork.org/users/1457145-jkchstr",
+      "scripts": [
+        {
+          "id": 532664,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-13T00:28:00.000Z",
+          "code_updated_at": "2025-04-13T00:28:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Copiar imagem do Canva Premium [PT-BR]",
+          "description": "Copie ou abra as imagens premium do Canva para usar onde quiser",
+          "url": "https://greasyfork.org/scripts/532664-copiar-imagem-do-canva-premium-pt-br",
+          "code_url": "https://update.greasyfork.org/scripts/532664/Copiar%20imagem%20do%20Canva%20Premium%20%5BPT-BR%5D.user.js",
+          "code_size": 5432,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Copiar imagem do Canva Premium [PT-BR]",
+  "description": "Copie ou abra as imagens premium do Canva para usar onde quiser",
+  "url": "https://greasyfork.org/scripts/532664-copiar-imagem-do-canva-premium-pt-br",
+  "code_url": "https://update.greasyfork.org/scripts/532664/Copiar%20imagem%20do%20Canva%20Premium%20%5BPT-BR%5D.user.js",
+  "code_size": 5432,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

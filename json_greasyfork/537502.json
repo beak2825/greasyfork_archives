@@ -1,0 +1,34 @@
+{
+  "id": 537502,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T08:20:42.000Z",
+  "code_updated_at": "2025-05-28T08:20:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1260198,
+      "name": "Edward Chesterton",
+      "created_at": "2024-02-12T04:28:37.000Z",
+      "url": "https://greasyfork.org/users/1260198-edward-chesterton",
+      "scripts": []
+    }
+  ],
+  "name": "Bitrix24 Smart Process Menu",
+  "description": "Добавляет меню смарт-процессов в Bitrix24 с настройками",
+  "url": "https://greasyfork.org/scripts/537502-bitrix24-smart-process-menu",
+  "code_url": "https://update.greasyfork.org/scripts/537502/Bitrix24%20Smart%20Process%20Menu.user.js",
+  "code_size": 14989,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540222,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T18:41:21.000Z",
+    "code_updated_at": "2025-06-20T18:41:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486299,
+        "name": "Syntax-Surfer-1",
+        "created_at": "2025-06-20T16:44:33.000Z",
+        "url": "https://greasyfork.org/users/1486299-syntax-surfer-1"
+      }
+    ],
+    "name": "Auto Scroll Up & Down",
+    "description": "Auto-scroll any page. Press \"S\" to scroll down, Shift+S to scroll up. Use ↑ and ↓ to adjust speed in real time.",
+    "url": "https://greasyfork.org/scripts/540222-auto-scroll-up-down",
+    "code_url": "https://update.greasyfork.org/scripts/540222/Auto%20Scroll%20Up%20%20Down.user.js",
+    "code_size": 2609,
+    "license": null,
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

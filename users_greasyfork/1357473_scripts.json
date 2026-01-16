@@ -1,0 +1,35 @@
+[
+  {
+    "id": 505106,
+    "daily_installs": 1,
+    "total_installs": 65,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-25T08:36:33.000Z",
+    "code_updated_at": "2024-08-25T08:36:33.000Z",
+    "namespace": "KoGaMa Bypass Paste Protection",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1357473,
+        "name": "D9074",
+        "created_at": "2024-08-25T08:34:41.000Z",
+        "url": "https://greasyfork.org/users/1357473-d9074"
+      }
+    ],
+    "name": "KoGaMa Bypass Paste Protection",
+    "description": "Simple script to disable \"paste\" event listener.",
+    "url": "https://greasyfork.org/scripts/505106-kogama-bypass-paste-protection",
+    "code_url": "https://update.greasyfork.org/scripts/505106/KoGaMa%20Bypass%20Paste%20Protection.user.js",
+    "code_size": 1554,
+    "license": null,
+    "version": "5.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

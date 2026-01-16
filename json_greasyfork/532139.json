@@ -1,0 +1,34 @@
+{
+  "id": 532139,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-07T22:19:51.000Z",
+  "code_updated_at": "2025-04-07T22:20:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1455187,
+      "name": "Dale Litster",
+      "created_at": "2025-04-07T22:09:17.000Z",
+      "url": "https://greasyfork.org/users/1455187-dale-litster",
+      "scripts": []
+    }
+  ],
+  "name": "ShadConnect Paul PTA Autofill (Google Sheets Live + Field Check)",
+  "description": "Autofill PTA form using live Google Sheets CSV (with textarea fix)",
+  "url": "https://greasyfork.org/scripts/532139-shadconnect-paul-pta-autofill-google-sheets-live-field-check",
+  "code_url": "https://update.greasyfork.org/scripts/532139/ShadConnect%20Paul%20PTA%20Autofill%20%28Google%20Sheets%20Live%20%2B%20Field%20Check%29.user.js",
+  "code_size": 8313,
+  "license": null,
+  "version": "3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

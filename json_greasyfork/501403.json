@@ -1,0 +1,59 @@
+{
+  "id": 501403,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-21T18:36:56.000Z",
+  "code_updated_at": "2024-07-21T18:36:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1337738,
+      "name": "Binance",
+      "created_at": "2024-07-21T14:25:38.000Z",
+      "url": "https://greasyfork.org/users/1337738-binance",
+      "scripts": [
+        {
+          "id": 501403,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-21T18:36:56.000Z",
+          "code_updated_at": "2024-07-21T18:36:56.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Universal Scroll to Top Button",
+          "description": "Adds a convenient \"Scroll to Top\" button to all web pages",
+          "url": "https://greasyfork.org/scripts/501403-universal-scroll-to-top-button",
+          "code_url": "https://update.greasyfork.org/scripts/501403/Universal%20Scroll%20to%20Top%20Button.user.js",
+          "code_size": 1328,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Universal Scroll to Top Button",
+  "description": "Adds a convenient \"Scroll to Top\" button to all web pages",
+  "url": "https://greasyfork.org/scripts/501403-universal-scroll-to-top-button",
+  "code_url": "https://update.greasyfork.org/scripts/501403/Universal%20Scroll%20to%20Top%20Button.user.js",
+  "code_size": 1328,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

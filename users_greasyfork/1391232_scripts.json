@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515791,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-04T15:44:01.000Z",
+    "code_updated_at": "2024-11-06T19:07:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391232,
+        "name": "dosier",
+        "created_at": "2024-11-04T15:41:12.000Z",
+        "url": "https://greasyfork.org/users/1391232-dosier"
+      }
+    ],
+    "name": "FishTank chat filter",
+    "description": "Removes duplicate messages, messages that have too many repetitious strings, and item usages.",
+    "url": "https://greasyfork.org/scripts/515791-fishtank-chat-filter",
+    "code_url": "https://update.greasyfork.org/scripts/515791/FishTank%20chat%20filter.user.js",
+    "code_size": 4795,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

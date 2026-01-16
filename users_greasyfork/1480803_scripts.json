@@ -1,0 +1,68 @@
+[
+  {
+    "id": 538945,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-09T20:54:59.000Z",
+    "code_updated_at": "2025-06-09T21:06:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480803,
+        "name": "alee33",
+        "created_at": "2025-06-08T21:04:22.000Z",
+        "url": "https://greasyfork.org/users/1480803-alee33"
+      }
+    ],
+    "name": "Internet Roadtrip - April Fools!",
+    "description": "Flip the entire page visually by wrapping content, with a toggle button fixed center-left",
+    "url": "https://greasyfork.org/scripts/538945-internet-roadtrip-april-fools",
+    "code_url": "https://update.greasyfork.org/scripts/538945/Internet%20Roadtrip%20-%20April%20Fools%21.user.js",
+    "code_size": 1759,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538865,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T21:08:23.000Z",
+    "code_updated_at": "2025-06-08T21:08:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480803,
+        "name": "alee33",
+        "created_at": "2025-06-08T21:04:22.000Z",
+        "url": "https://greasyfork.org/users/1480803-alee33"
+      }
+    ],
+    "name": "Replace Steering Wheel with Full Pizza",
+    "description": "Replace the steering wheel in Internet Roadtrip with a full pizza image (slightly bigger)",
+    "url": "https://greasyfork.org/scripts/538865-replace-steering-wheel-with-full-pizza",
+    "code_url": "https://update.greasyfork.org/scripts/538865/Replace%20Steering%20Wheel%20with%20Full%20Pizza.user.js",
+    "code_size": 1544,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 509899,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-23T23:45:22.000Z",
+  "code_updated_at": "2024-09-23T23:45:22.000Z",
+  "namespace": "http://your-namespace-here.com  // Change to your own unique namespace if you have one",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1372170,
+      "name": "Tristancantcode0",
+      "created_at": "2024-09-23T23:35:28.000Z",
+      "url": "https://greasyfork.org/users/1372170-tristancantcode0",
+      "scripts": []
+    }
+  ],
+  "name": "Replace Roblox Verified Badge with Red Badge",
+  "description": "Replaces the default blue verified badge on Roblox profiles with a custom red badge",
+  "url": "https://greasyfork.org/scripts/509899-replace-roblox-verified-badge-with-red-badge",
+  "code_url": "https://update.greasyfork.org/scripts/509899/Replace%20Roblox%20Verified%20Badge%20with%20Red%20Badge.user.js",
+  "code_size": 1710,
+  "license": "MIT  // You can specify a license here, or remove this line if you don't want to.",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

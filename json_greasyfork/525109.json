@@ -1,0 +1,59 @@
+{
+  "id": 525109,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-28T02:24:30.000Z",
+  "code_updated_at": "2025-06-29T12:08:25.000Z",
+  "namespace": "http://Vebascans.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1428111,
+      "name": "VebaScans",
+      "created_at": "2025-01-28T02:05:55.000Z",
+      "url": "https://greasyfork.org/users/1428111-vebascans",
+      "scripts": [
+        {
+          "id": 525109,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-28T02:24:30.000Z",
+          "code_updated_at": "2025-06-29T12:08:25.000Z",
+          "namespace": "http://Vebascans.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Custom Background Manager",
+          "description": "Web siteleri için arka plan değiştirme [öncelikli manga-manhwa siteleri]",
+          "url": "https://greasyfork.org/scripts/525109-custom-background-manager",
+          "code_url": "https://update.greasyfork.org/scripts/525109/Custom%20Background%20Manager.user.js",
+          "code_size": 46942,
+          "license": "MIT License",
+          "version": "2.3.3",
+          "locale": "tr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Custom Background Manager",
+  "description": "Web siteleri için arka plan değiştirme [öncelikli manga-manhwa siteleri]",
+  "url": "https://greasyfork.org/scripts/525109-custom-background-manager",
+  "code_url": "https://update.greasyfork.org/scripts/525109/Custom%20Background%20Manager.user.js",
+  "code_size": 46942,
+  "license": "MIT License",
+  "version": "2.3.3",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

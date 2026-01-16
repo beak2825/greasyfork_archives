@@ -1,0 +1,59 @@
+{
+  "id": 524607,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-23T06:20:44.000Z",
+  "code_updated_at": "2025-01-23T06:20:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1426364,
+      "name": "dogAteTaco",
+      "created_at": "2025-01-23T06:14:48.000Z",
+      "url": "https://greasyfork.org/users/1426364-dogatetaco",
+      "scripts": [
+        {
+          "id": 524607,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-23T06:20:44.000Z",
+          "code_updated_at": "2025-01-23T06:20:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Last.fm Auto Click PLAY ON DEVICE",
+          "description": "Auto clicks the PLAY ON DEVICE button so you don't have to do it manually when you are opening multiple tabs on Last.fm",
+          "url": "https://greasyfork.org/scripts/524607-last-fm-auto-click-play-on-device",
+          "code_url": "https://update.greasyfork.org/scripts/524607/Lastfm%20Auto%20Click%20PLAY%20ON%20DEVICE.user.js",
+          "code_size": 1827,
+          "license": "MIT License",
+          "version": "1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Last.fm Auto Click PLAY ON DEVICE",
+  "description": "Auto clicks the PLAY ON DEVICE button so you don't have to do it manually when you are opening multiple tabs on Last.fm",
+  "url": "https://greasyfork.org/scripts/524607-last-fm-auto-click-play-on-device",
+  "code_url": "https://update.greasyfork.org/scripts/524607/Lastfm%20Auto%20Click%20PLAY%20ON%20DEVICE.user.js",
+  "code_size": 1827,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

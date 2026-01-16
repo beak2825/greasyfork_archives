@@ -1,0 +1,59 @@
+{
+  "id": 551813,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-07T04:36:04.000Z",
+  "code_updated_at": "2025-10-07T04:37:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522671,
+      "name": "Lorem Ipsum Here",
+      "created_at": "2025-10-06T03:06:43.000Z",
+      "url": "https://greasyfork.org/users/1522671-lorem-ipsum-here",
+      "scripts": [
+        {
+          "id": 551813,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-07T04:36:04.000Z",
+          "code_updated_at": "2025-10-07T04:37:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "T̸̞̈S̵͎͗A̴̪̋R̵̮͛ ̶̖͂P̵̭̕O̶̫͂K̸͉̈́Ē̸̮  ᶠᵒʳ ᶠᵃᶜᵉᵇᵒᵒᵏ 'ᵛ'",
+          "description": "Billions must POKE!!!",
+          "url": "https://greasyfork.org/scripts/551813-t-s-a-r-p-o-k-e-%E1%B6%A0%E1%B5%92%CA%B3-%E1%B6%A0%E1%B5%83%E1%B6%9C%E1%B5%89%E1%B5%87%E1%B5%92%E1%B5%92%E1%B5%8F-%E1%B5%9B",
+          "code_url": "https://update.greasyfork.org/scripts/551813/T%CC%B8%CC%88%CC%9ES%CC%B5%CD%97%CD%8EA%CC%B4%CC%8B%CC%AAR%CC%B5%CD%9B%CC%AE%20%CC%B6%CD%82%CC%96P%CC%B5%CC%95%CC%ADO%CC%B6%CD%82%CC%ABK%CC%B8%CD%84%CD%89E%CC%B8%CC%84%CC%AE%20%20%E1%B6%A0%E1%B5%92%CA%B3%20%E1%B6%A0%E1%B5%83%E1%B6%9C%E1%B5%89%E1%B5%87%E1%B5%92%E1%B5%92%E1%B5%8F%20%27%E1%B5%9B%27.user.js",
+          "code_size": 55586,
+          "license": "MIT License",
+          "version": "1.8.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "T̸̞̈S̵͎͗A̴̪̋R̵̮͛ ̶̖͂P̵̭̕O̶̫͂K̸͉̈́Ē̸̮  ᶠᵒʳ ᶠᵃᶜᵉᵇᵒᵒᵏ 'ᵛ'",
+  "description": "Billions must POKE!!!",
+  "url": "https://greasyfork.org/scripts/551813-t-s-a-r-p-o-k-e-%E1%B6%A0%E1%B5%92%CA%B3-%E1%B6%A0%E1%B5%83%E1%B6%9C%E1%B5%89%E1%B5%87%E1%B5%92%E1%B5%92%E1%B5%8F-%E1%B5%9B",
+  "code_url": "https://update.greasyfork.org/scripts/551813/T%CC%B8%CC%88%CC%9ES%CC%B5%CD%97%CD%8EA%CC%B4%CC%8B%CC%AAR%CC%B5%CD%9B%CC%AE%20%CC%B6%CD%82%CC%96P%CC%B5%CC%95%CC%ADO%CC%B6%CD%82%CC%ABK%CC%B8%CD%84%CD%89E%CC%B8%CC%84%CC%AE%20%20%E1%B6%A0%E1%B5%92%CA%B3%20%E1%B6%A0%E1%B5%83%E1%B6%9C%E1%B5%89%E1%B5%87%E1%B5%92%E1%B5%92%E1%B5%8F%20%27%E1%B5%9B%27.user.js",
+  "code_size": 55586,
+  "license": "MIT License",
+  "version": "1.8.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

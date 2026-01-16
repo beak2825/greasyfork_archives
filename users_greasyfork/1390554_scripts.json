@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515665,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-04T00:56:07.000Z",
+    "code_updated_at": "2024-11-06T02:48:30.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1390554-baishui1134",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1390554,
+        "name": "baishui1134",
+        "created_at": "2024-11-03T11:10:43.000Z",
+        "url": "https://greasyfork.org/users/1390554-baishui1134"
+      }
+    ],
+    "name": "白水腾讯视频跳转",
+    "description": "腾讯视频快捷跳转到欧乐影院、唐人街影院",
+    "url": "https://greasyfork.org/scripts/515665-%E7%99%BD%E6%B0%B4%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E8%B7%B3%E8%BD%AC",
+    "code_url": "https://update.greasyfork.org/scripts/515665/%E7%99%BD%E6%B0%B4%E8%85%BE%E8%AE%AF%E8%A7%86%E9%A2%91%E8%B7%B3%E8%BD%AC.user.js",
+    "code_size": 1629,
+    "license": "AGPL License",
+    "version": "0.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 504973,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-24T13:03:25.000Z",
+    "code_updated_at": "2024-11-09T15:10:32.000Z",
+    "namespace": "https://github.com/Losketch",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356910,
+        "name": "Losketch",
+        "created_at": "2024-08-24T07:04:03.000Z",
+        "url": "https://greasyfork.org/users/1356910-losketch"
+      }
+    ],
+    "name": "扩展生僻字 & 单字繁转简",
+    "description": "主要用于扩展字并将这些字的繁体转换为简体。",
+    "url": "https://greasyfork.org/scripts/504973-%E6%89%A9%E5%B1%95%E7%94%9F%E5%83%BB%E5%AD%97-%E5%8D%95%E5%AD%97%E7%B9%81%E8%BD%AC%E7%AE%80",
+    "code_url": "https://update.greasyfork.org/scripts/504973/%E6%89%A9%E5%B1%95%E7%94%9F%E5%83%BB%E5%AD%97%20%20%E5%8D%95%E5%AD%97%E7%B9%81%E8%BD%AC%E7%AE%80.user.js",
+    "code_size": 142406,
+    "license": "Do What The F*ck You Want To Public License",
+    "version": "1.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

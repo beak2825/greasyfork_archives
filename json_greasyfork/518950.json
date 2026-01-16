@@ -1,0 +1,33 @@
+{
+  "id": 518950,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-26T14:59:35.000Z",
+  "code_updated_at": "2024-11-26T14:59:35.000Z",
+  "namespace": "eight04.blogspot.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1402795,
+      "name": "maven1997",
+      "created_at": "2024-11-26T14:47:43.000Z",
+      "url": "https://greasyfork.org/users/1402795-maven1997"
+    }
+  ],
+  "name": "Direct Wmode",
+  "description": "An userscript to make flash object display in \"direact\" mode.",
+  "url": "https://greasyfork.org/scripts/518950-direct-wmode",
+  "code_url": "https://update.greasyfork.org/scripts/518950/Direct%20Wmode.user.js",
+  "code_size": 399,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

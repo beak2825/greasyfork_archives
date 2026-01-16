@@ -1,0 +1,33 @@
+{
+  "id": 531845,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-04T16:28:08.000Z",
+  "code_updated_at": "2025-04-16T22:19:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1042780,
+      "name": "vFractal",
+      "created_at": "2023-03-16T01:38:24.000Z",
+      "url": "https://greasyfork.org/users/1042780-vfractal"
+    }
+  ],
+  "name": "Kavita Margins + Incognito Redirect",
+  "description": "Adjusts paginate widths and panel heights and forces Incognito read on kavita.partsdetour.com",
+  "url": "https://greasyfork.org/scripts/531845-kavita-margins-incognito-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/531845/Kavita%20Margins%20%2B%20Incognito%20Redirect.user.js",
+  "code_size": 2264,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 543386,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-23T04:07:13.000Z",
+  "code_updated_at": "2025-09-19T21:25:21.000Z",
+  "namespace": "https://greasyfork.org/en/users/1382956-abara-cadabra",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1382956,
+      "name": "Abara Cadabra",
+      "created_at": "2024-10-19T01:17:49.000Z",
+      "url": "https://greasyfork.org/users/1382956-abara-cadabra"
+    }
+  ],
+  "name": "Group Messages Tracker (OUTDATED)",
+  "description": "Adds a tracker for new messages in ur groups with a list for the groups and their newest messages.",
+  "url": "https://greasyfork.org/scripts/543386-group-messages-tracker-outdated",
+  "code_url": "https://update.greasyfork.org/scripts/543386/Group%20Messages%20Tracker%20%28OUTDATED%29.user.js",
+  "code_size": 9858,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

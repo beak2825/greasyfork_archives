@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518677,
+    "daily_installs": 5,
+    "total_installs": 4112,
+    "fan_score": "78.4",
+    "good_ratings": 30,
+    "ok_ratings": 1,
+    "bad_ratings": 2,
+    "created_at": "2024-11-24T10:53:32.000Z",
+    "code_updated_at": "2025-11-17T01:53:08.000Z",
+    "namespace": "https://github.com/LuckyPuppy514/external-player",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 903977,
+        "name": "LuckyPuppy514",
+        "created_at": "2022-04-18T16:28:21.000Z",
+        "url": "https://greasyfork.org/users/903977-luckypuppy514"
+      }
+    ],
+    "name": "External Player",
+    "description": "Play web video via external player",
+    "url": "https://greasyfork.org/scripts/518677-external-player",
+    "code_url": "https://update.greasyfork.org/scripts/518677/External%20Player.user.js",
+    "code_size": 212283,
+    "license": "MIT License",
+    "version": "1.2.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

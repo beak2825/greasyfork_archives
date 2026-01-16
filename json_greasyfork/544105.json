@@ -1,0 +1,33 @@
+{
+  "id": 544105,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-30T13:27:49.000Z",
+  "code_updated_at": "2025-09-18T17:37:23.000Z",
+  "namespace": "com.dounford.flatmmo.sample",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499666,
+      "name": "Felipe Dounford",
+      "created_at": "2025-07-30T00:46:05.000Z",
+      "url": "https://greasyfork.org/users/1499666-felipe-dounford"
+    }
+  ],
+  "name": "FlatMMO+ SamplePlugin",
+  "description": "FlatMMO+ Template Script",
+  "url": "https://greasyfork.org/scripts/544105-flatmmo-sampleplugin",
+  "code_url": "https://update.greasyfork.org/scripts/544105/FlatMMO%2B%20SamplePlugin.user.js",
+  "code_size": 6539,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

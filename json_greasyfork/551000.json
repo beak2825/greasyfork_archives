@@ -1,0 +1,59 @@
+{
+  "id": 551000,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-28T21:51:13.000Z",
+  "code_updated_at": "2025-09-28T21:51:13.000Z",
+  "namespace": "https://poki.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1520477,
+      "name": "Giovane2230",
+      "created_at": "2025-09-28T21:31:15.000Z",
+      "url": "https://greasyfork.org/users/1520477-giovane2230",
+      "scripts": [
+        {
+          "id": 551000,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-28T21:51:13.000Z",
+          "code_updated_at": "2025-09-28T21:51:13.000Z",
+          "namespace": "https://poki.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Poki Better Fullscreen",
+          "description": "Adds a smart fullscreen button and hides navbar.",
+          "url": "https://greasyfork.org/scripts/551000-poki-better-fullscreen",
+          "code_url": "https://update.greasyfork.org/scripts/551000/Poki%20Better%20Fullscreen.user.js",
+          "code_size": 10123,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Poki Better Fullscreen",
+  "description": "Adds a smart fullscreen button and hides navbar.",
+  "url": "https://greasyfork.org/scripts/551000-poki-better-fullscreen",
+  "code_url": "https://update.greasyfork.org/scripts/551000/Poki%20Better%20Fullscreen.user.js",
+  "code_size": 10123,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 503737,
+  "daily_installs": 0,
+  "total_installs": 281,
+  "fan_score": "72.2",
+  "good_ratings": 10,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-15T12:51:49.000Z",
+  "code_updated_at": "2024-12-07T16:11:08.000Z",
+  "namespace": "https://space.bilibili.com/93654843",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 220399,
+      "name": "FiNNiER",
+      "created_at": "2018-10-20T00:48:22.000Z",
+      "url": "https://greasyfork.org/users/220399-finnier",
+      "scripts": [
+        {
+          "id": 503737,
+          "daily_installs": 0,
+          "total_installs": 281,
+          "fan_score": "72.2",
+          "good_ratings": 10,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-15T12:51:49.000Z",
+          "code_updated_at": "2024-12-07T16:11:08.000Z",
+          "namespace": "https://space.bilibili.com/93654843",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better SteamPY",
+          "description": "提供Steampy界面美化，功能增强，如库中已有游戏标记(支持家庭库及愿望单)、标记资料受限游戏等功能",
+          "url": "https://greasyfork.org/scripts/503737-better-steampy",
+          "code_url": "https://update.greasyfork.org/scripts/503737/Better%20SteamPY.user.js",
+          "code_size": 20611,
+          "license": null,
+          "version": "20241208",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Better SteamPY",
+  "description": "提供Steampy界面美化，功能增强，如库中已有游戏标记(支持家庭库及愿望单)、标记资料受限游戏等功能",
+  "url": "https://greasyfork.org/scripts/503737-better-steampy",
+  "code_url": "https://update.greasyfork.org/scripts/503737/Better%20SteamPY.user.js",
+  "code_size": 20611,
+  "license": null,
+  "version": "20241208",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

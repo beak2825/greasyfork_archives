@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531877,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-05T05:50:15.000Z",
+    "code_updated_at": "2025-05-21T05:26:51.000Z",
+    "namespace": "HWD-fork",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454179,
+        "name": "Nathan Hunt",
+        "created_at": "2025-04-05T05:44:13.000Z",
+        "url": "https://greasyfork.org/users/1454179-nathan-hunt"
+      }
+    ],
+    "name": "HWD-fork",
+    "description": "Automation of actions for the game Hero Wars",
+    "url": "https://greasyfork.org/scripts/531877-hwd-fork",
+    "code_url": "https://update.greasyfork.org/scripts/531877/HWD-fork.user.js",
+    "code_size": 398147,
+    "license": "Copyright ZingerY",
+    "version": "1.32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

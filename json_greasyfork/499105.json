@@ -1,0 +1,34 @@
+{
+  "id": 499105,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-28T05:42:08.000Z",
+  "code_updated_at": "2024-06-28T07:12:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 522344,
+      "name": "愿你安好",
+      "created_at": "2020-04-19T08:39:10.000Z",
+      "url": "https://greasyfork.org/users/522344-%E6%84%BF%E4%BD%A0%E5%AE%89%E5%A5%BD",
+      "scripts": []
+    }
+  ],
+  "name": "生成数据字段",
+  "description": "业务模型中生成数据字段",
+  "url": "https://greasyfork.org/scripts/499105-%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E5%AD%97%E6%AE%B5",
+  "code_url": "https://update.greasyfork.org/scripts/499105/%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E5%AD%97%E6%AE%B5.user.js",
+  "code_size": 8380,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

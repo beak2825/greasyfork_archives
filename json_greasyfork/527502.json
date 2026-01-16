@@ -1,0 +1,59 @@
+{
+  "id": 527502,
+  "daily_installs": 0,
+  "total_installs": 85,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-20T03:53:28.000Z",
+  "code_updated_at": "2025-02-20T03:53:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1437357,
+      "name": "williamJ666",
+      "created_at": "2025-02-20T03:44:36.000Z",
+      "url": "https://greasyfork.org/users/1437357-williamj666",
+      "scripts": [
+        {
+          "id": 527502,
+          "daily_installs": 0,
+          "total_installs": 85,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-20T03:53:28.000Z",
+          "code_updated_at": "2025-02-20T03:53:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Florr.io Super Ping(开发版)",
+          "description": "Detects Super spawns in Florr.io, displays notifications, styled Super Ping messages, always visible, edge collision, language support, resizable UI, and hotkey recording. Includes a movable log window and UI toggles, with persistent UI positions.",
+          "url": "https://greasyfork.org/scripts/527502-florr-io-super-ping-%E5%BC%80%E5%8F%91%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/527502/Florrio%20Super%20Ping%28%E5%BC%80%E5%8F%91%E7%89%88%29.user.js",
+          "code_size": 33192,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Florr.io Super Ping(开发版)",
+  "description": "Detects Super spawns in Florr.io, displays notifications, styled Super Ping messages, always visible, edge collision, language support, resizable UI, and hotkey recording. Includes a movable log window and UI toggles, with persistent UI positions.",
+  "url": "https://greasyfork.org/scripts/527502-florr-io-super-ping-%E5%BC%80%E5%8F%91%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/527502/Florrio%20Super%20Ping%28%E5%BC%80%E5%8F%91%E7%89%88%29.user.js",
+  "code_size": 33192,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

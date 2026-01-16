@@ -1,0 +1,68 @@
+[
+  {
+    "id": 531739,
+    "daily_installs": 1,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-03T16:14:33.000Z",
+    "code_updated_at": "2025-04-03T16:14:33.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1452603-moreanx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452603,
+        "name": "MoreanX",
+        "created_at": "2025-04-01T02:58:35.000Z",
+        "url": "https://greasyfork.org/users/1452603-moreanx"
+      }
+    ],
+    "name": "微博评论清空专家",
+    "description": "彻底清空微博所有个人评论（含历史记录）",
+    "url": "https://greasyfork.org/scripts/531739-%E5%BE%AE%E5%8D%9A%E8%AF%84%E8%AE%BA%E6%B8%85%E7%A9%BA%E4%B8%93%E5%AE%B6",
+    "code_url": "https://update.greasyfork.org/scripts/531739/%E5%BE%AE%E5%8D%9A%E8%AF%84%E8%AE%BA%E6%B8%85%E7%A9%BA%E4%B8%93%E5%AE%B6.user.js",
+    "code_size": 7044,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531730,
+    "daily_installs": 1,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-03T15:35:20.000Z",
+    "code_updated_at": "2025-04-03T15:35:20.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1452603-moreanx",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452603,
+        "name": "MoreanX",
+        "created_at": "2025-04-01T02:58:35.000Z",
+        "url": "https://greasyfork.org/users/1452603-moreanx"
+      }
+    ],
+    "name": "新浪微博一键清空助手",
+    "description": "一键清空微博、清空关注、清空粉丝、清空收藏、清空点赞记录",
+    "url": "https://greasyfork.org/scripts/531730-%E6%96%B0%E6%B5%AA%E5%BE%AE%E5%8D%9A%E4%B8%80%E9%94%AE%E6%B8%85%E7%A9%BA%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/531730/%E6%96%B0%E6%B5%AA%E5%BE%AE%E5%8D%9A%E4%B8%80%E9%94%AE%E6%B8%85%E7%A9%BA%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 18501,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

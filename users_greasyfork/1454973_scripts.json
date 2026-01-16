@@ -1,0 +1,68 @@
+[
+  {
+    "id": 532080,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T11:11:06.000Z",
+    "code_updated_at": "2025-04-07T11:40:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454973,
+        "name": "Shedu",
+        "created_at": "2025-04-07T09:46:48.000Z",
+        "url": "https://greasyfork.org/users/1454973-shedu"
+      }
+    ],
+    "name": "Torn RW Infobox",
+    "description": "Show finished ranked wars with clickable faction links",
+    "url": "https://greasyfork.org/scripts/532080-torn-rw-infobox",
+    "code_url": "https://update.greasyfork.org/scripts/532080/Torn%20RW%20Infobox.user.js",
+    "code_size": 4968,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532071,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T09:49:51.000Z",
+    "code_updated_at": "2025-05-15T12:22:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454973,
+        "name": "Shedu",
+        "created_at": "2025-04-07T09:46:48.000Z",
+        "url": "https://greasyfork.org/users/1454973-shedu"
+      }
+    ],
+    "name": "CacheTracker",
+    "description": "Infobox showing lowest prices of each RW cache",
+    "url": "https://greasyfork.org/scripts/532071-cachetracker",
+    "code_url": "https://update.greasyfork.org/scripts/532071/CacheTracker.user.js",
+    "code_size": 5707,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

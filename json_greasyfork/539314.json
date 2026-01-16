@@ -1,0 +1,59 @@
+{
+  "id": 539314,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-13T18:03:41.000Z",
+  "code_updated_at": "2025-06-13T18:07:16.000Z",
+  "namespace": "Search-with-goodreads-annas-archive-libgen-zlibrary-enhanced-search",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483256,
+      "name": "agfdo5tl8",
+      "created_at": "2025-06-13T12:57:16.000Z",
+      "url": "https://greasyfork.org/users/1483256-agfdo5tl8",
+      "scripts": [
+        {
+          "id": 539314,
+          "daily_installs": 0,
+          "total_installs": 40,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-13T18:03:41.000Z",
+          "code_updated_at": "2025-06-13T18:07:16.000Z",
+          "namespace": "Search-with-goodreads-annas-archive-libgen-zlibrary-enhanced-search",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Search with Goodreads, Anna's Archive, LibGen, and Z-Library (Enhanced Search)",
+          "description": "Automatically finds the ISBNs of all editions of a book and adds convenient buttons to search directly on Goodreads, Anna's Archive, Libgen and Z-Library",
+          "url": "https://greasyfork.org/scripts/539314-search-with-goodreads-anna-s-archive-libgen-and-z-library-enhanced-search",
+          "code_url": "https://update.greasyfork.org/scripts/539314/Search%20with%20Goodreads%2C%20Anna%27s%20Archive%2C%20LibGen%2C%20and%20Z-Library%20%28Enhanced%20Search%29.user.js",
+          "code_size": 18670,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Search with Goodreads, Anna's Archive, LibGen, and Z-Library (Enhanced Search)",
+  "description": "Automatically finds the ISBNs of all editions of a book and adds convenient buttons to search directly on Goodreads, Anna's Archive, Libgen and Z-Library",
+  "url": "https://greasyfork.org/scripts/539314-search-with-goodreads-anna-s-archive-libgen-and-z-library-enhanced-search",
+  "code_url": "https://update.greasyfork.org/scripts/539314/Search%20with%20Goodreads%2C%20Anna%27s%20Archive%2C%20LibGen%2C%20and%20Z-Library%20%28Enhanced%20Search%29.user.js",
+  "code_size": 18670,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 520987,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-17T07:48:46.000Z",
+  "code_updated_at": "2026-01-15T07:42:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1268808,
+      "name": "chDios",
+      "created_at": "2024-03-01T09:20:33.000Z",
+      "url": "https://greasyfork.org/users/1268808-chdios"
+    }
+  ],
+  "name": "质量部脚本",
+  "description": "Bug分析脚本",
+  "url": "https://greasyfork.org/scripts/520987-%E8%B4%A8%E9%87%8F%E9%83%A8%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/520987/%E8%B4%A8%E9%87%8F%E9%83%A8%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 2286,
+  "license": "none",
+  "version": "202601150",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

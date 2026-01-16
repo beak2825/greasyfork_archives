@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549531,
+    "daily_installs": 1,
+    "total_installs": 32,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-14T15:24:55.000Z",
+    "code_updated_at": "2025-09-14T15:27:22.000Z",
+    "namespace": "knoa.jp",
+    "support_url": "https://github.com/mkco5162/youtube-volume-curve-designer/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515087,
+        "name": "mkco5162",
+        "created_at": "2025-09-14T15:22:45.000Z",
+        "url": "https://greasyfork.org/users/1515087-mkco5162"
+      }
+    ],
+    "name": "YouTube Volume Curve Designer",
+    "description": "Customize the volume increasing curve for subtle sound tweaks and maximum volume boosts.",
+    "url": "https://greasyfork.org/scripts/549531-youtube-volume-curve-designer",
+    "code_url": "https://update.greasyfork.org/scripts/549531/YouTube%20Volume%20Curve%20Designer.user.js",
+    "code_size": 58361,
+    "license": "MIT License",
+    "version": "3.0.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

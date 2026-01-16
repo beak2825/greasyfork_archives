@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520437,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T16:55:41.000Z",
+    "code_updated_at": "2024-12-11T19:00:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 254603,
+        "name": "Shurtmato",
+        "created_at": "2019-03-06T08:03:43.000Z",
+        "url": "https://greasyfork.org/users/254603-shurtmato"
+      }
+    ],
+    "name": "Traductor español",
+    "description": "Traduce los textos claves al español",
+    "url": "https://greasyfork.org/scripts/520437-traductor-espa%C3%B1ol",
+    "code_url": "https://update.greasyfork.org/scripts/520437/Traductor%20espa%C3%B1ol.user.js",
+    "code_size": 7490,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

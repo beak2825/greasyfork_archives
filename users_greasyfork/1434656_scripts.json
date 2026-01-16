@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526779,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-13T12:57:50.000Z",
+    "code_updated_at": "2025-02-13T12:57:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434656,
+        "name": "Ouhth",
+        "created_at": "2025-02-13T12:54:27.000Z",
+        "url": "https://greasyfork.org/users/1434656-ouhth"
+      }
+    ],
+    "name": "抖音10分钟跳转 (可配置时长)",
+    "description": "当你使用抖音达到配置时长后，自动跳转到其他网页 (可配置时长)",
+    "url": "https://greasyfork.org/scripts/526779-%E6%8A%96%E9%9F%B310%E5%88%86%E9%92%9F%E8%B7%B3%E8%BD%AC-%E5%8F%AF%E9%85%8D%E7%BD%AE%E6%97%B6%E9%95%BF",
+    "code_url": "https://update.greasyfork.org/scripts/526779/%E6%8A%96%E9%9F%B310%E5%88%86%E9%92%9F%E8%B7%B3%E8%BD%AC%20%28%E5%8F%AF%E9%85%8D%E7%BD%AE%E6%97%B6%E9%95%BF%29.user.js",
+    "code_size": 4538,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

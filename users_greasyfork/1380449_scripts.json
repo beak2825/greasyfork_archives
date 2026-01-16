@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512479,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T15:37:35.000Z",
+    "code_updated_at": "2024-10-13T15:37:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380449,
+        "name": "Tebogo Lebeya",
+        "created_at": "2024-10-13T15:34:10.000Z",
+        "url": "https://greasyfork.org/users/1380449-tebogo-lebeya"
+      }
+    ],
+    "name": "Dahood_Shellshockers_theme",
+    "description": "Blue_hex_theme",
+    "url": "https://greasyfork.org/scripts/512479-dahood-shellshockers-theme",
+    "code_url": "https://update.greasyfork.org/scripts/512479/Dahood_Shellshockers_theme.user.js",
+    "code_size": 3118,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

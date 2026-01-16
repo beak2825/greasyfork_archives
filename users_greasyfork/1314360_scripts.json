@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497493,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-10T04:46:39.000Z",
+    "code_updated_at": "2024-11-19T04:27:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1314360,
+        "name": "Peter Savarese",
+        "created_at": "2024-06-08T07:41:39.000Z",
+        "url": "https://greasyfork.org/users/1314360-peter-savarese"
+      }
+    ],
+    "name": "Infiniti Service Schedule Automater",
+    "description": "Infiniti West Chester Service Schedule Automater. Creates a button on a vehicle's RO page which when clicked, will check for scheduled services (brake fluid, coolant, spark plugs, etc.) based on whether services haven't been recommended in scheduled time or if services were previously declined and vehicle is currently still due.",
+    "url": "https://greasyfork.org/scripts/497493-infiniti-service-schedule-automater",
+    "code_url": "https://update.greasyfork.org/scripts/497493/Infiniti%20Service%20Schedule%20Automater.user.js",
+    "code_size": 61260,
+    "license": null,
+    "version": "0.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

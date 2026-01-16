@@ -1,0 +1,134 @@
+[
+  {
+    "id": 507326,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T14:20:30.000Z",
+    "code_updated_at": "2025-11-30T00:18:09.000Z",
+    "namespace": "happyviking",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994066,
+        "name": "HappyViking",
+        "created_at": "2022-12-07T13:51:01.000Z",
+        "url": "https://greasyfork.org/users/994066-happyviking"
+      }
+    ],
+    "name": "New Instance Button for Nitter",
+    "description": "Adds a button to Nitter instances to redirect to a new instance.",
+    "url": "https://greasyfork.org/scripts/507326-new-instance-button-for-nitter",
+    "code_url": "https://update.greasyfork.org/scripts/507326/New%20Instance%20Button%20for%20Nitter.user.js",
+    "code_size": 1414,
+    "license": "MIT License",
+    "version": "1.63.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507325,
+    "daily_installs": 0,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T14:16:37.000Z",
+    "code_updated_at": "2025-11-30T00:18:08.000Z",
+    "namespace": "happyviking",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994066,
+        "name": "HappyViking",
+        "created_at": "2022-12-07T13:51:01.000Z",
+        "url": "https://greasyfork.org/users/994066-happyviking"
+      }
+    ],
+    "name": "Automatic Nitter Quota & Error Redirector",
+    "description": "Automatically redirects to another Nitter instance if the one you're directed to has reached its rate limit/quota or has an error.",
+    "url": "https://greasyfork.org/scripts/507325-automatic-nitter-quota-error-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/507325/Automatic%20Nitter%20Quota%20%20Error%20Redirector.user.js",
+    "code_size": 2072,
+    "license": "MIT License",
+    "version": "1.10.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507322,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T14:15:04.000Z",
+    "code_updated_at": "2024-09-07T14:15:04.000Z",
+    "namespace": "happyviking",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994066,
+        "name": "HappyViking",
+        "created_at": "2022-12-07T13:51:01.000Z",
+        "url": "https://greasyfork.org/users/994066-happyviking"
+      }
+    ],
+    "name": "Farside to Fastside",
+    "description": "Automatically redirects to Fastside if Farside is not working",
+    "url": "https://greasyfork.org/scripts/507322-farside-to-fastside",
+    "code_url": "https://update.greasyfork.org/scripts/507322/Farside%20to%20Fastside.user.js",
+    "code_size": 941,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 497373,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-08T16:59:32.000Z",
+    "code_updated_at": "2024-06-08T16:59:32.000Z",
+    "namespace": "ahappyviking",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994066,
+        "name": "HappyViking",
+        "created_at": "2022-12-07T13:51:01.000Z",
+        "url": "https://greasyfork.org/users/994066-happyviking"
+      }
+    ],
+    "name": "Production & Dev instance favicon",
+    "description": "Replaces your favicon if you are on the dev or prod instance of your web app (not on localhost)",
+    "url": "https://greasyfork.org/scripts/497373-production-dev-instance-favicon",
+    "code_url": "https://update.greasyfork.org/scripts/497373/Production%20%20Dev%20instance%20favicon.user.js",
+    "code_size": 10602,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

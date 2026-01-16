@@ -1,0 +1,34 @@
+{
+  "id": 544485,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-03T08:18:09.000Z",
+  "code_updated_at": "2025-08-03T08:18:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1501152,
+      "name": "Brapson Von Brapovich",
+      "created_at": "2025-08-03T08:11:45.000Z",
+      "url": "https://greasyfork.org/users/1501152-brapson-von-brapovich",
+      "scripts": []
+    }
+  ],
+  "name": "drawthefish",
+  "description": "You take full responsibility for your drawings",
+  "url": "https://greasyfork.org/scripts/544485-drawthefish",
+  "code_url": "https://update.greasyfork.org/scripts/544485/drawthefish.user.js",
+  "code_size": 7825,
+  "license": "Creative Commons Attribution 4.0 International",
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 548485,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-05T14:13:22.000Z",
+  "code_updated_at": "2025-12-09T06:49:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1166658,
+      "name": "chenh_tampermonkey",
+      "created_at": "2023-09-05T10:23:46.000Z",
+      "url": "https://greasyfork.org/users/1166658-chenh-tampermonkey",
+      "scripts": [
+        {
+          "id": 548485,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-05T14:13:22.000Z",
+          "code_updated_at": "2025-12-09T06:49:55.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "钦定字体",
+          "description": "指定网页的 UI 字体和代码字体，忽略图标",
+          "url": "https://greasyfork.org/scripts/548485-%E9%92%A6%E5%AE%9A%E5%AD%97%E4%BD%93",
+          "code_url": "https://update.greasyfork.org/scripts/548485/%E9%92%A6%E5%AE%9A%E5%AD%97%E4%BD%93.user.js",
+          "code_size": 2003,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "钦定字体",
+  "description": "指定网页的 UI 字体和代码字体，忽略图标",
+  "url": "https://greasyfork.org/scripts/548485-%E9%92%A6%E5%AE%9A%E5%AD%97%E4%BD%93",
+  "code_url": "https://update.greasyfork.org/scripts/548485/%E9%92%A6%E5%AE%9A%E5%AD%97%E4%BD%93.user.js",
+  "code_size": 2003,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

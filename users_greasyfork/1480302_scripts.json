@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538707,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T13:35:08.000Z",
+    "code_updated_at": "2025-06-08T13:42:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1480302,
+        "name": "hkgnobody",
+        "created_at": "2025-06-07T13:33:07.000Z",
+        "url": "https://greasyfork.org/users/1480302-hkgnobody"
+      }
+    ],
+    "name": "MilkyWayIdle Consumable Stock Alert (Team Channel Only)",
+    "description": "Alert clan chat when consumables stock is low in MilkyWayIdle",
+    "url": "https://greasyfork.org/scripts/538707-milkywayidle-consumable-stock-alert-team-channel-only",
+    "code_url": "https://update.greasyfork.org/scripts/538707/MilkyWayIdle%20Consumable%20Stock%20Alert%20%28Team%20Channel%20Only%29.user.js",
+    "code_size": 9139,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.9.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538448,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-05T14:43:17.000Z",
+    "code_updated_at": "2025-06-05T14:43:17.000Z",
+    "namespace": "http://www.acornsemi.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479393,
+        "name": "Jessy Tang",
+        "created_at": "2025-06-05T14:35:56.000Z",
+        "url": "https://greasyfork.org/users/1479393-jessy-tang"
+      }
+    ],
+    "name": "精准删除 Highcharts/AmCharts 水印 - 17kqh.com",
+    "description": "删除 Highcharts 和 AmCharts 图表中的水印（如“一起看期货” 和 “17kqh.com”）",
+    "url": "https://greasyfork.org/scripts/538448-%E7%B2%BE%E5%87%86%E5%88%A0%E9%99%A4-highcharts-amcharts-%E6%B0%B4%E5%8D%B0-17kqh-com",
+    "code_url": "https://update.greasyfork.org/scripts/538448/%E7%B2%BE%E5%87%86%E5%88%A0%E9%99%A4%20HighchartsAmCharts%20%E6%B0%B4%E5%8D%B0%20-%2017kqhcom.user.js",
+    "code_size": 1903,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

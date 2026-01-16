@@ -31,5 +31,203 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 551666,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T11:13:24.000Z",
+    "code_updated_at": "2025-10-05T11:13:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "Colab Pro 计算单元外显",
+    "description": "实时显示 Colab Pro 当前消耗的运行时单元",
+    "url": "https://greasyfork.org/scripts/551666-colab-pro-%E8%AE%A1%E7%AE%97%E5%8D%95%E5%85%83%E5%A4%96%E6%98%BE",
+    "code_url": "https://update.greasyfork.org/scripts/551666/Colab%20Pro%20%E8%AE%A1%E7%AE%97%E5%8D%95%E5%85%83%E5%A4%96%E6%98%BE.user.js",
+    "code_size": 5046,
+    "license": "MIT License",
+    "version": "2025-10-05",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549336,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-13T01:46:27.000Z",
+    "code_updated_at": "2025-09-13T01:46:26.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/309232-3989364",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "ZodGame 一键签到/赚分",
+    "description": "在 Zod 首页添加一键签到/赚分按钮",
+    "url": "https://greasyfork.org/scripts/549336-zodgame-%E4%B8%80%E9%94%AE%E7%AD%BE%E5%88%B0-%E8%B5%9A%E5%88%86",
+    "code_url": "https://update.greasyfork.org/scripts/549336/ZodGame%20%E4%B8%80%E9%94%AE%E7%AD%BE%E5%88%B0%E8%B5%9A%E5%88%86.user.js",
+    "code_size": 5614,
+    "license": "MIT License",
+    "version": "2025-08-31",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526068,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-06T08:15:15.000Z",
+    "code_updated_at": "2025-02-06T08:15:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "阿里云盘自动重定向",
+    "description": "重定向分享页面的 aliyundrive.com 到 alipan.com",
+    "url": "https://greasyfork.org/scripts/526068-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91",
+    "code_url": "https://update.greasyfork.org/scripts/526068/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91.user.js",
+    "code_size": 505,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519023,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-27T09:17:49.000Z",
+    "code_updated_at": "2025-06-05T05:00:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "Danbooru Tag Autocompletion For Fooocus",
+    "description": "Tag autocompletion for fooocus",
+    "url": "https://greasyfork.org/scripts/519023-danbooru-tag-autocompletion-for-fooocus",
+    "code_url": "https://update.greasyfork.org/scripts/519023/Danbooru%20Tag%20Autocompletion%20For%20Fooocus.user.js",
+    "code_size": 13253,
+    "license": "MIT License",
+    "version": "2025-06-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510523,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-28T03:16:16.000Z",
+    "code_updated_at": "2024-09-28T03:16:16.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "阿里云盘分享自动切换为列表显示",
+    "description": "网页版阿里云盘分享分为卡片模式和列表模式，其中列表模式可以直观的看到文件的大小。这个简单的脚本将强制切换显示模式为列表模式。",
+    "url": "https://greasyfork.org/scripts/510523-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E5%88%86%E4%BA%AB%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E4%B8%BA%E5%88%97%E8%A1%A8%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/510523/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E5%88%86%E4%BA%AB%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E4%B8%BA%E5%88%97%E8%A1%A8%E6%98%BE%E7%A4%BA.user.js",
+    "code_size": 804,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500795,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-16T10:09:58.000Z",
+    "code_updated_at": "2024-10-12T11:43:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 309232,
+        "name": "3989364",
+        "created_at": "2019-06-12T14:16:38.000Z",
+        "url": "https://greasyfork.org/users/309232-3989364"
+      }
+    ],
+    "name": "fancaps 图片批量导出",
+    "description": "批量选择 fancaps 的图片并导出图片链接",
+    "url": "https://greasyfork.org/scripts/500795-fancaps-%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA",
+    "code_url": "https://update.greasyfork.org/scripts/500795/fancaps%20%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA.user.js",
+    "code_size": 4647,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

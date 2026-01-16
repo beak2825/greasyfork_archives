@@ -1,0 +1,59 @@
+{
+  "id": 535566,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-10T14:04:03.000Z",
+  "code_updated_at": "2025-05-10T14:04:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468215,
+      "name": "kibermaks",
+      "created_at": "2025-05-10T09:35:50.000Z",
+      "url": "https://greasyfork.org/users/1468215-kibermaks",
+      "scripts": [
+        {
+          "id": 535566,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-10T14:04:03.000Z",
+          "code_updated_at": "2025-05-10T14:04:02.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bubble Editor Enhancements",
+          "description": "Enhances Bubble.io editor: Data Type/Option Sets/Attributes (layout, colors). Modal dialogs - full keyboard support (Enter/Esc, Tab nav). Toggleable canvas padding. Ctrl+N for hinted \"Create a new...\" buttons.",
+          "url": "https://greasyfork.org/scripts/535566-bubble-editor-enhancements",
+          "code_url": "https://update.greasyfork.org/scripts/535566/Bubble%20Editor%20Enhancements.user.js",
+          "code_size": 29275,
+          "license": "MIT License",
+          "version": "2025.05.10-04",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bubble Editor Enhancements",
+  "description": "Enhances Bubble.io editor: Data Type/Option Sets/Attributes (layout, colors). Modal dialogs - full keyboard support (Enter/Esc, Tab nav). Toggleable canvas padding. Ctrl+N for hinted \"Create a new...\" buttons.",
+  "url": "https://greasyfork.org/scripts/535566-bubble-editor-enhancements",
+  "code_url": "https://update.greasyfork.org/scripts/535566/Bubble%20Editor%20Enhancements.user.js",
+  "code_size": 29275,
+  "license": "MIT License",
+  "version": "2025.05.10-04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

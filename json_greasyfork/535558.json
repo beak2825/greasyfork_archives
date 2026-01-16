@@ -1,0 +1,59 @@
+{
+  "id": 535558,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-10T12:11:09.000Z",
+  "code_updated_at": "2025-05-10T12:11:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468266,
+      "name": "gtresd",
+      "created_at": "2025-05-10T11:34:11.000Z",
+      "url": "https://greasyfork.org/users/1468266-gtresd",
+      "scripts": [
+        {
+          "id": 535558,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-10T12:11:09.000Z",
+          "code_updated_at": "2025-05-10T12:11:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Gladiabots team colors (fixed)",
+          "description": "Mark player names with their team color",
+          "url": "https://greasyfork.org/scripts/535558-gladiabots-team-colors-fixed",
+          "code_url": "https://update.greasyfork.org/scripts/535558/Gladiabots%20team%20colors%20%28fixed%29.user.js",
+          "code_size": 11490,
+          "license": "MIT License",
+          "version": "0.18",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Gladiabots team colors (fixed)",
+  "description": "Mark player names with their team color",
+  "url": "https://greasyfork.org/scripts/535558-gladiabots-team-colors-fixed",
+  "code_url": "https://update.greasyfork.org/scripts/535558/Gladiabots%20team%20colors%20%28fixed%29.user.js",
+  "code_size": 11490,
+  "license": "MIT License",
+  "version": "0.18",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

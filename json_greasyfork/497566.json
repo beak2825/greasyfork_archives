@@ -1,0 +1,59 @@
+{
+  "id": 497566,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-10T20:27:43.000Z",
+  "code_updated_at": "2024-06-10T20:27:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1315898,
+      "name": "zakarka2006",
+      "created_at": "2024-06-10T20:24:39.000Z",
+      "url": "https://greasyfork.org/users/1315898-zakarka2006",
+      "scripts": [
+        {
+          "id": 497566,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-10T20:27:43.000Z",
+          "code_updated_at": "2024-06-10T20:27:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Хомяк",
+          "description": "replace js file from hamsterkombat.io to ktnff.tech",
+          "url": "https://greasyfork.org/scripts/497566-%D1%85%D0%BE%D0%BC%D1%8F%D0%BA",
+          "code_url": "https://update.greasyfork.org/scripts/497566/%D0%A5%D0%BE%D0%BC%D1%8F%D0%BA.user.js",
+          "code_size": 1068,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Хомяк",
+  "description": "replace js file from hamsterkombat.io to ktnff.tech",
+  "url": "https://greasyfork.org/scripts/497566-%D1%85%D0%BE%D0%BC%D1%8F%D0%BA",
+  "code_url": "https://update.greasyfork.org/scripts/497566/%D0%A5%D0%BE%D0%BC%D1%8F%D0%BA.user.js",
+  "code_size": 1068,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

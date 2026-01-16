@@ -1,0 +1,33 @@
+{
+  "id": 510039,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-24T20:09:11.000Z",
+  "code_updated_at": "2024-09-25T14:04:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1372580,
+      "name": "colout",
+      "created_at": "2024-09-24T20:03:09.000Z",
+      "url": "https://greasyfork.org/users/1372580-colout"
+    }
+  ],
+  "name": "Gmail Phishing Intercepter",
+  "description": "Really simple POC script to warn when clicking hrefs and copy the link to clipboard instead of navigating. WARNING - this a POC and might fail. It's simple enough that it shouldn't fail too spectacularly though.",
+  "url": "https://greasyfork.org/scripts/510039-gmail-phishing-intercepter",
+  "code_url": "https://update.greasyfork.org/scripts/510039/Gmail%20Phishing%20Intercepter.user.js",
+  "code_size": 1995,
+  "license": "MIT License",
+  "version": "2024-09-25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

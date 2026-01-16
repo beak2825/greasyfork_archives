@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550873,
+    "daily_installs": 1,
+    "total_installs": 253,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-27T15:12:09.000Z",
+    "code_updated_at": "2025-12-17T03:08:01.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/178351-yesilin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 178351,
+        "name": "YeSilin",
+        "created_at": "2018-04-06T06:43:32.000Z",
+        "url": "https://greasyfork.org/users/178351-yesilin"
+      }
+    ],
+    "name": "视频网页全屏(改)",
+    "description": "让所有视频网页全屏，开启画中画功能，支持自定义按钮位置。",
+    "url": "https://greasyfork.org/scripts/550873-%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/550873/%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%28%E6%94%B9%29.user.js",
+    "code_size": 64258,
+    "license": "MIT License",
+    "version": "12.5.83",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

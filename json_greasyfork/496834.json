@@ -1,0 +1,33 @@
+{
+  "id": 496834,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-02T12:35:58.000Z",
+  "code_updated_at": "2024-06-02T12:35:58.000Z",
+  "namespace": "https://github.com/tony6960/bcczcs_no_sleep_script/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 897393,
+      "name": "tony6960",
+      "created_at": "2022-04-04T04:21:31.000Z",
+      "url": "https://greasyfork.org/users/897393-tony6960"
+    }
+  ],
+  "name": "BCCZCS.COM校对冷却禁用",
+  "description": "disable bcczcs.com's pracitce wrong time sleep",
+  "url": "https://greasyfork.org/scripts/496834-bcczcs-com%E6%A0%A1%E5%AF%B9%E5%86%B7%E5%8D%B4%E7%A6%81%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/496834/BCCZCSCOM%E6%A0%A1%E5%AF%B9%E5%86%B7%E5%8D%B4%E7%A6%81%E7%94%A8.user.js",
+  "code_size": 722,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

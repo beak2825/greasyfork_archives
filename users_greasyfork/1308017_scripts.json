@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520062,
+    "daily_installs": 1,
+    "total_installs": 198,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-07T17:41:24.000Z",
+    "code_updated_at": "2024-12-12T13:00:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1308017,
+        "name": "Meff1u",
+        "created_at": "2024-05-27T13:11:17.000Z",
+        "url": "https://greasyfork.org/users/1308017-meff1u"
+      }
+    ],
+    "name": "Geoguessr Like Games - Location Finder",
+    "description": "Pinpointing location finder (Geoguessr, Geotastic, GeoHub, etc.).",
+    "url": "https://greasyfork.org/scripts/520062-geoguessr-like-games-location-finder",
+    "code_url": "https://update.greasyfork.org/scripts/520062/Geoguessr%20Like%20Games%20-%20Location%20Finder.user.js",
+    "code_size": 15291,
+    "license": "MIT License",
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541613,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T10:58:39.000Z",
+    "code_updated_at": "2025-07-04T10:58:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491564,
+        "name": "leos12",
+        "created_at": "2025-07-04T10:52:44.000Z",
+        "url": "https://greasyfork.org/users/1491564-leos12"
+      }
+    ],
+    "name": "TikTok Preserve Scroll on Back",
+    "description": "Prevent TikTok from auto-scrolling to top when returning from a video",
+    "url": "https://greasyfork.org/scripts/541613-tiktok-preserve-scroll-on-back",
+    "code_url": "https://update.greasyfork.org/scripts/541613/TikTok%20Preserve%20Scroll%20on%20Back.user.js",
+    "code_size": 2224,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

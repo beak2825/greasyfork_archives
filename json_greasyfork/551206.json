@@ -1,0 +1,34 @@
+{
+  "id": 551206,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-01T02:20:05.000Z",
+  "code_updated_at": "2025-10-15T09:55:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521176,
+      "name": "sHB8",
+      "created_at": "2025-10-01T02:18:30.000Z",
+      "url": "https://greasyfork.org/users/1521176-shb8",
+      "scripts": []
+    }
+  ],
+  "name": "unlucid.ai 자동 출석체크",
+  "description": "unlucid.ai 사이트에 방문하여 로그인, 출석체크를 자동으로 수행하고 탭을 닫습니다. (속도 및 안정성 개선)",
+  "url": "https://greasyfork.org/scripts/551206-unlucid-ai-%EC%9E%90%EB%8F%99-%EC%B6%9C%EC%84%9D%EC%B2%B4%ED%81%AC",
+  "code_url": "https://update.greasyfork.org/scripts/551206/unlucidai%20%EC%9E%90%EB%8F%99%20%EC%B6%9C%EC%84%9D%EC%B2%B4%ED%81%AC.user.js",
+  "code_size": 6807,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

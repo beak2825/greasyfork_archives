@@ -1,0 +1,59 @@
+{
+  "id": 521783,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-25T14:21:23.000Z",
+  "code_updated_at": "2024-12-25T15:11:22.000Z",
+  "namespace": "https://github.com/zfeny",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1411206,
+      "name": "ZFeny",
+      "created_at": "2024-12-15T13:09:59.000Z",
+      "url": "https://greasyfork.org/users/1411206-zfeny",
+      "scripts": [
+        {
+          "id": 521783,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-25T14:21:23.000Z",
+          "code_updated_at": "2024-12-25T15:11:22.000Z",
+          "namespace": "https://github.com/zfeny",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎收藏夹批量导出为MarkDown文档",
+          "description": "用于批量将知乎收藏夹全部页面导出为独立的MarkDown文档，支持段落、图片、视频、外链、引用和加粗文本转换。",
+          "url": "https://greasyfork.org/scripts/521783-%E7%9F%A5%E4%B9%8E%E6%94%B6%E8%97%8F%E5%A4%B9%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E4%B8%BAmarkdown%E6%96%87%E6%A1%A3",
+          "code_url": "https://update.greasyfork.org/scripts/521783/%E7%9F%A5%E4%B9%8E%E6%94%B6%E8%97%8F%E5%A4%B9%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E4%B8%BAMarkDown%E6%96%87%E6%A1%A3.user.js",
+          "code_size": 8095,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎收藏夹批量导出为MarkDown文档",
+  "description": "用于批量将知乎收藏夹全部页面导出为独立的MarkDown文档，支持段落、图片、视频、外链、引用和加粗文本转换。",
+  "url": "https://greasyfork.org/scripts/521783-%E7%9F%A5%E4%B9%8E%E6%94%B6%E8%97%8F%E5%A4%B9%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E4%B8%BAmarkdown%E6%96%87%E6%A1%A3",
+  "code_url": "https://update.greasyfork.org/scripts/521783/%E7%9F%A5%E4%B9%8E%E6%94%B6%E8%97%8F%E5%A4%B9%E6%89%B9%E9%87%8F%E5%AF%BC%E5%87%BA%E4%B8%BAMarkDown%E6%96%87%E6%A1%A3.user.js",
+  "code_size": 8095,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

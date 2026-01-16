@@ -1,0 +1,59 @@
+{
+  "id": 525448,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T17:42:18.000Z",
+  "code_updated_at": "2025-02-01T16:42:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1425513,
+      "name": "El Escarabajo",
+      "created_at": "2025-01-20T21:52:15.000Z",
+      "url": "https://greasyfork.org/users/1425513-el-escarabajo",
+      "scripts": [
+        {
+          "id": 525448,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-31T17:42:18.000Z",
+          "code_updated_at": "2025-02-01T16:42:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mejoras para Novelcool+",
+          "description": "Este es un script simple donde modifica la parte donde ves manwha y arregla unos errores y te permite elegir la cantidad de imagenes de los capitulos ejemplos hasta 50 siempre y cuando tenga 50 y si no tiene 50 solo cargara la cantidad de imagenes disponibles",
+          "url": "https://greasyfork.org/scripts/525448-mejoras-para-novelcool",
+          "code_url": "https://update.greasyfork.org/scripts/525448/Mejoras%20para%20Novelcool%2B.user.js",
+          "code_size": 7466,
+          "license": "MIT License",
+          "version": "2.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Mejoras para Novelcool+",
+  "description": "Este es un script simple donde modifica la parte donde ves manwha y arregla unos errores y te permite elegir la cantidad de imagenes de los capitulos ejemplos hasta 50 siempre y cuando tenga 50 y si no tiene 50 solo cargara la cantidad de imagenes disponibles",
+  "url": "https://greasyfork.org/scripts/525448-mejoras-para-novelcool",
+  "code_url": "https://update.greasyfork.org/scripts/525448/Mejoras%20para%20Novelcool%2B.user.js",
+  "code_size": 7466,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

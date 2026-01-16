@@ -1,0 +1,34 @@
+{
+  "id": 523145,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-07T21:47:54.000Z",
+  "code_updated_at": "2025-02-15T09:58:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420708,
+      "name": "Ярослав Колмогорцев",
+      "created_at": "2025-01-07T21:44:45.000Z",
+      "url": "https://greasyfork.org/users/1420708-%D1%8F%D1%80%D0%BE%D1%81%D0%BB%D0%B0%D0%B2-%D0%BA%D0%BE%D0%BB%D0%BC%D0%BE%D0%B3%D0%BE%D1%80%D1%86%D0%B5%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "Для кураторов форума",
+  "description": "Скрипт для упрощения работы кураторов форума на BlackRussia. Связь с разработчиком https://vk.com/kottvse https://vk.com/jaroslavgrasso",
+  "url": "https://greasyfork.org/scripts/523145-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/523145/%D0%94%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+  "code_size": 204516,
+  "license": "MIT License",
+  "version": "2.1R FIX",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

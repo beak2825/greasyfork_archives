@@ -1,0 +1,33 @@
+{
+  "id": 541135,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-29T18:58:41.000Z",
+  "code_updated_at": "2025-06-29T21:02:38.000Z",
+  "namespace": "https://skyskraber.dk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490074,
+      "name": "Nikolajkiil",
+      "created_at": "2025-06-29T18:56:53.000Z",
+      "url": "https://greasyfork.org/users/1490074-nikolajkiil"
+    }
+  ],
+  "name": "XP Minigame",
+  "description": "XP & Level system med rank og med kommandoer",
+  "url": "https://greasyfork.org/scripts/541135-xp-minigame",
+  "code_url": "https://update.greasyfork.org/scripts/541135/XP%20Minigame.user.js",
+  "code_size": 17162,
+  "license": null,
+  "version": "3.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

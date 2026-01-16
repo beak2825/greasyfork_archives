@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544636,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T15:26:15.000Z",
+    "code_updated_at": "2025-10-03T16:48:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/TheHeartFickle/OpenSubtitleOnBiliBili/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501573,
+        "name": "TheHeartFickle",
+        "created_at": "2025-08-04T15:03:36.000Z",
+        "url": "https://greasyfork.org/users/1501573-theheartfickle"
+      }
+    ],
+    "name": "自动打开b站字幕",
+    "description": "自动开启B站视频字幕功能",
+    "url": "https://greasyfork.org/scripts/544636-%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80b%E7%AB%99%E5%AD%97%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/544636/%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80b%E7%AB%99%E5%AD%97%E5%B9%95.user.js",
+    "code_size": 3784,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

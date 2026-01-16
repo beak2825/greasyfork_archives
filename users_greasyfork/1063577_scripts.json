@@ -1,0 +1,68 @@
+[
+  {
+    "id": 512737,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T15:37:26.000Z",
+    "code_updated_at": "2024-10-26T14:33:44.000Z",
+    "namespace": "https://yyya-nico.co/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1063577,
+        "name": "yyya-nico",
+        "created_at": "2023-04-19T14:45:04.000Z",
+        "url": "https://greasyfork.org/users/1063577-yyya-nico"
+      }
+    ],
+    "name": "ニコニコ大百科 ピコExt",
+    "description": "投稿されているピコカキコのプレイヤー下に便利機能を足します。",
+    "url": "https://greasyfork.org/scripts/512737-%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E5%A4%A7%E7%99%BE%E7%A7%91-%E3%83%94%E3%82%B3ext",
+    "code_url": "https://update.greasyfork.org/scripts/512737/%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E5%A4%A7%E7%99%BE%E7%A7%91%20%E3%83%94%E3%82%B3Ext.user.js",
+    "code_size": 2049,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499578,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-03T12:16:52.000Z",
+    "code_updated_at": "2024-07-03T13:17:51.000Z",
+    "namespace": "https://yyya-nico.co/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1063577,
+        "name": "yyya-nico",
+        "created_at": "2023-04-19T14:45:04.000Z",
+        "url": "https://greasyfork.org/users/1063577-yyya-nico"
+      }
+    ],
+    "name": "NHKプラス キーボード操作可能に",
+    "description": "NHKプラスのキーボード操作を一部拡張します。カーソル左右で進む/戻る、スペースで一時停止/再生、カーソル上下で再生速度変更。",
+    "url": "https://greasyfork.org/scripts/499578-nhk%E3%83%97%E3%83%A9%E3%82%B9-%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%89%E6%93%8D%E4%BD%9C%E5%8F%AF%E8%83%BD%E3%81%AB",
+    "code_url": "https://update.greasyfork.org/scripts/499578/NHK%E3%83%97%E3%83%A9%E3%82%B9%20%E3%82%AD%E3%83%BC%E3%83%9C%E3%83%BC%E3%83%89%E6%93%8D%E4%BD%9C%E5%8F%AF%E8%83%BD%E3%81%AB.user.js",
+    "code_size": 2036,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

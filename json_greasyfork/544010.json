@@ -1,0 +1,33 @@
+{
+  "id": 544010,
+  "daily_installs": 0,
+  "total_installs": 50,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-29T16:06:00.000Z",
+  "code_updated_at": "2025-07-29T16:05:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1485145,
+      "name": "Rubystance",
+      "created_at": "2025-06-18T03:53:36.000Z",
+      "url": "https://greasyfork.org/users/1485145-rubystance"
+    }
+  ],
+  "name": "ChillFaucet - Auto Login & Claim LTC.",
+  "description": "Automatically login and claim LTC after solving IconCaptcha. ICON CAPTCHA ON MY TELEGRAM CHANNEL.",
+  "url": "https://greasyfork.org/scripts/544010-chillfaucet-auto-login-claim-ltc",
+  "code_url": "https://update.greasyfork.org/scripts/544010/ChillFaucet%20-%20Auto%20Login%20%20Claim%20LTC.user.js",
+  "code_size": 3224,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

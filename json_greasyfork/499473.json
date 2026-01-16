@@ -1,0 +1,33 @@
+{
+  "id": 499473,
+  "daily_installs": 0,
+  "total_installs": 40,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-02T08:25:01.000Z",
+  "code_updated_at": "2024-07-02T08:39:16.000Z",
+  "namespace": "https://github.com/liyang8246",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1327090,
+      "name": "liyang8246",
+      "created_at": "2024-07-02T08:13:35.000Z",
+      "url": "https://greasyfork.org/users/1327090-liyang8246"
+    }
+  ],
+  "name": "广二师随机教评",
+  "description": "适用于广东第二师范学院新教务系统评教,在提交下有一随机按钮",
+  "url": "https://greasyfork.org/scripts/499473-%E5%B9%BF%E4%BA%8C%E5%B8%88%E9%9A%8F%E6%9C%BA%E6%95%99%E8%AF%84",
+  "code_url": "https://update.greasyfork.org/scripts/499473/%E5%B9%BF%E4%BA%8C%E5%B8%88%E9%9A%8F%E6%9C%BA%E6%95%99%E8%AF%84.user.js",
+  "code_size": 1640,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

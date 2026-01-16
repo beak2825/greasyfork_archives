@@ -1,0 +1,167 @@
+[
+  {
+    "id": 538980,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T09:02:44.000Z",
+    "code_updated_at": "2025-06-24T06:04:51.000Z",
+    "namespace": "https://greasyfork.org/users/713625",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713625,
+        "name": "winexec",
+        "created_at": "2020-12-06T09:59:09.000Z",
+        "url": "https://greasyfork.org/users/713625-winexec"
+      }
+    ],
+    "name": "cryptodrip.io",
+    "description": "auto click, auto wd",
+    "url": "https://greasyfork.org/scripts/538980-cryptodrip-io",
+    "code_url": "https://update.greasyfork.org/scripts/538980/cryptodripio.user.js",
+    "code_size": 8917,
+    "license": null,
+    "version": "1.8",
+    "locale": "mg",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527093,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T11:56:44.000Z",
+    "code_updated_at": "2025-02-16T11:56:44.000Z",
+    "namespace": "https://greasyfork.org/users/713625",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713625,
+        "name": "winexec",
+        "created_at": "2020-12-06T09:59:09.000Z",
+        "url": "https://greasyfork.org/users/713625-winexec"
+      }
+    ],
+    "name": "timewall.io",
+    "description": "Autoclick ads",
+    "url": "https://greasyfork.org/scripts/527093-timewall-io",
+    "code_url": "https://update.greasyfork.org/scripts/527093/timewallio.user.js",
+    "code_size": 5602,
+    "license": null,
+    "version": "0.0.1.20250216115644",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523478,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-11T17:03:12.000Z",
+    "code_updated_at": "2025-01-12T11:54:33.000Z",
+    "namespace": "https://greasyfork.org/users/713625",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713625,
+        "name": "winexec",
+        "created_at": "2020-12-06T09:59:09.000Z",
+        "url": "https://greasyfork.org/users/713625-winexec"
+      }
+    ],
+    "name": "hives.pw",
+    "description": "autoclaim + autowithdraw",
+    "url": "https://greasyfork.org/scripts/523478-hives-pw",
+    "code_url": "https://update.greasyfork.org/scripts/523478/hivespw.user.js",
+    "code_size": 4497,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522480,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-01T09:55:36.000Z",
+    "code_updated_at": "2025-01-01T09:55:36.000Z",
+    "namespace": "https://greasyfork.org/users/713625",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713625,
+        "name": "winexec",
+        "created_at": "2020-12-06T09:59:09.000Z",
+        "url": "https://greasyfork.org/users/713625-winexec"
+      }
+    ],
+    "name": "freebitco.in",
+    "description": "autoclaimer",
+    "url": "https://greasyfork.org/scripts/522480-freebitco-in",
+    "code_url": "https://update.greasyfork.org/scripts/522480/freebitcoin.user.js",
+    "code_size": 2441,
+    "license": null,
+    "version": "0.0.1.20250101095536",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521645,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T08:29:04.000Z",
+    "code_updated_at": "2024-12-24T08:29:04.000Z",
+    "namespace": "https://greasyfork.org/users/713625",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 713625,
+        "name": "winexec",
+        "created_at": "2020-12-06T09:59:09.000Z",
+        "url": "https://greasyfork.org/users/713625-winexec"
+      }
+    ],
+    "name": "litebits.io auto-claim",
+    "description": "autoclaimer",
+    "url": "https://greasyfork.org/scripts/521645-litebits-io-auto-claim",
+    "code_url": "https://update.greasyfork.org/scripts/521645/litebitsio%20auto-claim.user.js",
+    "code_size": 1883,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 546019,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-16T01:56:21.000Z",
+  "code_updated_at": "2025-08-16T01:56:21.000Z",
+  "namespace": "http://www.milkywayidle.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503103,
+      "name": "physon",
+      "created_at": "2025-08-09T08:06:14.000Z",
+      "url": "https://greasyfork.org/users/1503103-physon"
+    }
+  ],
+  "name": "Milky Way Idle - Chat History Font Size Increaser",
+  "description": "Change font size to 20px for Chat History",
+  "url": "https://greasyfork.org/scripts/546019-milky-way-idle-chat-history-font-size-increaser",
+  "code_url": "https://update.greasyfork.org/scripts/546019/Milky%20Way%20Idle%20-%20Chat%20History%20Font%20Size%20Increaser.user.js",
+  "code_size": 1424,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

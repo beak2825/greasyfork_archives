@@ -1,0 +1,34 @@
+{
+  "id": 543686,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-26T09:52:43.000Z",
+  "code_updated_at": "2025-12-23T14:13:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294379,
+      "name": "dan bing",
+      "created_at": "2024-04-28T14:13:32.000Z",
+      "url": "https://greasyfork.org/users/1294379-dan-bing",
+      "scripts": []
+    }
+  ],
+  "name": "超时监控PRO-12.23",
+  "description": "辛辛苦苦测试",
+  "url": "https://greasyfork.org/scripts/543686-%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7pro-12-23",
+  "code_url": "https://update.greasyfork.org/scripts/543686/%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7PRO-1223.user.js",
+  "code_size": 28085,
+  "license": "MIT License",
+  "version": "4.8.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

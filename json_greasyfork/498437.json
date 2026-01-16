@@ -1,0 +1,34 @@
+{
+  "id": 498437,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-20T09:16:55.000Z",
+  "code_updated_at": "2024-06-20T09:16:55.000Z",
+  "namespace": "https://dev.limkim.xyz/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320727,
+      "name": "袁家乐",
+      "created_at": "2024-06-19T17:43:25.000Z",
+      "url": "https://greasyfork.org/users/1320727-%E8%A2%81%E5%AE%B6%E4%B9%90",
+      "scripts": []
+    }
+  ],
+  "name": "好医生-视频一键到底与自动答题",
+  "description": "提供好医生CME继续医学教育平台的视频倍速与一键看完, 并且支持考试一键完成, 现已支持: 北京健康在线-好医生继续医学教育(包含河北地区)、北京市继续医学教育必修课培训2024(北京市全员必修课培训)",
+  "url": "https://greasyfork.org/scripts/498437-%E5%A5%BD%E5%8C%BB%E7%94%9F-%E8%A7%86%E9%A2%91%E4%B8%80%E9%94%AE%E5%88%B0%E5%BA%95%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/498437/%E5%A5%BD%E5%8C%BB%E7%94%9F-%E8%A7%86%E9%A2%91%E4%B8%80%E9%94%AE%E5%88%B0%E5%BA%95%E4%B8%8E%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js",
+  "code_size": 16291,
+  "license": "MIT License",
+  "version": "1.4.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

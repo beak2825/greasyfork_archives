@@ -1,0 +1,59 @@
+{
+  "id": 522718,
+  "daily_installs": 0,
+  "total_installs": 43,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-03T16:11:07.000Z",
+  "code_updated_at": "2025-01-03T16:11:06.000Z",
+  "namespace": "https://greasyfork.org/users/1419143",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1419143,
+      "name": "kapinzzal02",
+      "created_at": "2025-01-03T16:04:39.000Z",
+      "url": "https://greasyfork.org/users/1419143-kapinzzal02",
+      "scripts": [
+        {
+          "id": 522718,
+          "daily_installs": 0,
+          "total_installs": 43,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-03T16:11:07.000Z",
+          "code_updated_at": "2025-01-03T16:11:06.000Z",
+          "namespace": "https://greasyfork.org/users/1419143",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Volume Fix",
+          "description": "Makes YouTube usable for listening to music :)",
+          "url": "https://greasyfork.org/scripts/522718-youtube-volume-fix",
+          "code_url": "https://update.greasyfork.org/scripts/522718/YouTube%20Volume%20Fix.user.js",
+          "code_size": 2343,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Volume Fix",
+  "description": "Makes YouTube usable for listening to music :)",
+  "url": "https://greasyfork.org/scripts/522718-youtube-volume-fix",
+  "code_url": "https://update.greasyfork.org/scripts/522718/YouTube%20Volume%20Fix.user.js",
+  "code_size": 2343,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

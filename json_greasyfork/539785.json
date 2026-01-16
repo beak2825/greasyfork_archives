@@ -1,0 +1,33 @@
+{
+  "id": 539785,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-17T17:59:44.000Z",
+  "code_updated_at": "2025-06-17T17:59:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088100,
+      "name": "YouTubeDrawaria",
+      "created_at": "2023-05-31T23:20:20.000Z",
+      "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+    }
+  ],
+  "name": "Drawaria Thought Bubble",
+  "description": "Agrega una burbuja de pensamiento personalizable con forma de nube sobre el avatar de perfil en Drawaria.online, con textos iniciales adaptados al idioma del navegador (Inglés/Español).",
+  "url": "https://greasyfork.org/scripts/539785-drawaria-thought-bubble",
+  "code_url": "https://update.greasyfork.org/scripts/539785/Drawaria%20Thought%20Bubble.user.js",
+  "code_size": 11108,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

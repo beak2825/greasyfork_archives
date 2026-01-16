@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536826,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-22T10:27:04.000Z",
+    "code_updated_at": "2025-05-22T10:27:04.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473361,
+        "name": "Chris Ghorra",
+        "created_at": "2025-05-22T10:23:14.000Z",
+        "url": "https://greasyfork.org/users/1473361-chris-ghorra"
+      }
+    ],
+    "name": "Torn Crime Tracker",
+    "description": "Retrieve and store criminal record via API key (user-side only)",
+    "url": "https://greasyfork.org/scripts/536826-torn-crime-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/536826/Torn%20Crime%20Tracker.user.js",
+    "code_size": 1879,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 541852,
+  "daily_installs": 0,
+  "total_installs": 46,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-06T18:44:30.000Z",
+  "code_updated_at": "2025-07-06T18:45:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492299,
+      "name": "violettt",
+      "created_at": "2025-07-06T18:38:06.000Z",
+      "url": "https://greasyfork.org/users/1492299-violettt",
+      "scripts": [
+        {
+          "id": 541852,
+          "daily_installs": 0,
+          "total_installs": 46,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-06T18:44:30.000Z",
+          "code_updated_at": "2025-07-06T18:45:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube 4-Column Home Page Layout",
+          "description": "Force YouTube to use a 4-column grid, fix layout, and remove section renderers like Shorts etc.",
+          "url": "https://greasyfork.org/scripts/541852-youtube-4-column-home-page-layout",
+          "code_url": "https://update.greasyfork.org/scripts/541852/YouTube%204-Column%20Home%20Page%20Layout.user.js",
+          "code_size": 2185,
+          "license": "GPLv3",
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube 4-Column Home Page Layout",
+  "description": "Force YouTube to use a 4-column grid, fix layout, and remove section renderers like Shorts etc.",
+  "url": "https://greasyfork.org/scripts/541852-youtube-4-column-home-page-layout",
+  "code_url": "https://update.greasyfork.org/scripts/541852/YouTube%204-Column%20Home%20Page%20Layout.user.js",
+  "code_size": 2185,
+  "license": "GPLv3",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

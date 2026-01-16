@@ -1,0 +1,59 @@
+{
+  "id": 529157,
+  "daily_installs": 0,
+  "total_installs": 59,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-03-08T05:17:24.000Z",
+  "code_updated_at": "2025-06-19T22:01:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1443425,
+      "name": "RootThePlanet",
+      "created_at": "2025-03-08T04:41:13.000Z",
+      "url": "https://greasyfork.org/users/1443425-roottheplanet",
+      "scripts": [
+        {
+          "id": 529157,
+          "daily_installs": 0,
+          "total_installs": 59,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-03-08T05:17:24.000Z",
+          "code_updated_at": "2025-06-19T22:01:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Reddit AI BotBuster (Enhanced UX - Complete)",
+          "description": "Detects suspected bot accounts and AI-generated content on Reddit with a transparent, configurable, and research-based engine.",
+          "url": "https://greasyfork.org/scripts/529157-reddit-ai-botbuster-enhanced-ux-complete",
+          "code_url": "https://update.greasyfork.org/scripts/529157/Reddit%20AI%20BotBuster%20%28Enhanced%20UX%20-%20Complete%29.user.js",
+          "code_size": 18317,
+          "license": null,
+          "version": "4.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Reddit AI BotBuster (Enhanced UX - Complete)",
+  "description": "Detects suspected bot accounts and AI-generated content on Reddit with a transparent, configurable, and research-based engine.",
+  "url": "https://greasyfork.org/scripts/529157-reddit-ai-botbuster-enhanced-ux-complete",
+  "code_url": "https://update.greasyfork.org/scripts/529157/Reddit%20AI%20BotBuster%20%28Enhanced%20UX%20-%20Complete%29.user.js",
+  "code_size": 18317,
+  "license": null,
+  "version": "4.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

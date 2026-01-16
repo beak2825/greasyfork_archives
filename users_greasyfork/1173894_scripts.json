@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500627,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-14T14:47:39.000Z",
+    "code_updated_at": "2024-09-21T17:27:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/mz-ir/mazyar",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173894,
+        "name": "paladiny",
+        "created_at": "2023-09-15T17:58:41.000Z",
+        "url": "https://greasyfork.org/users/1173894-paladiny"
+      }
+    ],
+    "name": "Mazyar_DaysModify",
+    "description": "Swiss Army knife for managerzone.com",
+    "url": "https://greasyfork.org/scripts/500627-mazyar-daysmodify",
+    "code_url": "https://update.greasyfork.org/scripts/500627/Mazyar_DaysModify.user.js",
+    "code_size": 240543,
+    "license": "MIT License",
+    "version": "2.50",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

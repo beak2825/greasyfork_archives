@@ -1,0 +1,68 @@
+[
+  {
+    "id": 498205,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-17T23:48:20.000Z",
+    "code_updated_at": "2024-06-17T23:48:19.000Z",
+    "namespace": "https://trajano.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1319746,
+        "name": "trajano",
+        "created_at": "2024-06-17T23:42:37.000Z",
+        "url": "https://greasyfork.org/users/1319746-trajano"
+      }
+    ],
+    "name": "Remove annoying users from StackOverflow",
+    "description": "Masks out the comments and the names of users you don't like on StackOverflow",
+    "url": "https://greasyfork.org/scripts/498205-remove-annoying-users-from-stackoverflow",
+    "code_url": "https://update.greasyfork.org/scripts/498205/Remove%20annoying%20users%20from%20StackOverflow.user.js",
+    "code_size": 1680,
+    "license": "Eclipse Public License 2.0",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498204,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-17T23:45:38.000Z",
+    "code_updated_at": "2024-06-17T23:45:38.000Z",
+    "namespace": "https://trajano.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1319746,
+        "name": "trajano",
+        "created_at": "2024-06-17T23:42:37.000Z",
+        "url": "https://greasyfork.org/users/1319746-trajano"
+      }
+    ],
+    "name": "Ignore low downvotes on own post",
+    "description": "Zeros out low down votes for your own post.",
+    "url": "https://greasyfork.org/scripts/498204-ignore-low-downvotes-on-own-post",
+    "code_url": "https://update.greasyfork.org/scripts/498204/Ignore%20low%20downvotes%20on%20own%20post.user.js",
+    "code_size": 690,
+    "license": "Eclipse Public License 2.0",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

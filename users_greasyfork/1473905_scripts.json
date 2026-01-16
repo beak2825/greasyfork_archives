@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537636,
+    "daily_installs": 1,
+    "total_installs": 11,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-29T13:52:24.000Z",
+    "code_updated_at": "2025-05-29T13:58:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473905,
+        "name": "nbh",
+        "created_at": "2025-05-23T15:29:47.000Z",
+        "url": "https://greasyfork.org/users/1473905-nbh"
+      }
+    ],
+    "name": "抖音播完自动暂停",
+    "description": "在抖音网页版中，当视频剩余 0.2 秒时自动暂停，防止自动跳播下一条视频。同时支持快捷键P控制启用/暂停",
+    "url": "https://greasyfork.org/scripts/537636-%E6%8A%96%E9%9F%B3%E6%92%AD%E5%AE%8C%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C",
+    "code_url": "https://update.greasyfork.org/scripts/537636/%E6%8A%96%E9%9F%B3%E6%92%AD%E5%AE%8C%E8%87%AA%E5%8A%A8%E6%9A%82%E5%81%9C.user.js",
+    "code_size": 22569,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

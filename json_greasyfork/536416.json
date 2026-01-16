@@ -1,0 +1,33 @@
+{
+  "id": 536416,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-18T17:55:00.000Z",
+  "code_updated_at": "2025-05-18T17:55:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1471714,
+      "name": "ZCBQET",
+      "created_at": "2025-05-18T17:51:56.000Z",
+      "url": "https://greasyfork.org/users/1471714-zcbqet"
+    }
+  ],
+  "name": "批量吸血",
+  "description": "吸血",
+  "url": "https://greasyfork.org/scripts/536416-%E6%89%B9%E9%87%8F%E5%90%B8%E8%A1%80",
+  "code_url": "https://update.greasyfork.org/scripts/536416/%E6%89%B9%E9%87%8F%E5%90%B8%E8%A1%80.user.js",
+  "code_size": 29583,
+  "license": "GPL",
+  "version": "2025-05-17",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

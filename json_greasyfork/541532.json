@@ -1,0 +1,33 @@
+{
+  "id": 541532,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-03T12:46:08.000Z",
+  "code_updated_at": "2025-07-03T12:46:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724139,
+      "name": "jianhua hao (自由之翼乱了心)",
+      "created_at": "2021-01-05T09:07:55.000Z",
+      "url": "https://greasyfork.org/users/724139-jianhua-hao-%E8%87%AA%E7%94%B1%E4%B9%8B%E7%BF%BC%E4%B9%B1%E4%BA%86%E5%BF%83"
+    }
+  ],
+  "name": "ArtStation项目图片8K/4K加载",
+  "description": "将ArtStation项目中的图片强制替换为8K或4K版本",
+  "url": "https://greasyfork.org/scripts/541532-artstation%E9%A1%B9%E7%9B%AE%E5%9B%BE%E7%89%878k-4k%E5%8A%A0%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/541532/ArtStation%E9%A1%B9%E7%9B%AE%E5%9B%BE%E7%89%878K4K%E5%8A%A0%E8%BD%BD.user.js",
+  "code_size": 7114,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

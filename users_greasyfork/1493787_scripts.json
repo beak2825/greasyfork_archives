@@ -1,0 +1,101 @@
+[
+  {
+    "id": 542402,
+    "daily_installs": 10,
+    "total_installs": 810,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T14:41:47.000Z",
+    "code_updated_at": "2025-07-12T14:41:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493787,
+        "name": "lucien scripts",
+        "created_at": "2025-07-11T12:36:57.000Z",
+        "url": "https://greasyfork.org/users/1493787-lucien-scripts"
+      }
+    ],
+    "name": "Poxel.io Custom Crosshair + Smart Macro + Anti-Lag + Real FPS GUI",
+    "description": "Draggable GUI with custom crosshair, real FPS counter, smart auto macro, and anti-lag for Poxel.io — press M to toggle the mod menu visibility",
+    "url": "https://greasyfork.org/scripts/542402-poxel-io-custom-crosshair-smart-macro-anti-lag-real-fps-gui",
+    "code_url": "https://update.greasyfork.org/scripts/542402/Poxelio%20Custom%20Crosshair%20%2B%20Smart%20Macro%20%2B%20Anti-Lag%20%2B%20Real%20FPS%20GUI.user.js",
+    "code_size": 5758,
+    "license": null,
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542300,
+    "daily_installs": 1,
+    "total_installs": 172,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T12:53:08.000Z",
+    "code_updated_at": "2025-07-11T12:53:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493787,
+        "name": "lucien scripts",
+        "created_at": "2025-07-11T12:36:57.000Z",
+        "url": "https://greasyfork.org/users/1493787-lucien-scripts"
+      }
+    ],
+    "name": "Poxel.io Anti-Lag & FPS Booster",
+    "description": "Boost FPS, reduce lag, and add FPS counter in Poxel.io",
+    "url": "https://greasyfork.org/scripts/542300-poxel-io-anti-lag-fps-booster",
+    "code_url": "https://update.greasyfork.org/scripts/542300/Poxelio%20Anti-Lag%20%20FPS%20Booster.user.js",
+    "code_size": 2238,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542297,
+    "daily_installs": 5,
+    "total_installs": 162,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T12:39:30.000Z",
+    "code_updated_at": "2025-07-11T12:39:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493787,
+        "name": "lucien scripts",
+        "created_at": "2025-07-11T12:36:57.000Z",
+        "url": "https://greasyfork.org/users/1493787-lucien-scripts"
+      }
+    ],
+    "name": "Poxel.io Custom Crosshair with Menu",
+    "description": "Add a customizable crosshair with menu to Poxel.io",
+    "url": "https://greasyfork.org/scripts/542297-poxel-io-custom-crosshair-with-menu",
+    "code_url": "https://update.greasyfork.org/scripts/542297/Poxelio%20Custom%20Crosshair%20with%20Menu.user.js",
+    "code_size": 3538,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

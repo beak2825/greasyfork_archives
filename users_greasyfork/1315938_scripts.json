@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497570,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-11T01:00:25.000Z",
+    "code_updated_at": "2024-06-11T01:00:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1315938,
+        "name": "yeeting fluber",
+        "created_at": "2024-06-11T00:59:14.000Z",
+        "url": "https://greasyfork.org/users/1315938-yeeting-fluber"
+      }
+    ],
+    "name": "opt X 2fa",
+    "description": "trying to bypass otp or 2fa feel free to improve and give credit no leeching",
+    "url": "https://greasyfork.org/scripts/497570-opt-x-2fa",
+    "code_url": "https://update.greasyfork.org/scripts/497570/opt%20X%202fa.user.js",
+    "code_size": 2933,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

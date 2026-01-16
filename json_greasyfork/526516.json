@@ -1,0 +1,34 @@
+{
+  "id": 526516,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-11T06:47:49.000Z",
+  "code_updated_at": "2025-12-31T04:52:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433839,
+      "name": "kmikrt AI",
+      "created_at": "2025-02-11T05:59:39.000Z",
+      "url": "https://greasyfork.org/users/1433839-kmikrt-ai",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube Arrow Buttons",
+  "description": "ipad,iphone補助用 YouTubeに 0 / 再生・停止 / 10秒戻る / 10秒進む のボタンを右下サイドバー式で表示",
+  "url": "https://greasyfork.org/scripts/526516-youtube-arrow-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/526516/YouTube%20Arrow%20Buttons.user.js",
+  "code_size": 13144,
+  "license": "MIT License",
+  "version": "0.25(強制ミニプレーヤーバグはずっとある/どうにもならないからこのまま使用)",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

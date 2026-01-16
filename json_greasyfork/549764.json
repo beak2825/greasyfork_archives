@@ -1,0 +1,33 @@
+{
+  "id": 549764,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-16T20:27:35.000Z",
+  "code_updated_at": "2025-09-16T20:27:35.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1423973,
+      "name": "adriel45dev",
+      "created_at": "2025-01-16T15:07:31.000Z",
+      "url": "https://greasyfork.org/users/1423973-adriel45dev"
+    }
+  ],
+  "name": "Image Extractor Pro V2 - Multi Service",
+  "description": "Extrai imagens de múltiplas telas, suportando diferentes tipos de serviço com fallback automático.",
+  "url": "https://greasyfork.org/scripts/549764-image-extractor-pro-v2-multi-service",
+  "code_url": "https://update.greasyfork.org/scripts/549764/Image%20Extractor%20Pro%20V2%20-%20Multi%20Service.user.js",
+  "code_size": 36993,
+  "license": "MIT License",
+  "version": "2.4",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

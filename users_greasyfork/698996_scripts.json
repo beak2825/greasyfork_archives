@@ -1,0 +1,68 @@
+[
+  {
+    "id": 532310,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T11:26:48.000Z",
+    "code_updated_at": "2025-04-18T16:43:20.000Z",
+    "namespace": "img_change",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698996,
+        "name": "pikaqian",
+        "created_at": "2020-10-28T08:02:19.000Z",
+        "url": "https://greasyfork.org/users/698996-pikaqian"
+      }
+    ],
+    "name": "预览图（改）",
+    "description": "原脚本预览图功能的修改版",
+    "url": "https://greasyfork.org/scripts/532310-%E9%A2%84%E8%A7%88%E5%9B%BE-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/532310/%E9%A2%84%E8%A7%88%E5%9B%BE%EF%BC%88%E6%94%B9%EF%BC%89.user.js",
+    "code_size": 344754,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532306,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T10:48:56.000Z",
+    "code_updated_at": "2025-04-09T10:48:56.000Z",
+    "namespace": "history_change",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 698996,
+        "name": "pikaqian",
+        "created_at": "2020-10-28T08:02:19.000Z",
+        "url": "https://greasyfork.org/users/698996-pikaqian"
+      }
+    ],
+    "name": "历史记录（改）",
+    "description": "原脚本历史记录功能的修改版",
+    "url": "https://greasyfork.org/scripts/532306-%E5%8E%86%E5%8F%B2%E8%AE%B0%E5%BD%95-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/532306/%E5%8E%86%E5%8F%B2%E8%AE%B0%E5%BD%95%EF%BC%88%E6%94%B9%EF%BC%89.user.js",
+    "code_size": 343736,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

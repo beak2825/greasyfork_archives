@@ -1,0 +1,33 @@
+{
+  "id": 516636,
+  "daily_installs": 0,
+  "total_installs": 159,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-10T07:03:22.000Z",
+  "code_updated_at": "2024-11-13T04:39:30.000Z",
+  "namespace": "https://www.youtube.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1393752,
+      "name": "TheAwesome Oofio",
+      "created_at": "2024-11-10T06:57:37.000Z",
+      "url": "https://greasyfork.org/users/1393752-theawesome-oofio"
+    }
+  ],
+  "name": "Simple Youtube Video Downloader",
+  "description": "Opens an embedded popup with the download page URL for MP3 or MP4",
+  "url": "https://greasyfork.org/scripts/516636-simple-youtube-video-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/516636/Simple%20Youtube%20Video%20Downloader.user.js",
+  "code_size": 7997,
+  "license": "MIT License",
+  "version": "1.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

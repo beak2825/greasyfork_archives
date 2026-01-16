@@ -1,0 +1,59 @@
+{
+  "id": 536003,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-14T19:27:39.000Z",
+  "code_updated_at": "2025-05-14T19:47:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1467991,
+      "name": "ninecats",
+      "created_at": "2025-05-09T22:22:51.000Z",
+      "url": "https://greasyfork.org/users/1467991-ninecats",
+      "scripts": [
+        {
+          "id": 536003,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-14T19:27:39.000Z",
+          "code_updated_at": "2025-05-14T19:47:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Discord Auto Join Button Clicker",
+          "description": "自动点击Discord加入按钮",
+          "url": "https://greasyfork.org/scripts/536003-discord-auto-join-button-clicker",
+          "code_url": "https://update.greasyfork.org/scripts/536003/Discord%20Auto%20Join%20Button%20Clicker.user.js",
+          "code_size": 966,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Discord Auto Join Button Clicker",
+  "description": "自动点击Discord加入按钮",
+  "url": "https://greasyfork.org/scripts/536003-discord-auto-join-button-clicker",
+  "code_url": "https://update.greasyfork.org/scripts/536003/Discord%20Auto%20Join%20Button%20Clicker.user.js",
+  "code_size": 966,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

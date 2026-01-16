@@ -1,0 +1,33 @@
+{
+  "id": 507243,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-07T05:44:17.000Z",
+  "code_updated_at": "2026-01-04T00:22:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052200,
+      "name": "Shu2Ouma",
+      "created_at": "2023-04-03T03:42:12.000Z",
+      "url": "https://greasyfork.org/users/1052200-shu2ouma"
+    }
+  ],
+  "name": "ERISTA Redump+",
+  "description": "Filtrar, organizar y gestionar juegos Redump con herramientas esenciales",
+  "url": "https://greasyfork.org/scripts/507243-erista-redump",
+  "code_url": "https://update.greasyfork.org/scripts/507243/ERISTA%20Redump%2B.user.js",
+  "code_size": 38109,
+  "license": null,
+  "version": "1.0",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

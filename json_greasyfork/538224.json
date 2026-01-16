@@ -1,0 +1,59 @@
+{
+  "id": 538224,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-03T14:22:51.000Z",
+  "code_updated_at": "2025-08-17T03:45:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1478446,
+      "name": "Tarot",
+      "created_at": "2025-06-03T14:19:26.000Z",
+      "url": "https://greasyfork.org/users/1478446-tarot",
+      "scripts": [
+        {
+          "id": 538224,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-03T14:22:51.000Z",
+          "code_updated_at": "2025-08-17T03:45:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fix Light/Dark Mode Formatting",
+          "description": "Removes Lightmode/Darkmode Background leftover from copy & pasting when on the other Mode",
+          "url": "https://greasyfork.org/scripts/538224-fix-light-dark-mode-formatting",
+          "code_url": "https://update.greasyfork.org/scripts/538224/Fix%20LightDark%20Mode%20Formatting.user.js",
+          "code_size": 1371,
+          "license": "GNU AGPLv3",
+          "version": "2025-08-17-0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fix Light/Dark Mode Formatting",
+  "description": "Removes Lightmode/Darkmode Background leftover from copy & pasting when on the other Mode",
+  "url": "https://greasyfork.org/scripts/538224-fix-light-dark-mode-formatting",
+  "code_url": "https://update.greasyfork.org/scripts/538224/Fix%20LightDark%20Mode%20Formatting.user.js",
+  "code_size": 1371,
+  "license": "GNU AGPLv3",
+  "version": "2025-08-17-0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 523098,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-07T07:11:55.000Z",
+    "code_updated_at": "2025-01-07T07:23:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1308851,
+        "name": "wzyff",
+        "created_at": "2024-05-29T08:08:16.000Z",
+        "url": "https://greasyfork.org/users/1308851-wzyff"
+      }
+    ],
+    "name": "Swipe word search on Douban",
+    "description": "Swipe word search, quickly select search engine, one-click search, jump to Baidu, Google, Bing, etc. Note: The first icon is the button to open the URL, which is only available when the Chinese text is selected as the link.",
+    "url": "https://greasyfork.org/scripts/523098-swipe-word-search-on-douban",
+    "code_url": "https://update.greasyfork.org/scripts/523098/Swipe%20word%20search%20on%20Douban.user.js",
+    "code_size": 39084,
+    "license": "Sufjan",
+    "version": "2025-01-07T1523",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522971,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-06T03:23:08.000Z",
+    "code_updated_at": "2025-01-07T05:51:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1308851,
+        "name": "wzyff",
+        "created_at": "2024-05-29T08:08:16.000Z",
+        "url": "https://greasyfork.org/users/1308851-wzyff"
+      }
+    ],
+    "name": "\"yudao\" free",
+    "description": "该脚本仅供学习使用。",
+    "url": "https://greasyfork.org/scripts/522971-yudao-free",
+    "code_url": "https://update.greasyfork.org/scripts/522971/%22yudao%22%20free.user.js",
+    "code_size": 2640,
+    "license": "Sufjan",
+    "version": "2025-01-07T11:42",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

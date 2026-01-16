@@ -1,0 +1,68 @@
+[
+  {
+    "id": 514822,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-30T08:19:11.000Z",
+    "code_updated_at": "2024-10-30T08:19:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1313468,
+        "name": "阿杰。",
+        "created_at": "2024-06-06T13:33:58.000Z",
+        "url": "https://greasyfork.org/users/1313468-%E9%98%BF%E6%9D%B0"
+      }
+    ],
+    "name": "haojiegg or da",
+    "description": "填写商品id在框 输入循环时间即可自动点击商品",
+    "url": "https://greasyfork.org/scripts/514822-haojiegg-or-da",
+    "code_url": "https://update.greasyfork.org/scripts/514822/haojiegg%20or%20da.user.js",
+    "code_size": 4389,
+    "license": "Mag",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 497222,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-06T13:43:26.000Z",
+    "code_updated_at": "2024-10-30T08:09:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1313468,
+        "name": "阿杰。",
+        "created_at": "2024-06-06T13:33:58.000Z",
+        "url": "https://greasyfork.org/users/1313468-%E9%98%BF%E6%9D%B0"
+      }
+    ],
+    "name": "haojiegg连点",
+    "description": "独创",
+    "url": "https://greasyfork.org/scripts/497222-haojiegg%E8%BF%9E%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/497222/haojiegg%E8%BF%9E%E7%82%B9.user.js",
+    "code_size": 2870,
+    "license": "No License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

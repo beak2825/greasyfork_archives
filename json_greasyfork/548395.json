@@ -1,0 +1,59 @@
+{
+  "id": 548395,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T23:16:07.000Z",
+  "code_updated_at": "2025-09-04T23:22:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511934,
+      "name": "mazadegan",
+      "created_at": "2025-09-04T23:11:41.000Z",
+      "url": "https://greasyfork.org/users/1511934-mazadegan",
+      "scripts": [
+        {
+          "id": 548395,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-04T23:16:07.000Z",
+          "code_updated_at": "2025-09-04T23:22:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wiktionary Audio Downloader (list item at end of each pronunciation list)",
+          "description": "Add a \"Download audio\" <li> button at the end of the pronunciation list for wiktionary sounds, using raw file URLs",
+          "url": "https://greasyfork.org/scripts/548395-wiktionary-audio-downloader-list-item-at-end-of-each-pronunciation-list",
+          "code_url": "https://update.greasyfork.org/scripts/548395/Wiktionary%20Audio%20Downloader%20%28list%20item%20at%20end%20of%20each%20pronunciation%20list%29.user.js",
+          "code_size": 4763,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wiktionary Audio Downloader (list item at end of each pronunciation list)",
+  "description": "Add a \"Download audio\" <li> button at the end of the pronunciation list for wiktionary sounds, using raw file URLs",
+  "url": "https://greasyfork.org/scripts/548395-wiktionary-audio-downloader-list-item-at-end-of-each-pronunciation-list",
+  "code_url": "https://update.greasyfork.org/scripts/548395/Wiktionary%20Audio%20Downloader%20%28list%20item%20at%20end%20of%20each%20pronunciation%20list%29.user.js",
+  "code_size": 4763,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

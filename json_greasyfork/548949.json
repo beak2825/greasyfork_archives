@@ -1,0 +1,33 @@
+{
+  "id": 548949,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-09T14:38:45.000Z",
+  "code_updated_at": "2025-09-09T15:17:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513352,
+      "name": "Paul Pillow",
+      "created_at": "2025-09-09T14:36:19.000Z",
+      "url": "https://greasyfork.org/users/1513352-paul-pillow"
+    }
+  ],
+  "name": "Right Click Zoom with Crosshairs",
+  "description": "Instantly zooms in to the center of the page when the right mouse button is pressed and resets on release, with a small, hollow red circle crosshair appearing when zoomed.",
+  "url": "https://greasyfork.org/scripts/548949-right-click-zoom-with-crosshairs",
+  "code_url": "https://update.greasyfork.org/scripts/548949/Right%20Click%20Zoom%20with%20Crosshairs.user.js",
+  "code_size": 2693,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

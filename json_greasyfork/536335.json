@@ -1,0 +1,33 @@
+{
+  "id": 536335,
+  "daily_installs": 0,
+  "total_installs": 20,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-17T19:42:39.000Z",
+  "code_updated_at": "2025-08-23T21:37:19.000Z",
+  "namespace": "custom.scripts.youtube",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417987,
+      "name": "powermello powermello",
+      "created_at": "2024-12-31T15:37:58.000Z",
+      "url": "https://greasyfork.org/users/1417987-powermello-powermello"
+    }
+  ],
+  "name": "Unlock YT Live Rewind",
+  "description": "Força o modo DVR em transmissões ao vivo no YouTube com DVR desativado",
+  "url": "https://greasyfork.org/scripts/536335-unlock-yt-live-rewind",
+  "code_url": "https://update.greasyfork.org/scripts/536335/Unlock%20YT%20Live%20Rewind.user.js",
+  "code_size": 2861,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 534907,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-04T11:46:31.000Z",
+  "code_updated_at": "2025-05-05T21:51:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265334,
+      "name": "Lukáš Malec",
+      "created_at": "2024-02-22T10:27:03.000Z",
+      "url": "https://greasyfork.org/users/1265334-luk%C3%A1%C5%A1-malec",
+      "scripts": []
+    }
+  ],
+  "name": "Livesport MLB Výsledky - Týmy, datum, skore",
+  "description": "Vygeneruje tabulku výsledků MLB zápasů na stránce Livesport",
+  "url": "https://greasyfork.org/scripts/534907-livesport-mlb-v%C3%BDsledky-t%C3%BDmy-datum-skore",
+  "code_url": "https://update.greasyfork.org/scripts/534907/Livesport%20MLB%20V%C3%BDsledky%20-%20T%C3%BDmy%2C%20datum%2C%20skore.user.js",
+  "code_size": 4270,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

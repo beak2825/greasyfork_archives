@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527111,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-16T15:49:12.000Z",
+    "code_updated_at": "2025-02-16T15:53:04.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435748,
+        "name": "Kieron D.",
+        "created_at": "2025-02-16T15:29:57.000Z",
+        "url": "https://greasyfork.org/users/1435748-kieron-d"
+      }
+    ],
+    "name": "Torn Faction Inactivity Checker",
+    "description": "Adds a faction inactivity check button with sorted color-coded results.",
+    "url": "https://greasyfork.org/scripts/527111-torn-faction-inactivity-checker",
+    "code_url": "https://update.greasyfork.org/scripts/527111/Torn%20Faction%20Inactivity%20Checker.user.js",
+    "code_size": 5420,
+    "license": "MIT License",
+    "version": "5.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

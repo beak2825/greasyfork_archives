@@ -1,0 +1,33 @@
+{
+  "id": 514825,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-30T08:30:18.000Z",
+  "code_updated_at": "2024-10-30T08:30:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1088968,
+      "name": "JiazanWang",
+      "created_at": "2023-06-02T08:08:48.000Z",
+      "url": "https://greasyfork.org/users/1088968-jiazanwang"
+    }
+  ],
+  "name": "Toggle White Overlay on Top of ChatGPT Page",
+  "description": "在 https://chatgpt.com/ 页面顶部添加一个可切换的白色背景覆盖层，鼠标移入时显示，移开时隐藏",
+  "url": "https://greasyfork.org/scripts/514825-toggle-white-overlay-on-top-of-chatgpt-page",
+  "code_url": "https://update.greasyfork.org/scripts/514825/Toggle%20White%20Overlay%20on%20Top%20of%20ChatGPT%20Page.user.js",
+  "code_size": 1582,
+  "license": null,
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

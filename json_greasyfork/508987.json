@@ -1,0 +1,59 @@
+{
+  "id": 508987,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-18T06:44:45.000Z",
+  "code_updated_at": "2025-01-13T09:43:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369487,
+      "name": "229681883",
+      "created_at": "2024-09-18T06:24:39.000Z",
+      "url": "https://greasyfork.org/users/1369487-229681883",
+      "scripts": [
+        {
+          "id": 508987,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-18T06:44:45.000Z",
+          "code_updated_at": "2025-01-13T09:43:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "列表增加AI按钮",
+          "description": "在网页表格添加一个“AI审批”的按钮，点击按钮可快速跳转AI审批页面。",
+          "url": "https://greasyfork.org/scripts/508987-%E5%88%97%E8%A1%A8%E5%A2%9E%E5%8A%A0ai%E6%8C%89%E9%92%AE",
+          "code_url": "https://update.greasyfork.org/scripts/508987/%E5%88%97%E8%A1%A8%E5%A2%9E%E5%8A%A0AI%E6%8C%89%E9%92%AE.user.js",
+          "code_size": 2422,
+          "license": "MIT License",
+          "version": "1.0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "列表增加AI按钮",
+  "description": "在网页表格添加一个“AI审批”的按钮，点击按钮可快速跳转AI审批页面。",
+  "url": "https://greasyfork.org/scripts/508987-%E5%88%97%E8%A1%A8%E5%A2%9E%E5%8A%A0ai%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/508987/%E5%88%97%E8%A1%A8%E5%A2%9E%E5%8A%A0AI%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 2422,
+  "license": "MIT License",
+  "version": "1.0.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

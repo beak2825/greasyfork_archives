@@ -1,0 +1,68 @@
+[
+  {
+    "id": 499124,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-28T10:16:06.000Z",
+    "code_updated_at": "2024-06-28T11:28:53.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 772993,
+        "name": "Masao S",
+        "created_at": "2021-05-17T06:20:31.000Z",
+        "url": "https://greasyfork.org/users/772993-masao-s"
+      }
+    ],
+    "name": "WOWOW オンデマンド 動画の尺を非表示",
+    "description": "サッカーなどを追っかけ再生する際、動画の長さで延長戦の有無などが分かってしまうのを回避する",
+    "url": "https://greasyfork.org/scripts/499124-wowow-%E3%82%AA%E3%83%B3%E3%83%87%E3%83%9E%E3%83%B3%E3%83%89-%E5%8B%95%E7%94%BB%E3%81%AE%E5%B0%BA%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/499124/WOWOW%20%E3%82%AA%E3%83%B3%E3%83%87%E3%83%9E%E3%83%B3%E3%83%89%20%E5%8B%95%E7%94%BB%E3%81%AE%E5%B0%BA%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA.user.js",
+    "code_size": 2449,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499123,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-28T10:13:17.000Z",
+    "code_updated_at": "2024-06-30T06:22:00.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 772993,
+        "name": "Masao S",
+        "created_at": "2021-05-17T06:20:31.000Z",
+        "url": "https://greasyfork.org/users/772993-masao-s"
+      }
+    ],
+    "name": "ABEMA 動画の尺を非表示",
+    "description": "サッカーなどを追っかけ再生する際、動画の長さで延長戦の有無などが分かってしまうのを回避する",
+    "url": "https://greasyfork.org/scripts/499123-abema-%E5%8B%95%E7%94%BB%E3%81%AE%E5%B0%BA%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/499123/ABEMA%20%E5%8B%95%E7%94%BB%E3%81%AE%E5%B0%BA%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA.user.js",
+    "code_size": 2470,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

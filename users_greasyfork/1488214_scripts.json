@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540695,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T06:47:44.000Z",
+    "code_updated_at": "2025-06-25T06:47:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488214,
+        "name": "李代理",
+        "created_at": "2025-06-25T06:36:51.000Z",
+        "url": "https://greasyfork.org/users/1488214-%E6%9D%8E%E4%BB%A3%E7%90%86"
+      }
+    ],
+    "name": "Gemini 界面拓宽",
+    "description": "拓宽 Gemini 聊天界面的回复内容区域。",
+    "url": "https://greasyfork.org/scripts/540695-gemini-%E7%95%8C%E9%9D%A2%E6%8B%93%E5%AE%BD",
+    "code_url": "https://update.greasyfork.org/scripts/540695/Gemini%20%E7%95%8C%E9%9D%A2%E6%8B%93%E5%AE%BD.user.js",
+    "code_size": 1837,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

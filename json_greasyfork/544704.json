@@ -1,0 +1,34 @@
+{
+  "id": 544704,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-05T09:23:46.000Z",
+  "code_updated_at": "2025-08-05T10:03:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453761,
+      "name": "PL M",
+      "created_at": "2025-04-04T01:55:45.000Z",
+      "url": "https://greasyfork.org/users/1453761-pl-m",
+      "scripts": []
+    }
+  ],
+  "name": "Flat World (Wide Web)",
+  "description": "Removes rounded corners from all elements on all web pages.",
+  "url": "https://greasyfork.org/scripts/544704-flat-world-wide-web",
+  "code_url": "https://update.greasyfork.org/scripts/544704/Flat%20World%20%28Wide%20Web%29.user.js",
+  "code_size": 27279,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

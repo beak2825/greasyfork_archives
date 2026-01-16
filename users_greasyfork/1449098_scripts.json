@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538126,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-03T02:02:19.000Z",
+    "code_updated_at": "2025-06-03T11:36:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1449098,
+        "name": "Ansh Srivastava",
+        "created_at": "2025-03-23T01:59:42.000Z",
+        "url": "https://greasyfork.org/users/1449098-ansh-srivastava"
+      }
+    ],
+    "name": "Blocksi Libary for Gimkit Aimbot",
+    "description": "Blocksi Libary for Gimkit Aimbot(Script is fully Gimkit aimbot and the libary not fully done and is a compacted file .exe)",
+    "url": "https://greasyfork.org/scripts/538126-blocksi-libary-for-gimkit-aimbot",
+    "code_url": "https://update.greasyfork.org/scripts/538126/Blocksi%20Libary%20for%20Gimkit%20Aimbot.user.js",
+    "code_size": 14230,
+    "license": "MIT License",
+    "version": "0.0.1.20250603113636",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

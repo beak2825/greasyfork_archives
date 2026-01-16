@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537295,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-26T08:11:28.000Z",
+    "code_updated_at": "2025-05-26T08:11:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474993,
+        "name": "好难啊起个名字",
+        "created_at": "2025-05-26T07:51:14.000Z",
+        "url": "https://greasyfork.org/users/1474993-%E5%A5%BD%E9%9A%BE%E5%95%8A%E8%B5%B7%E4%B8%AA%E5%90%8D%E5%AD%97"
+      }
+    ],
+    "name": "全平台文章转Markdown工具",
+    "description": "支持微信/知乎/简书等平台，提取文字图片并生成Markdown文件",
+    "url": "https://greasyfork.org/scripts/537295-%E5%85%A8%E5%B9%B3%E5%8F%B0%E6%96%87%E7%AB%A0%E8%BD%ACmarkdown%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/537295/%E5%85%A8%E5%B9%B3%E5%8F%B0%E6%96%87%E7%AB%A0%E8%BD%ACMarkdown%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 9716,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

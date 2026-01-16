@@ -30,6 +30,39 @@
     "version": "2026-01-08",
     "locale": "zh-CN",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530066,
+    "daily_installs": 1,
+    "total_installs": 33,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-17T08:56:50.000Z",
+    "code_updated_at": "2025-11-22T01:22:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12293,
+        "name": "wcx19911123",
+        "created_at": "2015-06-12T03:28:02.000Z",
+        "url": "https://greasyfork.org/users/12293-wcx19911123"
+      }
+    ],
+    "name": "吾爱破解桌面版优化",
+    "description": "为吾爱破解的桌面版网页增加一些便利性功能",
+    "url": "https://greasyfork.org/scripts/530066-%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E6%A1%8C%E9%9D%A2%E7%89%88%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/530066/%E5%90%BE%E7%88%B1%E7%A0%B4%E8%A7%A3%E6%A1%8C%E9%9D%A2%E7%89%88%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 13368,
+    "license": "MIT License",
+    "version": "2025.11.22",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

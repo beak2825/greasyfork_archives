@@ -1,0 +1,33 @@
+{
+  "id": 541918,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-07T13:30:05.000Z",
+  "code_updated_at": "2025-07-07T13:30:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492515,
+      "name": "zbmin",
+      "created_at": "2025-07-07T12:23:36.000Z",
+      "url": "https://greasyfork.org/users/1492515-zbmin"
+    }
+  ],
+  "name": "图寻复盘助手",
+  "description": "新一代复盘助手，更精美的UI、更高效的复盘",
+  "url": "https://greasyfork.org/scripts/541918-%E5%9B%BE%E5%AF%BB%E5%A4%8D%E7%9B%98%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/541918/%E5%9B%BE%E5%AF%BB%E5%A4%8D%E7%9B%98%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 44100,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

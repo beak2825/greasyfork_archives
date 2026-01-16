@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517555,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T19:00:11.000Z",
+    "code_updated_at": "2024-11-15T19:00:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 985641,
+        "name": "Muhammad Games",
+        "created_at": "2022-11-20T13:37:19.000Z",
+        "url": "https://greasyfork.org/users/985641-muhammad-games"
+      }
+    ],
+    "name": "Show Hitboxes",
+    "description": "Show hitboxes",
+    "url": "https://greasyfork.org/scripts/517555-show-hitboxes",
+    "code_url": "https://update.greasyfork.org/scripts/517555/Show%20Hitboxes.user.js",
+    "code_size": 2549,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

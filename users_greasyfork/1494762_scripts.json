@@ -130,5 +130,71 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550775,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-26T16:51:54.000Z",
+    "code_updated_at": "2025-12-28T16:58:42.000Z",
+    "namespace": "https://bsky.app/profile/neon-ai.art",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1494762,
+        "name": "ねおん",
+        "created_at": "2025-07-14T09:29:11.000Z",
+        "url": "https://greasyfork.org/users/1494762-%E3%81%AD%E3%81%8A%E3%82%93"
+      }
+    ],
+    "name": "Tokimeki MediaView Fix Plus",
+    "description": "Enables navigating to individual post pages by clicking on the body or quote source in TOKIMEKI's \"Media\" style. Also adds keyboard shortcuts for reactions.",
+    "url": "https://greasyfork.org/scripts/550775-tokimeki-mediaview-fix-plus",
+    "code_url": "https://update.greasyfork.org/scripts/550775/Tokimeki%20MediaView%20Fix%20Plus.user.js",
+    "code_size": 40979,
+    "license": "PolyForm Noncommercial 1.0.0; https://polyformproject.org/licenses/noncommercial/1.0.0/",
+    "version": "3.6",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545465,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-11T21:38:25.000Z",
+    "code_updated_at": "2025-12-23T06:22:05.000Z",
+    "namespace": "https://bsky.app/profile/neon-ai.art",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1494762,
+        "name": "ねおん",
+        "created_at": "2025-07-14T09:29:11.000Z",
+        "url": "https://greasyfork.org/users/1494762-%E3%81%AD%E3%81%8A%E3%82%93"
+      }
+    ],
+    "name": "Bluesky⇔Tokimeki 切り替え",
+    "description": "BlueskyとTokimekiのURLを、ボタン、キーボードショートカット、右クリックメニューで切り替え。",
+    "url": "https://greasyfork.org/scripts/545465-bluesky-tokimeki-%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88",
+    "code_url": "https://update.greasyfork.org/scripts/545465/Bluesky%E2%87%94Tokimeki%20%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88.user.js",
+    "code_size": 34480,
+    "license": "CC BY-NC 4.0",
+    "version": "7.8",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

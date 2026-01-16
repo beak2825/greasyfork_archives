@@ -1,0 +1,59 @@
+{
+  "id": 542373,
+  "daily_installs": 0,
+  "total_installs": 33,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-12T06:47:03.000Z",
+  "code_updated_at": "2025-09-27T04:09:24.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/477107",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456176,
+      "name": "诺子小姐",
+      "created_at": "2025-04-10T10:14:16.000Z",
+      "url": "https://greasyfork.org/users/1456176-%E8%AF%BA%E5%AD%90%E5%B0%8F%E5%A7%90",
+      "scripts": [
+        {
+          "id": 542373,
+          "daily_installs": 0,
+          "total_installs": 33,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-12T06:47:03.000Z",
+          "code_updated_at": "2025-09-27T04:09:24.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/scripts/477107",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Microsoft Bing Rewards每日任务脚本 自用修改 by 诺子小姐",
+          "description": "自动完成微软Rewards每日搜索任务,每次运行时获取热门词,随机选择搜索词",
+          "url": "https://greasyfork.org/scripts/542373-microsoft-bing-rewards%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E8%84%9A%E6%9C%AC-%E8%87%AA%E7%94%A8%E4%BF%AE%E6%94%B9-by-%E8%AF%BA%E5%AD%90%E5%B0%8F%E5%A7%90",
+          "code_url": "https://update.greasyfork.org/scripts/542373/Microsoft%20Bing%20Rewards%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E8%84%9A%E6%9C%AC%20%E8%87%AA%E7%94%A8%E4%BF%AE%E6%94%B9%20by%20%E8%AF%BA%E5%AD%90%E5%B0%8F%E5%A7%90.user.js",
+          "code_size": 7777,
+          "license": "GNU GPLv3",
+          "version": "V1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Microsoft Bing Rewards每日任务脚本 自用修改 by 诺子小姐",
+  "description": "自动完成微软Rewards每日搜索任务,每次运行时获取热门词,随机选择搜索词",
+  "url": "https://greasyfork.org/scripts/542373-microsoft-bing-rewards%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E8%84%9A%E6%9C%AC-%E8%87%AA%E7%94%A8%E4%BF%AE%E6%94%B9-by-%E8%AF%BA%E5%AD%90%E5%B0%8F%E5%A7%90",
+  "code_url": "https://update.greasyfork.org/scripts/542373/Microsoft%20Bing%20Rewards%E6%AF%8F%E6%97%A5%E4%BB%BB%E5%8A%A1%E8%84%9A%E6%9C%AC%20%E8%87%AA%E7%94%A8%E4%BF%AE%E6%94%B9%20by%20%E8%AF%BA%E5%AD%90%E5%B0%8F%E5%A7%90.user.js",
+  "code_size": 7777,
+  "license": "GNU GPLv3",
+  "version": "V1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

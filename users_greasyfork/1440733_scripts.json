@@ -1,0 +1,68 @@
+[
+  {
+    "id": 528482,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T22:35:26.000Z",
+    "code_updated_at": "2025-03-12T17:52:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440733,
+        "name": "GingerDev0",
+        "created_at": "2025-02-27T21:16:49.000Z",
+        "url": "https://greasyfork.org/users/1440733-gingerdev0"
+      }
+    ],
+    "name": "HW Auto Hacking & Software Installation (Looped, Toggle, Skip Bad Cracker)",
+    "description": "Automatically scans /list for vulnerable IPs (skipping those that return a cracker error), hacks them, uploads/installs software, clears logs, logs out, and repeats. Includes a sidebar toggle to start/stop automation, clears /logs if textarea is not empty, shows a modal on \"Success! Log successfully edited.\" message, checks software table before uploading, and sniffs IPs from logs.",
+    "url": "https://greasyfork.org/scripts/528482-hw-auto-hacking-software-installation-looped-toggle-skip-bad-cracker",
+    "code_url": "https://update.greasyfork.org/scripts/528482/HW%20Auto%20Hacking%20%20Software%20Installation%20%28Looped%2C%20Toggle%2C%20Skip%20Bad%20Cracker%29.user.js",
+    "code_size": 57301,
+    "license": "MIT License",
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528293,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-27T21:19:01.000Z",
+    "code_updated_at": "2025-02-28T01:16:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440733,
+        "name": "GingerDev0",
+        "created_at": "2025-02-27T21:16:49.000Z",
+        "url": "https://greasyfork.org/users/1440733-gingerdev0"
+      }
+    ],
+    "name": "HackerWars QOL Script",
+    "description": "Clears logs if conditions are met, inserts a custom log message, parses IPs, BTC addresses and Bank accounts from logs, provides modals for viewing/editing these, and auto refreshes the page with a countdown (paused when menu is open). Also toggles auto deletion of red-fonted software.",
+    "url": "https://greasyfork.org/scripts/528293-hackerwars-qol-script",
+    "code_url": "https://update.greasyfork.org/scripts/528293/HackerWars%20QOL%20Script.user.js",
+    "code_size": 39138,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

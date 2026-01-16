@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499841,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-06T09:32:25.000Z",
+    "code_updated_at": "2024-07-08T06:55:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1329126,
+        "name": "licat233",
+        "created_at": "2024-07-06T09:18:21.000Z",
+        "url": "https://greasyfork.org/users/1329126-licat233"
+      }
+    ],
+    "name": "魔方公式转换助手",
+    "description": "魔方公式转换助手用于将英文公式转化为上勾下回的中文公式",
+    "url": "https://greasyfork.org/scripts/499841-%E9%AD%94%E6%96%B9%E5%85%AC%E5%BC%8F%E8%BD%AC%E6%8D%A2%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/499841/%E9%AD%94%E6%96%B9%E5%85%AC%E5%BC%8F%E8%BD%AC%E6%8D%A2%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 3729,
+    "license": "MIT License",
+    "version": "v1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

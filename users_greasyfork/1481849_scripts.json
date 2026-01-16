@@ -1,0 +1,101 @@
+[
+  {
+    "id": 541296,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-07-01T02:48:16.000Z",
+    "code_updated_at": "2025-09-21T07:52:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481849,
+        "name": "mmmmmmwrtn",
+        "created_at": "2025-06-11T02:27:40.000Z",
+        "url": "https://greasyfork.org/users/1481849-mmmmmmwrtn"
+      }
+    ],
+    "name": "크랙채팅로거",
+    "description": "crack 캐릭터챗 채팅로그를 JSON으로 복사하거나 txt로 저장합니다",
+    "url": "https://greasyfork.org/scripts/541296-%ED%81%AC%EB%9E%99%EC%B1%84%ED%8C%85%EB%A1%9C%EA%B1%B0",
+    "code_url": "https://update.greasyfork.org/scripts/541296/%ED%81%AC%EB%9E%99%EC%B1%84%ED%8C%85%EB%A1%9C%EA%B1%B0.user.js",
+    "code_size": 6211,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540894,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T02:27:40.000Z",
+    "code_updated_at": "2025-06-27T03:05:52.000Z",
+    "namespace": "https://crack.wrtn.ai",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481849,
+        "name": "mmmmmmwrtn",
+        "created_at": "2025-06-11T02:27:40.000Z",
+        "url": "https://greasyfork.org/users/1481849-mmmmmmwrtn"
+      }
+    ],
+    "name": "크랙보조메모장(메보)",
+    "description": "크랙용 보조메모장 및 매크로",
+    "url": "https://greasyfork.org/scripts/540894-%ED%81%AC%EB%9E%99%EB%B3%B4%EC%A1%B0%EB%A9%94%EB%AA%A8%EC%9E%A5-%EB%A9%94%EB%B3%B4",
+    "code_url": "https://update.greasyfork.org/scripts/540894/%ED%81%AC%EB%9E%99%EB%B3%B4%EC%A1%B0%EB%A9%94%EB%AA%A8%EC%9E%A5%28%EB%A9%94%EB%B3%B4%29.user.js",
+    "code_size": 9906,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539575,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-16T04:50:13.000Z",
+    "code_updated_at": "2025-06-16T05:04:45.000Z",
+    "namespace": "https://crack.wrtn.ai",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481849,
+        "name": "mmmmmmwrtn",
+        "created_at": "2025-06-11T02:27:40.000Z",
+        "url": "https://greasyfork.org/users/1481849-mmmmmmwrtn"
+      }
+    ],
+    "name": "보조바퀴(크랙 기억력 보조)",
+    "description": "크랙 기억력 보조용 메모장",
+    "url": "https://greasyfork.org/scripts/539575-%EB%B3%B4%EC%A1%B0%EB%B0%94%ED%80%B4-%ED%81%AC%EB%9E%99-%EA%B8%B0%EC%96%B5%EB%A0%A5-%EB%B3%B4%EC%A1%B0",
+    "code_url": "https://update.greasyfork.org/scripts/539575/%EB%B3%B4%EC%A1%B0%EB%B0%94%ED%80%B4%28%ED%81%AC%EB%9E%99%20%EA%B8%B0%EC%96%B5%EB%A0%A5%20%EB%B3%B4%EC%A1%B0%29.user.js",
+    "code_size": 8372,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

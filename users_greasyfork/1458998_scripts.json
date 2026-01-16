@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533135,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T13:42:09.000Z",
+    "code_updated_at": "2025-04-18T20:29:03.000Z",
+    "namespace": "https://kemono.su/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1458998,
+        "name": "agent457",
+        "created_at": "2025-04-17T12:41:04.000Z",
+        "url": "https://greasyfork.org/users/1458998-agent457"
+      }
+    ],
+    "name": "Kemono Discord Favourite Button",
+    "description": "Add a favourite button to Discord server creator pages on Kemono",
+    "url": "https://greasyfork.org/scripts/533135-kemono-discord-favourite-button",
+    "code_url": "https://update.greasyfork.org/scripts/533135/Kemono%20Discord%20Favourite%20Button.user.js",
+    "code_size": 5487,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

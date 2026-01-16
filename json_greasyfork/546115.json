@@ -1,0 +1,33 @@
+{
+  "id": 546115,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-17T02:40:53.000Z",
+  "code_updated_at": "2025-08-17T02:40:53.000Z",
+  "namespace": "https://greasyfork.org/users/1505795",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505795,
+      "name": "DoubleCat",
+      "created_at": "2025-08-17T01:21:57.000Z",
+      "url": "https://greasyfork.org/users/1505795-doublecat"
+    }
+  ],
+  "name": "Bilibili分享优化",
+  "description": "劫持Bilibili分享按钮，直接提取分享文本，让分享更加清爽",
+  "url": "https://greasyfork.org/scripts/546115-bilibili%E5%88%86%E4%BA%AB%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/546115/Bilibili%E5%88%86%E4%BA%AB%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 7462,
+  "license": "GPL_V3",
+  "version": "0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

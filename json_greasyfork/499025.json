@@ -1,0 +1,59 @@
+{
+  "id": 499025,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-27T06:01:56.000Z",
+  "code_updated_at": "2024-06-27T06:01:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1314201,
+      "name": "boiby",
+      "created_at": "2024-06-08T01:09:06.000Z",
+      "url": "https://greasyfork.org/users/1314201-boiby",
+      "scripts": [
+        {
+          "id": 499330,
+          "daily_installs": 0,
+          "total_installs": 93,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-01T02:14:14.000Z",
+          "code_updated_at": "2025-03-01T01:36:54.000Z",
+          "namespace": "https://greasyfork.org/en/scripts/499330-late-2020-roblox-ban-screen-script",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Late 2020 Roblox Ban Screen Script",
+          "description": "Reverts to the 2020-2024 Roblox ban screen.",
+          "url": "https://greasyfork.org/scripts/499330-late-2020-roblox-ban-screen-script",
+          "code_url": "https://update.greasyfork.org/scripts/499330/Late%202020%20Roblox%20Ban%20Screen%20Script.user.js",
+          "code_size": 10317,
+          "license": "GNU GPLv3",
+          "version": "1.31",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "2013 Roblox Ban Screen (UNFINISHED)",
+  "description": "Brings back the Roblox ban (not-approved) screen layout from around 2013.",
+  "url": "https://greasyfork.org/scripts/499025-2013-roblox-ban-screen-unfinished",
+  "code_url": "https://update.greasyfork.org/scripts/499025/2013%20Roblox%20Ban%20Screen%20%28UNFINISHED%29.user.js",
+  "code_size": 11175,
+  "license": "GNU GPLv3",
+  "version": "1.0-alpha1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

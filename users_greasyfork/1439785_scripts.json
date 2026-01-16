@@ -64,5 +64,137 @@
     "locale": "ja",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550903,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-28T00:21:47.000Z",
+    "code_updated_at": "2025-09-28T00:21:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439785,
+        "name": "K9Y_onj",
+        "created_at": "2025-02-25T08:48:32.000Z",
+        "url": "https://greasyfork.org/users/1439785-k9y-onj"
+      }
+    ],
+    "name": "Open2ch 滞在時間カウンター",
+    "description": "open2ch livejupiter 板での累計滞在時間を計測",
+    "url": "https://greasyfork.org/scripts/550903-open2ch-%E6%BB%9E%E5%9C%A8%E6%99%82%E9%96%93%E3%82%AB%E3%82%A6%E3%83%B3%E3%82%BF%E3%83%BC",
+    "code_url": "https://update.greasyfork.org/scripts/550903/Open2ch%20%E6%BB%9E%E5%9C%A8%E6%99%82%E9%96%93%E3%82%AB%E3%82%A6%E3%83%B3%E3%82%BF%E3%83%BC.user.js",
+    "code_size": 1801,
+    "license": null,
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528418,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T08:31:35.000Z",
+    "code_updated_at": "2025-03-01T08:31:35.000Z",
+    "namespace": "うんはらバスターZ (モザイク版)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439785,
+        "name": "K9Y_onj",
+        "created_at": "2025-02-25T08:48:32.000Z",
+        "url": "https://greasyfork.org/users/1439785-k9y-onj"
+      }
+    ],
+    "name": "うんはらバスターZ（モザイク版）",
+    "description": "おんjで画像にモザイクをかけ、解除ボタンを表示！スレ移動でもモザイクが適用されるように改善！",
+    "url": "https://greasyfork.org/scripts/528418-%E3%81%86%E3%82%93%E3%81%AF%E3%82%89%E3%83%90%E3%82%B9%E3%82%BF%E3%83%BCz-%E3%83%A2%E3%82%B6%E3%82%A4%E3%82%AF%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/528418/%E3%81%86%E3%82%93%E3%81%AF%E3%82%89%E3%83%90%E3%82%B9%E3%82%BF%E3%83%BCZ%EF%BC%88%E3%83%A2%E3%82%B6%E3%82%A4%E3%82%AF%E7%89%88%EF%BC%89.user.js",
+    "code_size": 6195,
+    "license": null,
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528414,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T08:04:01.000Z",
+    "code_updated_at": "2025-03-01T09:01:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439785,
+        "name": "K9Y_onj",
+        "created_at": "2025-02-25T08:48:32.000Z",
+        "url": "https://greasyfork.org/users/1439785-k9y-onj"
+      }
+    ],
+    "name": "×印押す押すくん",
+    "description": "×ボタンを押しやすく",
+    "url": "https://greasyfork.org/scripts/528414-%E5%8D%B0%E6%8A%BC%E3%81%99%E6%8A%BC%E3%81%99%E3%81%8F%E3%82%93",
+    "code_url": "https://update.greasyfork.org/scripts/528414/%C3%97%E5%8D%B0%E6%8A%BC%E3%81%99%E6%8A%BC%E3%81%99%E3%81%8F%E3%82%93.user.js",
+    "code_size": 978,
+    "license": null,
+    "version": "1.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528405,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T03:50:56.000Z",
+    "code_updated_at": "2025-03-01T07:03:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439785,
+        "name": "K9Y_onj",
+        "created_at": "2025-02-25T08:48:32.000Z",
+        "url": "https://greasyfork.org/users/1439785-k9y-onj"
+      }
+    ],
+    "name": "うんはらバスターV2",
+    "description": "おんjで画像を表示するか逐一確認！",
+    "url": "https://greasyfork.org/scripts/528405-%E3%81%86%E3%82%93%E3%81%AF%E3%82%89%E3%83%90%E3%82%B9%E3%82%BF%E3%83%BCv2",
+    "code_url": "https://update.greasyfork.org/scripts/528405/%E3%81%86%E3%82%93%E3%81%AF%E3%82%89%E3%83%90%E3%82%B9%E3%82%BF%E3%83%BCV2.user.js",
+    "code_size": 3972,
+    "license": null,
+    "version": "1.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

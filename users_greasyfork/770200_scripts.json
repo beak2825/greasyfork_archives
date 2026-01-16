@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528436,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-01T12:47:46.000Z",
+    "code_updated_at": "2025-03-01T12:47:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770200,
+        "name": "Linx ESP",
+        "created_at": "2021-05-09T12:47:46.000Z",
+        "url": "https://greasyfork.org/users/770200-linx-esp"
+      }
+    ],
+    "name": "Cambiar Orden por defecto de los bundles de Fanatical",
+    "description": "Fanatical lo pone por defecto como \"Más vendidos\". No, no, quiero ver lo más reciente, que si no no me entero de qué hay nuevo",
+    "url": "https://greasyfork.org/scripts/528436-cambiar-orden-por-defecto-de-los-bundles-de-fanatical",
+    "code_url": "https://update.greasyfork.org/scripts/528436/Cambiar%20Orden%20por%20defecto%20de%20los%20bundles%20de%20Fanatical.user.js",
+    "code_size": 4999,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

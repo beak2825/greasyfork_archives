@@ -1,0 +1,33 @@
+{
+  "id": 517110,
+  "daily_installs": 8,
+  "total_installs": 1176,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-13T07:20:20.000Z",
+  "code_updated_at": "2024-11-13T07:20:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1375707,
+      "name": "Salem.Creatz",
+      "created_at": "2024-10-02T07:42:56.000Z",
+      "url": "https://greasyfork.org/users/1375707-salem-creatz"
+    }
+  ],
+  "name": "Blooket Hacks",
+  "description": "hack blooket",
+  "url": "https://greasyfork.org/scripts/517110-blooket-hacks",
+  "code_url": "https://update.greasyfork.org/scripts/517110/Blooket%20Hacks.user.js",
+  "code_size": 211972,
+  "license": "BANANA CAT",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

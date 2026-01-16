@@ -1,0 +1,33 @@
+{
+  "id": 525394,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T09:23:23.000Z",
+  "code_updated_at": "2025-09-01T00:04:57.000Z",
+  "namespace": "https://greasyfork.org/users/1429342",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429342,
+      "name": "Elena Corner",
+      "created_at": "2025-01-31T08:10:15.000Z",
+      "url": "https://greasyfork.org/users/1429342-elena-corner"
+    }
+  ],
+  "name": "Courseskipper",
+  "description": "Autocomplete_Moodle_section_SCORM",
+  "url": "https://greasyfork.org/scripts/525394-courseskipper",
+  "code_url": "https://update.greasyfork.org/scripts/525394/Courseskipper.user.js",
+  "code_size": 4771,
+  "license": "MIT License",
+  "version": "1.6.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

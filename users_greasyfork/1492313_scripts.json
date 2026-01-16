@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541861,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-06T20:55:19.000Z",
+    "code_updated_at": "2025-07-06T20:55:19.000Z",
+    "namespace": "ZestTaxiSpyder",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1492313,
+        "name": "SPYDER",
+        "created_at": "2025-07-06T20:16:14.000Z",
+        "url": "https://greasyfork.org/users/1492313-spyder"
+      }
+    ],
+    "name": "Taxi Earnings Overlay",
+    "description": "Displays a compact earnings summary overlay on the taxi.orangez.io dashboard.",
+    "url": "https://greasyfork.org/scripts/541861-taxi-earnings-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/541861/Taxi%20Earnings%20Overlay.user.js",
+    "code_size": 22539,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

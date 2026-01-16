@@ -1,0 +1,33 @@
+{
+  "id": 499121,
+  "daily_installs": 2,
+  "total_installs": 63,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-06-28T09:47:36.000Z",
+  "code_updated_at": "2024-09-29T02:59:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1316281,
+      "name": "November2246",
+      "created_at": "2024-06-11T14:46:31.000Z",
+      "url": "https://greasyfork.org/users/1316281-november2246"
+    }
+  ],
+  "name": "Sudoku King",
+  "description": "Cheat for Sodoku.com",
+  "url": "https://greasyfork.org/scripts/499121-sudoku-king",
+  "code_url": "https://update.greasyfork.org/scripts/499121/Sudoku%20King.user.js",
+  "code_size": 15847,
+  "license": "ISC License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

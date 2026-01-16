@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543487,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-24T09:37:57.000Z",
+    "code_updated_at": "2025-07-24T09:39:13.000Z",
+    "namespace": "https://greasyfork.org/users/1457017",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457017,
+        "name": "Николай Шерстюк",
+        "created_at": "2025-04-12T13:38:54.000Z",
+        "url": "https://greasyfork.org/users/1457017-%D0%BD%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B9-%D1%88%D0%B5%D1%80%D1%81%D1%82%D1%8E%D0%BA"
+      }
+    ],
+    "name": "Hide beauty ratings on LMD",
+    "description": "Hides beauty ratings for Logic Masters Germany puzzles",
+    "url": "https://greasyfork.org/scripts/543487-hide-beauty-ratings-on-lmd",
+    "code_url": "https://update.greasyfork.org/scripts/543487/Hide%20beauty%20ratings%20on%20LMD.user.js",
+    "code_size": 1355,
+    "license": "GNU GPLv3",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 501625,
+  "daily_installs": 0,
+  "total_installs": 107,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-24T01:56:20.000Z",
+  "code_updated_at": "2025-04-13T08:03:34.000Z",
+  "namespace": "sttb-ujs-dxrk1e",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1338634,
+      "name": "DXRK1E",
+      "created_at": "2024-07-23T09:47:41.000Z",
+      "url": "https://greasyfork.org/users/1338634-dxrk1e"
+    }
+  ],
+  "name": "Scroll to Top Button",
+  "description": "Adds a customizable scroll-to-top button near the page bottom.",
+  "url": "https://greasyfork.org/scripts/501625-scroll-to-top-button",
+  "code_url": "https://update.greasyfork.org/scripts/501625/Scroll%20to%20Top%20Button.user.js",
+  "code_size": 5839,
+  "license": "MIT License",
+  "version": "3.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

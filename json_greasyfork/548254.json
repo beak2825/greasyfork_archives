@@ -1,0 +1,59 @@
+{
+  "id": 548254,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-03T14:48:51.000Z",
+  "code_updated_at": "2025-09-05T15:02:01.000Z",
+  "namespace": "anilist-sort-chapters",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511475,
+      "name": "Kormit The Frag",
+      "created_at": "2025-09-03T14:34:19.000Z",
+      "url": "https://greasyfork.org/users/1511475-kormit-the-frag",
+      "scripts": [
+        {
+          "id": 548254,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-03T14:48:51.000Z",
+          "code_updated_at": "2025-09-05T15:02:01.000Z",
+          "namespace": "anilist-sort-chapters",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AniList Sort by Chapters Toggle",
+          "description": "Sort a single AniList manga list by total chapters; click button to toggle ascending/descending.",
+          "url": "https://greasyfork.org/scripts/548254-anilist-sort-by-chapters-toggle",
+          "code_url": "https://update.greasyfork.org/scripts/548254/AniList%20Sort%20by%20Chapters%20Toggle.user.js",
+          "code_size": 2581,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AniList Sort by Chapters Toggle",
+  "description": "Sort a single AniList manga list by total chapters; click button to toggle ascending/descending.",
+  "url": "https://greasyfork.org/scripts/548254-anilist-sort-by-chapters-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/548254/AniList%20Sort%20by%20Chapters%20Toggle.user.js",
+  "code_size": 2581,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 524287,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-20T11:13:16.000Z",
+  "code_updated_at": "2025-03-07T14:14:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1415775,
+      "name": "GeRuiTe555",
+      "created_at": "2024-12-25T20:18:18.000Z",
+      "url": "https://greasyfork.org/users/1415775-geruite555"
+    }
+  ],
+  "name": "闲鱼数据采集助手",
+  "description": "闲鱼店铺数据采集和图片下载工具，仅供学习研究使用，禁止商业用途",
+  "url": "https://greasyfork.org/scripts/524287-%E9%97%B2%E9%B1%BC%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/524287/%E9%97%B2%E9%B1%BC%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 32802,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

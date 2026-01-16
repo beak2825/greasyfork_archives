@@ -1,0 +1,34 @@
+{
+  "id": 521596,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-23T19:44:37.000Z",
+  "code_updated_at": "2024-12-23T19:44:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265334,
+      "name": "Lukáš Malec",
+      "created_at": "2024-02-22T10:27:03.000Z",
+      "url": "https://greasyfork.org/users/1265334-luk%C3%A1%C5%A1-malec",
+      "scripts": []
+    }
+  ],
+  "name": "LNB tlačítka Basketbal/Statistiky",
+  "description": "Přidá proklikávací tlačítka na skore a statistiky",
+  "url": "https://greasyfork.org/scripts/521596-lnb-tla%C4%8D%C3%ADtka-basketbal-statistiky",
+  "code_url": "https://update.greasyfork.org/scripts/521596/LNB%20tla%C4%8D%C3%ADtka%20BasketbalStatistiky.user.js",
+  "code_size": 5450,
+  "license": "MIT License",
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

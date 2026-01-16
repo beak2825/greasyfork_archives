@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535671,
+    "daily_installs": 17,
+    "total_installs": 2541,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-11T14:57:27.000Z",
+    "code_updated_at": "2026-01-10T17:02:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464500,
+        "name": "AlphB",
+        "created_at": "2025-05-01T17:35:46.000Z",
+        "url": "https://greasyfork.org/users/1464500-alphb"
+      }
+    ],
+    "name": "Ranged Way Idle",
+    "description": "一些超级有用的MWI的QoL功能",
+    "url": "https://greasyfork.org/scripts/535671-ranged-way-idle",
+    "code_url": "https://update.greasyfork.org/scripts/535671/Ranged%20Way%20Idle.user.js",
+    "code_size": 251847,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "6.21",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 523350,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-10T04:00:30.000Z",
+    "code_updated_at": "2025-01-10T04:00:29.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128089,
+        "name": "ZhangRF",
+        "created_at": "2023-07-16T06:51:24.000Z",
+        "url": "https://greasyfork.org/users/1128089-zhangrf"
+      }
+    ],
+    "name": "百度脚本",
+    "description": "用户库",
+    "url": "https://greasyfork.org/scripts/523350-%E7%99%BE%E5%BA%A6%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/523350/1518185/%E7%99%BE%E5%BA%A6%E8%84%9A%E6%9C%AC.js",
+    "code_size": 3697,
+    "license": null,
+    "version": "0.0.1.20250110040029",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 521999,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-27T15:14:49.000Z",
+    "code_updated_at": "2025-01-18T05:57:30.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128089,
+        "name": "ZhangRF",
+        "created_at": "2023-07-16T06:51:24.000Z",
+        "url": "https://greasyfork.org/users/1128089-zhangrf"
+      }
+    ],
+    "name": "自动上滑脚本",
+    "description": "自用库",
+    "url": "https://greasyfork.org/scripts/521999-%E8%87%AA%E5%8A%A8%E4%B8%8A%E6%BB%91%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/521999/1522497/%E8%87%AA%E5%8A%A8%E4%B8%8A%E6%BB%91%E8%84%9A%E6%9C%AC.js",
+    "code_size": 46160,
+    "license": null,
+    "version": "0.0.1.20250118055730",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520147,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-08T14:22:19.000Z",
+    "code_updated_at": "2025-01-18T06:23:53.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128089,
+        "name": "ZhangRF",
+        "created_at": "2023-07-16T06:51:24.000Z",
+        "url": "https://greasyfork.org/users/1128089-zhangrf"
+      }
+    ],
+    "name": "gifshowjs",
+    "description": "自用库",
+    "url": "https://greasyfork.org/scripts/520147-gifshowjs",
+    "code_url": "https://update.greasyfork.org/scripts/520147/1522508/gifshowjs.js",
+    "code_size": 73798,
+    "license": null,
+    "version": "0.0.1.20250118062353",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518778,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T09:15:34.000Z",
+    "code_updated_at": "2025-01-31T13:42:52.000Z",
+    "namespace": null,
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1128089,
+        "name": "ZhangRF",
+        "created_at": "2023-07-16T06:51:24.000Z",
+        "url": "https://greasyfork.org/users/1128089-zhangrf"
+      }
+    ],
+    "name": "tiktok.js",
+    "description": "自用程序调用库",
+    "url": "https://greasyfork.org/scripts/518778-tiktok-js",
+    "code_url": "https://update.greasyfork.org/scripts/518778/1529678/tiktokjs.js",
+    "code_size": 56760,
+    "license": null,
+    "version": "0.0.1.20250131134252",
+    "locale": "nl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

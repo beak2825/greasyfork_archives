@@ -1,0 +1,59 @@
+{
+  "id": 519495,
+  "daily_installs": 3,
+  "total_installs": 1953,
+  "fan_score": "1.8",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 2,
+  "created_at": "2024-12-01T21:41:37.000Z",
+  "code_updated_at": "2024-12-05T01:27:22.000Z",
+  "namespace": "https://openguessr.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1405151,
+      "name": "Dewohhleengo",
+      "created_at": "2024-12-01T21:33:39.000Z",
+      "url": "https://greasyfork.org/users/1405151-dewohhleengo",
+      "scripts": [
+        {
+          "id": 519495,
+          "daily_installs": 3,
+          "total_installs": 1953,
+          "fan_score": "1.8",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 2,
+          "created_at": "2024-12-01T21:41:37.000Z",
+          "code_updated_at": "2024-12-05T01:27:22.000Z",
+          "namespace": "https://openguessr.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OpenGuessr Hack Location Finder",
+          "description": "Extract and open PanoramaIframe location in OPENGUESSR full site when pressing Control + X + S together",
+          "url": "https://greasyfork.org/scripts/519495-openguessr-hack-location-finder",
+          "code_url": "https://update.greasyfork.org/scripts/519495/OpenGuessr%20Hack%20Location%20Finder.user.js",
+          "code_size": 3420,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OpenGuessr Hack Location Finder",
+  "description": "Extract and open PanoramaIframe location in OPENGUESSR full site when pressing Control + X + S together",
+  "url": "https://greasyfork.org/scripts/519495-openguessr-hack-location-finder",
+  "code_url": "https://update.greasyfork.org/scripts/519495/OpenGuessr%20Hack%20Location%20Finder.user.js",
+  "code_size": 3420,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

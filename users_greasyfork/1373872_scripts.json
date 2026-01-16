@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510483,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T19:49:06.000Z",
+    "code_updated_at": "2024-09-27T21:13:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1373872,
+        "name": "Zakkina-AmongUs",
+        "created_at": "2024-09-27T19:44:51.000Z",
+        "url": "https://greasyfork.org/users/1373872-zakkina-amongus"
+      }
+    ],
+    "name": "Zakkina's WBR QOL",
+    "description": "Quality of Life improvements for whatbeatsrock.com, including autoclick, slur filtering, number bypass, RGB sliders.",
+    "url": "https://greasyfork.org/scripts/510483-zakkina-s-wbr-qol",
+    "code_url": "https://update.greasyfork.org/scripts/510483/Zakkina%27s%20WBR%20QOL.user.js",
+    "code_size": 12604,
+    "license": null,
+    "version": "5.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523724,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-14T04:43:47.000Z",
+    "code_updated_at": "2025-01-14T04:43:47.000Z",
+    "namespace": "https://greasyfork.org/users/1423047",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1423047,
+        "name": "danhgianhanh",
+        "created_at": "2025-01-14T03:57:52.000Z",
+        "url": "https://greasyfork.org/users/1423047-danhgianhanh"
+      }
+    ],
+    "name": "Smartphone Camera Review",
+    "description": "A quick review of the best smartphone cameras currently available, focusing on photo, video capabilities, and creative features.",
+    "url": "https://greasyfork.org/scripts/523724-smartphone-camera-review",
+    "code_url": "https://update.greasyfork.org/scripts/523724/Smartphone%20Camera%20Review.user.js",
+    "code_size": 3343,
+    "license": null,
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

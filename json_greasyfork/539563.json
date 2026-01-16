@@ -1,0 +1,34 @@
+{
+  "id": 539563,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-16T03:14:55.000Z",
+  "code_updated_at": "2025-06-16T05:53:03.000Z",
+  "namespace": "https://github.com/lcandy2/YunZhanDownloader",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 668912,
+      "name": "chungou1996",
+      "created_at": "2020-07-21T10:14:26.000Z",
+      "url": "https://greasyfork.org/users/668912-chungou1996",
+      "scripts": []
+    }
+  ],
+  "name": "云展网PDF下载 YunZhanDownloader",
+  "description": "从云展网下载PDF书籍",
+  "url": "https://greasyfork.org/scripts/539563-%E4%BA%91%E5%B1%95%E7%BD%91pdf%E4%B8%8B%E8%BD%BD-yunzhandownloader",
+  "code_url": "https://update.greasyfork.org/scripts/539563/%E4%BA%91%E5%B1%95%E7%BD%91PDF%E4%B8%8B%E8%BD%BD%20YunZhanDownloader.user.js",
+  "code_size": 5015,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

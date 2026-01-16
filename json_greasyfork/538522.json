@@ -1,0 +1,34 @@
+{
+  "id": 538522,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-06T06:50:21.000Z",
+  "code_updated_at": "2025-06-06T10:03:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1375620,
+      "name": "Enokawa",
+      "created_at": "2024-10-02T03:50:38.000Z",
+      "url": "https://greasyfork.org/users/1375620-enokawa",
+      "scripts": []
+    }
+  ],
+  "name": "LINE Chat Biz Note Enhancement",
+  "description": "Adds a note-taking feature to LINE Chat Biz, storing data in Google Sheets, with ChatID, auto-header, caching, and icon fix.",
+  "url": "https://greasyfork.org/scripts/538522-line-chat-biz-note-enhancement",
+  "code_url": "https://update.greasyfork.org/scripts/538522/LINE%20Chat%20Biz%20Note%20Enhancement.user.js",
+  "code_size": 40162,
+  "license": null,
+  "version": "1.5 // バージョンを更新",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

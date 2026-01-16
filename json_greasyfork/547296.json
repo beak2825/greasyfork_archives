@@ -1,0 +1,59 @@
+{
+  "id": 547296,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-26T00:05:40.000Z",
+  "code_updated_at": "2025-08-26T00:05:40.000Z",
+  "namespace": "Grundo's Cafe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1496182,
+      "name": "ItsASine",
+      "created_at": "2025-07-18T23:32:16.000Z",
+      "url": "https://greasyfork.org/users/1496182-itsasine",
+      "scripts": [
+        {
+          "id": 543128,
+          "daily_installs": 0,
+          "total_installs": 75,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-20T14:02:07.000Z",
+          "code_updated_at": "2025-09-13T15:20:16.000Z",
+          "namespace": "https://www.grundos.cafe/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[GC] Avatar Checklist",
+          "description": "Avatar, Site Themes, Relics, and Trophies checklist for Grundo's Cafe, visit https://www.grundos.cafe/~Tyco",
+          "url": "https://greasyfork.org/scripts/543128-gc-avatar-checklist",
+          "code_url": "https://update.greasyfork.org/scripts/543128/%5BGC%5D%20Avatar%20Checklist.user.js",
+          "code_size": 18742,
+          "license": "MIT License",
+          "version": "4.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[GC][Backup] - Underwater Fishing Mods",
+  "description": "Fishing rewards sorting and logging with combined results.",
+  "url": "https://greasyfork.org/scripts/547296-gc-backup-underwater-fishing-mods",
+  "code_url": "https://update.greasyfork.org/scripts/547296/%5BGC%5D%5BBackup%5D%20-%20Underwater%20Fishing%20Mods.user.js",
+  "code_size": 19667,
+  "license": "MIT License",
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

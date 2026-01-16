@@ -1,0 +1,33 @@
+{
+  "id": 536815,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-22T09:23:22.000Z",
+  "code_updated_at": "2025-05-24T19:50:53.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473325,
+      "name": "hayaokuri",
+      "created_at": "2025-05-22T09:07:17.000Z",
+      "url": "https://greasyfork.org/users/1473325-hayaokuri"
+    }
+  ],
+  "name": "Gemini: Enterで改行、Shift+Enterで送信",
+  "description": "PC版Geminiのチャット入力欄で、Enterキーで改行、Shift+Enterキーで送信できるようにします。",
+  "url": "https://greasyfork.org/scripts/536815-gemini-enter%E3%81%A7%E6%94%B9%E8%A1%8C-shift-enter%E3%81%A7%E9%80%81%E4%BF%A1",
+  "code_url": "https://update.greasyfork.org/scripts/536815/Gemini%3A%20Enter%E3%81%A7%E6%94%B9%E8%A1%8C%E3%80%81Shift%2BEnter%E3%81%A7%E9%80%81%E4%BF%A1.user.js",
+  "code_size": 5275,
+  "license": "MIT License",
+  "version": "1.01",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

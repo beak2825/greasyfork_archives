@@ -1,0 +1,59 @@
+{
+  "id": 525327,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-30T13:11:45.000Z",
+  "code_updated_at": "2025-01-30T13:11:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429025,
+      "name": "Dotero",
+      "created_at": "2025-01-30T13:10:14.000Z",
+      "url": "https://greasyfork.org/users/1429025-dotero",
+      "scripts": [
+        {
+          "id": 525327,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-30T13:11:45.000Z",
+          "code_updated_at": "2025-01-30T13:11:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Meneame",
+          "description": "Quita el adblocker popup y otra mierda",
+          "url": "https://greasyfork.org/scripts/525327-meneame",
+          "code_url": "https://update.greasyfork.org/scripts/525327/Meneame.user.js",
+          "code_size": 1384,
+          "license": "GNU GPLv3",
+          "version": "2024-12-18",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Meneame",
+  "description": "Quita el adblocker popup y otra mierda",
+  "url": "https://greasyfork.org/scripts/525327-meneame",
+  "code_url": "https://update.greasyfork.org/scripts/525327/Meneame.user.js",
+  "code_size": 1384,
+  "license": "GNU GPLv3",
+  "version": "2024-12-18",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

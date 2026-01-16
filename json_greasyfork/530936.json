@@ -1,0 +1,33 @@
+{
+  "id": 530936,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-26T17:29:09.000Z",
+  "code_updated_at": "2025-03-26T17:29:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 594536,
+      "name": "i9l121 ihr8f",
+      "created_at": "2020-06-16T02:43:00.000Z",
+      "url": "https://greasyfork.org/users/594536-i9l121-ihr8f"
+    }
+  ],
+  "name": "Rsload net Emerald Twilight Theme",
+  "description": "A dark green theme with orange accents and a gradient background (dark purple to dark blue) for rsload.net",
+  "url": "https://greasyfork.org/scripts/530936-rsload-net-emerald-twilight-theme",
+  "code_url": "https://update.greasyfork.org/scripts/530936/Rsload%20net%20Emerald%20Twilight%20Theme.user.js",
+  "code_size": 16663,
+  "license": "MIT License",
+  "version": "1.32",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

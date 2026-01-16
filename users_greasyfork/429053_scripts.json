@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502402,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-02T03:14:41.000Z",
+    "code_updated_at": "2024-08-02T03:14:41.000Z",
+    "namespace": "https://greasyfork.org/users/429053",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 429053,
+        "name": "MXXXXXS",
+        "created_at": "2019-12-27T12:22:46.000Z",
+        "url": "https://greasyfork.org/users/429053-mxxxxxs"
+      }
+    ],
+    "name": "Remove youtube pause more videos",
+    "description": "Remove youtube pause more videos.",
+    "url": "https://greasyfork.org/scripts/502402-remove-youtube-pause-more-videos",
+    "code_url": "https://update.greasyfork.org/scripts/502402/Remove%20youtube%20pause%20more%20videos.user.js",
+    "code_size": 734,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

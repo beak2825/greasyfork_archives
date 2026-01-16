@@ -1,0 +1,34 @@
+{
+  "id": 532811,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-14T10:30:20.000Z",
+  "code_updated_at": "2025-04-14T10:30:20.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970725,
+      "name": "ĐēĀđ Fîłł",
+      "created_at": "2022-10-14T14:35:57.000Z",
+      "url": "https://greasyfork.org/users/970725-%C4%91%C4%93%C4%81%C4%91-f%C3%AE%C5%82%C5%82",
+      "scripts": []
+    }
+  ],
+  "name": "Для крутышей с 14 / By K. Stoyn",
+  "description": "Жб/Обж / K. Stoyn",
+  "url": "https://greasyfork.org/scripts/532811-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%80%D1%83%D1%82%D1%8B%D1%88%D0%B5%D0%B9-%D1%81-14-by-k-stoyn",
+  "code_url": "https://update.greasyfork.org/scripts/532811/%D0%94%D0%BB%D1%8F%20%D0%BA%D1%80%D1%83%D1%82%D1%8B%D1%88%D0%B5%D0%B9%20%D1%81%2014%20%20By%20K%20Stoyn.user.js",
+  "code_size": 67226,
+  "license": "MIT License",
+  "version": "1.00",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

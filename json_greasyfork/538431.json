@@ -1,0 +1,59 @@
+{
+  "id": 538431,
+  "daily_installs": 1,
+  "total_installs": 108,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-05T12:48:10.000Z",
+  "code_updated_at": "2025-06-08T16:12:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479182,
+      "name": "umm OuO",
+      "created_at": "2025-06-05T07:21:43.000Z",
+      "url": "https://greasyfork.org/users/1479182-umm-ouo",
+      "scripts": [
+        {
+          "id": 538431,
+          "daily_installs": 1,
+          "total_installs": 108,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-05T12:48:10.000Z",
+          "code_updated_at": "2025-06-08T16:12:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Read (Linux.do Only)",
+          "description": "自动刷阅读回复，仅支持Linux.do社区",
+          "url": "https://greasyfork.org/scripts/538431-auto-read-linux-do-only",
+          "code_url": "https://update.greasyfork.org/scripts/538431/Auto%20Read%20%28Linuxdo%20Only%29.user.js",
+          "code_size": 16337,
+          "license": "MIT License",
+          "version": "2.1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Read (Linux.do Only)",
+  "description": "自动刷阅读回复，仅支持Linux.do社区",
+  "url": "https://greasyfork.org/scripts/538431-auto-read-linux-do-only",
+  "code_url": "https://update.greasyfork.org/scripts/538431/Auto%20Read%20%28Linuxdo%20Only%29.user.js",
+  "code_size": 16337,
+  "license": "MIT License",
+  "version": "2.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

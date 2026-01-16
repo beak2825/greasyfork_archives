@@ -262,5 +262,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 536096,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T13:51:17.000Z",
+    "code_updated_at": "2025-05-21T00:20:28.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Bible.com iframe specific styles",
+    "description": "Adds a class to html if bible.com is in an iframe. Adjusts font size of parallel versions to fit the left column. Accepts parent scrolling messages.",
+    "url": "https://greasyfork.org/scripts/536096-bible-com-iframe-specific-styles",
+    "code_url": "https://update.greasyfork.org/scripts/536096/Biblecom%20iframe%20specific%20styles.user.js",
+    "code_size": 26435,
+    "license": null,
+    "version": "2.0b",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531909,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-05T13:50:33.000Z",
+    "code_updated_at": "2025-04-24T23:59:20.000Z",
+    "namespace": "aiuanyu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "[Test] KIPSutian-autoplay",
+    "description": "自動開啟查詢結果表格/列表中每個詞目連結於 Modal iframe (表格) 或直接播放音檔 (列表)，依序播放音檔(自動偵測時長)，主表格/列表自動滾動高亮(播放時持續綠色，暫停時僅閃爍，表格頁同步高亮)，處理完畢後自動跳轉下一頁繼續播放，可即時暫停/停止/點擊背景暫停(表格)/點擊表格/列表列播放，並根據亮暗模式高亮按鈕。新增：儲存/載入最近10筆播放進度(使用絕對索引與完整URL，下拉選單顯示頁面編號)、進度連結。區分按鈕暫停(不關Modal)與遮罩暫停(關Modal)行為，調整下拉選單邊距。控制區動態定位。",
+    "url": "https://greasyfork.org/scripts/531909-test-kipsutian-autoplay",
+    "code_url": "https://update.greasyfork.org/scripts/531909/%5BTest%5D%20KIPSutian-autoplay.user.js",
+    "code_size": 91350,
+    "license": "GNU GPLv3",
+    "version": "4.44b-桌面 Chrome 載入進度也要按 modal",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531767,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-03T20:43:02.000Z",
+    "code_updated_at": "2025-06-15T13:53:05.000Z",
+    "namespace": "aiuanyu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "KIPSutian-autoplay",
+    "description": "自動開啟查詢結果表格/列表中每個詞目連結於 Modal iframe (表格) 或直接播放音檔 (列表)，依序播放音檔(自動偵測時長)，主表格/列表自動滾動高亮(播放時持續綠色，暫停時僅閃爍，表格頁同步高亮)，處理完畢後自動跳轉下一頁繼續播放，可即時暫停/停止/點擊背景暫停(表格)/點擊表格/列表列播放，並根據亮暗模式高亮按鈕。新增：儲存/載入最近10筆播放進度(使用絕對索引與完整URL，下拉選單顯示頁面編號)、進度連結。區分按鈕暫停(不關Modal)與遮罩暫停(關Modal)行為，調整下拉選單邊距。控制區動態定位。齒盤 global hotkey（燒齒）。",
+    "url": "https://greasyfork.org/scripts/531767-kipsutian-autoplay",
+    "code_url": "https://update.greasyfork.org/scripts/531767/KIPSutian-autoplay.user.js",
+    "code_size": 101364,
+    "license": "GNU GPLv3",
+    "version": "4.53b",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531017,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-27T12:43:44.000Z",
+    "code_updated_at": "2025-04-09T10:49:53.000Z",
+    "namespace": "aiuanyu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "Tâi-gí「教典」TL ⇄ POJ",
+    "description": "予代管當局 ROC 教育部 Tâi-gí 常用詞詞典網站呈現出 POJ！（對臺羅換過來、換轉去）",
+    "url": "https://greasyfork.org/scripts/531017-t%C3%A2i-g%C3%AD-%E6%95%99%E5%85%B8-tl-poj",
+    "code_url": "https://update.greasyfork.org/scripts/531017/T%C3%A2i-g%C3%AD%E3%80%8C%E6%95%99%E5%85%B8%E3%80%8DTL%20%E2%87%84%20POJ.user.js",
+    "code_size": 20245,
+    "license": "GNU GPLv3",
+    "version": "2.2.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530928,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-26T15:28:28.000Z",
+    "code_updated_at": "2025-03-26T15:55:37.000Z",
+    "namespace": "aiuanyu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450109,
+        "name": "愛灣語",
+        "created_at": "2025-03-25T11:50:29.000Z",
+        "url": "https://greasyfork.org/users/1450109-%E6%84%9B%E7%81%A3%E8%AA%9E"
+      }
+    ],
+    "name": "客拼 → HagPinPlus",
+    "description": "將網頁上的客拼取代為 HagPinPlus（客拼乙式方案）更美觀。目前可處理代管當局教育部臺灣客語辭典網頁。",
+    "url": "https://greasyfork.org/scripts/530928-%E5%AE%A2%E6%8B%BC-hagpinplus",
+    "code_url": "https://update.greasyfork.org/scripts/530928/%E5%AE%A2%E6%8B%BC%20%E2%86%92%20HagPinPlus.user.js",
+    "code_size": 14022,
+    "license": "GNU GPLv3",
+    "version": "3.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 549118,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T09:21:37.000Z",
+    "code_updated_at": "2025-10-24T17:59:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207526,
+        "name": "legovader09",
+        "created_at": "2023-10-30T15:54:48.000Z",
+        "url": "https://greasyfork.org/users/1207526-legovader09"
+      }
+    ],
+    "name": "The Student Room (TSR) Popup Blocker",
+    "description": "Gets rid of the sign up form blocking the page.",
+    "url": "https://greasyfork.org/scripts/549118-the-student-room-tsr-popup-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/549118/The%20Student%20Room%20%28TSR%29%20Popup%20Blocker.user.js",
+    "code_size": 886,
+    "license": "MIT License",
+    "version": "4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528789,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-04T18:59:41.000Z",
+    "code_updated_at": "2025-09-11T09:23:35.000Z",
+    "namespace": "https://github.com/legovader09",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1207526,
+        "name": "legovader09",
+        "created_at": "2023-10-30T15:54:48.000Z",
+        "url": "https://greasyfork.org/users/1207526-legovader09"
+      }
+    ],
+    "name": "Pi.ai Hide auto sidebar",
+    "description": "Hide the sidebar on initial load to prevent it from showing up each time you send a message",
+    "url": "https://greasyfork.org/scripts/528789-pi-ai-hide-auto-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/528789/Piai%20Hide%20auto%20sidebar.user.js",
+    "code_size": 697,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

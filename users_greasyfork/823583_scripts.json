@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533915,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T09:30:56.000Z",
+    "code_updated_at": "2025-04-25T09:32:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823583,
+        "name": "cogecha Jacobsen",
+        "created_at": "2021-10-10T03:45:47.000Z",
+        "url": "https://greasyfork.org/users/823583-cogecha-jacobsen"
+      }
+    ],
+    "name": "DIC Music 封面自动转存图床",
+    "description": "将封面链接输入框中的其它图床链接转存替换为海豚官方图床",
+    "url": "https://greasyfork.org/scripts/533915-dic-music-%E5%B0%81%E9%9D%A2%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%AD%98%E5%9B%BE%E5%BA%8A",
+    "code_url": "https://update.greasyfork.org/scripts/533915/DIC%20Music%20%E5%B0%81%E9%9D%A2%E8%87%AA%E5%8A%A8%E8%BD%AC%E5%AD%98%E5%9B%BE%E5%BA%8A.user.js",
+    "code_size": 10734,
+    "license": null,
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533908,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T08:24:52.000Z",
+    "code_updated_at": "2025-04-25T08:46:10.000Z",
+    "namespace": "https://github.com/techmovie/easy-upload",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 823583,
+        "name": "cogecha Jacobsen",
+        "created_at": "2021-10-10T03:45:47.000Z",
+        "url": "https://greasyfork.org/users/823583-cogecha-jacobsen"
+      }
+    ],
+    "name": "EasyUpload-no_merge",
+    "description": "一键转种，支持PT站点之间的种子转移。",
+    "url": "https://greasyfork.org/scripts/533908-easyupload-no-merge",
+    "code_url": "https://update.greasyfork.org/scripts/533908/EasyUpload-no_merge.user.js",
+    "code_size": 1143611,
+    "license": "MIT License",
+    "version": "6.1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

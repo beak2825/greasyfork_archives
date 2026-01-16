@@ -1,0 +1,68 @@
+[
+  {
+    "id": 550567,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T14:53:01.000Z",
+    "code_updated_at": "2025-11-19T22:07:45.000Z",
+    "namespace": "https://greasyfork.org/users/551710",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 551710,
+        "name": "-Gzz-",
+        "created_at": "2020-05-04T14:39:27.000Z",
+        "url": "https://greasyfork.org/users/551710-gzz"
+      }
+    ],
+    "name": "IPE自动保存 (on THBWiki)",
+    "description": "自动保存 InPageEdit 在每个页面的上一次编辑内容到本地，也支持保存默认编辑器的内容",
+    "url": "https://greasyfork.org/scripts/550567-ipe%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98-on-thbwiki",
+    "code_url": "https://update.greasyfork.org/scripts/550567/IPE%E8%87%AA%E5%8A%A8%E4%BF%9D%E5%AD%98%20%28on%20THBWiki%29.user.js",
+    "code_size": 14145,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549815,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-17T09:32:57.000Z",
+    "code_updated_at": "2025-10-01T11:17:45.000Z",
+    "namespace": "https://greasyfork.org/users/551710",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 551710,
+        "name": "-Gzz-",
+        "created_at": "2020-05-04T14:39:27.000Z",
+        "url": "https://greasyfork.org/users/551710-gzz"
+      }
+    ],
+    "name": "IPE添加预览样式和快捷键 (on THBWiki)",
+    "description": "为 InPageEdit 的预览添加缺少的样式，以及各种快捷键",
+    "url": "https://greasyfork.org/scripts/549815-ipe%E6%B7%BB%E5%8A%A0%E9%A2%84%E8%A7%88%E6%A0%B7%E5%BC%8F%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE-on-thbwiki",
+    "code_url": "https://update.greasyfork.org/scripts/549815/IPE%E6%B7%BB%E5%8A%A0%E9%A2%84%E8%A7%88%E6%A0%B7%E5%BC%8F%E5%92%8C%E5%BF%AB%E6%8D%B7%E9%94%AE%20%28on%20THBWiki%29.user.js",
+    "code_size": 6950,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

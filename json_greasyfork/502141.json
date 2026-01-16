@@ -1,0 +1,59 @@
+{
+  "id": 502141,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-30T04:34:32.000Z",
+  "code_updated_at": "2024-07-30T04:34:32.000Z",
+  "namespace": "http://abbypan.github.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1342291,
+      "name": "Lanlan Pan",
+      "created_at": "2024-07-30T04:23:30.000Z",
+      "url": "https://greasyfork.org/users/1342291-lanlan-pan",
+      "scripts": [
+        {
+          "id": 502141,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-30T04:34:32.000Z",
+          "code_updated_at": "2024-07-30T04:34:32.000Z",
+          "namespace": "http://abbypan.github.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hjj_tidy",
+          "description": "红晋江( http://bbs.jjwxc.net ) 贴子整理，去广告，加跳转，只看楼主，最少字数等等",
+          "url": "https://greasyfork.org/scripts/502141-hjj-tidy",
+          "code_url": "https://update.greasyfork.org/scripts/502141/hjj_tidy.user.js",
+          "code_size": 11413,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hjj_tidy",
+  "description": "红晋江( http://bbs.jjwxc.net ) 贴子整理，去广告，加跳转，只看楼主，最少字数等等",
+  "url": "https://greasyfork.org/scripts/502141-hjj-tidy",
+  "code_url": "https://update.greasyfork.org/scripts/502141/hjj_tidy.user.js",
+  "code_size": 11413,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 541127,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-29T17:32:31.000Z",
+  "code_updated_at": "2025-07-02T21:30:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1488388,
+      "name": "猫（一只机器猫）",
+      "created_at": "2025-06-25T13:46:23.000Z",
+      "url": "https://greasyfork.org/users/1488388-%E7%8C%AB-%E4%B8%80%E5%8F%AA%E6%9C%BA%E5%99%A8%E7%8C%AB",
+      "scripts": [
+        {
+          "id": 541127,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-29T17:32:31.000Z",
+          "code_updated_at": "2025-07-02T21:30:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "百度网盘 - 自动加载全部文件 + 倒序显示 + 自动取消全选",
+          "description": "还原旧版显示方式，模拟手动操作",
+          "url": "https://greasyfork.org/scripts/541127-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98-%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%85%A8%E9%83%A8%E6%96%87%E4%BB%B6-%E5%80%92%E5%BA%8F%E6%98%BE%E7%A4%BA-%E8%87%AA%E5%8A%A8%E5%8F%96%E6%B6%88%E5%85%A8%E9%80%89",
+          "code_url": "https://update.greasyfork.org/scripts/541127/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%20-%20%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%85%A8%E9%83%A8%E6%96%87%E4%BB%B6%20%2B%20%E5%80%92%E5%BA%8F%E6%98%BE%E7%A4%BA%20%2B%20%E8%87%AA%E5%8A%A8%E5%8F%96%E6%B6%88%E5%85%A8%E9%80%89.user.js",
+          "code_size": 4076,
+          "license": "CC-BY-NC",
+          "version": "2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "百度网盘 - 自动加载全部文件 + 倒序显示 + 自动取消全选",
+  "description": "还原旧版显示方式，模拟手动操作",
+  "url": "https://greasyfork.org/scripts/541127-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98-%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%85%A8%E9%83%A8%E6%96%87%E4%BB%B6-%E5%80%92%E5%BA%8F%E6%98%BE%E7%A4%BA-%E8%87%AA%E5%8A%A8%E5%8F%96%E6%B6%88%E5%85%A8%E9%80%89",
+  "code_url": "https://update.greasyfork.org/scripts/541127/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%20-%20%E8%87%AA%E5%8A%A8%E5%8A%A0%E8%BD%BD%E5%85%A8%E9%83%A8%E6%96%87%E4%BB%B6%20%2B%20%E5%80%92%E5%BA%8F%E6%98%BE%E7%A4%BA%20%2B%20%E8%87%AA%E5%8A%A8%E5%8F%96%E6%B6%88%E5%85%A8%E9%80%89.user.js",
+  "code_size": 4076,
+  "license": "CC-BY-NC",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

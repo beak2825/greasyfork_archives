@@ -1,0 +1,59 @@
+{
+  "id": 543312,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-22T09:21:30.000Z",
+  "code_updated_at": "2025-07-22T09:21:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497252,
+      "name": "사각사각블럭",
+      "created_at": "2025-07-22T09:18:56.000Z",
+      "url": "https://greasyfork.org/users/1497252-%EC%82%AC%EA%B0%81%EC%82%AC%EA%B0%81%EB%B8%94%EB%9F%AD",
+      "scripts": [
+        {
+          "id": 543312,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-22T09:21:30.000Z",
+          "code_updated_at": "2025-07-22T09:21:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "치지직 Pretendard(사이드바만)",
+          "description": "aside_wrapper__Eq1-b에만 Pretendard 폰트 적용 + name_text 포함 클래스는 굵게",
+          "url": "https://greasyfork.org/scripts/543312-%EC%B9%98%EC%A7%80%EC%A7%81-pretendard-%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%EB%A7%8C",
+          "code_url": "https://update.greasyfork.org/scripts/543312/%EC%B9%98%EC%A7%80%EC%A7%81%20Pretendard%28%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%EB%A7%8C%29.user.js",
+          "code_size": 1606,
+          "license": null,
+          "version": "1.1",
+          "locale": "ko",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "치지직 Pretendard(사이드바만)",
+  "description": "aside_wrapper__Eq1-b에만 Pretendard 폰트 적용 + name_text 포함 클래스는 굵게",
+  "url": "https://greasyfork.org/scripts/543312-%EC%B9%98%EC%A7%80%EC%A7%81-pretendard-%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%EB%A7%8C",
+  "code_url": "https://update.greasyfork.org/scripts/543312/%EC%B9%98%EC%A7%80%EC%A7%81%20Pretendard%28%EC%82%AC%EC%9D%B4%EB%93%9C%EB%B0%94%EB%A7%8C%29.user.js",
+  "code_size": 1606,
+  "license": null,
+  "version": "1.1",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

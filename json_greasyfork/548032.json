@@ -1,0 +1,34 @@
+{
+  "id": 548032,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-01T13:33:05.000Z",
+  "code_updated_at": "2025-09-01T15:53:39.000Z",
+  "namespace": "https://markg.dev/userscripts/aff-link-helper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326401,
+      "name": "Mark Gallardo",
+      "created_at": "2024-07-01T00:49:34.000Z",
+      "url": "https://greasyfork.org/users/1326401-mark-gallardo",
+      "scripts": []
+    }
+  ],
+  "name": "Aff Link Helper — Shopee + Lazada PH + Push to GSheets",
+  "description": "Capture clean product URLs and generate affiliate shortlinks for Shopee (GraphQL) and Lazada PH (subId template flow). Push results to Google Sheets (AFF_Links).",
+  "url": "https://greasyfork.org/scripts/548032-aff-link-helper-shopee-lazada-ph-push-to-gsheets",
+  "code_url": "https://update.greasyfork.org/scripts/548032/Aff%20Link%20Helper%20%E2%80%94%20Shopee%20%2B%20Lazada%20PH%20%2B%20Push%20to%20GSheets.user.js",
+  "code_size": 22516,
+  "license": "MIT License",
+  "version": "2025.09.01.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

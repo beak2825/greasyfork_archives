@@ -1,0 +1,33 @@
+{
+  "id": 547206,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-25T06:51:31.000Z",
+  "code_updated_at": "2025-08-25T06:51:31.000Z",
+  "namespace": "https://coretegra.com/userscripts/coretegra-info-widget",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1508582,
+      "name": "coretegra",
+      "created_at": "2025-08-25T06:37:18.000Z",
+      "url": "https://greasyfork.org/users/1508582-coretegra"
+    }
+  ],
+  "name": "Coretegra Info Widget",
+  "description": "Shows Coretegra Technologies details and quick links in a floating panel on any site.",
+  "url": "https://greasyfork.org/scripts/547206-coretegra-info-widget",
+  "code_url": "https://update.greasyfork.org/scripts/547206/Coretegra%20Info%20Widget.user.js",
+  "code_size": 6327,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

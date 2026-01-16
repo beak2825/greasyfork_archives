@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530980,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-27T04:24:43.000Z",
+    "code_updated_at": "2025-04-14T11:38:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450747,
+        "name": "Mr96s",
+        "created_at": "2025-03-27T03:30:13.000Z",
+        "url": "https://greasyfork.org/users/1450747-mr96s"
+      }
+    ],
+    "name": "币圈KOL劣迹标记 - X(Twitter)",
+    "description": "在Twitter/X上标记有劣迹的加密货币KOL，并实时显示其劣迹指数(0-100分)和不良行为记录。整合公共数据和本地自定义功能，帮助用户识别高风险KOL，避免投资陷阱。支持证据查看、数据更新和自定义标记功能。",
+    "url": "https://greasyfork.org/scripts/530980-%E5%B8%81%E5%9C%88kol%E5%8A%A3%E8%BF%B9%E6%A0%87%E8%AE%B0-x-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/530980/%E5%B8%81%E5%9C%88KOL%E5%8A%A3%E8%BF%B9%E6%A0%87%E8%AE%B0%20-%20X%28Twitter%29.user.js",
+    "code_size": 23376,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

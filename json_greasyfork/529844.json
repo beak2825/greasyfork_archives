@@ -1,0 +1,33 @@
+{
+  "id": 529844,
+  "daily_installs": 1,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-14T22:09:15.000Z",
+  "code_updated_at": "2026-01-15T11:30:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320764,
+      "name": "Darrellia",
+      "created_at": "2024-06-19T21:18:25.000Z",
+      "url": "https://greasyfork.org/users/1320764-darrellia"
+    }
+  ],
+  "name": "OC Role Display - Ravage Edition",
+  "description": "Color Coding the positions",
+  "url": "https://greasyfork.org/scripts/529844-oc-role-display-ravage-edition",
+  "code_url": "https://update.greasyfork.org/scripts/529844/OC%20Role%20Display%20-%20Ravage%20Edition.user.js",
+  "code_size": 7402,
+  "license": "MIT License",
+  "version": "2.5.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

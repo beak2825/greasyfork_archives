@@ -1,0 +1,34 @@
+{
+  "id": 510877,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-30T09:31:56.000Z",
+  "code_updated_at": "2024-10-03T03:27:53.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1259364,
+      "name": "4ma9ry",
+      "created_at": "2024-02-09T12:25:15.000Z",
+      "url": "https://greasyfork.org/users/1259364-4ma9ry",
+      "scripts": []
+    }
+  ],
+  "name": "[Youtube] No UPCOMING Thumbnails",
+  "description": "Youtubeの「登録チャンネル」ページにて、「配信予定」の動画・ライブを全て非表示にします",
+  "url": "https://greasyfork.org/scripts/510877-youtube-no-upcoming-thumbnails",
+  "code_url": "https://update.greasyfork.org/scripts/510877/%5BYoutube%5D%20No%20UPCOMING%20Thumbnails.user.js",
+  "code_size": 1522,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

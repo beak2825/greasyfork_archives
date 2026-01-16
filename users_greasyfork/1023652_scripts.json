@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509265,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T21:56:14.000Z",
+    "code_updated_at": "2026-01-03T08:39:07.000Z",
+    "namespace": "https://greasyfork.org/ja/users/1023652",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1023652,
+        "name": "ゆにてぃー",
+        "created_at": "2023-02-08T09:30:26.000Z",
+        "url": "https://greasyfork.org/users/1023652-%E3%82%86%E3%81%AB%E3%81%A6%E3%81%83%E3%83%BC"
+      }
+    ],
+    "name": "Make Pixiv a little more useful.",
+    "description": "I wish I could make Pixiv a little more useful.",
+    "url": "https://greasyfork.org/scripts/509265-make-pixiv-a-little-more-useful",
+    "code_url": "https://update.greasyfork.org/scripts/509265/Make%20Pixiv%20a%20little%20more%20useful.user.js",
+    "code_size": 323370,
+    "license": "MIT License",
+    "version": "0.2.0.5-Beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

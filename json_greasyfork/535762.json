@@ -1,0 +1,34 @@
+{
+  "id": 535762,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T09:24:07.000Z",
+  "code_updated_at": "2026-01-14T01:52:37.000Z",
+  "namespace": "https://greasyfork.org/en/scripts/535762-snickelmarket-dev-version",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1406290,
+      "name": "Snickelfritz",
+      "created_at": "2024-12-04T05:39:28.000Z",
+      "url": "https://greasyfork.org/users/1406290-snickelfritz",
+      "scripts": []
+    }
+  ],
+  "name": "Snickelmarket-dev-version",
+  "description": "Add quality and bonus percent to the item market, auction house, and bazaars.",
+  "url": "https://greasyfork.org/scripts/535762-snickelmarket-dev-version",
+  "code_url": "https://update.greasyfork.org/scripts/535762/Snickelmarket-dev-version.user.js",
+  "code_size": 112106,
+  "license": "GNU GPLv3",
+  "version": "0.2.0b",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

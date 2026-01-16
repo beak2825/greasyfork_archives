@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544106,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-30T13:29:40.000Z",
+    "code_updated_at": "2025-07-30T15:27:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499868,
+        "name": "C0DET1GER",
+        "created_at": "2025-07-30T13:26:38.000Z",
+        "url": "https://greasyfork.org/users/1499868-c0det1ger"
+      }
+    ],
+    "name": "Hide Scores",
+    "description": "Hide scores on CMS scoreboard",
+    "url": "https://greasyfork.org/scripts/544106-hide-scores",
+    "code_url": "https://update.greasyfork.org/scripts/544106/Hide%20Scores.user.js",
+    "code_size": 4732,
+    "license": "MIT License",
+    "version": "2025-07-32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

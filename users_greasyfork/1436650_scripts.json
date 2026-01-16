@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527344,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T15:08:28.000Z",
+    "code_updated_at": "2025-02-18T15:08:27.000Z",
+    "namespace": "http://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436650,
+        "name": "Unworthy8414",
+        "created_at": "2025-02-18T15:07:21.000Z",
+        "url": "https://greasyfork.org/users/1436650-unworthy8414"
+      }
+    ],
+    "name": "Reddit to Acorn Redirector",
+    "description": "Redirects Reddit links to Acorn app",
+    "url": "https://greasyfork.org/scripts/527344-reddit-to-acorn-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/527344/Reddit%20to%20Acorn%20Redirector.user.js",
+    "code_size": 1312,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 534930,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-04T16:12:00.000Z",
+  "code_updated_at": "2025-05-04T16:20:46.000Z",
+  "namespace": "https://seusite.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465639,
+      "name": "VM Drones Agricolas",
+      "created_at": "2025-05-04T16:02:43.000Z",
+      "url": "https://greasyfork.org/users/1465639-vm-drones-agricolas",
+      "scripts": []
+    }
+  ],
+  "name": "Upador Otimizado Tribal Wars",
+  "description": "Automatiza evolução de recursos no Tribal Wars com fluidez, alternando vilas e priorizando madeira, argila e ferro de forma inteligente.",
+  "url": "https://greasyfork.org/scripts/534930-upador-otimizado-tribal-wars",
+  "code_url": "https://update.greasyfork.org/scripts/534930/Upador%20Otimizado%20Tribal%20Wars.user.js",
+  "code_size": 3843,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

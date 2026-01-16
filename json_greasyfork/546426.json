@@ -1,0 +1,33 @@
+{
+  "id": 546426,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T18:25:07.000Z",
+  "code_updated_at": "2025-08-19T18:36:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1396691,
+      "name": "Hamad AlShegifi",
+      "created_at": "2024-11-15T07:10:53.000Z",
+      "url": "https://greasyfork.org/users/1396691-hamad-alshegifi"
+    }
+  ],
+  "name": "Samples Check Toggle with Smart Auto-Clear",
+  "description": "Adds a toggle button to activate/deactivate a smart auto-clear that triggers 2 seconds after search results appear.",
+  "url": "https://greasyfork.org/scripts/546426-samples-check-toggle-with-smart-auto-clear",
+  "code_url": "https://update.greasyfork.org/scripts/546426/Samples%20Check%20Toggle%20with%20Smart%20Auto-Clear.user.js",
+  "code_size": 5359,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

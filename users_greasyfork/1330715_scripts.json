@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500102,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-09T11:55:50.000Z",
+    "code_updated_at": "2024-07-09T11:55:50.000Z",
+    "namespace": "https://greasyfork.org/users/1330715",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1330715,
+        "name": "base2taiji",
+        "created_at": "2024-07-09T11:35:23.000Z",
+        "url": "https://greasyfork.org/users/1330715-base2taiji"
+      }
+    ],
+    "name": "GNU Pascal Cringe Removal",
+    "description": "Removes ocular assault from the GNU Pascal website.",
+    "url": "https://greasyfork.org/scripts/500102-gnu-pascal-cringe-removal",
+    "code_url": "https://update.greasyfork.org/scripts/500102/GNU%20Pascal%20Cringe%20Removal.user.css",
+    "code_size": 455,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

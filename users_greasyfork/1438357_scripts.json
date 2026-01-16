@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527697,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-21T23:57:37.000Z",
+    "code_updated_at": "2025-02-21T23:57:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438357,
+        "name": "Stephen Hagenmeyer",
+        "created_at": "2025-02-21T23:56:49.000Z",
+        "url": "https://greasyfork.org/users/1438357-stephen-hagenmeyer"
+      }
+    ],
+    "name": "fisch to fischipedia",
+    "description": "Redirect a website to another site",
+    "url": "https://greasyfork.org/scripts/527697-fisch-to-fischipedia",
+    "code_url": "https://update.greasyfork.org/scripts/527697/fisch%20to%20fischipedia.user.js",
+    "code_size": 529,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

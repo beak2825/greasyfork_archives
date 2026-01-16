@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534517,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-30T13:09:48.000Z",
+    "code_updated_at": "2025-04-30T15:26:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1463920,
+        "name": "afjw",
+        "created_at": "2025-04-30T08:16:04.000Z",
+        "url": "https://greasyfork.org/users/1463920-afjw"
+      }
+    ],
+    "name": "CDC Booking Page Reload every 15m",
+    "description": "Refresh the page",
+    "url": "https://greasyfork.org/scripts/534517-cdc-booking-page-reload-every-15m",
+    "code_url": "https://update.greasyfork.org/scripts/534517/CDC%20Booking%20Page%20Reload%20every%2015m.user.js",
+    "code_size": 579,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534486,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-30T08:17:36.000Z",
+    "code_updated_at": "2025-05-01T12:12:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1463920,
+        "name": "afjw",
+        "created_at": "2025-04-30T08:16:04.000Z",
+        "url": "https://greasyfork.org/users/1463920-afjw"
+      }
+    ],
+    "name": "CDC Booking Script v0",
+    "description": "Refresh the page",
+    "url": "https://greasyfork.org/scripts/534486-cdc-booking-script-v0",
+    "code_url": "https://update.greasyfork.org/scripts/534486/CDC%20Booking%20Script%20v0.user.js",
+    "code_size": 13136,
+    "license": "MIT License",
+    "version": "0.12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

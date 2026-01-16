@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509658,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T10:51:48.000Z",
+    "code_updated_at": "2024-10-03T02:04:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1039878,
+        "name": "Albus Swift",
+        "created_at": "2023-03-10T13:06:51.000Z",
+        "url": "https://greasyfork.org/users/1039878-albus-swift"
+      }
+    ],
+    "name": "EXGF",
+    "description": "/oh /hsh /zhq",
+    "url": "https://greasyfork.org/scripts/509658-exgf",
+    "code_url": "https://update.greasyfork.org/scripts/509658/EXGF.user.js",
+    "code_size": 17815,
+    "license": "GPLv3",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

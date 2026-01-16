@@ -1,0 +1,59 @@
+{
+  "id": 536575,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-20T05:49:17.000Z",
+  "code_updated_at": "2025-05-20T05:49:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 153720,
+      "name": "一旁冷笑",
+      "created_at": "2017-09-23T12:55:38.000Z",
+      "url": "https://greasyfork.org/users/153720-%E4%B8%80%E6%97%81%E5%86%B7%E7%AC%91",
+      "scripts": [
+        {
+          "id": 536575,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-20T05:49:17.000Z",
+          "code_updated_at": "2025-05-20T05:49:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "煎蛋 MP4 替换为 GIF",
+          "description": "将特定格式的MP4链接替换为GIF链接，但不替换source标签中的MP4",
+          "url": "https://greasyfork.org/scripts/536575-%E7%85%8E%E8%9B%8B-mp4-%E6%9B%BF%E6%8D%A2%E4%B8%BA-gif",
+          "code_url": "https://update.greasyfork.org/scripts/536575/%E7%85%8E%E8%9B%8B%20MP4%20%E6%9B%BF%E6%8D%A2%E4%B8%BA%20GIF.user.js",
+          "code_size": 1567,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "煎蛋 MP4 替换为 GIF",
+  "description": "将特定格式的MP4链接替换为GIF链接，但不替换source标签中的MP4",
+  "url": "https://greasyfork.org/scripts/536575-%E7%85%8E%E8%9B%8B-mp4-%E6%9B%BF%E6%8D%A2%E4%B8%BA-gif",
+  "code_url": "https://update.greasyfork.org/scripts/536575/%E7%85%8E%E8%9B%8B%20MP4%20%E6%9B%BF%E6%8D%A2%E4%B8%BA%20GIF.user.js",
+  "code_size": 1567,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

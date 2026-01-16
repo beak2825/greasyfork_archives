@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535396,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T21:50:03.000Z",
+    "code_updated_at": "2025-05-08T21:50:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1467563,
+        "name": "Yuanhe Liu",
+        "created_at": "2025-05-08T21:48:00.000Z",
+        "url": "https://greasyfork.org/users/1467563-yuanhe-liu"
+      }
+    ],
+    "name": "中键点击自动滚动 (Middle Click Auto Scroll)",
+    "description": "单击鼠标中键切换自动滚动模式。鼠标在初始点击位置上方/下方移动时显示对应黑色小箭头并控制滚动方向/速度。再次单击中键、或单击左/右键、或按ESC键停止。",
+    "url": "https://greasyfork.org/scripts/535396-%E4%B8%AD%E9%94%AE%E7%82%B9%E5%87%BB%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8-middle-click-auto-scroll",
+    "code_url": "https://update.greasyfork.org/scripts/535396/%E4%B8%AD%E9%94%AE%E7%82%B9%E5%87%BB%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8%20%28Middle%20Click%20Auto%20Scroll%29.user.js",
+    "code_size": 6915,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 507143,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-06T14:24:41.000Z",
+  "code_updated_at": "2024-09-06T15:34:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "Tenipo Match Detail Button - Optimized",
+  "description": "Přidání tlačítek \"DETAIL ZÁPASU\" jen pro zápasy viditelné na obrazovce na stránce Tenipo.",
+  "url": "https://greasyfork.org/scripts/507143-tenipo-match-detail-button-optimized",
+  "code_url": "https://update.greasyfork.org/scripts/507143/Tenipo%20Match%20Detail%20Button%20-%20Optimized.user.js",
+  "code_size": 3001,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

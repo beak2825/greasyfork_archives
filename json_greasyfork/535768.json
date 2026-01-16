@@ -1,0 +1,33 @@
+{
+  "id": 535768,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T10:25:59.000Z",
+  "code_updated_at": "2025-11-07T09:10:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469118,
+      "name": "LW LW",
+      "created_at": "2025-05-12T10:22:48.000Z",
+      "url": "https://greasyfork.org/users/1469118-lw-lw"
+    }
+  ],
+  "name": "pingcode 特性故事点统计",
+  "description": "计算pingcode特性列表页面中的故事点总数，监听特定API返回的故事点",
+  "url": "https://greasyfork.org/scripts/535768-pingcode-%E7%89%B9%E6%80%A7%E6%95%85%E4%BA%8B%E7%82%B9%E7%BB%9F%E8%AE%A1",
+  "code_url": "https://update.greasyfork.org/scripts/535768/pingcode%20%E7%89%B9%E6%80%A7%E6%95%85%E4%BA%8B%E7%82%B9%E7%BB%9F%E8%AE%A1.user.js",
+  "code_size": 35618,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

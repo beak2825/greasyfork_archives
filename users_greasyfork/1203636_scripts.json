@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501979,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-28T06:54:08.000Z",
+    "code_updated_at": "2024-07-28T06:54:08.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1203636,
+        "name": "FrankZhai367",
+        "created_at": "2023-10-25T05:50:24.000Z",
+        "url": "https://greasyfork.org/users/1203636-frankzhai367"
+      }
+    ],
+    "name": "内容农场自动化sdk",
+    "description": "2024/7/28 14:38:11",
+    "url": "https://greasyfork.org/scripts/501979-%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA%E8%87%AA%E5%8A%A8%E5%8C%96sdk",
+    "code_url": "https://update.greasyfork.org/scripts/501979/%E5%86%85%E5%AE%B9%E5%86%9C%E5%9C%BA%E8%87%AA%E5%8A%A8%E5%8C%96sdk.user.js",
+    "code_size": 38008,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

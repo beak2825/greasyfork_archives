@@ -1,0 +1,59 @@
+{
+  "id": 515656,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-04T00:14:29.000Z",
+  "code_updated_at": "2024-11-04T00:14:29.000Z",
+  "namespace": "https://greasyfork.org/en/users/Kardiff",
+  "support_url": "https://github.com/Kardiff-Kill-Team/page_sorter/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1390821,
+      "name": "Kardiff",
+      "created_at": "2024-11-03T23:43:47.000Z",
+      "url": "https://greasyfork.org/users/1390821-kardiff",
+      "scripts": [
+        {
+          "id": 515656,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-04T00:14:29.000Z",
+          "code_updated_at": "2024-11-04T00:14:29.000Z",
+          "namespace": "https://greasyfork.org/en/users/Kardiff",
+          "support_url": "https://github.com/Kardiff-Kill-Team/page_sorter/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Warhammer Kill Team Rules Sorter",
+          "description": "Fan-made sorting tool for Kill Team rules page. Adds alphabetical and date sorting functionality with configurable date formats. This is an unofficial tool not affiliated with, endorsed, or sponsored by Games Workshop. Warhammer Kill Team is a trademark of Games Workshop Limited.",
+          "url": "https://greasyfork.org/scripts/515656-warhammer-kill-team-rules-sorter",
+          "code_url": "https://update.greasyfork.org/scripts/515656/Warhammer%20Kill%20Team%20Rules%20Sorter.user.js",
+          "code_size": 7974,
+          "license": "MIT License",
+          "version": "1.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Warhammer Kill Team Rules Sorter",
+  "description": "Fan-made sorting tool for Kill Team rules page. Adds alphabetical and date sorting functionality with configurable date formats. This is an unofficial tool not affiliated with, endorsed, or sponsored by Games Workshop. Warhammer Kill Team is a trademark of Games Workshop Limited.",
+  "url": "https://greasyfork.org/scripts/515656-warhammer-kill-team-rules-sorter",
+  "code_url": "https://update.greasyfork.org/scripts/515656/Warhammer%20Kill%20Team%20Rules%20Sorter.user.js",
+  "code_size": 7974,
+  "license": "MIT License",
+  "version": "1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

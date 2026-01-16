@@ -1,0 +1,34 @@
+{
+  "id": 542488,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-13T20:11:54.000Z",
+  "code_updated_at": "2025-07-13T20:11:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1494592,
+      "name": "italy lichri",
+      "created_at": "2025-07-13T20:10:29.000Z",
+      "url": "https://greasyfork.org/users/1494592-italy-lichri",
+      "scripts": []
+    }
+  ],
+  "name": "JW.ORG VTT 链接处理与跳转",
+  "description": "自动监控、复制 VTT 链接，并提供在新标签页跳转到指定链接的选项。",
+  "url": "https://greasyfork.org/scripts/542488-jw-org-vtt-%E9%93%BE%E6%8E%A5%E5%A4%84%E7%90%86%E4%B8%8E%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/542488/JWORG%20VTT%20%E9%93%BE%E6%8E%A5%E5%A4%84%E7%90%86%E4%B8%8E%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 2027,
+  "license": null,
+  "version": "0.6",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

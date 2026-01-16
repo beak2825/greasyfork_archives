@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539673,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-06-16T20:47:31.000Z",
+    "code_updated_at": "2025-06-16T20:47:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1484651,
+        "name": "Andres Antúnez paz",
+        "created_at": "2025-06-16T18:46:52.000Z",
+        "url": "https://greasyfork.org/users/1484651-andres-ant%C3%BAnez-paz"
+      }
+    ],
+    "name": "Rangos por Sala en Drawaria",
+    "description": "Asigna rangos a jugadores solo dentro de la sala actual.",
+    "url": "https://greasyfork.org/scripts/539673-rangos-por-sala-en-drawaria",
+    "code_url": "https://update.greasyfork.org/scripts/539673/Rangos%20por%20Sala%20en%20Drawaria.user.js",
+    "code_size": 1014,
+    "license": null,
+    "version": "1.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

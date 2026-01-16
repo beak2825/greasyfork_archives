@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 544655,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T19:26:41.000Z",
+    "code_updated_at": "2025-08-04T19:27:23.000Z",
+    "namespace": "https://axley.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501627,
+        "name": "Jason Axley",
+        "created_at": "2025-08-04T19:02:04.000Z",
+        "url": "https://greasyfork.org/users/1501627-jason-axley"
+      }
+    ],
+    "name": "LinkedIn Company Filter",
+    "description": "Simple, configurable filter to ignore job postings from companies you've ruled out",
+    "url": "https://greasyfork.org/scripts/544655-linkedin-company-filter",
+    "code_url": "https://update.greasyfork.org/scripts/544655/LinkedIn%20Company%20Filter.user.js",
+    "code_size": 4506,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544654,
+    "daily_installs": 0,
+    "total_installs": 73,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T19:21:17.000Z",
+    "code_updated_at": "2026-01-07T22:50:57.000Z",
+    "namespace": "http://axley.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501627,
+        "name": "Jason Axley",
+        "created_at": "2025-08-04T19:02:04.000Z",
+        "url": "https://greasyfork.org/users/1501627-jason-axley"
+      }
+    ],
+    "name": "Glassdoor Paywall Remover",
+    "description": "This script is designed to bypass visual overlays and restrictive styles (such as paywalls or scrolling blocks) on glassdoor. Derived from https://update.greasyfork.org/scripts/531857/Glassdoor%20Paywall%20Remover%20Update.user.js",
+    "url": "https://greasyfork.org/scripts/544654-glassdoor-paywall-remover",
+    "code_url": "https://update.greasyfork.org/scripts/544654/Glassdoor%20Paywall%20Remover.user.js",
+    "code_size": 3612,
+    "license": "MIT    https://opensource.org/license/mit",
+    "version": "1.2.2026-01-07",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544653,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T19:14:05.000Z",
+    "code_updated_at": "2025-08-04T19:14:04.000Z",
+    "namespace": "https://axley.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501627,
+        "name": "Jason Axley",
+        "created_at": "2025-08-04T19:02:04.000Z",
+        "url": "https://greasyfork.org/users/1501627-jason-axley"
+      }
+    ],
+    "name": "Readwise tag clean-up",
+    "description": "This script will fix all readwise tags that mistakenly have trailing whitespaces by removing the trailing whitespace",
+    "url": "https://greasyfork.org/scripts/544653-readwise-tag-clean-up",
+    "code_url": "https://update.greasyfork.org/scripts/544653/Readwise%20tag%20clean-up.user.js",
+    "code_size": 5190,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 498329,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-19T06:13:07.000Z",
+  "code_updated_at": "2024-07-10T04:16:20.000Z",
+  "namespace": "https://github.com/qiujie8092916",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1320409,
+      "name": "qiujie8092916",
+      "created_at": "2024-06-19T05:52:38.000Z",
+      "url": "https://greasyfork.org/users/1320409-qiujie8092916",
+      "scripts": [
+        {
+          "id": 498329,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-19T06:13:07.000Z",
+          "code_updated_at": "2024-07-10T04:16:20.000Z",
+          "namespace": "https://github.com/qiujie8092916",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "persisting column width of gantt of Redmine",
+          "description": "A Tampermonkey script to persist column width of gantt of Redmine and restore the previously set column width after the page loads",
+          "url": "https://greasyfork.org/scripts/498329-persisting-column-width-of-gantt-of-redmine",
+          "code_url": "https://update.greasyfork.org/scripts/498329/persisting%20column%20width%20of%20gantt%20of%20Redmine.user.js",
+          "code_size": 4848,
+          "license": "MIT License",
+          "version": "2024-07-10",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "persisting column width of gantt of Redmine",
+  "description": "A Tampermonkey script to persist column width of gantt of Redmine and restore the previously set column width after the page loads",
+  "url": "https://greasyfork.org/scripts/498329-persisting-column-width-of-gantt-of-redmine",
+  "code_url": "https://update.greasyfork.org/scripts/498329/persisting%20column%20width%20of%20gantt%20of%20Redmine.user.js",
+  "code_size": 4848,
+  "license": "MIT License",
+  "version": "2024-07-10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

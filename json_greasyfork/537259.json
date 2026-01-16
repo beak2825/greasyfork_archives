@@ -1,0 +1,33 @@
+{
+  "id": 537259,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-25T23:33:07.000Z",
+  "code_updated_at": "2025-07-06T13:36:20.000Z",
+  "namespace": "https://github.com/bylordwz/Aternos-24-7-Open-Ad-Anti-Anti",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474849,
+      "name": "bylordwz",
+      "created_at": "2025-05-25T23:31:01.000Z",
+      "url": "https://greasyfork.org/users/1474849-bylordwz"
+    }
+  ],
+  "name": "Aternos 24/7 Open (Ad Anti-Anti) - Improved",
+  "description": "Automatic server start for Aternos + bypasses anti-adblock checks - Improved version",
+  "url": "https://greasyfork.org/scripts/537259-aternos-24-7-open-ad-anti-anti-improved",
+  "code_url": "https://update.greasyfork.org/scripts/537259/Aternos%20247%20Open%20%28Ad%20Anti-Anti%29%20-%20Improved.user.js",
+  "code_size": 12068,
+  "license": "Copyright",
+  "version": "1.2",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

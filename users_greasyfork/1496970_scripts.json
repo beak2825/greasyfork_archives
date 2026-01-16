@@ -1,0 +1,68 @@
+[
+  {
+    "id": 543456,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T21:06:55.000Z",
+    "code_updated_at": "2025-07-26T04:33:52.000Z",
+    "namespace": "https://github.com/zhumengstarsandsea/Lift_Copy_Restrictions",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496970,
+        "name": "zhumengstarsandsea",
+        "created_at": "2025-07-21T12:40:10.000Z",
+        "url": "https://greasyfork.org/users/1496970-zhumengstarsandsea"
+      }
+    ],
+    "name": "解除复制限制 Lift Copy Restrictions",
+    "description": "一个旨在智能解除网页复制限制的油猴脚本。",
+    "url": "https://greasyfork.org/scripts/543456-%E8%A7%A3%E9%99%A4%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6-lift-copy-restrictions",
+    "code_url": "https://update.greasyfork.org/scripts/543456/%E8%A7%A3%E9%99%A4%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6%20Lift%20Copy%20Restrictions.user.js",
+    "code_size": 10683,
+    "license": "GNU Affero General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543450,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T19:02:58.000Z",
+    "code_updated_at": "2025-07-23T19:02:58.000Z",
+    "namespace": "https://github.com/zhumengstarsandsea/Chinese_University_MOOC_Enhancer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496970,
+        "name": "zhumengstarsandsea",
+        "created_at": "2025-07-21T12:40:10.000Z",
+        "url": "https://greasyfork.org/users/1496970-zhumengstarsandsea"
+      }
+    ],
+    "name": "中国大学MOOC(慕课)功能增强 Chinese University MOOC Enhancer",
+    "description": "一个旨在增强中国大学MOOC的视频学习体验的油猴脚本。",
+    "url": "https://greasyfork.org/scripts/543450-%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6mooc-%E6%85%95%E8%AF%BE-%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA-chinese-university-mooc-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/543450/%E4%B8%AD%E5%9B%BD%E5%A4%A7%E5%AD%A6MOOC%28%E6%85%95%E8%AF%BE%29%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA%20Chinese%20University%20MOOC%20Enhancer.user.js",
+    "code_size": 30557,
+    "license": "GNU Affero General Public License v3.0 only",
+    "version": "8.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

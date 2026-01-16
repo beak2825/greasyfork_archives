@@ -1,0 +1,68 @@
+[
+  {
+    "id": 537032,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-23T23:10:25.000Z",
+    "code_updated_at": "2025-05-23T23:11:23.000Z",
+    "namespace": "https://github.com/ruukulada",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419375,
+        "name": "ruukulada",
+        "created_at": "2025-01-04T08:18:13.000Z",
+        "url": "https://greasyfork.org/users/1419375-ruukulada"
+      }
+    ],
+    "name": "YouTube Theatre CSS",
+    "description": "Loads custom CSS for YouTube theatre mode",
+    "url": "https://greasyfork.org/scripts/537032-youtube-theatre-css",
+    "code_url": "https://update.greasyfork.org/scripts/537032/YouTube%20Theatre%20CSS.user.js",
+    "code_size": 1568,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522784,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T08:25:48.000Z",
+    "code_updated_at": "2025-12-18T05:11:07.000Z",
+    "namespace": "https://github.com/ruukulada",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419375,
+        "name": "ruukulada",
+        "created_at": "2025-01-04T08:18:13.000Z",
+        "url": "https://greasyfork.org/users/1419375-ruukulada"
+      }
+    ],
+    "name": "Auto-Translate Posts on Twitter",
+    "description": "Automatically clicks the \"Translate post\" button",
+    "url": "https://greasyfork.org/scripts/522784-auto-translate-posts-on-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/522784/Auto-Translate%20Posts%20on%20Twitter.user.js",
+    "code_size": 1244,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

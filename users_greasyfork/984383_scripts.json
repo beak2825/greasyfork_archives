@@ -30,6 +30,204 @@
     "version": "2.2",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 550278,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-21T22:03:13.000Z",
+    "code_updated_at": "2025-09-21T22:03:13.000Z",
+    "namespace": "https://greasyfork.org/users/984383",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984383,
+        "name": "Miro-Lemmens",
+        "created_at": "2022-11-17T08:46:26.000Z",
+        "url": "https://greasyfork.org/users/984383-miro-lemmens"
+      }
+    ],
+    "name": "WWsteden",
+    "description": "wwsteden",
+    "url": "https://greasyfork.org/scripts/550278-wwsteden",
+    "code_url": "https://update.greasyfork.org/scripts/550278/WWsteden.user.js",
+    "code_size": 4213,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 550277,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-21T22:01:48.000Z",
+    "code_updated_at": "2025-09-29T16:02:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984383,
+        "name": "Miro-Lemmens",
+        "created_at": "2022-11-17T08:46:26.000Z",
+        "url": "https://greasyfork.org/users/984383-miro-lemmens"
+      }
+    ],
+    "name": "Trade percentages",
+    "description": "trade percentage",
+    "url": "https://greasyfork.org/scripts/550277-trade-percentages",
+    "code_url": "https://update.greasyfork.org/scripts/550277/Trade%20percentages.user.js",
+    "code_size": 8186,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545748,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-13T22:46:44.000Z",
+    "code_updated_at": "2025-10-15T22:35:53.000Z",
+    "namespace": "http://example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984383,
+        "name": "Miro-Lemmens",
+        "created_at": "2022-11-17T08:46:26.000Z",
+        "url": "https://greasyfork.org/users/984383-miro-lemmens"
+      }
+    ],
+    "name": "Block PMs",
+    "description": "Disables the use of spells on towns and movement commands by unbinding the buttons from the backend.",
+    "url": "https://greasyfork.org/scripts/545748-block-pms",
+    "code_url": "https://update.greasyfork.org/scripts/545748/Block%20PMs.user.js",
+    "code_size": 1734,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 505763,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-29T15:16:30.000Z",
+    "code_updated_at": "2024-08-29T15:16:30.000Z",
+    "namespace": "https://greasyfork.org/users/984383",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984383,
+        "name": "Miro-Lemmens",
+        "created_at": "2022-11-17T08:46:26.000Z",
+        "url": "https://greasyfork.org/users/984383-miro-lemmens"
+      }
+    ],
+    "name": "Auto City Index",
+    "description": "Automatically clicks the index button from the city indexer",
+    "url": "https://greasyfork.org/scripts/505763-auto-city-index",
+    "code_url": "https://update.greasyfork.org/scripts/505763/Auto%20City%20Index.user.js",
+    "code_size": 866,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502789,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T13:53:04.000Z",
+    "code_updated_at": "2024-08-06T13:53:04.000Z",
+    "namespace": "https://greasyfork.org/users/984383",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984383,
+        "name": "Miro-Lemmens",
+        "created_at": "2022-11-17T08:46:26.000Z",
+        "url": "https://greasyfork.org/users/984383-miro-lemmens"
+      }
+    ],
+    "name": "troopcounter nl117",
+    "description": "troopcounter",
+    "url": "https://greasyfork.org/scripts/502789-troopcounter-nl117",
+    "code_url": "https://update.greasyfork.org/scripts/502789/troopcounter%20nl117.user.js",
+    "code_size": 4288,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502099,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T17:11:05.000Z",
+    "code_updated_at": "2024-10-01T09:28:40.000Z",
+    "namespace": "https://greasyfork.org/users/984383",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984383,
+        "name": "Miro-Lemmens",
+        "created_at": "2022-11-17T08:46:26.000Z",
+        "url": "https://greasyfork.org/users/984383-miro-lemmens"
+      }
+    ],
+    "name": "bd level check",
+    "description": "checks for non max bds",
+    "url": "https://greasyfork.org/scripts/502099-bd-level-check",
+    "code_url": "https://update.greasyfork.org/scripts/502099/bd%20level%20check.user.js",
+    "code_size": 3291,
+    "license": null,
+    "version": "2.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

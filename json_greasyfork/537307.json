@@ -1,0 +1,33 @@
+{
+  "id": 537307,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-26T10:33:31.000Z",
+  "code_updated_at": "2025-05-26T10:33:31.000Z",
+  "namespace": "https://github.com/0xymandias",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474454,
+      "name": "Alrena",
+      "created_at": "2025-05-24T21:21:32.000Z",
+      "url": "https://greasyfork.org/users/1474454-alrena"
+    }
+  ],
+  "name": "Attack Better - modified",
+  "description": "Move Torn \"Start Fight\" button on top of your weapon of choice and remove certain elements to help with load times. Modified to add leave, mug, hosp button moving. Original by smokey",
+  "url": "https://greasyfork.org/scripts/537307-attack-better-modified",
+  "code_url": "https://update.greasyfork.org/scripts/537307/Attack%20Better%20-%20modified.user.js",
+  "code_size": 9341,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.7.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

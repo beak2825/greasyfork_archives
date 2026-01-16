@@ -1,0 +1,59 @@
+{
+  "id": 531771,
+  "daily_installs": 0,
+  "total_installs": 99,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-04-03T21:35:27.000Z",
+  "code_updated_at": "2025-04-03T21:35:26.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453734,
+      "name": "Naggy Cruly",
+      "created_at": "2025-04-03T21:16:09.000Z",
+      "url": "https://greasyfork.org/users/1453734-naggy-cruly",
+      "scripts": [
+        {
+          "id": 531771,
+          "daily_installs": 0,
+          "total_installs": 99,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-04-03T21:35:27.000Z",
+          "code_updated_at": "2025-04-03T21:35:26.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Custom Mods for Kirka",
+          "description": "3/3/2025, 8:54:35 PM",
+          "url": "https://greasyfork.org/scripts/531771-custom-mods-for-kirka",
+          "code_url": "https://update.greasyfork.org/scripts/531771/Custom%20Mods%20for%20Kirka.user.js",
+          "code_size": 14589,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Custom Mods for Kirka",
+  "description": "3/3/2025, 8:54:35 PM",
+  "url": "https://greasyfork.org/scripts/531771-custom-mods-for-kirka",
+  "code_url": "https://update.greasyfork.org/scripts/531771/Custom%20Mods%20for%20Kirka.user.js",
+  "code_size": 14589,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

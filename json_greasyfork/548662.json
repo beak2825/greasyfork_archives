@@ -1,0 +1,34 @@
+{
+  "id": 548662,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-07T03:55:25.000Z",
+  "code_updated_at": "2025-09-07T03:55:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510111,
+      "name": "Trissi_Pissi7",
+      "created_at": "2025-08-30T00:31:18.000Z",
+      "url": "https://greasyfork.org/users/1510111-trissi-pissi7",
+      "scripts": []
+    }
+  ],
+  "name": "Ísland.is Kennitala Fix (SPA-safe) (Róbert Frans Skjaldarson | 030107-3730)",
+  "description": "Works with React routing on island.is and safely replaces Kennitala without breaking layout or styles.",
+  "url": "https://greasyfork.org/scripts/548662-%C3%ADsland-is-kennitala-fix-spa-safe-r%C3%B3bert-frans-skjaldarson-030107-3730",
+  "code_url": "https://update.greasyfork.org/scripts/548662/%C3%8Dslandis%20Kennitala%20Fix%20%28SPA-safe%29%20%28R%C3%B3bert%20Frans%20Skjaldarson%20%7C%20030107-3730%29.user.js",
+  "code_size": 1675,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -130,5 +130,170 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 548603,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T15:52:04.000Z",
+    "code_updated_at": "2025-09-06T15:52:04.000Z",
+    "namespace": "akm.torn.dont-touch-my-battlestats",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "dont-touch-my-wall-battlestats",
+    "description": "show tornstats spies on faction wall page",
+    "url": "https://greasyfork.org/scripts/548603-dont-touch-my-wall-battlestats",
+    "code_url": "https://update.greasyfork.org/scripts/548603/dont-touch-my-wall-battlestats.user.js",
+    "code_size": 26333,
+    "license": "GNU GPLv3",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 537860,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-31T14:29:25.000Z",
+    "code_updated_at": "2025-05-31T14:29:24.000Z",
+    "namespace": "https://github.com/SOLiNARY",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Torn Loadout Switcher",
+    "description": "Adds customisable quick loadout change buttons on Items page.",
+    "url": "https://greasyfork.org/scripts/537860-torn-loadout-switcher",
+    "code_url": "https://update.greasyfork.org/scripts/537860/Torn%20Loadout%20Switcher.user.js",
+    "code_size": 11642,
+    "license": "MIT License",
+    "version": "0.6.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535524,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T03:58:28.000Z",
+    "code_updated_at": "2025-05-10T03:58:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Move attack..",
+    "description": "Move attack button on torn..",
+    "url": "https://greasyfork.org/scripts/535524-move-attack",
+    "code_url": "https://update.greasyfork.org/scripts/535524/Move%20attack.user.js",
+    "code_size": 4436,
+    "license": "personal usage",
+    "version": "1.33",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535492,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-09T16:05:23.000Z",
+    "code_updated_at": "2025-05-09T16:10:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Faction Warring, Player Status",
+    "description": "Track faction members status",
+    "url": "https://greasyfork.org/scripts/535492-faction-warring-player-status",
+    "code_url": "https://update.greasyfork.org/scripts/535492/Faction%20Warring%2C%20Player%20Status.user.js",
+    "code_size": 18073,
+    "license": "Personal use",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 513995,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-25T11:30:00.000Z",
+    "code_updated_at": "2024-10-25T11:29:59.000Z",
+    "namespace": "SMTH",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1154608,
+        "name": "SethSolutions",
+        "created_at": "2023-08-19T04:24:09.000Z",
+        "url": "https://greasyfork.org/users/1154608-sethsolutions"
+      }
+    ],
+    "name": "Ice Frog Book",
+    "description": "Watch what you want through the API interface anytime, anywhere！",
+    "url": "https://greasyfork.org/scripts/513995-ice-frog-book",
+    "code_url": "https://update.greasyfork.org/scripts/513995/Ice%20Frog%20Book.user.js",
+    "code_size": 457798,
+    "license": null,
+    "version": "3.1.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

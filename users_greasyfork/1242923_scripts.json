@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498886,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-25T17:26:04.000Z",
+    "code_updated_at": "2024-06-25T17:26:04.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1242923,
+        "name": "enbyte",
+        "created_at": "2024-01-03T23:20:20.000Z",
+        "url": "https://greasyfork.org/users/1242923-enbyte"
+      }
+    ],
+    "name": "Add \"Mute Site\" functionality to all websites in Google Chrome",
+    "description": "Make the \"Mute Site\" button active on every site you visit in Google Chrome",
+    "url": "https://greasyfork.org/scripts/498886-add-mute-site-functionality-to-all-websites-in-google-chrome",
+    "code_url": "https://update.greasyfork.org/scripts/498886/Add%20%22Mute%20Site%22%20functionality%20to%20all%20websites%20in%20Google%20Chrome.user.js",
+    "code_size": 923,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

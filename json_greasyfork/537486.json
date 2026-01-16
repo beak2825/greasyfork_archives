@@ -1,0 +1,33 @@
+{
+  "id": 537486,
+  "daily_installs": 1,
+  "total_installs": 117,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T01:19:45.000Z",
+  "code_updated_at": "2025-12-06T18:20:18.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1443061,
+      "name": "GFOUR",
+      "created_at": "2025-03-07T00:22:05.000Z",
+      "url": "https://greasyfork.org/users/1443061-gfour"
+    }
+  ],
+  "name": "FF Scouter V2 + BS Estimates (modded)",
+  "description": "Shows the expected Fair Fight score against targets and faction war status",
+  "url": "https://greasyfork.org/scripts/537486-ff-scouter-v2-bs-estimates-modded",
+  "code_url": "https://update.greasyfork.org/scripts/537486/FF%20Scouter%20V2%20%2B%20BS%20Estimates%20%28modded%29.user.js",
+  "code_size": 45764,
+  "license": null,
+  "version": "2.44",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

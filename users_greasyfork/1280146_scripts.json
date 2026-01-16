@@ -30,6 +30,39 @@
     "version": "1.0.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 497036,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-04T13:56:35.000Z",
+    "code_updated_at": "2024-06-04T13:57:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1280146,
+        "name": "SH4DOW4RE",
+        "created_at": "2024-03-27T11:00:03.000Z",
+        "url": "https://greasyfork.org/users/1280146-sh4dow4re"
+      }
+    ],
+    "name": "ANSI MOOC Accelerator",
+    "description": "Accelerate ANSI MOOC's videos to x16",
+    "url": "https://greasyfork.org/scripts/497036-ansi-mooc-accelerator",
+    "code_url": "https://update.greasyfork.org/scripts/497036/ANSI%20MOOC%20Accelerator.user.js",
+    "code_size": 2425,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

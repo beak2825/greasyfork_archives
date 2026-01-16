@@ -1,0 +1,59 @@
+{
+  "id": 525532,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-01T12:42:58.000Z",
+  "code_updated_at": "2025-02-01T12:42:58.000Z",
+  "namespace": "https://github.com/sternenklinge/TORN-ToDo-List",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429878,
+      "name": "zuk0",
+      "created_at": "2025-02-01T12:00:16.000Z",
+      "url": "https://greasyfork.org/users/1429878-zuk0",
+      "scripts": [
+        {
+          "id": 525532,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-01T12:42:58.000Z",
+          "code_updated_at": "2025-02-01T12:42:58.000Z",
+          "namespace": "https://github.com/sternenklinge/TORN-ToDo-List",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TORN To-Do List",
+          "description": "Adds a To-Do list with settings, per-task schedule, drag & drop reordering, and import/export functionality.",
+          "url": "https://greasyfork.org/scripts/525532-torn-to-do-list",
+          "code_url": "https://update.greasyfork.org/scripts/525532/TORN%20To-Do%20List.user.js",
+          "code_size": 22617,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TORN To-Do List",
+  "description": "Adds a To-Do list with settings, per-task schedule, drag & drop reordering, and import/export functionality.",
+  "url": "https://greasyfork.org/scripts/525532-torn-to-do-list",
+  "code_url": "https://update.greasyfork.org/scripts/525532/TORN%20To-Do%20List.user.js",
+  "code_size": 22617,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

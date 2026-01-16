@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533322,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T09:51:47.000Z",
+    "code_updated_at": "2025-04-19T09:51:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459719,
+        "name": "Ever 727",
+        "created_at": "2025-04-19T09:50:08.000Z",
+        "url": "https://greasyfork.org/users/1459719-ever-727"
+      }
+    ],
+    "name": "MyGO!!!!!×Ave Mujica 合同ライブ「わかれ道の、その先へ」Force Ticket Check",
+    "description": "强制修改 /users/confirmation 接口的 ticket_check 为 true",
+    "url": "https://greasyfork.org/scripts/533322-mygo-ave-mujica-%E5%90%88%E5%90%8C%E3%83%A9%E3%82%A4%E3%83%96-%E3%82%8F%E3%81%8B%E3%82%8C%E9%81%93%E3%81%AE-%E3%81%9D%E3%81%AE%E5%85%88%E3%81%B8-force-ticket-check",
+    "code_url": "https://update.greasyfork.org/scripts/533322/MyGO%21%21%21%21%21%C3%97Ave%20Mujica%20%E5%90%88%E5%90%8C%E3%83%A9%E3%82%A4%E3%83%96%E3%80%8C%E3%82%8F%E3%81%8B%E3%82%8C%E9%81%93%E3%81%AE%E3%80%81%E3%81%9D%E3%81%AE%E5%85%88%E3%81%B8%E3%80%8DForce%20Ticket%20Check.user.js",
+    "code_size": 3243,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

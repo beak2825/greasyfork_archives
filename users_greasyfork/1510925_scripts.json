@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548052,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T17:41:24.000Z",
+    "code_updated_at": "2025-09-01T17:41:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510925,
+        "name": "tomastrivino",
+        "created_at": "2025-09-01T17:39:54.000Z",
+        "url": "https://greasyfork.org/users/1510925-tomastrivino"
+      }
+    ],
+    "name": "Eliminar elementos con ID ek-overlay y ek-modal en Canvas UC",
+    "description": "Elimina elementos con ID ek-overlay y ek-modal en https://cursos.canvas.uc.cl/",
+    "url": "https://greasyfork.org/scripts/548052-eliminar-elementos-con-id-ek-overlay-y-ek-modal-en-canvas-uc",
+    "code_url": "https://update.greasyfork.org/scripts/548052/Eliminar%20elementos%20con%20ID%20ek-overlay%20y%20ek-modal%20en%20Canvas%20UC.user.js",
+    "code_size": 1281,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

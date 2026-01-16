@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500203,
+    "daily_installs": 0,
+    "total_installs": 183,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-10T15:11:28.000Z",
+    "code_updated_at": "2024-07-10T15:11:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1331385,
+        "name": "nkatshiba",
+        "created_at": "2024-07-10T14:54:23.000Z",
+        "url": "https://greasyfork.org/users/1331385-nkatshiba"
+      }
+    ],
+    "name": "Scrolller.com Redirector",
+    "description": "Redirect Scrolller subreddit pages to sorted and filtered view",
+    "url": "https://greasyfork.org/scripts/500203-scrolller-com-redirector",
+    "code_url": "https://update.greasyfork.org/scripts/500203/Scrolllercom%20Redirector.user.js",
+    "code_size": 1206,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

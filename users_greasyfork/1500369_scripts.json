@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544583,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-04T07:06:56.000Z",
+    "code_updated_at": "2025-11-10T20:40:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500369,
+        "name": "Bitodette",
+        "created_at": "2025-08-01T02:20:44.000Z",
+        "url": "https://greasyfork.org/users/1500369-bitodette"
+      }
+    ],
+    "name": "Siakang Dark Mode",
+    "description": "Dark Mode untuk Siakang Untirta.",
+    "url": "https://greasyfork.org/scripts/544583-siakang-dark-mode",
+    "code_url": "https://update.greasyfork.org/scripts/544583/Siakang%20Dark%20Mode.user.js",
+    "code_size": 26540,
+    "license": null,
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

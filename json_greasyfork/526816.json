@@ -1,0 +1,33 @@
+{
+  "id": 526816,
+  "daily_installs": 3,
+  "total_installs": 123,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-13T19:57:18.000Z",
+  "code_updated_at": "2025-02-13T19:57:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 209123,
+      "name": "Kalila Violette",
+      "created_at": "2018-08-31T01:24:23.000Z",
+      "url": "https://greasyfork.org/users/209123-kalila-violette"
+    }
+  ],
+  "name": "Auto Set Twitch Quality to Source",
+  "description": "Automatically sets Twitch player quality to 1080p60 (Source) using element detection and closes the settings menu",
+  "url": "https://greasyfork.org/scripts/526816-auto-set-twitch-quality-to-source",
+  "code_url": "https://update.greasyfork.org/scripts/526816/Auto%20Set%20Twitch%20Quality%20to%20Source.user.js",
+  "code_size": 2575,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 504120,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-18T13:25:50.000Z",
+    "code_updated_at": "2024-08-18T13:25:50.000Z",
+    "namespace": "el_professor",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "Mug targets Hospital",
+    "description": "Export hospital targets",
+    "url": "https://greasyfork.org/scripts/504120-mug-targets-hospital",
+    "code_url": "https://update.greasyfork.org/scripts/504120/Mug%20targets%20Hospital.user.js",
+    "code_size": 2230,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503212,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T15:38:16.000Z",
+    "code_updated_at": "2024-08-13T20:20:08.000Z",
+    "namespace": "el_profesor",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "Auction Market Spy",
+    "description": "Know your auctions",
+    "url": "https://greasyfork.org/scripts/503212-auction-market-spy",
+    "code_url": "https://update.greasyfork.org/scripts/503212/Auction%20Market%20Spy.user.js",
+    "code_size": 1940,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 497129,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-05T16:18:53.000Z",
+    "code_updated_at": "2024-06-05T17:25:31.000Z",
+    "namespace": "el_profesor",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 428659,
+        "name": "El Profesor",
+        "created_at": "2019-12-26T10:17:19.000Z",
+        "url": "https://greasyfork.org/users/428659-el-profesor"
+      }
+    ],
+    "name": "Propertymarket Spy",
+    "description": "Know your properties",
+    "url": "https://greasyfork.org/scripts/497129-propertymarket-spy",
+    "code_url": "https://update.greasyfork.org/scripts/497129/Propertymarket%20Spy.user.js",
+    "code_size": 1633,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 544860,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-06T23:51:47.000Z",
+    "code_updated_at": "2025-08-06T23:51:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425138,
+        "name": "iot",
+        "created_at": "2025-01-19T17:59:18.000Z",
+        "url": "https://greasyfork.org/users/1425138-iot"
+      }
+    ],
+    "name": "滑动时暂停动画与视频（保留音频）",
+    "description": "页面滑动时暂停动画和视频，松手后恢复，仅保留音频播放",
+    "url": "https://greasyfork.org/scripts/544860-%E6%BB%91%E5%8A%A8%E6%97%B6%E6%9A%82%E5%81%9C%E5%8A%A8%E7%94%BB%E4%B8%8E%E8%A7%86%E9%A2%91-%E4%BF%9D%E7%95%99%E9%9F%B3%E9%A2%91",
+    "code_url": "https://update.greasyfork.org/scripts/544860/%E6%BB%91%E5%8A%A8%E6%97%B6%E6%9A%82%E5%81%9C%E5%8A%A8%E7%94%BB%E4%B8%8E%E8%A7%86%E9%A2%91%EF%BC%88%E4%BF%9D%E7%95%99%E9%9F%B3%E9%A2%91%EF%BC%89.user.js",
+    "code_size": 8405,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544773,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-05T21:51:11.000Z",
+    "code_updated_at": "2025-08-05T21:51:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425138,
+        "name": "iot",
+        "created_at": "2025-01-19T17:59:18.000Z",
+        "url": "https://greasyfork.org/users/1425138-iot"
+      }
+    ],
+    "name": "滑动时暂停所有动画与视频（保留音频）- 增强版",
+    "description": "页面滑动时暂停多种动画和视频资源，松手后恢复，仅保留音频播放，并增强了对GIF和Three.js的支持。",
+    "url": "https://greasyfork.org/scripts/544773-%E6%BB%91%E5%8A%A8%E6%97%B6%E6%9A%82%E5%81%9C%E6%89%80%E6%9C%89%E5%8A%A8%E7%94%BB%E4%B8%8E%E8%A7%86%E9%A2%91-%E4%BF%9D%E7%95%99%E9%9F%B3%E9%A2%91-%E5%A2%9E%E5%BC%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/544773/%E6%BB%91%E5%8A%A8%E6%97%B6%E6%9A%82%E5%81%9C%E6%89%80%E6%9C%89%E5%8A%A8%E7%94%BB%E4%B8%8E%E8%A7%86%E9%A2%91%EF%BC%88%E4%BF%9D%E7%95%99%E9%9F%B3%E9%A2%91%EF%BC%89-%20%E5%A2%9E%E5%BC%BA%E7%89%88.user.js",
+    "code_size": 24992,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543750,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-27T05:51:31.000Z",
+    "code_updated_at": "2025-07-27T05:51:31.000Z",
+    "namespace": "https://openai.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425138,
+        "name": "iot",
+        "created_at": "2025-01-19T17:59:18.000Z",
+        "url": "https://greasyfork.org/users/1425138-iot"
+      }
+    ],
+    "name": "Ultimate HTTP and Plaintext Blocker",
+    "description": "强制拦截所有HTTP/非加密内容，提高隐私安全性",
+    "url": "https://greasyfork.org/scripts/543750-ultimate-http-and-plaintext-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/543750/Ultimate%20HTTP%20and%20Plaintext%20Blocker.user.js",
+    "code_size": 5214,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542746,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-16T18:16:30.000Z",
+    "code_updated_at": "2025-07-16T18:16:30.000Z",
+    "namespace": "https://your.namespace.example",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425138,
+        "name": "iot",
+        "created_at": "2025-01-19T17:59:18.000Z",
+        "url": "https://greasyfork.org/users/1425138-iot"
+      }
+    ],
+    "name": "Universal Smooth Scroll Full Embedded (Optimized & Rewritten)",
+    "description": "无外链！内嵌 USS 源码 + 自定义平滑滚动控制，适配 AdGuard 等用户脚本系统。",
+    "url": "https://greasyfork.org/scripts/542746-universal-smooth-scroll-full-embedded-optimized-rewritten",
+    "code_url": "https://update.greasyfork.org/scripts/542746/Universal%20Smooth%20Scroll%20Full%20Embedded%20%28Optimized%20%20Rewritten%29.user.js",
+    "code_size": 44296,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

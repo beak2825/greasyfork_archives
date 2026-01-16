@@ -1,0 +1,68 @@
+[
+  {
+    "id": 506642,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-03T15:35:31.000Z",
+    "code_updated_at": "2024-09-03T15:35:30.000Z",
+    "namespace": "https://greasyfork.org/en/users/12605-alja%C5%BE-kozina",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12605,
+        "name": "Aljaž Kozina",
+        "created_at": "2015-06-21T20:35:08.000Z",
+        "url": "https://greasyfork.org/users/12605-alja%C5%BE-kozina"
+      }
+    ],
+    "name": "GOG Don't Giveaway Consent - Marketing, Promotions",
+    "description": "Revoke consent for sharing data with third-parties when claiming a giveaway",
+    "url": "https://greasyfork.org/scripts/506642-gog-don-t-giveaway-consent-marketing-promotions",
+    "code_url": "https://update.greasyfork.org/scripts/506642/GOG%20Don%27t%20Giveaway%20Consent%20-%20Marketing%2C%20Promotions.user.js",
+    "code_size": 3741,
+    "license": "GPLv3",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505495,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-27T19:59:02.000Z",
+    "code_updated_at": "2024-08-27T19:59:02.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 12605,
+        "name": "Aljaž Kozina",
+        "created_at": "2015-06-21T20:35:08.000Z",
+        "url": "https://greasyfork.org/users/12605-alja%C5%BE-kozina"
+      }
+    ],
+    "name": "More space for titles on hianime.to",
+    "description": "Adds a custom CSS style to the anime list elements.",
+    "url": "https://greasyfork.org/scripts/505495-more-space-for-titles-on-hianime-to",
+    "code_url": "https://update.greasyfork.org/scripts/505495/More%20space%20for%20titles%20on%20hianimeto.user.js",
+    "code_size": 726,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

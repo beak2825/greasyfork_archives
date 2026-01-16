@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526158,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-07T04:57:20.000Z",
+    "code_updated_at": "2025-02-07T22:40:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1432423,
+        "name": "Zrp200",
+        "created_at": "2025-02-07T04:52:55.000Z",
+        "url": "https://greasyfork.org/users/1432423-zrp200"
+      }
+    ],
+    "name": "National Dex Ubers UU Teambuilder Table Patch",
+    "description": "Import National Dex Ubers UU banlist from PS! source to hide banned Pokemon in the teambuilder.",
+    "url": "https://greasyfork.org/scripts/526158-national-dex-ubers-uu-teambuilder-table-patch",
+    "code_url": "https://update.greasyfork.org/scripts/526158/National%20Dex%20Ubers%20UU%20Teambuilder%20Table%20Patch.user.js",
+    "code_size": 1179,
+    "license": null,
+    "version": "2025-02-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515358,
+    "daily_installs": 0,
+    "total_installs": 473,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-11-02T09:34:44.000Z",
+    "code_updated_at": "2024-11-02T09:34:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1390035,
+        "name": "Rinku Suthar",
+        "created_at": "2024-11-02T09:29:45.000Z",
+        "url": "https://greasyfork.org/users/1390035-rinku-suthar"
+      }
+    ],
+    "name": "Diep.io Auto-leveler Bot Enhanced",
+    "description": "Press Q to toggle auto-leveling; must be in the base once for team detection.",
+    "url": "https://greasyfork.org/scripts/515358-diep-io-auto-leveler-bot-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/515358/Diepio%20Auto-leveler%20Bot%20Enhanced.user.js",
+    "code_size": 3366,
+    "license": null,
+    "version": "2024-11-02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

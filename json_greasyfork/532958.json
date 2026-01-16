@@ -1,0 +1,59 @@
+{
+  "id": 532958,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-15T21:04:40.000Z",
+  "code_updated_at": "2025-04-15T21:23:38.000Z",
+  "namespace": "http://github.com/yancharkin/malvs",
+  "support_url": "https://github.com/yancharkin/malvs/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458333,
+      "name": "yancharkin",
+      "created_at": "2025-04-15T21:01:31.000Z",
+      "url": "https://greasyfork.org/users/1458333-yancharkin",
+      "scripts": [
+        {
+          "id": 532958,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-15T21:04:40.000Z",
+          "code_updated_at": "2025-04-15T21:23:38.000Z",
+          "namespace": "http://github.com/yancharkin/malvs",
+          "support_url": "https://github.com/yancharkin/malvs/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MAL VS",
+          "description": "Adds video search buttons to anime lists on MAL.",
+          "url": "https://greasyfork.org/scripts/532958-mal-vs",
+          "code_url": "https://update.greasyfork.org/scripts/532958/MAL%20VS.user.js",
+          "code_size": 8951,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MAL VS",
+  "description": "Adds video search buttons to anime lists on MAL.",
+  "url": "https://greasyfork.org/scripts/532958-mal-vs",
+  "code_url": "https://update.greasyfork.org/scripts/532958/MAL%20VS.user.js",
+  "code_size": 8951,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

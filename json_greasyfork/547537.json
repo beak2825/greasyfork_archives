@@ -1,0 +1,33 @@
+{
+  "id": 547537,
+  "daily_installs": 2,
+  "total_installs": 72,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T01:33:56.000Z",
+  "code_updated_at": "2025-08-28T01:35:15.000Z",
+  "namespace": "https://nitrotype.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1487661,
+      "name": "Daymare",
+      "created_at": "2025-06-23T23:29:16.000Z",
+      "url": "https://greasyfork.org/users/1487661-daymare"
+    }
+  ],
+  "name": "Nitro Type WS Logger - Day",
+  "description": "This Nitro Type script allows you to see everyone's race stats during a race. That includes everyone's current race session, avg speed, total races, etc.",
+  "url": "https://greasyfork.org/scripts/547537-nitro-type-ws-logger-day",
+  "code_url": "https://update.greasyfork.org/scripts/547537/Nitro%20Type%20WS%20Logger%20-%20Day.user.js",
+  "code_size": 14721,
+  "license": null,
+  "version": "5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

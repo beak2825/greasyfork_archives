@@ -1,0 +1,59 @@
+{
+  "id": 542926,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-18T14:58:16.000Z",
+  "code_updated_at": "2025-08-15T13:57:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 762662,
+      "name": "WhiskeyJackIV",
+      "created_at": "2021-04-20T15:18:19.000Z",
+      "url": "https://greasyfork.org/users/762662-whiskeyjackiv",
+      "scripts": [
+        {
+          "id": 558249,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-07T18:22:28.000Z",
+          "code_updated_at": "2025-12-07T18:22:28.000Z",
+          "namespace": "whiskey_jack.torn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn: Block 1m & 10m Slots Bets",
+          "description": "Blocks the 1,000,000 and 10,000,000 bet buttons on the Torn slots page.",
+          "url": "https://greasyfork.org/scripts/558249-torn-block-1m-10m-slots-bets",
+          "code_url": "https://update.greasyfork.org/scripts/558249/Torn%3A%20Block%201m%20%2010m%20Slots%20Bets.user.js",
+          "code_size": 3491,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tampermonkey Port: Logitech F4 Hold Trigger",
+  "description": "press f4 to load miniprofile",
+  "url": "https://greasyfork.org/scripts/542926-tampermonkey-port-logitech-f4-hold-trigger",
+  "code_url": "https://update.greasyfork.org/scripts/542926/Tampermonkey%20Port%3A%20Logitech%20F4%20Hold%20Trigger.user.js",
+  "code_size": 1733,
+  "license": "CC BY-NC-ND 4.0",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

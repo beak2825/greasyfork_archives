@@ -1,0 +1,33 @@
+{
+  "id": 551644,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-05T09:15:22.000Z",
+  "code_updated_at": "2025-10-05T09:15:22.000Z",
+  "namespace": "https://greasyfork.org/zh-TW/users/4839",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 4839,
+      "name": "Leadra",
+      "created_at": "2014-08-29T13:28:40.000Z",
+      "url": "https://greasyfork.org/users/4839-leadra"
+    }
+  ],
+  "name": "twitcasting的CSS",
+  "description": "twitcasting的CSS美化",
+  "url": "https://greasyfork.org/scripts/551644-twitcasting%E7%9A%84css",
+  "code_url": "https://update.greasyfork.org/scripts/551644/twitcasting%E7%9A%84CSS.user.css",
+  "code_size": 2248,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

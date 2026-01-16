@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548375,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T18:02:15.000Z",
+    "code_updated_at": "2025-12-05T20:07:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479876,
+        "name": "Moritaka Madoka",
+        "created_at": "2025-06-06T13:35:37.000Z",
+        "url": "https://greasyfork.org/users/1479876-moritaka-madoka"
+      }
+    ],
+    "name": "YouTube Volume Booster 600% Enhanced",
+    "description": "Enhanced volume booster with closable panel, zoom feature, and improved stability - Fixed drag jump issue",
+    "url": "https://greasyfork.org/scripts/548375-youtube-volume-booster-600-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/548375/YouTube%20Volume%20Booster%20600%25%20Enhanced.user.js",
+    "code_size": 46026,
+    "license": "MIT License",
+    "version": "4.2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 540329,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-21T14:40:55.000Z",
+  "code_updated_at": "2025-06-21T14:40:55.000Z",
+  "namespace": "http://retroachievements.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480677,
+      "name": "Nepiki",
+      "created_at": "2025-06-08T13:13:46.000Z",
+      "url": "https://greasyfork.org/users/1480677-nepiki",
+      "scripts": []
+    }
+  ],
+  "name": "WritingTeam Implement Template Generator",
+  "description": "This script generates forum post templates for the WritingTeam to use when implementing a set",
+  "url": "https://greasyfork.org/scripts/540329-writingteam-implement-template-generator",
+  "code_url": "https://update.greasyfork.org/scripts/540329/WritingTeam%20Implement%20Template%20Generator.user.js",
+  "code_size": 17546,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

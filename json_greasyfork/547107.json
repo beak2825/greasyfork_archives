@@ -1,0 +1,34 @@
+{
+  "id": 547107,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-24T14:43:44.000Z",
+  "code_updated_at": "2025-08-24T14:43:44.000Z",
+  "namespace": "k100466jerry",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 830652,
+      "name": "JerryWu",
+      "created_at": "2021-10-31T12:54:31.000Z",
+      "url": "https://greasyfork.org/users/830652-jerrywu",
+      "scripts": []
+    }
+  ],
+  "name": "巴哈動畫瘋 背景主題",
+  "description": "在 ani.gamer.com.tw 套用全頁背景圖，並將主題變數底色改為透明/半透明，讓背景透出。",
+  "url": "https://greasyfork.org/scripts/547107-%E5%B7%B4%E5%93%88%E5%8B%95%E7%95%AB%E7%98%8B-%E8%83%8C%E6%99%AF%E4%B8%BB%E9%A1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/547107/%E5%B7%B4%E5%93%88%E5%8B%95%E7%95%AB%E7%98%8B%20%E8%83%8C%E6%99%AF%E4%B8%BB%E9%A1%8C.user.js",
+  "code_size": 5453,
+  "license": null,
+  "version": "2025.08.24.2243",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

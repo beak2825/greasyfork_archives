@@ -1,0 +1,33 @@
+{
+  "id": 497302,
+  "daily_installs": 6,
+  "total_installs": 11698,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-07T14:54:21.000Z",
+  "code_updated_at": "2024-06-07T14:54:21.000Z",
+  "namespace": "youtube-amateur",
+  "support_url": "http://www.tingyour.com?utm_source=gf",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1313887,
+      "name": "huanxiangのtangguo",
+      "created_at": "2024-06-07T09:57:09.000Z",
+      "url": "https://greasyfork.org/users/1313887-huanxiang%E3%81%AEtangguo"
+    }
+  ],
+  "name": "免费YouTube™ Downloader，YouTube HTML5视频&MP3音频播放工具，把油管当播客听MP3，本地油管视频通用下载器 🚀💯 - tingyour.com（NO ADS 🚫）！",
+  "description": "免科学上网工具/梯子在线看油管，快速搜索，中文字幕下载/双语翻译，把油管当播客听MP3，将YouTube当Podcast听，可以订阅自己喜欢的油管博主及频道，收藏自己喜欢的视频，极速加载无需等待，免费YouTube™ Downloader，本地YouTube油管下载器，YouTube视频下载，油管视频通用下载器，不需要通过第三方的服务就能下载YouTube油管视频，支持MP3/MP4/HD/SD/FullHD/3GP等高清高码率格式，YouTube MP3音频&HTML5视频播放工具！",
+  "url": "https://greasyfork.org/scripts/497302-%E5%85%8D%E8%B4%B9youtube-downloader-youtube-html5%E8%A7%86%E9%A2%91-mp3%E9%9F%B3%E9%A2%91%E6%92%AD%E6%94%BE%E5%B7%A5%E5%85%B7-%E6%8A%8A%E6%B2%B9%E7%AE%A1%E5%BD%93%E6%92%AD%E5%AE%A2%E5%90%ACmp3-%E6%9C%AC%E5%9C%B0%E6%B2%B9%E7%AE%A1%E8%A7%86%E9%A2%91%E9%80%9A%E7%94%A8%E4%B8%8B%E8%BD%BD%E5%99%A8-tingyour-com-no-ads",
+  "code_url": "https://update.greasyfork.org/scripts/497302/%E5%85%8D%E8%B4%B9YouTube%E2%84%A2%20Downloader%EF%BC%8CYouTube%20HTML5%E8%A7%86%E9%A2%91MP3%E9%9F%B3%E9%A2%91%E6%92%AD%E6%94%BE%E5%B7%A5%E5%85%B7%EF%BC%8C%E6%8A%8A%E6%B2%B9%E7%AE%A1%E5%BD%93%E6%92%AD%E5%AE%A2%E5%90%ACMP3%EF%BC%8C%E6%9C%AC%E5%9C%B0%E6%B2%B9%E7%AE%A1%E8%A7%86%E9%A2%91%E9%80%9A%E7%94%A8%E4%B8%8B%E8%BD%BD%E5%99%A8%20%F0%9F%9A%80%F0%9F%92%AF%20-%20tingyourcom%EF%BC%88NO%20ADS%20%F0%9F%9A%AB%EF%BC%89%EF%BC%81.user.js",
+  "code_size": 10643,
+  "license": "GPL3 license",
+  "version": "1.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

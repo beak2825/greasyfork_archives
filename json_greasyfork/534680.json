@@ -1,0 +1,59 @@
+{
+  "id": 534680,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-02T03:37:01.000Z",
+  "code_updated_at": "2025-05-02T09:18:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464595,
+      "name": "masavo",
+      "created_at": "2025-05-02T03:15:20.000Z",
+      "url": "https://greasyfork.org/users/1464595-masavo",
+      "scripts": [
+        {
+          "id": 534680,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-02T03:37:01.000Z",
+          "code_updated_at": "2025-05-02T09:18:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Get out from X -今すぐXから立ち去れ-",
+          "description": "You can't get into X anymore. please logout from x.com",
+          "url": "https://greasyfork.org/scripts/534680-get-out-from-x-%E4%BB%8A%E3%81%99%E3%81%90x%E3%81%8B%E3%82%89%E7%AB%8B%E3%81%A1%E5%8E%BB%E3%82%8C",
+          "code_url": "https://update.greasyfork.org/scripts/534680/Get%20out%20from%20X%20-%E4%BB%8A%E3%81%99%E3%81%90X%E3%81%8B%E3%82%89%E7%AB%8B%E3%81%A1%E5%8E%BB%E3%82%8C-.user.js",
+          "code_size": 3631,
+          "license": null,
+          "version": "2025-05-02",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Get out from X -今すぐXから立ち去れ-",
+  "description": "You can't get into X anymore. please logout from x.com",
+  "url": "https://greasyfork.org/scripts/534680-get-out-from-x-%E4%BB%8A%E3%81%99%E3%81%90x%E3%81%8B%E3%82%89%E7%AB%8B%E3%81%A1%E5%8E%BB%E3%82%8C",
+  "code_url": "https://update.greasyfork.org/scripts/534680/Get%20out%20from%20X%20-%E4%BB%8A%E3%81%99%E3%81%90X%E3%81%8B%E3%82%89%E7%AB%8B%E3%81%A1%E5%8E%BB%E3%82%8C-.user.js",
+  "code_size": 3631,
+  "license": null,
+  "version": "2025-05-02",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 499583,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-03T13:02:31.000Z",
+  "code_updated_at": "2024-08-19T12:20:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed 4Rec DB ed.belle@t-online.de",
+  "description": "Modify account balance values, update data-positive attribute, and remove currency elements",
+  "url": "https://greasyfork.org/scripts/499583-ed-4rec-db-ed-belle-t-online-de",
+  "code_url": "https://update.greasyfork.org/scripts/499583/Ed%204Rec%20DB%20edbelle%40t-onlinede.user.js",
+  "code_size": 415,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

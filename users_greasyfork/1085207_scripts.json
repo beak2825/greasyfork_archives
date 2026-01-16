@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523786,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-14T19:59:29.000Z",
+    "code_updated_at": "2025-01-14T20:00:13.000Z",
+    "namespace": "///",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1085207,
+        "name": "plaer br",
+        "created_at": "2023-05-26T17:22:57.000Z",
+        "url": "https://greasyfork.org/users/1085207-plaer-br"
+      }
+    ],
+    "name": "Ulyanovsk | Скрипт для ГС/ЗГС",
+    "description": "Скрипт для ГС/ЗГС ГОСС/ОПГ",
+    "url": "https://greasyfork.org/scripts/523786-ulyanovsk-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D1%81-%D0%B7%D0%B3%D1%81",
+    "code_url": "https://update.greasyfork.org/scripts/523786/Ulyanovsk%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%A1%D0%97%D0%93%D0%A1.user.js",
+    "code_size": 12217,
+    "license": "none",
+    "version": "1.0",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 497692,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-12T06:14:06.000Z",
+  "code_updated_at": "2024-06-12T06:14:06.000Z",
+  "namespace": "https://github.com/JoanLeeo/appstoreconnect_payments_and_financial_reports_savetoxlsx",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1316543,
+      "name": "闻道",
+      "created_at": "2024-06-12T06:10:32.000Z",
+      "url": "https://greasyfork.org/users/1316543-%E9%97%BB%E9%81%93",
+      "scripts": [
+        {
+          "id": 497692,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-12T06:14:06.000Z",
+          "code_updated_at": "2024-06-12T06:14:06.000Z",
+          "namespace": "https://github.com/JoanLeeo/appstoreconnect_payments_and_financial_reports_savetoxlsx",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Appstoreconnect一键下载为xlsx付款和财务报告",
+          "description": "Appstoreconnect 一键下载付款报告为xlsx格式文件",
+          "url": "https://greasyfork.org/scripts/497692-appstoreconnect%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E4%B8%BAxlsx%E4%BB%98%E6%AC%BE%E5%92%8C%E8%B4%A2%E5%8A%A1%E6%8A%A5%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/497692/Appstoreconnect%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E4%B8%BAxlsx%E4%BB%98%E6%AC%BE%E5%92%8C%E8%B4%A2%E5%8A%A1%E6%8A%A5%E5%91%8A.user.js",
+          "code_size": 5462,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Appstoreconnect一键下载为xlsx付款和财务报告",
+  "description": "Appstoreconnect 一键下载付款报告为xlsx格式文件",
+  "url": "https://greasyfork.org/scripts/497692-appstoreconnect%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E4%B8%BAxlsx%E4%BB%98%E6%AC%BE%E5%92%8C%E8%B4%A2%E5%8A%A1%E6%8A%A5%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/497692/Appstoreconnect%E4%B8%80%E9%94%AE%E4%B8%8B%E8%BD%BD%E4%B8%BAxlsx%E4%BB%98%E6%AC%BE%E5%92%8C%E8%B4%A2%E5%8A%A1%E6%8A%A5%E5%91%8A.user.js",
+  "code_size": 5462,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

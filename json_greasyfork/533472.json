@@ -1,0 +1,59 @@
+{
+  "id": 533472,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-21T02:17:52.000Z",
+  "code_updated_at": "2025-04-21T02:17:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 666323,
+      "name": "佐木",
+      "created_at": "2020-07-13T05:43:35.000Z",
+      "url": "https://greasyfork.org/users/666323-%E4%BD%90%E6%9C%A8",
+      "scripts": [
+        {
+          "id": 533472,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-21T02:17:52.000Z",
+          "code_updated_at": "2025-04-21T02:17:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "宝塔授权管理移动端整合优化（SVG菜单按钮）",
+          "description": "移动端优化：菜单折叠、主内容全屏、字段名注入、按钮居中、隐藏客服模块，使用SVG图标美化菜单按钮，提升宝塔授权管理页面体验。",
+          "url": "https://greasyfork.org/scripts/533472-%E5%AE%9D%E5%A1%94%E6%8E%88%E6%9D%83%E7%AE%A1%E7%90%86%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%95%B4%E5%90%88%E4%BC%98%E5%8C%96-svg%E8%8F%9C%E5%8D%95%E6%8C%89%E9%92%AE",
+          "code_url": "https://update.greasyfork.org/scripts/533472/%E5%AE%9D%E5%A1%94%E6%8E%88%E6%9D%83%E7%AE%A1%E7%90%86%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%95%B4%E5%90%88%E4%BC%98%E5%8C%96%EF%BC%88SVG%E8%8F%9C%E5%8D%95%E6%8C%89%E9%92%AE%EF%BC%89.user.js",
+          "code_size": 6079,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "宝塔授权管理移动端整合优化（SVG菜单按钮）",
+  "description": "移动端优化：菜单折叠、主内容全屏、字段名注入、按钮居中、隐藏客服模块，使用SVG图标美化菜单按钮，提升宝塔授权管理页面体验。",
+  "url": "https://greasyfork.org/scripts/533472-%E5%AE%9D%E5%A1%94%E6%8E%88%E6%9D%83%E7%AE%A1%E7%90%86%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%95%B4%E5%90%88%E4%BC%98%E5%8C%96-svg%E8%8F%9C%E5%8D%95%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/533472/%E5%AE%9D%E5%A1%94%E6%8E%88%E6%9D%83%E7%AE%A1%E7%90%86%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%95%B4%E5%90%88%E4%BC%98%E5%8C%96%EF%BC%88SVG%E8%8F%9C%E5%8D%95%E6%8C%89%E9%92%AE%EF%BC%89.user.js",
+  "code_size": 6079,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 548184,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-03T00:48:02.000Z",
+  "code_updated_at": "2025-10-26T13:45:36.000Z",
+  "namespace": "zero.whiskzey.torn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 762662,
+      "name": "WhiskeyJackIV",
+      "created_at": "2021-04-20T15:18:19.000Z",
+      "url": "https://greasyfork.org/users/762662-whiskeyjackiv",
+      "scripts": [
+        {
+          "id": 558249,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-07T18:22:28.000Z",
+          "code_updated_at": "2025-12-07T18:22:28.000Z",
+          "namespace": "whiskey_jack.torn",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn: Block 1m & 10m Slots Bets",
+          "description": "Blocks the 1,000,000 and 10,000,000 bet buttons on the Torn slots page.",
+          "url": "https://greasyfork.org/scripts/558249-torn-block-1m-10m-slots-bets",
+          "code_url": "https://update.greasyfork.org/scripts/558249/Torn%3A%20Block%201m%20%2010m%20Slots%20Bets.user.js",
+          "code_size": 3491,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "WhiskZey mug + UI Controls (Inline Title Version)",
+  "description": "Reposition attack buttons + inline UI for weapon/outcome/temp toggle (next to Attacking) 🛡️ whiskey_jack edition + single-click lock + centered overlay",
+  "url": "https://greasyfork.org/scripts/548184-whiskzey-mug-ui-controls-inline-title-version",
+  "code_url": "https://update.greasyfork.org/scripts/548184/WhiskZey%20mug%20%2B%20UI%20Controls%20%28Inline%20Title%20Version%29.user.js",
+  "code_size": 10819,
+  "license": "GNU GPLv3",
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

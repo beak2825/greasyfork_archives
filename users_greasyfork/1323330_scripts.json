@@ -1,0 +1,101 @@
+[
+  {
+    "id": 519865,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-05T12:33:44.000Z",
+    "code_updated_at": "2025-03-08T15:22:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/susmouse/open-webui-prompt-helper",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1323330,
+        "name": "susmouse",
+        "created_at": "2024-06-24T16:53:11.000Z",
+        "url": "https://greasyfork.org/users/1323330-susmouse"
+      }
+    ],
+    "name": "✨ OpenWebUI提示词助手(兼容v0.5.20)",
+    "description": "为OpenWebUI的高级系统提示词加入类似nextchat的面具功能",
+    "url": "https://greasyfork.org/scripts/519865-openwebui%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A9%E6%89%8B-%E5%85%BC%E5%AE%B9v0-5-20",
+    "code_url": "https://update.greasyfork.org/scripts/519865/%E2%9C%A8%20OpenWebUI%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%8A%A9%E6%89%8B%28%E5%85%BC%E5%AE%B9v0520%29.user.js",
+    "code_size": 6262,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510130,
+    "daily_installs": 0,
+    "total_installs": 116,
+    "fan_score": "43.6",
+    "good_ratings": 5,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-09-25T12:46:35.000Z",
+    "code_updated_at": "2024-10-09T10:39:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1323330,
+        "name": "susmouse",
+        "created_at": "2024-06-24T16:53:11.000Z",
+        "url": "https://greasyfork.org/users/1323330-susmouse"
+      }
+    ],
+    "name": "文本大爆炸",
+    "description": "仿照锤子的大爆炸，对选中文本进行分词",
+    "url": "https://greasyfork.org/scripts/510130-%E6%96%87%E6%9C%AC%E5%A4%A7%E7%88%86%E7%82%B8",
+    "code_url": "https://update.greasyfork.org/scripts/510130/%E6%96%87%E6%9C%AC%E5%A4%A7%E7%88%86%E7%82%B8.user.js",
+    "code_size": 14452,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498809,
+    "daily_installs": 1,
+    "total_installs": 461,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-25T01:11:27.000Z",
+    "code_updated_at": "2024-06-26T03:59:16.000Z",
+    "namespace": "https://github.com/susmouse/DarkModeByXIU2_Enhanced",
+    "support_url": "https://github.com/susmouse/DarkModeByXIU2_Enhanced",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1323330,
+        "name": "susmouse",
+        "created_at": "2024-06-24T16:53:11.000Z",
+        "url": "https://greasyfork.org/users/1323330-susmouse"
+      }
+    ],
+    "name": "护眼模式（侧边按钮版）",
+    "description": "为简单有效的全网通用护眼模式（夜间模式、暗黑模式、深色模式）添加了侧边按钮",
+    "url": "https://greasyfork.org/scripts/498809-%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F-%E4%BE%A7%E8%BE%B9%E6%8C%89%E9%92%AE%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/498809/%E6%8A%A4%E7%9C%BC%E6%A8%A1%E5%BC%8F%EF%BC%88%E4%BE%A7%E8%BE%B9%E6%8C%89%E9%92%AE%E7%89%88%EF%BC%89.user.js",
+    "code_size": 39165,
+    "license": "GPL-3.0 License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

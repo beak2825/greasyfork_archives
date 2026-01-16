@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 544039,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T19:24:49.000Z",
+    "code_updated_at": "2025-11-07T20:32:05.000Z",
+    "namespace": "https://app.graphite.dev/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499619,
+        "name": "jaredallard",
+        "created_at": "2025-07-29T19:04:46.000Z",
+        "url": "https://greasyfork.org/users/1499619-jaredallard"
+      }
+    ],
+    "name": "Redirect Graphite.dev to Github",
+    "description": "Redirects all Graphite.com PR links to Github",
+    "url": "https://greasyfork.org/scripts/544039-redirect-graphite-dev-to-github",
+    "code_url": "https://update.greasyfork.org/scripts/544039/Redirect%20Graphitedev%20to%20Github.user.js",
+    "code_size": 1821,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2025-11-07",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

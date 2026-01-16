@@ -1,0 +1,33 @@
+{
+  "id": 535287,
+  "daily_installs": 0,
+  "total_installs": 144,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T02:40:53.000Z",
+  "code_updated_at": "2025-05-08T13:23:06.000Z",
+  "namespace": "https://github.com/qk-antares",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1467111,
+      "name": "qk-antares",
+      "created_at": "2025-05-08T02:27:10.000Z",
+      "url": "https://greasyfork.org/users/1467111-qk-antares"
+    }
+  ],
+  "name": "LeetCode 灵神题单状态标记",
+  "description": "请求用户所有题目的状态，匹配HTML页面上相应的题目超链接进行展示，适用于灵神的讨论帖题单场景（也可用于其他题单）",
+  "url": "https://greasyfork.org/scripts/535287-leetcode-%E7%81%B5%E7%A5%9E%E9%A2%98%E5%8D%95%E7%8A%B6%E6%80%81%E6%A0%87%E8%AE%B0",
+  "code_url": "https://update.greasyfork.org/scripts/535287/LeetCode%20%E7%81%B5%E7%A5%9E%E9%A2%98%E5%8D%95%E7%8A%B6%E6%80%81%E6%A0%87%E8%AE%B0.user.js",
+  "code_size": 7093,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530093,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-17T15:15:28.000Z",
+    "code_updated_at": "2025-04-15T02:44:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446902,
+        "name": "Felamande",
+        "created_at": "2025-03-17T15:03:46.000Z",
+        "url": "https://greasyfork.org/users/1446902-felamande"
+      }
+    ],
+    "name": "大模型中文翻译助手",
+    "description": "选中文本后调用 OpenAI Compatible API 将其翻译为中文，支持历史记录、收藏夹及整页翻译",
+    "url": "https://greasyfork.org/scripts/530093-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/530093/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 199064,
+    "license": "MIT License",
+    "version": "2.3.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

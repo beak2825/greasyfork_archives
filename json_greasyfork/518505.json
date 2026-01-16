@@ -1,0 +1,59 @@
+{
+  "id": 518505,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-22T19:02:20.000Z",
+  "code_updated_at": "2024-11-22T19:02:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1400898,
+      "name": "tunguski",
+      "created_at": "2024-11-22T18:47:16.000Z",
+      "url": "https://greasyfork.org/users/1400898-tunguski",
+      "scripts": [
+        {
+          "id": 518505,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-22T19:02:20.000Z",
+          "code_updated_at": "2024-11-22T19:02:20.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tichu Online cleanup",
+          "description": "Clean the interface for mobile phones",
+          "url": "https://greasyfork.org/scripts/518505-tichu-online-cleanup",
+          "code_url": "https://update.greasyfork.org/scripts/518505/Tichu%20Online%20cleanup.user.js",
+          "code_size": 4166,
+          "license": null,
+          "version": "2024-11-22",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tichu Online cleanup",
+  "description": "Clean the interface for mobile phones",
+  "url": "https://greasyfork.org/scripts/518505-tichu-online-cleanup",
+  "code_url": "https://update.greasyfork.org/scripts/518505/Tichu%20Online%20cleanup.user.js",
+  "code_size": 4166,
+  "license": null,
+  "version": "2024-11-22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

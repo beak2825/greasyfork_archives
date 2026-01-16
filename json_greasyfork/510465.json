@@ -1,0 +1,59 @@
+{
+  "id": 510465,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-27T16:46:55.000Z",
+  "code_updated_at": "2025-10-24T11:17:29.000Z",
+  "namespace": "https://hideoo.dev/",
+  "support_url": "https://github.com/HiDeoo/userscript-astro-docs-preview-links/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1373823,
+      "name": "HiDeoo",
+      "created_at": "2024-09-27T16:17:33.000Z",
+      "url": "https://greasyfork.org/users/1373823-hideoo",
+      "scripts": [
+        {
+          "id": 510465,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-27T16:46:55.000Z",
+          "code_updated_at": "2025-10-24T11:17:29.000Z",
+          "namespace": "https://hideoo.dev/",
+          "support_url": "https://github.com/HiDeoo/userscript-astro-docs-preview-links/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Astro Docs Preview Links",
+          "description": "Adds preview links of tracked files in GitHub pull requests to the Astro and Starlight documentation.",
+          "url": "https://greasyfork.org/scripts/510465-astro-docs-preview-links",
+          "code_url": "https://update.greasyfork.org/scripts/510465/Astro%20Docs%20Preview%20Links.user.js",
+          "code_size": 5177,
+          "license": "MIT License",
+          "version": "0.1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Astro Docs Preview Links",
+  "description": "Adds preview links of tracked files in GitHub pull requests to the Astro and Starlight documentation.",
+  "url": "https://greasyfork.org/scripts/510465-astro-docs-preview-links",
+  "code_url": "https://update.greasyfork.org/scripts/510465/Astro%20Docs%20Preview%20Links.user.js",
+  "code_size": 5177,
+  "license": "MIT License",
+  "version": "0.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

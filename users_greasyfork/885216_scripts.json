@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499681,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-04T15:13:59.000Z",
+    "code_updated_at": "2024-07-04T15:17:04.000Z",
+    "namespace": "http://github.com/basilguo",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 885216,
+        "name": "Basil Guo",
+        "created_at": "2022-03-10T04:46:22.000Z",
+        "url": "https://greasyfork.org/users/885216-basil-guo"
+      }
+    ],
+    "name": "Facilitating learncpp.com",
+    "description": "Move the control button from bottom to top. This is not a responsive script.",
+    "url": "https://greasyfork.org/scripts/499681-facilitating-learncpp-com",
+    "code_url": "https://update.greasyfork.org/scripts/499681/Facilitating%20learncppcom.user.js",
+    "code_size": 2666,
+    "license": "MIT License",
+    "version": "2024-07-04-02",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

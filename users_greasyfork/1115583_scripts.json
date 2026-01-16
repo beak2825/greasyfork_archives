@@ -30,6 +30,171 @@
     "version": "0.1",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549200,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T01:50:27.000Z",
+    "code_updated_at": "2025-09-12T01:50:26.000Z",
+    "namespace": "https://kuiwaiwai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1115583,
+        "name": "kuiwaiwai",
+        "created_at": "2023-06-30T07:22:29.000Z",
+        "url": "https://greasyfork.org/users/1115583-kuiwaiwai"
+      }
+    ],
+    "name": "极速鸟工作流自定义标题库优化",
+    "description": "为极速鸟工作流添加自定义标题库功能（极速鸟！！！还我自定义标题！！！）",
+    "url": "https://greasyfork.org/scripts/549200-%E6%9E%81%E9%80%9F%E9%B8%9F%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E9%A2%98%E5%BA%93%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/549200/%E6%9E%81%E9%80%9F%E9%B8%9F%E5%B7%A5%E4%BD%9C%E6%B5%81%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A0%87%E9%A2%98%E5%BA%93%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 25162,
+    "license": "Apache License 2.0",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 544435,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-02T19:51:21.000Z",
+    "code_updated_at": "2025-12-01T12:42:55.000Z",
+    "namespace": "https://kuiwaiwai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1115583,
+        "name": "kuiwaiwai",
+        "created_at": "2023-06-30T07:22:29.000Z",
+        "url": "https://greasyfork.org/users/1115583-kuiwaiwai"
+      }
+    ],
+    "name": "巨量引擎优化助手",
+    "description": "提供账户信息快速复制、项目/计划ID批量复制、账户备注批量修改等功能",
+    "url": "https://greasyfork.org/scripts/544435-%E5%B7%A8%E9%87%8F%E5%BC%95%E6%93%8E%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/544435/%E5%B7%A8%E9%87%8F%E5%BC%95%E6%93%8E%E4%BC%98%E5%8C%96%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 51658,
+    "license": "Apache License 2.0",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501054,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-18T08:52:05.000Z",
+    "code_updated_at": "2024-08-21T16:28:32.000Z",
+    "namespace": "https://www.kuiwaiwai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1115583,
+        "name": "kuiwaiwai",
+        "created_at": "2023-06-30T07:22:29.000Z",
+        "url": "https://greasyfork.org/users/1115583-kuiwaiwai"
+      }
+    ],
+    "name": "巨量素材ID批量复制",
+    "description": "批量复制巨量 素材管理->视频管理 界面中的素材ID",
+    "url": "https://greasyfork.org/scripts/501054-%E5%B7%A8%E9%87%8F%E7%B4%A0%E6%9D%90id%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/501054/%E5%B7%A8%E9%87%8F%E7%B4%A0%E6%9D%90ID%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 2486,
+    "license": "GNU General Public License v3.0",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500157,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-10T02:25:00.000Z",
+    "code_updated_at": "2024-07-10T02:25:00.000Z",
+    "namespace": "https://www.kuiwaiwai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1115583,
+        "name": "kuiwaiwai",
+        "created_at": "2023-06-30T07:22:29.000Z",
+        "url": "https://greasyfork.org/users/1115583-kuiwaiwai"
+      }
+    ],
+    "name": "极速鸟批量计划一键执行",
+    "description": "一键点击页面中的所有执行按钮（拯救鼠标，从我做起！）",
+    "url": "https://greasyfork.org/scripts/500157-%E6%9E%81%E9%80%9F%E9%B8%9F%E6%89%B9%E9%87%8F%E8%AE%A1%E5%88%92%E4%B8%80%E9%94%AE%E6%89%A7%E8%A1%8C",
+    "code_url": "https://update.greasyfork.org/scripts/500157/%E6%9E%81%E9%80%9F%E9%B8%9F%E6%89%B9%E9%87%8F%E8%AE%A1%E5%88%92%E4%B8%80%E9%94%AE%E6%89%A7%E8%A1%8C.user.js",
+    "code_size": 2049,
+    "license": "GNU General Public License v3.0",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500156,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-10T02:18:02.000Z",
+    "code_updated_at": "2024-11-18T11:45:02.000Z",
+    "namespace": "https://www.kuiwaiwai.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1115583,
+        "name": "kuiwaiwai",
+        "created_at": "2023-06-30T07:22:29.000Z",
+        "url": "https://greasyfork.org/users/1115583-kuiwaiwai"
+      }
+    ],
+    "name": "巨量账户信息复制优化",
+    "description": "垃圾巨量，别乱改我UI！！！",
+    "url": "https://greasyfork.org/scripts/500156-%E5%B7%A8%E9%87%8F%E8%B4%A6%E6%88%B7%E4%BF%A1%E6%81%AF%E5%A4%8D%E5%88%B6%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/500156/%E5%B7%A8%E9%87%8F%E8%B4%A6%E6%88%B7%E4%BF%A1%E6%81%AF%E5%A4%8D%E5%88%B6%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 4136,
+    "license": "GNU General Public License v3.0",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

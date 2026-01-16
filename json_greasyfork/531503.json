@@ -1,0 +1,34 @@
+{
+  "id": 531503,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-01T13:12:47.000Z",
+  "code_updated_at": "2025-04-01T13:33:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://zelenka.guru/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1285679,
+      "name": "seuyh",
+      "created_at": "2024-04-08T16:31:28.000Z",
+      "url": "https://greasyfork.org/users/1285679-seuyh",
+      "scripts": []
+    }
+  ],
+  "name": "Add Button",
+  "description": "Button Extend!",
+  "url": "https://greasyfork.org/scripts/531503-add-button",
+  "code_url": "https://update.greasyfork.org/scripts/531503/Add%20Button.user.js",
+  "code_size": 4177,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

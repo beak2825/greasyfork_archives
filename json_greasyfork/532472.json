@@ -1,0 +1,59 @@
+{
+  "id": 532472,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-10T22:35:23.000Z",
+  "code_updated_at": "2025-12-02T04:04:17.000Z",
+  "namespace": "https://static.crunchyroll.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456351,
+      "name": "Yanis Sansnom",
+      "created_at": "2025-04-10T22:31:52.000Z",
+      "url": "https://greasyfork.org/users/1456351-yanis-sansnom",
+      "scripts": [
+        {
+          "id": 532472,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-10T22:35:23.000Z",
+          "code_updated_at": "2025-12-02T04:04:17.000Z",
+          "namespace": "https://static.crunchyroll.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Crunchyroll Skip Intro/Outro Multilingual",
+          "description": "Skip intro and credits buttons on Crunchyroll iframe in 20+ languages",
+          "url": "https://greasyfork.org/scripts/532472-crunchyroll-skip-intro-outro-multilingual",
+          "code_url": "https://update.greasyfork.org/scripts/532472/Crunchyroll%20Skip%20IntroOutro%20Multilingual.user.js",
+          "code_size": 3060,
+          "license": "MIT License",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Crunchyroll Skip Intro/Outro Multilingual",
+  "description": "Skip intro and credits buttons on Crunchyroll iframe in 20+ languages",
+  "url": "https://greasyfork.org/scripts/532472-crunchyroll-skip-intro-outro-multilingual",
+  "code_url": "https://update.greasyfork.org/scripts/532472/Crunchyroll%20Skip%20IntroOutro%20Multilingual.user.js",
+  "code_size": 3060,
+  "license": "MIT License",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

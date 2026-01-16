@@ -1,0 +1,34 @@
+{
+  "id": 537904,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T23:30:31.000Z",
+  "code_updated_at": "2025-05-31T23:30:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1477336,
+      "name": "myaccount my",
+      "created_at": "2025-05-31T23:29:48.000Z",
+      "url": "https://greasyfork.org/users/1477336-myaccount-my",
+      "scripts": []
+    }
+  ],
+  "name": "Google Search AI Suffix",
+  "description": "Automatically adds \"-ai\" suffix to Google searches",
+  "url": "https://greasyfork.org/scripts/537904-google-search-ai-suffix",
+  "code_url": "https://update.greasyfork.org/scripts/537904/Google%20Search%20AI%20Suffix.user.js",
+  "code_size": 2015,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

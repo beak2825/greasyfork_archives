@@ -1,0 +1,68 @@
+[
+  {
+    "id": 530667,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-23T22:21:09.000Z",
+    "code_updated_at": "2025-04-05T19:56:40.000Z",
+    "namespace": "https://hulu.jp/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411343,
+        "name": "まぃ姫",
+        "created_at": "2024-12-15T19:07:39.000Z",
+        "url": "https://greasyfork.org/users/1411343-%E3%81%BE%E3%81%83%E5%A7%AB"
+      }
+    ],
+    "name": "Hulu Japan Auto Skip Intro & Next Episode",
+    "description": "Hulu Japanの「本編へスキップ」ボタンとカウントダウン表示後の「次の動画」ボタンを自動でクリック（Alt + C でオン/オフ切り替え可）",
+    "url": "https://greasyfork.org/scripts/530667-hulu-japan-auto-skip-intro-next-episode",
+    "code_url": "https://update.greasyfork.org/scripts/530667/Hulu%20Japan%20Auto%20Skip%20Intro%20%20Next%20Episode.user.js",
+    "code_size": 2506,
+    "license": null,
+    "version": "3.2",
+    "locale": "sv",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520847,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T00:31:52.000Z",
+    "code_updated_at": "2025-04-05T17:21:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411343,
+        "name": "まぃ姫",
+        "created_at": "2024-12-15T19:07:39.000Z",
+        "url": "https://greasyfork.org/users/1411343-%E3%81%BE%E3%81%83%E5%A7%AB"
+      }
+    ],
+    "name": "覗きアリア削除",
+    "description": "指定された浮動ボタン要素を検出し削除します。",
+    "url": "https://greasyfork.org/scripts/520847-%E8%A6%97%E3%81%8D%E3%82%A2%E3%83%AA%E3%82%A2%E5%89%8A%E9%99%A4",
+    "code_url": "https://update.greasyfork.org/scripts/520847/%E8%A6%97%E3%81%8D%E3%82%A2%E3%83%AA%E3%82%A2%E5%89%8A%E9%99%A4.user.js",
+    "code_size": 1317,
+    "license": null,
+    "version": "0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536030,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T02:45:59.000Z",
+    "code_updated_at": "2025-08-02T01:05:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1470256,
+        "name": "sirrob",
+        "created_at": "2025-05-15T02:07:52.000Z",
+        "url": "https://greasyfork.org/users/1470256-sirrob"
+      }
+    ],
+    "name": "YouTube GVDS1750 (GarbageVideoDisposalSystem, >1750 view)",
+    "description": "English Only - Youtube recommends garbage videos with 0-1750 views, so we put them in the garbage disposal.",
+    "url": "https://greasyfork.org/scripts/536030-youtube-gvds1750-garbagevideodisposalsystem-1750-view",
+    "code_url": "https://update.greasyfork.org/scripts/536030/YouTube%20GVDS1750%20%28GarbageVideoDisposalSystem%2C%20%3E1750%20view%29.user.js",
+    "code_size": 22288,
+    "license": "GNU GPLv3",
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536027,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T02:27:37.000Z",
+    "code_updated_at": "2025-05-31T23:07:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1470256,
+        "name": "sirrob",
+        "created_at": "2025-05-15T02:07:52.000Z",
+        "url": "https://greasyfork.org/users/1470256-sirrob"
+      }
+    ],
+    "name": "eBay Sponsored Listing Exploder 9000",
+    "description": "\"Exploders\" sponsored listings on the search page",
+    "url": "https://greasyfork.org/scripts/536027-ebay-sponsored-listing-exploder-9000",
+    "code_url": "https://update.greasyfork.org/scripts/536027/eBay%20Sponsored%20Listing%20Exploder%209000.user.js",
+    "code_size": 8398,
+    "license": "GNU GPLv3",
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

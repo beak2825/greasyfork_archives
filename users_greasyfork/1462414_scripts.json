@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534065,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T12:43:23.000Z",
+    "code_updated_at": "2025-04-26T13:31:17.000Z",
+    "namespace": "https://gitee.com/PDBC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1462414,
+        "name": "nullnull.zj",
+        "created_at": "2025-04-26T11:40:36.000Z",
+        "url": "https://greasyfork.org/users/1462414-nullnull-zj"
+      }
+    ],
+    "name": "下载网易云lrc歌词文件",
+    "description": "下载网易云音乐的歌词（lrc文件格式）",
+    "url": "https://greasyfork.org/scripts/534065-%E4%B8%8B%E8%BD%BD%E7%BD%91%E6%98%93%E4%BA%91lrc%E6%AD%8C%E8%AF%8D%E6%96%87%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/534065/%E4%B8%8B%E8%BD%BD%E7%BD%91%E6%98%93%E4%BA%91lrc%E6%AD%8C%E8%AF%8D%E6%96%87%E4%BB%B6.user.js",
+    "code_size": 4394,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 521448,
+  "daily_installs": 0,
+  "total_installs": 202,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-22T11:57:45.000Z",
+  "code_updated_at": "2024-12-22T11:57:45.000Z",
+  "namespace": "https://greasyfork.org/users/1413768",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1413768,
+      "name": "你可以叫我VV子",
+      "created_at": "2024-12-21T12:01:22.000Z",
+      "url": "https://greasyfork.org/users/1413768-%E4%BD%A0%E5%8F%AF%E4%BB%A5%E5%8F%AB%E6%88%91vv%E5%AD%90",
+      "scripts": [
+        {
+          "id": 521448,
+          "daily_installs": 0,
+          "total_installs": 202,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-22T11:57:45.000Z",
+          "code_updated_at": "2024-12-22T11:57:45.000Z",
+          "namespace": "https://greasyfork.org/users/1413768",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VIP/VeryImportantPerson 🌙",
+          "description": "别问，问就是有充VIP的钱不如给我喝奶茶",
+          "url": "https://greasyfork.org/scripts/521448-vip-veryimportantperson",
+          "code_url": "https://update.greasyfork.org/scripts/521448/VIPVeryImportantPerson%20%F0%9F%8C%99.user.js",
+          "code_size": 105238,
+          "license": null,
+          "version": "0.0.1.20241222115745",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VIP/VeryImportantPerson 🌙",
+  "description": "别问，问就是有充VIP的钱不如给我喝奶茶",
+  "url": "https://greasyfork.org/scripts/521448-vip-veryimportantperson",
+  "code_url": "https://update.greasyfork.org/scripts/521448/VIPVeryImportantPerson%20%F0%9F%8C%99.user.js",
+  "code_size": 105238,
+  "license": null,
+  "version": "0.0.1.20241222115745",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

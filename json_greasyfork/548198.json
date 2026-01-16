@@ -1,0 +1,34 @@
+{
+  "id": 548198,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-03T05:58:13.000Z",
+  "code_updated_at": "2025-09-30T11:32:57.000Z",
+  "namespace": "cz.hockey.table.froms3",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "S3 Schedules (ICEHL + Metal Ligaen)",
+  "description": "Vloží nahoře tabulku s live urls (API + ofiko + xG) pro ICEHL i Metal Ligaen.",
+  "url": "https://greasyfork.org/scripts/548198-s3-schedules-icehl-metal-ligaen",
+  "code_url": "https://update.greasyfork.org/scripts/548198/S3%20Schedules%20%28ICEHL%20%2B%20Metal%20Ligaen%29.user.js",
+  "code_size": 7991,
+  "license": "MIT License",
+  "version": "3.3",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 502915,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-08T00:04:09.000Z",
+  "code_updated_at": "2025-06-05T23:37:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294856,
+      "name": "manoflaser",
+      "created_at": "2024-04-29T17:04:20.000Z",
+      "url": "https://greasyfork.org/users/1294856-manoflaser",
+      "scripts": []
+    }
+  ],
+  "name": "Youtube Commenters Info display",
+  "description": "Displays the number of subscribers, joined date, video count, view count, and country next to each comment under every video.",
+  "url": "https://greasyfork.org/scripts/502915-youtube-commenters-info-display",
+  "code_url": "https://update.greasyfork.org/scripts/502915/Youtube%20Commenters%20Info%20display.user.js",
+  "code_size": 12975,
+  "license": null,
+  "version": "0.10",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

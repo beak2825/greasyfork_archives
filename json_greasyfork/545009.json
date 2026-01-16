@@ -1,0 +1,34 @@
+{
+  "id": 545009,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-08T06:06:24.000Z",
+  "code_updated_at": "2025-08-08T06:06:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497583,
+      "name": "Daniel Głowacz",
+      "created_at": "2025-07-23T08:54:02.000Z",
+      "url": "https://greasyfork.org/users/1497583-daniel-g%C5%82owacz",
+      "scripts": []
+    }
+  ],
+  "name": "E-commerce Panel Helper v2",
+  "description": "Add a movable and dockable modal to e-commerce product editing panel",
+  "url": "https://greasyfork.org/scripts/545009-e-commerce-panel-helper-v2",
+  "code_url": "https://update.greasyfork.org/scripts/545009/E-commerce%20Panel%20Helper%20v2.user.js",
+  "code_size": 35097,
+  "license": null,
+  "version": "0.68",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

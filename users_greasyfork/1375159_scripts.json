@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510977,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-01T01:18:35.000Z",
+    "code_updated_at": "2024-10-01T01:18:35.000Z",
+    "namespace": "https://seu-nome-de-usuario.greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375159,
+        "name": "Otávio de melo cordeiro",
+        "created_at": "2024-10-01T00:57:04.000Z",
+        "url": "https://greasyfork.org/users/1375159-ot%C3%A1vio-de-melo-cordeiro"
+      }
+    ],
+    "name": "Youtuber Kinger",
+    "description": "Melhora a experiência no YouTube removendo anúncios, ocultando comentários e ajustando a qualidade máxima dos vídeos automaticamente.",
+    "url": "https://greasyfork.org/scripts/510977-youtuber-kinger",
+    "code_url": "https://update.greasyfork.org/scripts/510977/Youtuber%20Kinger.user.js",
+    "code_size": 3598,
+    "license": null,
+    "version": "2.0",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

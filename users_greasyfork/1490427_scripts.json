@@ -1,0 +1,68 @@
+[
+  {
+    "id": 541300,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T03:10:09.000Z",
+    "code_updated_at": "2025-07-01T03:10:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490427,
+        "name": "Amil John",
+        "created_at": "2025-06-30T20:38:35.000Z",
+        "url": "https://greasyfork.org/users/1490427-amil-john"
+      }
+    ],
+    "name": "All Media Speed",
+    "description": "Use Alt + . and Alt + , to change speed by 0.1x. Overlay is styled like",
+    "url": "https://greasyfork.org/scripts/541300-all-media-speed",
+    "code_url": "https://update.greasyfork.org/scripts/541300/All%20Media%20Speed.user.js",
+    "code_size": 2917,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541277,
+    "daily_installs": 1,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-30T21:16:24.000Z",
+    "code_updated_at": "2025-06-30T21:16:24.000Z",
+    "namespace": "violentmonkey.ultimate.redirect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490427,
+        "name": "Amil John",
+        "created_at": "2025-06-30T20:38:35.000Z",
+        "url": "https://greasyfork.org/users/1490427-amil-john"
+      }
+    ],
+    "name": "Ultimate Instance Redirect",
+    "description": "Redirect social media to privacy frontends, remember mirror, switch instances with button and Ctrl+Shift+R hotkey. SponsorBlock removed. Sticky redirects enabled.",
+    "url": "https://greasyfork.org/scripts/541277-ultimate-instance-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/541277/Ultimate%20Instance%20Redirect.user.js",
+    "code_size": 8354,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

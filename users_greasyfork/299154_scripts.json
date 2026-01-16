@@ -1,0 +1,101 @@
+[
+  {
+    "id": 537025,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-23T22:01:52.000Z",
+    "code_updated_at": "2025-06-19T20:04:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 299154,
+        "name": "rnnqq",
+        "created_at": "2019-05-08T02:50:18.000Z",
+        "url": "https://greasyfork.org/users/299154-rnnqq"
+      }
+    ],
+    "name": "YouTube Incremental Subtitles Sidebar - Modernized",
+    "description": "Modernized UI. Persistent subtitle monitoring. Normal mode minimizes to corner (X icon). Overlay mode has its own minimize (X icon) and mode switch (⇄ icon). Enhanced hover effects for minimized states. When minimized (even from overlay mode), native YouTube subtitles will be shown. Overlay controls fade in on mouseover of text area or controls, and fade out on mouseleave from sidebar.",
+    "url": "https://greasyfork.org/scripts/537025-youtube-incremental-subtitles-sidebar-modernized",
+    "code_url": "https://update.greasyfork.org/scripts/537025/YouTube%20Incremental%20Subtitles%20Sidebar%20-%20Modernized.user.js",
+    "code_size": 58420,
+    "license": "MIT License",
+    "version": "3.0.2 // バージョン更新 (オーバーレイコントロールの表示/非表示をマウスオーバーで制御)",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530670,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-24T00:18:02.000Z",
+    "code_updated_at": "2025-05-09T23:05:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 299154,
+        "name": "rnnqq",
+        "created_at": "2019-05-08T02:50:18.000Z",
+        "url": "https://greasyfork.org/users/299154-rnnqq"
+      }
+    ],
+    "name": "TVer プレイヤー機能拡張",
+    "description": "TVerビデオプレイヤーにクリックで再生/一時停止、マウスホイールで音量調整機能を追加し、URL変更を処理。ライブページはスキップ。セレクタを外部化し、イベントリスナー管理を改善。コメントを強化しメンテナンス性を向上。",
+    "url": "https://greasyfork.org/scripts/530670-tver-%E3%83%97%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC%E6%A9%9F%E8%83%BD%E6%8B%A1%E5%BC%B5",
+    "code_url": "https://update.greasyfork.org/scripts/530670/TVer%20%E3%83%97%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC%E6%A9%9F%E8%83%BD%E6%8B%A1%E5%BC%B5.user.js",
+    "code_size": 23585,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530664,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-23T21:59:13.000Z",
+    "code_updated_at": "2025-03-24T02:44:36.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 299154,
+        "name": "rnnqq",
+        "created_at": "2019-05-08T02:50:18.000Z",
+        "url": "https://greasyfork.org/users/299154-rnnqq"
+      }
+    ],
+    "name": "Tverプレイヤーでかくする",
+    "description": "Stylussで使うと良いと思いますまる　なんでTVerあんな中途半端な大きさなの",
+    "url": "https://greasyfork.org/scripts/530664-tver%E3%83%97%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC%E3%81%A7%E3%81%8B%E3%81%8F%E3%81%99%E3%82%8B",
+    "code_url": "https://update.greasyfork.org/scripts/530664/Tver%E3%83%97%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC%E3%81%A7%E3%81%8B%E3%81%8F%E3%81%99%E3%82%8B.user.css",
+    "code_size": 1182,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

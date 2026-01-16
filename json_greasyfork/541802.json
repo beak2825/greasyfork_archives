@@ -1,0 +1,34 @@
+{
+  "id": 541802,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-06T10:01:50.000Z",
+  "code_updated_at": "2025-07-06T10:09:03.000Z",
+  "namespace": "https://4chan.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 906497,
+      "name": "Seiren Heart",
+      "created_at": "2022-04-24T19:43:50.000Z",
+      "url": "https://greasyfork.org/users/906497-seiren-heart",
+      "scripts": []
+    }
+  ],
+  "name": "4chan European Date Format Hook",
+  "description": "Forces DD/MM/YYYY format on 4chan by overriding their internal date function",
+  "url": "https://greasyfork.org/scripts/541802-4chan-european-date-format-hook",
+  "code_url": "https://update.greasyfork.org/scripts/541802/4chan%20European%20Date%20Format%20Hook.user.js",
+  "code_size": 1517,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

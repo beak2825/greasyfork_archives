@@ -1,0 +1,74 @@
+[
+  {
+    "id": 502663,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-05T06:13:45.000Z",
+    "code_updated_at": "2024-08-05T07:25:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783226,
+        "name": "ALoong",
+        "created_at": "2021-06-14T06:56:37.000Z",
+        "url": "https://greasyfork.org/users/783226-aloong"
+      },
+      {
+        "id": 1280956,
+        "name": "Sun_ever",
+        "created_at": "2024-03-29T04:36:46.000Z",
+        "url": "https://greasyfork.org/users/1280956-sun-ever"
+      }
+    ],
+    "name": "PSChina Server Translation CAP",
+    "description": "PSChina Server Translation CAP汉化脚本",
+    "url": "https://greasyfork.org/scripts/502663-pschina-server-translation-cap",
+    "code_url": "https://update.greasyfork.org/scripts/502663/PSChina%20Server%20Translation%20CAP.user.js",
+    "code_size": 4801,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502050,
+    "daily_installs": 0,
+    "total_installs": 117,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-29T07:49:20.000Z",
+    "code_updated_at": "2025-02-07T08:03:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 783226,
+        "name": "ALoong",
+        "created_at": "2021-06-14T06:56:37.000Z",
+        "url": "https://greasyfork.org/users/783226-aloong"
+      }
+    ],
+    "name": "PSChina Server Translation SV TEST",
+    "description": "PSChina Server Translation朱紫蓝之圆盘汉化脚本测试版",
+    "url": "https://greasyfork.org/scripts/502050-pschina-server-translation-sv-test",
+    "code_url": "https://update.greasyfork.org/scripts/502050/PSChina%20Server%20Translation%20SV%20TEST.user.js",
+    "code_size": 948932,
+    "license": "MIT License",
+    "version": "1.7.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

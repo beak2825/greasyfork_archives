@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534678,
+    "daily_installs": 2,
+    "total_installs": 490,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-02T01:47:05.000Z",
+    "code_updated_at": "2025-05-02T01:47:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464565,
+        "name": "zNxrd",
+        "created_at": "2025-05-02T01:27:17.000Z",
+        "url": "https://greasyfork.org/users/1464565-znxrd"
+      }
+    ],
+    "name": "Bloxd.io Scaffold (Auto-Place Block Under Player) with Toggle + Status",
+    "description": "Auto-place blocks under player in Bloxd.io using NoaHook, toggle with Z key, with visible status text on screen.",
+    "url": "https://greasyfork.org/scripts/534678-bloxd-io-scaffold-auto-place-block-under-player-with-toggle-status",
+    "code_url": "https://update.greasyfork.org/scripts/534678/Bloxdio%20Scaffold%20%28Auto-Place%20Block%20Under%20Player%29%20with%20Toggle%20%2B%20Status.user.js",
+    "code_size": 2997,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

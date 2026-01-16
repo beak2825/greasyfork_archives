@@ -1,0 +1,34 @@
+{
+  "id": 527513,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-20T06:30:57.000Z",
+  "code_updated_at": "2025-02-20T06:30:56.000Z",
+  "namespace": "gfmirror",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1435633,
+      "name": "gfmirror",
+      "created_at": "2025-02-16T09:14:33.000Z",
+      "url": "https://greasyfork.org/users/1435633-gfmirror",
+      "scripts": []
+    }
+  ],
+  "name": "GreasyFork镜像站验证库-02",
+  "description": "GreasyFork镜像站验证库:https://github.com/shenchanran/greasyfork-mirror",
+  "url": "https://greasyfork.org/scripts/527513-greasyfork%E9%95%9C%E5%83%8F%E7%AB%99%E9%AA%8C%E8%AF%81%E5%BA%93-02",
+  "code_url": "https://update.greasyfork.org/scripts/527513/1540230/GreasyFork%E9%95%9C%E5%83%8F%E7%AB%99%E9%AA%8C%E8%AF%81%E5%BA%93-02.js",
+  "code_size": 301,
+  "license": null,
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

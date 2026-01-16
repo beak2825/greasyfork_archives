@@ -1,0 +1,34 @@
+{
+  "id": 548311,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T04:59:46.000Z",
+  "code_updated_at": "2025-09-04T04:59:46.000Z",
+  "namespace": "https://markg.dev/userscripts/sp-income-drive",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326401,
+      "name": "Mark Gallardo",
+      "created_at": "2024-07-01T00:49:34.000Z",
+      "url": "https://greasyfork.org/users/1326401-mark-gallardo",
+      "scripts": []
+    }
+  ],
+  "name": "SP INCOME Report — Drive Export (Saved Task URL)",
+  "description": "Shopee affiliate export: pick dates → export CSV → save to Google Drive; also save task URL for manual retry/open/clear",
+  "url": "https://greasyfork.org/scripts/548311-sp-income-report-drive-export-saved-task-url",
+  "code_url": "https://update.greasyfork.org/scripts/548311/SP%20INCOME%20Report%20%E2%80%94%20Drive%20Export%20%28Saved%20Task%20URL%29.user.js",
+  "code_size": 15749,
+  "license": null,
+  "version": "3.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 520090,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-08T02:49:15.000Z",
+  "code_updated_at": "2025-02-11T06:45:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 206502,
+      "name": "TomaszFromasz",
+      "created_at": "2018-08-21T06:06:43.000Z",
+      "url": "https://greasyfork.org/users/206502-tomaszfromasz",
+      "scripts": []
+    }
+  ],
+  "name": "PPTrans Monitor",
+  "description": "Monitoruje parametry TSO z API, filtruje dane i wysyła info na Chime",
+  "url": "https://greasyfork.org/scripts/520090-pptrans-monitor",
+  "code_url": "https://update.greasyfork.org/scripts/520090/PPTrans%20Monitor.user.js",
+  "code_size": 24983,
+  "license": null,
+  "version": "2.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

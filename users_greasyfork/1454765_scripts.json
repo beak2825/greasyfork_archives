@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532026,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-06T22:37:51.000Z",
+    "code_updated_at": "2025-04-06T22:37:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454765,
+        "name": "Atilla kosegen",
+        "created_at": "2025-04-06T22:35:57.000Z",
+        "url": "https://greasyfork.org/users/1454765-atilla-kosegen"
+      }
+    ],
+    "name": "Auto Clicker with Mobile & Desktop Draggable UI",
+    "description": "Auto-clicker with a draggable UI that works on desktop and mobile devices too.",
+    "url": "https://greasyfork.org/scripts/532026-auto-clicker-with-mobile-desktop-draggable-ui",
+    "code_url": "https://update.greasyfork.org/scripts/532026/Auto%20Clicker%20with%20Mobile%20%20Desktop%20Draggable%20UI.user.js",
+    "code_size": 4296,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

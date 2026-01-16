@@ -1,0 +1,33 @@
+{
+  "id": 547866,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-30T21:05:59.000Z",
+  "code_updated_at": "2025-08-30T21:05:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510073,
+      "name": "Tristan_Sikora",
+      "created_at": "2025-08-29T20:43:51.000Z",
+      "url": "https://greasyfork.org/users/1510073-tristan-sikora"
+    }
+  ],
+  "name": "Ísland.is Kennitala Fix (SPA-safe) (Sóley Líf Gunnarsdóttir Brown | 100508-3030)",
+  "description": "Works with React routing on island.is and safely replaces Kennitala without breaking layout or styles.",
+  "url": "https://greasyfork.org/scripts/547866-%C3%ADsland-is-kennitala-fix-spa-safe-s%C3%B3ley-l%C3%ADf-gunnarsd%C3%B3ttir-brown-100508-3030",
+  "code_url": "https://update.greasyfork.org/scripts/547866/%C3%8Dslandis%20Kennitala%20Fix%20%28SPA-safe%29%20%28S%C3%B3ley%20L%C3%ADf%20Gunnarsd%C3%B3ttir%20Brown%20%7C%20100508-3030%29.user.js",
+  "code_size": 1310,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

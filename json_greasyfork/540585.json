@@ -1,0 +1,33 @@
+{
+  "id": 540585,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-24T06:59:58.000Z",
+  "code_updated_at": "2025-06-24T06:59:58.000Z",
+  "namespace": "https://github.com/ocyss",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 788149,
+      "name": "yingzk",
+      "created_at": "2021-06-28T03:43:58.000Z",
+      "url": "https://greasyfork.org/users/788149-yingzk"
+    }
+  ],
+  "name": "非全自动美团神龙召唤",
+  "description": "教程来源参考 https://linux.do/t/topic/743802",
+  "url": "https://greasyfork.org/scripts/540585-%E9%9D%9E%E5%85%A8%E8%87%AA%E5%8A%A8%E7%BE%8E%E5%9B%A2%E7%A5%9E%E9%BE%99%E5%8F%AC%E5%94%A4",
+  "code_url": "https://update.greasyfork.org/scripts/540585/%E9%9D%9E%E5%85%A8%E8%87%AA%E5%8A%A8%E7%BE%8E%E5%9B%A2%E7%A5%9E%E9%BE%99%E5%8F%AC%E5%94%A4.user.js",
+  "code_size": 1912,
+  "license": "MIT License",
+  "version": "2025-06-23",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

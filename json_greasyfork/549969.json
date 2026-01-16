@@ -1,0 +1,33 @@
+{
+  "id": 549969,
+  "daily_installs": 0,
+  "total_installs": 166,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-18T13:55:52.000Z",
+  "code_updated_at": "2025-09-18T13:55:52.000Z",
+  "namespace": "https://jiaobenmiao.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 564470,
+      "name": "tuziang",
+      "created_at": "2020-05-18T04:44:31.000Z",
+      "url": "https://greasyfork.org/users/564470-tuziang"
+    }
+  ],
+  "name": "华医网刷课脚本",
+  "description": "该油猴脚本用于 华医网 的辅助看课，脚本功能如下：自动静音播放，自动切换视频，屏蔽课堂问答，自动考试",
+  "url": "https://greasyfork.org/scripts/549969-%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/549969/%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 32730,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

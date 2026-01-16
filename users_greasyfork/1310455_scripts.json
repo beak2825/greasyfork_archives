@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496872,
+    "daily_installs": 0,
+    "total_installs": 686,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-02T16:45:40.000Z",
+    "code_updated_at": "2024-06-03T12:36:27.000Z",
+    "namespace": "http://aslxcoder.glitch.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1310455,
+        "name": "naggets",
+        "created_at": "2024-05-31T21:22:22.000Z",
+        "url": "https://greasyfork.org/users/1310455-naggets"
+      }
+    ],
+    "name": "Neptune Macros (ALL JS!!)",
+    "description": "Currently, A good Sploop.io Script to be in Greasyfork!",
+    "url": "https://greasyfork.org/scripts/496872-neptune-macros-all-js",
+    "code_url": "https://update.greasyfork.org/scripts/496872/Neptune%20Macros%20%28ALL%20JS%21%21%29.user.js",
+    "code_size": 11554,
+    "license": "MIT License",
+    "version": "V1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 497577,
+  "daily_installs": 0,
+  "total_installs": 47,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-11T03:07:29.000Z",
+  "code_updated_at": "2024-06-20T19:21:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1315976,
+      "name": "yodaluca23",
+      "created_at": "2024-06-11T02:56:15.000Z",
+      "url": "https://greasyfork.org/users/1315976-yodaluca23"
+    }
+  ],
+  "name": "Tracking Redirect Nuker",
+  "description": "Decode encoded URLs in links and replace them with the decoded URL",
+  "url": "https://greasyfork.org/scripts/497577-tracking-redirect-nuker",
+  "code_url": "https://update.greasyfork.org/scripts/497577/Tracking%20Redirect%20Nuker.user.js",
+  "code_size": 1346,
+  "license": "GNU GPLv3",
+  "version": "0.2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

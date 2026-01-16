@@ -1,0 +1,59 @@
+{
+  "id": 522577,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-02T09:12:07.000Z",
+  "code_updated_at": "2025-01-02T09:12:07.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 331839,
+      "name": "achabuhecha",
+      "created_at": "2019-08-22T08:36:01.000Z",
+      "url": "https://greasyfork.org/users/331839-achabuhecha",
+      "scripts": [
+        {
+          "id": 545550,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-12T09:15:55.000Z",
+          "code_updated_at": "2025-12-28T13:55:46.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "屏蔽浮动广告 & 外部链接广告",
+          "description": "自动隐藏网页中的浮动广告（包括固定/绝对定位的a、img、div等），并且如果广告元素的链接（href/src）指向外部域名，也进行屏蔽",
+          "url": "https://greasyfork.org/scripts/545550-%E5%B1%8F%E8%94%BD%E6%B5%AE%E5%8A%A8%E5%B9%BF%E5%91%8A-%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/545550/%E5%B1%8F%E8%94%BD%E6%B5%AE%E5%8A%A8%E5%B9%BF%E5%91%8A%20%20%E5%A4%96%E9%83%A8%E9%93%BE%E6%8E%A5%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 3994,
+          "license": "MIT License",
+          "version": "2.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "52pt.site",
+  "description": "2025/1/2 11:33:11",
+  "url": "https://greasyfork.org/scripts/522577-52pt-site",
+  "code_url": "https://update.greasyfork.org/scripts/522577/52ptsite.user.js",
+  "code_size": 1473,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

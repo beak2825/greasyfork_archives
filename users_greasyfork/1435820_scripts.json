@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527143,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-02-16T23:05:42.000Z",
+    "code_updated_at": "2025-02-16T23:05:41.000Z",
+    "namespace": "https://gist.github.com/Acamol/b925fbaea3b45858023fe94898f9ea87",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435820,
+        "name": "Acamol",
+        "created_at": "2025-02-16T22:28:57.000Z",
+        "url": "https://greasyfork.org/users/1435820-acamol"
+      }
+    ],
+    "name": "Plex IMDb Ratings & Links",
+    "description": "Adds IMDb ratings and direct links to IMDb pages for movies and TV shows in your Plex library.",
+    "url": "https://greasyfork.org/scripts/527143-plex-imdb-ratings-links",
+    "code_url": "https://update.greasyfork.org/scripts/527143/Plex%20IMDb%20Ratings%20%20Links.user.js",
+    "code_size": 9028,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

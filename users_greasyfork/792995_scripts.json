@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521265,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-20T05:18:25.000Z",
+    "code_updated_at": "2024-12-20T05:22:21.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/792995-a-bcd",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 792995,
+        "name": "A BCD",
+        "created_at": "2021-07-13T05:05:07.000Z",
+        "url": "https://greasyfork.org/users/792995-a-bcd"
+      }
+    ],
+    "name": "东农urp教务系统自动评教脚本",
+    "description": "东北农业大学教务系统一键评教脚本",
+    "url": "https://greasyfork.org/scripts/521265-%E4%B8%9C%E5%86%9Curp%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/521265/%E4%B8%9C%E5%86%9Curp%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 1588,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

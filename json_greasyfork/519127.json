@@ -1,0 +1,34 @@
+{
+  "id": 519127,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-28T09:24:27.000Z",
+  "code_updated_at": "2024-11-28T09:24:27.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1398387,
+      "name": "zzhttc",
+      "created_at": "2024-11-18T06:08:14.000Z",
+      "url": "https://greasyfork.org/users/1398387-zzhttc",
+      "scripts": []
+    }
+  ],
+  "name": "农场自动-绪言言",
+  "description": "2024/11/18",
+  "url": "https://greasyfork.org/scripts/519127-%E5%86%9C%E5%9C%BA%E8%87%AA%E5%8A%A8-%E7%BB%AA%E8%A8%80%E8%A8%80",
+  "code_url": "https://update.greasyfork.org/scripts/519127/%E5%86%9C%E5%9C%BA%E8%87%AA%E5%8A%A8-%E7%BB%AA%E8%A8%80%E8%A8%80.user.js",
+  "code_size": 24536,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

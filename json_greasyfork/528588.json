@@ -1,0 +1,59 @@
+{
+  "id": 528588,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-03T00:27:44.000Z",
+  "code_updated_at": "2025-03-03T00:50:04.000Z",
+  "namespace": "https://x.com/officebeats",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1408849,
+      "name": "0b3ats",
+      "created_at": "2024-12-10T01:26:54.000Z",
+      "url": "https://greasyfork.org/users/1408849-0b3ats",
+      "scripts": [
+        {
+          "id": 528588,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-03T00:27:44.000Z",
+          "code_updated_at": "2025-03-03T00:50:04.000Z",
+          "namespace": "https://x.com/officebeats",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove Chat from Streamed.su",
+          "description": "Removes the live chat and \"Enter theater mode\" button from streamed.su streaming pages, centering the video content",
+          "url": "https://greasyfork.org/scripts/528588-remove-chat-from-streamed-su",
+          "code_url": "https://update.greasyfork.org/scripts/528588/Remove%20Chat%20from%20Streamedsu.user.js",
+          "code_size": 4738,
+          "license": "MIT License",
+          "version": "0.12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove Chat from Streamed.su",
+  "description": "Removes the live chat and \"Enter theater mode\" button from streamed.su streaming pages, centering the video content",
+  "url": "https://greasyfork.org/scripts/528588-remove-chat-from-streamed-su",
+  "code_url": "https://update.greasyfork.org/scripts/528588/Remove%20Chat%20from%20Streamedsu.user.js",
+  "code_size": 4738,
+  "license": "MIT License",
+  "version": "0.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

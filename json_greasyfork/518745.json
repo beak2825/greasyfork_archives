@@ -1,0 +1,33 @@
+{
+  "id": 518745,
+  "daily_installs": 0,
+  "total_installs": 81,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-25T02:05:04.000Z",
+  "code_updated_at": "2025-05-23T17:21:15.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1352302,
+      "name": "The0x539",
+      "created_at": "2024-08-15T14:39:13.000Z",
+      "url": "https://greasyfork.org/users/1352302-the0x539"
+    }
+  ],
+  "name": "Disable DRC Audio on YouTube (SPA fix)",
+  "description": "Disables DRC Audio (Stable Volume) on YouTube (Working as of November 2024)",
+  "url": "https://greasyfork.org/scripts/518745-disable-drc-audio-on-youtube-spa-fix",
+  "code_url": "https://update.greasyfork.org/scripts/518745/Disable%20DRC%20Audio%20on%20YouTube%20%28SPA%20fix%29.user.js",
+  "code_size": 1475,
+  "license": "MIT License",
+  "version": "0.2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

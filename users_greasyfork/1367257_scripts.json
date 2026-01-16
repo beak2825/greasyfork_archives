@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508378,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-14T04:37:07.000Z",
+    "code_updated_at": "2024-09-14T04:45:42.000Z",
+    "namespace": "https://azastudio.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1367257,
+        "name": "Nathan Thompson (Nate)",
+        "created_at": "2024-09-14T04:35:34.000Z",
+        "url": "https://greasyfork.org/users/1367257-nathan-thompson-nate"
+      }
+    ],
+    "name": "Dark/Light Mode Toggle",
+    "description": "Toggle between dark and light mode on any website with a button on the center right of the screen that auto hides.",
+    "url": "https://greasyfork.org/scripts/508378-dark-light-mode-toggle",
+    "code_url": "https://update.greasyfork.org/scripts/508378/DarkLight%20Mode%20Toggle.user.js",
+    "code_size": 3384,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

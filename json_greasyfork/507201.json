@@ -1,0 +1,33 @@
+{
+  "id": 507201,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-06T20:59:22.000Z",
+  "code_updated_at": "2024-09-06T20:59:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1364150,
+      "name": "Diramix",
+      "created_at": "2024-09-06T20:58:11.000Z",
+      "url": "https://greasyfork.org/users/1364150-diramix"
+    }
+  ],
+  "name": "mos-ru-theme",
+  "description": "school.mos.ru crack",
+  "url": "https://greasyfork.org/scripts/507201-mos-ru-theme",
+  "code_url": "https://update.greasyfork.org/scripts/507201/mos-ru-theme.user.js",
+  "code_size": 2896,
+  "license": null,
+  "version": "2024-09-06",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

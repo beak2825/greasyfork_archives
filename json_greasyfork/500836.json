@@ -1,0 +1,33 @@
+{
+  "id": 500836,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-16T16:40:42.000Z",
+  "code_updated_at": "2024-07-16T17:02:40.000Z",
+  "namespace": "leeSalami.lss",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1233676,
+      "name": "leeSalami",
+      "created_at": "2023-12-14T10:20:52.000Z",
+      "url": "https://greasyfork.org/users/1233676-leesalami"
+    }
+  ],
+  "name": "Gebäude nach Stadt benennen",
+  "description": "Erlaubt das automatische Benennen von Gebäuden während dem Bau",
+  "url": "https://greasyfork.org/scripts/500836-geb%C3%A4ude-nach-stadt-benennen",
+  "code_url": "https://update.greasyfork.org/scripts/500836/Geb%C3%A4ude%20nach%20Stadt%20benennen.user.js",
+  "code_size": 2664,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

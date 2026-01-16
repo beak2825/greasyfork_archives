@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537705,
+    "daily_installs": 1,
+    "total_installs": 185,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-30T02:16:17.000Z",
+    "code_updated_at": "2025-05-30T02:16:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1476555,
+        "name": "youngdemon19xondiscord",
+        "created_at": "2025-05-30T02:05:46.000Z",
+        "url": "https://greasyfork.org/users/1476555-youngdemon19xondiscord"
+      }
+    ],
+    "name": "Blooket Gui (THE BEST)",
+    "description": "one of the best of the best.",
+    "url": "https://greasyfork.org/scripts/537705-blooket-gui-the-best",
+    "code_url": "https://update.greasyfork.org/scripts/537705/Blooket%20Gui%20%28THE%20BEST%29.user.js",
+    "code_size": 187909,
+    "license": "MIT License",
+    "version": "1.4.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544862,
+    "daily_installs": 2,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-07T00:05:18.000Z",
+    "code_updated_at": "2025-08-07T00:05:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279019,
+        "name": "KoolKars475",
+        "created_at": "2024-03-25T01:29:18.000Z",
+        "url": "https://greasyfork.org/users/1279019-koolkars475"
+      }
+    ],
+    "name": "Human Auto Typer",
+    "description": "Works anywhere! Type like a pro with \"start-now\" trigger, stylish UI, manual controls & Shift x3 to stop. Try it!",
+    "url": "https://greasyfork.org/scripts/544862-human-auto-typer",
+    "code_url": "https://update.greasyfork.org/scripts/544862/Human%20Auto%20Typer.user.js",
+    "code_size": 11603,
+    "license": "MIT License",
+    "version": "4.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

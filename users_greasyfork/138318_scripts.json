@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526469,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-10T15:48:45.000Z",
+    "code_updated_at": "2025-03-16T13:49:57.000Z",
+    "namespace": "https://linux.do/u/ziyun",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 138318,
+        "name": "am09",
+        "created_at": "2017-07-05T02:04:36.000Z",
+        "url": "https://greasyfork.org/users/138318-am09"
+      }
+    ],
+    "name": "1.传奇挂机多功能脚本 - 重构版",
+    "description": "传奇挂机多功能脚本 - 优化版本，提高代码可维护性和效率",
+    "url": "https://greasyfork.org/scripts/526469-1-%E4%BC%A0%E5%A5%87%E6%8C%82%E6%9C%BA%E5%A4%9A%E5%8A%9F%E8%83%BD%E8%84%9A%E6%9C%AC-%E9%87%8D%E6%9E%84%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/526469/1%E4%BC%A0%E5%A5%87%E6%8C%82%E6%9C%BA%E5%A4%9A%E5%8A%9F%E8%83%BD%E8%84%9A%E6%9C%AC%20-%20%E9%87%8D%E6%9E%84%E7%89%88.user.js",
+    "code_size": 47696,
+    "license": "MIT License",
+    "version": "1.5.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

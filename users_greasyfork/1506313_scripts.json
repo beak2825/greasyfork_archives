@@ -1,0 +1,35 @@
+[
+  {
+    "id": 546297,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-18T14:27:53.000Z",
+    "code_updated_at": "2025-08-18T14:27:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1506313,
+        "name": "psdoc0716",
+        "created_at": "2025-08-18T14:23:41.000Z",
+        "url": "https://greasyfork.org/users/1506313-psdoc0716"
+      }
+    ],
+    "name": "豆瓣电影UI优化",
+    "description": "优化豆瓣电影网站的用户界面，提供更舒适的浏览体验",
+    "url": "https://greasyfork.org/scripts/546297-%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1ui%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/546297/%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1UI%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 8817,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 540007,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-19T12:34:36.000Z",
+  "code_updated_at": "2025-06-19T13:01:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1485753,
+      "name": "getaaron",
+      "created_at": "2025-06-19T12:22:19.000Z",
+      "url": "https://greasyfork.org/users/1485753-getaaron"
+    }
+  ],
+  "name": "Tiller.com - Sort Connected Accounts",
+  "description": "Add \"Sort By\" dropdown to connected accounts page",
+  "url": "https://greasyfork.org/scripts/540007-tiller-com-sort-connected-accounts",
+  "code_url": "https://update.greasyfork.org/scripts/540007/Tillercom%20-%20Sort%20Connected%20Accounts.user.js",
+  "code_size": 8094,
+  "license": "MIT License",
+  "version": "2025-06-17",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

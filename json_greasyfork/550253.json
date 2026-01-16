@@ -1,0 +1,34 @@
+{
+  "id": 550253,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-21T14:32:58.000Z",
+  "code_updated_at": "2025-09-21T14:32:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514819,
+      "name": "Irakli Lagvilava",
+      "created_at": "2025-09-14T04:17:00.000Z",
+      "url": "https://greasyfork.org/users/1514819-irakli-lagvilava",
+      "scripts": []
+    }
+  ],
+  "name": "Автонажатие D при прокрутке до конца",
+  "description": "Нажимает клавишу D когда страница прокручена до конца",
+  "url": "https://greasyfork.org/scripts/550253-%D0%B0%D0%B2%D1%82%D0%BE%D0%BD%D0%B0%D0%B6%D0%B0%D1%82%D0%B8%D0%B5-d-%D0%BF%D1%80%D0%B8-%D0%BF%D1%80%D0%BE%D0%BA%D1%80%D1%83%D1%82%D0%BA%D0%B5-%D0%B4%D0%BE-%D0%BA%D0%BE%D0%BD%D1%86%D0%B0",
+  "code_url": "https://update.greasyfork.org/scripts/550253/%D0%90%D0%B2%D1%82%D0%BE%D0%BD%D0%B0%D0%B6%D0%B0%D1%82%D0%B8%D0%B5%20D%20%D0%BF%D1%80%D0%B8%20%D0%BF%D1%80%D0%BE%D0%BA%D1%80%D1%83%D1%82%D0%BA%D0%B5%20%D0%B4%D0%BE%20%D0%BA%D0%BE%D0%BD%D1%86%D0%B0.user.js",
+  "code_size": 2850,
+  "license": null,
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

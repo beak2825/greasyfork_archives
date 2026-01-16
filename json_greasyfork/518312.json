@@ -1,0 +1,34 @@
+{
+  "id": 518312,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-21T07:45:54.000Z",
+  "code_updated_at": "2024-11-24T18:56:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 786157,
+      "name": "修止符",
+      "created_at": "2021-06-22T11:27:08.000Z",
+      "url": "https://greasyfork.org/users/786157-%E4%BF%AE%E6%AD%A2%E7%AC%A6",
+      "scripts": []
+    }
+  ],
+  "name": "海外OTA平台助手(测试版)",
+  "description": "测海外OTA平台助手,支持策略页面显示备注等功能",
+  "url": "https://greasyfork.org/scripts/518312-%E6%B5%B7%E5%A4%96ota%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B-%E6%B5%8B%E8%AF%95%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/518312/%E6%B5%B7%E5%A4%96OTA%E5%B9%B3%E5%8F%B0%E5%8A%A9%E6%89%8B%28%E6%B5%8B%E8%AF%95%E7%89%88%29.user.js",
+  "code_size": 60360,
+  "license": "MPL",
+  "version": "0.92",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

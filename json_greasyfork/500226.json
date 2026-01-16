@@ -1,0 +1,34 @@
+{
+  "id": 500226,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-10T21:14:08.000Z",
+  "code_updated_at": "2025-03-04T17:36:32.000Z",
+  "namespace": "xyzabcd",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1156278,
+      "name": "Cthaeh",
+      "created_at": "2023-08-21T13:57:21.000Z",
+      "url": "https://greasyfork.org/users/1156278-cthaeh",
+      "scripts": []
+    }
+  ],
+  "name": "Duellstat",
+  "description": "Enhance the usability of the game",
+  "url": "https://greasyfork.org/scripts/500226-duellstat",
+  "code_url": "https://update.greasyfork.org/scripts/500226/Duellstat.user.js",
+  "code_size": 1147545,
+  "license": null,
+  "version": "v0.80.1",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

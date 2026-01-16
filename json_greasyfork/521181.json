@@ -1,0 +1,33 @@
+{
+  "id": 521181,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-19T04:41:36.000Z",
+  "code_updated_at": "2024-12-19T04:41:36.000Z",
+  "namespace": "http://jaronsteele.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1412840,
+      "name": "toxin-x",
+      "created_at": "2024-12-19T04:40:27.000Z",
+      "url": "https://greasyfork.org/users/1412840-toxin-x"
+    }
+  ],
+  "name": "translate to/from Jaron's alphabet",
+  "description": "Highlight the text you want to translate and then right click it and select tampermonkey",
+  "url": "https://greasyfork.org/scripts/521181-translate-to-from-jaron-s-alphabet",
+  "code_url": "https://update.greasyfork.org/scripts/521181/translate%20tofrom%20Jaron%27s%20alphabet.user.js",
+  "code_size": 1827,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

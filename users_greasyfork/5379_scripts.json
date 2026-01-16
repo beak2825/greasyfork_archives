@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551701,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T19:27:35.000Z",
+    "code_updated_at": "2025-10-05T19:27:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5379,
+        "name": "cahrehn",
+        "created_at": "2014-09-16T21:38:50.000Z",
+        "url": "https://greasyfork.org/users/5379-cahrehn"
+      }
+    ],
+    "name": "MTG Draft GIH WR Overlay",
+    "description": "Toggle overlay showing Game In Hand win rates for MTG cards on Draftmancer and 17Lands",
+    "url": "https://greasyfork.org/scripts/551701-mtg-draft-gih-wr-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/551701/MTG%20Draft%20GIH%20WR%20Overlay.user.js",
+    "code_size": 19000,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

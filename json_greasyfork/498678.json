@@ -1,0 +1,34 @@
+{
+  "id": 498678,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-23T15:17:19.000Z",
+  "code_updated_at": "2024-06-23T15:17:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807598,
+      "name": "Ahmed Esslaoui",
+      "created_at": "2021-08-23T04:35:33.000Z",
+      "url": "https://greasyfork.org/users/807598-ahmed-esslaoui",
+      "scripts": []
+    }
+  ],
+  "name": "Refund helper",
+  "description": "Add a refund button to retrieve ID and open a new link with the ID pasted in a field",
+  "url": "https://greasyfork.org/scripts/498678-refund-helper",
+  "code_url": "https://update.greasyfork.org/scripts/498678/Refund%20helper.user.js",
+  "code_size": 2969,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

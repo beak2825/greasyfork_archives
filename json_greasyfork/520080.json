@@ -1,0 +1,59 @@
+{
+  "id": 520080,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-08T01:03:04.000Z",
+  "code_updated_at": "2024-12-08T01:03:03.000Z",
+  "namespace": "https://blog.bgme.me",
+  "support_url": "https://github.com/404-novel-project/novel-downloader",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1262767,
+      "name": "bexon",
+      "created_at": "2024-02-18T01:03:33.000Z",
+      "url": "https://greasyfork.org/users/1262767-bexon",
+      "scripts": [
+        {
+          "id": 487567,
+          "daily_installs": 0,
+          "total_installs": 65,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-02-18T02:22:58.000Z",
+          "code_updated_at": "2024-02-18T02:40:02.000Z",
+          "namespace": "bexon",
+          "support_url": "https://gitlab.com/bexon/userscripts/-/issues/new",
+          "contribution_url": "https://ko-fi.com/bexon",
+          "contribution_amount": null,
+          "name": "VGMURLs",
+          "description": "Copy albums urls from KHInsider.",
+          "url": "https://greasyfork.org/scripts/487567-vgmurls",
+          "code_url": "https://update.greasyfork.org/scripts/487567/VGMURLs.user.js",
+          "code_size": 3200,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小说下载器",
+  "description": "一个可扩展的通用型小说下载器。",
+  "url": "https://greasyfork.org/scripts/520080-%E5%B0%8F%E8%AF%B4%E4%B8%8B%E8%BD%BD%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/520080/%E5%B0%8F%E8%AF%B4%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+  "code_size": 1643505,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "5.2.1014",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542419,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T20:40:03.000Z",
+    "code_updated_at": "2025-07-13T18:12:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1494249,
+        "name": "ParaMigi",
+        "created_at": "2025-07-12T19:02:50.000Z",
+        "url": "https://greasyfork.org/users/1494249-paramigi"
+      }
+    ],
+    "name": "Universal Inline & Display LaTeX Renderer (KaTeX)",
+    "description": "Render inline and display LaTeX math on any website using KaTeX. Careful with input fields! Be sure to have rendering OFF when entering an input field, otherwise you can mess up your delimiters. I have made a fix button for this, but it might not be exactly correct.",
+    "url": "https://greasyfork.org/scripts/542419-universal-inline-display-latex-renderer-katex",
+    "code_url": "https://update.greasyfork.org/scripts/542419/Universal%20Inline%20%20Display%20LaTeX%20Renderer%20%28KaTeX%29.user.js",
+    "code_size": 15385,
+    "license": "MIT License",
+    "version": "2025-07-13.5.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

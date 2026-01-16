@@ -1,0 +1,59 @@
+{
+  "id": 530293,
+  "daily_installs": 1,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-19T18:10:11.000Z",
+  "code_updated_at": "2025-03-19T18:10:11.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1447816,
+      "name": "zaydah",
+      "created_at": "2025-03-19T18:06:13.000Z",
+      "url": "https://greasyfork.org/users/1447816-zaydah",
+      "scripts": [
+        {
+          "id": 530293,
+          "daily_installs": 1,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-19T18:10:11.000Z",
+          "code_updated_at": "2025-03-19T18:10:11.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FT.live Message reader",
+          "description": "3/19/2025, 2:23:22 PM",
+          "url": "https://greasyfork.org/scripts/530293-ft-live-message-reader",
+          "code_url": "https://update.greasyfork.org/scripts/530293/FTlive%20Message%20reader.user.js",
+          "code_size": 3837,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FT.live Message reader",
+  "description": "3/19/2025, 2:23:22 PM",
+  "url": "https://greasyfork.org/scripts/530293-ft-live-message-reader",
+  "code_url": "https://update.greasyfork.org/scripts/530293/FTlive%20Message%20reader.user.js",
+  "code_size": 3837,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 497791,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-13T08:47:37.000Z",
+  "code_updated_at": "2024-06-13T09:52:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1317168,
+      "name": "Łukasz Kucharski",
+      "created_at": "2024-06-13T08:41:24.000Z",
+      "url": "https://greasyfork.org/users/1317168-%C5%82ukasz-kucharski"
+    }
+  ],
+  "name": "Forms Questions Extractor",
+  "description": "A script that allows you to export questions from a loaded MS Forms test.",
+  "url": "https://greasyfork.org/scripts/497791-forms-questions-extractor",
+  "code_url": "https://update.greasyfork.org/scripts/497791/Forms%20Questions%20Extractor.user.js",
+  "code_size": 921,
+  "license": "MIT License",
+  "version": "2024-06-01v3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

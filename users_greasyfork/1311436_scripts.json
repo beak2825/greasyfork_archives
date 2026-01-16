@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497460,
+    "daily_installs": 0,
+    "total_installs": 197,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-09T15:44:12.000Z",
+    "code_updated_at": "2024-06-09T15:44:12.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1311436,
+        "name": "sorenGu",
+        "created_at": "2024-06-02T16:35:27.000Z",
+        "url": "https://greasyfork.org/users/1311436-sorengu"
+      }
+    ],
+    "name": "pokerogue.net type effectiveness helper",
+    "description": "Shows a info panel at the left side of the screen to display the type effectiveness of attacks against all (most, some pokemon seem to not show up) pokemon on the field. The \"i\" key opens and closes the info window at the left.",
+    "url": "https://greasyfork.org/scripts/497460-pokerogue-net-type-effectiveness-helper",
+    "code_url": "https://update.greasyfork.org/scripts/497460/pokeroguenet%20type%20effectiveness%20helper.user.js",
+    "code_size": 9828,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

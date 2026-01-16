@@ -1,0 +1,59 @@
+{
+  "id": 536078,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T11:09:54.000Z",
+  "code_updated_at": "2025-05-15T11:09:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 703188,
+      "name": "dfaofeng",
+      "created_at": "2020-11-09T11:26:54.000Z",
+      "url": "https://greasyfork.org/users/703188-dfaofeng",
+      "scripts": [
+        {
+          "id": 536078,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-15T11:09:54.000Z",
+          "code_updated_at": "2025-05-15T11:09:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站网页版一键开播/关播",
+          "description": "在B站直播姬网页版添加按钮，动态获取RoomID和分区，选择后一键开播/关播，并用HTML展示结果及复制按钮（成功信息手动关闭）。",
+          "url": "https://greasyfork.org/scripts/536078-b%E7%AB%99%E7%BD%91%E9%A1%B5%E7%89%88%E4%B8%80%E9%94%AE%E5%BC%80%E6%92%AD-%E5%85%B3%E6%92%AD",
+          "code_url": "https://update.greasyfork.org/scripts/536078/B%E7%AB%99%E7%BD%91%E9%A1%B5%E7%89%88%E4%B8%80%E9%94%AE%E5%BC%80%E6%92%AD%E5%85%B3%E6%92%AD.user.js",
+          "code_size": 28445,
+          "license": "MIT License",
+          "version": "0.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站网页版一键开播/关播",
+  "description": "在B站直播姬网页版添加按钮，动态获取RoomID和分区，选择后一键开播/关播，并用HTML展示结果及复制按钮（成功信息手动关闭）。",
+  "url": "https://greasyfork.org/scripts/536078-b%E7%AB%99%E7%BD%91%E9%A1%B5%E7%89%88%E4%B8%80%E9%94%AE%E5%BC%80%E6%92%AD-%E5%85%B3%E6%92%AD",
+  "code_url": "https://update.greasyfork.org/scripts/536078/B%E7%AB%99%E7%BD%91%E9%A1%B5%E7%89%88%E4%B8%80%E9%94%AE%E5%BC%80%E6%92%AD%E5%85%B3%E6%92%AD.user.js",
+  "code_size": 28445,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

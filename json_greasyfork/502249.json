@@ -1,0 +1,34 @@
+{
+  "id": 502249,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-31T08:57:03.000Z",
+  "code_updated_at": "2026-01-09T18:06:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1343010,
+      "name": "GuitarWei",
+      "created_at": "2024-07-31T08:22:45.000Z",
+      "url": "https://greasyfork.org/users/1343010-guitarwei",
+      "scripts": []
+    }
+  ],
+  "name": "LSE Drill Metric Viewer",
+  "description": "To help DCEO view LSE drill metrics",
+  "url": "https://greasyfork.org/scripts/502249-lse-drill-metric-viewer",
+  "code_url": "https://update.greasyfork.org/scripts/502249/LSE%20Drill%20Metric%20Viewer.user.js",
+  "code_size": 33375,
+  "license": "MIT License",
+  "version": "3.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

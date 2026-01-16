@@ -1,0 +1,34 @@
+{
+  "id": 526271,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-08T10:49:22.000Z",
+  "code_updated_at": "2026-01-08T07:27:12.000Z",
+  "namespace": "https://clients.netafraz.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1419751,
+      "name": "Farshad Mehryar",
+      "created_at": "2025-01-05T07:37:22.000Z",
+      "url": "https://greasyfork.org/users/1419751-farshad-mehryar",
+      "scripts": []
+    }
+  ],
+  "name": "Office_Authentication",
+  "description": "This module customizes the authentication system.",
+  "url": "https://greasyfork.org/scripts/526271-office-authentication",
+  "code_url": "https://update.greasyfork.org/scripts/526271/Office_Authentication.user.js",
+  "code_size": 15711,
+  "license": "AGPLv3.0",
+  "version": "1.3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

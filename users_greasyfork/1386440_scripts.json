@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514093,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-26T04:39:29.000Z",
+    "code_updated_at": "2024-10-26T04:54:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1386440,
+        "name": "nimooooo",
+        "created_at": "2024-10-26T04:25:02.000Z",
+        "url": "https://greasyfork.org/users/1386440-nimooooo"
+      }
+    ],
+    "name": "bilibili-block-users",
+    "description": "批量拉黑B站用户",
+    "url": "https://greasyfork.org/scripts/514093-bilibili-block-users",
+    "code_url": "https://update.greasyfork.org/scripts/514093/bilibili-block-users.user.js",
+    "code_size": 3080,
+    "license": "MIT License",
+    "version": "2024-10-26 3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

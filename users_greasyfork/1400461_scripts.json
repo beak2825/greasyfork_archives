@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518419,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T03:16:45.000Z",
+    "code_updated_at": "2024-11-22T03:16:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400461,
+        "name": "TianTian Liu",
+        "created_at": "2024-11-22T03:14:37.000Z",
+        "url": "https://greasyfork.org/users/1400461-tiantian-liu"
+      }
+    ],
+    "name": "Random Word in Title",
+    "description": "随机将JSON数据中的单词与释义显示在所有网页的标题中",
+    "url": "https://greasyfork.org/scripts/518419-random-word-in-title",
+    "code_url": "https://update.greasyfork.org/scripts/518419/Random%20Word%20in%20Title.user.js",
+    "code_size": 791287,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

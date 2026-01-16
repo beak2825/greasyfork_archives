@@ -1,0 +1,59 @@
+{
+  "id": 549108,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-11T08:04:39.000Z",
+  "code_updated_at": "2025-09-11T08:04:39.000Z",
+  "namespace": "tornado404",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513857,
+      "name": "tornado404",
+      "created_at": "2025-09-11T07:15:16.000Z",
+      "url": "https://greasyfork.org/users/1513857-tornado404",
+      "scripts": [
+        {
+          "id": 549108,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-11T08:04:39.000Z",
+          "code_updated_at": "2025-09-11T08:04:39.000Z",
+          "namespace": "tornado404",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "豆瓣租房助手 Enhanced",
+          "description": "豆瓣租房小组智能助手 - 基于mscststs原版优化升级，新增过滤功能、智能分类、自定义标签、用户黑名单等",
+          "url": "https://greasyfork.org/scripts/549108-%E8%B1%86%E7%93%A3%E7%A7%9F%E6%88%BF%E5%8A%A9%E6%89%8B-enhanced",
+          "code_url": "https://update.greasyfork.org/scripts/549108/%E8%B1%86%E7%93%A3%E7%A7%9F%E6%88%BF%E5%8A%A9%E6%89%8B%20Enhanced.user.js",
+          "code_size": 14355,
+          "license": "ISC License",
+          "version": "0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆瓣租房助手 Enhanced",
+  "description": "豆瓣租房小组智能助手 - 基于mscststs原版优化升级，新增过滤功能、智能分类、自定义标签、用户黑名单等",
+  "url": "https://greasyfork.org/scripts/549108-%E8%B1%86%E7%93%A3%E7%A7%9F%E6%88%BF%E5%8A%A9%E6%89%8B-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/549108/%E8%B1%86%E7%93%A3%E7%A7%9F%E6%88%BF%E5%8A%A9%E6%89%8B%20Enhanced.user.js",
+  "code_size": 14355,
+  "license": "ISC License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

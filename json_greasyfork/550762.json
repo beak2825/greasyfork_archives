@@ -1,0 +1,34 @@
+{
+  "id": 550762,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-26T14:25:31.000Z",
+  "code_updated_at": "2025-09-26T14:25:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1519663,
+      "name": "markopetryakov",
+      "created_at": "2025-09-26T14:19:48.000Z",
+      "url": "https://greasyfork.org/users/1519663-markopetryakov",
+      "scripts": []
+    }
+  ],
+  "name": "DjinniAutomation",
+  "description": "Djinni candidates automation",
+  "url": "https://greasyfork.org/scripts/550762-djinniautomation",
+  "code_url": "https://update.greasyfork.org/scripts/550762/DjinniAutomation.user.js",
+  "code_size": 45609,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

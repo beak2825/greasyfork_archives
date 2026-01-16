@@ -1,0 +1,33 @@
+{
+  "id": 550328,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-22T07:43:58.000Z",
+  "code_updated_at": "2025-09-22T07:43:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1316225,
+      "name": "Rather Not Say",
+      "created_at": "2024-06-11T12:57:53.000Z",
+      "url": "https://greasyfork.org/users/1316225-rather-not-say"
+    }
+  ],
+  "name": "Close after .1s",
+  "description": "Close login successful",
+  "url": "https://greasyfork.org/scripts/550328-close-after-1s",
+  "code_url": "https://update.greasyfork.org/scripts/550328/Close%20after%201s.user.js",
+  "code_size": 577,
+  "license": "MIT License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

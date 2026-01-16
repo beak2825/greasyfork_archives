@@ -1,0 +1,34 @@
+{
+  "id": 506352,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-02T05:55:42.000Z",
+  "code_updated_at": "2024-09-02T05:55:42.000Z",
+  "namespace": "https://greasyfork.org/users/51812",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 51812,
+      "name": "cptwilson",
+      "created_at": "2016-06-29T16:51:51.000Z",
+      "url": "https://greasyfork.org/users/51812-cptwilson",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube Autoplay Disable",
+  "description": "Stop YouTube autoplay after video ending",
+  "url": "https://greasyfork.org/scripts/506352-youtube-autoplay-disable",
+  "code_url": "https://update.greasyfork.org/scripts/506352/YouTube%20Autoplay%20Disable.user.js",
+  "code_size": 695,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

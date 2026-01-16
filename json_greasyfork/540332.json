@@ -1,0 +1,33 @@
+{
+  "id": 540332,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-21T15:13:01.000Z",
+  "code_updated_at": "2025-06-21T15:13:01.000Z",
+  "namespace": "ChatGPT",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441970,
+      "name": "南竹",
+      "created_at": "2025-03-03T17:26:50.000Z",
+      "url": "https://greasyfork.org/users/1441970-%E5%8D%97%E7%AB%B9"
+    }
+  ],
+  "name": "B站收藏夹批量提取视频链接／Bilibili Favlist Extractor",
+  "description": "在 B 站收藏夹页提取本页所有视频标题 + 链接到浮动窗口，支持一键复制与导出 TXT",
+  "url": "https://greasyfork.org/scripts/540332-b%E7%AB%99%E6%94%B6%E8%97%8F%E5%A4%B9%E6%89%B9%E9%87%8F%E6%8F%90%E5%8F%96%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5-bilibili-favlist-extractor",
+  "code_url": "https://update.greasyfork.org/scripts/540332/B%E7%AB%99%E6%94%B6%E8%97%8F%E5%A4%B9%E6%89%B9%E9%87%8F%E6%8F%90%E5%8F%96%E8%A7%86%E9%A2%91%E9%93%BE%E6%8E%A5%EF%BC%8FBilibili%20Favlist%20Extractor.user.js",
+  "code_size": 5478,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

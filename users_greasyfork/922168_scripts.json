@@ -64,5 +64,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 544562,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T23:49:53.000Z",
+    "code_updated_at": "2025-08-03T23:49:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922168,
+        "name": "Mark Zinzow",
+        "created_at": "2022-06-05T04:11:52.000Z",
+        "url": "https://greasyfork.org/users/922168-mark-zinzow"
+      }
+    ],
+    "name": "Hide Temu \"Local\" Listings",
+    "description": "Hide any .EKDT7a3v container that contains the word \"local\" on Temu",
+    "url": "https://greasyfork.org/scripts/544562-hide-temu-local-listings",
+    "code_url": "https://update.greasyfork.org/scripts/544562/Hide%20Temu%20%22Local%22%20Listings.user.js",
+    "code_size": 1881,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510623,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-28T17:25:11.000Z",
+    "code_updated_at": "2024-09-28T17:25:10.000Z",
+    "namespace": "https://greasyfork.org/en/users/922168-mark-zinzow",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 922168,
+        "name": "Mark Zinzow",
+        "created_at": "2022-06-05T04:11:52.000Z",
+        "url": "https://greasyfork.org/users/922168-mark-zinzow"
+      }
+    ],
+    "name": "Fronius Celsius to Fahrenheit and Windspeed Converter",
+    "description": "Convert EU units to U.S. 2024-09-28",
+    "url": "https://greasyfork.org/scripts/510623-fronius-celsius-to-fahrenheit-and-windspeed-converter",
+    "code_url": "https://update.greasyfork.org/scripts/510623/Fronius%20Celsius%20to%20Fahrenheit%20and%20Windspeed%20Converter.user.js",
+    "code_size": 2580,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

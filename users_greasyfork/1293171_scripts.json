@@ -31,5 +31,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 527582,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-20T17:12:24.000Z",
+    "code_updated_at": "2025-02-20T17:12:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293171,
+        "name": "Matt32r98we",
+        "created_at": "2024-04-26T01:05:09.000Z",
+        "url": "https://greasyfork.org/users/1293171-matt32r98we"
+      }
+    ],
+    "name": "TradingView Measure Button Click with F1 (desktop)",
+    "description": "Click the \"Measure\" button when F1 is pressed on TradingView",
+    "url": "https://greasyfork.org/scripts/527582-tradingview-measure-button-click-with-f1-desktop",
+    "code_url": "https://update.greasyfork.org/scripts/527582/TradingView%20Measure%20Button%20Click%20with%20F1%20%28desktop%29.user.js",
+    "code_size": 1479,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525762,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-03T14:38:04.000Z",
+    "code_updated_at": "2025-04-04T05:23:31.000Z",
+    "namespace": "https://greasyfork.org/users/424058",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293171,
+        "name": "Matt32r98we",
+        "created_at": "2024-04-26T01:05:09.000Z",
+        "url": "https://greasyfork.org/users/1293171-matt32r98we"
+      }
+    ],
+    "name": "Up-down arrows buttons (Mobile)",
+    "description": "Creates up-down arrows buttons on chart",
+    "url": "https://greasyfork.org/scripts/525762-up-down-arrows-buttons-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/525762/Up-down%20arrows%20buttons%20%28Mobile%29.user.js",
+    "code_size": 4510,
+    "license": null,
+    "version": "2.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525288,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-29T23:30:33.000Z",
+    "code_updated_at": "2025-01-29T23:30:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293171,
+        "name": "Matt32r98we",
+        "created_at": "2024-04-26T01:05:09.000Z",
+        "url": "https://greasyfork.org/users/1293171-matt32r98we"
+      }
+    ],
+    "name": "Tradingview Hide Unwanted Broker List Buttons",
+    "description": "Hide buttons except those for TradeStation, OANDA, and Paper on TradingView",
+    "url": "https://greasyfork.org/scripts/525288-tradingview-hide-unwanted-broker-list-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/525288/Tradingview%20Hide%20Unwanted%20Broker%20List%20Buttons.user.js",
+    "code_size": 1494,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503239,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T21:51:26.000Z",
+    "code_updated_at": "2024-08-10T21:51:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293171,
+        "name": "Matt32r98we",
+        "created_at": "2024-04-26T01:05:09.000Z",
+        "url": "https://greasyfork.org/users/1293171-matt32r98we"
+      }
+    ],
+    "name": "Auto Scale Active Chart",
+    "description": "Press Control + A to auto scale the active chart in TradingView",
+    "url": "https://greasyfork.org/scripts/503239-auto-scale-active-chart",
+    "code_url": "https://update.greasyfork.org/scripts/503239/Auto%20Scale%20Active%20Chart.user.js",
+    "code_size": 1289,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

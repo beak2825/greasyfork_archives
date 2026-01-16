@@ -97,5 +97,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 548670,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-07T06:34:41.000Z",
+    "code_updated_at": "2025-09-07T06:34:41.000Z",
+    "namespace": "https://greasyfork.org/users/204955",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 204955,
+        "name": "GFgatus",
+        "created_at": "2018-08-14T18:23:50.000Z",
+        "url": "https://greasyfork.org/users/204955-gfgatus"
+      }
+    ],
+    "name": "NIKKE Switching position",
+    "description": "妮姬聯盟戰儀表板單位轉換，自動切換困難分頁 B→億, M→萬 + 「Day 2」tab",
+    "url": "https://greasyfork.org/scripts/548670-nikke-switching-position",
+    "code_url": "https://update.greasyfork.org/scripts/548670/NIKKE%20Switching%20position.user.js",
+    "code_size": 1864,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

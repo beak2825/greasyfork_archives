@@ -1,0 +1,59 @@
+{
+  "id": 542650,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-15T16:39:13.000Z",
+  "code_updated_at": "2025-07-15T16:39:12.000Z",
+  "namespace": "https://greasyfork.org/users/1495206",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1495206,
+      "name": "某王王",
+      "created_at": "2025-07-15T16:36:01.000Z",
+      "url": "https://greasyfork.org/users/1495206-%E6%9F%90%E7%8E%8B%E7%8E%8B",
+      "scripts": [
+        {
+          "id": 542650,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-15T16:39:13.000Z",
+          "code_updated_at": "2025-07-15T16:39:12.000Z",
+          "namespace": "https://greasyfork.org/users/1495206",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "通用ai插图脚本",
+          "description": "使用sd、novelai3、comfyui、std 配合ai在酒馆生成插图 以及酒馆正则管理",
+          "url": "https://greasyfork.org/scripts/542650-%E9%80%9A%E7%94%A8ai%E6%8F%92%E5%9B%BE%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/542650/%E9%80%9A%E7%94%A8ai%E6%8F%92%E5%9B%BE%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 171393,
+          "license": "GPL",
+          "version": "0.0.5",
+          "locale": "pt",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "通用ai插图脚本",
+  "description": "使用sd、novelai3、comfyui、std 配合ai在酒馆生成插图 以及酒馆正则管理",
+  "url": "https://greasyfork.org/scripts/542650-%E9%80%9A%E7%94%A8ai%E6%8F%92%E5%9B%BE%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/542650/%E9%80%9A%E7%94%A8ai%E6%8F%92%E5%9B%BE%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 171393,
+  "license": "GPL",
+  "version": "0.0.5",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

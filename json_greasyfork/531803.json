@@ -1,0 +1,33 @@
+{
+  "id": 531803,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-04T06:25:48.000Z",
+  "code_updated_at": "2025-11-13T13:14:13.000Z",
+  "namespace": "http://empiriecom.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453824,
+      "name": "senritsu",
+      "created_at": "2025-04-04T06:16:42.000Z",
+      "url": "https://greasyfork.org/users/1453824-senritsu"
+    }
+  ],
+  "name": "dormakaba empirie-fier",
+  "description": "Make dormakaba more usable",
+  "url": "https://greasyfork.org/scripts/531803-dormakaba-empirie-fier",
+  "code_url": "https://update.greasyfork.org/scripts/531803/dormakaba%20empirie-fier.user.js",
+  "code_size": 16978,
+  "license": "MIT License",
+  "version": "2025-11-13",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

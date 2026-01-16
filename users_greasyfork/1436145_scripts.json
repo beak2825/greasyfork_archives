@@ -1,0 +1,134 @@
+[
+  {
+    "id": 527332,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T13:04:08.000Z",
+    "code_updated_at": "2025-02-18T13:04:08.000Z",
+    "namespace": "https://greasyfork.org/users/725966",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436145,
+        "name": "fajay",
+        "created_at": "2025-02-17T14:53:15.000Z",
+        "url": "https://greasyfork.org/users/1436145-fajay"
+      }
+    ],
+    "name": "Nova Hill Timezone modifier",
+    "description": "Modify timezones on forums posts",
+    "url": "https://greasyfork.org/scripts/527332-nova-hill-timezone-modifier",
+    "code_url": "https://update.greasyfork.org/scripts/527332/Nova%20Hill%20Timezone%20modifier.user.js",
+    "code_size": 6179,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527330,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T13:00:37.000Z",
+    "code_updated_at": "2025-02-18T13:00:37.000Z",
+    "namespace": "https://greasyfork.org/users/1436145",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436145,
+        "name": "fajay",
+        "created_at": "2025-02-17T14:53:15.000Z",
+        "url": "https://greasyfork.org/users/1436145-fajay"
+      }
+    ],
+    "name": "Nova Hill Refresh on error",
+    "description": "Automatically refreshes when encountering an error",
+    "url": "https://greasyfork.org/scripts/527330-nova-hill-refresh-on-error",
+    "code_url": "https://update.greasyfork.org/scripts/527330/Nova%20Hill%20Refresh%20on%20error.user.js",
+    "code_size": 404,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527325,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T12:44:50.000Z",
+    "code_updated_at": "2025-02-18T12:44:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436145,
+        "name": "fajay",
+        "created_at": "2025-02-17T14:53:15.000Z",
+        "url": "https://greasyfork.org/users/1436145-fajay"
+      }
+    ],
+    "name": "Nova Hill Posts Per Day",
+    "description": "Tells you (on average) how much a user posts per day",
+    "url": "https://greasyfork.org/scripts/527325-nova-hill-posts-per-day",
+    "code_url": "https://update.greasyfork.org/scripts/527325/Nova%20Hill%20Posts%20Per%20Day.user.js",
+    "code_size": 1633,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527234,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-17T14:56:37.000Z",
+    "code_updated_at": "2025-02-17T14:56:37.000Z",
+    "namespace": "https://nova-hill.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436145,
+        "name": "fajay",
+        "created_at": "2025-02-17T14:53:15.000Z",
+        "url": "https://greasyfork.org/users/1436145-fajay"
+      }
+    ],
+    "name": "Nova Hill Obsidian",
+    "description": "Makes the Nova-Hill theme extra dark so its easy on your eyes.",
+    "url": "https://greasyfork.org/scripts/527234-nova-hill-obsidian",
+    "code_url": "https://update.greasyfork.org/scripts/527234/Nova%20Hill%20Obsidian.user.js",
+    "code_size": 1863,
+    "license": null,
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

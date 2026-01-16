@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540581,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-24T05:54:45.000Z",
+    "code_updated_at": "2025-06-24T05:54:45.000Z",
+    "namespace": "--",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1382956,
+        "name": "Abara Cadabra",
+        "created_at": "2024-10-19T01:17:49.000Z",
+        "url": "https://greasyfork.org/users/1382956-abara-cadabra"
+      }
+    ],
+    "name": "Instantly join your private server",
+    "description": "-0",
+    "url": "https://greasyfork.org/scripts/540581-instantly-join-your-private-server",
+    "code_url": "https://update.greasyfork.org/scripts/540581/Instantly%20join%20your%20private%20server.user.js",
+    "code_size": 4111,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

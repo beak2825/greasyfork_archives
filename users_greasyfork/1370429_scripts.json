@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509315,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-20T04:26:58.000Z",
+    "code_updated_at": "2024-09-20T06:58:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1370429,
+        "name": "Homiewrecker",
+        "created_at": "2024-09-20T04:16:09.000Z",
+        "url": "https://greasyfork.org/users/1370429-homiewrecker"
+      }
+    ],
+    "name": "BSV (Battle Stats Viewer) with TornStats and YATA Integration",
+    "description": "Fetch and display combined battle stats for users in Torn factions, profiles, and other pages, with TornStats and YATA integration.",
+    "url": "https://greasyfork.org/scripts/509315-bsv-battle-stats-viewer-with-tornstats-and-yata-integration",
+    "code_url": "https://update.greasyfork.org/scripts/509315/BSV%20%28Battle%20Stats%20Viewer%29%20with%20TornStats%20and%20YATA%20Integration.user.js",
+    "code_size": 11566,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

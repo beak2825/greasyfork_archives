@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 524527,
+    "daily_installs": 1,
+    "total_installs": 416,
+    "fan_score": "21.9",
+    "good_ratings": 1,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2025-01-22T13:08:20.000Z",
+    "code_updated_at": "2025-11-08T08:45:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426113,
+        "name": "xjy666a",
+        "created_at": "2025-01-22T12:13:44.000Z",
+        "url": "https://greasyfork.org/users/1426113-xjy666a"
+      }
+    ],
+    "name": "网站URL简化|去除杂乱参数",
+    "description": "自动清理必应搜索、B站视频、百度搜索、KIMI AI、360搜索、CSDN博客和搜狗搜索等的URL中的多余参数，优化浏览体验",
+    "url": "https://greasyfork.org/scripts/524527-%E7%BD%91%E7%AB%99url%E7%AE%80%E5%8C%96-%E5%8E%BB%E9%99%A4%E6%9D%82%E4%B9%B1%E5%8F%82%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/524527/%E7%BD%91%E7%AB%99URL%E7%AE%80%E5%8C%96%7C%E5%8E%BB%E9%99%A4%E6%9D%82%E4%B9%B1%E5%8F%82%E6%95%B0.user.js",
+    "code_size": 134321,
+    "license": "MIT License",
+    "version": "3.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

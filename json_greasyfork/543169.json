@@ -1,0 +1,33 @@
+{
+  "id": 543169,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-21T02:04:24.000Z",
+  "code_updated_at": "2025-07-21T02:14:05.000Z",
+  "namespace": "https://greasyfork.org/users/YOUR-GREASYFORK-USER-ID",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1496784,
+      "name": "Pentax",
+      "created_at": "2025-07-21T02:02:06.000Z",
+      "url": "https://greasyfork.org/users/1496784-pentax"
+    }
+  ],
+  "name": "Torn.com - Item Market Deal Finder",
+  "description": "Highlights items on Torn.com's Item Market that are significantly below their average market value (via Torn API).",
+  "url": "https://greasyfork.org/scripts/543169-torn-com-item-market-deal-finder",
+  "code_url": "https://update.greasyfork.org/scripts/543169/Torncom%20-%20Item%20Market%20Deal%20Finder.user.js",
+  "code_size": 9347,
+  "license": null,
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

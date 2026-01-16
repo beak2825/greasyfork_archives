@@ -1,0 +1,134 @@
+[
+  {
+    "id": 545700,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-13T13:54:11.000Z",
+    "code_updated_at": "2025-08-13T13:54:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503867,
+        "name": "S E N S E",
+        "created_at": "2025-08-11T15:46:36.000Z",
+        "url": "https://greasyfork.org/users/1503867-s-e-n-s-e"
+      }
+    ],
+    "name": "CellCraft/Agma Voice Chat P2P",
+    "description": "Voice chat for CellCraft or Agma with friends (P2P via WebRTC + public signaling)",
+    "url": "https://greasyfork.org/scripts/545700-cellcraft-agma-voice-chat-p2p",
+    "code_url": "https://update.greasyfork.org/scripts/545700/CellCraftAgma%20Voice%20Chat%20P2P.user.js",
+    "code_size": 4058,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545513,
+    "daily_installs": 0,
+    "total_installs": 58,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T04:59:25.000Z",
+    "code_updated_at": "2025-08-12T04:59:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503867,
+        "name": "S E N S E",
+        "created_at": "2025-08-11T15:46:36.000Z",
+        "url": "https://greasyfork.org/users/1503867-s-e-n-s-e"
+      }
+    ],
+    "name": "Agma.io Helper + Freeze + FPS Boost",
+    "description": "Adds free freeze, FPS boost, zoom, and menu for Agma.io",
+    "url": "https://greasyfork.org/scripts/545513-agma-io-helper-freeze-fps-boost",
+    "code_url": "https://update.greasyfork.org/scripts/545513/Agmaio%20Helper%20%2B%20Freeze%20%2B%20FPS%20Boost.user.js",
+    "code_size": 3828,
+    "license": "S E N S E",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545510,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T04:50:24.000Z",
+    "code_updated_at": "2025-08-12T04:51:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503867,
+        "name": "S E N S E",
+        "created_at": "2025-08-11T15:46:36.000Z",
+        "url": "https://greasyfork.org/users/1503867-s-e-n-s-e"
+      }
+    ],
+    "name": "CellCraft FPS Boost with Menu",
+    "description": "FPS boost for CellCraft by disabling effects + adding a toggle menu + S E N S E branding",
+    "url": "https://greasyfork.org/scripts/545510-cellcraft-fps-boost-with-menu",
+    "code_url": "https://update.greasyfork.org/scripts/545510/CellCraft%20FPS%20Boost%20with%20Menu.user.js",
+    "code_size": 3196,
+    "license": "S E N S E",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 545439,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-11T16:12:32.000Z",
+    "code_updated_at": "2025-08-11T16:12:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503867,
+        "name": "S E N S E",
+        "created_at": "2025-08-11T15:46:36.000Z",
+        "url": "https://greasyfork.org/users/1503867-s-e-n-s-e"
+      }
+    ],
+    "name": "Agma.io Infinite Mass & Skin Changer Mod",
+    "description": "Infinite mass, skin changer, and bypass chat censor mod for Agma.io - Author: S E N S E",
+    "url": "https://greasyfork.org/scripts/545439-agma-io-infinite-mass-skin-changer-mod",
+    "code_url": "https://update.greasyfork.org/scripts/545439/Agmaio%20Infinite%20Mass%20%20Skin%20Changer%20Mod.user.js",
+    "code_size": 5055,
+    "license": "S E N S E",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

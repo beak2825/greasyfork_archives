@@ -1,0 +1,59 @@
+{
+  "id": 497464,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-09T16:37:10.000Z",
+  "code_updated_at": "2024-07-03T12:32:40.000Z",
+  "namespace": "https://greasyfork.org/users/1312904",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1312904,
+      "name": "Jydis",
+      "created_at": "2024-06-05T13:10:40.000Z",
+      "url": "https://greasyfork.org/users/1312904-jydis",
+      "scripts": [
+        {
+          "id": 497352,
+          "daily_installs": 0,
+          "total_installs": 12,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-08T11:49:23.000Z",
+          "code_updated_at": "2024-06-08T11:49:22.000Z",
+          "namespace": "https://greasyfork.org/users/1312904",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Eruda Defaults",
+          "description": "Set default settings across sites for the Eruda console",
+          "url": "https://greasyfork.org/scripts/497352-eruda-defaults",
+          "code_url": "https://update.greasyfork.org/scripts/497352/Eruda%20Defaults.user.js",
+          "code_size": 384,
+          "license": "MIT License",
+          "version": "0.0.1.20240608114922",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Whale Dark",
+  "description": "Revert overeager dark theme",
+  "url": "https://greasyfork.org/scripts/497464-whale-dark",
+  "code_url": "https://update.greasyfork.org/scripts/497464/Whale%20Dark.user.js",
+  "code_size": 776,
+  "license": null,
+  "version": "0.0.1.20240703123240",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

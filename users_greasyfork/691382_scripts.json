@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551223,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-01T07:35:33.000Z",
+    "code_updated_at": "2025-10-01T07:35:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 691382,
+        "name": "蓝色白菜",
+        "created_at": "2020-09-30T10:13:37.000Z",
+        "url": "https://greasyfork.org/users/691382-%E8%93%9D%E8%89%B2%E7%99%BD%E8%8F%9C"
+      }
+    ],
+    "name": "蓝白-棕色尘埃2消息页面布局优化",
+    "description": "棕色尘埃2消息页面布局优化",
+    "url": "https://greasyfork.org/scripts/551223-%E8%93%9D%E7%99%BD-%E6%A3%95%E8%89%B2%E5%B0%98%E5%9F%832%E6%B6%88%E6%81%AF%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/551223/%E8%93%9D%E7%99%BD-%E6%A3%95%E8%89%B2%E5%B0%98%E5%9F%832%E6%B6%88%E6%81%AF%E9%A1%B5%E9%9D%A2%E5%B8%83%E5%B1%80%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 8466,
+    "license": "MIT License",
+    "version": "2025-07-11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 508782,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T03:53:18.000Z",
+    "code_updated_at": "2024-09-17T03:53:18.000Z",
+    "namespace": "设置已看",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 691382,
+        "name": "蓝色白菜",
+        "created_at": "2020-09-30T10:13:37.000Z",
+        "url": "https://greasyfork.org/users/691382-%E8%93%9D%E8%89%B2%E7%99%BD%E8%8F%9C"
+      }
+    ],
+    "name": "btnull设置已看",
+    "description": "btnull设置已看，用来找电影",
+    "url": "https://greasyfork.org/scripts/508782-btnull%E8%AE%BE%E7%BD%AE%E5%B7%B2%E7%9C%8B",
+    "code_url": "https://update.greasyfork.org/scripts/508782/btnull%E8%AE%BE%E7%BD%AE%E5%B7%B2%E7%9C%8B.user.js",
+    "code_size": 9088,
+    "license": "GPLv3",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

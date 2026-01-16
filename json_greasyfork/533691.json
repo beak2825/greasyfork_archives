@@ -1,0 +1,59 @@
+{
+  "id": 533691,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-23T05:43:38.000Z",
+  "code_updated_at": "2025-04-23T05:43:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461217,
+      "name": "plasma8k",
+      "created_at": "2025-04-23T05:41:22.000Z",
+      "url": "https://greasyfork.org/users/1461217-plasma8k",
+      "scripts": [
+        {
+          "id": 533691,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-23T05:43:38.000Z",
+          "code_updated_at": "2025-04-23T05:43:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Auto Heart Comments",
+          "description": "Automatically hearts comments on your YouTube videos",
+          "url": "https://greasyfork.org/scripts/533691-youtube-auto-heart-comments",
+          "code_url": "https://update.greasyfork.org/scripts/533691/YouTube%20Auto%20Heart%20Comments.user.js",
+          "code_size": 16885,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Auto Heart Comments",
+  "description": "Automatically hearts comments on your YouTube videos",
+  "url": "https://greasyfork.org/scripts/533691-youtube-auto-heart-comments",
+  "code_url": "https://update.greasyfork.org/scripts/533691/YouTube%20Auto%20Heart%20Comments.user.js",
+  "code_size": 16885,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

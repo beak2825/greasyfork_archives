@@ -1,0 +1,59 @@
+{
+  "id": 545944,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T08:43:41.000Z",
+  "code_updated_at": "2025-08-16T06:39:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505234,
+      "name": "who404",
+      "created_at": "2025-08-15T08:23:33.000Z",
+      "url": "https://greasyfork.org/users/1505234-who404",
+      "scripts": [
+        {
+          "id": 545944,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-15T08:43:41.000Z",
+          "code_updated_at": "2025-08-16T06:39:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "对话完成提示器(AI Moinitor)",
+          "description": "监测AI聊天生成是否完成并通知提醒（带音效选择）",
+          "url": "https://greasyfork.org/scripts/545944-%E5%AF%B9%E8%AF%9D%E5%AE%8C%E6%88%90%E6%8F%90%E7%A4%BA%E5%99%A8-ai-moinitor",
+          "code_url": "https://update.greasyfork.org/scripts/545944/%E5%AF%B9%E8%AF%9D%E5%AE%8C%E6%88%90%E6%8F%90%E7%A4%BA%E5%99%A8%28AI%20Moinitor%29.user.js",
+          "code_size": 25045,
+          "license": "GNU General Public License v3.0 or later",
+          "version": "3.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "对话完成提示器(AI Moinitor)",
+  "description": "监测AI聊天生成是否完成并通知提醒（带音效选择）",
+  "url": "https://greasyfork.org/scripts/545944-%E5%AF%B9%E8%AF%9D%E5%AE%8C%E6%88%90%E6%8F%90%E7%A4%BA%E5%99%A8-ai-moinitor",
+  "code_url": "https://update.greasyfork.org/scripts/545944/%E5%AF%B9%E8%AF%9D%E5%AE%8C%E6%88%90%E6%8F%90%E7%A4%BA%E5%99%A8%28AI%20Moinitor%29.user.js",
+  "code_size": 25045,
+  "license": "GNU General Public License v3.0 or later",
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

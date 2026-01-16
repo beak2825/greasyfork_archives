@@ -1,0 +1,59 @@
+{
+  "id": 543823,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-28T03:14:21.000Z",
+  "code_updated_at": "2025-07-28T03:28:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 681086,
+      "name": "Mhvandyke",
+      "created_at": "2020-08-20T03:43:39.000Z",
+      "url": "https://greasyfork.org/users/681086-mhvandyke",
+      "scripts": [
+        {
+          "id": 428469,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-06-25T20:03:11.000Z",
+          "code_updated_at": "2021-06-25T20:03:10.000Z",
+          "namespace": "GeorgeBailey",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Copy PMs FreeForums",
+          "description": "GeorgeBailey",
+          "url": "https://greasyfork.org/scripts/428469-copy-pms-freeforums",
+          "code_url": "https://update.greasyfork.org/scripts/428469/Copy%20PMs%20FreeForums.user.js",
+          "code_size": 3102,
+          "license": null,
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GeorgeBailey Reddit",
+  "description": "Adds reddit features to mafiascum",
+  "url": "https://greasyfork.org/scripts/543823-georgebailey-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/543823/GeorgeBailey%20Reddit.user.js",
+  "code_size": 7746,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

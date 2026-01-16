@@ -1,0 +1,33 @@
+{
+  "id": 515048,
+  "daily_installs": 1,
+  "total_installs": 136,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-10-31T13:23:14.000Z",
+  "code_updated_at": "2024-11-30T04:36:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1383472,
+      "name": "tg4567",
+      "created_at": "2024-10-20T05:35:04.000Z",
+      "url": "https://greasyfork.org/users/1383472-tg4567"
+    }
+  ],
+  "name": "Telegram 无限制转发删除（使用火狐浏览器有效）",
+  "description": "Telegram 突破按钮限制（转发与删除）脚本，适合网页端telegram使用。安装该脚本插件，建议使用火狐！chrome内核浏览器无效！",
+  "url": "https://greasyfork.org/scripts/515048-telegram-%E6%97%A0%E9%99%90%E5%88%B6%E8%BD%AC%E5%8F%91%E5%88%A0%E9%99%A4-%E4%BD%BF%E7%94%A8%E7%81%AB%E7%8B%90%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9C%89%E6%95%88",
+  "code_url": "https://update.greasyfork.org/scripts/515048/Telegram%20%E6%97%A0%E9%99%90%E5%88%B6%E8%BD%AC%E5%8F%91%E5%88%A0%E9%99%A4%EF%BC%88%E4%BD%BF%E7%94%A8%E7%81%AB%E7%8B%90%E6%B5%8F%E8%A7%88%E5%99%A8%E6%9C%89%E6%95%88%EF%BC%89.user.js",
+  "code_size": 1504,
+  "license": "GNU GPLv3",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

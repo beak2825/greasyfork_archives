@@ -1,0 +1,59 @@
+{
+  "id": 538725,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-07T16:45:58.000Z",
+  "code_updated_at": "2025-06-07T16:45:58.000Z",
+  "namespace": "https://greasyfork.org/users/1461615",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461615,
+      "name": "Weierstras-s",
+      "created_at": "2025-04-24T08:25:30.000Z",
+      "url": "https://greasyfork.org/users/1461615-weierstras-s",
+      "scripts": [
+        {
+          "id": 536205,
+          "daily_installs": 2,
+          "total_installs": 1360,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-05-16T09:43:34.000Z",
+          "code_updated_at": "2025-06-15T14:34:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "[银河奶牛]康康运气",
+          "description": "更详细的统计数据",
+          "url": "https://greasyfork.org/scripts/536205-%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B-%E5%BA%B7%E5%BA%B7%E8%BF%90%E6%B0%94",
+          "code_url": "https://update.greasyfork.org/scripts/536205/%5B%E9%93%B6%E6%B2%B3%E5%A5%B6%E7%89%9B%5D%E5%BA%B7%E5%BA%B7%E8%BF%90%E6%B0%94.user.js",
+          "code_size": 373862,
+          "license": "MIT License",
+          "version": "0.1.13",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "[DEBUG]WebSocket日志查看器",
+  "description": "更详细的统计数据",
+  "url": "https://greasyfork.org/scripts/538725-debug-websocket%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/538725/%5BDEBUG%5DWebSocket%E6%97%A5%E5%BF%97%E6%9F%A5%E7%9C%8B%E5%99%A8.user.js",
+  "code_size": 3050,
+  "license": "MIT License",
+  "version": "0.1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

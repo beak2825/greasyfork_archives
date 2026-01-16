@@ -1,0 +1,33 @@
+{
+  "id": 550925,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-28T05:14:18.000Z",
+  "code_updated_at": "2025-09-28T05:14:18.000Z",
+  "namespace": "Open in self/new tab.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453447,
+      "name": "恋恋Sama",
+      "created_at": "2025-04-03T04:48:29.000Z",
+      "url": "https://greasyfork.org/users/1453447-%E6%81%8B%E6%81%8Bsama"
+    }
+  ],
+  "name": "链接地址全在【当前/新建】标签页中打开（翻页除外）",
+  "description": "控制链接在当前或新标签页打开，分页链接始终在当前页打开// ==/UserScript==",
+  "url": "https://greasyfork.org/scripts/550925-%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E5%85%A8%E5%9C%A8-%E5%BD%93%E5%89%8D-%E6%96%B0%E5%BB%BA-%E6%A0%87%E7%AD%BE%E9%A1%B5%E4%B8%AD%E6%89%93%E5%BC%80-%E7%BF%BB%E9%A1%B5%E9%99%A4%E5%A4%96",
+  "code_url": "https://update.greasyfork.org/scripts/550925/%E9%93%BE%E6%8E%A5%E5%9C%B0%E5%9D%80%E5%85%A8%E5%9C%A8%E3%80%90%E5%BD%93%E5%89%8D%E6%96%B0%E5%BB%BA%E3%80%91%E6%A0%87%E7%AD%BE%E9%A1%B5%E4%B8%AD%E6%89%93%E5%BC%80%EF%BC%88%E7%BF%BB%E9%A1%B5%E9%99%A4%E5%A4%96%EF%BC%89.user.js",
+  "code_size": 2601,
+  "license": null,
+  "version": "0.0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

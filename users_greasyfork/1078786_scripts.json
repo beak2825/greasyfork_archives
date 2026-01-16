@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497480,
+    "daily_installs": 0,
+    "total_installs": 175,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-06-10T00:06:58.000Z",
+    "code_updated_at": "2025-12-15T07:13:45.000Z",
+    "namespace": "https://github.com/amcginn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078786,
+        "name": "amcginn",
+        "created_at": "2023-05-14T04:12:21.000Z",
+        "url": "https://greasyfork.org/users/1078786-amcginn"
+      }
+    ],
+    "name": "Show Google Image Size",
+    "description": "Add image sizes to Google Image search results.",
+    "url": "https://greasyfork.org/scripts/497480-show-google-image-size",
+    "code_url": "https://update.greasyfork.org/scripts/497480/Show%20Google%20Image%20Size.user.js",
+    "code_size": 2833,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

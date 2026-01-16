@@ -1,0 +1,68 @@
+[
+  {
+    "id": 536612,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-20T14:08:17.000Z",
+    "code_updated_at": "2025-05-20T14:08:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363521,
+        "name": "Markisoke",
+        "created_at": "2024-09-05T14:52:01.000Z",
+        "url": "https://greasyfork.org/users/1363521-markisoke"
+      }
+    ],
+    "name": "Tweakers PriceGraph Mover",
+    "description": "Move priceGraph below listings",
+    "url": "https://greasyfork.org/scripts/536612-tweakers-pricegraph-mover",
+    "code_url": "https://update.greasyfork.org/scripts/536612/Tweakers%20PriceGraph%20Mover.user.js",
+    "code_size": 2026,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506981,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-05T14:53:37.000Z",
+    "code_updated_at": "2024-09-05T14:53:37.000Z",
+    "namespace": "https://tweakers.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363521,
+        "name": "Markisoke",
+        "created_at": "2024-09-05T14:52:01.000Z",
+        "url": "https://greasyfork.org/users/1363521-markisoke"
+      }
+    ],
+    "name": "Tweakers negatief comments automatisch uitklappen",
+    "description": "Automatically expand negative comments and append URL params on Tweakers.net articles.",
+    "url": "https://greasyfork.org/scripts/506981-tweakers-negatief-comments-automatisch-uitklappen",
+    "code_url": "https://update.greasyfork.org/scripts/506981/Tweakers%20negatief%20comments%20automatisch%20uitklappen.user.js",
+    "code_size": 1026,
+    "license": null,
+    "version": "2024-09-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

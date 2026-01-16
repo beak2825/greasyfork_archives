@@ -1,0 +1,33 @@
+{
+  "id": 531687,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T08:10:38.000Z",
+  "code_updated_at": "2025-04-03T08:20:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433480,
+      "name": "スマホオタクにわか",
+      "created_at": "2025-02-10T05:56:01.000Z",
+      "url": "https://greasyfork.org/users/1433480-%E3%82%B9%E3%83%9E%E3%83%9B%E3%82%AA%E3%82%BF%E3%82%AF%E3%81%AB%E3%82%8F%E3%81%8B"
+    }
+  ],
+  "name": "Braveに切り替え j",
+  "description": "Execute UserScript",
+  "url": "https://greasyfork.org/scripts/531687-brave%E3%81%AB%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88-j",
+  "code_url": "https://update.greasyfork.org/scripts/531687/Brave%E3%81%AB%E5%88%87%E3%82%8A%E6%9B%BF%E3%81%88%20j.user.js",
+  "code_size": 958,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

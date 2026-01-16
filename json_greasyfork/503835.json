@@ -1,0 +1,34 @@
+{
+  "id": 503835,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-16T11:13:50.000Z",
+  "code_updated_at": "2024-08-16T11:13:50.000Z",
+  "namespace": "https://greasyfork.org/Premixed-button-clicker-random",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291442,
+      "name": "jimbootie",
+      "created_at": "2024-04-21T18:51:51.000Z",
+      "url": "https://greasyfork.org/users/1291442-jimbootie",
+      "scripts": []
+    }
+  ],
+  "name": "Button Clicker Random",
+  "description": "Clicks a button at random intervalsPremi",
+  "url": "https://greasyfork.org/scripts/503835-button-clicker-random",
+  "code_url": "https://update.greasyfork.org/scripts/503835/Button%20Clicker%20Random.user.js",
+  "code_size": 828,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

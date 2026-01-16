@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553028,
+    "daily_installs": 11,
+    "total_installs": 504,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-18T17:42:20.000Z",
+    "code_updated_at": "2025-10-18T17:42:20.000Z",
+    "namespace": "xdcheats.poxel.io.friendlycheats",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527364,
+        "name": "Xdmad_or_masha",
+        "created_at": "2025-10-16T10:10:40.000Z",
+        "url": "https://greasyfork.org/users/1527364-xdmad-or-masha"
+      }
+    ],
+    "name": "XDcheats - Poxel.io - friendly cheats",
+    "description": "this cheats is not against TOS this mod will make you feel ccomfortable for you finger and much more by Xdmad or masha",
+    "url": "https://greasyfork.org/scripts/553028-xdcheats-poxel-io-friendly-cheats",
+    "code_url": "https://update.greasyfork.org/scripts/553028/XDcheats%20-%20Poxelio%20-%20friendly%20cheats.user.js",
+    "code_size": 8881,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

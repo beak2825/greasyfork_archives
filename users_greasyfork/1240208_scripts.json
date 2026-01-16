@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519793,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-04T22:01:49.000Z",
+    "code_updated_at": "2024-12-04T22:01:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1240208,
+        "name": "Руслан Кричка",
+        "created_at": "2023-12-28T07:30:49.000Z",
+        "url": "https://greasyfork.org/users/1240208-%D1%80%D1%83%D1%81%D0%BB%D0%B0%D0%BD-%D0%BA%D1%80%D0%B8%D1%87%D0%BA%D0%B0"
+      }
+    ],
+    "name": "Скрипт для ГС ОПГ TVER",
+    "description": "Скрипт для ГС/ЗГС направлений",
+    "url": "https://greasyfork.org/scripts/519793-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B3%D1%81-%D0%BE%D0%BF%D0%B3-tver",
+    "code_url": "https://update.greasyfork.org/scripts/519793/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%93%D0%A1%20%D0%9E%D0%9F%D0%93%20TVER.user.js",
+    "code_size": 21621,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "uk",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

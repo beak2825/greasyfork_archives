@@ -1,0 +1,134 @@
+[
+  {
+    "id": 529267,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-09T08:06:19.000Z",
+    "code_updated_at": "2025-03-10T08:41:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/htrnguyen/Text-Summarizer-with-Gemini-API/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1418328,
+        "name": "htrnguyen",
+        "created_at": "2025-01-01T15:53:59.000Z",
+        "url": "https://greasyfork.org/users/1418328-htrnguyen"
+      }
+    ],
+    "name": "Text Summarizer with Gemini API",
+    "description": "Summarize selected text using Gemini 2.0 Flash API with enhanced features",
+    "url": "https://greasyfork.org/scripts/529267-text-summarizer-with-gemini-api",
+    "code_url": "https://update.greasyfork.org/scripts/529267/Text%20Summarizer%20with%20Gemini%20API.user.js",
+    "code_size": 27393,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522818,
+    "daily_installs": 1,
+    "total_installs": 148,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T13:46:03.000Z",
+    "code_updated_at": "2025-10-29T16:42:56.000Z",
+    "namespace": "https://github.com/htrnguyen/User-Scripts/tree/main/Unlock-Unlimited-Medium",
+    "support_url": "https://github.com/htrnguyen/User-Scripts/tree/main/Unlock-Unlimited-Medium/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1418328,
+        "name": "htrnguyen",
+        "created_at": "2025-01-01T15:53:59.000Z",
+        "url": "https://greasyfork.org/users/1418328-htrnguyen"
+      }
+    ],
+    "name": "Unlock Unlimited Medium",
+    "description": "Unlock all Medium-based articles via freedium.cfd with enhanced detection and performance optimizations",
+    "url": "https://greasyfork.org/scripts/522818-unlock-unlimited-medium",
+    "code_url": "https://update.greasyfork.org/scripts/522818/Unlock%20Unlimited%20Medium.user.js",
+    "code_size": 11969,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522571,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-02T08:49:09.000Z",
+    "code_updated_at": "2025-01-02T08:49:09.000Z",
+    "namespace": "https://github.com/htrnguyen/Coursera-Auto-Subtitle",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1418328,
+        "name": "htrnguyen",
+        "created_at": "2025-01-01T15:53:59.000Z",
+        "url": "https://greasyfork.org/users/1418328-htrnguyen"
+      }
+    ],
+    "name": "Coursera Auto Subtitle",
+    "description": "Automatically enables, enhances, and translates subtitles on Coursera. Features include a draggable icon, customizable language selection, and real-time translation using Google Translate.",
+    "url": "https://greasyfork.org/scripts/522571-coursera-auto-subtitle",
+    "code_url": "https://update.greasyfork.org/scripts/522571/Coursera%20Auto%20Subtitle.user.js",
+    "code_size": 10635,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522500,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-01T16:08:08.000Z",
+    "code_updated_at": "2025-01-02T04:10:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/htrnguyen/Network-Speed-Monitor/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1418328,
+        "name": "htrnguyen",
+        "created_at": "2025-01-01T15:53:59.000Z",
+        "url": "https://greasyfork.org/users/1418328-htrnguyen"
+      }
+    ],
+    "name": "Network Speed Monitor",
+    "description": "Hiển thị tốc độ mạng (download/upload) lên màn hình trong thời gian thực.",
+    "url": "https://greasyfork.org/scripts/522500-network-speed-monitor",
+    "code_url": "https://update.greasyfork.org/scripts/522500/Network%20Speed%20Monitor.user.js",
+    "code_size": 4453,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

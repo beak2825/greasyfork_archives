@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513502,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-22T09:22:03.000Z",
+    "code_updated_at": "2024-11-28T09:05:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1384486,
+        "name": "xichen233",
+        "created_at": "2024-10-22T09:00:30.000Z",
+        "url": "https://greasyfork.org/users/1384486-xichen233"
+      }
+    ],
+    "name": "自动化点击",
+    "description": "自动点击",
+    "url": "https://greasyfork.org/scripts/513502-%E8%87%AA%E5%8A%A8%E5%8C%96%E7%82%B9%E5%87%BB",
+    "code_url": "https://update.greasyfork.org/scripts/513502/%E8%87%AA%E5%8A%A8%E5%8C%96%E7%82%B9%E5%87%BB.user.js",
+    "code_size": 3531,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

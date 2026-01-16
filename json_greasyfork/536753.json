@@ -1,0 +1,59 @@
+{
+  "id": 536753,
+  "daily_installs": 0,
+  "total_installs": 83,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-21T22:15:59.000Z",
+  "code_updated_at": "2025-05-21T22:15:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473130,
+      "name": "xiao an ت",
+      "created_at": "2025-05-21T21:27:01.000Z",
+      "url": "https://greasyfork.org/users/1473130-xiao-an-%D8%AA",
+      "scripts": [
+        {
+          "id": 536753,
+          "daily_installs": 0,
+          "total_installs": 83,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-21T22:15:59.000Z",
+          "code_updated_at": "2025-05-21T22:15:59.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Telegram 繁體中文化 UI ( 網頁版 )",
+          "description": "將 Telegram Web UI 介面翻譯成繁體中文（ 包含更多設定選單 ）",
+          "url": "https://greasyfork.org/scripts/536753-telegram-%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87%E5%8C%96-ui-%E7%B6%B2%E9%A0%81%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/536753/Telegram%20%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87%E5%8C%96%20UI%20%28%20%E7%B6%B2%E9%A0%81%E7%89%88%20%29.user.js",
+          "code_size": 9531,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Telegram 繁體中文化 UI ( 網頁版 )",
+  "description": "將 Telegram Web UI 介面翻譯成繁體中文（ 包含更多設定選單 ）",
+  "url": "https://greasyfork.org/scripts/536753-telegram-%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87%E5%8C%96-ui-%E7%B6%B2%E9%A0%81%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/536753/Telegram%20%E7%B9%81%E9%AB%94%E4%B8%AD%E6%96%87%E5%8C%96%20UI%20%28%20%E7%B6%B2%E9%A0%81%E7%89%88%20%29.user.js",
+  "code_size": 9531,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

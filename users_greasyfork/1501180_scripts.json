@@ -1,0 +1,101 @@
+[
+  {
+    "id": 544559,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T23:26:43.000Z",
+    "code_updated_at": "2025-10-17T01:50:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501180,
+        "name": "abdelatif",
+        "created_at": "2025-08-03T09:59:51.000Z",
+        "url": "https://greasyfork.org/users/1501180-abdelatif"
+      }
+    ],
+    "name": "Letterboxd Watched & Watchlist Highlighter",
+    "description": "Highlights films that are marked as watched (green) or are in your watchlist (blue) on any Letterboxd page.",
+    "url": "https://greasyfork.org/scripts/544559-letterboxd-watched-watchlist-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/544559/Letterboxd%20Watched%20%20Watchlist%20Highlighter.user.js",
+    "code_size": 3089,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544501,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T10:17:29.000Z",
+    "code_updated_at": "2025-08-03T10:17:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501180,
+        "name": "abdelatif",
+        "created_at": "2025-08-03T09:59:51.000Z",
+        "url": "https://greasyfork.org/users/1501180-abdelatif"
+      }
+    ],
+    "name": "Letterboxd Batch watched Marker",
+    "description": "Marks all visible unwatched films as watched, with a small delay between each action, and then stops.",
+    "url": "https://greasyfork.org/scripts/544501-letterboxd-batch-watched-marker",
+    "code_url": "https://update.greasyfork.org/scripts/544501/Letterboxd%20Batch%20watched%20Marker.user.js",
+    "code_size": 4205,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544500,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-03T10:14:22.000Z",
+    "code_updated_at": "2025-08-03T10:14:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1501180,
+        "name": "abdelatif",
+        "created_at": "2025-08-03T09:59:51.000Z",
+        "url": "https://greasyfork.org/users/1501180-abdelatif"
+      }
+    ],
+    "name": "Letterboxd Batch Mark as Unwatched",
+    "description": "Marks all visible \"watched\" films as \"unwatched\" from a list/grid view.",
+    "url": "https://greasyfork.org/scripts/544500-letterboxd-batch-mark-as-unwatched",
+    "code_url": "https://update.greasyfork.org/scripts/544500/Letterboxd%20Batch%20Mark%20as%20Unwatched.user.js",
+    "code_size": 4362,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

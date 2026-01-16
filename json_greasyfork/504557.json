@@ -1,0 +1,34 @@
+{
+  "id": 504557,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-21T23:13:23.000Z",
+  "code_updated_at": "2025-09-23T00:32:28.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330004,
+      "name": "Kayleigh",
+      "created_at": "2024-07-08T04:45:53.000Z",
+      "url": "https://greasyfork.org/users/1330004-kayleigh",
+      "scripts": []
+    }
+  ],
+  "name": "Udemy Video Viewport Height",
+  "description": "Changes the max-height of the specified div on Udemy",
+  "url": "https://greasyfork.org/scripts/504557-udemy-video-viewport-height",
+  "code_url": "https://update.greasyfork.org/scripts/504557/Udemy%20Video%20Viewport%20Height.user.js",
+  "code_size": 1064,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

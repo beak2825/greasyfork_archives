@@ -30,6 +30,72 @@
     "version": "2025-12-02.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551728,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-06T06:49:37.000Z",
+    "code_updated_at": "2025-10-06T06:49:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385456,
+        "name": "KakkoiDev",
+        "created_at": "2024-10-24T08:43:11.000Z",
+        "url": "https://greasyfork.org/users/1385456-kakkoidev"
+      }
+    ],
+    "name": "Slack AI Translate",
+    "description": "Add English/Japanese translation button to Slack",
+    "url": "https://greasyfork.org/scripts/551728-slack-ai-translate",
+    "code_url": "https://update.greasyfork.org/scripts/551728/Slack%20AI%20Translate.user.js",
+    "code_size": 21146,
+    "license": "MIT License",
+    "version": "2025-05-29",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 513815,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T08:48:12.000Z",
+    "code_updated_at": "2024-11-07T07:34:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385456,
+        "name": "KakkoiDev",
+        "created_at": "2024-10-24T08:43:11.000Z",
+        "url": "https://greasyfork.org/users/1385456-kakkoidev"
+      }
+    ],
+    "name": "Gmeet++",
+    "description": "Add nice-to-have features to Gmeet meetings",
+    "url": "https://greasyfork.org/scripts/513815-gmeet",
+    "code_url": "https://update.greasyfork.org/scripts/513815/Gmeet%2B%2B.user.js",
+    "code_size": 8578,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

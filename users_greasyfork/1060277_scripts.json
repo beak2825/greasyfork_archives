@@ -1,0 +1,101 @@
+[
+  {
+    "id": 548007,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T07:48:06.000Z",
+    "code_updated_at": "2025-10-01T20:29:47.000Z",
+    "namespace": "https://github.com/TZFC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060277,
+        "name": "TZFC",
+        "created_at": "2023-04-14T18:46:06.000Z",
+        "url": "https://greasyfork.org/users/1060277-tzfc"
+      }
+    ],
+    "name": "Bilibili Video MP4 Copy",
+    "description": "Floating button + dropdown near toolbar; dark-mode readable; fetches all progressive MP4 qualities.",
+    "url": "https://greasyfork.org/scripts/548007-bilibili-video-mp4-copy",
+    "code_url": "https://update.greasyfork.org/scripts/548007/Bilibili%20Video%20MP4%20Copy.user.js",
+    "code_size": 12086,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 547981,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T03:14:46.000Z",
+    "code_updated_at": "2025-09-11T08:56:57.000Z",
+    "namespace": "https://github.com/TZFC",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060277,
+        "name": "TZFC",
+        "created_at": "2023-04-14T18:46:06.000Z",
+        "url": "https://greasyfork.org/users/1060277-tzfc"
+      }
+    ],
+    "name": "Bilibili Live URL Copy",
+    "description": "Dropdown lists QNs from current_qn + accept_qn. Default selection = lowest fMP4 QN. On copy, query Bilibili gateway with that QN to get the correct URL/host. Prefers HLS fMP4.",
+    "url": "https://greasyfork.org/scripts/547981-bilibili-live-url-copy",
+    "code_url": "https://update.greasyfork.org/scripts/547981/Bilibili%20Live%20URL%20Copy.user.js",
+    "code_size": 12638,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542478,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-13T18:07:32.000Z",
+    "code_updated_at": "2025-11-15T16:07:44.000Z",
+    "namespace": "https://github.com/TZFC/Danmaku-replace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060277,
+        "name": "TZFC",
+        "created_at": "2023-04-14T18:46:06.000Z",
+        "url": "https://greasyfork.org/users/1060277-tzfc"
+      }
+    ],
+    "name": "Danmaku replace",
+    "description": "Replace chosen substrings in outgoing Bilibili live-chat messages before they are sent.",
+    "url": "https://greasyfork.org/scripts/542478-danmaku-replace",
+    "code_url": "https://update.greasyfork.org/scripts/542478/Danmaku%20replace.user.js",
+    "code_size": 7555,
+    "license": "GNU General Public License v3.0 only",
+    "version": "5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

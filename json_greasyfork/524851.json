@@ -1,0 +1,59 @@
+{
+  "id": 524851,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-25T15:51:15.000Z",
+  "code_updated_at": "2025-01-25T15:51:15.000Z",
+  "namespace": "http://rachpt.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 175111,
+      "name": "rachpt",
+      "created_at": "2018-03-16T11:08:29.000Z",
+      "url": "https://greasyfork.org/users/175111-rachpt",
+      "scripts": [
+        {
+          "id": 450262,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-08-27T02:53:08.000Z",
+          "code_updated_at": "2022-08-28T04:36:06.000Z",
+          "namespace": "http://rachpt.cn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PT Signed",
+          "description": "PT 去签到",
+          "url": "https://greasyfork.org/scripts/450262-pt-signed",
+          "code_url": "https://update.greasyfork.org/scripts/450262/PT%20Signed.user.js",
+          "code_size": 940,
+          "license": "MIT License",
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google OAuth2 示例",
+  "description": "示例油猴脚本，展示如何实现 Google OAuth2 认证",
+  "url": "https://greasyfork.org/scripts/524851-google-oauth2-%E7%A4%BA%E4%BE%8B",
+  "code_url": "https://update.greasyfork.org/scripts/524851/Google%20OAuth2%20%E7%A4%BA%E4%BE%8B.user.js",
+  "code_size": 6144,
+  "license": null,
+  "version": "0.1",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

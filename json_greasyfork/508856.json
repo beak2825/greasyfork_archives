@@ -1,0 +1,59 @@
+{
+  "id": 508856,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-17T12:22:59.000Z",
+  "code_updated_at": "2024-09-17T12:22:58.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1369102,
+      "name": "oldhunterr",
+      "created_at": "2024-09-17T11:58:39.000Z",
+      "url": "https://greasyfork.org/users/1369102-oldhunterr",
+      "scripts": [
+        {
+          "id": 508856,
+          "daily_installs": 0,
+          "total_installs": 30,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-17T12:22:59.000Z",
+          "code_updated_at": "2024-09-17T12:22:58.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Music Bulk Remove",
+          "description": "Bulk remove songs from YouTube Music playlists and library",
+          "url": "https://greasyfork.org/scripts/508856-youtube-music-bulk-remove",
+          "code_url": "https://update.greasyfork.org/scripts/508856/YouTube%20Music%20Bulk%20Remove.user.js",
+          "code_size": 6068,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Music Bulk Remove",
+  "description": "Bulk remove songs from YouTube Music playlists and library",
+  "url": "https://greasyfork.org/scripts/508856-youtube-music-bulk-remove",
+  "code_url": "https://update.greasyfork.org/scripts/508856/YouTube%20Music%20Bulk%20Remove.user.js",
+  "code_size": 6068,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

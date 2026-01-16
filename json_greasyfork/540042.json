@@ -1,0 +1,34 @@
+{
+  "id": 540042,
+  "daily_installs": 0,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-19T18:23:29.000Z",
+  "code_updated_at": "2025-06-20T22:03:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1359352,
+      "name": "Vladyslav Svitlyi",
+      "created_at": "2024-08-28T14:00:42.000Z",
+      "url": "https://greasyfork.org/users/1359352-vladyslav-svitlyi",
+      "scripts": []
+    }
+  ],
+  "name": "Expert Portal Chat Timer Tech",
+  "description": "Timer for expert-portal.com chats with color indicator, inactivity warnings, and a little surprise.",
+  "url": "https://greasyfork.org/scripts/540042-expert-portal-chat-timer-tech",
+  "code_url": "https://update.greasyfork.org/scripts/540042/Expert%20Portal%20Chat%20Timer%20Tech.user.js",
+  "code_size": 11710,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

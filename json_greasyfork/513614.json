@@ -1,0 +1,59 @@
+{
+  "id": 513614,
+  "daily_installs": 0,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-23T03:22:22.000Z",
+  "code_updated_at": "2025-08-20T02:51:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1384831,
+      "name": "buhuixue",
+      "created_at": "2024-10-23T03:20:41.000Z",
+      "url": "https://greasyfork.org/users/1384831-buhuixue",
+      "scripts": [
+        {
+          "id": 513614,
+          "daily_installs": 0,
+          "total_installs": 39,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-23T03:22:22.000Z",
+          "code_updated_at": "2025-08-20T02:51:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "安培在线学习",
+          "description": "进入到学习界面点击",
+          "url": "https://greasyfork.org/scripts/513614-%E5%AE%89%E5%9F%B9%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0",
+          "code_url": "https://update.greasyfork.org/scripts/513614/%E5%AE%89%E5%9F%B9%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0.user.js",
+          "code_size": 6440,
+          "license": null,
+          "version": "2025-8-20",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "安培在线学习",
+  "description": "进入到学习界面点击",
+  "url": "https://greasyfork.org/scripts/513614-%E5%AE%89%E5%9F%B9%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0",
+  "code_url": "https://update.greasyfork.org/scripts/513614/%E5%AE%89%E5%9F%B9%E5%9C%A8%E7%BA%BF%E5%AD%A6%E4%B9%A0.user.js",
+  "code_size": 6440,
+  "license": null,
+  "version": "2025-8-20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 502419,
+  "daily_installs": 1,
+  "total_installs": 58,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-02T07:01:37.000Z",
+  "code_updated_at": "2024-08-02T07:01:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 823902,
+      "name": "ozyl",
+      "created_at": "2021-10-11T02:30:16.000Z",
+      "url": "https://greasyfork.org/users/823902-ozyl"
+    }
+  ],
+  "name": "移除文心一言搜索结果",
+  "description": "删除百度搜索结果的文心一言",
+  "url": "https://greasyfork.org/scripts/502419-%E7%A7%BB%E9%99%A4%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C",
+  "code_url": "https://update.greasyfork.org/scripts/502419/%E7%A7%BB%E9%99%A4%E6%96%87%E5%BF%83%E4%B8%80%E8%A8%80%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C.user.js",
+  "code_size": 998,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

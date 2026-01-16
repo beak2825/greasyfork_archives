@@ -1,0 +1,59 @@
+{
+  "id": 506241,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-01T13:10:16.000Z",
+  "code_updated_at": "2024-09-01T13:10:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1361450,
+      "name": "koisi",
+      "created_at": "2024-09-01T13:07:44.000Z",
+      "url": "https://greasyfork.org/users/1361450-koisi",
+      "scripts": [
+        {
+          "id": 506241,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-01T13:10:16.000Z",
+          "code_updated_at": "2024-09-01T13:10:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TF Youtube",
+          "description": "YouTube's popups? They don't bother you, and they definitely don't bother me.",
+          "url": "https://greasyfork.org/scripts/506241-tf-youtube",
+          "code_url": "https://update.greasyfork.org/scripts/506241/TF%20Youtube.user.js",
+          "code_size": 962,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TF Youtube",
+  "description": "YouTube's popups? They don't bother you, and they definitely don't bother me.",
+  "url": "https://greasyfork.org/scripts/506241-tf-youtube",
+  "code_url": "https://update.greasyfork.org/scripts/506241/TF%20Youtube.user.js",
+  "code_size": 962,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

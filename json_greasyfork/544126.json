@@ -1,0 +1,34 @@
+{
+  "id": 544126,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-30T18:44:57.000Z",
+  "code_updated_at": "2025-07-30T18:44:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1380516,
+      "name": "Dirt-fairy",
+      "created_at": "2024-10-13T18:56:35.000Z",
+      "url": "https://greasyfork.org/users/1380516-dirt-fairy",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Profile Button Hider (Darkmode + Drag + Memory)",
+  "description": "Toggle visibility of Torn.com profile buttons (dark mode, collapsible UI, global ON/OFF, draggable)",
+  "url": "https://greasyfork.org/scripts/544126-torn-profile-button-hider-darkmode-drag-memory",
+  "code_url": "https://update.greasyfork.org/scripts/544126/Torn%20Profile%20Button%20Hider%20%28Darkmode%20%2B%20Drag%20%2B%20Memory%29.user.js",
+  "code_size": 6947,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

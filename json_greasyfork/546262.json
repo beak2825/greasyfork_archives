@@ -1,0 +1,59 @@
+{
+  "id": 546262,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-18T08:51:45.000Z",
+  "code_updated_at": "2025-08-18T08:51:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1506200,
+      "name": "skl49",
+      "created_at": "2025-08-18T08:33:01.000Z",
+      "url": "https://greasyfork.org/users/1506200-skl49",
+      "scripts": [
+        {
+          "id": 546262,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-18T08:51:45.000Z",
+          "code_updated_at": "2025-08-18T08:51:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PDF.js Direct Downloader",
+          "description": "Adds a download button to PDF.js viewers that saves the original PDF file",
+          "url": "https://greasyfork.org/scripts/546262-pdf-js-direct-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/546262/PDFjs%20Direct%20Downloader.user.js",
+          "code_size": 1929,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PDF.js Direct Downloader",
+  "description": "Adds a download button to PDF.js viewers that saves the original PDF file",
+  "url": "https://greasyfork.org/scripts/546262-pdf-js-direct-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/546262/PDFjs%20Direct%20Downloader.user.js",
+  "code_size": 1929,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

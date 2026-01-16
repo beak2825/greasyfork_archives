@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511238,
+    "daily_installs": 0,
+    "total_installs": 75,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-02T18:18:27.000Z",
+    "code_updated_at": "2024-10-03T04:09:45.000Z",
+    "namespace": "https://fryzen.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375910,
+        "name": "avali.cloud",
+        "created_at": "2024-10-02T17:48:32.000Z",
+        "url": "https://greasyfork.org/users/1375910-avali-cloud"
+      }
+    ],
+    "name": "Better Youtube Volume",
+    "description": "Replaces the volume slider with a version that offers more control at lower volumes",
+    "url": "https://greasyfork.org/scripts/511238-better-youtube-volume",
+    "code_url": "https://update.greasyfork.org/scripts/511238/Better%20Youtube%20Volume.user.js",
+    "code_size": 2923,
+    "license": "The Unlicense",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

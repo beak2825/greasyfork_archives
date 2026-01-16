@@ -1,0 +1,59 @@
+{
+  "id": 518136,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-20T01:18:08.000Z",
+  "code_updated_at": "2026-01-10T04:52:48.000Z",
+  "namespace": "https://www.muooy.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1399290,
+      "name": "daliyuer",
+      "created_at": "2024-11-20T00:45:41.000Z",
+      "url": "https://greasyfork.org/users/1399290-daliyuer",
+      "scripts": [
+        {
+          "id": 518136,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-20T01:18:08.000Z",
+          "code_updated_at": "2026-01-10T04:52:48.000Z",
+          "namespace": "https://www.muooy.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MoviePilot自动登录",
+          "description": "因为MoviePilot每次重启都要重新登陆，而且浏览器又不能自动填充账号密码，我比较懒不想输账号密码所有我写了这个脚本。",
+          "url": "https://greasyfork.org/scripts/518136-moviepilot%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+          "code_url": "https://update.greasyfork.org/scripts/518136/MoviePilot%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+          "code_size": 11447,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MoviePilot自动登录",
+  "description": "因为MoviePilot每次重启都要重新登陆，而且浏览器又不能自动填充账号密码，我比较懒不想输账号密码所有我写了这个脚本。",
+  "url": "https://greasyfork.org/scripts/518136-moviepilot%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/518136/MoviePilot%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+  "code_size": 11447,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

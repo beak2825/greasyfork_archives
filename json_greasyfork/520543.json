@@ -1,0 +1,33 @@
+{
+  "id": 520543,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-13T02:05:46.000Z",
+  "code_updated_at": "2024-12-13T02:05:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1396130,
+      "name": "DanstyRO",
+      "created_at": "2024-11-14T08:49:00.000Z",
+      "url": "https://greasyfork.org/users/1396130-danstyro"
+    }
+  ],
+  "name": "拓元 outside 跳出後",
+  "description": "自動點擊立即訂購按鈕，並在特定條件下跳轉到指定網站。",
+  "url": "https://greasyfork.org/scripts/520543-%E6%8B%93%E5%85%83-outside-%E8%B7%B3%E5%87%BA%E5%BE%8C",
+  "code_url": "https://update.greasyfork.org/scripts/520543/%E6%8B%93%E5%85%83%20outside%20%E8%B7%B3%E5%87%BA%E5%BE%8C.user.js",
+  "code_size": 913,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

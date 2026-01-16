@@ -1,0 +1,59 @@
+{
+  "id": 550052,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-19T11:06:35.000Z",
+  "code_updated_at": "2025-09-19T11:06:35.000Z",
+  "namespace": "https://www.sumoli.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516926,
+      "name": "红叶24",
+      "created_at": "2025-09-19T11:01:50.000Z",
+      "url": "https://greasyfork.org/users/1516926-%E7%BA%A2%E5%8F%B624",
+      "scripts": [
+        {
+          "id": 550052,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-19T11:06:35.000Z",
+          "code_updated_at": "2025-09-19T11:06:35.000Z",
+          "namespace": "https://www.sumoli.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "隐藏b站反广告tips",
+          "description": "这个插件可以隐藏b站的反广告tips，也就是首页最上边的橙色提示，包括修复了一些布局问题",
+          "url": "https://greasyfork.org/scripts/550052-%E9%9A%90%E8%97%8Fb%E7%AB%99%E5%8F%8D%E5%B9%BF%E5%91%8Atips",
+          "code_url": "https://update.greasyfork.org/scripts/550052/%E9%9A%90%E8%97%8Fb%E7%AB%99%E5%8F%8D%E5%B9%BF%E5%91%8Atips.user.js",
+          "code_size": 884,
+          "license": "MIT License",
+          "version": "v1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "隐藏b站反广告tips",
+  "description": "这个插件可以隐藏b站的反广告tips，也就是首页最上边的橙色提示，包括修复了一些布局问题",
+  "url": "https://greasyfork.org/scripts/550052-%E9%9A%90%E8%97%8Fb%E7%AB%99%E5%8F%8D%E5%B9%BF%E5%91%8Atips",
+  "code_url": "https://update.greasyfork.org/scripts/550052/%E9%9A%90%E8%97%8Fb%E7%AB%99%E5%8F%8D%E5%B9%BF%E5%91%8Atips.user.js",
+  "code_size": 884,
+  "license": "MIT License",
+  "version": "v1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542164,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T04:51:02.000Z",
+    "code_updated_at": "2026-01-11T11:55:36.000Z",
+    "namespace": "npm/vite-plugin-monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493347,
+        "name": "ParaN3xus",
+        "created_at": "2025-07-10T04:43:21.000Z",
+        "url": "https://greasyfork.org/users/1493347-paran3xus"
+      }
+    ],
+    "name": "typstyle-tampermonkey",
+    "description": "Format code using typstyle in typst.app",
+    "url": "https://greasyfork.org/scripts/542164-typstyle-tampermonkey",
+    "code_url": "https://update.greasyfork.org/scripts/542164/typstyle-tampermonkey.user.js",
+    "code_size": 780049,
+    "license": "MPL 2.0",
+    "version": "0.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

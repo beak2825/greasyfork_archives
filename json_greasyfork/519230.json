@@ -1,0 +1,34 @@
+{
+  "id": 519230,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-29T03:58:10.000Z",
+  "code_updated_at": "2025-03-05T05:13:04.000Z",
+  "namespace": "https://bgm.tv/user/chiefmagician",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1398433,
+      "name": "bgmmajia",
+      "created_at": "2024-11-18T08:14:06.000Z",
+      "url": "https://greasyfork.org/users/1398433-bgmmajia",
+      "scripts": []
+    }
+  ],
+  "name": "新增书籍版本助手",
+  "description": "版本搬运工的好朋友",
+  "url": "https://greasyfork.org/scripts/519230-%E6%96%B0%E5%A2%9E%E4%B9%A6%E7%B1%8D%E7%89%88%E6%9C%AC%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/519230/%E6%96%B0%E5%A2%9E%E4%B9%A6%E7%B1%8D%E7%89%88%E6%9C%AC%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 14820,
+  "license": "MIT License",
+  "version": "4.0.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 526879,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-14T12:23:00.000Z",
+    "code_updated_at": "2025-02-14T12:23:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443053,
+        "name": "_KT_",
+        "created_at": "2020-02-09T09:15:25.000Z",
+        "url": "https://greasyfork.org/users/443053-kt"
+      }
+    ],
+    "name": "Pretix Participants Export",
+    "description": "Adds an export button to the participants tab",
+    "url": "https://greasyfork.org/scripts/526879-pretix-participants-export",
+    "code_url": "https://update.greasyfork.org/scripts/526879/Pretix%20Participants%20Export.user.js",
+    "code_size": 2209,
+    "license": "MIT License",
+    "version": "2025-01-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523002,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-06T11:00:46.000Z",
+    "code_updated_at": "2025-01-13T13:23:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443053,
+        "name": "_KT_",
+        "created_at": "2020-02-09T09:15:25.000Z",
+        "url": "https://greasyfork.org/users/443053-kt"
+      }
+    ],
+    "name": "rewe Shop - Favourites - Sale Only",
+    "description": "When you go to your Favourites List in the shop, you can now show only articles that are on sale.",
+    "url": "https://greasyfork.org/scripts/523002-rewe-shop-favourites-sale-only",
+    "code_url": "https://update.greasyfork.org/scripts/523002/rewe%20Shop%20-%20Favourites%20-%20Sale%20Only.user.js",
+    "code_size": 4296,
+    "license": "MIT License",
+    "version": "2025-01-13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522804,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T12:13:55.000Z",
+    "code_updated_at": "2025-01-05T09:33:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443053,
+        "name": "_KT_",
+        "created_at": "2020-02-09T09:15:25.000Z",
+        "url": "https://greasyfork.org/users/443053-kt"
+      }
+    ],
+    "name": "BookCrossing BCID Export",
+    "description": "Export BCIds, title, author, and category of books on the current page to a CSV file. This can than be used to print labels.",
+    "url": "https://greasyfork.org/scripts/522804-bookcrossing-bcid-export",
+    "code_url": "https://update.greasyfork.org/scripts/522804/BookCrossing%20BCID%20Export.user.js",
+    "code_size": 2854,
+    "license": "MIT License",
+    "version": "2025-01-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

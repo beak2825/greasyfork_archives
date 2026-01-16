@@ -1,0 +1,34 @@
+{
+  "id": 535806,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T16:10:15.000Z",
+  "code_updated_at": "2025-05-12T16:10:40.000Z",
+  "namespace": "https://github.com/edlau2",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440358,
+      "name": "Anne Belle",
+      "created_at": "2025-02-26T18:08:43.000Z",
+      "url": "https://greasyfork.org/users/1440358-anne-belle",
+      "scripts": []
+    }
+  ],
+  "name": "Torn-JS-Helpers-Copied",
+  "description": "Commonly used functions in my Torn scripts.",
+  "url": "https://greasyfork.org/scripts/535806-torn-js-helpers-copied",
+  "code_url": "https://update.greasyfork.org/scripts/535806/1587872/Torn-JS-Helpers-Copied.js",
+  "code_size": 99387,
+  "license": "MIT License",
+  "version": "2.46.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

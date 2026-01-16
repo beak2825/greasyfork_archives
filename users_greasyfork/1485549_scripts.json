@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543110,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T10:51:46.000Z",
+    "code_updated_at": "2025-12-03T03:56:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485549,
+        "name": "Feng Ling (她说朝霞思月)",
+        "created_at": "2025-06-19T03:21:45.000Z",
+        "url": "https://greasyfork.org/users/1485549-feng-ling-%E5%A5%B9%E8%AF%B4%E6%9C%9D%E9%9C%9E%E6%80%9D%E6%9C%88"
+      }
+    ],
+    "name": "微博网址一键跳转插件",
+    "description": "在云智服工作台中自动转换微博链接",
+    "url": "https://greasyfork.org/scripts/543110-%E5%BE%AE%E5%8D%9A%E7%BD%91%E5%9D%80%E4%B8%80%E9%94%AE%E8%B7%B3%E8%BD%AC%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/543110/%E5%BE%AE%E5%8D%9A%E7%BD%91%E5%9D%80%E4%B8%80%E9%94%AE%E8%B7%B3%E8%BD%AC%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 17605,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

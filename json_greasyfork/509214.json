@@ -1,0 +1,34 @@
+{
+  "id": 509214,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-19T15:02:34.000Z",
+  "code_updated_at": "2024-09-19T16:41:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://zelenka.guru/seuyh/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1285679,
+      "name": "seuyh",
+      "created_at": "2024-04-08T16:31:28.000Z",
+      "url": "https://greasyfork.org/users/1285679-seuyh",
+      "scripts": []
+    }
+  ],
+  "name": "P2P LZT",
+  "description": "Улучшение вкладки P2P обменов",
+  "url": "https://greasyfork.org/scripts/509214-p2p-lzt",
+  "code_url": "https://update.greasyfork.org/scripts/509214/P2P%20LZT.user.js",
+  "code_size": 9844,
+  "license": "MIT License",
+  "version": "0.7",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

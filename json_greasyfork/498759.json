@@ -1,0 +1,33 @@
+{
+  "id": 498759,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-24T12:21:07.000Z",
+  "code_updated_at": "2024-07-05T14:33:23.000Z",
+  "namespace": "https://github.com/jeanlucaslima/myhackernews/",
+  "support_url": "https://github.com/jeanlucaslima/myhackernews/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1323187,
+      "name": "Jean Lucas",
+      "created_at": "2024-06-24T12:09:55.000Z",
+      "url": "https://greasyfork.org/users/1323187-jean-lucas"
+    }
+  ],
+  "name": "myhackernews",
+  "description": "Apply a dark theme to Hacker News, modify navigation links, and add a custom menu with highlighted active links",
+  "url": "https://greasyfork.org/scripts/498759-myhackernews",
+  "code_url": "https://update.greasyfork.org/scripts/498759/myhackernews.user.js",
+  "code_size": 7172,
+  "license": "MIT License",
+  "version": "3.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 532251,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T01:20:04.000Z",
+    "code_updated_at": "2025-04-23T01:09:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 258613,
+        "name": "Tanuki",
+        "created_at": "2019-03-10T17:43:09.000Z",
+        "url": "https://greasyfork.org/users/258613-tanuki"
+      }
+    ],
+    "name": "YouTube Timestamp Manager",
+    "description": "Full-featured timestamp manager with video tracking, inline editing, seeking, and sharp UI.",
+    "url": "https://greasyfork.org/scripts/532251-youtube-timestamp-manager",
+    "code_url": "https://update.greasyfork.org/scripts/532251/YouTube%20Timestamp%20Manager.user.js",
+    "code_size": 54731,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513941,
+    "daily_installs": 1,
+    "total_installs": 97,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-25T04:05:20.000Z",
+    "code_updated_at": "2024-10-25T07:20:51.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/513941-use-old-youtube-color-palette",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 258613,
+        "name": "Tanuki",
+        "created_at": "2019-03-10T17:43:09.000Z",
+        "url": "https://greasyfork.org/users/258613-tanuki"
+      }
+    ],
+    "name": "Use Old YouTube Color Palette",
+    "description": "Change the new YouTube color palette to the old color palette.",
+    "url": "https://greasyfork.org/scripts/513941-use-old-youtube-color-palette",
+    "code_url": "https://update.greasyfork.org/scripts/513941/Use%20Old%20YouTube%20Color%20Palette.user.js",
+    "code_size": 3566,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

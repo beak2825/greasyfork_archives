@@ -1,0 +1,33 @@
+{
+  "id": 533748,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-23T17:46:22.000Z",
+  "code_updated_at": "2025-04-23T17:46:22.000Z",
+  "namespace": "ThermaL -userscripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461057,
+      "name": "ThermaL",
+      "created_at": "2025-04-22T16:37:02.000Z",
+      "url": "https://greasyfork.org/users/1461057-thermal"
+    }
+  ],
+  "name": "TorrentBD Activities and Breakdown Page Sorter",
+  "description": "clickable column headers to sort torrent data by name, size, seedtime, seedbonus, and ratio on TorrentBD's seedbonus and activities pages.",
+  "url": "https://greasyfork.org/scripts/533748-torrentbd-activities-and-breakdown-page-sorter",
+  "code_url": "https://update.greasyfork.org/scripts/533748/TorrentBD%20Activities%20and%20Breakdown%20Page%20Sorter.user.js",
+  "code_size": 28572,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

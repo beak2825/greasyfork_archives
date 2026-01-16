@@ -1,0 +1,101 @@
+[
+  {
+    "id": 545009,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T06:06:24.000Z",
+    "code_updated_at": "2025-08-08T06:06:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497583,
+        "name": "Daniel Głowacz",
+        "created_at": "2025-07-23T08:54:02.000Z",
+        "url": "https://greasyfork.org/users/1497583-daniel-g%C5%82owacz"
+      }
+    ],
+    "name": "E-commerce Panel Helper v2",
+    "description": "Add a movable and dockable modal to e-commerce product editing panel",
+    "url": "https://greasyfork.org/scripts/545009-e-commerce-panel-helper-v2",
+    "code_url": "https://update.greasyfork.org/scripts/545009/E-commerce%20Panel%20Helper%20v2.user.js",
+    "code_size": 35097,
+    "license": null,
+    "version": "0.68",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545006,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T05:58:40.000Z",
+    "code_updated_at": "2025-08-08T06:05:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497583,
+        "name": "Daniel Głowacz",
+        "created_at": "2025-07-23T08:54:02.000Z",
+        "url": "https://greasyfork.org/users/1497583-daniel-g%C5%82owacz"
+      }
+    ],
+    "name": "Ecommer Panel v2",
+    "description": "Constants",
+    "url": "https://greasyfork.org/scripts/545006-ecommer-panel-v2",
+    "code_url": "https://update.greasyfork.org/scripts/545006/1637638/Ecommer%20Panel%20v2.js",
+    "code_size": 35555,
+    "license": null,
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543415,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T08:55:24.000Z",
+    "code_updated_at": "2025-07-23T09:57:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497583,
+        "name": "Daniel Głowacz",
+        "created_at": "2025-07-23T08:54:02.000Z",
+        "url": "https://greasyfork.org/users/1497583-daniel-g%C5%82owacz"
+      }
+    ],
+    "name": "Podmiana nazw operatorów Butosklep",
+    "description": "Podmienia wybrane nazwiska na liście operatorów w panelu zwrotów Butosklep.",
+    "url": "https://greasyfork.org/scripts/543415-podmiana-nazw-operator%C3%B3w-butosklep",
+    "code_url": "https://update.greasyfork.org/scripts/543415/Podmiana%20nazw%20operator%C3%B3w%20Butosklep.user.js",
+    "code_size": 2362,
+    "license": null,
+    "version": "1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

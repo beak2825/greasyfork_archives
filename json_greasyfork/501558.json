@@ -1,0 +1,33 @@
+{
+  "id": 501558,
+  "daily_installs": 0,
+  "total_installs": 201,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-23T07:08:21.000Z",
+  "code_updated_at": "2024-07-31T08:16:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1337556,
+      "name": "jiusimeng",
+      "created_at": "2024-07-21T07:54:00.000Z",
+      "url": "https://greasyfork.org/users/1337556-jiusimeng"
+    }
+  ],
+  "name": "巨量百应循环讲解-鼠标模拟",
+  "description": "通过模拟鼠标点击，实现解放双手，自动循环讲解，本脚本由AI编写",
+  "url": "https://greasyfork.org/scripts/501558-%E5%B7%A8%E9%87%8F%E7%99%BE%E5%BA%94%E5%BE%AA%E7%8E%AF%E8%AE%B2%E8%A7%A3-%E9%BC%A0%E6%A0%87%E6%A8%A1%E6%8B%9F",
+  "code_url": "https://update.greasyfork.org/scripts/501558/%E5%B7%A8%E9%87%8F%E7%99%BE%E5%BA%94%E5%BE%AA%E7%8E%AF%E8%AE%B2%E8%A7%A3-%E9%BC%A0%E6%A0%87%E6%A8%A1%E6%8B%9F.user.js",
+  "code_size": 9036,
+  "license": "MIT License",
+  "version": "1.7",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

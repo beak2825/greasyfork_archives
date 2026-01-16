@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531485,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T09:55:45.000Z",
+    "code_updated_at": "2025-04-01T10:01:41.000Z",
+    "namespace": "https://greasyfork.org/users/1452753",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452753,
+        "name": "sm1le_7",
+        "created_at": "2025-04-01T09:47:53.000Z",
+        "url": "https://greasyfork.org/users/1452753-sm1le-7"
+      }
+    ],
+    "name": "TS: Admin Enhancements (Поиск, Кнопки, Таблицы)",
+    "description": "Единый скрипт: поиск, кнопки копирования (ID/Booker/Excel/FullID/RRN), улучшение таблиц платежей/чеков.",
+    "url": "https://greasyfork.org/scripts/531485-ts-admin-enhancements-%D0%BF%D0%BE%D0%B8%D1%81%D0%BA-%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8-%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%86%D1%8B",
+    "code_url": "https://update.greasyfork.org/scripts/531485/TS%3A%20Admin%20Enhancements%20%28%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%2C%20%D0%9A%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8%2C%20%D0%A2%D0%B0%D0%B1%D0%BB%D0%B8%D1%86%D1%8B%29.user.js",
+    "code_size": 33907,
+    "license": null,
+    "version": "7.2.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

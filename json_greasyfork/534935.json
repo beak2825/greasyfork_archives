@@ -1,0 +1,34 @@
+{
+  "id": 534935,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-04T16:59:00.000Z",
+  "code_updated_at": "2025-05-04T16:59:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465663,
+      "name": "kdln",
+      "created_at": "2025-05-04T16:55:14.000Z",
+      "url": "https://greasyfork.org/users/1465663-kdln",
+      "scripts": []
+    }
+  ],
+  "name": "Underscore & Dash Cleaner (Lite)",
+  "description": "Add a “Clean” button to your Title field; strips underscores & all but the first/last dash.",
+  "url": "https://greasyfork.org/scripts/534935-underscore-dash-cleaner-lite",
+  "code_url": "https://update.greasyfork.org/scripts/534935/Underscore%20%20Dash%20Cleaner%20%28Lite%29.user.js",
+  "code_size": 2429,
+  "license": null,
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

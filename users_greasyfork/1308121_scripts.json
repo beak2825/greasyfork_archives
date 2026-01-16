@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547971,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-31T21:54:34.000Z",
+    "code_updated_at": "2025-09-04T17:17:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1308121,
+        "name": "yee1819",
+        "created_at": "2024-05-27T17:52:43.000Z",
+        "url": "https://greasyfork.org/users/1308121-yee1819"
+      }
+    ],
+    "name": "B站分P时长统计",
+    "description": "监听URL变化并计算分P总时长/已播放/剩余（右下角 box 背景进度 + 分P卡片背景进度）",
+    "url": "https://greasyfork.org/scripts/547971-b%E7%AB%99%E5%88%86p%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/547971/B%E7%AB%99%E5%88%86P%E6%97%B6%E9%95%BF%E7%BB%9F%E8%AE%A1.user.js",
+    "code_size": 10685,
+    "license": "MIT License",
+    "version": "0.83",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

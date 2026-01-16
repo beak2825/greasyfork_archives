@@ -1,0 +1,33 @@
+{
+  "id": 548995,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-10T05:26:40.000Z",
+  "code_updated_at": "2025-09-10T05:26:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1513504,
+      "name": "一只路过的毒蘑菇",
+      "created_at": "2025-09-10T05:12:09.000Z",
+      "url": "https://greasyfork.org/users/1513504-%E4%B8%80%E5%8F%AA%E8%B7%AF%E8%BF%87%E7%9A%84%E6%AF%92%E8%98%91%E8%8F%87"
+    }
+  ],
+  "name": "东南大学抢课助手改版(终极版)-2025.9更新",
+  "description": "听说你抢不到课",
+  "url": "https://greasyfork.org/scripts/548995-%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B%E6%94%B9%E7%89%88-%E7%BB%88%E6%9E%81%E7%89%88-2025-9%E6%9B%B4%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/548995/%E4%B8%9C%E5%8D%97%E5%A4%A7%E5%AD%A6%E6%8A%A2%E8%AF%BE%E5%8A%A9%E6%89%8B%E6%94%B9%E7%89%88%28%E7%BB%88%E6%9E%81%E7%89%88%29-20259%E6%9B%B4%E6%96%B0.user.js",
+  "code_size": 36045,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

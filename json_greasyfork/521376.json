@@ -1,0 +1,33 @@
+{
+  "id": 521376,
+  "daily_installs": 1,
+  "total_installs": 23,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-21T11:27:50.000Z",
+  "code_updated_at": "2024-12-21T11:27:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1413458,
+      "name": "HongChen0828",
+      "created_at": "2024-12-20T15:31:29.000Z",
+      "url": "https://greasyfork.org/users/1413458-hongchen0828"
+    }
+  ],
+  "name": "屏蔽斗鱼虎牙资源并禁用 WebRTC",
+  "description": "拦截指定资源以及 URL 中包含 p2p 或 P2P 的请求，并禁用 WebRTC。",
+  "url": "https://greasyfork.org/scripts/521376-%E5%B1%8F%E8%94%BD%E6%96%97%E9%B1%BC%E8%99%8E%E7%89%99%E8%B5%84%E6%BA%90%E5%B9%B6%E7%A6%81%E7%94%A8-webrtc",
+  "code_url": "https://update.greasyfork.org/scripts/521376/%E5%B1%8F%E8%94%BD%E6%96%97%E9%B1%BC%E8%99%8E%E7%89%99%E8%B5%84%E6%BA%90%E5%B9%B6%E7%A6%81%E7%94%A8%20WebRTC.user.js",
+  "code_size": 3335,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

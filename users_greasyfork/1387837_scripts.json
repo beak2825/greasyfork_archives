@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514572,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-29T00:05:52.000Z",
+    "code_updated_at": "2024-10-29T00:05:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1387837,
+        "name": "汪红红",
+        "created_at": "2024-10-29T00:00:08.000Z",
+        "url": "https://greasyfork.org/users/1387837-%E6%B1%AA%E7%BA%A2%E7%BA%A2"
+      }
+    ],
+    "name": "百度网盘Svip会员破解青春版",
+    "description": "修改所有可改的身份信息，修改成超级会员身份，可以使用网站自带的倍速、字幕等功能。",
+    "url": "https://greasyfork.org/scripts/514572-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/514572/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98Svip%E4%BC%9A%E5%91%98%E7%A0%B4%E8%A7%A3%E9%9D%92%E6%98%A5%E7%89%88.user.js",
+    "code_size": 8611,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

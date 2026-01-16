@@ -1,0 +1,59 @@
+{
+  "id": 543685,
+  "daily_installs": 2,
+  "total_installs": 141,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-26T09:11:22.000Z",
+  "code_updated_at": "2025-10-23T03:18:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1496879,
+      "name": "flymekyo",
+      "created_at": "2025-07-21T07:44:11.000Z",
+      "url": "https://greasyfork.org/users/1496879-flymekyo",
+      "scripts": [
+        {
+          "id": 543685,
+          "daily_installs": 2,
+          "total_installs": 141,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-26T09:11:22.000Z",
+          "code_updated_at": "2025-10-23T03:18:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "S1 Plus - Stage1st 体验增强套件",
+          "description": "为Stage1st论坛提供帖子/用户屏蔽、导航栏自定义、自动签到、阅读进度跟踪、回复收藏、远程同步等多种功能，全方位优化你的论坛体验。",
+          "url": "https://greasyfork.org/scripts/543685-s1-plus-stage1st-%E4%BD%93%E9%AA%8C%E5%A2%9E%E5%BC%BA%E5%A5%97%E4%BB%B6",
+          "code_url": "https://update.greasyfork.org/scripts/543685/S1%20Plus%20-%20Stage1st%20%E4%BD%93%E9%AA%8C%E5%A2%9E%E5%BC%BA%E5%A5%97%E4%BB%B6.user.js",
+          "code_size": 320182,
+          "license": "MIT License",
+          "version": "6.2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "S1 Plus - Stage1st 体验增强套件",
+  "description": "为Stage1st论坛提供帖子/用户屏蔽、导航栏自定义、自动签到、阅读进度跟踪、回复收藏、远程同步等多种功能，全方位优化你的论坛体验。",
+  "url": "https://greasyfork.org/scripts/543685-s1-plus-stage1st-%E4%BD%93%E9%AA%8C%E5%A2%9E%E5%BC%BA%E5%A5%97%E4%BB%B6",
+  "code_url": "https://update.greasyfork.org/scripts/543685/S1%20Plus%20-%20Stage1st%20%E4%BD%93%E9%AA%8C%E5%A2%9E%E5%BC%BA%E5%A5%97%E4%BB%B6.user.js",
+  "code_size": 320182,
+  "license": "MIT License",
+  "version": "6.2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

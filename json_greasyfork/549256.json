@@ -1,0 +1,59 @@
+{
+  "id": 549256,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-12T12:13:11.000Z",
+  "code_updated_at": "2025-10-14T12:21:38.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514260,
+      "name": "devilbone skin",
+      "created_at": "2025-09-12T12:05:30.000Z",
+      "url": "https://greasyfork.org/users/1514260-devilbone-skin",
+      "scripts": [
+        {
+          "id": 549256,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-12T12:13:11.000Z",
+          "code_updated_at": "2025-10-14T12:21:38.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Asistente de Formularios APEX (Panel Fijo con Foco)",
+          "description": "Añade un panel lateral para gestionar órdenes y rellenar datos, con lista de trabajadores personalizable. Pone el foco en el campo de orden al cargar.",
+          "url": "https://greasyfork.org/scripts/549256-asistente-de-formularios-apex-panel-fijo-con-foco",
+          "code_url": "https://update.greasyfork.org/scripts/549256/Asistente%20de%20Formularios%20APEX%20%28Panel%20Fijo%20con%20Foco%29.user.js",
+          "code_size": 18858,
+          "license": null,
+          "version": "2.2",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Asistente de Formularios APEX (Panel Fijo con Foco)",
+  "description": "Añade un panel lateral para gestionar órdenes y rellenar datos, con lista de trabajadores personalizable. Pone el foco en el campo de orden al cargar.",
+  "url": "https://greasyfork.org/scripts/549256-asistente-de-formularios-apex-panel-fijo-con-foco",
+  "code_url": "https://update.greasyfork.org/scripts/549256/Asistente%20de%20Formularios%20APEX%20%28Panel%20Fijo%20con%20Foco%29.user.js",
+  "code_size": 18858,
+  "license": null,
+  "version": "2.2",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

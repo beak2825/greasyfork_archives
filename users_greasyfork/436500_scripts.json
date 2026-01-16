@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531688,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-03T08:19:06.000Z",
+    "code_updated_at": "2025-04-03T08:19:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 436500,
+        "name": "tao lin",
+        "created_at": "2020-01-18T14:33:16.000Z",
+        "url": "https://greasyfork.org/users/436500-tao-lin"
+      }
+    ],
+    "name": "Chiphell 灰度模式",
+    "description": "将 www.chiphell.com 的所有页面呈现为灰色调",
+    "url": "https://greasyfork.org/scripts/531688-chiphell-%E7%81%B0%E5%BA%A6%E6%A8%A1%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/531688/Chiphell%20%E7%81%B0%E5%BA%A6%E6%A8%A1%E5%BC%8F.user.js",
+    "code_size": 1158,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

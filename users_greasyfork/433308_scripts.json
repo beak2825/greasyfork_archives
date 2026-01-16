@@ -30,6 +30,105 @@
     "version": "2.2",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548033,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T13:35:12.000Z",
+    "code_updated_at": "2025-09-01T13:35:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433308,
+        "name": "吕梁军",
+        "created_at": "2020-01-08T07:38:58.000Z",
+        "url": "https://greasyfork.org/users/433308-%E5%90%95%E6%A2%81%E5%86%9B"
+      }
+    ],
+    "name": "Chacuo AES Auto Config",
+    "description": "自动设置查错网 AES 参数",
+    "url": "https://greasyfork.org/scripts/548033-chacuo-aes-auto-config",
+    "code_url": "https://update.greasyfork.org/scripts/548033/Chacuo%20AES%20Auto%20Config.user.js",
+    "code_size": 1534,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532301,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T10:06:19.000Z",
+    "code_updated_at": "2025-04-09T10:06:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433308,
+        "name": "吕梁军",
+        "created_at": "2020-01-08T07:38:58.000Z",
+        "url": "https://greasyfork.org/users/433308-%E5%90%95%E6%A2%81%E5%86%9B"
+      }
+    ],
+    "name": "电力ticket获取",
+    "description": "自动获取 X-Ticket 并显示",
+    "url": "https://greasyfork.org/scripts/532301-%E7%94%B5%E5%8A%9Bticket%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/532301/%E7%94%B5%E5%8A%9Bticket%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 1932,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 497862,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-14T02:56:09.000Z",
+    "code_updated_at": "2024-06-14T02:56:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 433308,
+        "name": "吕梁军",
+        "created_at": "2020-01-08T07:38:58.000Z",
+        "url": "https://greasyfork.org/users/433308-%E5%90%95%E6%A2%81%E5%86%9B"
+      }
+    ],
+    "name": "禅道面板",
+    "description": "任务宽度",
+    "url": "https://greasyfork.org/scripts/497862-%E7%A6%85%E9%81%93%E9%9D%A2%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/497862/%E7%A6%85%E9%81%93%E9%9D%A2%E6%9D%BF.user.js",
+    "code_size": 1160,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ja",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 530846,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-25T17:18:07.000Z",
+    "code_updated_at": "2025-03-25T17:18:07.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393090,
+        "name": "Cougar",
+        "created_at": "2024-11-08T20:20:11.000Z",
+        "url": "https://greasyfork.org/users/1393090-cougar"
+      }
+    ],
+    "name": "Saved search open auctions only in osta.ee",
+    "description": "Modify search agent list links to filter only auctions",
+    "url": "https://greasyfork.org/scripts/530846-saved-search-open-auctions-only-in-osta-ee",
+    "code_url": "https://update.greasyfork.org/scripts/530846/Saved%20search%20open%20auctions%20only%20in%20ostaee.user.js",
+    "code_size": 7755,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 516448,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-08T20:23:53.000Z",
+    "code_updated_at": "2025-03-01T09:48:38.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1393090,
+        "name": "Cougar",
+        "created_at": "2024-11-08T20:20:11.000Z",
+        "url": "https://greasyfork.org/users/1393090-cougar"
+      }
+    ],
+    "name": "Email auto-confirmation in osta.ee",
+    "description": "Fill email confirmation automatically",
+    "url": "https://greasyfork.org/scripts/516448-email-auto-confirmation-in-osta-ee",
+    "code_url": "https://update.greasyfork.org/scripts/516448/Email%20auto-confirmation%20in%20ostaee.user.js",
+    "code_size": 7578,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515313,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T01:51:30.000Z",
+    "code_updated_at": "2024-11-02T01:51:30.000Z",
+    "namespace": "http://example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 5177,
+        "name": "ruocaled",
+        "created_at": "2014-09-09T21:26:34.000Z",
+        "url": "https://greasyfork.org/users/5177-ruocaled"
+      }
+    ],
+    "name": "还原渐变文字为普通文本",
+    "description": "在 Bangumi 上将渐变颜色的文字还原为正常文本",
+    "url": "https://greasyfork.org/scripts/515313-%E8%BF%98%E5%8E%9F%E6%B8%90%E5%8F%98%E6%96%87%E5%AD%97%E4%B8%BA%E6%99%AE%E9%80%9A%E6%96%87%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/515313/%E8%BF%98%E5%8E%9F%E6%B8%90%E5%8F%98%E6%96%87%E5%AD%97%E4%B8%BA%E6%99%AE%E9%80%9A%E6%96%87%E6%9C%AC.user.js",
+    "code_size": 1474,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

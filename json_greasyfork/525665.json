@@ -1,0 +1,59 @@
+{
+  "id": 525665,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-02T17:36:56.000Z",
+  "code_updated_at": "2025-02-02T17:41:42.000Z",
+  "namespace": "https://greasyfork.org/scripts/467384",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1430454,
+      "name": "Lander-Hatsune",
+      "created_at": "2025-02-02T17:35:01.000Z",
+      "url": "https://greasyfork.org/users/1430454-lander-hatsune",
+      "scripts": [
+        {
+          "id": 525665,
+          "daily_installs": 0,
+          "total_installs": 42,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-02T17:36:56.000Z",
+          "code_updated_at": "2025-02-02T17:41:42.000Z",
+          "namespace": "https://greasyfork.org/scripts/467384",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🛠️B站过滤广告视频/推广视频",
+          "description": "多规则过滤B站推荐内容（类名过滤｜粉丝数过滤｜SVG标记过滤）",
+          "url": "https://greasyfork.org/scripts/525665-b%E7%AB%99%E8%BF%87%E6%BB%A4%E5%B9%BF%E5%91%8A%E8%A7%86%E9%A2%91-%E6%8E%A8%E5%B9%BF%E8%A7%86%E9%A2%91",
+          "code_url": "https://update.greasyfork.org/scripts/525665/%F0%9F%9B%A0%EF%B8%8FB%E7%AB%99%E8%BF%87%E6%BB%A4%E5%B9%BF%E5%91%8A%E8%A7%86%E9%A2%91%E6%8E%A8%E5%B9%BF%E8%A7%86%E9%A2%91.user.js",
+          "code_size": 4838,
+          "license": "GNU GPL v3",
+          "version": "2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🛠️B站过滤广告视频/推广视频",
+  "description": "多规则过滤B站推荐内容（类名过滤｜粉丝数过滤｜SVG标记过滤）",
+  "url": "https://greasyfork.org/scripts/525665-b%E7%AB%99%E8%BF%87%E6%BB%A4%E5%B9%BF%E5%91%8A%E8%A7%86%E9%A2%91-%E6%8E%A8%E5%B9%BF%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/525665/%F0%9F%9B%A0%EF%B8%8FB%E7%AB%99%E8%BF%87%E6%BB%A4%E5%B9%BF%E5%91%8A%E8%A7%86%E9%A2%91%E6%8E%A8%E5%B9%BF%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 4838,
+  "license": "GNU GPL v3",
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

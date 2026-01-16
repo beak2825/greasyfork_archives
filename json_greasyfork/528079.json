@@ -1,0 +1,33 @@
+{
+  "id": 528079,
+  "daily_installs": 1,
+  "total_installs": 12,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-25T20:13:17.000Z",
+  "code_updated_at": "2025-02-25T20:13:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440008,
+      "name": "llxmeow",
+      "created_at": "2025-02-25T18:47:03.000Z",
+      "url": "https://greasyfork.org/users/1440008-llxmeow"
+    }
+  ],
+  "name": "Bilibili查看关注时间",
+  "description": "bilibili查看关注时间，桌面版web端关注页面的**全部关注**可用，不行的话刷新页面试试。",
+  "url": "https://greasyfork.org/scripts/528079-bilibili%E6%9F%A5%E7%9C%8B%E5%85%B3%E6%B3%A8%E6%97%B6%E9%97%B4",
+  "code_url": "https://update.greasyfork.org/scripts/528079/Bilibili%E6%9F%A5%E7%9C%8B%E5%85%B3%E6%B3%A8%E6%97%B6%E9%97%B4.user.js",
+  "code_size": 3909,
+  "license": "MIT License",
+  "version": "0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

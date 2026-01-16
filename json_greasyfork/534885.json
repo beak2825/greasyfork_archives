@@ -1,0 +1,33 @@
+{
+  "id": 534885,
+  "daily_installs": 2,
+  "total_installs": 215,
+  "fan_score": "46.3",
+  "good_ratings": 4,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-05-04T07:35:07.000Z",
+  "code_updated_at": "2025-05-21T15:07:58.000Z",
+  "namespace": "https://github.com/soitgoes-again/eyeinthecloud",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1452920,
+      "name": "So It Goes Again",
+      "created_at": "2025-04-01T17:23:27.000Z",
+      "url": "https://greasyfork.org/users/1452920-so-it-goes-again"
+    }
+  ],
+  "name": "Eye in the Cloud - A Google AI Studio Focused Experience",
+  "description": "Get focused by hiding the clutter, hide chat history, lag free text box, VIBE Mode, and themes!",
+  "url": "https://greasyfork.org/scripts/534885-eye-in-the-cloud-a-google-ai-studio-focused-experience",
+  "code_url": "https://update.greasyfork.org/scripts/534885/Eye%20in%20the%20Cloud%20-%20A%20Google%20AI%20Studio%20Focused%20Experience.user.js",
+  "code_size": 203783,
+  "license": null,
+  "version": "0.639",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

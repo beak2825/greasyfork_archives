@@ -1,0 +1,101 @@
+[
+  {
+    "id": 539175,
+    "daily_installs": 2,
+    "total_installs": 196,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T04:23:22.000Z",
+    "code_updated_at": "2026-01-06T19:26:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459311,
+        "name": "grem_coder",
+        "created_at": "2025-04-18T08:57:19.000Z",
+        "url": "https://greasyfork.org/users/1459311-grem-coder"
+      }
+    ],
+    "name": "Holotower Soundposts",
+    "description": "Play sound for soundposts (video and image) on Holotower.",
+    "url": "https://greasyfork.org/scripts/539175-holotower-soundposts",
+    "code_url": "https://update.greasyfork.org/scripts/539175/Holotower%20Soundposts.user.js",
+    "code_size": 14606,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533223,
+    "daily_installs": 1,
+    "total_installs": 287,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T09:02:13.000Z",
+    "code_updated_at": "2025-07-09T02:36:18.000Z",
+    "namespace": "http://holotower.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459311,
+        "name": "grem_coder",
+        "created_at": "2025-04-18T08:57:19.000Z",
+        "url": "https://greasyfork.org/users/1459311-grem-coder"
+      }
+    ],
+    "name": "Holotower Custom Fixes",
+    "description": "Persistent “You” highlight dropdown, and Q‑key Quick‑Reply for holotower.org.",
+    "url": "https://greasyfork.org/scripts/533223-holotower-custom-fixes",
+    "code_url": "https://update.greasyfork.org/scripts/533223/Holotower%20Custom%20Fixes.user.js",
+    "code_size": 7767,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533222,
+    "daily_installs": 1,
+    "total_installs": 365,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T09:01:07.000Z",
+    "code_updated_at": "2026-01-07T06:40:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459311,
+        "name": "grem_coder",
+        "created_at": "2025-04-18T08:57:19.000Z",
+        "url": "https://greasyfork.org/users/1459311-grem-coder"
+      }
+    ],
+    "name": "Holotower Inline Quoting",
+    "description": "Inline Quoting for holotower.org",
+    "url": "https://greasyfork.org/scripts/533222-holotower-inline-quoting",
+    "code_url": "https://update.greasyfork.org/scripts/533222/Holotower%20Inline%20Quoting.user.js",
+    "code_size": 30204,
+    "license": "MIT License",
+    "version": "3.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

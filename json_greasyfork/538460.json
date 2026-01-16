@@ -1,0 +1,33 @@
+{
+  "id": 538460,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-05T17:38:05.000Z",
+  "code_updated_at": "2025-06-05T17:38:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479507,
+      "name": "Codiaz",
+      "created_at": "2025-06-05T17:28:02.000Z",
+      "url": "https://greasyfork.org/users/1479507-codiaz"
+    }
+  ],
+  "name": "Torn Bazaar Auto Update",
+  "description": "Adds a button to click all UPDATE buttons on Torn.com bazaar management page",
+  "url": "https://greasyfork.org/scripts/538460-torn-bazaar-auto-update",
+  "code_url": "https://update.greasyfork.org/scripts/538460/Torn%20Bazaar%20Auto%20Update.user.js",
+  "code_size": 3885,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

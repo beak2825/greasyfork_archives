@@ -1,0 +1,34 @@
+{
+  "id": 530595,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-23T07:46:31.000Z",
+  "code_updated_at": "2025-03-23T07:46:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448870,
+      "name": "KevinHuHanwen",
+      "created_at": "2025-03-22T10:24:33.000Z",
+      "url": "https://greasyfork.org/users/1448870-kevinhuhanwen",
+      "scripts": []
+    }
+  ],
+  "name": "反浏览器指纹追踪",
+  "description": "干扰常见浏览器指纹采集行为，保护隐私",
+  "url": "https://greasyfork.org/scripts/530595-%E5%8F%8D%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8C%87%E7%BA%B9%E8%BF%BD%E8%B8%AA",
+  "code_url": "https://update.greasyfork.org/scripts/530595/%E5%8F%8D%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8C%87%E7%BA%B9%E8%BF%BD%E8%B8%AA.user.js",
+  "code_size": 4732,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

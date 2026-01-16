@@ -1,0 +1,59 @@
+{
+  "id": 551605,
+  "daily_installs": 1,
+  "total_installs": 36,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-05T01:03:38.000Z",
+  "code_updated_at": "2025-10-05T01:04:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522323,
+      "name": "サギだサギ",
+      "created_at": "2025-10-05T00:58:01.000Z",
+      "url": "https://greasyfork.org/users/1522323-%E3%82%B5%E3%82%AE%E3%81%A0%E3%82%B5%E3%82%AE",
+      "scripts": [
+        {
+          "id": 551605,
+          "daily_installs": 1,
+          "total_installs": 36,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-05T01:03:38.000Z",
+          "code_updated_at": "2025-10-05T01:04:34.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MineFun.io Screen Effects",
+          "description": "ゲームのプレイ画面を少し暗くするScript",
+          "url": "https://greasyfork.org/scripts/551605-minefun-io-screen-effects",
+          "code_url": "https://update.greasyfork.org/scripts/551605/MineFunio%20Screen%20Effects.user.js",
+          "code_size": 896,
+          "license": null,
+          "version": "1.1",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MineFun.io Screen Effects",
+  "description": "ゲームのプレイ画面を少し暗くするScript",
+  "url": "https://greasyfork.org/scripts/551605-minefun-io-screen-effects",
+  "code_url": "https://update.greasyfork.org/scripts/551605/MineFunio%20Screen%20Effects.user.js",
+  "code_size": 896,
+  "license": null,
+  "version": "1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

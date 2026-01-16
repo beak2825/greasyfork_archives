@@ -1,0 +1,34 @@
+{
+  "id": 551133,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-30T10:04:07.000Z",
+  "code_updated_at": "2025-09-30T11:16:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "Ice Hockey xG",
+  "description": "Automaticky otevře visualizaci (xG) v nové záložce.",
+  "url": "https://greasyfork.org/scripts/551133-ice-hockey-xg",
+  "code_url": "https://update.greasyfork.org/scripts/551133/Ice%20Hockey%20xG.user.js",
+  "code_size": 992,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

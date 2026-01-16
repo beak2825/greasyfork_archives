@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498506,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-21T07:30:19.000Z",
+    "code_updated_at": "2024-06-21T07:30:19.000Z",
+    "namespace": "Private Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321474,
+        "name": "Duolingo Cheats",
+        "created_at": "2024-06-21T07:18:37.000Z",
+        "url": "https://greasyfork.org/users/1321474-duolingo-cheats"
+      }
+    ],
+    "name": "DuoCheat Bot auto command executer(xp farm)",
+    "description": "6/21/2024, 12:35:36 PM",
+    "url": "https://greasyfork.org/scripts/498506-duocheat-bot-auto-command-executer-xp-farm",
+    "code_url": "https://update.greasyfork.org/scripts/498506/DuoCheat%20Bot%20auto%20command%20executer%28xp%20farm%29.user.js",
+    "code_size": 3968,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

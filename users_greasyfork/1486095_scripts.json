@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540106,
+    "daily_installs": 0,
+    "total_installs": 38,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T08:59:07.000Z",
+    "code_updated_at": "2025-06-20T08:59:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486095,
+        "name": "Yousef Shamsaldeen",
+        "created_at": "2025-06-20T08:55:58.000Z",
+        "url": "https://greasyfork.org/users/1486095-yousef-shamsaldeen"
+      }
+    ],
+    "name": "YouTube Enhancer: Skip Ads, Expand Description, Disable Shorts",
+    "description": "Skips video ads, auto-expands description, and redirects YouTube Shorts to normal player",
+    "url": "https://greasyfork.org/scripts/540106-youtube-enhancer-skip-ads-expand-description-disable-shorts",
+    "code_url": "https://update.greasyfork.org/scripts/540106/YouTube%20Enhancer%3A%20Skip%20Ads%2C%20Expand%20Description%2C%20Disable%20Shorts.user.js",
+    "code_size": 2040,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 546294,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-18T14:09:33.000Z",
+  "code_updated_at": "2025-08-22T14:22:15.000Z",
+  "namespace": "https://github.com/yingchen6",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505970,
+      "name": "YY3",
+      "created_at": "2025-08-17T14:42:31.000Z",
+      "url": "https://greasyfork.org/users/1505970-yy3",
+      "scripts": [
+        {
+          "id": 546294,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-18T14:09:33.000Z",
+          "code_updated_at": "2025-08-22T14:22:15.000Z",
+          "namespace": "https://github.com/yingchen6",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "定时自动关闭网页(Close the page regularly)",
+          "description": "Drag and drop the pop-up window, set the slider for minutes + seconds, the small ball in the upper left corner shows the remaining time, and the theme can be switched.",
+          "url": "https://greasyfork.org/scripts/546294-%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E7%BD%91%E9%A1%B5-close-the-page-regularly",
+          "code_url": "https://update.greasyfork.org/scripts/546294/%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E7%BD%91%E9%A1%B5%28Close%20the%20page%20regularly%29.user.js",
+          "code_size": 12645,
+          "license": "MIT License",
+          "version": "1.8.19.17",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "定时自动关闭网页(Close the page regularly)",
+  "description": "Drag and drop the pop-up window, set the slider for minutes + seconds, the small ball in the upper left corner shows the remaining time, and the theme can be switched.",
+  "url": "https://greasyfork.org/scripts/546294-%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E7%BD%91%E9%A1%B5-close-the-page-regularly",
+  "code_url": "https://update.greasyfork.org/scripts/546294/%E5%AE%9A%E6%97%B6%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E7%BD%91%E9%A1%B5%28Close%20the%20page%20regularly%29.user.js",
+  "code_size": 12645,
+  "license": "MIT License",
+  "version": "1.8.19.17",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 523330,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T22:32:34.000Z",
+  "code_updated_at": "2025-01-14T18:11:42.000Z",
+  "namespace": "https://whompingwalr.us/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 392947,
+      "name": "Whomping Walrus",
+      "created_at": "2019-10-29T03:59:03.000Z",
+      "url": "https://greasyfork.org/users/392947-whomping-walrus",
+      "scripts": []
+    }
+  ],
+  "name": "KnowBe4 Training Accessibility Plugin",
+  "description": "Automates repetitive stress risks incurred by the usual completion of KnowBe4 online training tasks.  By installing and activating this script, you affirm you have read and do agree to the full texts of your trainings.  If you disagree, do not install or enable this script.  Activates automatically upon opening a specific supported training window.",
+  "url": "https://greasyfork.org/scripts/523330-knowbe4-training-accessibility-plugin",
+  "code_url": "https://update.greasyfork.org/scripts/523330/KnowBe4%20Training%20Accessibility%20Plugin.user.js",
+  "code_size": 2704,
+  "license": "MIT License",
+  "version": "2025.01.14",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

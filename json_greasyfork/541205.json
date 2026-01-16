@@ -1,0 +1,33 @@
+{
+  "id": 541205,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-30T12:48:41.000Z",
+  "code_updated_at": "2025-07-13T00:13:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1090050,
+      "name": "Bryan W",
+      "created_at": "2023-06-03T15:42:44.000Z",
+      "url": "https://greasyfork.org/users/1090050-bryan-w"
+    }
+  ],
+  "name": "Neopets Shop Report Autofill",
+  "description": "Detects bot accounts with specific shop banner and reports them, including profile link in report",
+  "url": "https://greasyfork.org/scripts/541205-neopets-shop-report-autofill",
+  "code_url": "https://update.greasyfork.org/scripts/541205/Neopets%20Shop%20Report%20Autofill.user.js",
+  "code_size": 24544,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

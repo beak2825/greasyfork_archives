@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515396,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-02T13:49:29.000Z",
+    "code_updated_at": "2024-11-02T13:49:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 667387,
+        "name": "SMakoto",
+        "created_at": "2020-07-16T12:16:39.000Z",
+        "url": "https://greasyfork.org/users/667387-smakoto"
+      }
+    ],
+    "name": "自动下载模型站预览与简介",
+    "description": "Automatically download images and description of some model site. 需要在油猴脚本中设置-通用开启高级模式，然后在下载 BETA中下载模式选择浏览器api，然后增加json进白名单（或者不想下json也可以不设置）。支持模之屋、bowlroll、booth。",
+    "url": "https://greasyfork.org/scripts/515396-%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9E%8B%E7%AB%99%E9%A2%84%E8%A7%88%E4%B8%8E%E7%AE%80%E4%BB%8B",
+    "code_url": "https://update.greasyfork.org/scripts/515396/%E8%87%AA%E5%8A%A8%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9E%8B%E7%AB%99%E9%A2%84%E8%A7%88%E4%B8%8E%E7%AE%80%E4%BB%8B.user.js",
+    "code_size": 14516,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

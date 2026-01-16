@@ -1,0 +1,34 @@
+{
+  "id": 531441,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-31T19:41:11.000Z",
+  "code_updated_at": "2025-03-31T19:41:35.000Z",
+  "namespace": "https://greasyfork.org/users/1446917",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1446917,
+      "name": "k0gasa",
+      "created_at": "2025-03-17T15:41:29.000Z",
+      "url": "https://greasyfork.org/users/1446917-k0gasa",
+      "scripts": []
+    }
+  ],
+  "name": "catalog + pods",
+  "description": "adds all items to inventory + pods",
+  "url": "https://greasyfork.org/scripts/531441-catalog-pods",
+  "code_url": "https://update.greasyfork.org/scripts/531441/catalog%20%2B%20pods.user.js",
+  "code_size": 44054,
+  "license": null,
+  "version": "5.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

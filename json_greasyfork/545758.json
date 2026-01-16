@@ -1,0 +1,33 @@
+{
+  "id": 545758,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-14T01:19:50.000Z",
+  "code_updated_at": "2025-08-14T01:21:45.000Z",
+  "namespace": "zhuimang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1504556,
+      "name": "zhuimang",
+      "created_at": "2025-08-13T08:53:03.000Z",
+      "url": "https://greasyfork.org/users/1504556-zhuimang"
+    }
+  ],
+  "name": "新华三大讲堂 | 完成视频 + 屏蔽检测 + 动态时长 + 自动刷新",
+  "description": "屏蔽切标签/鼠标检测防暂停，提供手动完成按钮、秒过视频按钮",
+  "url": "https://greasyfork.org/scripts/545758-%E6%96%B0%E5%8D%8E%E4%B8%89%E5%A4%A7%E8%AE%B2%E5%A0%82-%E5%AE%8C%E6%88%90%E8%A7%86%E9%A2%91-%E5%B1%8F%E8%94%BD%E6%A3%80%E6%B5%8B-%E5%8A%A8%E6%80%81%E6%97%B6%E9%95%BF-%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/545758/%E6%96%B0%E5%8D%8E%E4%B8%89%E5%A4%A7%E8%AE%B2%E5%A0%82%20%7C%20%E5%AE%8C%E6%88%90%E8%A7%86%E9%A2%91%20%2B%20%E5%B1%8F%E8%94%BD%E6%A3%80%E6%B5%8B%20%2B%20%E5%8A%A8%E6%80%81%E6%97%B6%E9%95%BF%20%2B%20%E8%87%AA%E5%8A%A8%E5%88%B7%E6%96%B0.user.js",
+  "code_size": 5972,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

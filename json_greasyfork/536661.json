@@ -1,0 +1,34 @@
+{
+  "id": 536661,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-21T06:15:23.000Z",
+  "code_updated_at": "2025-05-21T10:49:51.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431301,
+      "name": "Pehn Gian (qweasdzx9999)",
+      "created_at": "2025-02-04T10:21:51.000Z",
+      "url": "https://greasyfork.org/users/1431301-pehn-gian-qweasdzx9999",
+      "scripts": []
+    }
+  ],
+  "name": "百度网页端在回复中插入@吧务名",
+  "description": "在网页最左端的按钮，按下后在相应的回复框插入@吧务名",
+  "url": "https://greasyfork.org/scripts/536661-%E7%99%BE%E5%BA%A6%E7%BD%91%E9%A1%B5%E7%AB%AF%E5%9C%A8%E5%9B%9E%E5%A4%8D%E4%B8%AD%E6%8F%92%E5%85%A5-%E5%90%A7%E5%8A%A1%E5%90%8D",
+  "code_url": "https://update.greasyfork.org/scripts/536661/%E7%99%BE%E5%BA%A6%E7%BD%91%E9%A1%B5%E7%AB%AF%E5%9C%A8%E5%9B%9E%E5%A4%8D%E4%B8%AD%E6%8F%92%E5%85%A5%40%E5%90%A7%E5%8A%A1%E5%90%8D.user.js",
+  "code_size": 6381,
+  "license": null,
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

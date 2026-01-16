@@ -1,0 +1,59 @@
+{
+  "id": 534811,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-03T12:56:47.000Z",
+  "code_updated_at": "2025-05-03T12:58:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465194,
+      "name": "NirajShr3stha",
+      "created_at": "2025-05-03T12:50:35.000Z",
+      "url": "https://greasyfork.org/users/1465194-nirajshr3stha",
+      "scripts": [
+        {
+          "id": 534811,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-03T12:56:47.000Z",
+          "code_updated_at": "2025-05-03T12:58:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Twitch Auto !join Command (SlateJS Clipboard Injection)",
+          "description": "Auto-send \"!join\" on Twitch chat (modern UI) using clipboard paste for full compatibility",
+          "url": "https://greasyfork.org/scripts/534811-twitch-auto-join-command-slatejs-clipboard-injection",
+          "code_url": "https://update.greasyfork.org/scripts/534811/Twitch%20Auto%20%21join%20Command%20%28SlateJS%20Clipboard%20Injection%29.user.js",
+          "code_size": 4040,
+          "license": "MIT License",
+          "version": "2024.05.09",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Twitch Auto !join Command (SlateJS Clipboard Injection)",
+  "description": "Auto-send \"!join\" on Twitch chat (modern UI) using clipboard paste for full compatibility",
+  "url": "https://greasyfork.org/scripts/534811-twitch-auto-join-command-slatejs-clipboard-injection",
+  "code_url": "https://update.greasyfork.org/scripts/534811/Twitch%20Auto%20%21join%20Command%20%28SlateJS%20Clipboard%20Injection%29.user.js",
+  "code_size": 4040,
+  "license": "MIT License",
+  "version": "2024.05.09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

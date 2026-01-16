@@ -1,0 +1,34 @@
+{
+  "id": 539077,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T04:38:58.000Z",
+  "code_updated_at": "2025-06-12T01:29:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481906,
+      "name": "DrCatto",
+      "created_at": "2025-06-11T04:37:59.000Z",
+      "url": "https://greasyfork.org/users/1481906-drcatto",
+      "scripts": []
+    }
+  ],
+  "name": "BOXED.GG Gem Drop Joiner",
+  "description": "Enhanced auto-joiner with advanced anti-detection, human simulation and full stealth mode",
+  "url": "https://greasyfork.org/scripts/539077-boxed-gg-gem-drop-joiner",
+  "code_url": "https://update.greasyfork.org/scripts/539077/BOXEDGG%20Gem%20Drop%20Joiner.user.js",
+  "code_size": 55432,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

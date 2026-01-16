@@ -1,0 +1,35 @@
+[
+  {
+    "id": 506548,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-03T03:55:34.000Z",
+    "code_updated_at": "2024-09-03T04:16:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 860600,
+        "name": "YM555",
+        "created_at": "2022-01-03T08:05:59.000Z",
+        "url": "https://greasyfork.org/users/860600-ym555"
+      }
+    ],
+    "name": "chatgpt 验证码",
+    "description": "这个脚本旨在改善在 chatgpt.com 网站上的免费用户体验,包括自动移除可能出现的验证码，输入框回车时自动绕过烦人的验证码。",
+    "url": "https://greasyfork.org/scripts/506548-chatgpt-%E9%AA%8C%E8%AF%81%E7%A0%81",
+    "code_url": "https://update.greasyfork.org/scripts/506548/chatgpt%20%E9%AA%8C%E8%AF%81%E7%A0%81.user.js",
+    "code_size": 3226,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

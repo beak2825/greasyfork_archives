@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497019,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-04T10:13:23.000Z",
+    "code_updated_at": "2024-06-04T10:13:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1312256,
+        "name": "daviddvorszky",
+        "created_at": "2024-06-04T09:41:12.000Z",
+        "url": "https://greasyfork.org/users/1312256-daviddvorszky"
+      }
+    ],
+    "name": "Resource Timer",
+    "description": "shows how long it takes to gather enough resources to build a building",
+    "url": "https://greasyfork.org/scripts/497019-resource-timer",
+    "code_url": "https://update.greasyfork.org/scripts/497019/Resource%20Timer.user.js",
+    "code_size": 3676,
+    "license": "MIT License",
+    "version": "2024-06-04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

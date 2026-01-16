@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544803,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-06T06:46:52.000Z",
+    "code_updated_at": "2025-08-06T06:46:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502051,
+        "name": "DarkerKnight",
+        "created_at": "2025-08-06T05:26:40.000Z",
+        "url": "https://greasyfork.org/users/1502051-darkerknight"
+      }
+    ],
+    "name": "TBD Auto Complete Stickers And Shout Usernames",
+    "description": "Will auto fill the shout username and some emojies",
+    "url": "https://greasyfork.org/scripts/544803-tbd-auto-complete-stickers-and-shout-usernames",
+    "code_url": "https://update.greasyfork.org/scripts/544803/TBD%20Auto%20Complete%20Stickers%20And%20Shout%20Usernames.user.js",
+    "code_size": 3774,
+    "license": "MIT License",
+    "version": "2025-08-05",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

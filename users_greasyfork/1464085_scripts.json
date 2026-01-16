@@ -1,0 +1,68 @@
+[
+  {
+    "id": 538064,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-02T07:22:49.000Z",
+    "code_updated_at": "2025-06-02T07:22:49.000Z",
+    "namespace": "viasyla",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464085,
+        "name": "viasyla",
+        "created_at": "2025-04-30T16:27:55.000Z",
+        "url": "https://greasyfork.org/users/1464085-viasyla"
+      }
+    ],
+    "name": "AO3 BetterShip",
+    "description": "save include/exclude tags for fast search; hide non-top-tag works",
+    "url": "https://greasyfork.org/scripts/538064-ao3-bettership",
+    "code_url": "https://update.greasyfork.org/scripts/538064/AO3%20BetterShip.user.js",
+    "code_size": 20869,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534546,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-30T18:12:38.000Z",
+    "code_updated_at": "2025-05-01T07:10:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1464085,
+        "name": "viasyla",
+        "created_at": "2025-04-30T16:27:55.000Z",
+        "url": "https://greasyfork.org/users/1464085-viasyla"
+      }
+    ],
+    "name": "Douban Comment Deletion",
+    "description": "Delete your comments in group posts",
+    "url": "https://greasyfork.org/scripts/534546-douban-comment-deletion",
+    "code_url": "https://update.greasyfork.org/scripts/534546/Douban%20Comment%20Deletion.user.js",
+    "code_size": 8276,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

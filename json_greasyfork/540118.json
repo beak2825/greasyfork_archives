@@ -1,0 +1,59 @@
+{
+  "id": 540118,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T09:44:27.000Z",
+  "code_updated_at": "2025-06-20T09:44:27.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486116,
+      "name": "rainis-gianluca",
+      "created_at": "2025-06-20T09:41:16.000Z",
+      "url": "https://greasyfork.org/users/1486116-rainis-gianluca",
+      "scripts": [
+        {
+          "id": 540118,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-20T09:44:27.000Z",
+          "code_updated_at": "2025-06-20T09:44:27.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AD Block for Aranzulla site",
+          "description": "A simple script to remove ads from the Aranzulla website. This script bypass the adblock detection of the site.",
+          "url": "https://greasyfork.org/scripts/540118-ad-block-for-aranzulla-site",
+          "code_url": "https://update.greasyfork.org/scripts/540118/AD%20Block%20for%20Aranzulla%20site.user.js",
+          "code_size": 562,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AD Block for Aranzulla site",
+  "description": "A simple script to remove ads from the Aranzulla website. This script bypass the adblock detection of the site.",
+  "url": "https://greasyfork.org/scripts/540118-ad-block-for-aranzulla-site",
+  "code_url": "https://update.greasyfork.org/scripts/540118/AD%20Block%20for%20Aranzulla%20site.user.js",
+  "code_size": 562,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

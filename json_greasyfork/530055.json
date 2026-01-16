@@ -1,0 +1,33 @@
+{
+  "id": 530055,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-17T05:59:51.000Z",
+  "code_updated_at": "2025-03-28T06:09:28.000Z",
+  "namespace": "b38.dev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 165920,
+      "name": "VickScarlet",
+      "created_at": "2018-01-07T18:24:12.000Z",
+      "url": "https://greasyfork.org/users/165920-vickscarlet"
+    }
+  ],
+  "name": "Bangumi 统一地址",
+  "description": "Bangumi 统一地址 v1",
+  "url": "https://greasyfork.org/scripts/530055-bangumi-%E7%BB%9F%E4%B8%80%E5%9C%B0%E5%9D%80",
+  "code_url": "https://update.greasyfork.org/scripts/530055/Bangumi%20%E7%BB%9F%E4%B8%80%E5%9C%B0%E5%9D%80.user.js",
+  "code_size": 1613,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

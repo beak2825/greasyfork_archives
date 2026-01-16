@@ -1,0 +1,34 @@
+{
+  "id": 553579,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-24T14:07:11.000Z",
+  "code_updated_at": "2025-10-24T14:07:11.000Z",
+  "namespace": "https://greasyfork.org/users/ton-nom",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1530250,
+      "name": "ryad allaoui",
+      "created_at": "2025-10-24T14:02:03.000Z",
+      "url": "https://greasyfork.org/users/1530250-ryad-allaoui",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube Customizer",
+  "description": "Personnalise l'apparence de YouTube (couleurs, éléments cachés, etc.)",
+  "url": "https://greasyfork.org/scripts/553579-youtube-customizer",
+  "code_url": "https://update.greasyfork.org/scripts/553579/1683158/YouTube%20Customizer.js",
+  "code_size": 2310,
+  "license": null,
+  "version": "1.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

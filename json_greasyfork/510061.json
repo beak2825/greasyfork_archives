@@ -1,0 +1,34 @@
+{
+  "id": 510061,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-25T00:42:35.000Z",
+  "code_updated_at": "2024-09-25T00:42:34.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/FoliageOwO/QingJiaoHelper",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 807650,
+      "name": "381475008",
+      "created_at": "2021-08-23T07:27:58.000Z",
+      "url": "https://greasyfork.org/users/807650-381475008",
+      "scripts": []
+    }
+  ],
+  "name": "2024青骄",
+  "description": "跳过视频自动完成所有课程每日领取学分  课程自动填充答案",
+  "url": "https://greasyfork.org/scripts/510061-2024%E9%9D%92%E9%AA%84",
+  "code_url": "https://update.greasyfork.org/scripts/510061/2024%E9%9D%92%E9%AA%84.user.js",
+  "code_size": 37423,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.3.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

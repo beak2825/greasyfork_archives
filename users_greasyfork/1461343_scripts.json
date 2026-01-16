@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543336,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-22T14:31:03.000Z",
+    "code_updated_at": "2025-07-22T15:06:26.000Z",
+    "namespace": "https://greasyfork.org/en/users/xxoo110",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461343,
+        "name": "xxoo110",
+        "created_at": "2025-04-23T12:05:04.000Z",
+        "url": "https://greasyfork.org/users/1461343-xxoo110"
+      }
+    ],
+    "name": "Video Background Play Fix2",
+    "description": "Prevents YouTube and Vimeo from pausing videos when minimizing or switching tabs. Cross-browser port of https://addons.mozilla.org/en-US/firefox/addon/video-background-play-fix/",
+    "url": "https://greasyfork.org/scripts/543336-video-background-play-fix2",
+    "code_url": "https://update.greasyfork.org/scripts/543336/Video%20Background%20Play%20Fix2.user.js",
+    "code_size": 4584,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

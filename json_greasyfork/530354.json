@@ -1,0 +1,34 @@
+{
+  "id": 530354,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-20T11:41:55.000Z",
+  "code_updated_at": "2025-06-20T22:53:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448095,
+      "name": "worpiton",
+      "created_at": "2025-03-20T11:33:25.000Z",
+      "url": "https://greasyfork.org/users/1448095-worpiton",
+      "scripts": []
+    }
+  ],
+  "name": "Discord Quest Spoofer",
+  "description": "Automates Discord quest completion",
+  "url": "https://greasyfork.org/scripts/530354-discord-quest-spoofer",
+  "code_url": "https://update.greasyfork.org/scripts/530354/Discord%20Quest%20Spoofer.user.js",
+  "code_size": 11918,
+  "license": null,
+  "version": "4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

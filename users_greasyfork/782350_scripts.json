@@ -1,0 +1,68 @@
+[
+  {
+    "id": 528279,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-27T18:02:37.000Z",
+    "code_updated_at": "2025-02-27T18:02:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 782350,
+        "name": "SilentHill",
+        "created_at": "2021-06-11T14:33:11.000Z",
+        "url": "https://greasyfork.org/users/782350-silenthill"
+      }
+    ],
+    "name": "Alist MPV Play Button",
+    "description": "在 Alist 页面上添加 MPV 播放按钮",
+    "url": "https://greasyfork.org/scripts/528279-alist-mpv-play-button",
+    "code_url": "https://update.greasyfork.org/scripts/528279/Alist%20MPV%20Play%20Button.user.js",
+    "code_size": 2644,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 505700,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-29T02:50:14.000Z",
+    "code_updated_at": "2024-08-29T02:50:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 782350,
+        "name": "SilentHill",
+        "created_at": "2021-06-11T14:33:11.000Z",
+        "url": "https://greasyfork.org/users/782350-silenthill"
+      }
+    ],
+    "name": "Zhihu Cleaner",
+    "description": "Clean Zhihu by removing specified elements and hiding images periodically for better reading experience.",
+    "url": "https://greasyfork.org/scripts/505700-zhihu-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/505700/Zhihu%20Cleaner.user.js",
+    "code_size": 1987,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

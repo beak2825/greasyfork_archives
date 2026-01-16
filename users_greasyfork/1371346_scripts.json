@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520675,
+    "daily_installs": 0,
+    "total_installs": 61,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-14T05:36:57.000Z",
+    "code_updated_at": "2025-03-05T10:22:16.000Z",
+    "namespace": "https://greasyfork.org/ko/scripts/520675",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371346,
+        "name": "_하와와",
+        "created_at": "2024-09-22T04:38:29.000Z",
+        "url": "https://greasyfork.org/users/1371346-%ED%95%98%EC%99%80%EC%99%80"
+      }
+    ],
+    "name": "SOOP(숲) - 게시글/다시보기 댓글 엑셀파일로 추출",
+    "description": "SOOP 채널의 게시글이나 다시보기에서 댓글, 답글을 추출하여 엑셀파일로 저장합니다.",
+    "url": "https://greasyfork.org/scripts/520675-soop-%EC%88%B2-%EA%B2%8C%EC%8B%9C%EA%B8%80-%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0-%EB%8C%93%EA%B8%80-%EC%97%91%EC%85%80%ED%8C%8C%EC%9D%BC%EB%A1%9C-%EC%B6%94%EC%B6%9C",
+    "code_url": "https://update.greasyfork.org/scripts/520675/SOOP%28%EC%88%B2%29%20-%20%EA%B2%8C%EC%8B%9C%EA%B8%80%EB%8B%A4%EC%8B%9C%EB%B3%B4%EA%B8%B0%20%EB%8C%93%EA%B8%80%20%EC%97%91%EC%85%80%ED%8C%8C%EC%9D%BC%EB%A1%9C%20%EC%B6%94%EC%B6%9C.user.js",
+    "code_size": 10867,
+    "license": "MIT License",
+    "version": "20250305",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

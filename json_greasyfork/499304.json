@@ -1,0 +1,59 @@
+{
+  "id": 499304,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-30T15:37:57.000Z",
+  "code_updated_at": "2024-06-30T15:37:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326286,
+      "name": "hidn",
+      "created_at": "2024-06-30T15:35:20.000Z",
+      "url": "https://greasyfork.org/users/1326286-hidn",
+      "scripts": [
+        {
+          "id": 499304,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-30T15:37:57.000Z",
+          "code_updated_at": "2024-06-30T15:37:57.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Speed Up Time Script",
+          "description": "Tăng tốc thời gian trên trang web khi nhấp vào phần tử cụ thể",
+          "url": "https://greasyfork.org/scripts/499304-speed-up-time-script",
+          "code_url": "https://update.greasyfork.org/scripts/499304/Speed%20Up%20Time%20Script.user.js",
+          "code_size": 8407,
+          "license": "Hi",
+          "version": "1.0",
+          "locale": "vi",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Speed Up Time Script",
+  "description": "Tăng tốc thời gian trên trang web khi nhấp vào phần tử cụ thể",
+  "url": "https://greasyfork.org/scripts/499304-speed-up-time-script",
+  "code_url": "https://update.greasyfork.org/scripts/499304/Speed%20Up%20Time%20Script.user.js",
+  "code_size": 8407,
+  "license": "Hi",
+  "version": "1.0",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

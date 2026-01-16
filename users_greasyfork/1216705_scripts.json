@@ -1,0 +1,167 @@
+[
+  {
+    "id": 549389,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-13T10:23:33.000Z",
+    "code_updated_at": "2025-09-13T10:23:33.000Z",
+    "namespace": "FunPay: Сумма выводов",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1216705,
+        "name": "Maesta_Nequitia",
+        "created_at": "2023-11-13T10:26:21.000Z",
+        "url": "https://greasyfork.org/users/1216705-maesta-nequitia"
+      }
+    ],
+    "name": "FunPay: Сумма выводов",
+    "description": "Показывает суммы выводов по годам и итоговой суммой",
+    "url": "https://greasyfork.org/scripts/549389-funpay-%D1%81%D1%83%D0%BC%D0%BC%D0%B0-%D0%B2%D1%8B%D0%B2%D0%BE%D0%B4%D0%BE%D0%B2",
+    "code_url": "https://update.greasyfork.org/scripts/549389/FunPay%3A%20%D0%A1%D1%83%D0%BC%D0%BC%D0%B0%20%D0%B2%D1%8B%D0%B2%D0%BE%D0%B4%D0%BE%D0%B2.user.js",
+    "code_size": 7149,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549380,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-13T07:56:14.000Z",
+    "code_updated_at": "2025-09-13T07:56:14.000Z",
+    "namespace": "tape-operator",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1216705,
+        "name": "Maesta_Nequitia",
+        "created_at": "2023-11-13T10:26:21.000Z",
+        "url": "https://greasyfork.org/users/1216705-maesta-nequitia"
+      }
+    ],
+    "name": "Tape Operator",
+    "description": "Watch movies on IMDB, TMDB, Kinopoisk and Letterboxd with custom button!",
+    "url": "https://greasyfork.org/scripts/549380-tape-operator",
+    "code_url": "https://update.greasyfork.org/scripts/549380/Tape%20Operator.user.js",
+    "code_size": 7760,
+    "license": "MIT License",
+    "version": "3.3.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549379,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-13T07:53:25.000Z",
+    "code_updated_at": "2025-09-13T07:53:25.000Z",
+    "namespace": "All-in-One Tools",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1216705,
+        "name": "Maesta_Nequitia",
+        "created_at": "2023-11-13T10:26:21.000Z",
+        "url": "https://greasyfork.org/users/1216705-maesta-nequitia"
+      }
+    ],
+    "name": "Kinopoisk All-in-One Tools",
+    "description": "Скрипт для Kinopoisk и IMDb: случайный фильм, быстрый поиск с языком, центрирование и фиксированный заголовок IMDb",
+    "url": "https://greasyfork.org/scripts/549379-kinopoisk-all-in-one-tools",
+    "code_url": "https://update.greasyfork.org/scripts/549379/Kinopoisk%20All-in-One%20Tools.user.js",
+    "code_size": 7999,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549355,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-13T04:47:05.000Z",
+    "code_updated_at": "2025-09-13T04:47:05.000Z",
+    "namespace": "Little Doll Lite",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1216705,
+        "name": "Maesta_Nequitia",
+        "created_at": "2023-11-13T10:26:21.000Z",
+        "url": "https://greasyfork.org/users/1216705-maesta-nequitia"
+      }
+    ],
+    "name": "Little Doll Lite",
+    "description": "Автоматическая смена и установка часового пояса",
+    "url": "https://greasyfork.org/scripts/549355-little-doll-lite",
+    "code_url": "https://update.greasyfork.org/scripts/549355/Little%20Doll%20Lite.user.js",
+    "code_size": 2847,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541369,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T20:41:19.000Z",
+    "code_updated_at": "2025-07-01T20:41:19.000Z",
+    "namespace": "Twitch Betterment",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1216705,
+        "name": "Maesta_Nequitia",
+        "created_at": "2023-11-13T10:26:21.000Z",
+        "url": "https://greasyfork.org/users/1216705-maesta-nequitia"
+      }
+    ],
+    "name": "Twitch Betterment",
+    "description": "Отключение автоматического понижения качества видео и автоматическое начисление очков Twitch.",
+    "url": "https://greasyfork.org/scripts/541369-twitch-betterment",
+    "code_url": "https://update.greasyfork.org/scripts/541369/Twitch%20Betterment.user.js",
+    "code_size": 1523,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 545086,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T19:28:18.000Z",
+    "code_updated_at": "2025-08-08T19:28:18.000Z",
+    "namespace": "https://github.com/TwoSquirrels",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1288493,
+        "name": "TwoSquirrels",
+        "created_at": "2024-04-15T06:28:30.000Z",
+        "url": "https://greasyfork.org/users/1288493-twosquirrels"
+      }
+    ],
+    "name": "Suima Rainbow",
+    "description": "五フッ化アンチモンを虹色に光らせるだけ",
+    "url": "https://greasyfork.org/scripts/545086-suima-rainbow",
+    "code_url": "https://update.greasyfork.org/scripts/545086/Suima%20Rainbow.user.css",
+    "code_size": 357,
+    "license": "CC0",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523649,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T12:54:26.000Z",
+    "code_updated_at": "2025-01-13T13:49:29.000Z",
+    "namespace": "https://github.com/TwoSquirrels",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1288493,
+        "name": "TwoSquirrels",
+        "created_at": "2024-04-15T06:28:30.000Z",
+        "url": "https://greasyfork.org/users/1288493-twosquirrels"
+      }
+    ],
+    "name": "traQ Arrows Linkifier",
+    "description": "traQ 上のメッセージ先頭の「↑n」をリンクに置き換えます",
+    "url": "https://greasyfork.org/scripts/523649-traq-arrows-linkifier",
+    "code_url": "https://update.greasyfork.org/scripts/523649/traQ%20Arrows%20Linkifier.user.js",
+    "code_size": 5399,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511743,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T08:18:20.000Z",
+    "code_updated_at": "2024-10-07T08:18:20.000Z",
+    "namespace": "https://github.com/TwoSquirrels",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1288493,
+        "name": "TwoSquirrels",
+        "created_at": "2024-04-15T06:28:30.000Z",
+        "url": "https://greasyfork.org/users/1288493-twosquirrels"
+      }
+    ],
+    "name": "Risu Linguaporta Tool",
+    "description": "cheat",
+    "url": "https://greasyfork.org/scripts/511743-risu-linguaporta-tool",
+    "code_url": "https://update.greasyfork.org/scripts/511743/Risu%20Linguaporta%20Tool.user.js",
+    "code_size": 7980,
+    "license": "Creative Commons Attribution Non Commercial 4.0 International",
+    "version": "0.4",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511734,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T07:30:17.000Z",
+    "code_updated_at": "2024-10-09T07:10:17.000Z",
+    "namespace": "https://github.com/TwoSquirrels",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1288493,
+        "name": "TwoSquirrels",
+        "created_at": "2024-04-15T06:28:30.000Z",
+        "url": "https://greasyfork.org/users/1288493-twosquirrels"
+      }
+    ],
+    "name": "zenkyo-hoihoi",
+    "description": "traQ 用物理 CTF 対策ネタスクリプト",
+    "url": "https://greasyfork.org/scripts/511734-zenkyo-hoihoi",
+    "code_url": "https://update.greasyfork.org/scripts/511734/zenkyo-hoihoi.user.js",
+    "code_size": 6924,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

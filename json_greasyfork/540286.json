@@ -1,0 +1,59 @@
+{
+  "id": 540286,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-21T03:48:39.000Z",
+  "code_updated_at": "2025-06-21T03:48:39.000Z",
+  "namespace": "https://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486456,
+      "name": "小蓝条",
+      "created_at": "2025-06-21T03:46:01.000Z",
+      "url": "https://greasyfork.org/users/1486456-%E5%B0%8F%E8%93%9D%E6%9D%A1",
+      "scripts": [
+        {
+          "id": 540286,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-21T03:48:39.000Z",
+          "code_updated_at": "2025-06-21T03:48:39.000Z",
+          "namespace": "https://greasyfork.org/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "UPC(华东)教务系统通用自动评教(最终修复版)",
+          "description": "[2025最终版] 解决“请不要选相同一项”和“优秀占比已超过限制”的问题。脚本默认评为“良好”(80-89分)来绕过系统限制。智能识别理论课(单选框)和实验课(文本框)并全自动完成。",
+          "url": "https://greasyfork.org/scripts/540286-upc-%E5%8D%8E%E4%B8%9C-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%80%9A%E7%94%A8%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99-%E6%9C%80%E7%BB%88%E4%BF%AE%E5%A4%8D%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/540286/UPC%28%E5%8D%8E%E4%B8%9C%29%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%80%9A%E7%94%A8%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%28%E6%9C%80%E7%BB%88%E4%BF%AE%E5%A4%8D%E7%89%88%29.user.js",
+          "code_size": 8119,
+          "license": "MIT License",
+          "version": "3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "UPC(华东)教务系统通用自动评教(最终修复版)",
+  "description": "[2025最终版] 解决“请不要选相同一项”和“优秀占比已超过限制”的问题。脚本默认评为“良好”(80-89分)来绕过系统限制。智能识别理论课(单选框)和实验课(文本框)并全自动完成。",
+  "url": "https://greasyfork.org/scripts/540286-upc-%E5%8D%8E%E4%B8%9C-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%80%9A%E7%94%A8%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99-%E6%9C%80%E7%BB%88%E4%BF%AE%E5%A4%8D%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/540286/UPC%28%E5%8D%8E%E4%B8%9C%29%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E9%80%9A%E7%94%A8%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99%28%E6%9C%80%E7%BB%88%E4%BF%AE%E5%A4%8D%E7%89%88%29.user.js",
+  "code_size": 8119,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

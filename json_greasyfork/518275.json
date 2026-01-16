@@ -1,0 +1,33 @@
+{
+  "id": 518275,
+  "daily_installs": 0,
+  "total_installs": 44,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-21T00:00:57.000Z",
+  "code_updated_at": "2024-11-21T00:06:45.000Z",
+  "namespace": "brainly",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1148717,
+      "name": "Dev4Mod",
+      "created_at": "2023-08-11T02:28:50.000Z",
+      "url": "https://greasyfork.org/users/1148717-dev4mod"
+    }
+  ],
+  "name": "Brainly Plus",
+  "description": "Visualize as resposta e remova os paineis irritantes",
+  "url": "https://greasyfork.org/scripts/518275-brainly-plus",
+  "code_url": "https://update.greasyfork.org/scripts/518275/Brainly%20Plus.user.js",
+  "code_size": 1290,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

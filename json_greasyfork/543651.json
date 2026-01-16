@@ -1,0 +1,34 @@
+{
+  "id": 543651,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-25T22:40:51.000Z",
+  "code_updated_at": "2025-10-01T18:15:15.000Z",
+  "namespace": "CBI_P44_Plugins",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456457,
+      "name": "Tomas Morales",
+      "created_at": "2025-04-11T05:39:46.000Z",
+      "url": "https://greasyfork.org/users/1456457-tomas-morales",
+      "scripts": []
+    }
+  ],
+  "name": "OBG-Reporte de programa de citas de descarga",
+  "description": "Permite obtener un reporte del programa de citas, obtener información de las citas y obtener la información de los tiempos de arribo reales y tiempos de las tareas.",
+  "url": "https://greasyfork.org/scripts/543651-obg-reporte-de-programa-de-citas-de-descarga",
+  "code_url": "https://update.greasyfork.org/scripts/543651/OBG-Reporte%20de%20programa%20de%20citas%20de%20descarga.user.js",
+  "code_size": 102432,
+  "license": "MIT License",
+  "version": "2.3.5",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

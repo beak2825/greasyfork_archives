@@ -1,0 +1,68 @@
+[
+  {
+    "id": 552444,
+    "daily_installs": 1,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-13T07:45:07.000Z",
+    "code_updated_at": "2025-10-13T07:45:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 162399,
+        "name": "ddki",
+        "created_at": "2017-12-09T06:45:49.000Z",
+        "url": "https://greasyfork.org/users/162399-ddki"
+      }
+    ],
+    "name": "墨刀下载原型图片",
+    "description": "墨刀下载原型图片，悬浮球批量下载图片",
+    "url": "https://greasyfork.org/scripts/552444-%E5%A2%A8%E5%88%80%E4%B8%8B%E8%BD%BD%E5%8E%9F%E5%9E%8B%E5%9B%BE%E7%89%87",
+    "code_url": "https://update.greasyfork.org/scripts/552444/%E5%A2%A8%E5%88%80%E4%B8%8B%E8%BD%BD%E5%8E%9F%E5%9E%8B%E5%9B%BE%E7%89%87.user.js",
+    "code_size": 22348,
+    "license": null,
+    "version": "2025-10-13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530361,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-20T14:00:31.000Z",
+    "code_updated_at": "2025-03-20T14:00:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 162399,
+        "name": "ddki",
+        "created_at": "2017-12-09T06:45:49.000Z",
+        "url": "https://greasyfork.org/users/162399-ddki"
+      }
+    ],
+    "name": "夸克网盘-分享按时间倒序排序",
+    "description": "精准修改指定API请求的_sort参数",
+    "url": "https://greasyfork.org/scripts/530361-%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98-%E5%88%86%E4%BA%AB%E6%8C%89%E6%97%B6%E9%97%B4%E5%80%92%E5%BA%8F%E6%8E%92%E5%BA%8F",
+    "code_url": "https://update.greasyfork.org/scripts/530361/%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98-%E5%88%86%E4%BA%AB%E6%8C%89%E6%97%B6%E9%97%B4%E5%80%92%E5%BA%8F%E6%8E%92%E5%BA%8F.user.js",
+    "code_size": 2458,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

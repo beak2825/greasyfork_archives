@@ -1,0 +1,233 @@
+[
+  {
+    "id": 542542,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-14T11:19:51.000Z",
+    "code_updated_at": "2025-07-14T11:19:51.000Z",
+    "namespace": "notbot",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "Not a Bot",
+    "description": "Trying to do something",
+    "url": "https://greasyfork.org/scripts/542542-not-a-bot",
+    "code_url": "https://update.greasyfork.org/scripts/542542/Not%20a%20Bot.user.js",
+    "code_size": 16518,
+    "license": null,
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523087,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-07T04:54:55.000Z",
+    "code_updated_at": "2025-01-07T04:54:55.000Z",
+    "namespace": "https://greasyfork.org/users/1144622",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "PP BOOSTER ACTIVATOR",
+    "description": "try to activate the privillage!",
+    "url": "https://greasyfork.org/scripts/523087-pp-booster-activator",
+    "code_url": "https://update.greasyfork.org/scripts/523087/PP%20BOOSTER%20ACTIVATOR.user.js",
+    "code_size": 9583,
+    "license": null,
+    "version": "2025-01-07",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520861,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T05:03:10.000Z",
+    "code_updated_at": "2024-12-16T05:03:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "NEW NEW NEW",
+    "description": "try to control the world!",
+    "url": "https://greasyfork.org/scripts/520861-new-new-new",
+    "code_url": "https://update.greasyfork.org/scripts/520861/NEW%20NEW%20NEW.user.js",
+    "code_size": 58144,
+    "license": null,
+    "version": "08.08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518314,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-21T07:54:21.000Z",
+    "code_updated_at": "2025-12-01T04:26:46.000Z",
+    "namespace": "Amazing Journey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "Travel Light",
+    "description": "Your Journey!",
+    "url": "https://greasyfork.org/scripts/518314-travel-light",
+    "code_url": "https://update.greasyfork.org/scripts/518314/Travel%20Light.user.js",
+    "code_size": 17462,
+    "license": null,
+    "version": "2025.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512589,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-14T15:02:08.000Z",
+    "code_updated_at": "2024-10-14T15:02:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "Fetch Data on economy Indonesia",
+    "description": "try to fetch data from server and export to csv and txt",
+    "url": "https://greasyfork.org/scripts/512589-fetch-data-on-economy-indonesia",
+    "code_url": "https://update.greasyfork.org/scripts/512589/Fetch%20Data%20on%20economy%20Indonesia.user.js",
+    "code_size": 5945,
+    "license": null,
+    "version": "2024-10-14",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511303,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-03T05:45:48.000Z",
+    "code_updated_at": "2024-11-17T09:58:36.000Z",
+    "namespace": "something something",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "Click and Hit",
+    "description": "try to hit the ground and the sky!",
+    "url": "https://greasyfork.org/scripts/511303-click-and-hit",
+    "code_url": "https://update.greasyfork.org/scripts/511303/Click%20and%20Hit.user.js",
+    "code_size": 31850,
+    "license": null,
+    "version": "2024-11-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498151,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-17T09:05:13.000Z",
+    "code_updated_at": "2025-01-05T12:23:31.000Z",
+    "namespace": "Indo MOD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1144622,
+        "name": "32bitshop",
+        "created_at": "2023-08-05T12:52:47.000Z",
+        "url": "https://greasyfork.org/users/1144622-32bitshop"
+      }
+    ],
+    "name": "Indo Battle Manager",
+    "description": "try to take manage Indonesia",
+    "url": "https://greasyfork.org/scripts/498151-indo-battle-manager",
+    "code_url": "https://update.greasyfork.org/scripts/498151/Indo%20Battle%20Manager.user.js",
+    "code_size": 14250,
+    "license": null,
+    "version": "20250105",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

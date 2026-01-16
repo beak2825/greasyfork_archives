@@ -1,0 +1,33 @@
+{
+  "id": 544258,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-01T05:46:29.000Z",
+  "code_updated_at": "2025-08-01T05:48:07.000Z",
+  "namespace": "https://github.com/xiaozhang",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 458023,
+      "name": "script kiddie",
+      "created_at": "2020-03-12T11:14:37.000Z",
+      "url": "https://greasyfork.org/users/458023-script-kiddie"
+    }
+  ],
+  "name": "ChatGPT 回答完成提示音（WebAudio 方式）",
+  "description": "使用 Web Audio API 播放提示音，不依赖外链，避免无声，稳定可靠；每次回答后提醒一次。",
+  "url": "https://greasyfork.org/scripts/544258-chatgpt-%E5%9B%9E%E7%AD%94%E5%AE%8C%E6%88%90%E6%8F%90%E7%A4%BA%E9%9F%B3-webaudio-%E6%96%B9%E5%BC%8F",
+  "code_url": "https://update.greasyfork.org/scripts/544258/ChatGPT%20%E5%9B%9E%E7%AD%94%E5%AE%8C%E6%88%90%E6%8F%90%E7%A4%BA%E9%9F%B3%EF%BC%88WebAudio%20%E6%96%B9%E5%BC%8F%EF%BC%89.user.js",
+  "code_size": 3177,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

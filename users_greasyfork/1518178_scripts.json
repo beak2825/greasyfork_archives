@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550380,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-22T16:21:19.000Z",
+    "code_updated_at": "2025-09-29T04:04:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1518178,
+        "name": "Arere Ice (啊嘞嘞)",
+        "created_at": "2025-09-22T16:18:49.000Z",
+        "url": "https://greasyfork.org/users/1518178-arere-ice-%E5%95%8A%E5%98%9E%E5%98%9E"
+      }
+    ],
+    "name": "AI聊天对话框宽度调整",
+    "description": "调整AI聊天对话消息列宽度.目前涵盖ChatGPT和DeepSeek。",
+    "url": "https://greasyfork.org/scripts/550380-ai%E8%81%8A%E5%A4%A9%E5%AF%B9%E8%AF%9D%E6%A1%86%E5%AE%BD%E5%BA%A6%E8%B0%83%E6%95%B4",
+    "code_url": "https://update.greasyfork.org/scripts/550380/AI%E8%81%8A%E5%A4%A9%E5%AF%B9%E8%AF%9D%E6%A1%86%E5%AE%BD%E5%BA%A6%E8%B0%83%E6%95%B4.user.js",
+    "code_size": 12440,
+    "license": "MIT License",
+    "version": "2025-09-29",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

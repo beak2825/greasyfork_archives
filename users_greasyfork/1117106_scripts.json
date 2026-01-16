@@ -1,0 +1,134 @@
+[
+  {
+    "id": 550144,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T10:03:01.000Z",
+    "code_updated_at": "2025-09-20T10:03:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1117106,
+        "name": "Sunwuyuan",
+        "created_at": "2023-07-02T07:25:48.000Z",
+        "url": "https://greasyfork.org/users/1117106-sunwuyuan"
+      }
+    ],
+    "name": "Auto Read LINUXDO & IDCFlare",
+    "description": "自动刷 LINUXDO & IDCFlare 文章，第一作者liuweiqing，适配由wuyuan.dev",
+    "url": "https://greasyfork.org/scripts/550144-auto-read-linuxdo-idcflare",
+    "code_url": "https://update.greasyfork.org/scripts/550144/Auto%20Read%20LINUXDO%20%20IDCFlare.user.js",
+    "code_size": 34904,
+    "license": "MIT License",
+    "version": "1.5.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550133,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T07:24:37.000Z",
+    "code_updated_at": "2025-09-20T07:24:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1117106,
+        "name": "Sunwuyuan",
+        "created_at": "2023-07-02T07:25:48.000Z",
+        "url": "https://greasyfork.org/users/1117106-sunwuyuan"
+      }
+    ],
+    "name": "idcflare.com 等级查看",
+    "description": "一个idcflare.com论坛的小插件，可查询用户等级和升级到下一级的要求",
+    "url": "https://greasyfork.org/scripts/550133-idcflare-com-%E7%AD%89%E7%BA%A7%E6%9F%A5%E7%9C%8B",
+    "code_url": "https://update.greasyfork.org/scripts/550133/idcflarecom%20%E7%AD%89%E7%BA%A7%E6%9F%A5%E7%9C%8B.user.js",
+    "code_size": 32838,
+    "license": "MIT License",
+    "version": "0.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550122,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T03:13:02.000Z",
+    "code_updated_at": "2025-09-20T03:13:02.000Z",
+    "namespace": "linux.do&idcflare_ReadBoost",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1117106,
+        "name": "Sunwuyuan",
+        "created_at": "2023-07-02T07:25:48.000Z",
+        "url": "https://greasyfork.org/users/1117106-sunwuyuan"
+      }
+    ],
+    "name": "LINUXDO&IDCFlare ReadBoost",
+    "description": "LINUXDO ReadBoost是一个LINUXDO刷取已读帖量脚本，理论上支持所有Discourse论坛",
+    "url": "https://greasyfork.org/scripts/550122-linuxdo-idcflare-readboost",
+    "code_url": "https://update.greasyfork.org/scripts/550122/LINUXDOIDCFlare%20ReadBoost.user.js",
+    "code_size": 19855,
+    "license": null,
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540310,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-21T10:51:00.000Z",
+    "code_updated_at": "2025-06-21T11:12:10.000Z",
+    "namespace": "nodeloc.cc_ReadBoost",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1117106,
+        "name": "Sunwuyuan",
+        "created_at": "2023-07-02T07:25:48.000Z",
+        "url": "https://greasyfork.org/users/1117106-sunwuyuan"
+      }
+    ],
+    "name": "NODELOC ReadBoost",
+    "description": "NODELOC ReadBoost是一个NODELOC刷取已读帖量脚本，理论上支持所有Discourse论坛",
+    "url": "https://greasyfork.org/scripts/540310-nodeloc-readboost",
+    "code_url": "https://update.greasyfork.org/scripts/540310/NODELOC%20ReadBoost.user.js",
+    "code_size": 14356,
+    "license": null,
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

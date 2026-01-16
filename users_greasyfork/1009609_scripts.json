@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537043,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-24T00:56:52.000Z",
+    "code_updated_at": "2025-05-24T00:56:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1009609,
+        "name": "Reece Hart",
+        "created_at": "2023-01-10T00:01:41.000Z",
+        "url": "https://greasyfork.org/users/1009609-reece-hart"
+      }
+    ],
+    "name": "Shortcut Colorizer",
+    "description": "Apply colors to Shortcut Epics & Objectives",
+    "url": "https://greasyfork.org/scripts/537043-shortcut-colorizer",
+    "code_url": "https://update.greasyfork.org/scripts/537043/Shortcut%20Colorizer.user.js",
+    "code_size": 2176,
+    "license": "MIT License",
+    "version": "da6e72f",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

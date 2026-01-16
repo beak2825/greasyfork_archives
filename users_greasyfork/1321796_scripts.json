@@ -1,0 +1,134 @@
+[
+  {
+    "id": 499779,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T14:47:03.000Z",
+    "code_updated_at": "2024-07-05T14:47:03.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321796,
+        "name": "Кирилл Аркадьевич",
+        "created_at": "2024-06-21T18:17:28.000Z",
+        "url": "https://greasyfork.org/users/1321796-%D0%BA%D0%B8%D1%80%D0%B8%D0%BB%D0%BB-%D0%B0%D1%80%D0%BA%D0%B0%D0%B4%D1%8C%D0%B5%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Кураторы форума by F.Garcia",
+    "description": "Script work in 21.06.2024",
+    "url": "https://greasyfork.org/scripts/499779-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-f-garcia",
+    "code_url": "https://update.greasyfork.org/scripts/499779/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20FGarcia.user.js",
+    "code_size": 58472,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499778,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T14:44:54.000Z",
+    "code_updated_at": "2024-07-05T14:44:53.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321796,
+        "name": "Кирилл Аркадьевич",
+        "created_at": "2024-06-21T18:17:28.000Z",
+        "url": "https://greasyfork.org/users/1321796-%D0%BA%D0%B8%D1%80%D0%B8%D0%BB%D0%BB-%D0%B0%D1%80%D0%BA%D0%B0%D0%B4%D1%8C%D0%B5%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Кураторы форума by F.Garcia",
+    "description": "Script work in 21.06.2024",
+    "url": "https://greasyfork.org/scripts/499778-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-f-garcia",
+    "code_url": "https://update.greasyfork.org/scripts/499778/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20FGarcia.user.js",
+    "code_size": 58474,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498587,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-22T11:00:27.000Z",
+    "code_updated_at": "2024-06-22T11:00:27.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321796,
+        "name": "Кирилл Аркадьевич",
+        "created_at": "2024-06-21T18:17:28.000Z",
+        "url": "https://greasyfork.org/users/1321796-%D0%BA%D0%B8%D1%80%D0%B8%D0%BB%D0%BB-%D0%B0%D1%80%D0%BA%D0%B0%D0%B4%D1%8C%D0%B5%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Скрипт для ЗГКФ от Гарсии",
+    "description": "author F.Garcia",
+    "url": "https://greasyfork.org/scripts/498587-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B7%D0%B3%D0%BA%D1%84-%D0%BE%D1%82-%D0%B3%D0%B0%D1%80%D1%81%D0%B8%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/498587/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%97%D0%93%D0%9A%D0%A4%20%D0%BE%D1%82%20%D0%93%D0%B0%D1%80%D1%81%D0%B8%D0%B8.user.js",
+    "code_size": 134980,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498547,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-21T18:25:20.000Z",
+    "code_updated_at": "2024-06-21T18:25:20.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321796,
+        "name": "Кирилл Аркадьевич",
+        "created_at": "2024-06-21T18:17:28.000Z",
+        "url": "https://greasyfork.org/users/1321796-%D0%BA%D0%B8%D1%80%D0%B8%D0%BB%D0%BB-%D0%B0%D1%80%D0%BA%D0%B0%D0%B4%D1%8C%D0%B5%D0%B2%D0%B8%D1%87"
+      }
+    ],
+    "name": "Кураторы форума by F.Garcia",
+    "description": "Script work in 21.06.2024",
+    "url": "https://greasyfork.org/scripts/498547-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-f-garcia",
+    "code_url": "https://update.greasyfork.org/scripts/498547/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20FGarcia.user.js",
+    "code_size": 58555,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

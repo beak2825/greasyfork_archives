@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524589,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T02:47:24.000Z",
+    "code_updated_at": "2025-09-22T10:57:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426320,
+        "name": "DAMOCLES JR",
+        "created_at": "2025-01-23T02:38:51.000Z",
+        "url": "https://greasyfork.org/users/1426320-damocles-jr"
+      }
+    ],
+    "name": "douyu ad block",
+    "description": "斗鱼广告屏蔽 douyu ad block",
+    "url": "https://greasyfork.org/scripts/524589-douyu-ad-block",
+    "code_url": "https://update.greasyfork.org/scripts/524589/douyu%20ad%20block.user.js",
+    "code_size": 1907,
+    "license": "MIT License",
+    "version": "2025-09-22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

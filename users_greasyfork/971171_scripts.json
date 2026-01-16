@@ -1,0 +1,68 @@
+[
+  {
+    "id": 518154,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T05:08:06.000Z",
+    "code_updated_at": "2024-11-20T05:08:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971171,
+        "name": "jonbakerfish",
+        "created_at": "2022-10-15T13:35:08.000Z",
+        "url": "https://greasyfork.org/users/971171-jonbakerfish"
+      }
+    ],
+    "name": "Remove the AI summary from Google Search",
+    "description": "Remove the \"AI summary\" results from Google Search",
+    "url": "https://greasyfork.org/scripts/518154-remove-the-ai-summary-from-google-search",
+    "code_url": "https://update.greasyfork.org/scripts/518154/Remove%20the%20AI%20summary%20from%20Google%20Search.user.js",
+    "code_size": 1133,
+    "license": "MIT License",
+    "version": "2024-11-20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517646,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-16T14:08:33.000Z",
+    "code_updated_at": "2024-11-16T14:15:13.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 971171,
+        "name": "jonbakerfish",
+        "created_at": "2022-10-15T13:35:08.000Z",
+        "url": "https://greasyfork.org/users/971171-jonbakerfish"
+      }
+    ],
+    "name": "Redirect regional Google Scholar Profile to global site",
+    "description": "Redirects \"scholar.google.*\" to \"scholar.google.com\"",
+    "url": "https://greasyfork.org/scripts/517646-redirect-regional-google-scholar-profile-to-global-site",
+    "code_url": "https://update.greasyfork.org/scripts/517646/Redirect%20regional%20Google%20Scholar%20Profile%20to%20global%20site.user.js",
+    "code_size": 992,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 534330,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-29T03:41:05.000Z",
+    "code_updated_at": "2025-04-29T03:41:05.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446630,
+        "name": "Olumide Adeleke (Dee Hem)",
+        "created_at": "2025-03-17T04:55:50.000Z",
+        "url": "https://greasyfork.org/users/1446630-olumide-adeleke-dee-hem"
+      }
+    ],
+    "name": "Force Text Copying Enhanced",
+    "description": "Force-enable text copying across more browsers",
+    "url": "https://greasyfork.org/scripts/534330-force-text-copying-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/534330/Force%20Text%20Copying%20Enhanced.user.js",
+    "code_size": 1499,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534048,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T09:21:48.000Z",
+    "code_updated_at": "2025-04-26T09:21:48.000Z",
+    "namespace": "http://tampermonkey.net/ (or your personal URL)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446630,
+        "name": "Olumide Adeleke (Dee Hem)",
+        "created_at": "2025-03-17T04:55:50.000Z",
+        "url": "https://greasyfork.org/users/1446630-olumide-adeleke-dee-hem"
+      }
+    ],
+    "name": "Cool Jazz Font",
+    "description": "Applies Cool Jazz font to web pages",
+    "url": "https://greasyfork.org/scripts/534048-cool-jazz-font",
+    "code_url": "https://update.greasyfork.org/scripts/534048/Cool%20Jazz%20Font.user.js",
+    "code_size": 1072,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534045,
+    "daily_installs": 1,
+    "total_installs": 13,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T09:10:14.000Z",
+    "code_updated_at": "2025-04-26T09:10:14.000Z",
+    "namespace": "https://viayoo.com/ (or your personal URL)",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446630,
+        "name": "Olumide Adeleke (Dee Hem)",
+        "created_at": "2025-03-17T04:55:50.000Z",
+        "url": "https://greasyfork.org/users/1446630-olumide-adeleke-dee-hem"
+      }
+    ],
+    "name": "Force Enable Text Copying",
+    "description": "Force-enables text copying, even on sites that disable it.",
+    "url": "https://greasyfork.org/scripts/534045-force-enable-text-copying",
+    "code_url": "https://update.greasyfork.org/scripts/534045/Force%20Enable%20Text%20Copying.user.js",
+    "code_size": 1303,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530052,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-17T04:56:46.000Z",
+    "code_updated_at": "2025-03-17T04:56:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446630,
+        "name": "Olumide Adeleke (Dee Hem)",
+        "created_at": "2025-03-17T04:55:50.000Z",
+        "url": "https://greasyfork.org/users/1446630-olumide-adeleke-dee-hem"
+      }
+    ],
+    "name": "Mobile Element Inspector",
+    "description": "Adds a button to inspect elements on mobile browsers.",
+    "url": "https://greasyfork.org/scripts/530052-mobile-element-inspector",
+    "code_url": "https://update.greasyfork.org/scripts/530052/Mobile%20Element%20Inspector.user.js",
+    "code_size": 1910,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

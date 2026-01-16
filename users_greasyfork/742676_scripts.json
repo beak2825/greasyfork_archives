@@ -30,6 +30,171 @@
     "version": "2025-11-05",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512898,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-16T20:14:58.000Z",
+    "code_updated_at": "2024-10-17T01:09:59.000Z",
+    "namespace": "github.com/openstyles/stylus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742676,
+        "name": "Lucky Starlight",
+        "created_at": "2021-03-02T05:45:46.000Z",
+        "url": "https://greasyfork.org/users/742676-lucky-starlight"
+      }
+    ],
+    "name": "Santae Semi-Dark Theme",
+    "description": "A slightly more minimalist, darker / higher contrast theme for Santae. Approved by staff!",
+    "url": "https://greasyfork.org/scripts/512898-santae-semi-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/512898/Santae%20Semi-Dark%20Theme.user.css",
+    "code_size": 2160,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 505799,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-29T20:13:50.000Z",
+    "code_updated_at": "2024-08-29T20:29:46.000Z",
+    "namespace": "luckydevil.nz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742676,
+        "name": "Lucky Starlight",
+        "created_at": "2021-03-02T05:45:46.000Z",
+        "url": "https://greasyfork.org/users/742676-lucky-starlight"
+      }
+    ],
+    "name": "Goatlings Profile Box Alignment",
+    "description": "Fixing those annoying gaps in the Goatlings pet profile boxes!",
+    "url": "https://greasyfork.org/scripts/505799-goatlings-profile-box-alignment",
+    "code_url": "https://update.greasyfork.org/scripts/505799/Goatlings%20Profile%20Box%20Alignment.user.css",
+    "code_size": 437,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505688,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-29T01:47:28.000Z",
+    "code_updated_at": "2024-08-29T04:47:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742676,
+        "name": "Lucky Starlight",
+        "created_at": "2021-03-02T05:45:46.000Z",
+        "url": "https://greasyfork.org/users/742676-lucky-starlight"
+      }
+    ],
+    "name": "Goatlings Better Item Movement",
+    "description": "a better item sorter",
+    "url": "https://greasyfork.org/scripts/505688-goatlings-better-item-movement",
+    "code_url": "https://update.greasyfork.org/scripts/505688/Goatlings%20Better%20Item%20Movement.user.js",
+    "code_size": 8424,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504606,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-22T07:12:56.000Z",
+    "code_updated_at": "2024-08-29T04:55:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742676,
+        "name": "Lucky Starlight",
+        "created_at": "2021-03-02T05:45:46.000Z",
+        "url": "https://greasyfork.org/users/742676-lucky-starlight"
+      }
+    ],
+    "name": "Goatlings Helper",
+    "description": "some helpful stuff for goatlings",
+    "url": "https://greasyfork.org/scripts/504606-goatlings-helper",
+    "code_url": "https://update.greasyfork.org/scripts/504606/Goatlings%20Helper.user.js",
+    "code_size": 16987,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504572,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-22T02:16:42.000Z",
+    "code_updated_at": "2024-08-22T21:27:27.000Z",
+    "namespace": "luckydevil.nz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 742676,
+        "name": "Lucky Starlight",
+        "created_at": "2021-03-02T05:45:46.000Z",
+        "url": "https://greasyfork.org/users/742676-lucky-starlight"
+      }
+    ],
+    "name": "Goatlings Minimal / Darker Theme",
+    "description": "A higher-contrast, darker theme for Goatlings.com.",
+    "url": "https://greasyfork.org/scripts/504572-goatlings-minimal-darker-theme",
+    "code_url": "https://update.greasyfork.org/scripts/504572/Goatlings%20Minimal%20%20Darker%20Theme.user.css",
+    "code_size": 2283,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

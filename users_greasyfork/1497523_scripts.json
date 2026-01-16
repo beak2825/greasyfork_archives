@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543395,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T05:56:46.000Z",
+    "code_updated_at": "2025-07-23T05:56:46.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497523,
+        "name": "jayho z",
+        "created_at": "2025-07-23T05:44:03.000Z",
+        "url": "https://greasyfork.org/users/1497523-jayho-z"
+      }
+    ],
+    "name": "活动助手",
+    "description": "2025/7/23 00:26:23",
+    "url": "https://greasyfork.org/scripts/543395-%E6%B4%BB%E5%8A%A8%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/543395/%E6%B4%BB%E5%8A%A8%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 6526,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

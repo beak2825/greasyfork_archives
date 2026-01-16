@@ -1,0 +1,33 @@
+{
+  "id": 536859,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-22T15:13:37.000Z",
+  "code_updated_at": "2025-05-22T16:11:06.000Z",
+  "namespace": "https://staybrowser.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473093,
+      "name": "xiaocanln",
+      "created_at": "2025-05-21T18:23:16.000Z",
+      "url": "https://greasyfork.org/users/1473093-xiaocanln"
+    }
+  ],
+  "name": "51taoshiwan智能答题助手-随机答案+弹窗处理+自动跳转",
+  "description": "广水一中2023级出品",
+  "url": "https://greasyfork.org/scripts/536859-51taoshiwan%E6%99%BA%E8%83%BD%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B-%E9%9A%8F%E6%9C%BA%E7%AD%94%E6%A1%88-%E5%BC%B9%E7%AA%97%E5%A4%84%E7%90%86-%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC",
+  "code_url": "https://update.greasyfork.org/scripts/536859/51taoshiwan%E6%99%BA%E8%83%BD%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B-%E9%9A%8F%E6%9C%BA%E7%AD%94%E6%A1%88%2B%E5%BC%B9%E7%AA%97%E5%A4%84%E7%90%86%2B%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC.user.js",
+  "code_size": 4091,
+  "license": null,
+  "version": "0.3.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

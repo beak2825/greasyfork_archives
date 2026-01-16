@@ -1,0 +1,35 @@
+[
+  {
+    "id": 496728,
+    "daily_installs": 0,
+    "total_installs": 231,
+    "fan_score": "48.7",
+    "good_ratings": 6,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-06-01T08:52:41.000Z",
+    "code_updated_at": "2025-06-14T06:02:48.000Z",
+    "namespace": "https://github.com/pagyew",
+    "support_url": "https://github.com/pagyew/youtube-awesome",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1310668,
+        "name": "pagyew",
+        "created_at": "2024-06-01T08:17:51.000Z",
+        "url": "https://greasyfork.org/users/1310668-pagyew"
+      }
+    ],
+    "name": "YouTube Awesome",
+    "description": "Get the best YouTube experience",
+    "url": "https://greasyfork.org/scripts/496728-youtube-awesome",
+    "code_url": "https://update.greasyfork.org/scripts/496728/YouTube%20Awesome.user.js",
+    "code_size": 3989,
+    "license": "MIT License",
+    "version": "1.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

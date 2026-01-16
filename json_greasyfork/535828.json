@@ -1,0 +1,59 @@
+{
+  "id": 535828,
+  "daily_installs": 0,
+  "total_installs": 54,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T22:27:38.000Z",
+  "code_updated_at": "2025-05-12T22:27:38.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469362,
+      "name": "Poutchouli",
+      "created_at": "2025-05-12T22:23:29.000Z",
+      "url": "https://greasyfork.org/users/1469362-poutchouli",
+      "scripts": [
+        {
+          "id": 535828,
+          "daily_installs": 0,
+          "total_installs": 54,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-12T22:27:38.000Z",
+          "code_updated_at": "2025-05-12T22:27:38.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CivitAI-Crap-Blocker",
+          "description": "Blocks unwanted resources and removes cosmetic effects",
+          "url": "https://greasyfork.org/scripts/535828-civitai-crap-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/535828/CivitAI-Crap-Blocker.user.js",
+          "code_size": 3194,
+          "license": "GNU GPLv3",
+          "version": "3.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CivitAI-Crap-Blocker",
+  "description": "Blocks unwanted resources and removes cosmetic effects",
+  "url": "https://greasyfork.org/scripts/535828-civitai-crap-blocker",
+  "code_url": "https://update.greasyfork.org/scripts/535828/CivitAI-Crap-Blocker.user.js",
+  "code_size": 3194,
+  "license": "GNU GPLv3",
+  "version": "3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

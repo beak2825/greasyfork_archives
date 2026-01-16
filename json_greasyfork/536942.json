@@ -1,0 +1,34 @@
+{
+  "id": 536942,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-23T08:17:08.000Z",
+  "code_updated_at": "2025-05-27T08:17:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed 4Rec  vb.MichaelKolb1@gmx.net",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/536942-ed-4rec-vb-michaelkolb1-gmx-net",
+  "code_url": "https://update.greasyfork.org/scripts/536942/Ed%204Rec%20%20vbMichaelKolb1%40gmxnet.user.js",
+  "code_size": 99485,
+  "license": null,
+  "version": "2.0",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 540424,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-22T16:09:22.000Z",
+  "code_updated_at": "2025-06-22T16:37:31.000Z",
+  "namespace": "https://www.acfun.cn/u/955021",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1304406,
+      "name": "mem4tgo",
+      "created_at": "2024-05-20T05:25:56.000Z",
+      "url": "https://greasyfork.org/users/1304406-mem4tgo",
+      "scripts": [
+        {
+          "id": 540424,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-22T16:09:22.000Z",
+          "code_updated_at": "2025-06-22T16:37:31.000Z",
+          "namespace": "https://www.acfun.cn/u/955021",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "移除百度首页推荐 (优化版)",
+          "description": "百度首页推荐内容移除，并确保“我的关注”正常显示",
+          "url": "https://greasyfork.org/scripts/540424-%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%8E%A8%E8%8D%90-%E4%BC%98%E5%8C%96%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/540424/%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%8E%A8%E8%8D%90%20%28%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+          "code_size": 5474,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "移除百度首页推荐 (优化版)",
+  "description": "百度首页推荐内容移除，并确保“我的关注”正常显示",
+  "url": "https://greasyfork.org/scripts/540424-%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%8E%A8%E8%8D%90-%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/540424/%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%8E%A8%E8%8D%90%20%28%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+  "code_size": 5474,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

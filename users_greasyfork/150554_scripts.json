@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 539190,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T09:20:15.000Z",
+    "code_updated_at": "2025-06-12T10:36:18.000Z",
+    "namespace": "Save thread to file",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 150554,
+        "name": "kylyte",
+        "created_at": "2017-08-27T01:15:18.000Z",
+        "url": "https://greasyfork.org/users/150554-kylyte"
+      }
+    ],
+    "name": "Save Vietnamese xenforo forum content to HTML file",
+    "description": "Save your favorite thread into a html file",
+    "url": "https://greasyfork.org/scripts/539190-save-vietnamese-xenforo-forum-content-to-html-file",
+    "code_url": "https://update.greasyfork.org/scripts/539190/Save%20Vietnamese%20xenforo%20forum%20content%20to%20HTML%20file.user.js",
+    "code_size": 34221,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 523674,
+    "daily_installs": 2,
+    "total_installs": 120,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T17:32:05.000Z",
+    "code_updated_at": "2025-01-13T17:32:05.000Z",
+    "namespace": "Auto download Google Drive",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 150554,
+        "name": "kylyte",
+        "created_at": "2017-08-27T01:15:18.000Z",
+        "url": "https://greasyfork.org/users/150554-kylyte"
+      }
+    ],
+    "name": "Auto download in drive.google.com",
+    "description": "A userscript help automatic download files in Google Drive",
+    "url": "https://greasyfork.org/scripts/523674-auto-download-in-drive-google-com",
+    "code_url": "https://update.greasyfork.org/scripts/523674/Auto%20download%20in%20drivegooglecom.user.js",
+    "code_size": 3466,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504505,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-21T15:02:32.000Z",
+    "code_updated_at": "2024-08-21T15:02:31.000Z",
+    "namespace": "Embedded Tweet in Voz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 150554,
+        "name": "kylyte",
+        "created_at": "2017-08-27T01:15:18.000Z",
+        "url": "https://greasyfork.org/users/150554-kylyte"
+      }
+    ],
+    "name": "X.com to Twitter.com Embedded Tweet in Voz",
+    "description": "Replace x.com links with embedded tweets",
+    "url": "https://greasyfork.org/scripts/504505-x-com-to-twitter-com-embedded-tweet-in-voz",
+    "code_url": "https://update.greasyfork.org/scripts/504505/Xcom%20to%20Twittercom%20Embedded%20Tweet%20in%20Voz.user.js",
+    "code_size": 2489,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 501552,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-23T06:31:18.000Z",
+    "code_updated_at": "2024-07-25T14:36:04.000Z",
+    "namespace": "Embedded Tweet in Voz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 150554,
+        "name": "kylyte",
+        "created_at": "2017-08-27T01:15:18.000Z",
+        "url": "https://greasyfork.org/users/150554-kylyte"
+      }
+    ],
+    "name": "X.com to Twitter.com Embedded Tweet in Voz",
+    "description": "Replace x.com links with embedded tweets",
+    "url": "https://greasyfork.org/scripts/501552-x-com-to-twitter-com-embedded-tweet-in-voz",
+    "code_url": "https://update.greasyfork.org/scripts/501552/Xcom%20to%20Twittercom%20Embedded%20Tweet%20in%20Voz.user.js",
+    "code_size": 2247,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

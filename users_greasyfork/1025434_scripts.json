@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535633,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-11T08:22:11.000Z",
+    "code_updated_at": "2025-05-12T05:52:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025434,
+        "name": "暇な人QJ",
+        "created_at": "2023-02-11T11:07:26.000Z",
+        "url": "https://greasyfork.org/users/1025434-%E6%9A%87%E3%81%AA%E4%BA%BAqj"
+      }
+    ],
+    "name": "猜盐多板块每日谜题日期选择器",
+    "description": "支持猜原、猜萌、猜病板块的每日谜题自由切换与随机",
+    "url": "https://greasyfork.org/scripts/535633-%E7%8C%9C%E7%9B%90%E5%A4%9A%E6%9D%BF%E5%9D%97%E6%AF%8F%E6%97%A5%E8%B0%9C%E9%A2%98%E6%97%A5%E6%9C%9F%E9%80%89%E6%8B%A9%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/535633/%E7%8C%9C%E7%9B%90%E5%A4%9A%E6%9D%BF%E5%9D%97%E6%AF%8F%E6%97%A5%E8%B0%9C%E9%A2%98%E6%97%A5%E6%9C%9F%E9%80%89%E6%8B%A9%E5%99%A8.user.js",
+    "code_size": 5204,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

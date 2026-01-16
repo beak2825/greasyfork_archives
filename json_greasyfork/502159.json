@@ -1,0 +1,59 @@
+{
+  "id": 502159,
+  "daily_installs": 4,
+  "total_installs": 2038554,
+  "fan_score": "63.0",
+  "good_ratings": 24,
+  "ok_ratings": 3,
+  "bad_ratings": 5,
+  "created_at": "2024-07-30T09:05:48.000Z",
+  "code_updated_at": "2025-11-30T13:36:08.000Z",
+  "namespace": "http://tampermonkey7.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1342446,
+      "name": "SaveTime&LiveWell",
+      "created_at": "2024-07-30T08:57:53.000Z",
+      "url": "https://greasyfork.org/users/1342446-savetime-livewell",
+      "scripts": [
+        {
+          "id": 502159,
+          "daily_installs": 4,
+          "total_installs": 2038554,
+          "fan_score": "63.0",
+          "good_ratings": 24,
+          "ok_ratings": 3,
+          "bad_ratings": 5,
+          "created_at": "2024-07-30T09:05:48.000Z",
+          "code_updated_at": "2025-11-30T13:36:08.000Z",
+          "namespace": "http://tampermonkey7.net",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FCQ网课通助手[全网题库][通用智能适配答题][刷课]",
+          "description": "支持【寒假教师研修】【国家智慧教育公共服务平台】【国家中小学智慧教育平台】【超星学习通】【智慧树】【职教云系列】【雨课堂】【考试星】【168网校】【u校园】【大学MOOC】【云班课】【优慕课】【继续教育类】【绎通云课堂】【九江系列】【柠檬文才】【亿学宝云】【优课学堂】【小鹅通】【安徽继续教育】 【上海开放大学】 【华侨大学自考网络助学平台】【良师在线】【和学在线】【人卫慕课】【国家开放大学】【山财培训网（继续教育）】【浙江省高等学校在线开放课程共享平台】【国地质大学远程与继续教育学院】【重庆大学网络教育学院】【浙江省高等教育自学考试网络助学平台】【湖南高等学历继续教育】【优学院】【学起系列】【青书学堂】【学堂在线】【英华学堂】【广开网络教学平台】等平台的测验考试，内置题库，如有疑问或无法使用加群:399697149 咨询",
+          "url": "https://greasyfork.org/scripts/502159-fcq%E7%BD%91%E8%AF%BE%E9%80%9A%E5%8A%A9%E6%89%8B-%E5%85%A8%E7%BD%91%E9%A2%98%E5%BA%93-%E9%80%9A%E7%94%A8%E6%99%BA%E8%83%BD%E9%80%82%E9%85%8D%E7%AD%94%E9%A2%98-%E5%88%B7%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/502159/FCQ%E7%BD%91%E8%AF%BE%E9%80%9A%E5%8A%A9%E6%89%8B%5B%E5%85%A8%E7%BD%91%E9%A2%98%E5%BA%93%5D%5B%E9%80%9A%E7%94%A8%E6%99%BA%E8%83%BD%E9%80%82%E9%85%8D%E7%AD%94%E9%A2%98%5D%5B%E5%88%B7%E8%AF%BE%5D.user.js",
+          "code_size": 117752,
+          "license": null,
+          "version": "1.0.54",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FCQ网课通助手[全网题库][通用智能适配答题][刷课]",
+  "description": "支持【寒假教师研修】【国家智慧教育公共服务平台】【国家中小学智慧教育平台】【超星学习通】【智慧树】【职教云系列】【雨课堂】【考试星】【168网校】【u校园】【大学MOOC】【云班课】【优慕课】【继续教育类】【绎通云课堂】【九江系列】【柠檬文才】【亿学宝云】【优课学堂】【小鹅通】【安徽继续教育】 【上海开放大学】 【华侨大学自考网络助学平台】【良师在线】【和学在线】【人卫慕课】【国家开放大学】【山财培训网（继续教育）】【浙江省高等学校在线开放课程共享平台】【国地质大学远程与继续教育学院】【重庆大学网络教育学院】【浙江省高等教育自学考试网络助学平台】【湖南高等学历继续教育】【优学院】【学起系列】【青书学堂】【学堂在线】【英华学堂】【广开网络教学平台】等平台的测验考试，内置题库，如有疑问或无法使用加群:399697149 咨询",
+  "url": "https://greasyfork.org/scripts/502159-fcq%E7%BD%91%E8%AF%BE%E9%80%9A%E5%8A%A9%E6%89%8B-%E5%85%A8%E7%BD%91%E9%A2%98%E5%BA%93-%E9%80%9A%E7%94%A8%E6%99%BA%E8%83%BD%E9%80%82%E9%85%8D%E7%AD%94%E9%A2%98-%E5%88%B7%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/502159/FCQ%E7%BD%91%E8%AF%BE%E9%80%9A%E5%8A%A9%E6%89%8B%5B%E5%85%A8%E7%BD%91%E9%A2%98%E5%BA%93%5D%5B%E9%80%9A%E7%94%A8%E6%99%BA%E8%83%BD%E9%80%82%E9%85%8D%E7%AD%94%E9%A2%98%5D%5B%E5%88%B7%E8%AF%BE%5D.user.js",
+  "code_size": 117752,
+  "license": null,
+  "version": "1.0.54",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

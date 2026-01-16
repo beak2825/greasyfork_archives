@@ -1,0 +1,33 @@
+{
+  "id": 547974,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-31T22:23:33.000Z",
+  "code_updated_at": "2025-08-31T22:55:57.000Z",
+  "namespace": "lbxd-plex-opener",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1510651,
+      "name": "vigrid",
+      "created_at": "2025-08-31T22:20:50.000Z",
+      "url": "https://greasyfork.org/users/1510651-vigrid"
+    }
+  ],
+  "name": "Letterboxd → Plex opener",
+  "description": "Adds a Plex button on Letterboxd film pages that opens the movie in Plex Web. Authenticates via Plex OAuth PIN.",
+  "url": "https://greasyfork.org/scripts/547974-letterboxd-plex-opener",
+  "code_url": "https://update.greasyfork.org/scripts/547974/Letterboxd%20%E2%86%92%20Plex%20opener.user.js",
+  "code_size": 92531,
+  "license": "MIT License",
+  "version": "2.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

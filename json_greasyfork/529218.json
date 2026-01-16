@@ -1,0 +1,34 @@
+{
+  "id": 529218,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-08T16:39:13.000Z",
+  "code_updated_at": "2025-03-08T16:39:13.000Z",
+  "namespace": "https://keylol.com/t957351-1-1",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294135,
+      "name": "sjx01",
+      "created_at": "2024-04-28T02:34:40.000Z",
+      "url": "https://greasyfork.org/users/1294135-sjx01",
+      "scripts": []
+    }
+  ],
+  "name": "SteamDB促销界面DB链接批量复制",
+  "description": "可配合Steam快速添加购物车脚本(432190)使用实现将游戏批量加入购物车的功能",
+  "url": "https://greasyfork.org/scripts/529218-steamdb%E4%BF%83%E9%94%80%E7%95%8C%E9%9D%A2db%E9%93%BE%E6%8E%A5%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6",
+  "code_url": "https://update.greasyfork.org/scripts/529218/SteamDB%E4%BF%83%E9%94%80%E7%95%8C%E9%9D%A2DB%E9%93%BE%E6%8E%A5%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6.user.js",
+  "code_size": 10051,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548296,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T02:36:41.000Z",
+    "code_updated_at": "2025-09-04T02:36:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505150,
+        "name": "enen haha",
+        "created_at": "2025-08-15T02:37:07.000Z",
+        "url": "https://greasyfork.org/users/1505150-enen-haha"
+      }
+    ],
+    "name": "wolai.com Command+Enter 换行插件",
+    "description": "在 wolai.com 中添加 Command+Enter 换行功能，类似 VSCode",
+    "url": "https://greasyfork.org/scripts/548296-wolai-com-command-enter-%E6%8D%A2%E8%A1%8C%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/548296/wolaicom%20Command%2BEnter%20%E6%8D%A2%E8%A1%8C%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 10045,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

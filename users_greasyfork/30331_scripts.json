@@ -163,5 +163,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 530726,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-24T16:59:59.000Z",
+    "code_updated_at": "2025-04-04T15:44:57.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/530726-edna-cz-future-schedule-with-enhanced-countdown",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30331,
+        "name": "Setcher",
+        "created_at": "2016-02-14T16:19:35.000Z",
+        "url": "https://greasyfork.org/users/30331-setcher"
+      }
+    ],
+    "name": "Edna.cz Future Schedule with Enhanced Countdown",
+    "description": "Adds upcoming episodes to the main page summary",
+    "url": "https://greasyfork.org/scripts/530726-edna-cz-future-schedule-with-enhanced-countdown",
+    "code_url": "https://update.greasyfork.org/scripts/530726/Ednacz%20Future%20Schedule%20with%20Enhanced%20Countdown.user.js",
+    "code_size": 15400,
+    "license": null,
+    "version": "0.93",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528355,
+    "daily_installs": 0,
+    "total_installs": 120,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-28T11:56:25.000Z",
+    "code_updated_at": "2025-08-27T15:51:10.000Z",
+    "namespace": "https://greasyfork.org/users/30331-setcher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30331,
+        "name": "Setcher",
+        "created_at": "2016-02-14T16:19:35.000Z",
+        "url": "https://greasyfork.org/users/30331-setcher"
+      }
+    ],
+    "name": "Summarize Rapidgator links",
+    "description": "Summarize Rapidgator links and display them with a copy button.",
+    "url": "https://greasyfork.org/scripts/528355-summarize-rapidgator-links",
+    "code_url": "https://update.greasyfork.org/scripts/528355/Summarize%20Rapidgator%20links.user.js",
+    "code_size": 6046,
+    "license": null,
+    "version": "0.99",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 528354,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-28T11:47:37.000Z",
+    "code_updated_at": "2025-08-27T16:36:11.000Z",
+    "namespace": "https://greasyfork.org/users/30331-setcher",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 30331,
+        "name": "Setcher",
+        "created_at": "2016-02-14T16:19:35.000Z",
+        "url": "https://greasyfork.org/users/30331-setcher"
+      }
+    ],
+    "name": "DownArchive Link Extractor",
+    "description": "Extract links from DownArchive and copy them to clipboard",
+    "url": "https://greasyfork.org/scripts/528354-downarchive-link-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/528354/DownArchive%20Link%20Extractor.user.js",
+    "code_size": 5959,
+    "license": null,
+    "version": "0.61",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

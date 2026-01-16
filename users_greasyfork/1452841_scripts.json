@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531505,
+    "daily_installs": 0,
+    "total_installs": 51,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-01T13:32:45.000Z",
+    "code_updated_at": "2025-04-01T13:32:44.000Z",
+    "namespace": "https://www.pai.ci",
+    "support_url": "https://www.pai.ci",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452841,
+        "name": "Black Tran",
+        "created_at": "2025-04-01T13:27:30.000Z",
+        "url": "https://greasyfork.org/users/1452841-black-tran"
+      }
+    ],
+    "name": "【派派助手】百度网盘工具箱直链解析 ——持续更新",
+    "description": "【2022/02/07稳定奔放速度拉满】简单无限制的百度网盘解析脚本，无视黑号，免SVIP，免浏览器扩展，支持IDM、NDM、Aria、Motrix等多种工具下载。快来体验吧！！！👍👍👍",
+    "url": "https://greasyfork.org/scripts/531505-%E6%B4%BE%E6%B4%BE%E5%8A%A9%E6%89%8B-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E5%B7%A5%E5%85%B7%E7%AE%B1%E7%9B%B4%E9%93%BE%E8%A7%A3%E6%9E%90-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/531505/%E3%80%90%E6%B4%BE%E6%B4%BE%E5%8A%A9%E6%89%8B%E3%80%91%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E5%B7%A5%E5%85%B7%E7%AE%B1%E7%9B%B4%E9%93%BE%E8%A7%A3%E6%9E%90%20%E2%80%94%E2%80%94%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0.user.js",
+    "code_size": 240907,
+    "license": "MIT License",
+    "version": "1.2.0",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

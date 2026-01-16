@@ -1,0 +1,34 @@
+{
+  "id": 510431,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-27T12:17:12.000Z",
+  "code_updated_at": "2024-09-27T12:24:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1129606,
+      "name": "qiaxia",
+      "created_at": "2023-07-18T05:25:38.000Z",
+      "url": "https://greasyfork.org/users/1129606-qiaxia",
+      "scripts": []
+    }
+  ],
+  "name": "Douyin Live Clock",
+  "description": "Add Beijing time clock to Douyin live streams in fullscreen mode",
+  "url": "https://greasyfork.org/scripts/510431-douyin-live-clock",
+  "code_url": "https://update.greasyfork.org/scripts/510431/Douyin%20Live%20Clock.user.js",
+  "code_size": 1916,
+  "license": null,
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

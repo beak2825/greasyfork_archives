@@ -1,0 +1,34 @@
+{
+  "id": 510548,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-28T07:29:26.000Z",
+  "code_updated_at": "2024-09-28T07:29:26.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": "https://vk.com/lies_are_good",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1317310,
+      "name": "Anubis Goodman",
+      "created_at": "2024-06-13T13:55:47.000Z",
+      "url": "https://greasyfork.org/users/1317310-anubis-goodman",
+      "scripts": []
+    }
+  ],
+  "name": "FC | KEMEROVO | A.Goodman ЖБ и обж на АДМ",
+  "description": "Suggestions for improving the script write here > https://vk.com/lies_are_good",
+  "url": "https://greasyfork.org/scripts/510548-fc-kemerovo-a-goodman-%D0%B6%D0%B1-%D0%B8-%D0%BE%D0%B1%D0%B6-%D0%BD%D0%B0-%D0%B0%D0%B4%D0%BC",
+  "code_url": "https://update.greasyfork.org/scripts/510548/FC%20%7C%20KEMEROVO%20%7C%20AGoodman%20%D0%96%D0%91%20%D0%B8%20%D0%BE%D0%B1%D0%B6%20%D0%BD%D0%B0%20%D0%90%D0%94%D0%9C.user.js",
+  "code_size": 48661,
+  "license": "MIT License",
+  "version": "0.0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

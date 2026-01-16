@@ -1,0 +1,59 @@
+{
+  "id": 540382,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-22T08:33:08.000Z",
+  "code_updated_at": "2025-06-22T12:14:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486948,
+      "name": "Arena BreakoutAccount",
+      "created_at": "2025-06-22T08:27:42.000Z",
+      "url": "https://greasyfork.org/users/1486948-arena-breakoutaccount",
+      "scripts": [
+        {
+          "id": 540382,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-22T08:33:08.000Z",
+          "code_updated_at": "2025-06-22T12:14:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Drednot.io Economy Client (Queued)",
+          "description": "Process ! cmd using server just trust bro :)",
+          "url": "https://greasyfork.org/scripts/540382-drednot-io-economy-client-queued",
+          "code_url": "https://update.greasyfork.org/scripts/540382/Drednotio%20Economy%20Client%20%28Queued%29.user.js",
+          "code_size": 5226,
+          "license": null,
+          "version": "2.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Drednot.io Economy Client (Queued)",
+  "description": "Process ! cmd using server just trust bro :)",
+  "url": "https://greasyfork.org/scripts/540382-drednot-io-economy-client-queued",
+  "code_url": "https://update.greasyfork.org/scripts/540382/Drednotio%20Economy%20Client%20%28Queued%29.user.js",
+  "code_size": 5226,
+  "license": null,
+  "version": "2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

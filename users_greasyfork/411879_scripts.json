@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527902,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T05:59:50.000Z",
+    "code_updated_at": "2025-02-24T05:59:50.000Z",
+    "namespace": "https://greasyfork.org/users/411879",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 411879,
+        "name": "Clackz",
+        "created_at": "2019-12-04T02:12:14.000Z",
+        "url": "https://greasyfork.org/users/411879-clackz"
+      }
+    ],
+    "name": "新华三大讲堂 | 秒过 | 屏蔽弹窗",
+    "description": "屏蔽鼠标移出弹窗",
+    "url": "https://greasyfork.org/scripts/527902-%E6%96%B0%E5%8D%8E%E4%B8%89%E5%A4%A7%E8%AE%B2%E5%A0%82-%E7%A7%92%E8%BF%87-%E5%B1%8F%E8%94%BD%E5%BC%B9%E7%AA%97",
+    "code_url": "https://update.greasyfork.org/scripts/527902/%E6%96%B0%E5%8D%8E%E4%B8%89%E5%A4%A7%E8%AE%B2%E5%A0%82%20%7C%20%E7%A7%92%E8%BF%87%20%7C%20%E5%B1%8F%E8%94%BD%E5%BC%B9%E7%AA%97.user.js",
+    "code_size": 1804,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

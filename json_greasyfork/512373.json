@@ -1,0 +1,34 @@
+{
+  "id": 512373,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-12T18:08:59.000Z",
+  "code_updated_at": "2024-10-12T18:11:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1253654,
+      "name": "Richard Litten",
+      "created_at": "2024-01-26T20:44:47.000Z",
+      "url": "https://greasyfork.org/users/1253654-richard-litten",
+      "scripts": []
+    }
+  ],
+  "name": "eBay Foreign Listing Banner",
+  "description": "Displays a banner if an eBay listing has a \"Delivery alert flag\" icon in the delivery section",
+  "url": "https://greasyfork.org/scripts/512373-ebay-foreign-listing-banner",
+  "code_url": "https://update.greasyfork.org/scripts/512373/eBay%20Foreign%20Listing%20Banner.user.js",
+  "code_size": 1584,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

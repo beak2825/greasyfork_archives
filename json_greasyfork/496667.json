@@ -1,0 +1,33 @@
+{
+  "id": 496667,
+  "daily_installs": 0,
+  "total_installs": 206,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-31T17:33:22.000Z",
+  "code_updated_at": "2024-05-31T17:33:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1310413,
+      "name": "Gursahaj Singh",
+      "created_at": "2024-05-31T17:25:44.000Z",
+      "url": "https://greasyfork.org/users/1310413-gursahaj-singh"
+    }
+  ],
+  "name": "SAJIREACTGUI",
+  "description": "rebirth of konzas blooket cheats",
+  "url": "https://greasyfork.org/scripts/496667-sajireactgui",
+  "code_url": "https://update.greasyfork.org/scripts/496667/SAJIREACTGUI.user.js",
+  "code_size": 187913,
+  "license": "MIT License",
+  "version": "2024-05-31",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

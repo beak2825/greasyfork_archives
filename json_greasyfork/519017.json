@@ -1,0 +1,33 @@
+{
+  "id": 519017,
+  "daily_installs": 0,
+  "total_installs": 71,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-27T07:57:18.000Z",
+  "code_updated_at": "2024-11-28T06:09:54.000Z",
+  "namespace": "https://www.deviantart.com/yuumei",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1110269,
+      "name": "mibboy",
+      "created_at": "2023-06-23T19:45:59.000Z",
+      "url": "https://greasyfork.org/users/1110269-mibboy"
+    }
+  ],
+  "name": "Medium傻瓜式一键解锁(可配置多源)bypass Medium",
+  "description": "在Medium白嫖浏览付费文章,支持多个解锁源。Support for viewing paid  articles for medium.com",
+  "url": "https://greasyfork.org/scripts/519017-medium%E5%82%BB%E7%93%9C%E5%BC%8F%E4%B8%80%E9%94%AE%E8%A7%A3%E9%94%81-%E5%8F%AF%E9%85%8D%E7%BD%AE%E5%A4%9A%E6%BA%90-bypass-medium",
+  "code_url": "https://update.greasyfork.org/scripts/519017/Medium%E5%82%BB%E7%93%9C%E5%BC%8F%E4%B8%80%E9%94%AE%E8%A7%A3%E9%94%81%28%E5%8F%AF%E9%85%8D%E7%BD%AE%E5%A4%9A%E6%BA%90%29bypass%20Medium.user.js",
+  "code_size": 14524,
+  "license": "GPLv3",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

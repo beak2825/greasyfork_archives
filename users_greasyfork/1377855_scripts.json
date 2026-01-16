@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 512429,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T08:29:43.000Z",
+    "code_updated_at": "2024-10-14T14:01:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377855,
+        "name": "Snowballl11",
+        "created_at": "2024-10-07T12:42:36.000Z",
+        "url": "https://greasyfork.org/users/1377855-snowballl11"
+      }
+    ],
+    "name": "MathJax Support",
+    "description": "为网页添加MathJax支持，优化性能",
+    "url": "https://greasyfork.org/scripts/512429-mathjax-support",
+    "code_url": "https://update.greasyfork.org/scripts/512429/MathJax%20Support.user.js",
+    "code_size": 2867,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

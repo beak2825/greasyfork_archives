@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543258,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-21T22:35:05.000Z",
+    "code_updated_at": "2025-07-22T08:57:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1497108,
+        "name": "billion terry",
+        "created_at": "2025-07-21T22:24:16.000Z",
+        "url": "https://greasyfork.org/users/1497108-billion-terry"
+      }
+    ],
+    "name": "OMS 实用面板 (by：测试组@Steven)",
+    "description": "在 OMS/CMS 页面中添加可折叠工具面板，支持手动输入 Cookie、白名单、CMS 权限、批量钻石充值、联盟币、登录解封、赠送年卡、俱乐部扩容，并支持面板缩放，优化提示返回信息，新增清空查询功能，添加白名单自动授权，提示飘窗优化，新增靓号俱乐部，开通手牌权限，钻石回收权限，新增插入俱乐部成员",
+    "url": "https://greasyfork.org/scripts/543258-oms-%E5%AE%9E%E7%94%A8%E9%9D%A2%E6%9D%BF-by-%E6%B5%8B%E8%AF%95%E7%BB%84-steven",
+    "code_url": "https://update.greasyfork.org/scripts/543258/OMS%20%E5%AE%9E%E7%94%A8%E9%9D%A2%E6%9D%BF%20%28by%EF%BC%9A%E6%B5%8B%E8%AF%95%E7%BB%84%40Steven%29.user.js",
+    "code_size": 86423,
+    "license": null,
+    "version": "2.8.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

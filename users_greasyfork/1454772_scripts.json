@@ -1,0 +1,134 @@
+[
+  {
+    "id": 536848,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-22T14:00:55.000Z",
+    "code_updated_at": "2025-05-22T14:00:54.000Z",
+    "namespace": "pr0game",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454772,
+        "name": "yutsuku",
+        "created_at": "2025-04-06T23:41:57.000Z",
+        "url": "https://greasyfork.org/users/1454772-yutsuku"
+      }
+    ],
+    "name": "pr0game auto-galaxy sync",
+    "description": "Automatic galaxy sync",
+    "url": "https://greasyfork.org/scripts/536848-pr0game-auto-galaxy-sync",
+    "code_url": "https://update.greasyfork.org/scripts/536848/pr0game%20auto-galaxy%20sync.user.js",
+    "code_size": 483,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536332,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-17T19:10:27.000Z",
+    "code_updated_at": "2025-05-17T19:10:27.000Z",
+    "namespace": "pr0game",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454772,
+        "name": "yutsuku",
+        "created_at": "2025-04-06T23:41:57.000Z",
+        "url": "https://greasyfork.org/users/1454772-yutsuku"
+      }
+    ],
+    "name": "pr0game mouse hover fix",
+    "description": "Quick and dirty fix for not working hover elements in my gecko/chromiuim based browsers.",
+    "url": "https://greasyfork.org/scripts/536332-pr0game-mouse-hover-fix",
+    "code_url": "https://update.greasyfork.org/scripts/536332/pr0game%20mouse%20hover%20fix.user.js",
+    "code_size": 3248,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532473,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T22:57:53.000Z",
+    "code_updated_at": "2025-04-10T23:04:43.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454772,
+        "name": "yutsuku",
+        "created_at": "2025-04-06T23:41:57.000Z",
+        "url": "https://greasyfork.org/users/1454772-yutsuku"
+      }
+    ],
+    "name": "DoujinStyle Auto Redirect to download",
+    "description": "REQUIRES https://addons.mozilla.org/en-US/firefox/addon/cors-everywhere/ or similar addon that modifies CORS headers to work!",
+    "url": "https://greasyfork.org/scripts/532473-doujinstyle-auto-redirect-to-download",
+    "code_url": "https://update.greasyfork.org/scripts/532473/DoujinStyle%20Auto%20Redirect%20to%20download.user.js",
+    "code_size": 891,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532029,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-06T23:46:50.000Z",
+    "code_updated_at": "2025-04-06T23:46:49.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454772,
+        "name": "yutsuku",
+        "created_at": "2025-04-06T23:41:57.000Z",
+        "url": "https://greasyfork.org/users/1454772-yutsuku"
+      }
+    ],
+    "name": "X (Twitter) Auto Gallery Mode",
+    "description": "Opens posts that contains images in gallery mode by default",
+    "url": "https://greasyfork.org/scripts/532029-x-twitter-auto-gallery-mode",
+    "code_url": "https://update.greasyfork.org/scripts/532029/X%20%28Twitter%29%20Auto%20Gallery%20Mode.user.js",
+    "code_size": 1338,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

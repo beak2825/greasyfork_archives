@@ -1,0 +1,33 @@
+{
+  "id": 545813,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-14T10:59:29.000Z",
+  "code_updated_at": "2025-08-14T10:59:29.000Z",
+  "namespace": "surwall07@gmail.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1147621,
+      "name": "Marcus Xu",
+      "created_at": "2023-08-09T10:57:57.000Z",
+      "url": "https://greasyfork.org/users/1147621-marcus-xu"
+    }
+  ],
+  "name": "移除百度首页滚动条",
+  "description": "清除首页滚动条",
+  "url": "https://greasyfork.org/scripts/545813-%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%BB%9A%E5%8A%A8%E6%9D%A1",
+  "code_url": "https://update.greasyfork.org/scripts/545813/%E7%A7%BB%E9%99%A4%E7%99%BE%E5%BA%A6%E9%A6%96%E9%A1%B5%E6%BB%9A%E5%8A%A8%E6%9D%A1.user.js",
+  "code_size": 922,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

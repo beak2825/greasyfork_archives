@@ -1,0 +1,68 @@
+[
+  {
+    "id": 526486,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-10T21:26:12.000Z",
+    "code_updated_at": "2025-02-10T22:39:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433749,
+        "name": "Anonymous guy",
+        "created_at": "2025-02-10T20:41:29.000Z",
+        "url": "https://greasyfork.org/users/1433749-anonymous-guy"
+      }
+    ],
+    "name": "URL Query Modifier",
+    "description": "Automatically change pageNo and pageSize in URL queries",
+    "url": "https://greasyfork.org/scripts/526486-url-query-modifier",
+    "code_url": "https://update.greasyfork.org/scripts/526486/URL%20Query%20Modifier.user.js",
+    "code_size": 519,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526484,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-10T20:44:41.000Z",
+    "code_updated_at": "2025-02-10T20:52:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433749,
+        "name": "Anonymous guy",
+        "created_at": "2025-02-10T20:41:29.000Z",
+        "url": "https://greasyfork.org/users/1433749-anonymous-guy"
+      }
+    ],
+    "name": "Modify Page Number and Size",
+    "description": "Add controls to modify pageNo and pageSize in URL query",
+    "url": "https://greasyfork.org/scripts/526484-modify-page-number-and-size",
+    "code_url": "https://update.greasyfork.org/scripts/526484/Modify%20Page%20Number%20and%20Size.user.js",
+    "code_size": 3070,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

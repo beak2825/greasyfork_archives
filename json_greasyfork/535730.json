@@ -1,0 +1,34 @@
+{
+  "id": 535730,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T02:51:14.000Z",
+  "code_updated_at": "2025-05-12T02:51:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468913,
+      "name": "A Bee",
+      "created_at": "2025-05-12T02:33:01.000Z",
+      "url": "https://greasyfork.org/users/1468913-a-bee",
+      "scripts": []
+    }
+  ],
+  "name": "Instiz iOS Zoom Blocker (강화판)",
+  "description": "iOS Safari에서 input 포커스 시 확대 방지. 폰트 크기 강제 및 스타일 충돌 방지 포함",
+  "url": "https://greasyfork.org/scripts/535730-instiz-ios-zoom-blocker-%EA%B0%95%ED%99%94%ED%8C%90",
+  "code_url": "https://update.greasyfork.org/scripts/535730/Instiz%20iOS%20Zoom%20Blocker%20%28%EA%B0%95%ED%99%94%ED%8C%90%29.user.js",
+  "code_size": 2151,
+  "license": null,
+  "version": "1.4",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

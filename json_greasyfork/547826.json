@@ -1,0 +1,33 @@
+{
+  "id": 547826,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-30T10:35:02.000Z",
+  "code_updated_at": "2025-08-30T16:45:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286771,
+      "name": "samiytaa",
+      "created_at": "2024-04-11T07:19:58.000Z",
+      "url": "https://greasyfork.org/users/1286771-samiytaa"
+    }
+  ],
+  "name": "空行增加工具",
+  "description": "将正文部分的<br>替换为<br><br>，识别已有<br><br>格式，实现空行效果，可设置段落缩进，兼容手机端",
+  "url": "https://greasyfork.org/scripts/547826-%E7%A9%BA%E8%A1%8C%E5%A2%9E%E5%8A%A0%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/547826/%E7%A9%BA%E8%A1%8C%E5%A2%9E%E5%8A%A0%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 36675,
+  "license": null,
+  "version": "0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

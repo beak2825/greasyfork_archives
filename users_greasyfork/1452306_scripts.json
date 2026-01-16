@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533194,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T04:11:03.000Z",
+    "code_updated_at": "2025-04-18T04:11:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452306,
+        "name": "Pioneer-dot",
+        "created_at": "2025-03-31T07:19:33.000Z",
+        "url": "https://greasyfork.org/users/1452306-pioneer-dot"
+      }
+    ],
+    "name": "Auto Save Job Details with Custom Count (Grouped)",
+    "description": "自定义下载数量的求职者详情保存工具（分组保存）",
+    "url": "https://greasyfork.org/scripts/533194-auto-save-job-details-with-custom-count-grouped",
+    "code_url": "https://update.greasyfork.org/scripts/533194/Auto%20Save%20Job%20Details%20with%20Custom%20Count%20%28Grouped%29.user.js",
+    "code_size": 14218,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531545,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-02T02:43:55.000Z",
+    "code_updated_at": "2025-04-02T02:43:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1452306,
+        "name": "Pioneer-dot",
+        "created_at": "2025-03-31T07:19:33.000Z",
+        "url": "https://greasyfork.org/users/1452306-pioneer-dot"
+      }
+    ],
+    "name": "搜索求职者",
+    "description": "搜索块列表中同时匹配两个属性的元素，支持上下导航",
+    "url": "https://greasyfork.org/scripts/531545-%E6%90%9C%E7%B4%A2%E6%B1%82%E8%81%8C%E8%80%85",
+    "code_url": "https://update.greasyfork.org/scripts/531545/%E6%90%9C%E7%B4%A2%E6%B1%82%E8%81%8C%E8%80%85.user.js",
+    "code_size": 8531,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

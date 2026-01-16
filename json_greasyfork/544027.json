@@ -1,0 +1,33 @@
+{
+  "id": 544027,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-29T18:08:18.000Z",
+  "code_updated_at": "2025-07-29T18:08:18.000Z",
+  "namespace": "https://greasyfork.org/users/789838",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 158923,
+      "name": "STELLAR STELS",
+      "created_at": "2017-11-12T09:07:32.000Z",
+      "url": "https://greasyfork.org/users/158923-stellar-stels"
+    }
+  ],
+  "name": "Telegram Web — перемотка + сохранение прогресса видео",
+  "description": "Перемотка видео стрелками и восстановление по автору и времени",
+  "url": "https://greasyfork.org/scripts/544027-telegram-web-%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%BE%D1%82%D0%BA%D0%B0-%D1%81%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81%D0%B0-%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE",
+  "code_url": "https://update.greasyfork.org/scripts/544027/Telegram%20Web%20%E2%80%94%20%D0%BF%D0%B5%D1%80%D0%B5%D0%BC%D0%BE%D1%82%D0%BA%D0%B0%20%2B%20%D1%81%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B5%D1%81%D1%81%D0%B0%20%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE.user.js",
+  "code_size": 6690,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

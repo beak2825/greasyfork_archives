@@ -1,0 +1,68 @@
+[
+  {
+    "id": 540152,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T13:57:06.000Z",
+    "code_updated_at": "2025-06-20T14:50:21.000Z",
+    "namespace": "https://github.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 840,
+        "name": "Zren",
+        "created_at": "2014-05-11T03:08:59.000Z",
+        "url": "https://greasyfork.org/users/840-zren"
+      }
+    ],
+    "name": "Webtoons: Mobile Fix",
+    "description": "Description",
+    "url": "https://greasyfork.org/scripts/540152-webtoons-mobile-fix",
+    "code_url": "https://update.greasyfork.org/scripts/540152/Webtoons%3A%20Mobile%20Fix.user.js",
+    "code_size": 2965,
+    "license": null,
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535797,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T15:42:59.000Z",
+    "code_updated_at": "2025-05-12T15:45:31.000Z",
+    "namespace": "https://github.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 840,
+        "name": "Zren",
+        "created_at": "2014-05-11T03:08:59.000Z",
+        "url": "https://greasyfork.org/users/840-zren"
+      }
+    ],
+    "name": "ComicReader: Webtoons",
+    "description": "Description",
+    "url": "https://greasyfork.org/scripts/535797-comicreader-webtoons",
+    "code_url": "https://update.greasyfork.org/scripts/535797/ComicReader%3A%20Webtoons.user.js",
+    "code_size": 5920,
+    "license": null,
+    "version": "5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527573,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-20T15:50:12.000Z",
+    "code_updated_at": "2025-02-21T07:08:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 499982,
+        "name": "FZ KUJI",
+        "created_at": "2020-04-10T07:42:06.000Z",
+        "url": "https://greasyfork.org/users/499982-fz-kuji"
+      }
+    ],
+    "name": "LobeChat Preview Ads Remove",
+    "description": "LobeChat网页预览版顶部广告屏蔽，同时自动拉伸网页。",
+    "url": "https://greasyfork.org/scripts/527573-lobechat-preview-ads-remove",
+    "code_url": "https://update.greasyfork.org/scripts/527573/LobeChat%20Preview%20Ads%20Remove.user.js",
+    "code_size": 2273,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2025-02-21",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

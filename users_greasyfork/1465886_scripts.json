@@ -1,0 +1,35 @@
+[
+  {
+    "id": 534997,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T08:28:45.000Z",
+    "code_updated_at": "2025-05-05T08:28:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1465886,
+        "name": "vsatyamesc",
+        "created_at": "2025-05-05T08:16:23.000Z",
+        "url": "https://greasyfork.org/users/1465886-vsatyamesc"
+      }
+    ],
+    "name": "Renta Papy Image Downloader",
+    "description": "Download multiple whole chapters from Renta papy JP",
+    "url": "https://greasyfork.org/scripts/534997-renta-papy-image-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/534997/Renta%20Papy%20Image%20Downloader.user.js",
+    "code_size": 3512,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 509462,
+  "daily_installs": 1,
+  "total_installs": 37,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-21T02:24:52.000Z",
+  "code_updated_at": "2024-09-21T02:30:59.000Z",
+  "namespace": "https://greasyfork.org/users/1370822",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1370822,
+      "name": "HANT3R",
+      "created_at": "2024-09-21T02:12:00.000Z",
+      "url": "https://greasyfork.org/users/1370822-hant3r",
+      "scripts": [
+        {
+          "id": 509462,
+          "daily_installs": 1,
+          "total_installs": 37,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-21T02:24:52.000Z",
+          "code_updated_at": "2024-09-21T02:30:59.000Z",
+          "namespace": "https://greasyfork.org/users/1370822",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Kick.com Video Resume",
+          "description": "Automatically bookmarks Kick.com videos and resumes where you left off.",
+          "url": "https://greasyfork.org/scripts/509462-kick-com-video-resume",
+          "code_url": "https://update.greasyfork.org/scripts/509462/Kickcom%20Video%20Resume.user.js",
+          "code_size": 2379,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Kick.com Video Resume",
+  "description": "Automatically bookmarks Kick.com videos and resumes where you left off.",
+  "url": "https://greasyfork.org/scripts/509462-kick-com-video-resume",
+  "code_url": "https://update.greasyfork.org/scripts/509462/Kickcom%20Video%20Resume.user.js",
+  "code_size": 2379,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

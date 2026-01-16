@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548322,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T07:48:25.000Z",
+    "code_updated_at": "2025-09-19T03:06:39.000Z",
+    "namespace": "https://greasyfork.org/en/users/890062-garyt",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890062,
+        "name": "GaryT",
+        "created_at": "2022-03-20T23:25:29.000Z",
+        "url": "https://greasyfork.org/users/890062-garyt"
+      }
+    ],
+    "name": "Guardian Crossword Previous/Next",
+    "description": "Add Previous and Next buttons to Guardian (Cryptic) Crosswords",
+    "url": "https://greasyfork.org/scripts/548322-guardian-crossword-previous-next",
+    "code_url": "https://update.greasyfork.org/scripts/548322/Guardian%20Crossword%20PreviousNext.user.js",
+    "code_size": 2716,
+    "license": "MIT License",
+    "version": "2025-09-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498325,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-19T05:08:33.000Z",
+    "code_updated_at": "2024-06-19T05:08:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 890062,
+        "name": "GaryT",
+        "created_at": "2022-03-20T23:25:29.000Z",
+        "url": "https://greasyfork.org/users/890062-garyt"
+      }
+    ],
+    "name": "GeoCaching.com find already logged found drafts",
+    "description": "Find drafts that have already been logged as found",
+    "url": "https://greasyfork.org/scripts/498325-geocaching-com-find-already-logged-found-drafts",
+    "code_url": "https://update.greasyfork.org/scripts/498325/GeoCachingcom%20find%20already%20logged%20found%20drafts.user.js",
+    "code_size": 5583,
+    "license": null,
+    "version": "2024-06-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

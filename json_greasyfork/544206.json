@@ -1,0 +1,33 @@
+{
+  "id": 544206,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-31T13:57:21.000Z",
+  "code_updated_at": "2025-07-31T17:08:36.000Z",
+  "namespace": "https://github.com/marioplus/bilibili-toolkit",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 237786,
+      "name": "marioplus",
+      "created_at": "2019-01-07T01:36:49.000Z",
+      "url": "https://greasyfork.org/users/237786-marioplus"
+    }
+  ],
+  "name": "bilibili工具箱",
+  "description": "一些自用的b站脚本",
+  "url": "https://greasyfork.org/scripts/544206-bilibili%E5%B7%A5%E5%85%B7%E7%AE%B1",
+  "code_url": "https://update.greasyfork.org/scripts/544206/bilibili%E5%B7%A5%E5%85%B7%E7%AE%B1.user.js",
+  "code_size": 4780,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

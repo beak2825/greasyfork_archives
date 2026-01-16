@@ -1,0 +1,33 @@
+{
+  "id": 498569,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-22T04:44:27.000Z",
+  "code_updated_at": "2024-06-22T04:44:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1306116,
+      "name": "Hykuo",
+      "created_at": "2024-05-23T23:41:12.000Z",
+      "url": "https://greasyfork.org/users/1306116-hykuo"
+    }
+  ],
+  "name": "Modificador de Tema Kogama",
+  "description": "Altera a cor Tema do Kogama",
+  "url": "https://greasyfork.org/scripts/498569-modificador-de-tema-kogama",
+  "code_url": "https://update.greasyfork.org/scripts/498569/Modificador%20de%20Tema%20Kogama.user.js",
+  "code_size": 5413,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

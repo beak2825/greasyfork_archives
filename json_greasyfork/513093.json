@@ -1,0 +1,59 @@
+{
+  "id": 513093,
+  "daily_installs": 0,
+  "total_installs": 102,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-18T18:17:40.000Z",
+  "code_updated_at": "2024-10-18T20:48:12.000Z",
+  "namespace": "/DBI/bili-more-rates",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1382880,
+      "name": "Lokyii Ho",
+      "created_at": "2024-10-18T18:15:25.000Z",
+      "url": "https://greasyfork.org/users/1382880-lokyii-ho",
+      "scripts": [
+        {
+          "id": 513093,
+          "daily_installs": 0,
+          "total_installs": 102,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-18T18:17:40.000Z",
+          "code_updated_at": "2024-10-18T20:48:12.000Z",
+          "namespace": "/DBI/bili-more-rates",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "为 b 站 (bilibili) 添加自定义倍速, 支持快捷键，下一个视频的倍速=上一个视频的倍速",
+          "description": "为b站(bilibili)添加更多倍速 (可自定义, 支持自定义快捷键): 0.25X; 2.5X; 3X; 4X。",
+          "url": "https://greasyfork.org/scripts/513093-%E4%B8%BA-b-%E7%AB%99-bilibili-%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F-%E6%94%AF%E6%8C%81%E5%BF%AB%E6%8D%B7%E9%94%AE-%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F-%E4%B8%8A%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F",
+          "code_url": "https://update.greasyfork.org/scripts/513093/%E4%B8%BA%20b%20%E7%AB%99%20%28bilibili%29%20%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F%2C%20%E6%94%AF%E6%8C%81%E5%BF%AB%E6%8D%B7%E9%94%AE%EF%BC%8C%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F%3D%E4%B8%8A%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F.user.js",
+          "code_size": 3849,
+          "license": "MIT License",
+          "version": "1.2.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "为 b 站 (bilibili) 添加自定义倍速, 支持快捷键，下一个视频的倍速=上一个视频的倍速",
+  "description": "为b站(bilibili)添加更多倍速 (可自定义, 支持自定义快捷键): 0.25X; 2.5X; 3X; 4X。",
+  "url": "https://greasyfork.org/scripts/513093-%E4%B8%BA-b-%E7%AB%99-bilibili-%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F-%E6%94%AF%E6%8C%81%E5%BF%AB%E6%8D%B7%E9%94%AE-%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F-%E4%B8%8A%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F",
+  "code_url": "https://update.greasyfork.org/scripts/513093/%E4%B8%BA%20b%20%E7%AB%99%20%28bilibili%29%20%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%80%8D%E9%80%9F%2C%20%E6%94%AF%E6%8C%81%E5%BF%AB%E6%8D%B7%E9%94%AE%EF%BC%8C%E4%B8%8B%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F%3D%E4%B8%8A%E4%B8%80%E4%B8%AA%E8%A7%86%E9%A2%91%E7%9A%84%E5%80%8D%E9%80%9F.user.js",
+  "code_size": 3849,
+  "license": "MIT License",
+  "version": "1.2.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

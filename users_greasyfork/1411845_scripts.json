@@ -1,0 +1,68 @@
+[
+  {
+    "id": 520946,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-12-16T20:21:10.000Z",
+    "code_updated_at": "2024-12-16T20:21:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411845,
+        "name": "Emre YILMAZ",
+        "created_at": "2024-12-16T20:15:13.000Z",
+        "url": "https://greasyfork.org/users/1411845-emre-yilmaz"
+      }
+    ],
+    "name": "Youtube autoplay stopper",
+    "description": "Disable YouTube autoplay with user interaction required and dynamic settings",
+    "url": "https://greasyfork.org/scripts/520946-youtube-autoplay-stopper",
+    "code_url": "https://update.greasyfork.org/scripts/520946/Youtube%20autoplay%20stopper.user.js",
+    "code_size": 5111,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520943,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T20:17:49.000Z",
+    "code_updated_at": "2024-12-16T20:17:49.000Z",
+    "namespace": "https://example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411845,
+        "name": "Emre YILMAZ",
+        "created_at": "2024-12-16T20:15:13.000Z",
+        "url": "https://greasyfork.org/users/1411845-emre-yilmaz"
+      }
+    ],
+    "name": "Youtube Volume Scroll with Volume Percentage Only",
+    "description": "Control volume on YouTube, synchronize the volume slider, and display only the volume percentage inside the video player.",
+    "url": "https://greasyfork.org/scripts/520943-youtube-volume-scroll-with-volume-percentage-only",
+    "code_url": "https://update.greasyfork.org/scripts/520943/Youtube%20Volume%20Scroll%20with%20Volume%20Percentage%20Only.user.js",
+    "code_size": 4317,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

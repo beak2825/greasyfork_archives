@@ -1,0 +1,59 @@
+{
+  "id": 520827,
+  "daily_installs": 0,
+  "total_installs": 293,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-15T17:41:11.000Z",
+  "code_updated_at": "2025-04-21T17:35:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": "https://github.com/tianheil3/115-magnet-helper/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 329318,
+      "name": "tianheil3",
+      "created_at": "2019-08-19T03:40:47.000Z",
+      "url": "https://greasyfork.org/users/329318-tianheil3",
+      "scripts": [
+        {
+          "id": 520827,
+          "daily_installs": 0,
+          "total_installs": 293,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-15T17:41:11.000Z",
+          "code_updated_at": "2025-04-21T17:35:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://github.com/tianheil3/115-magnet-helper/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "115云盘磁力链接助手-- 天黑了",
+          "description": "自动捕捉页面磁力链接并保存至115云盘, 可选择已有文件夹保存",
+          "url": "https://greasyfork.org/scripts/520827-115%E4%BA%91%E7%9B%98%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B-%E5%A4%A9%E9%BB%91%E4%BA%86",
+          "code_url": "https://update.greasyfork.org/scripts/520827/115%E4%BA%91%E7%9B%98%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B--%20%E5%A4%A9%E9%BB%91%E4%BA%86.user.js",
+          "code_size": 31197,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "115云盘磁力链接助手-- 天黑了",
+  "description": "自动捕捉页面磁力链接并保存至115云盘, 可选择已有文件夹保存",
+  "url": "https://greasyfork.org/scripts/520827-115%E4%BA%91%E7%9B%98%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B-%E5%A4%A9%E9%BB%91%E4%BA%86",
+  "code_url": "https://update.greasyfork.org/scripts/520827/115%E4%BA%91%E7%9B%98%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5%E5%8A%A9%E6%89%8B--%20%E5%A4%A9%E9%BB%91%E4%BA%86.user.js",
+  "code_size": 31197,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

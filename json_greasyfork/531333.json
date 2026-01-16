@@ -1,0 +1,59 @@
+{
+  "id": 531333,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-30T12:31:07.000Z",
+  "code_updated_at": "2025-03-31T06:52:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1287621,
+      "name": "rxlxr11",
+      "created_at": "2024-04-13T04:25:45.000Z",
+      "url": "https://greasyfork.org/users/1287621-rxlxr11",
+      "scripts": [
+        {
+          "id": 531333,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-30T12:31:07.000Z",
+          "code_updated_at": "2025-03-31T06:52:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "体育馆自动预约",
+          "description": "自动预约江苏大学体育馆场地",
+          "url": "https://greasyfork.org/scripts/531333-%E4%BD%93%E8%82%B2%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6",
+          "code_url": "https://update.greasyfork.org/scripts/531333/%E4%BD%93%E8%82%B2%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6.user.js",
+          "code_size": 12230,
+          "license": "MIT License",
+          "version": "1.0.22",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "体育馆自动预约",
+  "description": "自动预约江苏大学体育馆场地",
+  "url": "https://greasyfork.org/scripts/531333-%E4%BD%93%E8%82%B2%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6",
+  "code_url": "https://update.greasyfork.org/scripts/531333/%E4%BD%93%E8%82%B2%E9%A6%86%E8%87%AA%E5%8A%A8%E9%A2%84%E7%BA%A6.user.js",
+  "code_size": 12230,
+  "license": "MIT License",
+  "version": "1.0.22",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

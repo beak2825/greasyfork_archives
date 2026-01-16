@@ -63,6 +63,105 @@
     "version": "1.0.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540542,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T17:31:50.000Z",
+    "code_updated_at": "2025-06-23T17:33:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 258202,
+        "name": "hj01857655",
+        "created_at": "2019-03-10T12:10:23.000Z",
+        "url": "https://greasyfork.org/users/258202-hj01857655"
+      }
+    ],
+    "name": "Cursort Automatic Registration Assistant(JavaScript)",
+    "description": "Cursor自动注册助手，需要配置临时邮箱和注册邮箱域名",
+    "url": "https://greasyfork.org/scripts/540542-cursort-automatic-registration-assistant-javascript",
+    "code_url": "https://update.greasyfork.org/scripts/540542/Cursort%20Automatic%20Registration%20Assistant%28JavaScript%29.user.js",
+    "code_size": 45537,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540130,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T10:57:40.000Z",
+    "code_updated_at": "2025-06-20T11:20:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 258202,
+        "name": "hj01857655",
+        "created_at": "2019-03-10T12:10:23.000Z",
+        "url": "https://greasyfork.org/users/258202-hj01857655"
+      }
+    ],
+    "name": "AugmentCode autoRegister(With Config Panel)",
+    "description": "自动完成AugmentCode的注册流程，支持可视化配置",
+    "url": "https://greasyfork.org/scripts/540130-augmentcode-autoregister-with-config-panel",
+    "code_url": "https://update.greasyfork.org/scripts/540130/AugmentCode%20autoRegister%28With%20Config%20Panel%29.user.js",
+    "code_size": 50672,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 537973,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-01T13:42:22.000Z",
+    "code_updated_at": "2025-06-01T13:46:10.000Z",
+    "namespace": "https://bbs.tampermonkey.net.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 258202,
+        "name": "hj01857655",
+        "created_at": "2019-03-10T12:10:23.000Z",
+        "url": "https://greasyfork.org/users/258202-hj01857655"
+      }
+    ],
+    "name": "艾利斯顿皇家医学院-评教脚本",
+    "description": "自动评教，自动跳过弹窗",
+    "url": "https://greasyfork.org/scripts/537973-%E8%89%BE%E5%88%A9%E6%96%AF%E9%A1%BF%E7%9A%87%E5%AE%B6%E5%8C%BB%E5%AD%A6%E9%99%A2-%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/537973/%E8%89%BE%E5%88%A9%E6%96%AF%E9%A1%BF%E7%9A%87%E5%AE%B6%E5%8C%BB%E5%AD%A6%E9%99%A2-%E8%AF%84%E6%95%99%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 2533,
+    "license": "MIT License",
+    "version": "0.3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

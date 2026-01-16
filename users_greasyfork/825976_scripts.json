@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512661,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T01:33:43.000Z",
+    "code_updated_at": "2024-10-15T02:59:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 825976,
+        "name": "Movelocity",
+        "created_at": "2021-10-17T04:02:04.000Z",
+        "url": "https://greasyfork.org/users/825976-movelocity"
+      }
+    ],
+    "name": "YX-Auto-login",
+    "description": "For auto login, data are stored locally",
+    "url": "https://greasyfork.org/scripts/512661-yx-auto-login",
+    "code_url": "https://update.greasyfork.org/scripts/512661/YX-Auto-login.user.js",
+    "code_size": 2299,
+    "license": "MIT License",
+    "version": "2024-10-15T11",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

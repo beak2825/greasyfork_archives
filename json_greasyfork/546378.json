@@ -1,0 +1,59 @@
+{
+  "id": 546378,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T08:46:21.000Z",
+  "code_updated_at": "2025-08-19T12:58:34.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1258461,
+      "name": "azazlf09",
+      "created_at": "2024-02-07T03:48:57.000Z",
+      "url": "https://greasyfork.org/users/1258461-azazlf09",
+      "scripts": [
+        {
+          "id": 555297,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-09T12:11:25.000Z",
+          "code_updated_at": "2025-11-09T12:11:25.000Z",
+          "namespace": "https://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小红书链接收藏家",
+          "description": "在收藏弹窗内直接管理文档，快速查找和操作",
+          "url": "https://greasyfork.org/scripts/555297-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E9%93%BE%E6%8E%A5%E6%94%B6%E8%97%8F%E5%AE%B6",
+          "code_url": "https://update.greasyfork.org/scripts/555297/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E9%93%BE%E6%8E%A5%E6%94%B6%E8%97%8F%E5%AE%B6.user.js",
+          "code_size": 21294,
+          "license": "Copyright (c) [大佬的鼠DonRat] All rights reserved.",
+          "version": "1.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "同志网帖子图片爬取工具",
+  "description": "并行下载+分块压缩+进度条+直接下载，解决打包慢问题",
+  "url": "https://greasyfork.org/scripts/546378-%E5%90%8C%E5%BF%97%E7%BD%91%E5%B8%96%E5%AD%90%E5%9B%BE%E7%89%87%E7%88%AC%E5%8F%96%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/546378/%E5%90%8C%E5%BF%97%E7%BD%91%E5%B8%96%E5%AD%90%E5%9B%BE%E7%89%87%E7%88%AC%E5%8F%96%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 13348,
+  "license": "MIT License",
+  "version": "3.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

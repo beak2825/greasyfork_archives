@@ -1,0 +1,34 @@
+{
+  "id": 503237,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-10T21:08:26.000Z",
+  "code_updated_at": "2024-08-12T12:36:00.000Z",
+  "namespace": "https://greasyfork.org/en/users/39779",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 39779,
+      "name": "Elie Cheng",
+      "created_at": "2016-04-21T04:28:02.000Z",
+      "url": "https://greasyfork.org/users/39779-elie-cheng",
+      "scripts": []
+    }
+  ],
+  "name": "MyMHAnyTrapAnySkin",
+  "description": "Turn any trap or skin you own, into a skin for your current setup.",
+  "url": "https://greasyfork.org/scripts/503237-mymhanytrapanyskin",
+  "code_url": "https://update.greasyfork.org/scripts/503237/MyMHAnyTrapAnySkin.user.js",
+  "code_size": 15778,
+  "license": "MIT License",
+  "version": "2024-08-12.001",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

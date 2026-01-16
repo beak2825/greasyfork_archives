@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511642,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-06T05:26:12.000Z",
+    "code_updated_at": "2024-10-06T05:26:12.000Z",
+    "namespace": "https://loogle.cc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1322668,
+        "name": "fishcelery4894 (Fishy)",
+        "created_at": "2024-06-23T12:33:48.000Z",
+        "url": "https://greasyfork.org/users/1322668-fishcelery4894-fishy"
+      }
+    ],
+    "name": "loogle spoof",
+    "description": "its a spoof for loogle man idk",
+    "url": "https://greasyfork.org/scripts/511642-loogle-spoof",
+    "code_url": "https://update.greasyfork.org/scripts/511642/loogle%20spoof.user.js",
+    "code_size": 1343,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

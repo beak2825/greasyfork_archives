@@ -1,0 +1,34 @@
+{
+  "id": 518561,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-23T09:41:20.000Z",
+  "code_updated_at": "2024-12-23T11:02:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1205855,
+      "name": "PEIT98",
+      "created_at": "2023-10-28T11:50:50.000Z",
+      "url": "https://greasyfork.org/users/1205855-peit98",
+      "scripts": []
+    }
+  ],
+  "name": "Amazon 自动OTP",
+  "description": "即时生成 TOTP，无需等待完整周期，检测输入框后立即填充并显示 OTP。",
+  "url": "https://greasyfork.org/scripts/518561-amazon-%E8%87%AA%E5%8A%A8otp",
+  "code_url": "https://update.greasyfork.org/scripts/518561/Amazon%20%E8%87%AA%E5%8A%A8OTP.user.js",
+  "code_size": 5819,
+  "license": null,
+  "version": "3.1",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

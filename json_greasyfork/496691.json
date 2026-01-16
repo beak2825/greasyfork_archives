@@ -1,0 +1,59 @@
+{
+  "id": 496691,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-01T01:12:06.000Z",
+  "code_updated_at": "2024-06-01T01:13:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1310007,
+      "name": "dispatchServlet",
+      "created_at": "2024-05-31T08:08:23.000Z",
+      "url": "https://greasyfork.org/users/1310007-dispatchservlet",
+      "scripts": [
+        {
+          "id": 496691,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-01T01:12:06.000Z",
+          "code_updated_at": "2024-06-01T01:13:47.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "科大国创工时加班查看系统显示问题",
+          "description": "解决科大国创工时加班系统 查看时左侧菜单显示不出来,不再要切换ie模式了",
+          "url": "https://greasyfork.org/scripts/496691-%E7%A7%91%E5%A4%A7%E5%9B%BD%E5%88%9B%E5%B7%A5%E6%97%B6%E5%8A%A0%E7%8F%AD%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98",
+          "code_url": "https://update.greasyfork.org/scripts/496691/%E7%A7%91%E5%A4%A7%E5%9B%BD%E5%88%9B%E5%B7%A5%E6%97%B6%E5%8A%A0%E7%8F%AD%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98.user.js",
+          "code_size": 1429,
+          "license": "MIT License",
+          "version": "2024-06-01",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "科大国创工时加班查看系统显示问题",
+  "description": "解决科大国创工时加班系统 查看时左侧菜单显示不出来,不再要切换ie模式了",
+  "url": "https://greasyfork.org/scripts/496691-%E7%A7%91%E5%A4%A7%E5%9B%BD%E5%88%9B%E5%B7%A5%E6%97%B6%E5%8A%A0%E7%8F%AD%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98",
+  "code_url": "https://update.greasyfork.org/scripts/496691/%E7%A7%91%E5%A4%A7%E5%9B%BD%E5%88%9B%E5%B7%A5%E6%97%B6%E5%8A%A0%E7%8F%AD%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E6%98%BE%E7%A4%BA%E9%97%AE%E9%A2%98.user.js",
+  "code_size": 1429,
+  "license": "MIT License",
+  "version": "2024-06-01",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

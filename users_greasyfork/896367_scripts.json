@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515543,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-03T09:02:00.000Z",
+    "code_updated_at": "2024-11-03T09:02:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 896367,
+        "name": "0x01x02x03",
+        "created_at": "2022-04-01T18:39:14.000Z",
+        "url": "https://greasyfork.org/users/896367-0x01x02x03"
+      }
+    ],
+    "name": "fab.com Filtros Extras",
+    "description": "Custom automated filter/gather script to simplify the process of adding new models from fab.com to your account, be aware that the server has a limit on how many you will be able to add to your account, and then you will have to wait to get your HTTP 429 error gone.",
+    "url": "https://greasyfork.org/scripts/515543-fab-com-filtros-extras",
+    "code_url": "https://update.greasyfork.org/scripts/515543/fabcom%20Filtros%20Extras.user.js",
+    "code_size": 3326,
+    "license": "MIT License",
+    "version": "2024-11-02",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

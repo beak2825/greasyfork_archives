@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551374,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-02T17:32:26.000Z",
+    "code_updated_at": "2025-10-03T09:39:45.000Z",
+    "namespace": "https://github.com/fishhh666",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521572,
+        "name": "fishhh666",
+        "created_at": "2025-10-02T11:16:36.000Z",
+        "url": "https://greasyfork.org/users/1521572-fishhh666"
+      }
+    ],
+    "name": "猫耳FM记录与XML弹幕下载",
+    "description": "记录猫耳FM / missevan 的 标题和网址，可导出为 JSON 方便后期处理其他任务。脚本支持下载当前页面弹幕 xml 或记录中的所有页面对应 xml（只能逐个下载）",
+    "url": "https://greasyfork.org/scripts/551374-%E7%8C%AB%E8%80%B3fm%E8%AE%B0%E5%BD%95%E4%B8%8Exml%E5%BC%B9%E5%B9%95%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/551374/%E7%8C%AB%E8%80%B3FM%E8%AE%B0%E5%BD%95%E4%B8%8EXML%E5%BC%B9%E5%B9%95%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 6646,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551350,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-02T15:12:07.000Z",
+    "code_updated_at": "2025-10-03T09:37:52.000Z",
+    "namespace": "https://github.com/fishhh666",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521572,
+        "name": "fishhh666",
+        "created_at": "2025-10-02T11:16:36.000Z",
+        "url": "https://greasyfork.org/users/1521572-fishhh666"
+      }
+    ],
+    "name": "猫耳FM内嵌字幕录制提取lrc",
+    "description": "自动捕获猫耳FM/missevan播放器内嵌字幕并导出为LRC文件，支持监测播放快结束时自动暂停并触发下载，支持手动下载，清除字幕缓存。网址变化会自动清除已收集的字幕。",
+    "url": "https://greasyfork.org/scripts/551350-%E7%8C%AB%E8%80%B3fm%E5%86%85%E5%B5%8C%E5%AD%97%E5%B9%95%E5%BD%95%E5%88%B6%E6%8F%90%E5%8F%96lrc",
+    "code_url": "https://update.greasyfork.org/scripts/551350/%E7%8C%AB%E8%80%B3FM%E5%86%85%E5%B5%8C%E5%AD%97%E5%B9%95%E5%BD%95%E5%88%B6%E6%8F%90%E5%8F%96lrc.user.js",
+    "code_size": 7831,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

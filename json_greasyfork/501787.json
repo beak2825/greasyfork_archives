@@ -1,0 +1,34 @@
+{
+  "id": 501787,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-25T18:24:28.000Z",
+  "code_updated_at": "2024-07-25T18:24:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1339791,
+      "name": "Haiying Shan",
+      "created_at": "2024-07-25T16:31:10.000Z",
+      "url": "https://greasyfork.org/users/1339791-haiying-shan",
+      "scripts": []
+    }
+  ],
+  "name": "Custom Sidebar with Tools",
+  "description": "A script to add a customizable sidebar with tool buttons for mobile devices with a draggable button to toggle the sidebar",
+  "url": "https://greasyfork.org/scripts/501787-custom-sidebar-with-tools",
+  "code_url": "https://update.greasyfork.org/scripts/501787/Custom%20Sidebar%20with%20Tools.user.js",
+  "code_size": 3759,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

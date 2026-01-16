@@ -1,0 +1,59 @@
+{
+  "id": 545195,
+  "daily_installs": 0,
+  "total_installs": 16,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-09T17:34:10.000Z",
+  "code_updated_at": "2025-08-09T17:34:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503238,
+      "name": "Volette",
+      "created_at": "2025-08-09T15:59:41.000Z",
+      "url": "https://greasyfork.org/users/1503238-volette",
+      "scripts": [
+        {
+          "id": 545195,
+          "daily_installs": 0,
+          "total_installs": 16,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-09T17:34:10.000Z",
+          "code_updated_at": "2025-08-09T17:34:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Church Prayer Streak Tracker (Web version only)",
+          "description": "Streak expiry in H:MM:SS (24h since last prayer, with ±30s grace), 24h count, consecutive days; pulse last 10m, red <1h; theme-aware; Refresh now; auto-refresh 5m & on visiting/leaving /church.php; history (last 10) with absolute dates; backfills up to 15 days; delta fetch; cached last prayer; gentle backoff; shows Expires/Expired at.",
+          "url": "https://greasyfork.org/scripts/545195-torn-church-prayer-streak-tracker-web-version-only",
+          "code_url": "https://update.greasyfork.org/scripts/545195/Torn%20Church%20Prayer%20Streak%20Tracker%20%28Web%20version%20only%29.user.js",
+          "code_size": 17728,
+          "license": null,
+          "version": "2.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Church Prayer Streak Tracker (Web version only)",
+  "description": "Streak expiry in H:MM:SS (24h since last prayer, with ±30s grace), 24h count, consecutive days; pulse last 10m, red <1h; theme-aware; Refresh now; auto-refresh 5m & on visiting/leaving /church.php; history (last 10) with absolute dates; backfills up to 15 days; delta fetch; cached last prayer; gentle backoff; shows Expires/Expired at.",
+  "url": "https://greasyfork.org/scripts/545195-torn-church-prayer-streak-tracker-web-version-only",
+  "code_url": "https://update.greasyfork.org/scripts/545195/Torn%20Church%20Prayer%20Streak%20Tracker%20%28Web%20version%20only%29.user.js",
+  "code_size": 17728,
+  "license": null,
+  "version": "2.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 499432,
+  "daily_installs": 0,
+  "total_installs": 290,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-01T22:21:54.000Z",
+  "code_updated_at": "2024-07-01T22:21:54.000Z",
+  "namespace": "Double Split, Triple Split, 16 Split Hotkeys And Quicker Feeding",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1322374,
+      "name": "xxrain1xx",
+      "created_at": "2024-06-22T23:01:03.000Z",
+      "url": "https://greasyfork.org/users/1322374-xxrain1xx"
+    }
+  ],
+  "name": "Agar.io Feed Macro + Split Hotkeys|By: Dabbles - Agario",
+  "description": "D - Double Split -|- S - Triple Split -|- A - 16 Split -|- Q - Feed",
+  "url": "https://greasyfork.org/scripts/499432-agar-io-feed-macro-split-hotkeys-by-dabbles-agario",
+  "code_url": "https://update.greasyfork.org/scripts/499432/Agario%20Feed%20Macro%20%2B%20Split%20Hotkeys%7CBy%3A%20Dabbles%20-%20Agario.user.js",
+  "code_size": 779,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 531913,
+    "daily_installs": 1,
+    "total_installs": 219,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-05T14:17:38.000Z",
+    "code_updated_at": "2025-06-02T12:46:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406267,
+        "name": "windofage",
+        "created_at": "2024-12-04T04:41:58.000Z",
+        "url": "https://greasyfork.org/users/1406267-windofage"
+      }
+    ],
+    "name": "AI Enter as Newline",
+    "description": "Enable Enter key for newline in AI chat input, use Cmd+Enter (Mac) or Ctrl+Enter (Windows) to send message.",
+    "url": "https://greasyfork.org/scripts/531913-ai-enter-as-newline",
+    "code_url": "https://update.greasyfork.org/scripts/531913/AI%20Enter%20as%20Newline.user.js",
+    "code_size": 29138,
+    "license": "MIT License",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519714,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-04T06:40:05.000Z",
+    "code_updated_at": "2024-12-04T06:47:51.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406267,
+        "name": "windofage",
+        "created_at": "2024-12-04T04:41:58.000Z",
+        "url": "https://greasyfork.org/users/1406267-windofage"
+      }
+    ],
+    "name": "Perplexity 翻譯來源文字",
+    "description": "將 Perplexity 搜尋結果的來源參考翻譯成繁體中文",
+    "url": "https://greasyfork.org/scripts/519714-perplexity-%E7%BF%BB%E8%AD%AF%E4%BE%86%E6%BA%90%E6%96%87%E5%AD%97",
+    "code_url": "https://update.greasyfork.org/scripts/519714/Perplexity%20%E7%BF%BB%E8%AD%AF%E4%BE%86%E6%BA%90%E6%96%87%E5%AD%97.user.js",
+    "code_size": 2562,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 519701,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-04T04:49:44.000Z",
+    "code_updated_at": "2024-12-04T06:46:40.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406267,
+        "name": "windofage",
+        "created_at": "2024-12-04T04:41:58.000Z",
+        "url": "https://greasyfork.org/users/1406267-windofage"
+      }
+    ],
+    "name": "Claude.ai 翻譯對話標題",
+    "description": "將 Claude.ai 網站上的英文對話標題自動翻譯成繁體中文",
+    "url": "https://greasyfork.org/scripts/519701-claude-ai-%E7%BF%BB%E8%AD%AF%E5%B0%8D%E8%A9%B1%E6%A8%99%E9%A1%8C",
+    "code_url": "https://update.greasyfork.org/scripts/519701/Claudeai%20%E7%BF%BB%E8%AD%AF%E5%B0%8D%E8%A9%B1%E6%A8%99%E9%A1%8C.user.js",
+    "code_size": 3570,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

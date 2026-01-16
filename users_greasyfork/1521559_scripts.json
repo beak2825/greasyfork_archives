@@ -129,6 +129,72 @@
     "version": "8.0",
     "locale": "ru",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551674,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T14:50:09.000Z",
+    "code_updated_at": "2025-10-05T14:50:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521559,
+        "name": "honoikazuch1",
+        "created_at": "2025-10-02T10:20:00.000Z",
+        "url": "https://greasyfork.org/users/1521559-honoikazuch1"
+      }
+    ],
+    "name": "АНИМАЦИИ ГОВНО",
+    "description": "Отключение анимаций",
+    "url": "https://greasyfork.org/scripts/551674-%D0%B0%D0%BD%D0%B8%D0%BC%D0%B0%D1%86%D0%B8%D0%B8-%D0%B3%D0%BE%D0%B2%D0%BD%D0%BE",
+    "code_url": "https://update.greasyfork.org/scripts/551674/%D0%90%D0%9D%D0%98%D0%9C%D0%90%D0%A6%D0%98%D0%98%20%D0%93%D0%9E%D0%92%D0%9D%D0%9E.user.js",
+    "code_size": 550,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551332,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-02T10:21:54.000Z",
+    "code_updated_at": "2025-10-02T10:21:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521559,
+        "name": "honoikazuch1",
+        "created_at": "2025-10-02T10:20:00.000Z",
+        "url": "https://greasyfork.org/users/1521559-honoikazuch1"
+      }
+    ],
+    "name": "Подсчёт входящих и исходящих обменов (с кликами)",
+    "description": "Считает количество входящих и исходящих обменов и показывает на любой странице animestars.org, с переходом по клику на страницу обменов",
+    "url": "https://greasyfork.org/scripts/551332-%D0%BF%D0%BE%D0%B4%D1%81%D1%87%D1%91%D1%82-%D0%B2%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%D1%85-%D0%B8-%D0%B8%D1%81%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%D1%85-%D0%BE%D0%B1%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2-%D1%81-%D0%BA%D0%BB%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8",
+    "code_url": "https://update.greasyfork.org/scripts/551332/%D0%9F%D0%BE%D0%B4%D1%81%D1%87%D1%91%D1%82%20%D0%B2%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%D1%85%20%D0%B8%20%D0%B8%D1%81%D1%85%D0%BE%D0%B4%D1%8F%D1%89%D0%B8%D1%85%20%D0%BE%D0%B1%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%20%28%D1%81%20%D0%BA%D0%BB%D0%B8%D0%BA%D0%B0%D0%BC%D0%B8%29.user.js",
+    "code_size": 3337,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500253,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-11T04:07:39.000Z",
+    "code_updated_at": "2024-07-11T05:17:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1331603,
+        "name": "ChenRuiShuShu",
+        "created_at": "2024-07-11T04:06:10.000Z",
+        "url": "https://greasyfork.org/users/1331603-chenruishushu"
+      }
+    ],
+    "name": "eagle remover",
+    "description": "add a fake tracker script so that EagleCloud tracker won't register it's tracker logic",
+    "url": "https://greasyfork.org/scripts/500253-eagle-remover",
+    "code_url": "https://update.greasyfork.org/scripts/500253/eagle%20remover.user.js",
+    "code_size": 884,
+    "license": "MIT License",
+    "version": "2024-05-11-3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

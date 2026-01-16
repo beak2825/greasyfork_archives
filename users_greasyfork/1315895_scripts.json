@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497660,
+    "daily_installs": 0,
+    "total_installs": 277,
+    "fan_score": "20.8",
+    "good_ratings": 1,
+    "ok_ratings": 2,
+    "bad_ratings": 0,
+    "created_at": "2024-06-11T18:39:16.000Z",
+    "code_updated_at": "2024-10-10T14:20:44.000Z",
+    "namespace": "https://github.com/anstosa/farmrpg-farmhand",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1315895,
+        "name": "anstosa",
+        "created_at": "2024-06-10T20:03:09.000Z",
+        "url": "https://greasyfork.org/users/1315895-anstosa"
+      }
+    ],
+    "name": "Farm RPG Farmhand",
+    "description": "Your helper around the RPG Farm",
+    "url": "https://greasyfork.org/scripts/497660-farm-rpg-farmhand",
+    "code_url": "https://update.greasyfork.org/scripts/497660/Farm%20RPG%20Farmhand.user.js",
+    "code_size": 310253,
+    "license": "MIT License",
+    "version": "1.0.31",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

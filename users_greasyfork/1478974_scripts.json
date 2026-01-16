@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538344,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-04T17:28:57.000Z",
+    "code_updated_at": "2025-06-04T17:28:56.000Z",
+    "namespace": "ChessBotPro",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478974,
+        "name": "Agência Horús Marketing",
+        "created_at": "2025-06-04T17:25:52.000Z",
+        "url": "https://greasyfork.org/users/1478974-ag%C3%AAncia-hor%C3%BAs-marketing"
+      }
+    ],
+    "name": "Chess.com Bot Pro",
+    "description": "Bot avançado para Chess.com com múltiplas funcionalidades",
+    "url": "https://greasyfork.org/scripts/538344-chess-com-bot-pro",
+    "code_url": "https://update.greasyfork.org/scripts/538344/Chesscom%20Bot%20Pro.user.js",
+    "code_size": 8697,
+    "license": null,
+    "version": "3.0.0",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

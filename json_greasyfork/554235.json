@@ -1,0 +1,34 @@
+{
+  "id": 554235,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T21:08:42.000Z",
+  "code_updated_at": "2025-10-30T21:08:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1532389,
+      "name": "Conan Kim",
+      "created_at": "2025-10-30T21:02:14.000Z",
+      "url": "https://greasyfork.org/users/1532389-conan-kim",
+      "scripts": []
+    }
+  ],
+  "name": "Chzzk Live Cleaner",
+  "description": "치지직 방송 목록에서 차단한 유저 숨기기",
+  "url": "https://greasyfork.org/scripts/554235-chzzk-live-cleaner",
+  "code_url": "https://update.greasyfork.org/scripts/554235/Chzzk%20Live%20Cleaner.user.js",
+  "code_size": 1954,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

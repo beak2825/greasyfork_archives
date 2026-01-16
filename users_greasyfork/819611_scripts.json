@@ -64,5 +64,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 529191,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-08T11:18:19.000Z",
+    "code_updated_at": "2025-03-08T11:18:19.000Z",
+    "namespace": "https://github.com/dnek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819611,
+        "name": "dnek",
+        "created_at": "2021-09-27T15:13:26.000Z",
+        "url": "https://greasyfork.org/users/819611-dnek"
+      }
+    ],
+    "name": "Simplified Twitter",
+    "description": "Remove distractions from the new Twitter layout; UserScript version of https://github.com/brunolemos/simplified-twitter",
+    "url": "https://greasyfork.org/scripts/529191-simplified-twitter",
+    "code_url": "https://update.greasyfork.org/scripts/529191/Simplified%20Twitter.user.js",
+    "code_size": 1733,
+    "license": "MIT License",
+    "version": "1.8.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515223,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-01T14:38:55.000Z",
+    "code_updated_at": "2024-11-01T14:38:55.000Z",
+    "namespace": "https://github.com/dnek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819611,
+        "name": "dnek",
+        "created_at": "2021-09-27T15:13:26.000Z",
+        "url": "https://greasyfork.org/users/819611-dnek"
+      }
+    ],
+    "name": "nicovideo-comfortable-controller-fader",
+    "description": "ニコニコ動画のプレイヤー下部のコントローラーを自然にフェードイン・フェードアウトさせます。",
+    "url": "https://greasyfork.org/scripts/515223-nicovideo-comfortable-controller-fader",
+    "code_url": "https://update.greasyfork.org/scripts/515223/nicovideo-comfortable-controller-fader.user.js",
+    "code_size": 2518,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502787,
+    "daily_installs": 0,
+    "total_installs": 301,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T13:45:51.000Z",
+    "code_updated_at": "2025-11-02T07:05:37.000Z",
+    "namespace": "https://github.com/dnek",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819611,
+        "name": "dnek",
+        "created_at": "2021-09-27T15:13:26.000Z",
+        "url": "https://greasyfork.org/users/819611-dnek"
+      }
+    ],
+    "name": "nicovideo-autoplay-canceler",
+    "description": "ニコニコ動画で動画の自動再生が開始された直後に自動的に一時停止します。停止に少しラグがあるため、停止時の再生時間が3秒未満の場合は0秒まで戻します。「nicovideo-next-video-canceler」「nicovideo-player-expander」は別のスクリプトです。",
+    "url": "https://greasyfork.org/scripts/502787-nicovideo-autoplay-canceler",
+    "code_url": "https://update.greasyfork.org/scripts/502787/nicovideo-autoplay-canceler.user.js",
+    "code_size": 3084,
+    "license": "MIT License",
+    "version": "2.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 502764,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T09:29:59.000Z",
+    "code_updated_at": "2024-08-06T09:29:59.000Z",
+    "namespace": "https://grayapps.es/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 15098,
+        "name": "Javiergg",
+        "created_at": "2015-09-09T09:34:53.000Z",
+        "url": "https://greasyfork.org/users/15098-javiergg"
+      }
+    ],
+    "name": "AnimeFLV-auto-skip-Mega-addon",
+    "description": "Set video on fullscreen and send data to AnimeFLV addon",
+    "url": "https://greasyfork.org/scripts/502764-animeflv-auto-skip-mega-addon",
+    "code_url": "https://update.greasyfork.org/scripts/502764/AnimeFLV-auto-skip-Mega-addon.user.js",
+    "code_size": 2687,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502760,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T08:52:47.000Z",
+    "code_updated_at": "2024-08-06T09:41:01.000Z",
+    "namespace": "https://grayapps.es/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 15098,
+        "name": "Javiergg",
+        "created_at": "2015-09-09T09:34:53.000Z",
+        "url": "https://greasyfork.org/users/15098-javiergg"
+      }
+    ],
+    "name": "AnimeFlV auto skip",
+    "description": "This script will try to autoplay videos and also when its ending the episode, will reproduce next.",
+    "url": "https://greasyfork.org/scripts/502760-animeflv-auto-skip",
+    "code_url": "https://update.greasyfork.org/scripts/502760/AnimeFlV%20auto%20skip.user.js",
+    "code_size": 1169,
+    "license": "MIT License",
+    "version": "0.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

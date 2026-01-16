@@ -1,0 +1,68 @@
+[
+  {
+    "id": 526067,
+    "daily_installs": 0,
+    "total_installs": 398,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-02-06T08:13:56.000Z",
+    "code_updated_at": "2025-02-07T03:10:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1110789,
+        "name": "Mellow Davis",
+        "created_at": "2023-06-24T09:49:00.000Z",
+        "url": "https://greasyfork.org/users/1110789-mellow-davis"
+      }
+    ],
+    "name": "DeepSeek自动重试",
+    "description": "检测到\"服务器繁忙\"时自动点击重试按钮",
+    "url": "https://greasyfork.org/scripts/526067-deepseek%E8%87%AA%E5%8A%A8%E9%87%8D%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/526067/DeepSeek%E8%87%AA%E5%8A%A8%E9%87%8D%E8%AF%95.user.js",
+    "code_size": 7513,
+    "license": "none",
+    "version": "0.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522770,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T05:38:37.000Z",
+    "code_updated_at": "2025-01-05T14:02:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1110789,
+        "name": "Mellow Davis",
+        "created_at": "2023-06-24T09:49:00.000Z",
+        "url": "https://greasyfork.org/users/1110789-mellow-davis"
+      }
+    ],
+    "name": "小红书帖子抓取器",
+    "description": "抓取小红书页面上的帖子标题、链接和点赞数",
+    "url": "https://greasyfork.org/scripts/522770-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%B8%96%E5%AD%90%E6%8A%93%E5%8F%96%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/522770/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E5%B8%96%E5%AD%90%E6%8A%93%E5%8F%96%E5%99%A8.user.js",
+    "code_size": 24462,
+    "license": "未经许可不得用作任何用途",
+    "version": "0.97",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

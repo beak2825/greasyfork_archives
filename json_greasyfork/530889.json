@@ -1,0 +1,59 @@
+{
+  "id": 530889,
+  "daily_installs": 1,
+  "total_installs": 15,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-26T07:07:05.000Z",
+  "code_updated_at": "2025-03-27T06:10:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450376,
+      "name": "木子火玄",
+      "created_at": "2025-03-26T05:56:31.000Z",
+      "url": "https://greasyfork.org/users/1450376-%E6%9C%A8%E5%AD%90%E7%81%AB%E7%8E%84",
+      "scripts": [
+        {
+          "id": 530889,
+          "daily_installs": 1,
+          "total_installs": 15,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-26T07:07:05.000Z",
+          "code_updated_at": "2025-03-27T06:10:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微信读书底色修改",
+          "description": "修改微信读书的背景颜色，提升阅读体验",
+          "url": "https://greasyfork.org/scripts/530889-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%BA%95%E8%89%B2%E4%BF%AE%E6%94%B9",
+          "code_url": "https://update.greasyfork.org/scripts/530889/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%BA%95%E8%89%B2%E4%BF%AE%E6%94%B9.user.js",
+          "code_size": 6561,
+          "license": "GNU GPLv3",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微信读书底色修改",
+  "description": "修改微信读书的背景颜色，提升阅读体验",
+  "url": "https://greasyfork.org/scripts/530889-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%BA%95%E8%89%B2%E4%BF%AE%E6%94%B9",
+  "code_url": "https://update.greasyfork.org/scripts/530889/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%BA%95%E8%89%B2%E4%BF%AE%E6%94%B9.user.js",
+  "code_size": 6561,
+  "license": "GNU GPLv3",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

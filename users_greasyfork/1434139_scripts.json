@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532822,
+    "daily_installs": 0,
+    "total_installs": 189,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-14T13:12:23.000Z",
+    "code_updated_at": "2025-04-14T13:12:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434139,
+        "name": "Aruna Telshan",
+        "created_at": "2025-02-12T03:22:25.000Z",
+        "url": "https://greasyfork.org/users/1434139-aruna-telshan"
+      }
+    ],
+    "name": "ExamTopics Popup Remover and Right-Click Enabler",
+    "description": "Hides the \"notRemoverPopup\" and enables right-click on examtopics.com",
+    "url": "https://greasyfork.org/scripts/532822-examtopics-popup-remover-and-right-click-enabler",
+    "code_url": "https://update.greasyfork.org/scripts/532822/ExamTopics%20Popup%20Remover%20and%20Right-Click%20Enabler.user.js",
+    "code_size": 2282,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

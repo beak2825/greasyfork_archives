@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542699,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-16T08:17:54.000Z",
+    "code_updated_at": "2025-09-04T19:37:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473575,
+        "name": "cerinawithasea1",
+        "created_at": "2025-05-22T23:28:34.000Z",
+        "url": "https://greasyfork.org/users/1473575-cerinawithasea1"
+      }
+    ],
+    "name": "Imgilism - Image Uploader (Improved)",
+    "description": "Right-click image upload to Mobilism - preserves native context menu",
+    "url": "https://greasyfork.org/scripts/542699-imgilism-image-uploader-improved",
+    "code_url": "https://update.greasyfork.org/scripts/542699/Imgilism%20-%20Image%20Uploader%20%28Improved%29.user.js",
+    "code_size": 12099,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

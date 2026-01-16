@@ -1,0 +1,33 @@
+{
+  "id": 505924,
+  "daily_installs": 0,
+  "total_installs": 316,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-30T18:13:00.000Z",
+  "code_updated_at": "2024-08-30T18:13:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 785797,
+      "name": "山海不爱玩",
+      "created_at": "2021-06-21T12:41:22.000Z",
+      "url": "https://greasyfork.org/users/785797-%E5%B1%B1%E6%B5%B7%E4%B8%8D%E7%88%B1%E7%8E%A9"
+    }
+  ],
+  "name": "山海|安全微伴刷课脚本|大学生新生入学安全教育刷课脚本",
+  "description": "2024新生入学必备，安全微伴刷课脚本，纯前模式点击实现，100%安全，进入课程后，右上角会提示倒计时十五秒，等待倒计时结束后，点击按钮即可完成当前的学习任务。",
+  "url": "https://greasyfork.org/scripts/505924-%E5%B1%B1%E6%B5%B7-%E5%AE%89%E5%85%A8%E5%BE%AE%E4%BC%B4%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC-%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%96%B0%E7%94%9F%E5%85%A5%E5%AD%A6%E5%AE%89%E5%85%A8%E6%95%99%E8%82%B2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/505924/%E5%B1%B1%E6%B5%B7%7C%E5%AE%89%E5%85%A8%E5%BE%AE%E4%BC%B4%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC%7C%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%96%B0%E7%94%9F%E5%85%A5%E5%AD%A6%E5%AE%89%E5%85%A8%E6%95%99%E8%82%B2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 2255,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

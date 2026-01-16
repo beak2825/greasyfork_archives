@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548857,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T20:41:41.000Z",
+    "code_updated_at": "2025-09-15T07:54:40.000Z",
+    "namespace": "https://github.com/brandonhenness/vs-marketplace-vsix-download-button",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1506549,
+        "name": "brandonhenness",
+        "created_at": "2025-08-19T07:04:23.000Z",
+        "url": "https://greasyfork.org/users/1506549-brandonhenness"
+      }
+    ],
+    "name": "VS Marketplace: Download VSIX",
+    "description": "Adds a \"Download VSIX\" button next to Install, copying its style exactly.",
+    "url": "https://greasyfork.org/scripts/548857-vs-marketplace-download-vsix",
+    "code_url": "https://update.greasyfork.org/scripts/548857/VS%20Marketplace%3A%20Download%20VSIX.user.js",
+    "code_size": 2587,
+    "license": "GPL-3.0-only; https://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.8.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

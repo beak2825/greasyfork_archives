@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537132,
+    "daily_installs": 1,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-24T16:29:30.000Z",
+    "code_updated_at": "2025-07-26T14:27:32.000Z",
+    "namespace": "AppleBottomJeans.FRPG.HUD",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474370,
+        "name": "AppleBottomJeans",
+        "created_at": "2025-05-24T15:49:44.000Z",
+        "url": "https://greasyfork.org/users/1474370-applebottomjeans"
+      }
+    ],
+    "name": "FRPG HUD",
+    "description": "Live inventory monitoring, meal timers and more!",
+    "url": "https://greasyfork.org/scripts/537132-frpg-hud",
+    "code_url": "https://update.greasyfork.org/scripts/537132/FRPG%20HUD.user.js",
+    "code_size": 88982,
+    "license": "GNU GPLv3",
+    "version": "2025-07-26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

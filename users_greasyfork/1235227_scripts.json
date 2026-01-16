@@ -30,6 +30,72 @@
     "version": "0.1.0",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 550503,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-24T00:46:17.000Z",
+    "code_updated_at": "2025-09-28T01:24:24.000Z",
+    "namespace": "https://greasyfork.org/users/your-name",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235227,
+        "name": "2220 pp",
+        "created_at": "2023-12-17T08:14:02.000Z",
+        "url": "https://greasyfork.org/users/1235227-2220-pp"
+      }
+    ],
+    "name": "chatgpt.com 写入 sessionStorage",
+    "description": "在 chatgpt.com 的会话存储中新增键 poijcwa，值为 jwoid",
+    "url": "https://greasyfork.org/scripts/550503-chatgpt-com-%E5%86%99%E5%85%A5-sessionstorage",
+    "code_url": "https://update.greasyfork.org/scripts/550503/chatgptcom%20%E5%86%99%E5%85%A5%20sessionStorage.user.js",
+    "code_size": 831,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 517957,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-19T02:04:07.000Z",
+    "code_updated_at": "2025-06-12T01:03:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235227,
+        "name": "2220 pp",
+        "created_at": "2023-12-17T08:14:02.000Z",
+        "url": "https://greasyfork.org/users/1235227-2220-pp"
+      }
+    ],
+    "name": "Google AI Studio 模型注入器（多模型版）",
+    "description": "向 Google AI Studio 注入自定义模型，支持主题表情图标。拦截 XHR/Fetch 请求，处理数组结构的 JSON 数据",
+    "url": "https://greasyfork.org/scripts/517957-google-ai-studio-%E6%A8%A1%E5%9E%8B%E6%B3%A8%E5%85%A5%E5%99%A8-%E5%A4%9A%E6%A8%A1%E5%9E%8B%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/517957/Google%20AI%20Studio%20%E6%A8%A1%E5%9E%8B%E6%B3%A8%E5%85%A5%E5%99%A8%EF%BC%88%E5%A4%9A%E6%A8%A1%E5%9E%8B%E7%89%88%EF%BC%89.user.js",
+    "code_size": 14887,
+    "license": "MIT License",
+    "version": "1.6.1",
+    "locale": "zh-CN",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

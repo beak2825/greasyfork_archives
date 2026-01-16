@@ -1,0 +1,59 @@
+{
+  "id": 499444,
+  "daily_installs": 0,
+  "total_installs": 166,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-02T01:57:30.000Z",
+  "code_updated_at": "2024-07-02T01:57:30.000Z",
+  "namespace": "http://www.qlteacher.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1301362,
+      "name": "xiaofan wang",
+      "created_at": "2024-05-14T07:23:14.000Z",
+      "url": "https://greasyfork.org/users/1301362-xiaofan-wang",
+      "scripts": [
+        {
+          "id": 499444,
+          "daily_installs": 0,
+          "total_installs": 166,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-02T01:57:30.000Z",
+          "code_updated_at": "2024-07-02T01:57:30.000Z",
+          "namespace": "http://www.qlteacher.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "山东省教师教育网|继续教育培训|国家中小学智慧教育平台|各种网课|",
+          "description": "有偿带学，各种网课，详情请加图片中微信",
+          "url": "https://greasyfork.org/scripts/499444-%E5%B1%B1%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E5%90%84%E7%A7%8D%E7%BD%91%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/499444/%E5%B1%B1%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91%7C%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E5%90%84%E7%A7%8D%E7%BD%91%E8%AF%BE%7C.user.js",
+          "code_size": 1742,
+          "license": null,
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "山东省教师教育网|继续教育培训|国家中小学智慧教育平台|各种网课|",
+  "description": "有偿带学，各种网课，详情请加图片中微信",
+  "url": "https://greasyfork.org/scripts/499444-%E5%B1%B1%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91-%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD-%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0-%E5%90%84%E7%A7%8D%E7%BD%91%E8%AF%BE",
+  "code_url": "https://update.greasyfork.org/scripts/499444/%E5%B1%B1%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E6%95%99%E8%82%B2%E7%BD%91%7C%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E5%9F%B9%E8%AE%AD%7C%E5%9B%BD%E5%AE%B6%E4%B8%AD%E5%B0%8F%E5%AD%A6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%B9%B3%E5%8F%B0%7C%E5%90%84%E7%A7%8D%E7%BD%91%E8%AF%BE%7C.user.js",
+  "code_size": 1742,
+  "license": null,
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

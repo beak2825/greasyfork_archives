@@ -1,0 +1,34 @@
+{
+  "id": 519818,
+  "daily_installs": 1,
+  "total_installs": 300,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-05T05:10:58.000Z",
+  "code_updated_at": "2025-05-12T01:04:24.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265194,
+      "name": "루시퍼홍",
+      "created_at": "2024-02-22T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D",
+      "scripts": []
+    }
+  ],
+  "name": "[루시퍼홍] 네이버 부동산 매물 다운로드",
+  "description": "Please use with Violentmonkey",
+  "url": "https://greasyfork.org/scripts/519818-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EB%84%A4%EC%9D%B4%EB%B2%84-%EB%B6%80%EB%8F%99%EC%82%B0-%EB%A7%A4%EB%AC%BC-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C",
+  "code_url": "https://update.greasyfork.org/scripts/519818/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EB%84%A4%EC%9D%B4%EB%B2%84%20%EB%B6%80%EB%8F%99%EC%82%B0%20%EB%A7%A4%EB%AC%BC%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.user.js",
+  "code_size": 33947,
+  "license": null,
+  "version": "1.07",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

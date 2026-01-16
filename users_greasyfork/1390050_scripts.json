@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516801,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-11T05:21:42.000Z",
+    "code_updated_at": "2025-10-27T15:21:38.000Z",
+    "namespace": "https://greasyfork.org/users/1390050",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1390050,
+        "name": "Asuna_2024",
+        "created_at": "2024-11-02T10:05:10.000Z",
+        "url": "https://greasyfork.org/users/1390050-asuna-2024"
+      }
+    ],
+    "name": "[哔哩哔哩直播]---弹幕反诈与防河蟹",
+    "description": "本脚本会提示你在直播间发送的弹幕是否被秒删，被什么秒删，有助于用户规避河蟹词，避免看似发了弹幕结果主播根本看不到，不被发送成功的谎言所欺骗！",
+    "url": "https://greasyfork.org/scripts/516801-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%9B%B4%E6%92%AD-%E5%BC%B9%E5%B9%95%E5%8F%8D%E8%AF%88%E4%B8%8E%E9%98%B2%E6%B2%B3%E8%9F%B9",
+    "code_url": "https://update.greasyfork.org/scripts/516801/%5B%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E7%9B%B4%E6%92%AD%5D---%E5%BC%B9%E5%B9%95%E5%8F%8D%E8%AF%88%E4%B8%8E%E9%98%B2%E6%B2%B3%E8%9F%B9.user.js",
+    "code_size": 114326,
+    "license": "GPL 3.0",
+    "version": "3.6.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

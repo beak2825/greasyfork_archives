@@ -1,0 +1,34 @@
+{
+  "id": 549095,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-11T02:45:45.000Z",
+  "code_updated_at": "2025-10-07T15:28:07.000Z",
+  "namespace": "CBI_P44_Plugins",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456457,
+      "name": "Tomas Morales",
+      "created_at": "2025-04-11T05:39:46.000Z",
+      "url": "https://greasyfork.org/users/1456457-tomas-morales",
+      "scripts": []
+    }
+  ],
+  "name": "NAV-Estado de patio inbound - ALMACENES",
+  "description": "Permite visualizar las unidades reportadas, registrar el tiempo en que se solicitó perfilar, guardar número de gafete e identificación, el tiempo dentro de cervecería, y los tiempos en los que se realizaron las tareas.",
+  "url": "https://greasyfork.org/scripts/549095-nav-estado-de-patio-inbound-almacenes",
+  "code_url": "https://update.greasyfork.org/scripts/549095/NAV-Estado%20de%20patio%20inbound%20-%20ALMACENES.user.js",
+  "code_size": 139496,
+  "license": "MIT License",
+  "version": "5.1.5",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

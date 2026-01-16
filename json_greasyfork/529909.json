@@ -1,0 +1,33 @@
+{
+  "id": 529909,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-15T15:10:42.000Z",
+  "code_updated_at": "2025-03-15T15:10:42.000Z",
+  "namespace": "https://greasyfork.org/users/1220697",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354617,
+      "name": "Arnold Schwarzenegger",
+      "created_at": "2024-08-19T15:11:28.000Z",
+      "url": "https://greasyfork.org/users/1354617-arnold-schwarzenegger"
+    }
+  ],
+  "name": "ICEbot v7 antiskid antisteal it",
+  "description": "Bot Panel for gartic.io",
+  "url": "https://greasyfork.org/scripts/529909-icebot-v7-antiskid-antisteal-it",
+  "code_url": "https://update.greasyfork.org/scripts/529909/ICEbot%20v7%20antiskid%20antisteal%20it.user.js",
+  "code_size": 125220,
+  "license": "MIT License",
+  "version": "5.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

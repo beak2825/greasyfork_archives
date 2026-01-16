@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547202,
+    "daily_installs": 1,
+    "total_installs": 171,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-25T06:03:23.000Z",
+    "code_updated_at": "2025-09-01T03:46:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1507842,
+        "name": "pipdax",
+        "created_at": "2025-08-22T21:39:35.000Z",
+        "url": "https://greasyfork.org/users/1507842-pipdax"
+      }
+    ],
+    "name": "Google AI Studio 聊天记录导出器（修改版）",
+    "description": "自动滚动 Google AI Studio 聊天界面，捕获用户消息、AI 思维链和 AI 回答，导出为 TXT 文件；或直接从 Python SDK 代码块中提取对话并导出。已修复网站更新所导致的问题。按钮已移至左下角并可隐藏。",
+    "url": "https://greasyfork.org/scripts/547202-google-ai-studio-%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA%E5%99%A8-%E4%BF%AE%E6%94%B9%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/547202/Google%20AI%20Studio%20%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA%E5%99%A8%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89.user.js",
+    "code_size": 38433,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

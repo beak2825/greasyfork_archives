@@ -1,0 +1,59 @@
+{
+  "id": 541426,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-02T09:56:47.000Z",
+  "code_updated_at": "2025-07-07T07:42:33.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 724885,
+      "name": "月夜箫声",
+      "created_at": "2021-01-07T12:54:41.000Z",
+      "url": "https://greasyfork.org/users/724885-%E6%9C%88%E5%A4%9C%E7%AE%AB%E5%A3%B0",
+      "scripts": [
+        {
+          "id": 541426,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-02T09:56:47.000Z",
+          "code_updated_at": "2025-07-07T07:42:33.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "大管加资源占用视角任务甘特图显示",
+          "description": "优化对不同普通任务的适配",
+          "url": "https://greasyfork.org/scripts/541426-%E5%A4%A7%E7%AE%A1%E5%8A%A0%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8%E8%A7%86%E8%A7%92%E4%BB%BB%E5%8A%A1%E7%94%98%E7%89%B9%E5%9B%BE%E6%98%BE%E7%A4%BA",
+          "code_url": "https://update.greasyfork.org/scripts/541426/%E5%A4%A7%E7%AE%A1%E5%8A%A0%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8%E8%A7%86%E8%A7%92%E4%BB%BB%E5%8A%A1%E7%94%98%E7%89%B9%E5%9B%BE%E6%98%BE%E7%A4%BA.user.js",
+          "code_size": 56949,
+          "license": "MIT License",
+          "version": "V1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "大管加资源占用视角任务甘特图显示",
+  "description": "优化对不同普通任务的适配",
+  "url": "https://greasyfork.org/scripts/541426-%E5%A4%A7%E7%AE%A1%E5%8A%A0%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8%E8%A7%86%E8%A7%92%E4%BB%BB%E5%8A%A1%E7%94%98%E7%89%B9%E5%9B%BE%E6%98%BE%E7%A4%BA",
+  "code_url": "https://update.greasyfork.org/scripts/541426/%E5%A4%A7%E7%AE%A1%E5%8A%A0%E8%B5%84%E6%BA%90%E5%8D%A0%E7%94%A8%E8%A7%86%E8%A7%92%E4%BB%BB%E5%8A%A1%E7%94%98%E7%89%B9%E5%9B%BE%E6%98%BE%E7%A4%BA.user.js",
+  "code_size": 56949,
+  "license": "MIT License",
+  "version": "V1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

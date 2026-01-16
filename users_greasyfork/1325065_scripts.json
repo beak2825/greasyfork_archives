@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499106,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-28T06:18:01.000Z",
+    "code_updated_at": "2024-07-19T10:25:21.000Z",
+    "namespace": "https://github.com/yanzhili/xImageEnlarge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1325065,
+        "name": "yanzhili",
+        "created_at": "2024-06-28T05:30:12.000Z",
+        "url": "https://greasyfork.org/users/1325065-yanzhili"
+      }
+    ],
+    "name": "X Long Image Enlarge Tool",
+    "description": "Add a button on the left top conner of a image,for convenience of displaying long images on X",
+    "url": "https://greasyfork.org/scripts/499106-x-long-image-enlarge-tool",
+    "code_url": "https://update.greasyfork.org/scripts/499106/X%20Long%20Image%20Enlarge%20Tool.user.js",
+    "code_size": 14308,
+    "license": "MIT License",
+    "version": "2024-07-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

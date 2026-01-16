@@ -1,0 +1,59 @@
+{
+  "id": 498460,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-20T15:21:21.000Z",
+  "code_updated_at": "2025-09-10T06:41:16.000Z",
+  "namespace": "https://greasyfork.org/users/1321187",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1321187,
+      "name": "STKYSK",
+      "created_at": "2024-06-20T15:07:40.000Z",
+      "url": "https://greasyfork.org/users/1321187-stkysk",
+      "scripts": [
+        {
+          "id": 498460,
+          "daily_installs": 0,
+          "total_installs": 49,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-20T15:21:21.000Z",
+          "code_updated_at": "2025-09-10T06:41:16.000Z",
+          "namespace": "https://greasyfork.org/users/1321187",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BiliBili一键关灯",
+          "description": "点击按钮可使视频实现一键关灯模式",
+          "url": "https://greasyfork.org/scripts/498460-bilibili%E4%B8%80%E9%94%AE%E5%85%B3%E7%81%AF",
+          "code_url": "https://update.greasyfork.org/scripts/498460/BiliBili%E4%B8%80%E9%94%AE%E5%85%B3%E7%81%AF.user.js",
+          "code_size": 20715,
+          "license": "MIT License",
+          "version": "0.2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BiliBili一键关灯",
+  "description": "点击按钮可使视频实现一键关灯模式",
+  "url": "https://greasyfork.org/scripts/498460-bilibili%E4%B8%80%E9%94%AE%E5%85%B3%E7%81%AF",
+  "code_url": "https://update.greasyfork.org/scripts/498460/BiliBili%E4%B8%80%E9%94%AE%E5%85%B3%E7%81%AF.user.js",
+  "code_size": 20715,
+  "license": "MIT License",
+  "version": "0.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

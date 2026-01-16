@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542015,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-08T12:18:30.000Z",
+    "code_updated_at": "2025-07-08T12:18:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1492823,
+        "name": "BV0073194",
+        "created_at": "2025-07-08T12:09:08.000Z",
+        "url": "https://greasyfork.org/users/1492823-bv0073194"
+      }
+    ],
+    "name": "Aria2C Cookie - IA",
+    "description": "A userscript for IA cookies.",
+    "url": "https://greasyfork.org/scripts/542015-aria2c-cookie-ia",
+    "code_url": "https://update.greasyfork.org/scripts/542015/Aria2C%20Cookie%20-%20IA.user.js",
+    "code_size": 1446,
+    "license": "Apache License 2.0",
+    "version": "2025-07-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503177,
+    "daily_installs": 0,
+    "total_installs": 45,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T09:28:08.000Z",
+    "code_updated_at": "2024-08-10T09:29:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1349021,
+        "name": "Behike",
+        "created_at": "2024-08-10T09:19:11.000Z",
+        "url": "https://greasyfork.org/users/1349021-behike"
+      }
+    ],
+    "name": "Remove gradient elements from the media control overlay on Max.com",
+    "description": "Remove the annoying gradient element from the control overlay which is shown on a mouse movement",
+    "url": "https://greasyfork.org/scripts/503177-remove-gradient-elements-from-the-media-control-overlay-on-max-com",
+    "code_url": "https://update.greasyfork.org/scripts/503177/Remove%20gradient%20elements%20from%20the%20media%20control%20overlay%20on%20Maxcom.user.js",
+    "code_size": 1580,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

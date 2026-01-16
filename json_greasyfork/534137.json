@@ -1,0 +1,59 @@
+{
+  "id": 534137,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-27T06:45:45.000Z",
+  "code_updated_at": "2025-05-18T06:22:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1460805,
+      "name": "13lackfir3",
+      "created_at": "2025-04-22T05:46:56.000Z",
+      "url": "https://greasyfork.org/users/1460805-13lackfir3",
+      "scripts": [
+        {
+          "id": 533594,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-22T05:57:15.000Z",
+          "code_updated_at": "2025-04-22T06:00:53.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Stock Toggle",
+          "description": "Adds a toggle switch to the Torn stocks page, with persistent state",
+          "url": "https://greasyfork.org/scripts/533594-torn-stock-toggle",
+          "code_url": "https://update.greasyfork.org/scripts/533594/Torn%20Stock%20Toggle.user.js",
+          "code_size": 5321,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Auction House Quick Indicator",
+  "description": "Adds a color coded perk with is percentage placement within that per color range and adds a quick visual icon for 70% and 90%. added armor //               to the script.",
+  "url": "https://greasyfork.org/scripts/534137-torn-auction-house-quick-indicator",
+  "code_url": "https://update.greasyfork.org/scripts/534137/Torn%20Auction%20House%20Quick%20Indicator.user.js",
+  "code_size": 12420,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

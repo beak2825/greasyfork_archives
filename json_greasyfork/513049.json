@@ -1,0 +1,59 @@
+{
+  "id": 513049,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-18T09:25:17.000Z",
+  "code_updated_at": "2024-10-18T16:06:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1344932,
+      "name": "MartyBlyth",
+      "created_at": "2024-08-03T23:36:12.000Z",
+      "url": "https://greasyfork.org/users/1344932-martyblyth",
+      "scripts": [
+        {
+          "id": 502539,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-03T23:37:35.000Z",
+          "code_updated_at": "2024-10-22T21:13:11.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mission Finder (NEW)",
+          "description": "Mission finder script with retry logic for loading vehicles and retrying unit selection if the loading bar is visible. Includes dispatch box functionality, patient selection, and color change. Only runs on mission dispatch pages.",
+          "url": "https://greasyfork.org/scripts/502539-mission-finder-new",
+          "code_url": "https://update.greasyfork.org/scripts/502539/Mission%20Finder%20%28NEW%29.user.js",
+          "code_size": 17243,
+          "license": null,
+          "version": "5.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Patient selector",
+  "description": "Always display the Patient Selector and Dispatch boxes and automatically select an Ambulance Officer if patient count exceeds 5.",
+  "url": "https://greasyfork.org/scripts/513049-patient-selector",
+  "code_url": "https://update.greasyfork.org/scripts/513049/Patient%20selector.user.js",
+  "code_size": 6574,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

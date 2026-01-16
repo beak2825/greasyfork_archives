@@ -1,0 +1,59 @@
+{
+  "id": 526223,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-07T22:07:58.000Z",
+  "code_updated_at": "2025-02-07T22:22:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1049942,
+      "name": "Rick Layne",
+      "created_at": "2023-03-29T11:50:13.000Z",
+      "url": "https://greasyfork.org/users/1049942-rick-layne",
+      "scripts": [
+        {
+          "id": 526223,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-07T22:07:58.000Z",
+          "code_updated_at": "2025-02-07T22:22:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "京东指定店铺(名)屏蔽器",
+          "description": "批量屏蔽指定京东店铺的商品",
+          "url": "https://greasyfork.org/scripts/526223-%E4%BA%AC%E4%B8%9C%E6%8C%87%E5%AE%9A%E5%BA%97%E9%93%BA-%E5%90%8D-%E5%B1%8F%E8%94%BD%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/526223/%E4%BA%AC%E4%B8%9C%E6%8C%87%E5%AE%9A%E5%BA%97%E9%93%BA%28%E5%90%8D%29%E5%B1%8F%E8%94%BD%E5%99%A8.user.js",
+          "code_size": 5232,
+          "license": null,
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "京东指定店铺(名)屏蔽器",
+  "description": "批量屏蔽指定京东店铺的商品",
+  "url": "https://greasyfork.org/scripts/526223-%E4%BA%AC%E4%B8%9C%E6%8C%87%E5%AE%9A%E5%BA%97%E9%93%BA-%E5%90%8D-%E5%B1%8F%E8%94%BD%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/526223/%E4%BA%AC%E4%B8%9C%E6%8C%87%E5%AE%9A%E5%BA%97%E9%93%BA%28%E5%90%8D%29%E5%B1%8F%E8%94%BD%E5%99%A8.user.js",
+  "code_size": 5232,
+  "license": null,
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521591,
+    "daily_installs": 0,
+    "total_installs": 121,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-23T18:16:36.000Z",
+    "code_updated_at": "2024-12-23T21:24:22.000Z",
+    "namespace": "https://chat.openai.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411288,
+        "name": "just_notfan373",
+        "created_at": "2024-12-15T15:53:54.000Z",
+        "url": "https://greasyfork.org/users/1411288-just-notfan373"
+      }
+    ],
+    "name": "Infinite Craft Helper - Enhanced by ChatGPT",
+    "description": "Adds helpful features to Infinite Craft, inspired by other user scripts but with added functionality.",
+    "url": "https://greasyfork.org/scripts/521591-infinite-craft-helper-enhanced-by-chatgpt",
+    "code_url": "https://update.greasyfork.org/scripts/521591/Infinite%20Craft%20Helper%20-%20Enhanced%20by%20ChatGPT.user.js",
+    "code_size": 7723,
+    "license": "MIT License",
+    "version": "4.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

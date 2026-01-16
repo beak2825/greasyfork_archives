@@ -1,0 +1,33 @@
+{
+  "id": 550707,
+  "daily_installs": 0,
+  "total_installs": 90,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-26T01:11:38.000Z",
+  "code_updated_at": "2025-09-26T08:02:59.000Z",
+  "namespace": "https://greasyfork.org/users/1519406",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1519406,
+      "name": "mattskiiau",
+      "created_at": "2025-09-26T00:58:25.000Z",
+      "url": "https://greasyfork.org/users/1519406-mattskiiau"
+    }
+  ],
+  "name": "Twitch Low-Latency Catch-Up",
+  "description": "Enjoy a smoother, truly live Twitch experience! This script intelligently manages playback speed to eliminate frustrating lag, keeping you in the moment. Comes with a simple on-screen menu to customize your settings.",
+  "url": "https://greasyfork.org/scripts/550707-twitch-low-latency-catch-up",
+  "code_url": "https://update.greasyfork.org/scripts/550707/Twitch%20Low-Latency%20Catch-Up.user.js",
+  "code_size": 20084,
+  "license": "GNU GPLv3",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

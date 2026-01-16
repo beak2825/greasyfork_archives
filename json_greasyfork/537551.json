@@ -1,0 +1,33 @@
+{
+  "id": 537551,
+  "daily_installs": 1,
+  "total_installs": 44,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T14:47:30.000Z",
+  "code_updated_at": "2025-05-28T17:03:01.000Z",
+  "namespace": "https://greasyfork.org/de/users/1475718-sanja93z",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1475718,
+      "name": "Sanja93Z",
+      "created_at": "2025-05-28T04:20:05.000Z",
+      "url": "https://greasyfork.org/users/1475718-sanja93z"
+    }
+  ],
+  "name": "Sanja93Z - Stake.com Auto Reload Claimer (10 minutes) V1",
+  "description": "10 minutes Reload Claimer for stake.com",
+  "url": "https://greasyfork.org/scripts/537551-sanja93z-stake-com-auto-reload-claimer-10-minutes-v1",
+  "code_url": "https://update.greasyfork.org/scripts/537551/Sanja93Z%20-%20Stakecom%20Auto%20Reload%20Claimer%20%2810%20minutes%29%20V1.user.js",
+  "code_size": 686,
+  "license": null,
+  "version": "28.05.2025 V1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

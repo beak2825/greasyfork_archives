@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545081,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T18:03:12.000Z",
+    "code_updated_at": "2025-08-08T18:03:12.000Z",
+    "namespace": "https://gist.github.com/WillMoggridge/133c22444caaa4cc3f2a5536e9621a37",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502937,
+        "name": "Name Man",
+        "created_at": "2025-08-08T18:01:47.000Z",
+        "url": "https://greasyfork.org/users/1502937-name-man"
+      }
+    ],
+    "name": "My Kittens Game tweaks",
+    "description": "Kittens!",
+    "url": "https://greasyfork.org/scripts/545081-my-kittens-game-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/545081/My%20Kittens%20Game%20tweaks.user.js",
+    "code_size": 1294,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 536497,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T12:33:06.000Z",
+    "code_updated_at": "2025-11-19T08:22:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133175,
+        "name": "nayingjiex",
+        "created_at": "2023-07-22T10:45:34.000Z",
+        "url": "https://greasyfork.org/users/1133175-nayingjiex"
+      }
+    ],
+    "name": "油猴6-IMMS浓缩液各检项状态+中键打开",
+    "description": "获取近n个批号并显示检项状态，中键点击打开",
+    "url": "https://greasyfork.org/scripts/536497-%E6%B2%B9%E7%8C%B46-imms%E6%B5%93%E7%BC%A9%E6%B6%B2%E5%90%84%E6%A3%80%E9%A1%B9%E7%8A%B6%E6%80%81-%E4%B8%AD%E9%94%AE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/536497/%E6%B2%B9%E7%8C%B46-IMMS%E6%B5%93%E7%BC%A9%E6%B6%B2%E5%90%84%E6%A3%80%E9%A1%B9%E7%8A%B6%E6%80%81%2B%E4%B8%AD%E9%94%AE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 13666,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536496,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T12:32:36.000Z",
+    "code_updated_at": "2025-11-24T08:12:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133175,
+        "name": "nayingjiex",
+        "created_at": "2023-07-22T10:45:34.000Z",
+        "url": "https://greasyfork.org/users/1133175-nayingjiex"
+      }
+    ],
+    "name": "油猴5-IMMS原液各检项状态+中键打开",
+    "description": "获取前N个批号并显示检项状态，抗原检项状态3/5时自动提取数值+温度（格式：数值/温度℃，缺失显示--），中键点击打开",
+    "url": "https://greasyfork.org/scripts/536496-%E6%B2%B9%E7%8C%B45-imms%E5%8E%9F%E6%B6%B2%E5%90%84%E6%A3%80%E9%A1%B9%E7%8A%B6%E6%80%81-%E4%B8%AD%E9%94%AE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/536496/%E6%B2%B9%E7%8C%B45-IMMS%E5%8E%9F%E6%B6%B2%E5%90%84%E6%A3%80%E9%A1%B9%E7%8A%B6%E6%80%81%2B%E4%B8%AD%E9%94%AE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 19517,
+    "license": "MIT License",
+    "version": "3.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536489,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T11:47:41.000Z",
+    "code_updated_at": "2025-11-19T08:03:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133175,
+        "name": "nayingjiex",
+        "created_at": "2023-07-22T10:45:34.000Z",
+        "url": "https://greasyfork.org/users/1133175-nayingjiex"
+      }
+    ],
+    "name": "油猴1-IMMS成品各检项状态+中键打开",
+    "description": "获取前N个批号并显示检项状态，中键点击打开",
+    "url": "https://greasyfork.org/scripts/536489-%E6%B2%B9%E7%8C%B41-imms%E6%88%90%E5%93%81%E5%90%84%E6%A3%80%E9%A1%B9%E7%8A%B6%E6%80%81-%E4%B8%AD%E9%94%AE%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/536489/%E6%B2%B9%E7%8C%B41-IMMS%E6%88%90%E5%93%81%E5%90%84%E6%A3%80%E9%A1%B9%E7%8A%B6%E6%80%81%2B%E4%B8%AD%E9%94%AE%E6%89%93%E5%BC%80.user.js",
+    "code_size": 14235,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509647,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T09:14:47.000Z",
+    "code_updated_at": "2025-10-02T13:12:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133175,
+        "name": "nayingjiex",
+        "created_at": "2023-07-22T10:45:34.000Z",
+        "url": "https://greasyfork.org/users/1133175-nayingjiex"
+      }
+    ],
+    "name": "B站 C键开关字幕",
+    "description": "使用C键快速切换B站视频字幕开关",
+    "url": "https://greasyfork.org/scripts/509647-b%E7%AB%99-c%E9%94%AE%E5%BC%80%E5%85%B3%E5%AD%97%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/509647/B%E7%AB%99%20C%E9%94%AE%E5%BC%80%E5%85%B3%E5%AD%97%E5%B9%95.user.js",
+    "code_size": 2198,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503513,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-13T08:25:40.000Z",
+    "code_updated_at": "2024-08-13T08:25:40.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1133175,
+        "name": "nayingjiex",
+        "created_at": "2023-07-22T10:45:34.000Z",
+        "url": "https://greasyfork.org/users/1133175-nayingjiex"
+      }
+    ],
+    "name": "油猴2-IMMS循环减少无用列",
+    "description": "IMMS循环减少无用列",
+    "url": "https://greasyfork.org/scripts/503513-%E6%B2%B9%E7%8C%B42-imms%E5%BE%AA%E7%8E%AF%E5%87%8F%E5%B0%91%E6%97%A0%E7%94%A8%E5%88%97",
+    "code_url": "https://update.greasyfork.org/scripts/503513/%E6%B2%B9%E7%8C%B42-IMMS%E5%BE%AA%E7%8E%AF%E5%87%8F%E5%B0%91%E6%97%A0%E7%94%A8%E5%88%97.user.js",
+    "code_size": 1786,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

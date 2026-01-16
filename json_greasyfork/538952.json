@@ -1,0 +1,33 @@
+{
+  "id": 538952,
+  "daily_installs": 1,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-10T01:04:50.000Z",
+  "code_updated_at": "2025-06-10T01:04:50.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481348,
+      "name": "Ryszard Petru",
+      "created_at": "2025-06-10T01:03:32.000Z",
+      "url": "https://greasyfork.org/users/1481348-ryszard-petru"
+    }
+  ],
+  "name": "Gladiatus AutoBot",
+  "description": "Bot do gladiatusa na automatyczne chodzenie na wyprawy i lochy",
+  "url": "https://greasyfork.org/scripts/538952-gladiatus-autobot",
+  "code_url": "https://update.greasyfork.org/scripts/538952/Gladiatus%20AutoBot.user.js",
+  "code_size": 96889,
+  "license": null,
+  "version": "1.6.11",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

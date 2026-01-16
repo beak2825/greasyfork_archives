@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526142,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-07T01:08:12.000Z",
+    "code_updated_at": "2025-02-07T01:08:12.000Z",
+    "namespace": "https://yourdomain.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1432365,
+        "name": "KoKa_UA",
+        "created_at": "2025-02-07T01:05:27.000Z",
+        "url": "https://greasyfork.org/users/1432365-koka-ua"
+      }
+    ],
+    "name": "Zendesk Notification Sound & Highlight Updated",
+    "description": "Play sound and change button style when a new notification arrives in Zendesk.",
+    "url": "https://greasyfork.org/scripts/526142-zendesk-notification-sound-highlight-updated",
+    "code_url": "https://update.greasyfork.org/scripts/526142/Zendesk%20Notification%20Sound%20%20Highlight%20Updated.user.js",
+    "code_size": 1526,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

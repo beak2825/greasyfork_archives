@@ -1,0 +1,33 @@
+{
+  "id": 517502,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-15T12:36:47.000Z",
+  "code_updated_at": "2024-11-30T08:04:36.000Z",
+  "namespace": "https://rant.li/boson",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 159669,
+      "name": "Ferro",
+      "created_at": "2017-11-17T15:26:11.000Z",
+      "url": "https://greasyfork.org/users/159669-ferro"
+    }
+  ],
+  "name": "Reddit Expand Post",
+  "description": "Expand posts on Reddit feeds and dynamically detect new posts to expand",
+  "url": "https://greasyfork.org/scripts/517502-reddit-expand-post",
+  "code_url": "https://update.greasyfork.org/scripts/517502/Reddit%20Expand%20Post.user.js",
+  "code_size": 2183,
+  "license": "GNU AGPLv3",
+  "version": "1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

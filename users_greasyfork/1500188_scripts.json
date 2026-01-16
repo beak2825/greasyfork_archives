@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544195,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-31T12:15:43.000Z",
+    "code_updated_at": "2025-07-31T13:09:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/Cerry2022/Codewars-Immersive-Translator/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1500188,
+        "name": "Cerry2022",
+        "created_at": "2025-07-31T11:58:49.000Z",
+        "url": "https://greasyfork.org/users/1500188-cerry2022"
+      }
+    ],
+    "name": "Codewars 沉浸式题目汉化工具",
+    "description": "Codewars 沉浸式题目汉化工具，支持中英对照、用户 API Key(Gemini)，并在 Kata 切换时自动刷新页面。",
+    "url": "https://greasyfork.org/scripts/544195-codewars-%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%A2%98%E7%9B%AE%E6%B1%89%E5%8C%96%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/544195/Codewars%20%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%A2%98%E7%9B%AE%E6%B1%89%E5%8C%96%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 32350,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

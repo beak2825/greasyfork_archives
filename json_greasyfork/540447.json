@@ -1,0 +1,59 @@
+{
+  "id": 540447,
+  "daily_installs": 3,
+  "total_installs": 220,
+  "fan_score": "7.3",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 3,
+  "created_at": "2025-06-23T00:09:45.000Z",
+  "code_updated_at": "2025-06-23T00:09:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1487189,
+      "name": "Aydin Jafarli",
+      "created_at": "2025-06-23T00:07:30.000Z",
+      "url": "https://greasyfork.org/users/1487189-aydin-jafarli",
+      "scripts": [
+        {
+          "id": 540447,
+          "daily_installs": 3,
+          "total_installs": 220,
+          "fan_score": "7.3",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 3,
+          "created_at": "2025-06-23T00:09:45.000Z",
+          "code_updated_at": "2025-06-23T00:09:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "FaceCheck URL Extractor mobile with Ratings",
+          "description": "Extracts image URLs and ratings from FaceCheck for mobile phones",
+          "url": "https://greasyfork.org/scripts/540447-facecheck-url-extractor-mobile-with-ratings",
+          "code_url": "https://update.greasyfork.org/scripts/540447/FaceCheck%20URL%20Extractor%20mobile%20with%20Ratings.user.js",
+          "code_size": 3490,
+          "license": null,
+          "version": "2.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "FaceCheck URL Extractor mobile with Ratings",
+  "description": "Extracts image URLs and ratings from FaceCheck for mobile phones",
+  "url": "https://greasyfork.org/scripts/540447-facecheck-url-extractor-mobile-with-ratings",
+  "code_url": "https://update.greasyfork.org/scripts/540447/FaceCheck%20URL%20Extractor%20mobile%20with%20Ratings.user.js",
+  "code_size": 3490,
+  "license": null,
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

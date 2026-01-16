@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537011,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-23T17:42:33.000Z",
+    "code_updated_at": "2025-05-23T17:42:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473955,
+        "name": "Nekit",
+        "created_at": "2025-05-23T17:37:07.000Z",
+        "url": "https://greasyfork.org/users/1473955-nekit"
+      }
+    ],
+    "name": "Скрипт для лидеров/следящих форума ANAPA",
+    "description": "По вопросам в ВК - https://vk.com/id859847308, туда же и по предложениям на улучшение скрипта)",
+    "url": "https://greasyfork.org/scripts/537011-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BB%D0%B8%D0%B4%D0%B5%D1%80%D0%BE%D0%B2-%D1%81%D0%BB%D0%B5%D0%B4%D1%8F%D1%89%D0%B8%D1%85-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-anapa",
+    "code_url": "https://update.greasyfork.org/scripts/537011/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BB%D0%B8%D0%B4%D0%B5%D1%80%D0%BE%D0%B2%D1%81%D0%BB%D0%B5%D0%B4%D1%8F%D1%89%D0%B8%D1%85%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20ANAPA.user.js",
+    "code_size": 13041,
+    "license": "MIT License",
+    "version": "3.15",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

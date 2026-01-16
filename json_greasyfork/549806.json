@@ -1,0 +1,59 @@
+{
+  "id": 549806,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-17T08:20:37.000Z",
+  "code_updated_at": "2025-09-17T08:20:37.000Z",
+  "namespace": "finally.torn.cardskimming-hide-sell",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 735181,
+      "name": "finally",
+      "created_at": "2021-02-06T16:15:21.000Z",
+      "url": "https://greasyfork.org/users/735181-finally",
+      "scripts": [
+        {
+          "id": 421324,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2021-02-06T16:21:08.000Z",
+          "code_updated_at": "2021-02-06T16:21:08.000Z",
+          "namespace": "finally.ScoreSaber",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Copy !bsr id",
+          "description": "Add button to scoresaber to copy the !bsr command",
+          "url": "https://greasyfork.org/scripts/421324-copy-bsr-id",
+          "code_url": "https://update.greasyfork.org/scripts/421324/Copy%20%21bsr%20id.user.js",
+          "code_size": 1864,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Card Skimming Sell Button",
+  "description": "Hides sell button in Card Skimming",
+  "url": "https://greasyfork.org/scripts/549806-hide-card-skimming-sell-button",
+  "code_url": "https://update.greasyfork.org/scripts/549806/Hide%20Card%20Skimming%20Sell%20Button.user.js",
+  "code_size": 455,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

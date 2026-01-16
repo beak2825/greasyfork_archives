@@ -1,0 +1,59 @@
+{
+  "id": 507140,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-06T13:58:51.000Z",
+  "code_updated_at": "2024-09-12T20:11:41.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1363811,
+      "name": "Adrien Chen",
+      "created_at": "2024-09-06T06:48:54.000Z",
+      "url": "https://greasyfork.org/users/1363811-adrien-chen",
+      "scripts": [
+        {
+          "id": 507140,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-06T13:58:51.000Z",
+          "code_updated_at": "2024-09-12T20:11:41.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RabbitMQ Payload Injection Tool",
+          "description": "9/12/2024, 1:59:09 PM",
+          "url": "https://greasyfork.org/scripts/507140-rabbitmq-payload-injection-tool",
+          "code_url": "https://update.greasyfork.org/scripts/507140/RabbitMQ%20Payload%20Injection%20Tool.user.js",
+          "code_size": 30560,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RabbitMQ Payload Injection Tool",
+  "description": "9/12/2024, 1:59:09 PM",
+  "url": "https://greasyfork.org/scripts/507140-rabbitmq-payload-injection-tool",
+  "code_url": "https://update.greasyfork.org/scripts/507140/RabbitMQ%20Payload%20Injection%20Tool.user.js",
+  "code_size": 30560,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

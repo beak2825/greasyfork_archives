@@ -1,0 +1,68 @@
+[
+  {
+    "id": 498942,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-26T07:16:22.000Z",
+    "code_updated_at": "2024-08-14T22:40:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1324003,
+        "name": "fallingstar10",
+        "created_at": "2024-06-26T02:23:29.000Z",
+        "url": "https://greasyfork.org/users/1324003-fallingstar10"
+      }
+    ],
+    "name": "ADblocker4DeepinBBSv1",
+    "description": "block AD-like Users in DeepinBBS",
+    "url": "https://greasyfork.org/scripts/498942-adblocker4deepinbbsv1",
+    "code_url": "https://update.greasyfork.org/scripts/498942/ADblocker4DeepinBBSv1.user.js",
+    "code_size": 2635,
+    "license": null,
+    "version": "2024-06-24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498936,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-26T06:03:50.000Z",
+    "code_updated_at": "2024-06-26T06:12:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1324003,
+        "name": "fallingstar10",
+        "created_at": "2024-06-26T02:23:29.000Z",
+        "url": "https://greasyfork.org/users/1324003-fallingstar10"
+      }
+    ],
+    "name": "ADblocker4DeepinBBS",
+    "description": "block AD-like Users in DeepinBBS",
+    "url": "https://greasyfork.org/scripts/498936-adblocker4deepinbbs",
+    "code_url": "https://update.greasyfork.org/scripts/498936/ADblocker4DeepinBBS.user.js",
+    "code_size": 2194,
+    "license": "MIT License",
+    "version": "2024-06-26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

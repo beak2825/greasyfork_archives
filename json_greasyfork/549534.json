@@ -1,0 +1,34 @@
+{
+  "id": 549534,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-14T15:54:25.000Z",
+  "code_updated_at": "2025-09-19T07:42:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499234,
+      "name": "dabendan123",
+      "created_at": "2025-07-28T16:35:35.000Z",
+      "url": "https://greasyfork.org/users/1499234-dabendan123",
+      "scripts": []
+    }
+  ],
+  "name": "TikTok Boosted Materials - Full Suite with Automation",
+  "description": "【稳定重构版】以v2.6为基础，恢复了被破坏的复选框功能，并重新正确集成了自动化删除模块。确保所有功能稳定共存。",
+  "url": "https://greasyfork.org/scripts/549534-tiktok-boosted-materials-full-suite-with-automation",
+  "code_url": "https://update.greasyfork.org/scripts/549534/TikTok%20Boosted%20Materials%20-%20Full%20Suite%20with%20Automation.user.js",
+  "code_size": 53794,
+  "license": null,
+  "version": "4.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

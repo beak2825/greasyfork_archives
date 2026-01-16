@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539269,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-13T07:25:38.000Z",
+    "code_updated_at": "2025-06-13T07:25:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483087,
+        "name": "shengdingbox",
+        "created_at": "2025-06-13T05:51:01.000Z",
+        "url": "https://greasyfork.org/users/1483087-shengdingbox"
+      }
+    ],
+    "name": "AugmentCode自动注册客户端",
+    "description": "自动完成AugmentCode的注册流程 (Cloudflare Worker 版本)",
+    "url": "https://greasyfork.org/scripts/539269-augmentcode%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E5%AE%A2%E6%88%B7%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/539269/AugmentCode%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E5%AE%A2%E6%88%B7%E7%AB%AF.user.js",
+    "code_size": 22222,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

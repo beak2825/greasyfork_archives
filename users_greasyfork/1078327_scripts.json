@@ -31,5 +31,104 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 546018,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-16T01:42:30.000Z",
+    "code_updated_at": "2025-08-17T00:55:07.000Z",
+    "namespace": "https://github.com/username/lingvist-smart-language-selector",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078327,
+        "name": "run king",
+        "created_at": "2023-05-13T08:21:01.000Z",
+        "url": "https://greasyfork.org/users/1078327-run-king"
+      }
+    ],
+    "name": "Lingvist 智能语言选择器",
+    "description": "进入 https://learn.lingvist.com/#hub 后自动选择指定语言并开始学习",
+    "url": "https://greasyfork.org/scripts/546018-lingvist-%E6%99%BA%E8%83%BD%E8%AF%AD%E8%A8%80%E9%80%89%E6%8B%A9%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/546018/Lingvist%20%E6%99%BA%E8%83%BD%E8%AF%AD%E8%A8%80%E9%80%89%E6%8B%A9%E5%99%A8.user.js",
+    "code_size": 16955,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543699,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T12:57:25.000Z",
+    "code_updated_at": "2025-07-28T01:53:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078327,
+        "name": "run king",
+        "created_at": "2023-05-13T08:21:01.000Z",
+        "url": "https://greasyfork.org/users/1078327-run-king"
+      }
+    ],
+    "name": "B站 & YouTube 仅激活标签播放并保持全屏",
+    "description": "只允许当前标签页播放视频，其他全部暂停，并保持全屏状态",
+    "url": "https://greasyfork.org/scripts/543699-b%E7%AB%99-youtube-%E4%BB%85%E6%BF%80%E6%B4%BB%E6%A0%87%E7%AD%BE%E6%92%AD%E6%94%BE%E5%B9%B6%E4%BF%9D%E6%8C%81%E5%85%A8%E5%B1%8F",
+    "code_url": "https://update.greasyfork.org/scripts/543699/B%E7%AB%99%20%20YouTube%20%E4%BB%85%E6%BF%80%E6%B4%BB%E6%A0%87%E7%AD%BE%E6%92%AD%E6%94%BE%E5%B9%B6%E4%BF%9D%E6%8C%81%E5%85%A8%E5%B1%8F.user.js",
+    "code_size": 2407,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541307,
+    "daily_installs": 0,
+    "total_installs": 35,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-01T04:06:47.000Z",
+    "code_updated_at": "2026-01-14T08:04:18.000Z",
+    "namespace": "https://www.fab.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1078327,
+        "name": "run king",
+        "created_at": "2023-05-13T08:21:01.000Z",
+        "url": "https://greasyfork.org/users/1078327-run-king"
+      }
+    ],
+    "name": "Fab Helper",
+    "description": "Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新",
+    "url": "https://greasyfork.org/scripts/541307-fab-helper",
+    "code_url": "https://update.greasyfork.org/scripts/541307/Fab%20Helper.user.js",
+    "code_size": 259245,
+    "license": null,
+    "version": "3.5.1-20260114031231",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

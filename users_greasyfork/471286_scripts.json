@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 534737,
+    "daily_installs": 3,
+    "total_installs": 211,
+    "fan_score": "51.0",
+    "good_ratings": 4,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-02T15:31:07.000Z",
+    "code_updated_at": "2026-01-01T13:13:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 471286,
+        "name": "Wenmoux",
+        "created_at": "2020-03-29T15:55:43.000Z",
+        "url": "https://greasyfork.org/users/471286-wenmoux"
+      }
+    ],
+    "name": "PO小说下载器",
+    "description": "下载PO18/POPO小说，支持TXT/HTML/EPUB格式，多线程下载，记录下载历史，增强阅读体验，查看已购书架，WebDAV上传，多站点自动识别",
+    "url": "https://greasyfork.org/scripts/534737-po%E5%B0%8F%E8%AF%B4%E4%B8%8B%E8%BD%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/534737/PO%E5%B0%8F%E8%AF%B4%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js",
+    "code_size": 124068,
+    "license": "MIT License",
+    "version": "2.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

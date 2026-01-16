@@ -1,0 +1,59 @@
+{
+  "id": 538853,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-08T18:34:41.000Z",
+  "code_updated_at": "2025-06-08T18:34:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480777,
+      "name": "白陌尘",
+      "created_at": "2025-06-08T18:31:28.000Z",
+      "url": "https://greasyfork.org/users/1480777-%E7%99%BD%E9%99%8C%E5%B0%98",
+      "scripts": [
+        {
+          "id": 538853,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-08T18:34:41.000Z",
+          "code_updated_at": "2025-06-08T18:34:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "手柄按键动态映射",
+          "description": "手柄按键与键盘实时绑定，支持导入导出、最小化、可拖动面板、查看网址等功能。",
+          "url": "https://greasyfork.org/scripts/538853-%E6%89%8B%E6%9F%84%E6%8C%89%E9%94%AE%E5%8A%A8%E6%80%81%E6%98%A0%E5%B0%84",
+          "code_url": "https://update.greasyfork.org/scripts/538853/%E6%89%8B%E6%9F%84%E6%8C%89%E9%94%AE%E5%8A%A8%E6%80%81%E6%98%A0%E5%B0%84.user.js",
+          "code_size": 8230,
+          "license": null,
+          "version": "2.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "手柄按键动态映射",
+  "description": "手柄按键与键盘实时绑定，支持导入导出、最小化、可拖动面板、查看网址等功能。",
+  "url": "https://greasyfork.org/scripts/538853-%E6%89%8B%E6%9F%84%E6%8C%89%E9%94%AE%E5%8A%A8%E6%80%81%E6%98%A0%E5%B0%84",
+  "code_url": "https://update.greasyfork.org/scripts/538853/%E6%89%8B%E6%9F%84%E6%8C%89%E9%94%AE%E5%8A%A8%E6%80%81%E6%98%A0%E5%B0%84.user.js",
+  "code_size": 8230,
+  "license": null,
+  "version": "2.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

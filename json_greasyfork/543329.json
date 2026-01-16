@@ -1,0 +1,59 @@
+{
+  "id": 543329,
+  "daily_installs": 1,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-22T13:55:57.000Z",
+  "code_updated_at": "2025-07-23T10:08:40.000Z",
+  "namespace": "https://greasyfork.org/hu/users/1496003-d%C3%A1niel-%C3%A1cs-dani",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1496003,
+      "name": "Dániel Ács (Dani)",
+      "created_at": "2025-07-18T08:24:57.000Z",
+      "url": "https://greasyfork.org/users/1496003-d%C3%A1niel-%C3%A1cs-dani",
+      "scripts": [
+        {
+          "id": 543329,
+          "daily_installs": 1,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-22T13:55:57.000Z",
+          "code_updated_at": "2025-07-23T10:08:40.000Z",
+          "namespace": "https://greasyfork.org/hu/users/1496003-d%C3%A1niel-%C3%A1cs-dani",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "OM kitöltő inyr.hu-hoz",
+          "description": "Magán fejlesztésű bővítmény, független az inyr.hu-tól — Több OM automatikus kitöltése, lebegő beállítási panellel, biztonságos GM tárolással és többnyelvű kezeléssel",
+          "url": "https://greasyfork.org/scripts/543329-om-kit%C3%B6lt%C5%91-inyr-hu-hoz",
+          "code_url": "https://update.greasyfork.org/scripts/543329/OM%20kit%C3%B6lt%C5%91%20inyrhu-hoz.user.js",
+          "code_size": 9729,
+          "license": "GNU General Public License v3.0 only",
+          "version": "4.1",
+          "locale": "hu",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OM kitöltő inyr.hu-hoz",
+  "description": "Magán fejlesztésű bővítmény, független az inyr.hu-tól — Több OM automatikus kitöltése, lebegő beállítási panellel, biztonságos GM tárolással és többnyelvű kezeléssel",
+  "url": "https://greasyfork.org/scripts/543329-om-kit%C3%B6lt%C5%91-inyr-hu-hoz",
+  "code_url": "https://update.greasyfork.org/scripts/543329/OM%20kit%C3%B6lt%C5%91%20inyrhu-hoz.user.js",
+  "code_size": 9729,
+  "license": "GNU General Public License v3.0 only",
+  "version": "4.1",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

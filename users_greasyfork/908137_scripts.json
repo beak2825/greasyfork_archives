@@ -1,0 +1,68 @@
+[
+  {
+    "id": 519048,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-27T13:45:30.000Z",
+    "code_updated_at": "2024-11-27T13:54:06.000Z",
+    "namespace": "https://greasyfork.org/users/908137",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908137,
+        "name": "liam-h",
+        "created_at": "2022-04-28T13:21:06.000Z",
+        "url": "https://greasyfork.org/users/908137-liam-h"
+      }
+    ],
+    "name": "Rateyourmusic Country Film Links",
+    "description": "Convert country tags to clickable links in film pages",
+    "url": "https://greasyfork.org/scripts/519048-rateyourmusic-country-film-links",
+    "code_url": "https://update.greasyfork.org/scripts/519048/Rateyourmusic%20Country%20Film%20Links.user.js",
+    "code_size": 3693,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509173,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T10:56:01.000Z",
+    "code_updated_at": "2025-09-16T13:31:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 908137,
+        "name": "liam-h",
+        "created_at": "2022-04-28T13:21:06.000Z",
+        "url": "https://greasyfork.org/users/908137-liam-h"
+      }
+    ],
+    "name": "Letterboxd Friend Ratings Analyzer",
+    "description": "Show ratings by your friends in a histogram, similar to the one Letterboxd shows for all user ratings.",
+    "url": "https://greasyfork.org/scripts/509173-letterboxd-friend-ratings-analyzer",
+    "code_url": "https://update.greasyfork.org/scripts/509173/Letterboxd%20Friend%20Ratings%20Analyzer.user.js",
+    "code_size": 4067,
+    "license": null,
+    "version": "3.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

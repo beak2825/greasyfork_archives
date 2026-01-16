@@ -1,0 +1,101 @@
+[
+  {
+    "id": 535960,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-14T10:12:14.000Z",
+    "code_updated_at": "2025-05-14T10:12:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435322,
+        "name": "Isidro Vila Verde",
+        "created_at": "2025-02-15T10:43:13.000Z",
+        "url": "https://greasyfork.org/users/1435322-isidro-vila-verde"
+      }
+    ],
+    "name": "Force Enable Selection & Right-Click",
+    "description": "Re-enables text selection and right-click on restrictive websites",
+    "url": "https://greasyfork.org/scripts/535960-force-enable-selection-right-click",
+    "code_url": "https://update.greasyfork.org/scripts/535960/Force%20Enable%20Selection%20%20Right-Click.user.js",
+    "code_size": 2682,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535953,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-14T09:55:09.000Z",
+    "code_updated_at": "2025-05-14T09:55:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435322,
+        "name": "Isidro Vila Verde",
+        "created_at": "2025-02-15T10:43:13.000Z",
+        "url": "https://greasyfork.org/users/1435322-isidro-vila-verde"
+      }
+    ],
+    "name": "Ultimate Persistent Highlighter",
+    "description": "Highlighter with debounced adjacent span merging",
+    "url": "https://greasyfork.org/scripts/535953-ultimate-persistent-highlighter",
+    "code_url": "https://update.greasyfork.org/scripts/535953/Ultimate%20Persistent%20Highlighter.user.js",
+    "code_size": 15358,
+    "license": null,
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526974,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-15T10:44:32.000Z",
+    "code_updated_at": "2025-03-23T16:56:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435322,
+        "name": "Isidro Vila Verde",
+        "created_at": "2025-02-15T10:43:13.000Z",
+        "url": "https://greasyfork.org/users/1435322-isidro-vila-verde"
+      }
+    ],
+    "name": "Bird Species Image Preview",
+    "description": "Show Flickr images when hovering over bird species names (IOC nomenclature) on a webpage.",
+    "url": "https://greasyfork.org/scripts/526974-bird-species-image-preview",
+    "code_url": "https://update.greasyfork.org/scripts/526974/Bird%20Species%20Image%20Preview.user.js",
+    "code_size": 32358,
+    "license": null,
+    "version": "3.2.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

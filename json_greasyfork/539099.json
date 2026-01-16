@@ -1,0 +1,33 @@
+{
+  "id": 539099,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-11T10:11:01.000Z",
+  "code_updated_at": "2025-06-11T10:11:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1482172,
+      "name": "李童",
+      "created_at": "2025-06-11T10:05:57.000Z",
+      "url": "https://greasyfork.org/users/1482172-%E6%9D%8E%E7%AB%A5"
+    }
+  ],
+  "name": "TONG-彼岸图网4K抓取",
+  "description": "彼岸图网图片批量下载，现代美化GUI，支持暂停/继续",
+  "url": "https://greasyfork.org/scripts/539099-tong-%E5%BD%BC%E5%B2%B8%E5%9B%BE%E7%BD%914k%E6%8A%93%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/539099/TONG-%E5%BD%BC%E5%B2%B8%E5%9B%BE%E7%BD%914K%E6%8A%93%E5%8F%96.user.js",
+  "code_size": 8427,
+  "license": "MTT",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

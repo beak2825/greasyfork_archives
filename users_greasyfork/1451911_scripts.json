@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533027,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T13:01:59.000Z",
+    "code_updated_at": "2025-04-17T00:27:37.000Z",
+    "namespace": "https://milkywayidle.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451911,
+        "name": "LLMenjoyer",
+        "created_at": "2025-03-30T06:29:47.000Z",
+        "url": "https://greasyfork.org/users/1451911-llmenjoyer"
+      }
+    ],
+    "name": "MWI Nex Leaderboard",
+    "description": "Overhauls the leaderboard UI using data from li-mwi-leaderboard.ngrok.io",
+    "url": "https://greasyfork.org/scripts/533027-mwi-nex-leaderboard",
+    "code_url": "https://update.greasyfork.org/scripts/533027/MWI%20Nex%20Leaderboard.user.js",
+    "code_size": 23367,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531302,
+    "daily_installs": 0,
+    "total_installs": 113,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-30T06:39:27.000Z",
+    "code_updated_at": "2025-04-08T10:28:55.000Z",
+    "namespace": "https://milkywayidle.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451911,
+        "name": "LLMenjoyer",
+        "created_at": "2025-03-30T06:29:47.000Z",
+        "url": "https://greasyfork.org/users/1451911-llmenjoyer"
+      }
+    ],
+    "name": "Milkyway Idle - Current Loot Tracker",
+    "description": "Tracks loot with overlay, total coin value via ask prices, improved UI/CSS, and fixed display logic.",
+    "url": "https://greasyfork.org/scripts/531302-milkyway-idle-current-loot-tracker",
+    "code_url": "https://update.greasyfork.org/scripts/531302/Milkyway%20Idle%20-%20Current%20Loot%20Tracker.user.js",
+    "code_size": 23203,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

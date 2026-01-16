@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498105,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-06-16T17:32:55.000Z",
+    "code_updated_at": "2024-06-16T17:32:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1319202,
+        "name": "justsomelearner",
+        "created_at": "2024-06-16T17:30:04.000Z",
+        "url": "https://greasyfork.org/users/1319202-justsomelearner"
+      }
+    ],
+    "name": "Duolingo Hebrew Text-to-Speech",
+    "description": "Automatically reads Hebrew text aloud in Duolingo's Hebrew course with a slower TTS rate and an optional button for manual playback, ensuring only one automatic playback per text change.",
+    "url": "https://greasyfork.org/scripts/498105-duolingo-hebrew-text-to-speech",
+    "code_url": "https://update.greasyfork.org/scripts/498105/Duolingo%20Hebrew%20Text-to-Speech.user.js",
+    "code_size": 3997,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

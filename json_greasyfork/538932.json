@@ -1,0 +1,59 @@
+{
+  "id": 538932,
+  "daily_installs": 2,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T17:34:44.000Z",
+  "code_updated_at": "2025-06-09T20:54:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481265,
+      "name": "GDTMG",
+      "created_at": "2025-06-09T17:31:59.000Z",
+      "url": "https://greasyfork.org/users/1481265-gdtmg",
+      "scripts": [
+        {
+          "id": 538932,
+          "daily_installs": 2,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-09T17:34:44.000Z",
+          "code_updated_at": "2025-06-09T20:54:04.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Bulk Unsubber",
+          "description": "Added Whitelist/Delist Everyone buttons | cool thing",
+          "url": "https://greasyfork.org/scripts/538932-youtube-bulk-unsubber",
+          "code_url": "https://update.greasyfork.org/scripts/538932/YouTube%20Bulk%20Unsubber.user.js",
+          "code_size": 12757,
+          "license": "MIT License",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Bulk Unsubber",
+  "description": "Added Whitelist/Delist Everyone buttons | cool thing",
+  "url": "https://greasyfork.org/scripts/538932-youtube-bulk-unsubber",
+  "code_url": "https://update.greasyfork.org/scripts/538932/YouTube%20Bulk%20Unsubber.user.js",
+  "code_size": 12757,
+  "license": "MIT License",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

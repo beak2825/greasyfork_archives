@@ -1,0 +1,59 @@
+{
+  "id": 537970,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-01T13:21:21.000Z",
+  "code_updated_at": "2025-09-27T23:04:32.000Z",
+  "namespace": "https://greasyfork.org/users/1477546",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1477546,
+      "name": "Pierre Sz",
+      "created_at": "2025-06-01T13:18:20.000Z",
+      "url": "https://greasyfork.org/users/1477546-pierre-sz",
+      "scripts": [
+        {
+          "id": 537970,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-01T13:21:21.000Z",
+          "code_updated_at": "2025-09-27T23:04:32.000Z",
+          "namespace": "https://greasyfork.org/users/1477546",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "DeepSeek Auto-Retry with Text & SVG Detection",
+          "description": "Auto retry when server busy detected by text or SVG icon, with toggle UI and cooldown.",
+          "url": "https://greasyfork.org/scripts/537970-deepseek-auto-retry-with-text-svg-detection",
+          "code_url": "https://update.greasyfork.org/scripts/537970/DeepSeek%20Auto-Retry%20with%20Text%20%20SVG%20Detection.user.js",
+          "code_size": 3294,
+          "license": "Blakken",
+          "version": "1.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "DeepSeek Auto-Retry with Text & SVG Detection",
+  "description": "Auto retry when server busy detected by text or SVG icon, with toggle UI and cooldown.",
+  "url": "https://greasyfork.org/scripts/537970-deepseek-auto-retry-with-text-svg-detection",
+  "code_url": "https://update.greasyfork.org/scripts/537970/DeepSeek%20Auto-Retry%20with%20Text%20%20SVG%20Detection.user.js",
+  "code_size": 3294,
+  "license": "Blakken",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

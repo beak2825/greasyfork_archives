@@ -1,0 +1,59 @@
+{
+  "id": 526509,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-11T04:31:24.000Z",
+  "code_updated_at": "2025-02-11T04:31:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1394834,
+      "name": "kuangru52",
+      "created_at": "2024-11-12T12:52:19.000Z",
+      "url": "https://greasyfork.org/users/1394834-kuangru52",
+      "scripts": [
+        {
+          "id": 526509,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-11T04:31:24.000Z",
+          "code_updated_at": "2025-02-11T04:31:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Ubits去广告",
+          "description": "移除ubits.club网站上的两个特定广告元素",
+          "url": "https://greasyfork.org/scripts/526509-ubits%E5%8E%BB%E5%B9%BF%E5%91%8A",
+          "code_url": "https://update.greasyfork.org/scripts/526509/Ubits%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+          "code_size": 2118,
+          "license": null,
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Ubits去广告",
+  "description": "移除ubits.club网站上的两个特定广告元素",
+  "url": "https://greasyfork.org/scripts/526509-ubits%E5%8E%BB%E5%B9%BF%E5%91%8A",
+  "code_url": "https://update.greasyfork.org/scripts/526509/Ubits%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js",
+  "code_size": 2118,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

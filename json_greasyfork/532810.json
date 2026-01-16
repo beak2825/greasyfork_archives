@@ -1,0 +1,34 @@
+{
+  "id": 532810,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-14T10:28:31.000Z",
+  "code_updated_at": "2025-04-18T07:34:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1457753,
+      "name": "Svyatoslav Podolskiy",
+      "created_at": "2025-04-14T10:26:27.000Z",
+      "url": "https://greasyfork.org/users/1457753-svyatoslav-podolskiy",
+      "scripts": []
+    }
+  ],
+  "name": "Zabbix Tools: Copy MAC and IP",
+  "description": "Копирование MAC-адреса и IP-адреса без порта",
+  "url": "https://greasyfork.org/scripts/532810-zabbix-tools-copy-mac-and-ip",
+  "code_url": "https://update.greasyfork.org/scripts/532810/Zabbix%20Tools%3A%20Copy%20MAC%20and%20IP.user.js",
+  "code_size": 4659,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

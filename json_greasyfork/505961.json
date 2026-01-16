@@ -1,0 +1,33 @@
+{
+  "id": 505961,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-31T01:57:04.000Z",
+  "code_updated_at": "2024-08-31T01:57:04.000Z",
+  "namespace": "https://greasyfork.org/users/1024912",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1024912,
+      "name": "Bort Mack",
+      "created_at": "2023-02-10T12:43:09.000Z",
+      "url": "https://greasyfork.org/users/1024912-bort-mack"
+    }
+  ],
+  "name": "bod bot empire game",
+  "description": "Drug Empire Game Under Expansion",
+  "url": "https://greasyfork.org/scripts/505961-bod-bot-empire-game",
+  "code_url": "https://update.greasyfork.org/scripts/505961/bod%20bot%20empire%20game.user.js",
+  "code_size": 527396,
+  "license": "Bort",
+  "version": "7.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 511280,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-03T02:32:38.000Z",
+  "code_updated_at": "2024-10-03T02:32:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 71893,
+      "name": "Austin 2",
+      "created_at": "2016-10-08T01:14:04.000Z",
+      "url": "https://greasyfork.org/users/71893-austin-2",
+      "scripts": []
+    }
+  ],
+  "name": "Skip Google Adservice Links",
+  "description": "Skip any Google adservice link",
+  "url": "https://greasyfork.org/scripts/511280-skip-google-adservice-links",
+  "code_url": "https://update.greasyfork.org/scripts/511280/Skip%20Google%20Adservice%20Links.user.js",
+  "code_size": 1240,
+  "license": null,
+  "version": "0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

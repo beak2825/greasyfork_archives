@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500412,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-12T08:31:20.000Z",
+    "code_updated_at": "2024-07-12T08:31:20.000Z",
+    "namespace": "https://greasyfork.org/users/1254939",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1254939,
+        "name": "lelouch123",
+        "created_at": "2024-01-30T01:00:59.000Z",
+        "url": "https://greasyfork.org/users/1254939-lelouch123"
+      }
+    ],
+    "name": "计时器掌控者|视频广告跳过|视频广告加速器",
+    "description": "控制网页计时器速度|加速跳过页面计时广告|视频快进（慢放）|跳过广告|支持几乎所有网页.",
+    "url": "https://greasyfork.org/scripts/500412-%E8%AE%A1%E6%97%B6%E5%99%A8%E6%8E%8C%E6%8E%A7%E8%80%85-%E8%A7%86%E9%A2%91%E5%B9%BF%E5%91%8A%E8%B7%B3%E8%BF%87-%E8%A7%86%E9%A2%91%E5%B9%BF%E5%91%8A%E5%8A%A0%E9%80%9F%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/500412/%E8%AE%A1%E6%97%B6%E5%99%A8%E6%8E%8C%E6%8E%A7%E8%80%85%7C%E8%A7%86%E9%A2%91%E5%B9%BF%E5%91%8A%E8%B7%B3%E8%BF%87%7C%E8%A7%86%E9%A2%91%E5%B9%BF%E5%91%8A%E5%8A%A0%E9%80%9F%E5%99%A8.user.js",
+    "code_size": 56140,
+    "license": null,
+    "version": "2.0.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

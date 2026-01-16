@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541609,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T10:07:46.000Z",
+    "code_updated_at": "2025-07-04T10:07:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491552,
+        "name": "Mouse Pp",
+        "created_at": "2025-07-04T09:56:23.000Z",
+        "url": "https://greasyfork.org/users/1491552-mouse-pp"
+      }
+    ],
+    "name": "隐藏日报首页弹窗信息",
+    "description": "隐藏指定站点的弹窗!",
+    "url": "https://greasyfork.org/scripts/541609-%E9%9A%90%E8%97%8F%E6%97%A5%E6%8A%A5%E9%A6%96%E9%A1%B5%E5%BC%B9%E7%AA%97%E4%BF%A1%E6%81%AF",
+    "code_url": "https://update.greasyfork.org/scripts/541609/%E9%9A%90%E8%97%8F%E6%97%A5%E6%8A%A5%E9%A6%96%E9%A1%B5%E5%BC%B9%E7%AA%97%E4%BF%A1%E6%81%AF.user.js",
+    "code_size": 1846,
+    "license": "MIT License",
+    "version": "2025-07-03",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

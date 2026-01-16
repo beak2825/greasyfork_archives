@@ -1,0 +1,59 @@
+{
+  "id": 507955,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-11T11:36:08.000Z",
+  "code_updated_at": "2024-09-11T11:36:08.000Z",
+  "namespace": "https://www.classtime.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1366121,
+      "name": "fanjab",
+      "created_at": "2024-09-11T11:32:13.000Z",
+      "url": "https://greasyfork.org/users/1366121-fanjab",
+      "scripts": [
+        {
+          "id": 507955,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-11T11:36:08.000Z",
+          "code_updated_at": "2024-09-11T11:36:08.000Z",
+          "namespace": "https://www.classtime.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Classtime copier",
+          "description": "Copy the title and answers from Classtime",
+          "url": "https://greasyfork.org/scripts/507955-classtime-copier",
+          "code_url": "https://update.greasyfork.org/scripts/507955/Classtime%20copier.user.js",
+          "code_size": 2226,
+          "license": "MIT License",
+          "version": "2024-09-11",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Classtime copier",
+  "description": "Copy the title and answers from Classtime",
+  "url": "https://greasyfork.org/scripts/507955-classtime-copier",
+  "code_url": "https://update.greasyfork.org/scripts/507955/Classtime%20copier.user.js",
+  "code_size": 2226,
+  "license": "MIT License",
+  "version": "2024-09-11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

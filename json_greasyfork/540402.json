@@ -1,0 +1,59 @@
+{
+  "id": 540402,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-22T12:21:32.000Z",
+  "code_updated_at": "2025-06-23T12:43:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1487023,
+      "name": "大金（Onnnn）",
+      "created_at": "2025-06-22T12:09:33.000Z",
+      "url": "https://greasyfork.org/users/1487023-%E5%A4%A7%E9%87%91-onnnn",
+      "scripts": [
+        {
+          "id": 540402,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-22T12:21:32.000Z",
+          "code_updated_at": "2025-06-23T12:43:25.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube视频统计信息弹窗",
+          "description": "提取YouTube视频数据(赞数、观看次数、发布日期)，显示在可拖拽的半透明弹窗中，支持位置记录、侧边收起、全屏隐藏和数字格式化",
+          "url": "https://greasyfork.org/scripts/540402-youtube%E8%A7%86%E9%A2%91%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF%E5%BC%B9%E7%AA%97",
+          "code_url": "https://update.greasyfork.org/scripts/540402/YouTube%E8%A7%86%E9%A2%91%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF%E5%BC%B9%E7%AA%97.user.js",
+          "code_size": 29924,
+          "license": "MIT License",
+          "version": "2.7.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube视频统计信息弹窗",
+  "description": "提取YouTube视频数据(赞数、观看次数、发布日期)，显示在可拖拽的半透明弹窗中，支持位置记录、侧边收起、全屏隐藏和数字格式化",
+  "url": "https://greasyfork.org/scripts/540402-youtube%E8%A7%86%E9%A2%91%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF%E5%BC%B9%E7%AA%97",
+  "code_url": "https://update.greasyfork.org/scripts/540402/YouTube%E8%A7%86%E9%A2%91%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF%E5%BC%B9%E7%AA%97.user.js",
+  "code_size": 29924,
+  "license": "MIT License",
+  "version": "2.7.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

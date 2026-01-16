@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501717,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-24T23:46:04.000Z",
+    "code_updated_at": "2024-07-26T01:08:49.000Z",
+    "namespace": "https://github.com/DrNaki",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1339353,
+        "name": "shawn vong",
+        "created_at": "2024-07-24T23:45:28.000Z",
+        "url": "https://greasyfork.org/users/1339353-shawn-vong"
+      }
+    ],
+    "name": "ChatGPT Questions' Tree",
+    "description": "进入问题页面后，点击按钮获取问题列表；点击问题某一项，直接跳转到对应位置。",
+    "url": "https://greasyfork.org/scripts/501717-chatgpt-questions-tree",
+    "code_url": "https://update.greasyfork.org/scripts/501717/ChatGPT%20Questions%27%20Tree.user.js",
+    "code_size": 6276,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

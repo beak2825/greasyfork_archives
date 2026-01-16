@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513754,
+    "daily_installs": 0,
+    "total_installs": 102,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-23T21:31:05.000Z",
+    "code_updated_at": "2024-10-23T21:31:05.000Z",
+    "namespace": "https://ShareYourCharacters.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371636,
+        "name": "SycAdmin",
+        "created_at": "2024-09-22T17:55:04.000Z",
+        "url": "https://greasyfork.org/users/1371636-sycadmin"
+      }
+    ],
+    "name": "CAI Profile Statistics",
+    "description": "Displays more detailed statistics in your Character.AI profile.",
+    "url": "https://greasyfork.org/scripts/513754-cai-profile-statistics",
+    "code_url": "https://update.greasyfork.org/scripts/513754/CAI%20Profile%20Statistics.user.js",
+    "code_size": 4442,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509868,
+    "daily_installs": 0,
+    "total_installs": 576,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-23T18:46:08.000Z",
+    "code_updated_at": "2025-08-16T06:54:44.000Z",
+    "namespace": "https://ShareYourCharacters.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371636,
+        "name": "SycAdmin",
+        "created_at": "2024-09-22T17:55:04.000Z",
+        "url": "https://greasyfork.org/users/1371636-sycadmin"
+      }
+    ],
+    "name": "CAI Chat2 Look",
+    "description": "Makes the CAI chat interface look more like the old chat2 interface",
+    "url": "https://greasyfork.org/scripts/509868-cai-chat2-look",
+    "code_url": "https://update.greasyfork.org/scripts/509868/CAI%20Chat2%20Look.user.js",
+    "code_size": 12636,
+    "license": "MIT License",
+    "version": "0.3.10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

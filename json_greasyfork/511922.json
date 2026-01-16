@@ -1,0 +1,34 @@
+{
+  "id": 511922,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-08T20:58:49.000Z",
+  "code_updated_at": "2024-10-08T21:00:41.000Z",
+  "namespace": "https://greasyfork.org/users/1377995",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1377995,
+      "name": "Zombro01",
+      "created_at": "2024-10-07T20:58:23.000Z",
+      "url": "https://greasyfork.org/users/1377995-zombro01",
+      "scripts": []
+    }
+  ],
+  "name": "khan helper",
+  "description": "Khan Helper",
+  "url": "https://greasyfork.org/scripts/511922-khan-helper",
+  "code_url": "https://update.greasyfork.org/scripts/511922/khan%20helper.user.js",
+  "code_size": 8352,
+  "license": "MIT License",
+  "version": "0.0.1.20241008210041",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

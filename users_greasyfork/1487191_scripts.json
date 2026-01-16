@@ -1,0 +1,68 @@
+[
+  {
+    "id": 545247,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-10T02:17:58.000Z",
+    "code_updated_at": "2025-08-10T02:17:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487191,
+        "name": "Viberystocrat",
+        "created_at": "2025-06-23T00:46:17.000Z",
+        "url": "https://greasyfork.org/users/1487191-viberystocrat"
+      }
+    ],
+    "name": "Holotower Hash Links",
+    "description": "Adds # links next to post numbers for original scroll-to-post functionality",
+    "url": "https://greasyfork.org/scripts/545247-holotower-hash-links",
+    "code_url": "https://update.greasyfork.org/scripts/545247/Holotower%20Hash%20Links.user.js",
+    "code_size": 7176,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540450,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T00:52:06.000Z",
+    "code_updated_at": "2025-08-10T02:21:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487191,
+        "name": "Viberystocrat",
+        "created_at": "2025-06-23T00:46:17.000Z",
+        "url": "https://greasyfork.org/users/1487191-viberystocrat"
+      }
+    ],
+    "name": "Holotower Auto Scroll by Claude",
+    "description": "Only scroll to new posts when user is already at bottom of page (with persistent state)",
+    "url": "https://greasyfork.org/scripts/540450-holotower-auto-scroll-by-claude",
+    "code_url": "https://update.greasyfork.org/scripts/540450/Holotower%20Auto%20Scroll%20by%20Claude.user.js",
+    "code_size": 12257,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

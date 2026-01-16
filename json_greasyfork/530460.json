@@ -1,0 +1,59 @@
+{
+  "id": 530460,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-21T16:51:18.000Z",
+  "code_updated_at": "2025-07-30T17:25:24.000Z",
+  "namespace": "https://github.com/teogabrielofc/saeskip",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448597,
+      "name": "teogabrielofc",
+      "created_at": "2025-03-21T16:43:46.000Z",
+      "url": "https://greasyfork.org/users/1448597-teogabrielofc",
+      "scripts": [
+        {
+          "id": 530460,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-21T16:51:18.000Z",
+          "code_updated_at": "2025-07-30T17:25:24.000Z",
+          "namespace": "https://github.com/teogabrielofc/saeskip",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SAEskip",
+          "description": "Um UserScript para o AVA SAE DIGITAL que ativa o modo professor no livro digita(depois de 5 segundos), ativa a opção de selecionar e texto e faz o player ficar 100% auto",
+          "url": "https://greasyfork.org/scripts/530460-saeskip",
+          "code_url": "https://update.greasyfork.org/scripts/530460/SAEskip.user.js",
+          "code_size": 4685,
+          "license": "GNU GPLv3",
+          "version": "2.1",
+          "locale": "pt-BR",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SAEskip",
+  "description": "Um UserScript para o AVA SAE DIGITAL que ativa o modo professor no livro digita(depois de 5 segundos), ativa a opção de selecionar e texto e faz o player ficar 100% auto",
+  "url": "https://greasyfork.org/scripts/530460-saeskip",
+  "code_url": "https://update.greasyfork.org/scripts/530460/SAEskip.user.js",
+  "code_size": 4685,
+  "license": "GNU GPLv3",
+  "version": "2.1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

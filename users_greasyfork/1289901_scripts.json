@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499573,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-03T09:34:04.000Z",
+    "code_updated_at": "2024-07-03T09:34:04.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1289901,
+        "name": "Egorik Crazy",
+        "created_at": "2024-04-18T12:55:07.000Z",
+        "url": "https://greasyfork.org/users/1289901-egorik-crazy"
+      }
+    ],
+    "name": "Black Russia | Скрипт для CX",
+    "description": "Скрипт для СХ",
+    "url": "https://greasyfork.org/scripts/499573-black-russia-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-cx",
+    "code_url": "https://update.greasyfork.org/scripts/499573/Black%20Russia%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20CX.user.js",
+    "code_size": 14205,
+    "license": "none",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

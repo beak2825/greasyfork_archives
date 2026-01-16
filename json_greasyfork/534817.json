@@ -1,0 +1,59 @@
+{
+  "id": 534817,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-03T14:20:40.000Z",
+  "code_updated_at": "2025-05-03T14:20:40.000Z",
+  "namespace": "https://greasyfork.org/users/1465219",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465219,
+      "name": "frankrusto32",
+      "created_at": "2025-05-03T14:09:45.000Z",
+      "url": "https://greasyfork.org/users/1465219-frankrusto32",
+      "scripts": [
+        {
+          "id": 534817,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-03T14:20:40.000Z",
+          "code_updated_at": "2025-05-03T14:20:40.000Z",
+          "namespace": "https://greasyfork.org/users/1465219",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Qobuz Linkifier",
+          "description": "make templates copy links to clipboard",
+          "url": "https://greasyfork.org/scripts/534817-qobuz-linkifier",
+          "code_url": "https://update.greasyfork.org/scripts/534817/Qobuz%20Linkifier.user.js",
+          "code_size": 10888,
+          "license": null,
+          "version": "0.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Qobuz Linkifier",
+  "description": "make templates copy links to clipboard",
+  "url": "https://greasyfork.org/scripts/534817-qobuz-linkifier",
+  "code_url": "https://update.greasyfork.org/scripts/534817/Qobuz%20Linkifier.user.js",
+  "code_size": 10888,
+  "license": null,
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

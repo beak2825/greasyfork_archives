@@ -1,0 +1,33 @@
+{
+  "id": 529807,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-14T12:54:52.000Z",
+  "code_updated_at": "2025-03-14T13:23:57.000Z",
+  "namespace": "popmundo",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1435088,
+      "name": "Kayra İrem Yazıcı (kayrahanim)",
+      "created_at": "2025-02-14T15:37:43.000Z",
+      "url": "https://greasyfork.org/users/1435088-kayra-i-rem-yaz%C4%B1c%C4%B1-kayrahanim"
+    }
+  ],
+  "name": "Nova Castelijns Mekân Nakit Scripti",
+  "description": "Popmundo'da şirket ve lokasyonları arasındaki para transferlerini yönetmek için bir araç.",
+  "url": "https://greasyfork.org/scripts/529807-nova-castelijns-mek%C3%A2n-nakit-scripti",
+  "code_url": "https://update.greasyfork.org/scripts/529807/Nova%20Castelijns%20Mek%C3%A2n%20Nakit%20Scripti.user.js",
+  "code_size": 8947,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 535185,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-07T03:03:55.000Z",
+  "code_updated_at": "2025-05-07T03:03:55.000Z",
+  "namespace": "Meica05GOD",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1466615,
+      "name": "Just Enjoy",
+      "created_at": "2025-05-07T00:54:34.000Z",
+      "url": "https://greasyfork.org/users/1466615-just-enjoy",
+      "scripts": [
+        {
+          "id": 535185,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-07T03:03:55.000Z",
+          "code_updated_at": "2025-05-07T03:03:55.000Z",
+          "namespace": "Meica05GOD",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Save Image As...",
+          "description": "Allows you to save an image in different formats.",
+          "url": "https://greasyfork.org/scripts/535185-save-image-as",
+          "code_url": "https://update.greasyfork.org/scripts/535185/Save%20Image%20As.user.js",
+          "code_size": 5629,
+          "license": "MIT License",
+          "version": "2.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Save Image As...",
+  "description": "Allows you to save an image in different formats.",
+  "url": "https://greasyfork.org/scripts/535185-save-image-as",
+  "code_url": "https://update.greasyfork.org/scripts/535185/Save%20Image%20As.user.js",
+  "code_size": 5629,
+  "license": "MIT License",
+  "version": "2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

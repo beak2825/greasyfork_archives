@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 532349,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T17:13:09.000Z",
+    "code_updated_at": "2025-04-09T17:13:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 66085,
+        "name": "trumpetbear",
+        "created_at": "2016-09-14T04:41:44.000Z",
+        "url": "https://greasyfork.org/users/66085-trumpetbear"
+      }
+    ],
+    "name": "GitHub Copy Ticket Ref",
+    "description": "Adds a button next to issue actions to copy issue ref (e.g. org/repo#123)",
+    "url": "https://greasyfork.org/scripts/532349-github-copy-ticket-ref",
+    "code_url": "https://update.greasyfork.org/scripts/532349/GitHub%20Copy%20Ticket%20Ref.user.js",
+    "code_size": 1893,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535023,
+    "daily_installs": 0,
+    "total_installs": 118,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T14:36:25.000Z",
+    "code_updated_at": "2025-05-05T14:36:25.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460567,
+        "name": "ANHTENGIO",
+        "created_at": "2025-04-21T13:20:30.000Z",
+        "url": "https://greasyfork.org/users/1460567-anhtengio"
+      }
+    ],
+    "name": "wall hack bro",
+    "description": "3/3/2025, 8:54:35 PM",
+    "url": "https://greasyfork.org/scripts/535023-wall-hack-bro",
+    "code_url": "https://update.greasyfork.org/scripts/535023/wall%20hack%20bro.user.js",
+    "code_size": 2989,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533529,
+    "daily_installs": 0,
+    "total_installs": 112,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-21T13:21:21.000Z",
+    "code_updated_at": "2025-04-21T13:21:21.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460567,
+        "name": "ANHTENGIO",
+        "created_at": "2025-04-21T13:20:30.000Z",
+        "url": "https://greasyfork.org/users/1460567-anhtengio"
+      }
+    ],
+    "name": "Custom Mods for Kirka",
+    "description": "3/3/2025, 8:54:35 PM",
+    "url": "https://greasyfork.org/scripts/533529-custom-mods-for-kirka",
+    "code_url": "https://update.greasyfork.org/scripts/533529/Custom%20Mods%20for%20Kirka.user.js",
+    "code_size": 2992,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

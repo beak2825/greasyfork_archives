@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533592,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T05:03:55.000Z",
+    "code_updated_at": "2025-04-22T05:03:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 965469,
+        "name": "amdd 132",
+        "created_at": "2022-10-01T16:55:46.000Z",
+        "url": "https://greasyfork.org/users/965469-amdd-132"
+      }
+    ],
+    "name": "TypeRacer Helper ;)",
+    "description": "Advanced cheat for typeracer.com — manual typing, auto mode, WPM limiter (Auto mode might IS be buggy)",
+    "url": "https://greasyfork.org/scripts/533592-typeracer-helper",
+    "code_url": "https://update.greasyfork.org/scripts/533592/TypeRacer%20Helper%20%3B%29.user.js",
+    "code_size": 6287,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

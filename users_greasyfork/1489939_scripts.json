@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 541104,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T11:53:44.000Z",
+    "code_updated_at": "2025-06-30T08:00:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489939,
+        "name": "SakakiChizuru",
+        "created_at": "2025-06-29T11:51:32.000Z",
+        "url": "https://greasyfork.org/users/1489939-sakakichizuru"
+      }
+    ],
+    "name": "Stellar Odyssey 汉化[SakakiChizuru版]",
+    "description": "Stellar Odyssey 汉化，当前适配6月29日更新版本。",
+    "url": "https://greasyfork.org/scripts/541104-stellar-odyssey-%E6%B1%89%E5%8C%96-sakakichizuru%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/541104/Stellar%20Odyssey%20%E6%B1%89%E5%8C%96%5BSakakiChizuru%E7%89%88%5D.user.js",
+    "code_size": 90096,
+    "license": "MIT License",
+    "version": "1.0.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

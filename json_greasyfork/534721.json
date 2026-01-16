@@ -1,0 +1,33 @@
+{
+  "id": 534721,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-02T13:54:21.000Z",
+  "code_updated_at": "2025-05-06T07:01:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464801,
+      "name": "CollectiveIntelli",
+      "created_at": "2025-05-02T12:30:28.000Z",
+      "url": "https://greasyfork.org/users/1464801-collectiveintelli"
+    }
+  ],
+  "name": "NamuSlack_Hearthstone",
+  "description": "편집해야 한다... vs ㅋㅋㅋㅋㅋㅋ (딸깍)",
+  "url": "https://greasyfork.org/scripts/534721-namuslack-hearthstone",
+  "code_url": "https://update.greasyfork.org/scripts/534721/NamuSlack_Hearthstone.user.js",
+  "code_size": 11682,
+  "license": "MIT License",
+  "version": "0.1.1.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

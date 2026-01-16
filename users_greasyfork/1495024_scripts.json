@@ -1,0 +1,68 @@
+[
+  {
+    "id": 542704,
+    "daily_installs": 0,
+    "total_installs": 56,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-16T10:04:22.000Z",
+    "code_updated_at": "2025-07-22T11:23:15.000Z",
+    "namespace": "https://greasyfork.org/users/1495024",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495024,
+        "name": "PixelPulse38",
+        "created_at": "2025-07-15T06:33:58.000Z",
+        "url": "https://greasyfork.org/users/1495024-pixelpulse38"
+      }
+    ],
+    "name": "Janitor AI - UI Bring back glass theme.",
+    "description": "Adds a subtle blur, customizes transparency, adds matching borders, and hides the placeholder text.",
+    "url": "https://greasyfork.org/scripts/542704-janitor-ai-ui-bring-back-glass-theme",
+    "code_url": "https://update.greasyfork.org/scripts/542704/Janitor%20AI%20-%20UI%20Bring%20back%20glass%20theme.user.js",
+    "code_size": 1366,
+    "license": "The Unlicense",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542604,
+    "daily_installs": 0,
+    "total_installs": 70,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-15T06:37:54.000Z",
+    "code_updated_at": "2025-07-15T08:47:11.000Z",
+    "namespace": "",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495024,
+        "name": "PixelPulse38",
+        "created_at": "2025-07-15T06:33:58.000Z",
+        "url": "https://greasyfork.org/users/1495024-pixelpulse38"
+      }
+    ],
+    "name": "Janitor AI - Stable Chat Width Fix",
+    "description": "Sets the chat textarea width to 1000px. (You can change it to fit your screen.)",
+    "url": "https://greasyfork.org/scripts/542604-janitor-ai-stable-chat-width-fix",
+    "code_url": "https://update.greasyfork.org/scripts/542604/Janitor%20AI%20-%20Stable%20Chat%20Width%20Fix.user.js",
+    "code_size": 632,
+    "license": "The Unlicense",
+    "version": "5.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

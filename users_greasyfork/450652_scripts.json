@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530698,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-24T10:26:50.000Z",
+    "code_updated_at": "2025-03-24T10:36:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 450652,
+        "name": "Wei Zong",
+        "created_at": "2020-02-27T10:11:11.000Z",
+        "url": "https://greasyfork.org/users/450652-wei-zong"
+      }
+    ],
+    "name": "Free Jav Bt 显示完整磁链名称（通过移除 d-block class）",
+    "description": "移除指定元素中的 d-block class",
+    "url": "https://greasyfork.org/scripts/530698-free-jav-bt-%E6%98%BE%E7%A4%BA%E5%AE%8C%E6%95%B4%E7%A3%81%E9%93%BE%E5%90%8D%E7%A7%B0-%E9%80%9A%E8%BF%87%E7%A7%BB%E9%99%A4-d-block-class",
+    "code_url": "https://update.greasyfork.org/scripts/530698/Free%20Jav%20Bt%20%E6%98%BE%E7%A4%BA%E5%AE%8C%E6%95%B4%E7%A3%81%E9%93%BE%E5%90%8D%E7%A7%B0%EF%BC%88%E9%80%9A%E8%BF%87%E7%A7%BB%E9%99%A4%20d-block%20class%EF%BC%89.user.js",
+    "code_size": 1689,
+    "license": "MIT License",
+    "version": "2025-03-24-18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

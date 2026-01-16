@@ -1,0 +1,33 @@
+{
+  "id": 535787,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T14:25:22.000Z",
+  "code_updated_at": "2025-05-25T09:57:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 169279,
+      "name": "凉DAN",
+      "created_at": "2018-02-03T16:16:32.000Z",
+      "url": "https://greasyfork.org/users/169279-%E5%87%89dan"
+    }
+  ],
+  "name": "Sunflower AutoClicker v1.4.2 ES5",
+  "description": "自动点击成熟作物或庄稼洞，连贯非并发点击，支持作物状态更新后重复识别，兼容 ES5。适配 sunflower-land.com/play 页面结构与规则。",
+  "url": "https://greasyfork.org/scripts/535787-sunflower-autoclicker-v1-4-2-es5",
+  "code_url": "https://update.greasyfork.org/scripts/535787/Sunflower%20AutoClicker%20v142%20ES5.user.js",
+  "code_size": 4727,
+  "license": "MIT License",
+  "version": "1.4.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

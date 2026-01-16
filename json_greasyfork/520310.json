@@ -1,0 +1,34 @@
+{
+  "id": 520310,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-10T13:29:54.000Z",
+  "code_updated_at": "2024-12-11T08:39:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1015753,
+      "name": "Livesport Data",
+      "created_at": "2023-01-23T15:19:13.000Z",
+      "url": "https://greasyfork.org/users/1015753-livesport-data",
+      "scripts": []
+    }
+  ],
+  "name": "365scores.com DynamicRedirect",
+  "description": "Přesměruje detail zápasu na zdroják ve chvíli, kdy obsahuje data.",
+  "url": "https://greasyfork.org/scripts/520310-365scores-com-dynamicredirect",
+  "code_url": "https://update.greasyfork.org/scripts/520310/365scorescom%20DynamicRedirect.user.js",
+  "code_size": 3195,
+  "license": "none",
+  "version": "1.3",
+  "locale": "cs",
+  "deleted": false,
+  "visibility": "public"
+}

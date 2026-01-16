@@ -1,0 +1,101 @@
+[
+  {
+    "id": 511677,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-06T13:57:34.000Z",
+    "code_updated_at": "2024-10-06T18:56:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1370292,
+        "name": "CodePer",
+        "created_at": "2024-09-19T19:00:18.000Z",
+        "url": "https://greasyfork.org/users/1370292-codeper"
+      }
+    ],
+    "name": "Useful Everyday Tools",
+    "description": "Simple everyday useful tools",
+    "url": "https://greasyfork.org/scripts/511677-useful-everyday-tools",
+    "code_url": "https://update.greasyfork.org/scripts/511677/Useful%20Everyday%20Tools.user.js",
+    "code_size": 9971,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510191,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T00:06:47.000Z",
+    "code_updated_at": "2024-09-26T00:06:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1370292,
+        "name": "CodePer",
+        "created_at": "2024-09-19T19:00:18.000Z",
+        "url": "https://greasyfork.org/users/1370292-codeper"
+      }
+    ],
+    "name": "AsusComm.com Video Controls",
+    "description": "A button on the bottom right to activate video controls on videos.",
+    "url": "https://greasyfork.org/scripts/510191-asuscomm-com-video-controls",
+    "code_url": "https://update.greasyfork.org/scripts/510191/AsusCommcom%20Video%20Controls.user.js",
+    "code_size": 1949,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509242,
+    "daily_installs": 0,
+    "total_installs": 449,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T19:01:49.000Z",
+    "code_updated_at": "2024-10-03T16:16:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1370292,
+        "name": "CodePer",
+        "created_at": "2024-09-19T19:00:18.000Z",
+        "url": "https://greasyfork.org/users/1370292-codeper"
+      }
+    ],
+    "name": "Netflix Bypass the \"Activate extra member to watch now\"",
+    "description": "Bypass the \"Activate extra member to watch now\"",
+    "url": "https://greasyfork.org/scripts/509242-netflix-bypass-the-activate-extra-member-to-watch-now",
+    "code_url": "https://update.greasyfork.org/scripts/509242/Netflix%20Bypass%20the%20%22Activate%20extra%20member%20to%20watch%20now%22.user.js",
+    "code_size": 3038,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

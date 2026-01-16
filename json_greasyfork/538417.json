@@ -1,0 +1,59 @@
+{
+  "id": 538417,
+  "daily_installs": 0,
+  "total_installs": 131,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-05T11:00:01.000Z",
+  "code_updated_at": "2025-07-10T09:02:48.000Z",
+  "namespace": "https://viayoo.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479264,
+      "name": "谷文昌",
+      "created_at": "2025-06-05T10:50:14.000Z",
+      "url": "https://greasyfork.org/users/1479264-%E8%B0%B7%E6%96%87%E6%98%8C",
+      "scripts": [
+        {
+          "id": 538417,
+          "daily_installs": 0,
+          "total_installs": 131,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-05T11:00:01.000Z",
+          "code_updated_at": "2025-07-10T09:02:48.000Z",
+          "namespace": "https://viayoo.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网页资源检测工具 (终极优化版)",
+          "description": "引入悬浮球三态逻辑（收起/展开/面板打开），增加超时自动收起功能，交互体验登峰造极。",
+          "url": "https://greasyfork.org/scripts/538417-%E7%BD%91%E9%A1%B5%E8%B5%84%E6%BA%90%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7-%E7%BB%88%E6%9E%81%E4%BC%98%E5%8C%96%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/538417/%E7%BD%91%E9%A1%B5%E8%B5%84%E6%BA%90%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7%20%28%E7%BB%88%E6%9E%81%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+          "code_size": 30084,
+          "license": null,
+          "version": "1.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "网页资源检测工具 (终极优化版)",
+  "description": "引入悬浮球三态逻辑（收起/展开/面板打开），增加超时自动收起功能，交互体验登峰造极。",
+  "url": "https://greasyfork.org/scripts/538417-%E7%BD%91%E9%A1%B5%E8%B5%84%E6%BA%90%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7-%E7%BB%88%E6%9E%81%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/538417/%E7%BD%91%E9%A1%B5%E8%B5%84%E6%BA%90%E6%A3%80%E6%B5%8B%E5%B7%A5%E5%85%B7%20%28%E7%BB%88%E6%9E%81%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+  "code_size": 30084,
+  "license": null,
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

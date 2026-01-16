@@ -1,0 +1,59 @@
+{
+  "id": 524691,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-24T05:21:25.000Z",
+  "code_updated_at": "2025-01-24T05:21:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1426704,
+      "name": "steelpancake",
+      "created_at": "2025-01-24T05:12:41.000Z",
+      "url": "https://greasyfork.org/users/1426704-steelpancake",
+      "scripts": [
+        {
+          "id": 524691,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-24T05:21:25.000Z",
+          "code_updated_at": "2025-01-24T05:21:25.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Desmos csv import",
+          "description": "Just a little helper userscipt to convert csv into a format that desmos likes",
+          "url": "https://greasyfork.org/scripts/524691-desmos-csv-import",
+          "code_url": "https://update.greasyfork.org/scripts/524691/Desmos%20csv%20import.user.js",
+          "code_size": 36915,
+          "license": "MIT License",
+          "version": "2024-11-12",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Desmos csv import",
+  "description": "Just a little helper userscipt to convert csv into a format that desmos likes",
+  "url": "https://greasyfork.org/scripts/524691-desmos-csv-import",
+  "code_url": "https://update.greasyfork.org/scripts/524691/Desmos%20csv%20import.user.js",
+  "code_size": 36915,
+  "license": "MIT License",
+  "version": "2024-11-12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

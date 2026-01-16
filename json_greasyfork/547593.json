@@ -1,0 +1,33 @@
+{
+  "id": 547593,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T11:33:43.000Z",
+  "code_updated_at": "2025-08-28T11:33:43.000Z",
+  "namespace": "https://greasyfork.org/users/181558",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 181558,
+      "name": "minarai",
+      "created_at": "2018-04-23T12:24:49.000Z",
+      "url": "https://greasyfork.org/users/181558-minarai"
+    }
+  ],
+  "name": "Amazonの検索ワード自動補正を自動で遠慮",
+  "description": "実験的",
+  "url": "https://greasyfork.org/scripts/547593-amazon%E3%81%AE%E6%A4%9C%E7%B4%A2%E3%83%AF%E3%83%BC%E3%83%89%E8%87%AA%E5%8B%95%E8%A3%9C%E6%AD%A3%E3%82%92%E8%87%AA%E5%8B%95%E3%81%A7%E9%81%A0%E6%85%AE",
+  "code_url": "https://update.greasyfork.org/scripts/547593/Amazon%E3%81%AE%E6%A4%9C%E7%B4%A2%E3%83%AF%E3%83%BC%E3%83%89%E8%87%AA%E5%8B%95%E8%A3%9C%E6%AD%A3%E3%82%92%E8%87%AA%E5%8B%95%E3%81%A7%E9%81%A0%E6%85%AE.user.js",
+  "code_size": 1463,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

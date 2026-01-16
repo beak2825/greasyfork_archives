@@ -1,0 +1,33 @@
+{
+  "id": 523433,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-11T05:21:12.000Z",
+  "code_updated_at": "2025-01-11T05:21:12.000Z",
+  "namespace": "WKAUTOCOMMIT",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421877,
+      "name": "truewells4",
+      "created_at": "2025-01-11T04:53:38.000Z",
+      "url": "https://greasyfork.org/users/1421877-truewells4"
+    }
+  ],
+  "name": "WK Auto Commit",
+  "description": "Auto commit for Wanikani",
+  "url": "https://greasyfork.org/scripts/523433-wk-auto-commit",
+  "code_url": "https://update.greasyfork.org/scripts/523433/WK%20Auto%20Commit.user.js",
+  "code_size": 7283,
+  "license": null,
+  "version": "0.4.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

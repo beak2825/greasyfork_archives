@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513005,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T01:04:54.000Z",
+    "code_updated_at": "2025-11-24T22:30:21.000Z",
+    "namespace": "mscststs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173008,
+        "name": "逆水行舟",
+        "created_at": "2023-09-14T15:00:09.000Z",
+        "url": "https://greasyfork.org/users/1173008-%E9%80%86%E6%B0%B4%E8%A1%8C%E8%88%9F"
+      }
+    ],
+    "name": "B站视频页 - 视频合集样式",
+    "description": "修改新版视频页的视频合集样式",
+    "url": "https://greasyfork.org/scripts/513005-b%E7%AB%99%E8%A7%86%E9%A2%91%E9%A1%B5-%E8%A7%86%E9%A2%91%E5%90%88%E9%9B%86%E6%A0%B7%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/513005/B%E7%AB%99%E8%A7%86%E9%A2%91%E9%A1%B5%20-%20%E8%A7%86%E9%A2%91%E5%90%88%E9%9B%86%E6%A0%B7%E5%BC%8F.user.js",
+    "code_size": 6735,
+    "license": "ISC License",
+    "version": "2.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 496782,
+    "daily_installs": 0,
+    "total_installs": 36,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-01T20:41:30.000Z",
+    "code_updated_at": "2025-09-28T09:48:31.000Z",
+    "namespace": "mscststs",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173008,
+        "name": "逆水行舟",
+        "created_at": "2023-09-14T15:00:09.000Z",
+        "url": "https://greasyfork.org/users/1173008-%E9%80%86%E6%B0%B4%E8%A1%8C%E8%88%9F"
+      }
+    ],
+    "name": "B站旧版搜索栏 - 添加清除搜索框内容按钮",
+    "description": "添加旧版搜索栏清除搜索框内容按钮",
+    "url": "https://greasyfork.org/scripts/496782-b%E7%AB%99%E6%97%A7%E7%89%88%E6%90%9C%E7%B4%A2%E6%A0%8F-%E6%B7%BB%E5%8A%A0%E6%B8%85%E9%99%A4%E6%90%9C%E7%B4%A2%E6%A1%86%E5%86%85%E5%AE%B9%E6%8C%89%E9%92%AE",
+    "code_url": "https://update.greasyfork.org/scripts/496782/B%E7%AB%99%E6%97%A7%E7%89%88%E6%90%9C%E7%B4%A2%E6%A0%8F%20-%20%E6%B7%BB%E5%8A%A0%E6%B8%85%E9%99%A4%E6%90%9C%E7%B4%A2%E6%A1%86%E5%86%85%E5%AE%B9%E6%8C%89%E9%92%AE.user.js",
+    "code_size": 6075,
+    "license": "ISC License",
+    "version": "1.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

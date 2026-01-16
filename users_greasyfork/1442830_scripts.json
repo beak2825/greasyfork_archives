@@ -64,5 +64,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 551788,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-06T20:19:54.000Z",
+    "code_updated_at": "2025-10-25T19:51:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Faction Target Finder",
+    "description": "Adds a draggable, minimizable window to find targets from a custom faction list.",
+    "url": "https://greasyfork.org/scripts/551788-faction-target-finder",
+    "code_url": "https://update.greasyfork.org/scripts/551788/Faction%20Target%20Finder.user.js",
+    "code_size": 41867,
+    "license": "MIT License",
+    "version": "1.5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539504,
+    "daily_installs": 0,
+    "total_installs": 15,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-15T11:21:38.000Z",
+    "code_updated_at": "2025-06-17T12:50:52.000Z",
+    "namespace": "GNSC4 [268863]",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Torn Profile Link Formatter",
+    "description": "Adds a copy button next to user names on profile, faction, and ranked war pages for easy sharing.",
+    "url": "https://greasyfork.org/scripts/539504-torn-profile-link-formatter",
+    "code_url": "https://update.greasyfork.org/scripts/539504/Torn%20Profile%20Link%20Formatter.user.js",
+    "code_size": 36376,
+    "license": null,
+    "version": "1.6.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536083,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T11:52:20.000Z",
+    "code_updated_at": "2025-05-15T11:52:20.000Z",
+    "namespace": "Torn.Armory.Snapshot.Recorder",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Torn Faction Armory - Detailed Snapshot to Sheet",
+    "description": "Scrapes detailed weapon and armor information from the faction armory page and sends it to a Google Sheet via a Web App.",
+    "url": "https://greasyfork.org/scripts/536083-torn-faction-armory-detailed-snapshot-to-sheet",
+    "code_url": "https://update.greasyfork.org/scripts/536083/Torn%20Faction%20Armory%20-%20Detailed%20Snapshot%20to%20Sheet.user.js",
+    "code_size": 18124,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535729,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T02:44:11.000Z",
+    "code_updated_at": "2025-05-12T02:44:11.000Z",
+    "namespace": "TornJailDynamicReloader",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Torn Jail Dynamic Reloader (Hash-Triggered)",
+    "description": "Dynamically reloads the jail list on Torn.com. Adds advanced filters (including score, with dual range sliders), manual refresh, quick bust/bail, and settings GUI with info tooltips. Improved refresh reliability.",
+    "url": "https://greasyfork.org/scripts/535729-torn-jail-dynamic-reloader-hash-triggered",
+    "code_url": "https://update.greasyfork.org/scripts/535729/Torn%20Jail%20Dynamic%20Reloader%20%28Hash-Triggered%29.user.js",
+    "code_size": 68331,
+    "license": null,
+    "version": "1.2.45",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 534101,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T21:11:53.000Z",
+    "code_updated_at": "2025-10-23T04:02:30.000Z",
+    "namespace": "Torn_Faction_War_Helper",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Torn Faction War Helper with Battle Stats",
+    "description": "Formats war/wall/profile lists, adds BS & Status columns/headers for BOTH factions, sorts BOTH lists (TW: Faction > Status > BS; Ranked/Profile: Status > BS), click status/row to attack, shows timer/last action. Now with FF Scouter fallback and a settings menu.",
+    "url": "https://greasyfork.org/scripts/534101-torn-faction-war-helper-with-battle-stats",
+    "code_url": "https://update.greasyfork.org/scripts/534101/Torn%20Faction%20War%20Helper%20with%20Battle%20Stats.user.js",
+    "code_size": 95743,
+    "license": null,
+    "version": "2.0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 534087,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-26T16:20:34.000Z",
+    "code_updated_at": "2025-04-27T18:44:05.000Z",
+    "namespace": "namespace",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442830,
+        "name": "Christopher Ebling (GNSC4)",
+        "created_at": "2025-03-06T07:07:59.000Z",
+        "url": "https://greasyfork.org/users/1442830-christopher-ebling-gnsc4"
+      }
+    ],
+    "name": "Qrev - w/ revive percent notification",
+    "description": "Adds a fast revive button and shows revive percentage automatically.",
+    "url": "https://greasyfork.org/scripts/534087-qrev-w-revive-percent-notification",
+    "code_url": "https://update.greasyfork.org/scripts/534087/Qrev%20-%20w%20revive%20percent%20notification.user.js",
+    "code_size": 27830,
+    "license": null,
+    "version": "4.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

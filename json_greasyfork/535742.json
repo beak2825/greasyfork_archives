@@ -1,0 +1,34 @@
+{
+  "id": 535742,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T05:33:03.000Z",
+  "code_updated_at": "2025-05-12T05:33:03.000Z",
+  "namespace": "https://greasyfork.org/users/1468855",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468855,
+      "name": "Djdksi",
+      "created_at": "2025-05-11T21:30:10.000Z",
+      "url": "https://greasyfork.org/users/1468855-djdksi",
+      "scripts": []
+    }
+  ],
+  "name": "Instiz iOS Zoom Blocker (Light)",
+  "description": "Fix iOS Safari input zoom by setting font-size to 16px",
+  "url": "https://greasyfork.org/scripts/535742-instiz-ios-zoom-blocker-light",
+  "code_url": "https://update.greasyfork.org/scripts/535742/Instiz%20iOS%20Zoom%20Blocker%20%28Light%29.user.js",
+  "code_size": 996,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

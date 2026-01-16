@@ -1,0 +1,134 @@
+[
+  {
+    "id": 540090,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T06:13:35.000Z",
+    "code_updated_at": "2025-06-20T13:47:40.000Z",
+    "namespace": "https://greasyfork.org/users/397156",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397156,
+        "name": "YuoHira",
+        "created_at": "2019-11-12T06:18:28.000Z",
+        "url": "https://greasyfork.org/users/397156-yuohira"
+      }
+    ],
+    "name": "猫猫放置-详细战斗日志面板",
+    "description": "猫猫放置-详细战斗日志面板,点击上方中间的按钮展开或者收起",
+    "url": "https://greasyfork.org/scripts/540090-%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE-%E8%AF%A6%E7%BB%86%E6%88%98%E6%96%97%E6%97%A5%E5%BF%97%E9%9D%A2%E6%9D%BF",
+    "code_url": "https://update.greasyfork.org/scripts/540090/%E7%8C%AB%E7%8C%AB%E6%94%BE%E7%BD%AE-%E8%AF%A6%E7%BB%86%E6%88%98%E6%96%97%E6%97%A5%E5%BF%97%E9%9D%A2%E6%9D%BF.user.js",
+    "code_size": 66898,
+    "license": "MIT License",
+    "version": "v1.45",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534595,
+    "daily_installs": 1,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-01T04:26:50.000Z",
+    "code_updated_at": "2025-05-01T04:26:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397156,
+        "name": "YuoHira",
+        "created_at": "2019-11-12T06:18:28.000Z",
+        "url": "https://greasyfork.org/users/397156-yuohira"
+      }
+    ],
+    "name": "B站自动关闭连播",
+    "description": "自动关闭B站视频的自动连播功能",
+    "url": "https://greasyfork.org/scripts/534595-b%E7%AB%99%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E8%BF%9E%E6%92%AD",
+    "code_url": "https://update.greasyfork.org/scripts/534595/B%E7%AB%99%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E8%BF%9E%E6%92%AD.user.js",
+    "code_size": 1866,
+    "license": "MIT License",
+    "version": "2025-05-01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513645,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-23T07:23:39.000Z",
+    "code_updated_at": "2024-10-23T07:23:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397156,
+        "name": "YuoHira",
+        "created_at": "2019-11-12T06:18:28.000Z",
+        "url": "https://greasyfork.org/users/397156-yuohira"
+      }
+    ],
+    "name": "fab商城和Unity商城比价",
+    "description": "fab商城和Unity商城比价工具,技术有限只能打开指定搜索框",
+    "url": "https://greasyfork.org/scripts/513645-fab%E5%95%86%E5%9F%8E%E5%92%8Cunity%E5%95%86%E5%9F%8E%E6%AF%94%E4%BB%B7",
+    "code_url": "https://update.greasyfork.org/scripts/513645/fab%E5%95%86%E5%9F%8E%E5%92%8CUnity%E5%95%86%E5%9F%8E%E6%AF%94%E4%BB%B7.user.js",
+    "code_size": 3971,
+    "license": "MIT License",
+    "version": "2024-10-23",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500680,
+    "daily_installs": 2,
+    "total_installs": 789,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T05:18:19.000Z",
+    "code_updated_at": "2025-04-22T08:43:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 397156,
+        "name": "YuoHira",
+        "created_at": "2019-11-12T06:18:28.000Z",
+        "url": "https://greasyfork.org/users/397156-yuohira"
+      }
+    ],
+    "name": "自动点击菜单",
+    "description": "自动点击菜单，支持按ID、类名、文本、位置自动点击，可设定执行次数",
+    "url": "https://greasyfork.org/scripts/500680-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E8%8F%9C%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/500680/%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E8%8F%9C%E5%8D%95.user.js",
+    "code_size": 39753,
+    "license": "MIT License",
+    "version": "1.47.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

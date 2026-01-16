@@ -1,0 +1,59 @@
+{
+  "id": 529910,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-15T15:11:45.000Z",
+  "code_updated_at": "2025-05-13T14:44:02.000Z",
+  "namespace": "https://github.com/xymoryn",
+  "support_url": "https://github.com/xymoryn/user-scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1446059,
+      "name": "xymoryn",
+      "created_at": "2025-03-15T14:41:04.000Z",
+      "url": "https://greasyfork.org/users/1446059-xymoryn",
+      "scripts": [
+        {
+          "id": 529910,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-15T15:11:45.000Z",
+          "code_updated_at": "2025-05-13T14:44:02.000Z",
+          "namespace": "https://github.com/xymoryn",
+          "support_url": "https://github.com/xymoryn/user-scripts/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Appinn Forum Upload Enhancer",
+          "description": "小众软件论坛发帖或回复时，粘贴、拖曳或上传按钮选择图片/文件，自动上传到 h1.appinn.me 并转为对应的 Markdown 格式输出。",
+          "url": "https://greasyfork.org/scripts/529910-appinn-forum-upload-enhancer",
+          "code_url": "https://update.greasyfork.org/scripts/529910/Appinn%20Forum%20Upload%20Enhancer.user.js",
+          "code_size": 31133,
+          "license": "GNU Affero General Public License v3.0",
+          "version": "0.5.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Appinn Forum Upload Enhancer",
+  "description": "小众软件论坛发帖或回复时，粘贴、拖曳或上传按钮选择图片/文件，自动上传到 h1.appinn.me 并转为对应的 Markdown 格式输出。",
+  "url": "https://greasyfork.org/scripts/529910-appinn-forum-upload-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/529910/Appinn%20Forum%20Upload%20Enhancer.user.js",
+  "code_size": 31133,
+  "license": "GNU Affero General Public License v3.0",
+  "version": "0.5.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

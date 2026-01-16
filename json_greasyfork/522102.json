@@ -1,0 +1,33 @@
+{
+  "id": 522102,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-28T13:56:09.000Z",
+  "code_updated_at": "2024-12-31T13:33:49.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1413658,
+      "name": "WJ Peian",
+      "created_at": "2024-12-21T07:09:08.000Z",
+      "url": "https://greasyfork.org/users/1413658-wj-peian"
+    }
+  ],
+  "name": "拖拽搜图",
+  "description": "拖拽图片进行以图搜图，可自定义四个方向的搜索引擎",
+  "url": "https://greasyfork.org/scripts/522102-%E6%8B%96%E6%8B%BD%E6%90%9C%E5%9B%BE",
+  "code_url": "https://update.greasyfork.org/scripts/522102/%E6%8B%96%E6%8B%BD%E6%90%9C%E5%9B%BE.user.js",
+  "code_size": 9327,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

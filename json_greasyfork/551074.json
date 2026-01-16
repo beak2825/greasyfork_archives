@@ -1,0 +1,33 @@
+{
+  "id": 551074,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-29T17:04:26.000Z",
+  "code_updated_at": "2025-09-29T17:04:26.000Z",
+  "namespace": "Fan",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1233676,
+      "name": "leeSalami",
+      "created_at": "2023-12-14T10:20:52.000Z",
+      "url": "https://greasyfork.org/users/1233676-leesalami"
+    }
+  ],
+  "name": "Memoiren des rebus",
+  "description": "Die unvergesslichen Momente des 2. Chefs",
+  "url": "https://greasyfork.org/scripts/551074-memoiren-des-rebus",
+  "code_url": "https://update.greasyfork.org/scripts/551074/Memoiren%20des%20rebus.user.js",
+  "code_size": 1096,
+  "license": "All Rights Reserved",
+  "version": "1.0",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

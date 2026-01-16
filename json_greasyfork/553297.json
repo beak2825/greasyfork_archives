@@ -17,7 +17,8 @@
       "id": 1445782,
       "name": "pipiorange030",
       "created_at": "2025-03-14T20:37:14.000Z",
-      "url": "https://greasyfork.org/users/1445782-pipiorange030"
+      "url": "https://greasyfork.org/users/1445782-pipiorange030",
+      "scripts": []
     }
   ],
   "name": "本地文件链接生成器",

@@ -1,0 +1,33 @@
+{
+  "id": 534879,
+  "daily_installs": 0,
+  "total_installs": 59,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-04T06:30:42.000Z",
+  "code_updated_at": "2025-05-06T03:27:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465442,
+      "name": "illilli",
+      "created_at": "2025-05-04T06:23:32.000Z",
+      "url": "https://greasyfork.org/users/1465442-illilli"
+    }
+  ],
+  "name": "boss-自动投递脚本",
+  "description": "自动化预览处理与沟通脚本 - 控制面板可隐藏，优化布局，日志输出，状态切换，新增已沟通候选人去除功能 + 成功计数 + 状态重置",
+  "url": "https://greasyfork.org/scripts/534879-boss-%E8%87%AA%E5%8A%A8%E6%8A%95%E9%80%92%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/534879/boss-%E8%87%AA%E5%8A%A8%E6%8A%95%E9%80%92%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 9506,
+  "license": "MIT License",
+  "version": "2.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

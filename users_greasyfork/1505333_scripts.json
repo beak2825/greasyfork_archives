@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545978,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T14:56:10.000Z",
+    "code_updated_at": "2025-08-15T14:56:10.000Z",
+    "namespace": "TOTK",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505333,
+        "name": "Bob last",
+        "created_at": "2025-08-15T14:47:39.000Z",
+        "url": "https://greasyfork.org/users/1505333-bob-last"
+      }
+    ],
+    "name": "Base64 Link Decoder for 4chan and Archives",
+    "description": "Decode base64-encoded links in 4chan posts and various archives",
+    "url": "https://greasyfork.org/scripts/545978-base64-link-decoder-for-4chan-and-archives",
+    "code_url": "https://update.greasyfork.org/scripts/545978/Base64%20Link%20Decoder%20for%204chan%20and%20Archives.user.js",
+    "code_size": 4927,
+    "license": "MIT License",
+    "version": "963.369",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

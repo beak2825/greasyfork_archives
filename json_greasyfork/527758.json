@@ -1,0 +1,59 @@
+{
+  "id": 527758,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-22T17:11:27.000Z",
+  "code_updated_at": "2025-02-22T17:31:02.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1438707,
+      "name": "patriq",
+      "created_at": "2025-02-22T17:10:11.000Z",
+      "url": "https://greasyfork.org/users/1438707-patriq",
+      "scripts": [
+        {
+          "id": 527758,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-22T17:11:27.000Z",
+          "code_updated_at": "2025-02-22T17:31:02.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tae Kim's fix",
+          "description": "2/22/2025, 5:23:26 PM",
+          "url": "https://greasyfork.org/scripts/527758-tae-kim-s-fix",
+          "code_url": "https://update.greasyfork.org/scripts/527758/Tae%20Kim%27s%20fix.user.js",
+          "code_size": 1730,
+          "license": "MIT License",
+          "version": "1.03",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Tae Kim's fix",
+  "description": "2/22/2025, 5:23:26 PM",
+  "url": "https://greasyfork.org/scripts/527758-tae-kim-s-fix",
+  "code_url": "https://update.greasyfork.org/scripts/527758/Tae%20Kim%27s%20fix.user.js",
+  "code_size": 1730,
+  "license": "MIT License",
+  "version": "1.03",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

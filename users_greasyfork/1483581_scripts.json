@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539488,
+    "daily_installs": 1,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-15T07:52:59.000Z",
+    "code_updated_at": "2025-06-15T07:52:59.000Z",
+    "namespace": "AudioChannelUpmix",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483581,
+        "name": "KiminoKaslana",
+        "created_at": "2025-06-14T08:04:47.000Z",
+        "url": "https://greasyfork.org/users/1483581-kiminokaslana"
+      }
+    ],
+    "name": "哔哩哔哩音频4声道上混",
+    "description": "将双声道上混到4声道，模拟环绕输出（适配4扬声器系统）",
+    "url": "https://greasyfork.org/scripts/539488-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E9%9F%B3%E9%A2%914%E5%A3%B0%E9%81%93%E4%B8%8A%E6%B7%B7",
+    "code_url": "https://update.greasyfork.org/scripts/539488/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E9%9F%B3%E9%A2%914%E5%A3%B0%E9%81%93%E4%B8%8A%E6%B7%B7.user.js",
+    "code_size": 9358,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520482,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-12T08:35:22.000Z",
+    "code_updated_at": "2025-07-09T06:36:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 82125,
+        "name": "yxx",
+        "created_at": "2016-11-23T01:04:30.000Z",
+        "url": "https://greasyfork.org/users/82125-yxx"
+      }
+    ],
+    "name": "英为财情定投计算器",
+    "description": "英为财情定投计算器，用于写定投报告用，输入起止时间和定投金额，计算回报率等数据",
+    "url": "https://greasyfork.org/scripts/520482-%E8%8B%B1%E4%B8%BA%E8%B4%A2%E6%83%85%E5%AE%9A%E6%8A%95%E8%AE%A1%E7%AE%97%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/520482/%E8%8B%B1%E4%B8%BA%E8%B4%A2%E6%83%85%E5%AE%9A%E6%8A%95%E8%AE%A1%E7%AE%97%E5%99%A8.user.js",
+    "code_size": 28072,
+    "license": "GPLv3",
+    "version": "2025-07-10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

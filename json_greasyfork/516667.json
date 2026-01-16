@@ -1,0 +1,34 @@
+{
+  "id": 516667,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-10T10:21:26.000Z",
+  "code_updated_at": "2024-11-17T13:31:35.000Z",
+  "namespace": "https://forum.blackrussia.online/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1393816,
+      "name": "rtxnovay",
+      "created_at": "2024-11-10T09:07:33.000Z",
+      "url": "https://greasyfork.org/users/1393816-rtxnovay",
+      "scripts": []
+    }
+  ],
+  "name": "Технические Чоколадки",
+  "description": "el scripto для Павляшика",
+  "url": "https://greasyfork.org/scripts/516667-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8",
+  "code_url": "https://update.greasyfork.org/scripts/516667/%D0%A2%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%A7%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8.user.js",
+  "code_size": 103226,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

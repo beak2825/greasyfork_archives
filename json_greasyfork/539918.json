@@ -1,0 +1,59 @@
+{
+  "id": 539918,
+  "daily_installs": 0,
+  "total_installs": 90,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-18T23:55:46.000Z",
+  "code_updated_at": "2025-12-23T21:31:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1485499,
+      "name": "qu-gf",
+      "created_at": "2025-06-18T23:50:14.000Z",
+      "url": "https://greasyfork.org/users/1485499-qu-gf",
+      "scripts": [
+        {
+          "id": 539918,
+          "daily_installs": 0,
+          "total_installs": 90,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-18T23:55:46.000Z",
+          "code_updated_at": "2025-12-23T21:31:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MWI Dungeon Timer",
+          "description": "Automatically displays the time taken between dungeon runs in Milky Way Idle chat.",
+          "url": "https://greasyfork.org/scripts/539918-mwi-dungeon-timer",
+          "code_url": "https://update.greasyfork.org/scripts/539918/MWI%20Dungeon%20Timer.user.js",
+          "code_size": 18909,
+          "license": "MIT License",
+          "version": "1.22",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MWI Dungeon Timer",
+  "description": "Automatically displays the time taken between dungeon runs in Milky Way Idle chat.",
+  "url": "https://greasyfork.org/scripts/539918-mwi-dungeon-timer",
+  "code_url": "https://update.greasyfork.org/scripts/539918/MWI%20Dungeon%20Timer.user.js",
+  "code_size": 18909,
+  "license": "MIT License",
+  "version": "1.22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

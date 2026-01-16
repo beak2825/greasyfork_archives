@@ -1,0 +1,59 @@
+{
+  "id": 526449,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-10T11:08:22.000Z",
+  "code_updated_at": "2025-02-10T11:09:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433581,
+      "name": "triple-dex",
+      "created_at": "2025-02-10T11:00:29.000Z",
+      "url": "https://greasyfork.org/users/1433581-triple-dex",
+      "scripts": [
+        {
+          "id": 526449,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-10T11:08:22.000Z",
+          "code_updated_at": "2025-02-10T11:09:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ModularGrid Manufacturer Exception Filter",
+          "description": "Add brand exclusion filtering to ModularGrid module browser",
+          "url": "https://greasyfork.org/scripts/526449-modulargrid-manufacturer-exception-filter",
+          "code_url": "https://update.greasyfork.org/scripts/526449/ModularGrid%20Manufacturer%20Exception%20Filter.user.js",
+          "code_size": 10219,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ModularGrid Manufacturer Exception Filter",
+  "description": "Add brand exclusion filtering to ModularGrid module browser",
+  "url": "https://greasyfork.org/scripts/526449-modulargrid-manufacturer-exception-filter",
+  "code_url": "https://update.greasyfork.org/scripts/526449/ModularGrid%20Manufacturer%20Exception%20Filter.user.js",
+  "code_size": 10219,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

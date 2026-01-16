@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547824,
+    "daily_installs": 22,
+    "total_installs": 761,
+    "fan_score": "19.8",
+    "good_ratings": 1,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-08-30T10:03:05.000Z",
+    "code_updated_at": "2025-08-31T13:31:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1509936,
+        "name": "VioletGay",
+        "created_at": "2025-08-29T10:25:11.000Z",
+        "url": "https://greasyfork.org/users/1509936-violetgay"
+      }
+    ],
+    "name": "Bloxd.io Mod Panel + Rainbow Watermark + Unban + Draggable Watermark + Killaura + Jesus",
+    "description": "Mod panel with rainbow watermark, unban feature, draggable watermark with saved position, Killaura toggle, and Jesus (walk on water & lava) for bloxd.io",
+    "url": "https://greasyfork.org/scripts/547824-bloxd-io-mod-panel-rainbow-watermark-unban-draggable-watermark-killaura-jesus",
+    "code_url": "https://update.greasyfork.org/scripts/547824/Bloxdio%20Mod%20Panel%20%2B%20Rainbow%20Watermark%20%2B%20Unban%20%2B%20Draggable%20Watermark%20%2B%20Killaura%20%2B%20Jesus.user.js",
+    "code_size": 12314,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

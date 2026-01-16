@@ -1,0 +1,59 @@
+{
+  "id": 539285,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-13T09:58:10.000Z",
+  "code_updated_at": "2025-06-13T09:58:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483175,
+      "name": "花开半夏",
+      "created_at": "2025-06-13T09:41:35.000Z",
+      "url": "https://greasyfork.org/users/1483175-%E8%8A%B1%E5%BC%80%E5%8D%8A%E5%A4%8F",
+      "scripts": [
+        {
+          "id": 539285,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-13T09:58:10.000Z",
+          "code_updated_at": "2025-06-13T09:58:09.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "安徽省高等教育自学考试助学服务平台，视频自动播放|连续播放|后台运行",
+          "description": "适配于安徽省高等教育自学考试助学服务平台的一个脚本，主要是实现视频自动播放、连续播放、后台运行，",
+          "url": "https://greasyfork.org/scripts/539285-%E5%AE%89%E5%BE%BD%E7%9C%81%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2%E8%87%AA%E5%AD%A6%E8%80%83%E8%AF%95%E5%8A%A9%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E8%BF%9E%E7%BB%AD%E6%92%AD%E6%94%BE-%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C",
+          "code_url": "https://update.greasyfork.org/scripts/539285/%E5%AE%89%E5%BE%BD%E7%9C%81%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2%E8%87%AA%E5%AD%A6%E8%80%83%E8%AF%95%E5%8A%A9%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%EF%BC%8C%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%7C%E8%BF%9E%E7%BB%AD%E6%92%AD%E6%94%BE%7C%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C.user.js",
+          "code_size": 29775,
+          "license": "Apache Licence 2.0",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "安徽省高等教育自学考试助学服务平台，视频自动播放|连续播放|后台运行",
+  "description": "适配于安徽省高等教育自学考试助学服务平台的一个脚本，主要是实现视频自动播放、连续播放、后台运行，",
+  "url": "https://greasyfork.org/scripts/539285-%E5%AE%89%E5%BE%BD%E7%9C%81%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2%E8%87%AA%E5%AD%A6%E8%80%83%E8%AF%95%E5%8A%A9%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0-%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE-%E8%BF%9E%E7%BB%AD%E6%92%AD%E6%94%BE-%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C",
+  "code_url": "https://update.greasyfork.org/scripts/539285/%E5%AE%89%E5%BE%BD%E7%9C%81%E9%AB%98%E7%AD%89%E6%95%99%E8%82%B2%E8%87%AA%E5%AD%A6%E8%80%83%E8%AF%95%E5%8A%A9%E5%AD%A6%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%EF%BC%8C%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%7C%E8%BF%9E%E7%BB%AD%E6%92%AD%E6%94%BE%7C%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C.user.js",
+  "code_size": 29775,
+  "license": "Apache Licence 2.0",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

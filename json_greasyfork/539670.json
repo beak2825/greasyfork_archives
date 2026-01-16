@@ -1,0 +1,33 @@
+{
+  "id": 539670,
+  "daily_installs": 0,
+  "total_installs": 303,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-06-16T20:17:12.000Z",
+  "code_updated_at": "2025-06-16T20:17:12.000Z",
+  "namespace": "https://greasyfork.org/users/1481054",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481054,
+      "name": "bugdaddy",
+      "created_at": "2025-06-09T10:39:23.000Z",
+      "url": "https://greasyfork.org/users/1481054-bugdaddy"
+    }
+  ],
+  "name": "MooMoo.io Overpowered Auto Heal (June 2025)",
+  "description": "Automatic aggressive healing script for MooMoo.io (June 2025 protocol).",
+  "url": "https://greasyfork.org/scripts/539670-moomoo-io-overpowered-auto-heal-june-2025",
+  "code_url": "https://update.greasyfork.org/scripts/539670/MooMooio%20Overpowered%20Auto%20Heal%20%28June%202025%29.user.js",
+  "code_size": 13176,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

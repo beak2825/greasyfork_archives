@@ -1,0 +1,59 @@
+{
+  "id": 535700,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-11T20:12:28.000Z",
+  "code_updated_at": "2025-06-05T16:18:47.000Z",
+  "namespace": "https://greasyfork.org/users/1468843",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1468843,
+      "name": "betamaxtape",
+      "created_at": "2025-05-11T19:51:58.000Z",
+      "url": "https://greasyfork.org/users/1468843-betamaxtape",
+      "scripts": [
+        {
+          "id": 535700,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-11T20:12:28.000Z",
+          "code_updated_at": "2025-06-05T16:18:47.000Z",
+          "namespace": "https://greasyfork.org/users/1468843",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Internet Archive Full Reviews",
+          "description": "Display full reviews for items on archive.org",
+          "url": "https://greasyfork.org/scripts/535700-internet-archive-full-reviews",
+          "code_url": "https://update.greasyfork.org/scripts/535700/Internet%20Archive%20Full%20Reviews.user.js",
+          "code_size": 1876,
+          "license": "CC0",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Internet Archive Full Reviews",
+  "description": "Display full reviews for items on archive.org",
+  "url": "https://greasyfork.org/scripts/535700-internet-archive-full-reviews",
+  "code_url": "https://update.greasyfork.org/scripts/535700/Internet%20Archive%20Full%20Reviews.user.js",
+  "code_size": 1876,
+  "license": "CC0",
+  "version": "1.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

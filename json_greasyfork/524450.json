@@ -1,0 +1,33 @@
+{
+  "id": 524450,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-21T22:05:24.000Z",
+  "code_updated_at": "2025-01-21T22:05:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1425897,
+      "name": "getwisp",
+      "created_at": "2025-01-21T21:23:02.000Z",
+      "url": "https://greasyfork.org/users/1425897-getwisp"
+    }
+  ],
+  "name": "Bypass m.forasm.com redirect",
+  "description": "Automatically redirect to target URL on m.forasm.com",
+  "url": "https://greasyfork.org/scripts/524450-bypass-m-forasm-com-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/524450/Bypass%20mforasmcom%20redirect.user.js",
+  "code_size": 900,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

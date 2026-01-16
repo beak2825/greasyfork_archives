@@ -1,0 +1,33 @@
+{
+  "id": 500770,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-16T05:22:02.000Z",
+  "code_updated_at": "2024-07-16T05:49:17.000Z",
+  "namespace": "Joshy2Saucy",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1219066,
+      "name": "joshualiu101",
+      "created_at": "2023-11-17T09:25:24.000Z",
+      "url": "https://greasyfork.org/users/1219066-joshualiu101"
+    }
+  ],
+  "name": "Benjify",
+  "description": "Turns all images on page to benjis",
+  "url": "https://greasyfork.org/scripts/500770-benjify",
+  "code_url": "https://update.greasyfork.org/scripts/500770/Benjify.user.js",
+  "code_size": 2111,
+  "license": "Joshy2Saucy",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

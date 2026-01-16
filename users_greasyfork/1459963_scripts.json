@@ -31,5 +31,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 533469,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-21T01:29:49.000Z",
+    "code_updated_at": "2025-04-21T01:29:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459963,
+        "name": "Steev Hovey",
+        "created_at": "2025-04-20T02:36:12.000Z",
+        "url": "https://greasyfork.org/users/1459963-steev-hovey"
+      }
+    ],
+    "name": "Torn City - Toggle Locked & Expensive Bazaar Item Remover",
+    "description": "Toggle removal of locked or expensive ($2+) bazaar items in Torn City via draggable button, with state persistence",
+    "url": "https://greasyfork.org/scripts/533469-torn-city-toggle-locked-expensive-bazaar-item-remover",
+    "code_url": "https://update.greasyfork.org/scripts/533469/Torn%20City%20-%20Toggle%20Locked%20%20Expensive%20Bazaar%20Item%20Remover.user.js",
+    "code_size": 5333,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 533371,
+    "daily_installs": 0,
+    "total_installs": 304,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-20T02:37:13.000Z",
+    "code_updated_at": "2025-04-21T01:22:46.000Z",
+    "namespace": "dollar.sale",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459963,
+        "name": "Steev Hovey",
+        "created_at": "2025-04-20T02:36:12.000Z",
+        "url": "https://greasyfork.org/users/1459963-steev-hovey"
+      }
+    ],
+    "name": "Dollar Sale Navigator",
+    "description": "Navigate through a list of bazaar links with a floating menu in Torn City",
+    "url": "https://greasyfork.org/scripts/533371-dollar-sale-navigator",
+    "code_url": "https://update.greasyfork.org/scripts/533371/Dollar%20Sale%20Navigator.user.js",
+    "code_size": 5497,
+    "license": "Private to Skarr02 [3462286] – cannot be used or duplicated in any form",
+    "version": "4.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

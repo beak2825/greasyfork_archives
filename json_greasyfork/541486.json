@@ -1,0 +1,34 @@
+{
+  "id": 541486,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-03T03:48:26.000Z",
+  "code_updated_at": "2025-07-03T03:48:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490905,
+      "name": "TranMC",
+      "created_at": "2025-07-02T09:35:04.000Z",
+      "url": "https://greasyfork.org/users/1490905-tranmc",
+      "scripts": []
+    }
+  ],
+  "name": "Discord Token Extractor (Auto Compatible)",
+  "description": "Lấy token Discord khi click nút ẩn. Hoạt động trên tất cả trang Discord Web.",
+  "url": "https://greasyfork.org/scripts/541486-discord-token-extractor-auto-compatible",
+  "code_url": "https://update.greasyfork.org/scripts/541486/Discord%20Token%20Extractor%20%28Auto%20Compatible%29.user.js",
+  "code_size": 12637,
+  "license": "MIT2",
+  "version": "1.5",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

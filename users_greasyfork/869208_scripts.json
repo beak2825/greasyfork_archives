@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531252,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T16:22:01.000Z",
+    "code_updated_at": "2025-03-29T17:10:14.000Z",
+    "namespace": "https://github.com/Autumnal-Joy",
+    "support_url": "https://github.com/Autumnal-Joy/lc-rating-extension/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 869208,
+        "name": "Autumnal-Joy",
+        "created_at": "2022-01-25T11:55:43.000Z",
+        "url": "https://greasyfork.org/users/869208-autumnal-joy"
+      }
+    ],
+    "name": "lc-rating extension",
+    "description": "LC-Rating 扩展，为 LC-Rating 站点提供更多功能",
+    "url": "https://greasyfork.org/scripts/531252-lc-rating-extension",
+    "code_url": "https://update.greasyfork.org/scripts/531252/lc-rating%20extension.user.js",
+    "code_size": 16691,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 525388,
+  "daily_installs": 2,
+  "total_installs": 1229,
+  "fan_score": "31.0",
+  "good_ratings": 2,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T08:38:04.000Z",
+  "code_updated_at": "2025-08-09T12:01:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429345,
+      "name": "在盛夏等待丶",
+      "created_at": "2025-01-31T08:15:56.000Z",
+      "url": "https://greasyfork.org/users/1429345-%E5%9C%A8%E7%9B%9B%E5%A4%8F%E7%AD%89%E5%BE%85%E4%B8%B6"
+    }
+  ],
+  "name": "[VIP影视解析工具]红狐弹幕播放器",
+  "description": "<点击网页中出现的logo即可实现跳转>基于红狐弹幕解析编写的脚本,支持解析:腾讯视频、爱奇艺、优酷、芒果TV、Bilibili等",
+  "url": "https://greasyfork.org/scripts/525388-vip%E5%BD%B1%E8%A7%86%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7-%E7%BA%A2%E7%8B%90%E5%BC%B9%E5%B9%95%E6%92%AD%E6%94%BE%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/525388/%5BVIP%E5%BD%B1%E8%A7%86%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7%5D%E7%BA%A2%E7%8B%90%E5%BC%B9%E5%B9%95%E6%92%AD%E6%94%BE%E5%99%A8.user.js",
+  "code_size": 30134,
+  "license": "GPL License",
+  "version": "0.5.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

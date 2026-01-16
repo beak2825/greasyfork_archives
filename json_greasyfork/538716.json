@@ -1,0 +1,34 @@
+{
+  "id": 538716,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-07T14:52:32.000Z",
+  "code_updated_at": "2025-06-07T14:52:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480329,
+      "name": "Tester Test",
+      "created_at": "2025-06-07T14:41:10.000Z",
+      "url": "https://greasyfork.org/users/1480329-tester-test",
+      "scripts": []
+    }
+  ],
+  "name": "Fake Balance & Level (Persistent Visual)",
+  "description": "Modifie visuellement la balance et le niveau (persistant après refresh)",
+  "url": "https://greasyfork.org/scripts/538716-fake-balance-level-persistent-visual",
+  "code_url": "https://update.greasyfork.org/scripts/538716/Fake%20Balance%20%20Level%20%28Persistent%20Visual%29.user.js",
+  "code_size": 1494,
+  "license": null,
+  "version": "1.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524741,
+    "daily_installs": 0,
+    "total_installs": 158,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-24T16:41:46.000Z",
+    "code_updated_at": "2025-12-24T16:17:17.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426948,
+        "name": "thehus",
+        "created_at": "2025-01-24T16:33:44.000Z",
+        "url": "https://greasyfork.org/users/1426948-thehus"
+      }
+    ],
+    "name": "Disable YouTube Ambient Mode",
+    "description": "Disables YouTube Ambient Mode on desktop",
+    "url": "https://greasyfork.org/scripts/524741-disable-youtube-ambient-mode",
+    "code_url": "https://update.greasyfork.org/scripts/524741/Disable%20YouTube%20Ambient%20Mode.user.js",
+    "code_size": 2165,
+    "license": "GNU GPLv3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

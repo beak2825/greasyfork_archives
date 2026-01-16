@@ -1,0 +1,59 @@
+{
+  "id": 511723,
+  "daily_installs": 0,
+  "total_installs": 31,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-07T05:38:02.000Z",
+  "code_updated_at": "2024-10-07T08:09:10.000Z",
+  "namespace": "https://github.com/21888/chatgpt-render-html",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1204075,
+      "name": "chabai",
+      "created_at": "2023-10-25T19:27:30.000Z",
+      "url": "https://greasyfork.org/users/1204075-chabai",
+      "scripts": [
+        {
+          "id": 511723,
+          "daily_installs": 0,
+          "total_installs": 31,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-07T05:38:02.000Z",
+          "code_updated_at": "2024-10-07T08:09:10.000Z",
+          "namespace": "https://github.com/21888/chatgpt-render-html",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT 渲染HTML代码",
+          "description": "chatgpt渲染html代码块,像Claude一样实时预览html ( chatgpt renders HTML code blocks, previewing HTML in real-time like Claude )",
+          "url": "https://greasyfork.org/scripts/511723-chatgpt-%E6%B8%B2%E6%9F%93html%E4%BB%A3%E7%A0%81",
+          "code_url": "https://update.greasyfork.org/scripts/511723/ChatGPT%20%E6%B8%B2%E6%9F%93HTML%E4%BB%A3%E7%A0%81.user.js",
+          "code_size": 15920,
+          "license": "GNU General Public License v2.0 only",
+          "version": "1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT 渲染HTML代码",
+  "description": "chatgpt渲染html代码块,像Claude一样实时预览html ( chatgpt renders HTML code blocks, previewing HTML in real-time like Claude )",
+  "url": "https://greasyfork.org/scripts/511723-chatgpt-%E6%B8%B2%E6%9F%93html%E4%BB%A3%E7%A0%81",
+  "code_url": "https://update.greasyfork.org/scripts/511723/ChatGPT%20%E6%B8%B2%E6%9F%93HTML%E4%BB%A3%E7%A0%81.user.js",
+  "code_size": 15920,
+  "license": "GNU General Public License v2.0 only",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

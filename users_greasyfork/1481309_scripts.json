@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538942,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-09T20:30:01.000Z",
+    "code_updated_at": "2025-06-09T20:30:01.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481309,
+        "name": "kristov",
+        "created_at": "2025-06-09T20:26:33.000Z",
+        "url": "https://greasyfork.org/users/1481309-kristov"
+      }
+    ],
+    "name": "Кураторы форума by K.Kristov",
+    "description": "Скрипт для КФ на жалобы игроков",
+    "url": "https://greasyfork.org/scripts/538942-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-k-kristov",
+    "code_url": "https://update.greasyfork.org/scripts/538942/%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D1%8B%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20KKristov.user.js",
+    "code_size": 138974,
+    "license": "MIT License",
+    "version": "4.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

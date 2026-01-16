@@ -1,0 +1,33 @@
+{
+  "id": 550546,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-24T12:03:21.000Z",
+  "code_updated_at": "2025-12-08T14:12:11.000Z",
+  "namespace": "npm/vite-plugin-monkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1518847,
+      "name": "MIANG.WU",
+      "created_at": "2025-09-24T11:33:56.000Z",
+      "url": "https://greasyfork.org/users/1518847-miang-wu"
+    }
+  ],
+  "name": "Blackboard 增强 Pro | Blackboard Enhanced Pro",
+  "description": "Blackboard 增强插件，For SCUPIANS",
+  "url": "https://greasyfork.org/scripts/550546-blackboard-%E5%A2%9E%E5%BC%BA-pro-blackboard-enhanced-pro",
+  "code_url": "https://update.greasyfork.org/scripts/550546/Blackboard%20%E5%A2%9E%E5%BC%BA%20Pro%20%7C%20Blackboard%20Enhanced%20Pro.user.js",
+  "code_size": 258370,
+  "license": "MIT License",
+  "version": "1.3.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

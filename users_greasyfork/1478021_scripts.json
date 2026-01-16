@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538099,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-02T16:44:57.000Z",
+    "code_updated_at": "2025-06-02T16:44:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478021,
+        "name": "CoreDialer",
+        "created_at": "2025-06-02T16:39:33.000Z",
+        "url": "https://greasyfork.org/users/1478021-coredialer"
+      }
+    ],
+    "name": "FRPG Mailbox Condenser",
+    "description": "Condense duplicate items in FRPG mailbox log",
+    "url": "https://greasyfork.org/scripts/538099-frpg-mailbox-condenser",
+    "code_url": "https://update.greasyfork.org/scripts/538099/FRPG%20Mailbox%20Condenser.user.js",
+    "code_size": 10714,
+    "license": "MIT License",
+    "version": "v1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

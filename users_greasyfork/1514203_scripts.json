@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551773,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-06T15:03:03.000Z",
+    "code_updated_at": "2025-10-14T08:42:31.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514203,
+        "name": "p-sam",
+        "created_at": "2025-09-12T09:04:14.000Z",
+        "url": "https://greasyfork.org/users/1514203-p-sam"
+      }
+    ],
+    "name": "Pipeline Elevator Music",
+    "description": "Un peu de musique pour attendre confortablement la fin de la pipeline",
+    "url": "https://greasyfork.org/scripts/551773-pipeline-elevator-music",
+    "code_url": "https://update.greasyfork.org/scripts/551773/Pipeline%20Elevator%20Music.user.js",
+    "code_size": 5842,
+    "license": "MIT License",
+    "version": "0.0.1.20251014104100",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 549236,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T09:08:20.000Z",
+    "code_updated_at": "2025-09-12T09:08:20.000Z",
+    "namespace": "http://github.com/p-sam",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514203,
+        "name": "p-sam",
+        "created_at": "2025-09-12T09:04:14.000Z",
+        "url": "https://greasyfork.org/users/1514203-p-sam"
+      }
+    ],
+    "name": "Open in Spotify",
+    "description": "Replaces download button with link to open in app current album/playlist/track/artist",
+    "url": "https://greasyfork.org/scripts/549236-open-in-spotify",
+    "code_url": "https://update.greasyfork.org/scripts/549236/Open%20in%20Spotify.user.js",
+    "code_size": 2104,
+    "license": "MIT License",
+    "version": "2025-09-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

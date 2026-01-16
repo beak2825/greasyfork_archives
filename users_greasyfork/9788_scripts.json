@@ -1,0 +1,101 @@
+[
+  {
+    "id": 499713,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T02:32:07.000Z",
+    "code_updated_at": "2024-07-05T03:10:56.000Z",
+    "namespace": "english",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9788,
+        "name": "Ben Pushka",
+        "created_at": "2015-03-18T06:04:44.000Z",
+        "url": "https://greasyfork.org/users/9788-ben-pushka"
+      }
+    ],
+    "name": "Gmail dark loading screen",
+    "description": "Gmail dark loading screen 2",
+    "url": "https://greasyfork.org/scripts/499713-gmail-dark-loading-screen",
+    "code_url": "https://update.greasyfork.org/scripts/499713/Gmail%20dark%20loading%20screen.user.js",
+    "code_size": 1484,
+    "license": "MIT License",
+    "version": "1.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499711,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-05T01:38:21.000Z",
+    "code_updated_at": "2024-07-05T01:38:21.000Z",
+    "namespace": "english",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9788,
+        "name": "Ben Pushka",
+        "created_at": "2015-03-18T06:04:44.000Z",
+        "url": "https://greasyfork.org/users/9788-ben-pushka"
+      }
+    ],
+    "name": "Reddit new look compact list",
+    "description": "Reddit new look theme compact list 2024",
+    "url": "https://greasyfork.org/scripts/499711-reddit-new-look-compact-list",
+    "code_url": "https://update.greasyfork.org/scripts/499711/Reddit%20new%20look%20compact%20list.user.js",
+    "code_size": 586,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498442,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-20T09:56:07.000Z",
+    "code_updated_at": "2024-06-20T10:30:22.000Z",
+    "namespace": "english",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 9788,
+        "name": "Ben Pushka",
+        "created_at": "2015-03-18T06:04:44.000Z",
+        "url": "https://greasyfork.org/users/9788-ben-pushka"
+      }
+    ],
+    "name": "google docs dark mode night theme",
+    "description": "google docs dark mode night theme 2",
+    "url": "https://greasyfork.org/scripts/498442-google-docs-dark-mode-night-theme",
+    "code_url": "https://update.greasyfork.org/scripts/498442/google%20docs%20dark%20mode%20night%20theme.user.js",
+    "code_size": 576,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

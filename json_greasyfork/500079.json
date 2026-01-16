@@ -1,0 +1,34 @@
+{
+  "id": 500079,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-09T08:18:24.000Z",
+  "code_updated_at": "2024-07-10T07:13:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330631,
+      "name": "azun",
+      "created_at": "2024-07-09T08:16:50.000Z",
+      "url": "https://greasyfork.org/users/1330631-azun",
+      "scripts": []
+    }
+  ],
+  "name": "刷课猫",
+  "description": "刷课猫!",
+  "url": "https://greasyfork.org/scripts/500079-%E5%88%B7%E8%AF%BE%E7%8C%AB",
+  "code_url": "https://update.greasyfork.org/scripts/500079/%E5%88%B7%E8%AF%BE%E7%8C%AB.user.js",
+  "code_size": 4269,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

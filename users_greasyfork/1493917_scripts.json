@@ -1,0 +1,134 @@
+[
+  {
+    "id": 542357,
+    "daily_installs": 1,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T03:07:25.000Z",
+    "code_updated_at": "2026-01-01T16:56:25.000Z",
+    "namespace": "https://greasyfork.org/users/1493917",
+    "support_url": "https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493917,
+        "name": "bpc-relay-bot",
+        "created_at": "2025-07-11T23:12:17.000Z",
+        "url": "https://greasyfork.org/users/1493917-bpc-relay-bot"
+      }
+    ],
+    "name": "Bypass Paywalls Clean - pl",
+    "description": "Bypass Paywalls of news sites",
+    "url": "https://greasyfork.org/scripts/542357-bypass-paywalls-clean-pl",
+    "code_url": "https://update.greasyfork.org/scripts/542357/Bypass%20Paywalls%20Clean%20-%20pl.user.js",
+    "code_size": 35382,
+    "license": "MIT; https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters/blob/raw?file=LICENSE",
+    "version": "4.2.4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542356,
+    "daily_installs": 0,
+    "total_installs": 49,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T03:07:24.000Z",
+    "code_updated_at": "2026-01-15T05:17:31.000Z",
+    "namespace": "https://greasyfork.org/users/1493917",
+    "support_url": "https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493917,
+        "name": "bpc-relay-bot",
+        "created_at": "2025-07-11T23:12:17.000Z",
+        "url": "https://greasyfork.org/users/1493917-bpc-relay-bot"
+      }
+    ],
+    "name": "Bypass Paywalls Clean - nl/be",
+    "description": "Bypass Paywalls of news sites",
+    "url": "https://greasyfork.org/scripts/542356-bypass-paywalls-clean-nl-be",
+    "code_url": "https://update.greasyfork.org/scripts/542356/Bypass%20Paywalls%20Clean%20-%20nlbe.user.js",
+    "code_size": 65008,
+    "license": "MIT; https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters/blob/raw?file=LICENSE",
+    "version": "4.2.8.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542352,
+    "daily_installs": 1,
+    "total_installs": 84,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T03:07:18.000Z",
+    "code_updated_at": "2026-01-12T17:09:29.000Z",
+    "namespace": "https://greasyfork.org/users/1493917",
+    "support_url": "https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493917,
+        "name": "bpc-relay-bot",
+        "created_at": "2025-07-11T23:12:17.000Z",
+        "url": "https://greasyfork.org/users/1493917-bpc-relay-bot"
+      }
+    ],
+    "name": "Bypass Paywalls Clean - es/pt/south america",
+    "description": "Bypass Paywalls of news sites",
+    "url": "https://greasyfork.org/scripts/542352-bypass-paywalls-clean-es-pt-south-america",
+    "code_url": "https://update.greasyfork.org/scripts/542352/Bypass%20Paywalls%20Clean%20-%20esptsouth%20america.user.js",
+    "code_size": 68004,
+    "license": "MIT; https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters/blob/raw?file=LICENSE",
+    "version": "4.2.8.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542350,
+    "daily_installs": 1,
+    "total_installs": 66,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T03:07:13.000Z",
+    "code_updated_at": "2026-01-16T05:13:17.000Z",
+    "namespace": "https://greasyfork.org/users/1493917",
+    "support_url": "https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493917,
+        "name": "bpc-relay-bot",
+        "created_at": "2025-07-11T23:12:17.000Z",
+        "url": "https://greasyfork.org/users/1493917-bpc-relay-bot"
+      }
+    ],
+    "name": "Bypass Paywalls Clean - de/at/ch",
+    "description": "Bypass Paywalls of news sites",
+    "url": "https://greasyfork.org/scripts/542350-bypass-paywalls-clean-de-at-ch",
+    "code_url": "https://update.greasyfork.org/scripts/542350/Bypass%20Paywalls%20Clean%20-%20deatch.user.js",
+    "code_size": 77103,
+    "license": "MIT; https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters/blob/raw?file=LICENSE",
+    "version": "4.2.8.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

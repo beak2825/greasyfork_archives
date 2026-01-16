@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523239,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-08T19:46:45.000Z",
+    "code_updated_at": "2025-01-09T00:58:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1387311,
+        "name": "Unown",
+        "created_at": "2024-10-27T20:29:27.000Z",
+        "url": "https://greasyfork.org/users/1387311-unown"
+      }
+    ],
+    "name": "Letterboxd Auto-Follow and Auto-Review opener Button",
+    "description": "Adds a button to auto-follow all users on a Letterboxd fans page and opens their reviews in new tabs with random delays to mimic human behavior.",
+    "url": "https://greasyfork.org/scripts/523239-letterboxd-auto-follow-and-auto-review-opener-button",
+    "code_url": "https://update.greasyfork.org/scripts/523239/Letterboxd%20Auto-Follow%20and%20Auto-Review%20opener%20Button.user.js",
+    "code_size": 3213,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 547143,
+  "daily_installs": 1,
+  "total_installs": 39,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-24T20:25:00.000Z",
+  "code_updated_at": "2025-08-24T20:25:00.000Z",
+  "namespace": "gboy.jai.export",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 780568,
+      "name": "Gboy",
+      "created_at": "2021-06-07T00:33:12.000Z",
+      "url": "https://greasyfork.org/users/780568-gboy",
+      "scripts": [
+        {
+          "id": 547143,
+          "daily_installs": 1,
+          "total_installs": 39,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-24T20:25:00.000Z",
+          "code_updated_at": "2025-08-24T20:25:00.000Z",
+          "namespace": "gboy.jai.export",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JanitorAI – Dump chat to file",
+          "description": "Adds \"Dump chat to file\" to the JanitorAI menu; exports full chat",
+          "url": "https://greasyfork.org/scripts/547143-janitorai-dump-chat-to-file",
+          "code_url": "https://update.greasyfork.org/scripts/547143/JanitorAI%20%E2%80%93%20Dump%20chat%20to%20file.user.js",
+          "code_size": 11095,
+          "license": "MIT License",
+          "version": "2.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JanitorAI – Dump chat to file",
+  "description": "Adds \"Dump chat to file\" to the JanitorAI menu; exports full chat",
+  "url": "https://greasyfork.org/scripts/547143-janitorai-dump-chat-to-file",
+  "code_url": "https://update.greasyfork.org/scripts/547143/JanitorAI%20%E2%80%93%20Dump%20chat%20to%20file.user.js",
+  "code_size": 11095,
+  "license": "MIT License",
+  "version": "2.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

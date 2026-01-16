@@ -1,0 +1,33 @@
+{
+  "id": 526673,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-12T12:17:26.000Z",
+  "code_updated_at": "2025-06-18T09:09:21.000Z",
+  "namespace": "rabbitohh.top",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 471391,
+      "name": "rabbitohh",
+      "created_at": "2020-03-30T00:50:06.000Z",
+      "url": "https://greasyfork.org/users/471391-rabbitohh"
+    }
+  ],
+  "name": "Bangumi高清图片",
+  "description": "同时支持封面和角色图高清化，角色图仅在用户页面生效",
+  "url": "https://greasyfork.org/scripts/526673-bangumi%E9%AB%98%E6%B8%85%E5%9B%BE%E7%89%87",
+  "code_url": "https://update.greasyfork.org/scripts/526673/Bangumi%E9%AB%98%E6%B8%85%E5%9B%BE%E7%89%87.user.js",
+  "code_size": 3809,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

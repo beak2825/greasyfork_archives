@@ -1,0 +1,34 @@
+{
+  "id": 498485,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-21T01:53:54.000Z",
+  "code_updated_at": "2024-06-21T01:55:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1321346,
+      "name": "xkyasurine",
+      "created_at": "2024-06-21T01:51:50.000Z",
+      "url": "https://greasyfork.org/users/1321346-xkyasurine",
+      "scripts": []
+    }
+  ],
+  "name": "PRLFC Auto-Accept and Refresh",
+  "description": "Automatically accepts studies on PRLFC and refreshes when necessary",
+  "url": "https://greasyfork.org/scripts/498485-prlfc-auto-accept-and-refresh",
+  "code_url": "https://update.greasyfork.org/scripts/498485/PRLFC%20Auto-Accept%20and%20Refresh.user.js",
+  "code_size": 2374,
+  "license": null,
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527435,
+    "daily_installs": 0,
+    "total_installs": 415,
+    "fan_score": "35.9",
+    "good_ratings": 4,
+    "ok_ratings": 2,
+    "bad_ratings": 1,
+    "created_at": "2025-02-19T12:45:44.000Z",
+    "code_updated_at": "2025-02-19T12:45:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1437126,
+        "name": "EBL",
+        "created_at": "2025-02-19T12:35:44.000Z",
+        "url": "https://greasyfork.org/users/1437126-ebl"
+      }
+    ],
+    "name": "Netflix Household Bypass",
+    "description": "Bypass the \"Your device isn’t part of the Netflix Household for this account\" popup",
+    "url": "https://greasyfork.org/scripts/527435-netflix-household-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/527435/Netflix%20Household%20Bypass.user.js",
+    "code_size": 1976,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

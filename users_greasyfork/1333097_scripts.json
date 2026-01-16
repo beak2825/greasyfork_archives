@@ -1,0 +1,68 @@
+[
+  {
+    "id": 537439,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-27T14:15:35.000Z",
+    "code_updated_at": "2025-12-07T13:15:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1333097,
+        "name": "ckrvxr",
+        "created_at": "2024-07-14T04:35:47.000Z",
+        "url": "https://greasyfork.org/users/1333097-ckrvxr"
+      }
+    ],
+    "name": "惠州学院 HZU | 教务系统课程表导出助手",
+    "description": "解析惠州学院教务系统（正方教务系统）的课程表页面，导出为标准 .ics 日历文件，供第三方日历使用。核心代码改自 31415926535x 。",
+    "url": "https://greasyfork.org/scripts/537439-%E6%83%A0%E5%B7%9E%E5%AD%A6%E9%99%A2-hzu-%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/537439/%E6%83%A0%E5%B7%9E%E5%AD%A6%E9%99%A2%20HZU%20%7C%20%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E8%A1%A8%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 16581,
+    "license": "Apache-2.0 license",
+    "version": "0.7.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 514682,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-29T13:45:07.000Z",
+    "code_updated_at": "2025-09-07T18:08:35.000Z",
+    "namespace": "https://greasyfork.org/scripts/514682",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1333097,
+        "name": "ckrvxr",
+        "created_at": "2024-07-14T04:35:47.000Z",
+        "url": "https://greasyfork.org/users/1333097-ckrvxr"
+      }
+    ],
+    "name": "网页字体替换增强器",
+    "description": "替换网页默认字体。可根据需求修改脚本中的字体设置。使用前需确保已安装所需字体。记得修改浏览器自带的字体设置。",
+    "url": "https://greasyfork.org/scripts/514682-%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2%E5%A2%9E%E5%BC%BA%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/514682/%E7%BD%91%E9%A1%B5%E5%AD%97%E4%BD%93%E6%9B%BF%E6%8D%A2%E5%A2%9E%E5%BC%BA%E5%99%A8.user.js",
+    "code_size": 24878,
+    "license": "Apache License 2.0",
+    "version": "10.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

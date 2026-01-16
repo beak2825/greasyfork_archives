@@ -1,0 +1,34 @@
+{
+  "id": 551304,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-02T01:26:04.000Z",
+  "code_updated_at": "2025-10-02T01:56:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462972,
+      "name": "Argenticle",
+      "created_at": "2025-04-28T00:56:29.000Z",
+      "url": "https://greasyfork.org/users/1462972-argenticle",
+      "scripts": []
+    }
+  ],
+  "name": "Youtube Autocomplete commands",
+  "description": "Robust autocomplete in YouTube live chat with mode change handling, keyboard navigation, caching, no logs. Fixed Enter autocomplete.",
+  "url": "https://greasyfork.org/scripts/551304-youtube-autocomplete-commands",
+  "code_url": "https://update.greasyfork.org/scripts/551304/Youtube%20Autocomplete%20commands.user.js",
+  "code_size": 9846,
+  "license": "MIT License",
+  "version": "1.96",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

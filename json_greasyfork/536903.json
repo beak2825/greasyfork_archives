@@ -1,0 +1,59 @@
+{
+  "id": 536903,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-22T22:33:02.000Z",
+  "code_updated_at": "2025-05-22T22:37:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473569,
+      "name": "Максим Голубев",
+      "created_at": "2025-05-22T22:31:30.000Z",
+      "url": "https://greasyfork.org/users/1473569-%D0%BC%D0%B0%D0%BA%D1%81%D0%B8%D0%BC-%D0%B3%D0%BE%D0%BB%D1%83%D0%B1%D0%B5%D0%B2",
+      "scripts": [
+        {
+          "id": 536903,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-22T22:33:02.000Z",
+          "code_updated_at": "2025-05-22T22:37:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Таймер сна для LordFilm (исправленный)",
+          "description": "Таймер сна с обратным отсчётом и сохранением времени",
+          "url": "https://greasyfork.org/scripts/536903-%D1%82%D0%B0%D0%B9%D0%BC%D0%B5%D1%80-%D1%81%D0%BD%D0%B0-%D0%B4%D0%BB%D1%8F-lordfilm-%D0%B8%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9",
+          "code_url": "https://update.greasyfork.org/scripts/536903/%D0%A2%D0%B0%D0%B9%D0%BC%D0%B5%D1%80%20%D1%81%D0%BD%D0%B0%20%D0%B4%D0%BB%D1%8F%20LordFilm%20%28%D0%B8%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9%29.user.js",
+          "code_size": 4643,
+          "license": null,
+          "version": "1.2",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Таймер сна для LordFilm (исправленный)",
+  "description": "Таймер сна с обратным отсчётом и сохранением времени",
+  "url": "https://greasyfork.org/scripts/536903-%D1%82%D0%B0%D0%B9%D0%BC%D0%B5%D1%80-%D1%81%D0%BD%D0%B0-%D0%B4%D0%BB%D1%8F-lordfilm-%D0%B8%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9",
+  "code_url": "https://update.greasyfork.org/scripts/536903/%D0%A2%D0%B0%D0%B9%D0%BC%D0%B5%D1%80%20%D1%81%D0%BD%D0%B0%20%D0%B4%D0%BB%D1%8F%20LordFilm%20%28%D0%B8%D1%81%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9%29.user.js",
+  "code_size": 4643,
+  "license": null,
+  "version": "1.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

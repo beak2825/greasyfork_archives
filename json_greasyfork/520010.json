@@ -1,0 +1,33 @@
+{
+  "id": 520010,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-07T04:09:05.000Z",
+  "code_updated_at": "2024-12-07T04:09:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1062734,
+      "name": "dcollinsn",
+      "created_at": "2023-04-18T13:32:07.000Z",
+      "url": "https://greasyfork.org/users/1062734-dcollinsn"
+    }
+  ],
+  "name": "GEM PurpleFox Hero Extraction",
+  "description": "Extract information about heroes in the current GEM event, and export it for PurpleFox",
+  "url": "https://greasyfork.org/scripts/520010-gem-purplefox-hero-extraction",
+  "code_url": "https://update.greasyfork.org/scripts/520010/GEM%20PurpleFox%20Hero%20Extraction.user.js",
+  "code_size": 1657,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

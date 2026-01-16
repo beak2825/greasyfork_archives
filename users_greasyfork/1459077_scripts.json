@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533155,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T16:45:30.000Z",
+    "code_updated_at": "2025-04-17T16:45:30.000Z",
+    "namespace": "Sturdychan",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459077,
+        "name": "anonVNscripts",
+        "created_at": "2025-04-17T15:26:17.000Z",
+        "url": "https://greasyfork.org/users/1459077-anonvnscripts"
+      }
+    ],
+    "name": "SturdyChan External Sounds",
+    "description": "Plays 4chan-style soundposts on SturdyChan",
+    "url": "https://greasyfork.org/scripts/533155-sturdychan-external-sounds",
+    "code_url": "https://update.greasyfork.org/scripts/533155/SturdyChan%20External%20Sounds.user.js",
+    "code_size": 9264,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

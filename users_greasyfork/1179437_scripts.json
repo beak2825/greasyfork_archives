@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502494,
+    "daily_installs": 0,
+    "total_installs": 161,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-03T07:31:27.000Z",
+    "code_updated_at": "2025-01-06T05:52:52.000Z",
+    "namespace": "https://msvip.example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1179437,
+        "name": "Gooodd",
+        "created_at": "2023-09-23T15:19:15.000Z",
+        "url": "https://greasyfork.org/users/1179437-gooodd"
+      }
+    ],
+    "name": "假猫粮供应商",
+    "description": "体验角色与装扮",
+    "url": "https://greasyfork.org/scripts/502494-%E5%81%87%E7%8C%AB%E7%B2%AE%E4%BE%9B%E5%BA%94%E5%95%86",
+    "code_url": "https://update.greasyfork.org/scripts/502494/%E5%81%87%E7%8C%AB%E7%B2%AE%E4%BE%9B%E5%BA%94%E5%95%86.user.js",
+    "code_size": 9876,
+    "license": "GNU General Public License v3.0 only",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

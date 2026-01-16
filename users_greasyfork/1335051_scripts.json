@@ -1,0 +1,35 @@
+[
+  {
+    "id": 500914,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-17T06:29:40.000Z",
+    "code_updated_at": "2024-07-17T06:29:40.000Z",
+    "namespace": "https://uncommongifts.in/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1335051,
+        "name": "Uncommon Gifts",
+        "created_at": "2024-07-17T06:21:44.000Z",
+        "url": "https://greasyfork.org/users/1335051-uncommon-gifts"
+      }
+    ],
+    "name": "Uncommon Gifts Promotion",
+    "description": "Insert a promotional link and description for Uncommon Gifts",
+    "url": "https://greasyfork.org/scripts/500914-uncommon-gifts-promotion",
+    "code_url": "https://update.greasyfork.org/scripts/500914/Uncommon%20Gifts%20Promotion.user.js",
+    "code_size": 1176,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

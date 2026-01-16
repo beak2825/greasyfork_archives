@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543724,
+    "daily_installs": 1,
+    "total_installs": 89,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-26T20:54:09.000Z",
+    "code_updated_at": "2025-08-18T22:04:22.000Z",
+    "namespace": "81e29c9d-b6e3-4210-b862-c93cb160f09a",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1498642,
+        "name": "Aleksey Maximov",
+        "created_at": "2025-07-26T20:40:19.000Z",
+        "url": "https://greasyfork.org/users/1498642-aleksey-maximov"
+      }
+    ],
+    "name": "ChatGPT AutoCleaner v5",
+    "description": "Bugfix & speed-up for ChatGPT: cleans the conversation chat window by trimming old messages from the Browser DOM. Keeps only the latest N turns visible, preventing lag and excessive DOM size on long sessions. Includes manual “Clean now” button and auto-clean toggle.",
+    "url": "https://greasyfork.org/scripts/543724-chatgpt-autocleaner-v5",
+    "code_url": "https://update.greasyfork.org/scripts/543724/ChatGPT%20AutoCleaner%20v5.user.js",
+    "code_size": 7838,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

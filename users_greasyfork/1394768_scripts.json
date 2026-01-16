@@ -1,0 +1,134 @@
+[
+  {
+    "id": 535328,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-08T09:22:03.000Z",
+    "code_updated_at": "2025-06-05T19:18:14.000Z",
+    "namespace": "https://github.com/weiduhuo/scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394768,
+        "name": "weiduhuo",
+        "created_at": "2024-11-12T10:41:35.000Z",
+        "url": "https://greasyfork.org/users/1394768-weiduhuo"
+      }
+    ],
+    "name": "Bangumi-Episode Air Status Corrector",
+    "description": "Correct the air status of individual episodes, using timing data and your custom settings from the /dev/app/2527 gadget",
+    "url": "https://greasyfork.org/scripts/535328-bangumi-episode-air-status-corrector",
+    "code_url": "https://update.greasyfork.org/scripts/535328/Bangumi-Episode%20Air%20Status%20Corrector.user.js",
+    "code_size": 8832,
+    "license": "MIT License",
+    "version": "0.2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532087,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T11:33:29.000Z",
+    "code_updated_at": "2025-04-14T13:48:01.000Z",
+    "namespace": "https://github.com/weiduhuo/scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394768,
+        "name": "weiduhuo",
+        "created_at": "2024-11-12T10:41:35.000Z",
+        "url": "https://greasyfork.org/users/1394768-weiduhuo"
+      }
+    ],
+    "name": "Bangumi-Restructure Person Works Filter Layout",
+    "description": "Restructure person works filter into a grid layout, and sort staff roles",
+    "url": "https://greasyfork.org/scripts/532087-bangumi-restructure-person-works-filter-layout",
+    "code_url": "https://update.greasyfork.org/scripts/532087/Bangumi-Restructure%20Person%20Works%20Filter%20Layout.user.js",
+    "code_size": 5074,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526618,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T04:49:42.000Z",
+    "code_updated_at": "2025-04-30T13:00:35.000Z",
+    "namespace": "https://github.com/weiduhuo/scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394768,
+        "name": "weiduhuo",
+        "created_at": "2024-11-12T10:41:35.000Z",
+        "url": "https://greasyfork.org/users/1394768-weiduhuo"
+      }
+    ],
+    "name": "Bangumi-To Romaji Title",
+    "description": "Retrieve the Romaji title of the subject and display it in the infobox",
+    "url": "https://greasyfork.org/scripts/526618-bangumi-to-romaji-title",
+    "code_url": "https://update.greasyfork.org/scripts/526618/Bangumi-To%20Romaji%20Title.user.js",
+    "code_size": 27322,
+    "license": "MIT License",
+    "version": "0.4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517618,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-16T08:43:48.000Z",
+    "code_updated_at": "2025-05-03T13:51:02.000Z",
+    "namespace": "https://github.com/weiduhuo/scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1394768,
+        "name": "weiduhuo",
+        "created_at": "2024-11-12T10:41:35.000Z",
+        "url": "https://greasyfork.org/users/1394768-weiduhuo"
+      }
+    ],
+    "name": "Bangumi-Custom Staff Sorting and Collapsing",
+    "description": "Customize the sorting and collapsing of staff roles in all types of subjects",
+    "url": "https://greasyfork.org/scripts/517618-bangumi-custom-staff-sorting-and-collapsing",
+    "code_url": "https://update.greasyfork.org/scripts/517618/Bangumi-Custom%20Staff%20Sorting%20and%20Collapsing.user.js",
+    "code_size": 122220,
+    "license": "MIT License",
+    "version": "1.4.5-2.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

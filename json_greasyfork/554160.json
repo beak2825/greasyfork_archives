@@ -1,0 +1,59 @@
+{
+  "id": 554160,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T02:51:12.000Z",
+  "code_updated_at": "2025-10-30T02:51:12.000Z",
+  "namespace": "https://example.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 703424,
+      "name": "tesuto",
+      "created_at": "2020-11-10T02:15:28.000Z",
+      "url": "https://greasyfork.org/users/703424-tesuto",
+      "scripts": [
+        {
+          "id": 544158,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-31T03:18:22.000Z",
+          "code_updated_at": "2025-07-31T04:17:50.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": "https://www.reddit.com/r/indonesia/comments/1mdrmup/psa_update_benerin_search_result_tokopedia_dengan/",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Tokopedia Hardcoded URL Param Cleaner",
+          "description": "Remove Tokopedia junk parameters injection",
+          "url": "https://greasyfork.org/scripts/544158-tokopedia-hardcoded-url-param-cleaner",
+          "code_url": "https://update.greasyfork.org/scripts/544158/Tokopedia%20Hardcoded%20URL%20Param%20Cleaner.user.js",
+          "code_size": 3545,
+          "license": "MIT License",
+          "version": "2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google Drive Account Selector",
+  "description": "Always open Google Drive links with a specific account number",
+  "url": "https://greasyfork.org/scripts/554160-google-drive-account-selector",
+  "code_url": "https://update.greasyfork.org/scripts/554160/Google%20Drive%20Account%20Selector.user.js",
+  "code_size": 1011,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

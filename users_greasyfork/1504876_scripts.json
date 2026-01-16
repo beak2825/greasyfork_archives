@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545793,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-14T08:34:44.000Z",
+    "code_updated_at": "2025-08-14T08:34:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504876,
+        "name": "Turan-da",
+        "created_at": "2025-08-14T06:56:41.000Z",
+        "url": "https://greasyfork.org/users/1504876-turan-da"
+      }
+    ],
+    "name": "华医网助手（自动下一课增强版）v3.2.0",
+    "description": "自动播放、跳过弹窗、精准跳转下一课（加强鲁棒性，适配多种DOM与文案）",
+    "url": "https://greasyfork.org/scripts/545793-%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%8A%A9%E6%89%8B-%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%AF%BE%E5%A2%9E%E5%BC%BA%E7%89%88-v3-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/545793/%E5%8D%8E%E5%8C%BB%E7%BD%91%E5%8A%A9%E6%89%8B%EF%BC%88%E8%87%AA%E5%8A%A8%E4%B8%8B%E4%B8%80%E8%AF%BE%E5%A2%9E%E5%BC%BA%E7%89%88%EF%BC%89v320.user.js",
+    "code_size": 15271,
+    "license": null,
+    "version": "3.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

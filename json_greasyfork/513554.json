@@ -1,0 +1,33 @@
+{
+  "id": 513554,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-22T17:52:18.000Z",
+  "code_updated_at": "2024-10-22T17:54:02.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1384699,
+      "name": "Leonardo Merza",
+      "created_at": "2024-10-22T17:50:49.000Z",
+      "url": "https://greasyfork.org/users/1384699-leonardo-merza"
+    }
+  ],
+  "name": "https://shucks.top/",
+  "description": "adds GB/$ column and allows for column shorting on table",
+  "url": "https://greasyfork.org/scripts/513554-https-shucks-top",
+  "code_url": "https://update.greasyfork.org/scripts/513554/https%3Ashuckstop.user.js",
+  "code_size": 3786,
+  "license": "MIT License",
+  "version": "2024-10-22",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

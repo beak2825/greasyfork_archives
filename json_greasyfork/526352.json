@@ -1,0 +1,33 @@
+{
+  "id": 526352,
+  "daily_installs": 0,
+  "total_installs": 105,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-09T06:19:51.000Z",
+  "code_updated_at": "2025-05-18T05:04:21.000Z",
+  "namespace": "qol.zed.zero.nao",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 830544,
+      "name": "Archimidiz",
+      "created_at": "2021-10-31T07:06:46.000Z",
+      "url": "https://greasyfork.org/users/830544-archimidiz"
+    }
+  ],
+  "name": "qol.zed",
+  "description": "qol updates for zed.city",
+  "url": "https://greasyfork.org/scripts/526352-qol-zed",
+  "code_url": "https://update.greasyfork.org/scripts/526352/qolzed.user.js",
+  "code_size": 73354,
+  "license": null,
+  "version": "1.7.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

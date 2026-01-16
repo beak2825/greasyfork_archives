@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524096,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-18T06:02:24.000Z",
+    "code_updated_at": "2025-01-18T06:02:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1424538,
+        "name": "eggsydev",
+        "created_at": "2025-01-18T06:01:22.000Z",
+        "url": "https://greasyfork.org/users/1424538-eggsydev"
+      }
+    ],
+    "name": "THY Auto Skipper",
+    "description": "Auto-skips \"Next\" button click when it's available in the SCORM player.",
+    "url": "https://greasyfork.org/scripts/524096-thy-auto-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/524096/THY%20Auto%20Skipper.user.js",
+    "code_size": 3261,
+    "license": "MIT License",
+    "version": "2024-10-09",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

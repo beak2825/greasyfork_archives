@@ -1,0 +1,34 @@
+{
+  "id": 549077,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-11T00:06:22.000Z",
+  "code_updated_at": "2025-10-07T15:29:01.000Z",
+  "namespace": "CBI_P44_Plugins",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456457,
+      "name": "Tomas Morales",
+      "created_at": "2025-04-11T05:39:46.000Z",
+      "url": "https://greasyfork.org/users/1456457-tomas-morales",
+      "scripts": []
+    }
+  ],
+  "name": "NAV-Estado de patio inbound - SPA",
+  "description": "Permite visualizar las unidades reportadas, registrar el tiempo en que se solicitó perfilar, guardar número de gafete e identificación, el tiempo dentro de cervecería, y los tiempos en los que se realizaron las tareas.",
+  "url": "https://greasyfork.org/scripts/549077-nav-estado-de-patio-inbound-spa",
+  "code_url": "https://update.greasyfork.org/scripts/549077/NAV-Estado%20de%20patio%20inbound%20-%20SPA.user.js",
+  "code_size": 158904,
+  "license": "MIT License",
+  "version": "5.1.4",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

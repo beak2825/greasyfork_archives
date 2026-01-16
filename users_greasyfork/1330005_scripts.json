@@ -1,0 +1,35 @@
+[
+  {
+    "id": 499968,
+    "daily_installs": 0,
+    "total_installs": 128,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-08T04:48:08.000Z",
+    "code_updated_at": "2024-07-08T04:48:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1330005,
+        "name": "Z-x",
+        "created_at": "2024-07-08T04:46:48.000Z",
+        "url": "https://greasyfork.org/users/1330005-z-x"
+      }
+    ],
+    "name": "PhotoPea AddBlock Perfect Pixel",
+    "description": "Add block version july 2024",
+    "url": "https://greasyfork.org/scripts/499968-photopea-addblock-perfect-pixel",
+    "code_url": "https://update.greasyfork.org/scripts/499968/PhotoPea%20AddBlock%20Perfect%20Pixel.user.js",
+    "code_size": 2972,
+    "license": "MIT License",
+    "version": "2024-07-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

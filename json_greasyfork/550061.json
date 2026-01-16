@@ -1,0 +1,59 @@
+{
+  "id": 550061,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-19T13:02:34.000Z",
+  "code_updated_at": "2025-09-29T14:36:12.000Z",
+  "namespace": "github@FocusedFaust",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1516959,
+      "name": "FocusedFaust",
+      "created_at": "2025-09-19T12:44:07.000Z",
+      "url": "https://greasyfork.org/users/1516959-focusedfaust",
+      "scripts": [
+        {
+          "id": 550061,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-19T13:02:34.000Z",
+          "code_updated_at": "2025-09-29T14:36:12.000Z",
+          "namespace": "github@FocusedFaust",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CS-214 Prettifier",
+          "description": "Prettifier for the class website, to track your work",
+          "url": "https://greasyfork.org/scripts/550061-cs-214-prettifier",
+          "code_url": "https://update.greasyfork.org/scripts/550061/CS-214%20Prettifier.user.js",
+          "code_size": 3522,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "2025-09-29",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CS-214 Prettifier",
+  "description": "Prettifier for the class website, to track your work",
+  "url": "https://greasyfork.org/scripts/550061-cs-214-prettifier",
+  "code_url": "https://update.greasyfork.org/scripts/550061/CS-214%20Prettifier.user.js",
+  "code_size": 3522,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "2025-09-29",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

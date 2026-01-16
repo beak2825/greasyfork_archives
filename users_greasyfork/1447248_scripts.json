@@ -31,5 +31,203 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 532457,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T19:05:47.000Z",
+    "code_updated_at": "2025-05-25T04:41:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1447248,
+        "name": "free fny (fnyfree)",
+        "created_at": "2025-03-18T10:46:18.000Z",
+        "url": "https://greasyfork.org/users/1447248-free-fny-fnyfree"
+      }
+    ],
+    "name": "sewerpt-label",
+    "description": "检查PT站种子页面的标签是否正确设置",
+    "url": "https://greasyfork.org/scripts/532457-sewerpt-label",
+    "code_url": "https://update.greasyfork.org/scripts/532457/sewerpt-label.user.js",
+    "code_size": 34309,
+    "license": "MTT",
+    "version": "0.8.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531253,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T16:27:20.000Z",
+    "code_updated_at": "2025-04-10T15:50:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1447248,
+        "name": "free fny (fnyfree)",
+        "created_at": "2025-03-18T10:46:18.000Z",
+        "url": "https://greasyfork.org/users/1447248-free-fny-fnyfree"
+      }
+    ],
+    "name": "sewerpt-low score",
+    "description": "根据IMDB和豆瓣评分自动审核种子是否应该携带\"冷门/低分\"标签",
+    "url": "https://greasyfork.org/scripts/531253-sewerpt-low-score",
+    "code_url": "https://update.greasyfork.org/scripts/531253/sewerpt-low%20score.user.js",
+    "code_size": 15869,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531229,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T09:12:30.000Z",
+    "code_updated_at": "2025-05-04T06:27:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1447248,
+        "name": "free fny (fnyfree)",
+        "created_at": "2025-03-18T10:46:18.000Z",
+        "url": "https://greasyfork.org/users/1447248-free-fny-fnyfree"
+      }
+    ],
+    "name": "sewer-assistant",
+    "description": "在审核弹窗中显示自定义模板面板，方便快速选择审核意见",
+    "url": "https://greasyfork.org/scripts/531229-sewer-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/531229/sewer-assistant.user.js",
+    "code_size": 9778,
+    "license": "MIT License",
+    "version": "1.5.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530514,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-22T05:31:51.000Z",
+    "code_updated_at": "2025-04-09T09:38:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1447248,
+        "name": "free fny (fnyfree)",
+        "created_at": "2025-03-18T10:46:18.000Z",
+        "url": "https://greasyfork.org/users/1447248-free-fny-fnyfree"
+      }
+    ],
+    "name": "下水道发种助手 - 音轨和字幕自动识别",
+    "description": "自动识别音轨和字幕信息并更新副标题，支持多种MediaInfo格式，增加小语种识别和悬浮框开关",
+    "url": "https://greasyfork.org/scripts/530514-%E4%B8%8B%E6%B0%B4%E9%81%93%E5%8F%91%E7%A7%8D%E5%8A%A9%E6%89%8B-%E9%9F%B3%E8%BD%A8%E5%92%8C%E5%AD%97%E5%B9%95%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB",
+    "code_url": "https://update.greasyfork.org/scripts/530514/%E4%B8%8B%E6%B0%B4%E9%81%93%E5%8F%91%E7%A7%8D%E5%8A%A9%E6%89%8B%20-%20%E9%9F%B3%E8%BD%A8%E5%92%8C%E5%AD%97%E5%B9%95%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB.user.js",
+    "code_size": 22523,
+    "license": "MIT License",
+    "version": "2.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530375,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-20T17:41:47.000Z",
+    "code_updated_at": "2025-04-07T11:53:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1447248,
+        "name": "free fny (fnyfree)",
+        "created_at": "2025-03-18T10:46:18.000Z",
+        "url": "https://greasyfork.org/users/1447248-free-fny-fnyfree"
+      }
+    ],
+    "name": "梦邀请内容替换助手",
+    "description": "自动替换邀请页面的默认文本内容",
+    "url": "https://greasyfork.org/scripts/530375-%E6%A2%A6%E9%82%80%E8%AF%B7%E5%86%85%E5%AE%B9%E6%9B%BF%E6%8D%A2%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/530375/%E6%A2%A6%E9%82%80%E8%AF%B7%E5%86%85%E5%AE%B9%E6%9B%BF%E6%8D%A2%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4171,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 530179,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-18T11:03:06.000Z",
+    "code_updated_at": "2025-03-18T11:03:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1447248,
+        "name": "free fny (fnyfree)",
+        "created_at": "2025-03-18T10:46:18.000Z",
+        "url": "https://greasyfork.org/users/1447248-free-fny-fnyfree"
+      }
+    ],
+    "name": "固态免流全自动取消助手",
+    "description": "自动取消任务并生成统计报告",
+    "url": "https://greasyfork.org/scripts/530179-%E5%9B%BA%E6%80%81%E5%85%8D%E6%B5%81%E5%85%A8%E8%87%AA%E5%8A%A8%E5%8F%96%E6%B6%88%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/530179/%E5%9B%BA%E6%80%81%E5%85%8D%E6%B5%81%E5%85%A8%E8%87%AA%E5%8A%A8%E5%8F%96%E6%B6%88%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 10000,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

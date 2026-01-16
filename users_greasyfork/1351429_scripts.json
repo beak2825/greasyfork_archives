@@ -64,5 +64,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 508874,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T13:59:08.000Z",
+    "code_updated_at": "2024-09-17T13:59:07.000Z",
+    "namespace": "http://21zys.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1351429,
+        "name": "21zys",
+        "created_at": "2024-08-14T03:20:55.000Z",
+        "url": "https://greasyfork.org/users/1351429-21zys"
+      }
+    ],
+    "name": "WordPress 后台文章列表美化脚本",
+    "description": "美化 WordPress 后台文章列表，取消换行，增加鼠标悬浮显示",
+    "url": "https://greasyfork.org/scripts/508874-wordpress-%E5%90%8E%E5%8F%B0%E6%96%87%E7%AB%A0%E5%88%97%E8%A1%A8%E7%BE%8E%E5%8C%96%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/508874/WordPress%20%E5%90%8E%E5%8F%B0%E6%96%87%E7%AB%A0%E5%88%97%E8%A1%A8%E7%BE%8E%E5%8C%96%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 3358,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505069,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-25T03:21:22.000Z",
+    "code_updated_at": "2025-12-25T13:06:41.000Z",
+    "namespace": "http://21zys.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1351429,
+        "name": "21zys",
+        "created_at": "2024-08-14T03:20:55.000Z",
+        "url": "https://greasyfork.org/users/1351429-21zys"
+      }
+    ],
+    "name": "图床上传脚本",
+    "description": "在右下角添加悬浮球，支持 S3/OSS/R2/SMMS/ImgURL 上传。配置逻辑：新安装默认全局共享，修改后自动转换为当前域名独立配置（支持按需分叉）。",
+    "url": "https://greasyfork.org/scripts/505069-%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/505069/%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 34454,
+    "license": "MIT License",
+    "version": "1.8.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 504333,
+    "daily_installs": 0,
+    "total_installs": 343,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-20T03:24:59.000Z",
+    "code_updated_at": "2024-08-22T09:21:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1351429,
+        "name": "21zys",
+        "created_at": "2024-08-14T03:20:55.000Z",
+        "url": "https://greasyfork.org/users/1351429-21zys"
+      }
+    ],
+    "name": "夸克网盘批量工具集",
+    "description": "批量重命名夸克网盘文件，获取文件列表",
+    "url": "https://greasyfork.org/scripts/504333-%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98%E6%89%B9%E9%87%8F%E5%B7%A5%E5%85%B7%E9%9B%86",
+    "code_url": "https://update.greasyfork.org/scripts/504333/%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98%E6%89%B9%E9%87%8F%E5%B7%A5%E5%85%B7%E9%9B%86.user.js",
+    "code_size": 14698,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

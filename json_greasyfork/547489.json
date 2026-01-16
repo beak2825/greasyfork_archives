@@ -1,0 +1,33 @@
+{
+  "id": 547489,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-27T15:42:53.000Z",
+  "code_updated_at": "2025-10-14T06:59:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1244394,
+      "name": "Alea iacta est",
+      "created_at": "2024-01-07T05:40:21.000Z",
+      "url": "https://greasyfork.org/users/1244394-alea-iacta-est"
+    }
+  ],
+  "name": "chatgpt team账号共享",
+  "description": "1",
+  "url": "https://greasyfork.org/scripts/547489-chatgpt-team%E8%B4%A6%E5%8F%B7%E5%85%B1%E4%BA%AB",
+  "code_url": "https://update.greasyfork.org/scripts/547489/chatgpt%20team%E8%B4%A6%E5%8F%B7%E5%85%B1%E4%BA%AB.user.js",
+  "code_size": 4757,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

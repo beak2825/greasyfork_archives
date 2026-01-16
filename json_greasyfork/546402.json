@@ -1,0 +1,33 @@
+{
+  "id": 546402,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T14:39:21.000Z",
+  "code_updated_at": "2026-01-06T19:52:13.000Z",
+  "namespace": "https://github.com/Max46656",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1021017,
+      "name": "Max46656",
+      "created_at": "2023-02-03T09:52:42.000Z",
+      "url": "https://greasyfork.org/users/1021017-max46656"
+    }
+  ],
+  "name": "Pixiv Save to Eagle",
+  "description": "將 Pixiv 作品圖片與動圖直接存入 Eagle",
+  "url": "https://greasyfork.org/scripts/546402-pixiv-save-to-eagle",
+  "code_url": "https://update.greasyfork.org/scripts/546402/Pixiv%20Save%20to%20Eagle.user.js",
+  "code_size": 25009,
+  "license": "MPL2.0",
+  "version": "1.5.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

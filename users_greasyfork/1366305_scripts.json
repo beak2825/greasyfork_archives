@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508013,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-11T20:39:41.000Z",
+    "code_updated_at": "2024-09-12T08:49:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1366305,
+        "name": "Burn This",
+        "created_at": "2024-09-11T20:34:36.000Z",
+        "url": "https://greasyfork.org/users/1366305-burn-this"
+      }
+    ],
+    "name": "GGn E-Books upload assistant",
+    "description": "Scans the filename for month, year, issue, format, language and fills in info based on that",
+    "url": "https://greasyfork.org/scripts/508013-ggn-e-books-upload-assistant",
+    "code_url": "https://update.greasyfork.org/scripts/508013/GGn%20E-Books%20upload%20assistant.user.js",
+    "code_size": 5227,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

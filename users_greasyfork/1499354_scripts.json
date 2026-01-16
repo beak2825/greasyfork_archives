@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543943,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-29T04:40:45.000Z",
+    "code_updated_at": "2025-07-29T04:40:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499354,
+        "name": "老三暮云",
+        "created_at": "2025-07-29T04:36:07.000Z",
+        "url": "https://greasyfork.org/users/1499354-%E8%80%81%E4%B8%89%E6%9A%AE%E4%BA%91"
+      }
+    ],
+    "name": "抖音登录弹框屏蔽器",
+    "description": "屏蔽抖音精选页等页面的登录弹框",
+    "url": "https://greasyfork.org/scripts/543943-%E6%8A%96%E9%9F%B3%E7%99%BB%E5%BD%95%E5%BC%B9%E6%A1%86%E5%B1%8F%E8%94%BD%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/543943/%E6%8A%96%E9%9F%B3%E7%99%BB%E5%BD%95%E5%BC%B9%E6%A1%86%E5%B1%8F%E8%94%BD%E5%99%A8.user.js",
+    "code_size": 5230,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

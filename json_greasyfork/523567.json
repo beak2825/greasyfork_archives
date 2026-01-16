@@ -1,0 +1,33 @@
+{
+  "id": 523567,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-12T17:01:09.000Z",
+  "code_updated_at": "2025-01-12T17:01:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1422554,
+      "name": "lola8",
+      "created_at": "2025-01-12T16:56:53.000Z",
+      "url": "https://greasyfork.org/users/1422554-lola8"
+    }
+  ],
+  "name": "VRoid Hub Remove Blur Filter",
+  "description": "Removes blur filter from images on the site",
+  "url": "https://greasyfork.org/scripts/523567-vroid-hub-remove-blur-filter",
+  "code_url": "https://update.greasyfork.org/scripts/523567/VRoid%20Hub%20Remove%20Blur%20Filter.user.js",
+  "code_size": 971,
+  "license": "MI",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

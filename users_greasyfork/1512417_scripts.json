@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548579,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T12:21:51.000Z",
+    "code_updated_at": "2025-09-06T13:17:55.000Z",
+    "namespace": "by ADRIANXU",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512417,
+        "name": "adrianprzcb",
+        "created_at": "2025-09-06T12:19:52.000Z",
+        "url": "https://greasyfork.org/users/1512417-adrianprzcb"
+      }
+    ],
+    "name": "GeoGuessr — Auto \"Play Again\" (Classic)",
+    "description": "Helps you stay focused while playing GeoGuessr Classic games. Automatically clicks the final ‘Play Again’ button at the end of a game.",
+    "url": "https://greasyfork.org/scripts/548579-geoguessr-auto-play-again-classic",
+    "code_url": "https://update.greasyfork.org/scripts/548579/GeoGuessr%20%E2%80%94%20Auto%20%22Play%20Again%22%20%28Classic%29.user.js",
+    "code_size": 3336,
+    "license": "MIT License",
+    "version": "1.32",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

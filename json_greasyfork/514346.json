@@ -1,0 +1,59 @@
+{
+  "id": 514346,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-27T15:21:43.000Z",
+  "code_updated_at": "2024-10-28T03:24:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1387230,
+      "name": "nattuggla",
+      "created_at": "2024-10-27T15:16:59.000Z",
+      "url": "https://greasyfork.org/users/1387230-nattuggla",
+      "scripts": [
+        {
+          "id": 514346,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-27T15:21:43.000Z",
+          "code_updated_at": "2024-10-28T03:24:30.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Udio Free Credits",
+          "description": "Automatically submits timed keystrokes to activate/listen to the examples on the feedback page, submit a vote on example A, and proceeding to the next.",
+          "url": "https://greasyfork.org/scripts/514346-udio-free-credits",
+          "code_url": "https://update.greasyfork.org/scripts/514346/Udio%20Free%20Credits.user.js",
+          "code_size": 3652,
+          "license": "GPL3",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Udio Free Credits",
+  "description": "Automatically submits timed keystrokes to activate/listen to the examples on the feedback page, submit a vote on example A, and proceeding to the next.",
+  "url": "https://greasyfork.org/scripts/514346-udio-free-credits",
+  "code_url": "https://update.greasyfork.org/scripts/514346/Udio%20Free%20Credits.user.js",
+  "code_size": 3652,
+  "license": "GPL3",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

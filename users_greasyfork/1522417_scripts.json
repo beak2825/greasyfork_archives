@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551636,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-05T07:52:34.000Z",
+    "code_updated_at": "2025-10-05T07:52:34.000Z",
+    "namespace": "https://github.com/prothales/no-youtube-feed",
+    "support_url": "https://github.com/prothales/no-youtube-feed/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1522417,
+        "name": "prothales",
+        "created_at": "2025-10-05T07:50:00.000Z",
+        "url": "https://greasyfork.org/users/1522417-prothales"
+      }
+    ],
+    "name": "YouTube Home → Subscriptions (SPA-aware)",
+    "description": "Redirect root \"/\" to /feed/subscriptions, including clicks on the YouTube logo (client-side navigation).",
+    "url": "https://greasyfork.org/scripts/551636-youtube-home-subscriptions-spa-aware",
+    "code_url": "https://update.greasyfork.org/scripts/551636/YouTube%20Home%20%E2%86%92%20Subscriptions%20%28SPA-aware%29.user.js",
+    "code_size": 2224,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

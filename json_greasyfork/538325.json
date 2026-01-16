@@ -1,0 +1,59 @@
+{
+  "id": 538325,
+  "daily_installs": 0,
+  "total_installs": 35,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-04T14:12:26.000Z",
+  "code_updated_at": "2025-06-04T14:12:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1478893,
+      "name": "huanyu_qvq",
+      "created_at": "2025-06-04T14:10:21.000Z",
+      "url": "https://greasyfork.org/users/1478893-huanyu-qvq",
+      "scripts": [
+        {
+          "id": 538325,
+          "daily_installs": 0,
+          "total_installs": 35,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-04T14:12:26.000Z",
+          "code_updated_at": "2025-06-04T14:12:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "zhs自动解除粘贴|复制限制 (增强版)",
+          "description": "自动解除网页中所有输入框的粘贴限制，带控制面板和开关",
+          "url": "https://greasyfork.org/scripts/538325-zhs%E8%87%AA%E5%8A%A8%E8%A7%A3%E9%99%A4%E7%B2%98%E8%B4%B4-%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6-%E5%A2%9E%E5%BC%BA%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/538325/zhs%E8%87%AA%E5%8A%A8%E8%A7%A3%E9%99%A4%E7%B2%98%E8%B4%B4%7C%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6%20%28%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+          "code_size": 18157,
+          "license": null,
+          "version": "2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "zhs自动解除粘贴|复制限制 (增强版)",
+  "description": "自动解除网页中所有输入框的粘贴限制，带控制面板和开关",
+  "url": "https://greasyfork.org/scripts/538325-zhs%E8%87%AA%E5%8A%A8%E8%A7%A3%E9%99%A4%E7%B2%98%E8%B4%B4-%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6-%E5%A2%9E%E5%BC%BA%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/538325/zhs%E8%87%AA%E5%8A%A8%E8%A7%A3%E9%99%A4%E7%B2%98%E8%B4%B4%7C%E5%A4%8D%E5%88%B6%E9%99%90%E5%88%B6%20%28%E5%A2%9E%E5%BC%BA%E7%89%88%29.user.js",
+  "code_size": 18157,
+  "license": null,
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

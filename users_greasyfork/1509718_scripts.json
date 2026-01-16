@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547628,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-28T15:15:29.000Z",
+    "code_updated_at": "2025-08-28T15:15:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1509718,
+        "name": "嘉（logolo）",
+        "created_at": "2025-08-28T15:13:06.000Z",
+        "url": "https://greasyfork.org/users/1509718-%E5%98%89-logolo"
+      }
+    ],
+    "name": "Google AI Studio 全面翻译",
+    "description": "翻译 Google AI Studio 页面上的多个特定文本部分，包括左侧导航栏和工具提示",
+    "url": "https://greasyfork.org/scripts/547628-google-ai-studio-%E5%85%A8%E9%9D%A2%E7%BF%BB%E8%AF%91",
+    "code_url": "https://update.greasyfork.org/scripts/547628/Google%20AI%20Studio%20%E5%85%A8%E9%9D%A2%E7%BF%BB%E8%AF%91.user.js",
+    "code_size": 17918,
+    "license": null,
+    "version": "0.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

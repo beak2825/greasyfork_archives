@@ -1,0 +1,101 @@
+[
+  {
+    "id": 510442,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T13:40:01.000Z",
+    "code_updated_at": "2025-01-31T13:40:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251613,
+        "name": "limesarine",
+        "created_at": "2024-01-22T07:32:50.000Z",
+        "url": "https://greasyfork.org/users/1251613-limesarine"
+      }
+    ],
+    "name": "Luogu Real Academic",
+    "description": "Customized for EricWan, script writer limesarine",
+    "url": "https://greasyfork.org/scripts/510442-luogu-real-academic",
+    "code_url": "https://update.greasyfork.org/scripts/510442/Luogu%20Real%20Academic.user.js",
+    "code_size": 2310,
+    "license": "© 2024 Limesarine. All rights reserved.",
+    "version": "v1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504105,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-18T10:13:10.000Z",
+    "code_updated_at": "2024-09-17T12:59:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251613,
+        "name": "limesarine",
+        "created_at": "2024-01-22T07:32:50.000Z",
+        "url": "https://greasyfork.org/users/1251613-limesarine"
+      }
+    ],
+    "name": "Name enlarger",
+    "description": "Enlarge and blacken the name on the ranklist",
+    "url": "https://greasyfork.org/scripts/504105-name-enlarger",
+    "code_url": "https://update.greasyfork.org/scripts/504105/Name%20enlarger.user.js",
+    "code_size": 693,
+    "license": "© 2024 Limesarine. All rights reserved.",
+    "version": "v1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503936,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-17T08:30:11.000Z",
+    "code_updated_at": "2024-08-17T08:30:10.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1251613,
+        "name": "limesarine",
+        "created_at": "2024-01-22T07:32:50.000Z",
+        "url": "https://greasyfork.org/users/1251613-limesarine"
+      }
+    ],
+    "name": "Luogu Code Printer",
+    "description": "Add a \"print\" button to print the code in submissions",
+    "url": "https://greasyfork.org/scripts/503936-luogu-code-printer",
+    "code_url": "https://update.greasyfork.org/scripts/503936/Luogu%20Code%20Printer.user.js",
+    "code_size": 2200,
+    "license": "© 2024 Limesarine. All rights reserved.",
+    "version": "v1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

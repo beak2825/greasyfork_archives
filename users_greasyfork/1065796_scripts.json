@@ -1,8 +1,8 @@
 [
   {
     "id": 553298,
-    "daily_installs": 0,
-    "total_installs": 4,
+    "daily_installs": 1,
+    "total_installs": 5,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -29,6 +29,72 @@
     "license": "MIT License",
     "version": "0.22.6-beta",
     "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537115,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-24T14:02:23.000Z",
+    "code_updated_at": "2025-10-21T15:35:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1065796,
+        "name": "kazaev",
+        "created_at": "2023-04-22T21:06:11.000Z",
+        "url": "https://greasyfork.org/users/1065796-kazaev"
+      }
+    ],
+    "name": "anime365-ext-beta",
+    "description": "Расширение для сайтов anime365 и smotret-anime",
+    "url": "https://greasyfork.org/scripts/537115-anime365-ext-beta",
+    "code_url": "https://update.greasyfork.org/scripts/537115/anime365-ext-beta.user.js",
+    "code_size": 12208,
+    "license": "MIT License",
+    "version": "0.35.0-beta",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 497987,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-15T10:58:21.000Z",
+    "code_updated_at": "2024-11-09T14:25:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1065796,
+        "name": "kazaev",
+        "created_at": "2023-04-22T21:06:11.000Z",
+        "url": "https://greasyfork.org/users/1065796-kazaev"
+      }
+    ],
+    "name": "only one domain",
+    "description": "edit domaines",
+    "url": "https://greasyfork.org/scripts/497987-only-one-domain",
+    "code_url": "https://update.greasyfork.org/scripts/497987/only%20one%20domain.user.js",
+    "code_size": 1448,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
     "deleted": false,
     "visibility": "public"
   }

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512312,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-12T02:55:41.000Z",
+    "code_updated_at": "2024-10-12T02:55:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1379742,
+        "name": "ca.zh",
+        "created_at": "2024-10-12T02:51:50.000Z",
+        "url": "https://greasyfork.org/users/1379742-ca-zh"
+      }
+    ],
+    "name": "白兔大转盘",
+    "description": "点击开始按钮后每3秒访问网址以进行抽奖",
+    "url": "https://greasyfork.org/scripts/512312-%E7%99%BD%E5%85%94%E5%A4%A7%E8%BD%AC%E7%9B%98",
+    "code_url": "https://update.greasyfork.org/scripts/512312/%E7%99%BD%E5%85%94%E5%A4%A7%E8%BD%AC%E7%9B%98.user.js",
+    "code_size": 4236,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

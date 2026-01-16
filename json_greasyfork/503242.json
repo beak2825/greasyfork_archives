@@ -1,0 +1,59 @@
+{
+  "id": 503242,
+  "daily_installs": 0,
+  "total_installs": 867,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-10T23:03:38.000Z",
+  "code_updated_at": "2025-03-12T17:12:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1349392,
+      "name": "ItsWAWGaming",
+      "created_at": "2024-08-10T23:00:53.000Z",
+      "url": "https://greasyfork.org/users/1349392-itswawgaming",
+      "scripts": [
+        {
+          "id": 503242,
+          "daily_installs": 0,
+          "total_installs": 867,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-10T23:03:38.000Z",
+          "code_updated_at": "2025-03-12T17:12:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Roblox 2011",
+          "description": "for use with https://userstyles.world/style/13722/roblox-2011-classic-updated-61224",
+          "url": "https://greasyfork.org/scripts/503242-roblox-2011",
+          "code_url": "https://update.greasyfork.org/scripts/503242/Roblox%202011.user.js",
+          "code_size": 35894,
+          "license": null,
+          "version": "0.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Roblox 2011",
+  "description": "for use with https://userstyles.world/style/13722/roblox-2011-classic-updated-61224",
+  "url": "https://greasyfork.org/scripts/503242-roblox-2011",
+  "code_url": "https://update.greasyfork.org/scripts/503242/Roblox%202011.user.js",
+  "code_size": 35894,
+  "license": null,
+  "version": "0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

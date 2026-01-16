@@ -1,0 +1,33 @@
+{
+  "id": 517206,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-13T18:41:36.000Z",
+  "code_updated_at": "2024-11-21T19:10:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 197010,
+      "name": "acypher",
+      "created_at": "2018-07-19T07:24:05.000Z",
+      "url": "https://greasyfork.org/users/197010-acypher"
+    }
+  ],
+  "name": "Stop NYTimes video animations",
+  "description": "Stop cinemagraph_video animations",
+  "url": "https://greasyfork.org/scripts/517206-stop-nytimes-video-animations",
+  "code_url": "https://update.greasyfork.org/scripts/517206/Stop%20NYTimes%20video%20animations.user.js",
+  "code_size": 1017,
+  "license": "MIT License",
+  "version": "2024-11-21",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

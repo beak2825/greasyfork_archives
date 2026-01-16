@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544209,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-31T14:36:35.000Z",
+    "code_updated_at": "2025-12-10T12:16:33.000Z",
+    "namespace": "https://github.com/aca22jy",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490764,
+        "name": "HP tony",
+        "created_at": "2025-07-01T23:23:45.000Z",
+        "url": "https://greasyfork.org/users/1490764-hp-tony"
+      }
+    ],
+    "name": "英国美签预约监控助手",
+    "description": "自动监控美国驻英国大使馆的签证空位，支持提醒与邮件通知。原创脚本，禁止未经授权转载或商用。",
+    "url": "https://greasyfork.org/scripts/544209-%E8%8B%B1%E5%9B%BD%E7%BE%8E%E7%AD%BE%E9%A2%84%E7%BA%A6%E7%9B%91%E6%8E%A7%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/544209/%E8%8B%B1%E5%9B%BD%E7%BE%8E%E7%AD%BE%E9%A2%84%E7%BA%A6%E7%9B%91%E6%8E%A7%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 4578,
+    "license": "CC BY-NC-ND 4.0",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

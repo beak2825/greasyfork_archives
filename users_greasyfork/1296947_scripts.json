@@ -1,0 +1,101 @@
+[
+  {
+    "id": 525116,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-28T04:46:43.000Z",
+    "code_updated_at": "2025-01-28T04:46:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1296947,
+        "name": "SGMax1",
+        "created_at": "2024-05-04T16:50:36.000Z",
+        "url": "https://greasyfork.org/users/1296947-sgmax1"
+      }
+    ],
+    "name": "网页端酷狗音乐打开可下载音频连接",
+    "description": "位于酷狗音乐的“网页端”播放界面时，按下快捷键K，自动打开这首歌的可下载链接（目前仅支持MP3格式，因为这个页面的链接指向的只有相应歌曲的MP3）",
+    "url": "https://greasyfork.org/scripts/525116-%E7%BD%91%E9%A1%B5%E7%AB%AF%E9%85%B7%E7%8B%97%E9%9F%B3%E4%B9%90%E6%89%93%E5%BC%80%E5%8F%AF%E4%B8%8B%E8%BD%BD%E9%9F%B3%E9%A2%91%E8%BF%9E%E6%8E%A5",
+    "code_url": "https://update.greasyfork.org/scripts/525116/%E7%BD%91%E9%A1%B5%E7%AB%AF%E9%85%B7%E7%8B%97%E9%9F%B3%E4%B9%90%E6%89%93%E5%BC%80%E5%8F%AF%E4%B8%8B%E8%BD%BD%E9%9F%B3%E9%A2%91%E8%BF%9E%E6%8E%A5.user.js",
+    "code_size": 937,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521698,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T20:37:02.000Z",
+    "code_updated_at": "2024-12-24T20:37:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1296947,
+        "name": "SGMax1",
+        "created_at": "2024-05-04T16:50:36.000Z",
+        "url": "https://greasyfork.org/users/1296947-sgmax1"
+      }
+    ],
+    "name": "B站身份码一键获取",
+    "description": "在页面左上角添加一个可拖动的按钮，点击以获取并复制Bilibili身份码，修复了拖动后误触发复制的问题",
+    "url": "https://greasyfork.org/scripts/521698-b%E7%AB%99%E8%BA%AB%E4%BB%BD%E7%A0%81%E4%B8%80%E9%94%AE%E8%8E%B7%E5%8F%96",
+    "code_url": "https://update.greasyfork.org/scripts/521698/B%E7%AB%99%E8%BA%AB%E4%BB%BD%E7%A0%81%E4%B8%80%E9%94%AE%E8%8E%B7%E5%8F%96.user.js",
+    "code_size": 4491,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521697,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-24T20:26:57.000Z",
+    "code_updated_at": "2024-12-26T08:27:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1296947,
+        "name": "SGMax1",
+        "created_at": "2024-05-04T16:50:36.000Z",
+        "url": "https://greasyfork.org/users/1296947-sgmax1"
+      }
+    ],
+    "name": "在B站直播间的弹幕后面添加一个时间戳（悬停显示）",
+    "description": "在每一条弹幕上添加一个不可见的时间戳，当鼠标滑过这个弹幕的时候显示这个弹幕是什么时候发的",
+    "url": "https://greasyfork.org/scripts/521697-%E5%9C%A8b%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E5%BC%B9%E5%B9%95%E5%90%8E%E9%9D%A2%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%97%B6%E9%97%B4%E6%88%B3-%E6%82%AC%E5%81%9C%E6%98%BE%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/521697/%E5%9C%A8B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E7%9A%84%E5%BC%B9%E5%B9%95%E5%90%8E%E9%9D%A2%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA%E6%97%B6%E9%97%B4%E6%88%B3%EF%BC%88%E6%82%AC%E5%81%9C%E6%98%BE%E7%A4%BA%EF%BC%89.user.js",
+    "code_size": 3404,
+    "license": null,
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

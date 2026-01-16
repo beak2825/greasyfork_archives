@@ -1,0 +1,59 @@
+{
+  "id": 548081,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-02T00:41:08.000Z",
+  "code_updated_at": "2025-09-04T04:28:57.000Z",
+  "namespace": "https://github.com/xJodye/ps-style-plus",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1509806,
+      "name": "jodye",
+      "created_at": "2025-08-29T01:47:00.000Z",
+      "url": "https://greasyfork.org/users/1509806-jodye",
+      "scripts": [
+        {
+          "id": 548081,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-02T00:41:08.000Z",
+          "code_updated_at": "2025-09-04T04:28:57.000Z",
+          "namespace": "https://github.com/xJodye/ps-style-plus",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PS Style+ v1.0",
+          "description": "Custom avatars + colors + chat icons (Still Experimental)",
+          "url": "https://greasyfork.org/scripts/548081-ps-style-v1-0",
+          "code_url": "https://update.greasyfork.org/scripts/548081/PS%20Style%2B%20v10.user.js",
+          "code_size": 54952,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PS Style+ v1.0",
+  "description": "Custom avatars + colors + chat icons (Still Experimental)",
+  "url": "https://greasyfork.org/scripts/548081-ps-style-v1-0",
+  "code_url": "https://update.greasyfork.org/scripts/548081/PS%20Style%2B%20v10.user.js",
+  "code_size": 54952,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

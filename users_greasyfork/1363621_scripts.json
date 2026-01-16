@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545951,
+    "daily_installs": 6,
+    "total_installs": 90,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T11:18:22.000Z",
+    "code_updated_at": "2025-08-15T11:18:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363621,
+        "name": "Bayan12 Ferhi",
+        "created_at": "2024-09-05T18:16:20.000Z",
+        "url": "https://greasyfork.org/users/1363621-bayan12-ferhi"
+      }
+    ],
+    "name": "Gartic.io Pro Drawing Assist (Sparkle UI + Grid + Guides + DnD)",
+    "description": "Reference overlay + grid + shape guides + color helper for Gartic.io. URL/file/drag-n-drop, drag/scale/rotate/opacity/lock/reset/clear, glittery UI, and hotkeys.",
+    "url": "https://greasyfork.org/scripts/545951-gartic-io-pro-drawing-assist-sparkle-ui-grid-guides-dnd",
+    "code_url": "https://update.greasyfork.org/scripts/545951/Garticio%20Pro%20Drawing%20Assist%20%28Sparkle%20UI%20%2B%20Grid%20%2B%20Guides%20%2B%20DnD%29.user.js",
+    "code_size": 20859,
+    "license": null,
+    "version": "5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

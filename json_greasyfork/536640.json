@@ -1,0 +1,34 @@
+{
+  "id": 536640,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-20T23:13:24.000Z",
+  "code_updated_at": "2025-05-20T23:30:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462972,
+      "name": "Argenticle",
+      "created_at": "2025-04-28T00:56:29.000Z",
+      "url": "https://greasyfork.org/users/1462972-argenticle",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube Live Chat One-Word Rule Buttons (Space, Below Ticker, Reliable)",
+  "description": "Adds two rows of one-word rule buttons (with visible space after command) below the ticker in YouTube Live Chat",
+  "url": "https://greasyfork.org/scripts/536640-youtube-live-chat-one-word-rule-buttons-space-below-ticker-reliable",
+  "code_url": "https://update.greasyfork.org/scripts/536640/YouTube%20Live%20Chat%20One-Word%20Rule%20Buttons%20%28Space%2C%20Below%20Ticker%2C%20Reliable%29.user.js",
+  "code_size": 5013,
+  "license": "MIT License",
+  "version": "0.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

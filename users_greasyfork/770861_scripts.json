@@ -96,6 +96,138 @@
     "version": "1.0",
     "locale": "vi",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548079,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T23:20:58.000Z",
+    "code_updated_at": "2025-09-01T23:20:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770861,
+        "name": "HuyTQ Harry",
+        "created_at": "2021-05-11T07:48:01.000Z",
+        "url": "https://greasyfork.org/users/770861-huytq-harry"
+      }
+    ],
+    "name": "MEXC Auto Trade Button",
+    "description": "Auto add Trade and Reverse buttons to Fibonacci dialog",
+    "url": "https://greasyfork.org/scripts/548079-mexc-auto-trade-button",
+    "code_url": "https://update.greasyfork.org/scripts/548079/MEXC%20Auto%20Trade%20Button.user.js",
+    "code_size": 19148,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548078,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T23:19:37.000Z",
+    "code_updated_at": "2026-01-01T05:18:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770861,
+        "name": "HuyTQ Harry",
+        "created_at": "2021-05-11T07:48:01.000Z",
+        "url": "https://greasyfork.org/users/770861-huytq-harry"
+      }
+    ],
+    "name": "Bybit URL Parser Auto Trade",
+    "description": "Parse trade parameters from URL and auto-fill Bybit trade form",
+    "url": "https://greasyfork.org/scripts/548078-bybit-url-parser-auto-trade",
+    "code_url": "https://update.greasyfork.org/scripts/548078/Bybit%20URL%20Parser%20Auto%20Trade.user.js",
+    "code_size": 11443,
+    "license": "MIT License",
+    "version": "2026-01-01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545248,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-10T02:19:04.000Z",
+    "code_updated_at": "2025-12-28T08:38:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770861,
+        "name": "HuyTQ Harry",
+        "created_at": "2021-05-11T07:48:01.000Z",
+        "url": "https://greasyfork.org/users/770861-huytq-harry"
+      }
+    ],
+    "name": "TradingView Trade Buttons (MXC, Bybit, Binance)",
+    "description": "Add MXC, Bybit, Binance, Copy buttons to TradingView Long/Short Position dialog",
+    "url": "https://greasyfork.org/scripts/545248-tradingview-trade-buttons-mxc-bybit-binance",
+    "code_url": "https://update.greasyfork.org/scripts/545248/TradingView%20Trade%20Buttons%20%28MXC%2C%20Bybit%2C%20Binance%29.user.js",
+    "code_size": 10048,
+    "license": null,
+    "version": "0.43",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545246,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-10T02:16:46.000Z",
+    "code_updated_at": "2025-08-10T02:16:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 770861,
+        "name": "HuyTQ Harry",
+        "created_at": "2021-05-11T07:48:01.000Z",
+        "url": "https://greasyfork.org/users/770861-huytq-harry"
+      }
+    ],
+    "name": "TradingView Alert Log Sender + Trade + Copy + Parse",
+    "description": "Gửi alert từ TradingView và thêm nút gửi lệnh, copy alert cụ thể + cải thiện UI",
+    "url": "https://greasyfork.org/scripts/545246-tradingview-alert-log-sender-trade-copy-parse",
+    "code_url": "https://update.greasyfork.org/scripts/545246/TradingView%20Alert%20Log%20Sender%20%2B%20Trade%20%2B%20Copy%20%2B%20Parse.user.js",
+    "code_size": 6306,
+    "license": "huytq1976@gmail.com",
+    "version": "0.6",
+    "locale": "vi",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

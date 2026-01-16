@@ -1,0 +1,34 @@
+{
+  "id": 527129,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-16T19:17:30.000Z",
+  "code_updated_at": "2025-02-16T19:36:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1414802,
+      "name": "Becca Turner",
+      "created_at": "2024-12-23T22:29:12.000Z",
+      "url": "https://greasyfork.org/users/1414802-becca-turner",
+      "scripts": []
+    }
+  ],
+  "name": "ZedCity Stat Notifier",
+  "description": "Notifications for desktop users",
+  "url": "https://greasyfork.org/scripts/527129-zedcity-stat-notifier",
+  "code_url": "https://update.greasyfork.org/scripts/527129/ZedCity%20Stat%20Notifier.user.js",
+  "code_size": 6641,
+  "license": "Mozilla Public License 2.0",
+  "version": "1.0.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

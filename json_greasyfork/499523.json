@@ -1,0 +1,33 @@
+{
+  "id": 499523,
+  "daily_installs": 0,
+  "total_installs": 332,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-02T18:47:36.000Z",
+  "code_updated_at": "2025-02-08T22:02:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1315976,
+      "name": "yodaluca23",
+      "created_at": "2024-06-11T02:56:15.000Z",
+      "url": "https://greasyfork.org/users/1315976-yodaluca23"
+    }
+  ],
+  "name": "Twitter/X Nitter Redirect",
+  "description": "Redirect twitter.com and x.com links to a random healthy Nitter instance.",
+  "url": "https://greasyfork.org/scripts/499523-twitter-x-nitter-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/499523/TwitterX%20Nitter%20Redirect.user.js",
+  "code_size": 2623,
+  "license": "GNU GPLv3",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

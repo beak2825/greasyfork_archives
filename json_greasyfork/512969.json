@@ -1,0 +1,34 @@
+{
+  "id": 512969,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-17T13:02:23.000Z",
+  "code_updated_at": "2024-11-03T19:55:05.000Z",
+  "namespace": "nexterot",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1134791,
+      "name": "nexterot",
+      "created_at": "2023-07-24T12:54:34.000Z",
+      "url": "https://greasyfork.org/users/1134791-nexterot",
+      "scripts": []
+    }
+  ],
+  "name": "Clan members last online",
+  "description": "Поиск афк игроков в клане",
+  "url": "https://greasyfork.org/scripts/512969-clan-members-last-online",
+  "code_url": "https://update.greasyfork.org/scripts/512969/Clan%20members%20last%20online.user.js",
+  "code_size": 6861,
+  "license": "none",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

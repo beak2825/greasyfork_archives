@@ -1,0 +1,59 @@
+{
+  "id": 521021,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-17T13:54:00.000Z",
+  "code_updated_at": "2024-12-17T13:54:00.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1411768,
+      "name": "S April",
+      "created_at": "2024-12-16T15:48:32.000Z",
+      "url": "https://greasyfork.org/users/1411768-s-april",
+      "scripts": [
+        {
+          "id": 521042,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-17T17:04:33.000Z",
+          "code_updated_at": "2024-12-17T17:13:28.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Yuketang Mess Helper",
+          "description": "A note of exams haven't done",
+          "url": "https://greasyfork.org/scripts/521042-yuketang-mess-helper",
+          "code_url": "https://update.greasyfork.org/scripts/521042/Yuketang%20Mess%20Helper.user.js",
+          "code_size": 12572,
+          "license": "MIT License",
+          "version": "1.01",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YuketangHelper.content.js",
+  "description": "用于插件页面的构建",
+  "url": "https://greasyfork.org/scripts/521021-yuketanghelper-content-js",
+  "code_url": "https://update.greasyfork.org/scripts/521021/1504836/YuketangHelpercontentjs.js",
+  "code_size": 2251,
+  "license": null,
+  "version": "0.0.1.20241217135400",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

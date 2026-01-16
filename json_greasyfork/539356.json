@@ -1,0 +1,33 @@
+{
+  "id": 539356,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-14T06:45:56.000Z",
+  "code_updated_at": "2025-06-14T06:45:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1460501,
+      "name": "syabusyabukun",
+      "created_at": "2025-04-21T11:12:05.000Z",
+      "url": "https://greasyfork.org/users/1460501-syabusyabukun"
+    }
+  ],
+  "name": "Buy Allしようとした時に確認ダイアログを表示させる。",
+  "description": "Display a confirmation dialog when attempting to 'Buy All' in Milky Way Idle",
+  "url": "https://greasyfork.org/scripts/539356-buy-all%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E3%81%97%E3%81%9F%E6%99%82%E3%81%AB%E7%A2%BA%E8%AA%8D%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%95%E3%81%9B%E3%82%8B",
+  "code_url": "https://update.greasyfork.org/scripts/539356/Buy%20All%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E3%81%97%E3%81%9F%E6%99%82%E3%81%AB%E7%A2%BA%E8%AA%8D%E3%83%80%E3%82%A4%E3%82%A2%E3%83%AD%E3%82%B0%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%95%E3%81%9B%E3%82%8B%E3%80%82.user.js",
+  "code_size": 1910,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

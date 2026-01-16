@@ -1,0 +1,59 @@
+{
+  "id": 530854,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-25T18:46:09.000Z",
+  "code_updated_at": "2025-03-25T18:46:09.000Z",
+  "namespace": "https://github.com/sourman-dev/dichtruyen-ai-userscript",
+  "support_url": "https://github.com/sourman-dev/dichtruyen-ai-userscript/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450246,
+      "name": "Trần Dũng",
+      "created_at": "2025-03-25T18:42:21.000Z",
+      "url": "https://greasyfork.org/users/1450246-tr%E1%BA%A7n-d%C5%A9ng",
+      "scripts": [
+        {
+          "id": 530854,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-25T18:46:09.000Z",
+          "code_updated_at": "2025-03-25T18:46:09.000Z",
+          "namespace": "https://github.com/sourman-dev/dichtruyen-ai-userscript",
+          "support_url": "https://github.com/sourman-dev/dichtruyen-ai-userscript/issues",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "dichtruyen.ai.vn",
+          "description": "Userscript hỗ trợ đọc dịch online các loại truyện convert, truyện tiếng nước ngoài bằng AI",
+          "url": "https://greasyfork.org/scripts/530854-dichtruyen-ai-vn",
+          "code_url": "https://update.greasyfork.org/scripts/530854/dichtruyenaivn.user.js",
+          "code_size": 76331,
+          "license": "MIT License",
+          "version": "0.0.3",
+          "locale": "vi",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "dichtruyen.ai.vn",
+  "description": "Userscript hỗ trợ đọc dịch online các loại truyện convert, truyện tiếng nước ngoài bằng AI",
+  "url": "https://greasyfork.org/scripts/530854-dichtruyen-ai-vn",
+  "code_url": "https://update.greasyfork.org/scripts/530854/dichtruyenaivn.user.js",
+  "code_size": 76331,
+  "license": "MIT License",
+  "version": "0.0.3",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

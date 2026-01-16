@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548855,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T20:18:50.000Z",
+    "code_updated_at": "2025-09-08T20:18:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513096,
+        "name": "cocashy",
+        "created_at": "2025-09-08T20:16:30.000Z",
+        "url": "https://greasyfork.org/users/1513096-cocashy"
+      }
+    ],
+    "name": "うりぼーネット 拡張機能 専門GP/GPA計算",
+    "description": "tmp",
+    "url": "https://greasyfork.org/scripts/548855-%E3%81%86%E3%82%8A%E3%81%BC%E3%83%BC%E3%83%8D%E3%83%83%E3%83%88-%E6%8B%A1%E5%BC%B5%E6%A9%9F%E8%83%BD-%E5%B0%82%E9%96%80gp-gpa%E8%A8%88%E7%AE%97",
+    "code_url": "https://update.greasyfork.org/scripts/548855/%E3%81%86%E3%82%8A%E3%81%BC%E3%83%BC%E3%83%8D%E3%83%83%E3%83%88%20%E6%8B%A1%E5%BC%B5%E6%A9%9F%E8%83%BD%20%E5%B0%82%E9%96%80GPGPA%E8%A8%88%E7%AE%97.user.js",
+    "code_size": 1644,
+    "license": "MIT License",
+    "version": "2025-09-08",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

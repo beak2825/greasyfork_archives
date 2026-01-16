@@ -31,5 +31,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 542377,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T07:55:31.000Z",
+    "code_updated_at": "2025-11-07T19:00:01.000Z",
+    "namespace": "imxitiz's-Script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279106,
+        "name": "imxitiz",
+        "created_at": "2024-03-25T05:38:51.000Z",
+        "url": "https://greasyfork.org/users/1279106-imxitiz"
+      }
+    ],
+    "name": "Grok Chat Workspace Icon Sync",
+    "description": "Automatically syncs and displays workspace icons next to chat history items on Grok Chat. Includes features for mapping, storing, and visually enhancing chat navigation with workspace icons.",
+    "url": "https://greasyfork.org/scripts/542377-grok-chat-workspace-icon-sync",
+    "code_url": "https://update.greasyfork.org/scripts/542377/Grok%20Chat%20Workspace%20Icon%20Sync.user.js",
+    "code_size": 3674,
+    "license": "GNU GPLv3",
+    "version": "1.5.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 516106,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-06T17:16:34.000Z",
+    "code_updated_at": "2025-11-04T15:29:42.000Z",
+    "namespace": "imxitiz's-Script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279106,
+        "name": "imxitiz",
+        "created_at": "2024-03-25T05:38:51.000Z",
+        "url": "https://greasyfork.org/users/1279106-imxitiz"
+      }
+    ],
+    "name": "Highlight diff in patches",
+    "description": "Nov 06 2024, 11:00:34 PM",
+    "url": "https://greasyfork.org/scripts/516106-highlight-diff-in-patches",
+    "code_url": "https://update.greasyfork.org/scripts/516106/Highlight%20diff%20in%20patches.user.js",
+    "code_size": 2542,
+    "license": "GNU GPLv3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503627,
+    "daily_installs": 0,
+    "total_installs": 308,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-14T09:30:45.000Z",
+    "code_updated_at": "2025-11-09T10:19:12.000Z",
+    "namespace": "imxitiz's-Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279106,
+        "name": "imxitiz",
+        "created_at": "2024-03-25T05:38:51.000Z",
+        "url": "https://greasyfork.org/users/1279106-imxitiz"
+      }
+    ],
+    "name": "Photopea No Ads Sidebar",
+    "description": "Remove the gap of ads Sidebar",
+    "url": "https://greasyfork.org/scripts/503627-photopea-no-ads-sidebar",
+    "code_url": "https://update.greasyfork.org/scripts/503627/Photopea%20No%20Ads%20Sidebar.user.js",
+    "code_size": 1225,
+    "license": "GNU GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503623,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-14T08:58:40.000Z",
+    "code_updated_at": "2025-11-07T19:00:02.000Z",
+    "namespace": "imxitiz's-Script",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1279106,
+        "name": "imxitiz",
+        "created_at": "2024-03-25T05:38:51.000Z",
+        "url": "https://greasyfork.org/users/1279106-imxitiz"
+      }
+    ],
+    "name": "Messenger Hide Chat List",
+    "description": "Hide or show the Messenger chat list based on user interaction. Includes features for resizing and locking Chat list visibility.",
+    "url": "https://greasyfork.org/scripts/503623-messenger-hide-chat-list",
+    "code_url": "https://update.greasyfork.org/scripts/503623/Messenger%20Hide%20Chat%20List.user.js",
+    "code_size": 24479,
+    "license": "GNU GPLv3",
+    "version": "3.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

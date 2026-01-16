@@ -1,0 +1,233 @@
+[
+  {
+    "id": 541064,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-28T19:10:53.000Z",
+    "code_updated_at": "2025-06-28T19:10:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Boycot 2K/Gearbox Games On Steam",
+    "description": "Highlight 2K/Gearbox games on Steam",
+    "url": "https://greasyfork.org/scripts/541064-boycot-2k-gearbox-games-on-steam",
+    "code_url": "https://update.greasyfork.org/scripts/541064/Boycot%202KGearbox%20Games%20On%20Steam.user.js",
+    "code_size": 2553,
+    "license": "GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537664,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-29T17:56:42.000Z",
+    "code_updated_at": "2025-05-29T17:56:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Boycot Microsoft Games On Steam",
+    "description": "Highlight games by Microsoft on Steam",
+    "url": "https://greasyfork.org/scripts/537664-boycot-microsoft-games-on-steam",
+    "code_url": "https://update.greasyfork.org/scripts/537664/Boycot%20Microsoft%20Games%20On%20Steam.user.js",
+    "code_size": 3166,
+    "license": "GPLv3",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536177,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-16T06:50:22.000Z",
+    "code_updated_at": "2025-05-16T06:50:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Hide YouTube Like Button",
+    "description": "Hide the YouTube like button, because fuck 'em!",
+    "url": "https://greasyfork.org/scripts/536177-hide-youtube-like-button",
+    "code_url": "https://update.greasyfork.org/scripts/536177/Hide%20YouTube%20Like%20Button.user.js",
+    "code_size": 1049,
+    "license": "GPLv3",
+    "version": "2025-05-13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 535622,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-11T07:07:51.000Z",
+    "code_updated_at": "2025-05-11T07:07:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Filter Out $0.00 Garbage On Google Play Purchase History",
+    "description": "Filter Out Free Stuff On Google Play Purchase History",
+    "url": "https://greasyfork.org/scripts/535622-filter-out-0-00-garbage-on-google-play-purchase-history",
+    "code_url": "https://update.greasyfork.org/scripts/535622/Filter%20Out%20%24000%20Garbage%20On%20Google%20Play%20Purchase%20History.user.js",
+    "code_size": 1147,
+    "license": "GPLv3",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 534934,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-04T16:44:46.000Z",
+    "code_updated_at": "2025-06-20T18:40:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Free Game Alert (Old Reddit)",
+    "description": "Highlight posts containing the word \"free\"",
+    "url": "https://greasyfork.org/scripts/534934-free-game-alert-old-reddit",
+    "code_url": "https://update.greasyfork.org/scripts/534934/Free%20Game%20Alert%20%28Old%20Reddit%29.user.js",
+    "code_size": 1263,
+    "license": "GPLv3",
+    "version": "2025.06.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533589,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T04:37:14.000Z",
+    "code_updated_at": "2025-04-22T04:37:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Mahgoub.com Out of Stock Filter",
+    "description": "Removes all out of stock items on mahgoub.com",
+    "url": "https://greasyfork.org/scripts/533589-mahgoub-com-out-of-stock-filter",
+    "code_url": "https://update.greasyfork.org/scripts/533589/Mahgoubcom%20Out%20of%20Stock%20Filter.user.js",
+    "code_size": 2241,
+    "license": "GPLv3",
+    "version": "2025-04-22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499690,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-04T17:04:01.000Z",
+    "code_updated_at": "2024-07-04T17:04:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 374348,
+        "name": "swanknight",
+        "created_at": "2019-09-21T07:04:49.000Z",
+        "url": "https://greasyfork.org/users/374348-swanknight"
+      }
+    ],
+    "name": "Jazeera Sphinx Flights Warning",
+    "description": "Warns you about shitty Sphinx flights on Jazeera Airways",
+    "url": "https://greasyfork.org/scripts/499690-jazeera-sphinx-flights-warning",
+    "code_url": "https://update.greasyfork.org/scripts/499690/Jazeera%20Sphinx%20Flights%20Warning.user.js",
+    "code_size": 1190,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

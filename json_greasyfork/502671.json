@@ -1,0 +1,33 @@
+{
+  "id": 502671,
+  "daily_installs": 0,
+  "total_installs": 204,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-05T08:12:17.000Z",
+  "code_updated_at": "2024-08-05T08:13:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1080742,
+      "name": "stuffed",
+      "created_at": "2023-05-18T00:00:56.000Z",
+      "url": "https://greasyfork.org/users/1080742-stuffed"
+    }
+  ],
+  "name": "Anna's Archive Download Button for Z-Library",
+  "description": "Adds a download button to Anna's Archive on z-library pages with book takedowns",
+  "url": "https://greasyfork.org/scripts/502671-anna-s-archive-download-button-for-z-library",
+  "code_url": "https://update.greasyfork.org/scripts/502671/Anna%27s%20Archive%20Download%20Button%20for%20Z-Library.user.js",
+  "code_size": 1744,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

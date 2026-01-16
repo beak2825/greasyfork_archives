@@ -1,0 +1,34 @@
+{
+  "id": 531418,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-31T13:39:19.000Z",
+  "code_updated_at": "2025-04-23T02:04:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1452428,
+      "name": "Kjay",
+      "created_at": "2025-03-31T13:14:14.000Z",
+      "url": "https://greasyfork.org/users/1452428-kjay",
+      "scripts": []
+    }
+  ],
+  "name": "Milky Way Idle Tasklist",
+  "description": "This script provides a persistent, draggable task list window for Milky Way Idle to help track your goals.",
+  "url": "https://greasyfork.org/scripts/531418-milky-way-idle-tasklist",
+  "code_url": "https://update.greasyfork.org/scripts/531418/Milky%20Way%20Idle%20Tasklist.user.js",
+  "code_size": 73510,
+  "license": "MIT License",
+  "version": "2.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

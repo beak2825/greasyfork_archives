@@ -1,0 +1,59 @@
+{
+  "id": 553062,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-19T03:55:21.000Z",
+  "code_updated_at": "2025-10-19T03:55:21.000Z",
+  "namespace": "https://greasyfork.org/users/697802-jeffers3n",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 697802,
+      "name": "jeffers3n",
+      "created_at": "2020-10-24T02:36:09.000Z",
+      "url": "https://greasyfork.org/users/697802-jeffers3n",
+      "scripts": [
+        {
+          "id": 553062,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-19T03:55:21.000Z",
+          "code_updated_at": "2025-10-19T03:55:21.000Z",
+          "namespace": "https://greasyfork.org/users/697802-jeffers3n",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NotebookLM YouTube Links Batch Import Assistant",
+          "description": "高效批量导入多个 YouTube 链接到 Google NotebookLM，智能处理各种场景，包括新建笔记本时自动弹出的窗口，并支持链接去重和成功后自动关闭。",
+          "url": "https://greasyfork.org/scripts/553062-notebooklm-youtube-links-batch-import-assistant",
+          "code_url": "https://update.greasyfork.org/scripts/553062/NotebookLM%20YouTube%20Links%20Batch%20Import%20Assistant.user.js",
+          "code_size": 11659,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NotebookLM YouTube Links Batch Import Assistant",
+  "description": "高效批量导入多个 YouTube 链接到 Google NotebookLM，智能处理各种场景，包括新建笔记本时自动弹出的窗口，并支持链接去重和成功后自动关闭。",
+  "url": "https://greasyfork.org/scripts/553062-notebooklm-youtube-links-batch-import-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/553062/NotebookLM%20YouTube%20Links%20Batch%20Import%20Assistant.user.js",
+  "code_size": 11659,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 551420,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-03T05:23:04.000Z",
+    "code_updated_at": "2025-10-03T05:56:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521776,
+        "name": "gmpro",
+        "created_at": "2025-10-03T05:20:09.000Z",
+        "url": "https://greasyfork.org/users/1521776-gmpro"
+      }
+    ],
+    "name": "동영상 다운로드",
+    "description": "현재 페이지의 제목을 동영상 파일명으로 설정합니다.",
+    "url": "https://greasyfork.org/scripts/551420-%EB%8F%99%EC%98%81%EC%83%81-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C",
+    "code_url": "https://update.greasyfork.org/scripts/551420/%EB%8F%99%EC%98%81%EC%83%81%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C.user.js",
+    "code_size": 3016,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

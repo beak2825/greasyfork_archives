@@ -1,0 +1,33 @@
+{
+  "id": 547058,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-24T00:59:53.000Z",
+  "code_updated_at": "2025-08-24T00:59:53.000Z",
+  "namespace": "karla@neopointskarla",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1448744,
+      "name": "NeoKarla",
+      "created_at": "2025-03-22T05:07:11.000Z",
+      "url": "https://greasyfork.org/users/1448744-neokarla"
+    }
+  ],
+  "name": "Neopets - Karla's Auto Wishing Well",
+  "description": "Automatically makes wishes at wishing well",
+  "url": "https://greasyfork.org/scripts/547058-neopets-karla-s-auto-wishing-well",
+  "code_url": "https://update.greasyfork.org/scripts/547058/Neopets%20-%20Karla%27s%20Auto%20Wishing%20Well.user.js",
+  "code_size": 3511,
+  "license": "GPL3",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

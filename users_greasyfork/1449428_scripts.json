@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530663,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-23T21:45:45.000Z",
+    "code_updated_at": "2025-03-23T21:45:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1449428,
+        "name": "Perák András",
+        "created_at": "2025-03-23T21:39:41.000Z",
+        "url": "https://greasyfork.org/users/1449428-per%C3%A1k-andr%C3%A1s"
+      }
+    ],
+    "name": "Nebula.tv Auto Translate",
+    "description": "Extract subtitles and replace them inline with DeepL translations (500k chars/month free tier)!",
+    "url": "https://greasyfork.org/scripts/530663-nebula-tv-auto-translate",
+    "code_url": "https://update.greasyfork.org/scripts/530663/Nebulatv%20Auto%20Translate.user.js",
+    "code_size": 7626,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

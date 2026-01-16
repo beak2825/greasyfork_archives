@@ -1,0 +1,59 @@
+{
+  "id": 530915,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-26T12:40:05.000Z",
+  "code_updated_at": "2025-03-30T21:04:19.000Z",
+  "namespace": "https://example.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1392155,
+      "name": "AshEnke",
+      "created_at": "2024-11-06T16:19:58.000Z",
+      "url": "https://greasyfork.org/users/1392155-ashenke",
+      "scripts": [
+        {
+          "id": 516092,
+          "daily_installs": 0,
+          "total_installs": 44,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-06T16:22:21.000Z",
+          "code_updated_at": "2024-11-11T16:59:44.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RPS Comment Auto-Expander",
+          "description": "Auto-expands truncated comments on Rock Paper Shotgun, and optionally auto expand replies as well",
+          "url": "https://greasyfork.org/scripts/516092-rps-comment-auto-expander",
+          "code_url": "https://update.greasyfork.org/scripts/516092/RPS%20Comment%20Auto-Expander.user.js",
+          "code_size": 5734,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Communauto Token Bridge",
+  "description": "Extract Communauto tokens and provide them to the Flexfinder page",
+  "url": "https://greasyfork.org/scripts/530915-communauto-token-bridge",
+  "code_url": "https://update.greasyfork.org/scripts/530915/Communauto%20Token%20Bridge.user.js",
+  "code_size": 5530,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

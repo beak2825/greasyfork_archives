@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545551,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T09:16:11.000Z",
+    "code_updated_at": "2025-08-12T09:16:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 339665,
+        "name": "jhlxlml",
+        "created_at": "2019-08-26T06:00:44.000Z",
+        "url": "https://greasyfork.org/users/339665-jhlxlml"
+      }
+    ],
+    "name": "智能图片批量下载器 (v1.0 - 暂不支持打包下载)",
+    "description": "鼠标选择图片！下载按钮已内置于面板中，逻辑更清晰。自动扫描、分辨率筛选、ZIP打包功能有问题。",
+    "url": "https://greasyfork.org/scripts/545551-%E6%99%BA%E8%83%BD%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%99%A8-v1-0-%E6%9A%82%E4%B8%8D%E6%94%AF%E6%8C%81%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/545551/%E6%99%BA%E8%83%BD%E5%9B%BE%E7%89%87%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD%E5%99%A8%20%28v10%20-%20%E6%9A%82%E4%B8%8D%E6%94%AF%E6%8C%81%E6%89%93%E5%8C%85%E4%B8%8B%E8%BD%BD%29.user.js",
+    "code_size": 20742,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

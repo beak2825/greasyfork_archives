@@ -1,0 +1,59 @@
+{
+  "id": 496711,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-01T05:16:11.000Z",
+  "code_updated_at": "2024-06-01T08:16:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 292039,
+      "name": "AmaiAya",
+      "created_at": "2019-04-14T11:17:16.000Z",
+      "url": "https://greasyfork.org/users/292039-amaiaya",
+      "scripts": [
+        {
+          "id": 496711,
+          "daily_installs": 0,
+          "total_installs": 42,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-01T05:16:11.000Z",
+          "code_updated_at": "2024-06-01T08:16:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SkebMemo",
+          "description": "Save memo for user at skeb.jp.",
+          "url": "https://greasyfork.org/scripts/496711-skebmemo",
+          "code_url": "https://update.greasyfork.org/scripts/496711/SkebMemo.user.js",
+          "code_size": 29319,
+          "license": "MIT License",
+          "version": "1.2.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SkebMemo",
+  "description": "Save memo for user at skeb.jp.",
+  "url": "https://greasyfork.org/scripts/496711-skebmemo",
+  "code_url": "https://update.greasyfork.org/scripts/496711/SkebMemo.user.js",
+  "code_size": 29319,
+  "license": "MIT License",
+  "version": "1.2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

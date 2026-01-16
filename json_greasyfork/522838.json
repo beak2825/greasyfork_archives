@@ -1,0 +1,59 @@
+{
+  "id": 522838,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-04T16:32:17.000Z",
+  "code_updated_at": "2025-01-04T16:32:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1198302,
+      "name": "leecaiy04",
+      "created_at": "2023-10-17T16:27:17.000Z",
+      "url": "https://greasyfork.org/users/1198302-leecaiy04",
+      "scripts": [
+        {
+          "id": 522838,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-04T16:32:17.000Z",
+          "code_updated_at": "2025-01-04T16:32:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浮动上传按钮（支持Excel解析和JSON导出，并附带帮助函数）",
+          "description": "在任意网站添加一个可移动的上传按钮，支持上传并解析Excel文件，以及将JSON数据保存为Excel文件，并提供帮助函数",
+          "url": "https://greasyfork.org/scripts/522838-%E6%B5%AE%E5%8A%A8%E4%B8%8A%E4%BC%A0%E6%8C%89%E9%92%AE-%E6%94%AF%E6%8C%81excel%E8%A7%A3%E6%9E%90%E5%92%8Cjson%E5%AF%BC%E5%87%BA-%E5%B9%B6%E9%99%84%E5%B8%A6%E5%B8%AE%E5%8A%A9%E5%87%BD%E6%95%B0",
+          "code_url": "https://update.greasyfork.org/scripts/522838/%E6%B5%AE%E5%8A%A8%E4%B8%8A%E4%BC%A0%E6%8C%89%E9%92%AE%EF%BC%88%E6%94%AF%E6%8C%81Excel%E8%A7%A3%E6%9E%90%E5%92%8CJSON%E5%AF%BC%E5%87%BA%EF%BC%8C%E5%B9%B6%E9%99%84%E5%B8%A6%E5%B8%AE%E5%8A%A9%E5%87%BD%E6%95%B0%EF%BC%89.user.js",
+          "code_size": 9183,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "浮动上传按钮（支持Excel解析和JSON导出，并附带帮助函数）",
+  "description": "在任意网站添加一个可移动的上传按钮，支持上传并解析Excel文件，以及将JSON数据保存为Excel文件，并提供帮助函数",
+  "url": "https://greasyfork.org/scripts/522838-%E6%B5%AE%E5%8A%A8%E4%B8%8A%E4%BC%A0%E6%8C%89%E9%92%AE-%E6%94%AF%E6%8C%81excel%E8%A7%A3%E6%9E%90%E5%92%8Cjson%E5%AF%BC%E5%87%BA-%E5%B9%B6%E9%99%84%E5%B8%A6%E5%B8%AE%E5%8A%A9%E5%87%BD%E6%95%B0",
+  "code_url": "https://update.greasyfork.org/scripts/522838/%E6%B5%AE%E5%8A%A8%E4%B8%8A%E4%BC%A0%E6%8C%89%E9%92%AE%EF%BC%88%E6%94%AF%E6%8C%81Excel%E8%A7%A3%E6%9E%90%E5%92%8CJSON%E5%AF%BC%E5%87%BA%EF%BC%8C%E5%B9%B6%E9%99%84%E5%B8%A6%E5%B8%AE%E5%8A%A9%E5%87%BD%E6%95%B0%EF%BC%89.user.js",
+  "code_size": 9183,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

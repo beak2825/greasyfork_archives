@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533597,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T06:03:20.000Z",
+    "code_updated_at": "2025-05-27T03:49:08.000Z",
+    "namespace": "https://chatgpt.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460806,
+        "name": "FrederickCampbell",
+        "created_at": "2025-04-22T05:50:30.000Z",
+        "url": "https://greasyfork.org/users/1460806-frederickcampbell"
+      }
+    ],
+    "name": "ChatGPT Quick‑Delete (No Popup)",
+    "description": "Hover to reveal a grey trash‑can badge; click it to auto‑delete the conversation instantly (no confirmation popup).",
+    "url": "https://greasyfork.org/scripts/533597-chatgpt-quick-delete-no-popup",
+    "code_url": "https://update.greasyfork.org/scripts/533597/ChatGPT%20Quick%E2%80%91Delete%20%28No%20Popup%29.user.js",
+    "code_size": 4614,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

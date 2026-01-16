@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548279,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-03T22:39:27.000Z",
+    "code_updated_at": "2025-09-03T22:39:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511575,
+        "name": "ChickenExecutor",
+        "created_at": "2025-09-03T22:24:47.000Z",
+        "url": "https://greasyfork.org/users/1511575-chickenexecutor"
+      }
+    ],
+    "name": "Chicken Executor",
+    "description": "Its just a executor.",
+    "url": "https://greasyfork.org/scripts/548279-chicken-executor",
+    "code_url": "https://update.greasyfork.org/scripts/548279/Chicken%20Executor.user.js",
+    "code_size": 39978,
+    "license": "None",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

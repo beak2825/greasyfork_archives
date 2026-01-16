@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533231,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T10:42:30.000Z",
+    "code_updated_at": "2025-04-18T10:42:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1381193,
+        "name": "이환이",
+        "created_at": "2024-10-15T09:17:32.000Z",
+        "url": "https://greasyfork.org/users/1381193-%EC%9D%B4%ED%99%98%EC%9D%B4"
+      }
+    ],
+    "name": "네이버 카페 iframe 자동 변환 + 즐겨찾기 정렬",
+    "description": "네이버 카페에서 iframe 내 링크 자동 처리 및 즐겨찾기 메뉴 드래그 정렬",
+    "url": "https://greasyfork.org/scripts/533231-%EB%84%A4%EC%9D%B4%EB%B2%84-%EC%B9%B4%ED%8E%98-iframe-%EC%9E%90%EB%8F%99-%EB%B3%80%ED%99%98-%EC%A6%90%EA%B2%A8%EC%B0%BE%EA%B8%B0-%EC%A0%95%EB%A0%AC",
+    "code_url": "https://update.greasyfork.org/scripts/533231/%EB%84%A4%EC%9D%B4%EB%B2%84%20%EC%B9%B4%ED%8E%98%20iframe%20%EC%9E%90%EB%8F%99%20%EB%B3%80%ED%99%98%20%2B%20%EC%A6%90%EA%B2%A8%EC%B0%BE%EA%B8%B0%20%EC%A0%95%EB%A0%AC.user.js",
+    "code_size": 4783,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 551232,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-01T09:32:25.000Z",
+  "code_updated_at": "2025-10-01T09:37:58.000Z",
+  "namespace": "https://google.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1521273,
+      "name": "Peter  Smith",
+      "created_at": "2025-10-01T09:12:45.000Z",
+      "url": "https://greasyfork.org/users/1521273-peter-smith",
+      "scripts": [
+        {
+          "id": 551232,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-01T09:32:25.000Z",
+          "code_updated_at": "2025-10-01T09:37:58.000Z",
+          "namespace": "https://google.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "May Massage Chan Mini – Giai Phap Cham Soc Suc Khoe Tien Loi, Hieu Qua",
+          "description": "Tìm hiểu lý do máy massage chân mini đang được ưa chuộng, cách chọn mua chuẩn xác và top sản phẩm chính hãng, giá tốt. Đặt mua máy massage chân mini tại NMI Mart để trải nghiệm thư giãn hiệu quả ngay tại nhà!",
+          "url": "https://greasyfork.org/scripts/551232-may-massage-chan-mini-giai-phap-cham-soc-suc-khoe-tien-loi-hieu-qua",
+          "code_url": "https://update.greasyfork.org/scripts/551232/May%20Massage%20Chan%20Mini%20%E2%80%93%20Giai%20Phap%20Cham%20Soc%20Suc%20Khoe%20Tien%20Loi%2C%20Hieu%20Qua.user.js",
+          "code_size": 1035,
+          "license": "MIT License",
+          "version": "0.3",
+          "locale": "vi",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "May Massage Chan Mini – Giai Phap Cham Soc Suc Khoe Tien Loi, Hieu Qua",
+  "description": "Tìm hiểu lý do máy massage chân mini đang được ưa chuộng, cách chọn mua chuẩn xác và top sản phẩm chính hãng, giá tốt. Đặt mua máy massage chân mini tại NMI Mart để trải nghiệm thư giãn hiệu quả ngay tại nhà!",
+  "url": "https://greasyfork.org/scripts/551232-may-massage-chan-mini-giai-phap-cham-soc-suc-khoe-tien-loi-hieu-qua",
+  "code_url": "https://update.greasyfork.org/scripts/551232/May%20Massage%20Chan%20Mini%20%E2%80%93%20Giai%20Phap%20Cham%20Soc%20Suc%20Khoe%20Tien%20Loi%2C%20Hieu%20Qua.user.js",
+  "code_size": 1035,
+  "license": "MIT License",
+  "version": "0.3",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

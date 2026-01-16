@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532848,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-14T19:49:31.000Z",
+    "code_updated_at": "2025-04-14T19:49:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457925,
+        "name": "YumaIsMe",
+        "created_at": "2025-04-14T19:41:44.000Z",
+        "url": "https://greasyfork.org/users/1457925-yumaisme"
+      }
+    ],
+    "name": "Auto Click Create Ticket Button with Ticket Limit",
+    "description": "Auto-clicks 'Create ticket' unless 3 or more ticket channels exist",
+    "url": "https://greasyfork.org/scripts/532848-auto-click-create-ticket-button-with-ticket-limit",
+    "code_url": "https://update.greasyfork.org/scripts/532848/Auto%20Click%20Create%20Ticket%20Button%20with%20Ticket%20Limit.user.js",
+    "code_size": 1580,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

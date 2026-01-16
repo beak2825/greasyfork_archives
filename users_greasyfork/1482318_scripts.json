@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541065,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-28T19:17:58.000Z",
+    "code_updated_at": "2025-06-28T22:02:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482318,
+        "name": "扶涛权",
+        "created_at": "2025-06-11T12:53:51.000Z",
+        "url": "https://greasyfork.org/users/1482318-%E6%89%B6%E6%B6%9B%E6%9D%83"
+      }
+    ],
+    "name": "【牛牛】华医网课程收藏工具(不喜勿喷)✨",
+    "description": "通过输入课程CID值自动收藏华医网课程!或者打开对应课程页面将会自动收藏,不需要手动去点!此脚本不适合所有人,只适合爱收藏课程的人群,不做过多解释,此为基础版本,后续将进行优化,更多功能敬请您等候!",
+    "url": "https://greasyfork.org/scripts/541065-%E7%89%9B%E7%89%9B-%E5%8D%8E%E5%8C%BB%E7%BD%91%E8%AF%BE%E7%A8%8B%E6%94%B6%E8%97%8F%E5%B7%A5%E5%85%B7-%E4%B8%8D%E5%96%9C%E5%8B%BF%E5%96%B7",
+    "code_url": "https://update.greasyfork.org/scripts/541065/%E3%80%90%E7%89%9B%E7%89%9B%E3%80%91%E5%8D%8E%E5%8C%BB%E7%BD%91%E8%AF%BE%E7%A8%8B%E6%94%B6%E8%97%8F%E5%B7%A5%E5%85%B7%28%E4%B8%8D%E5%96%9C%E5%8B%BF%E5%96%B7%29%E2%9C%A8.user.js",
+    "code_size": 4234,
+    "license": "MIT License",
+    "version": "1.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

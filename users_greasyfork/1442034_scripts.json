@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528688,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-04T00:58:04.000Z",
+    "code_updated_at": "2025-03-04T00:59:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442034,
+        "name": "宋戈（实力）",
+        "created_at": "2025-03-04T00:55:40.000Z",
+        "url": "https://greasyfork.org/users/1442034-%E5%AE%8B%E6%88%88-%E5%AE%9E%E5%8A%9B"
+      }
+    ],
+    "name": "洛谷讨论区重定向到 lglg.top",
+    "description": "洛谷讨论区链接重定向到 lglg.top",
+    "url": "https://greasyfork.org/scripts/528688-%E6%B4%9B%E8%B0%B7%E8%AE%A8%E8%AE%BA%E5%8C%BA%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0-lglg-top",
+    "code_url": "https://update.greasyfork.org/scripts/528688/%E6%B4%9B%E8%B0%B7%E8%AE%A8%E8%AE%BA%E5%8C%BA%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0%20lglgtop.user.js",
+    "code_size": 1071,
+    "license": null,
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

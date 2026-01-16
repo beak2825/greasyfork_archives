@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518769,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-25T07:13:55.000Z",
+    "code_updated_at": "2024-12-11T12:57:23.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1345689,
+        "name": "Abragim_Landstone",
+        "created_at": "2024-08-05T08:58:07.000Z",
+        "url": "https://greasyfork.org/users/1345689-abragim-landstone"
+      }
+    ],
+    "name": "Cкрипт для Кураторов Форума || Novosibirsk",
+    "description": "Обновление 8.7 - первое, которое вышло в 24 году. В нем наша команда добавила новые цвета и и новые аватарки. Так же убрали неграмотность, добавили 4 новых правила и пофиксили баг с Рп ситуациями. Выбирайте нас для основного использования, так как мы заботимся о нашем продукте.",
+    "url": "https://greasyfork.org/scripts/518769-c%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-novosibirsk",
+    "code_url": "https://update.greasyfork.org/scripts/518769/C%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%7C%7C%20Novosibirsk.user.js",
+    "code_size": 152196,
+    "license": "MIT License",
+    "version": "8.7",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518213,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T14:01:34.000Z",
+    "code_updated_at": "2024-11-20T14:01:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399680,
+        "name": "publicutilities",
+        "created_at": "2024-11-20T14:00:39.000Z",
+        "url": "https://greasyfork.org/users/1399680-publicutilities"
+      }
+    ],
+    "name": "Remove Print Media Style",
+    "description": "Remove specific @media print styles from oogartsen.nl",
+    "url": "https://greasyfork.org/scripts/518213-remove-print-media-style",
+    "code_url": "https://update.greasyfork.org/scripts/518213/Remove%20Print%20Media%20Style.user.js",
+    "code_size": 635,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

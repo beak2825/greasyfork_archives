@@ -1,0 +1,34 @@
+{
+  "id": 536883,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-22T18:41:58.000Z",
+  "code_updated_at": "2025-05-27T22:49:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 775676,
+      "name": "enavap",
+      "created_at": "2021-05-24T11:35:17.000Z",
+      "url": "https://greasyfork.org/users/775676-enavap",
+      "scripts": []
+    }
+  ],
+  "name": "Extractor de Contenido de Foro Waze Discuss con enlaces http",
+  "description": "Extrae contenido (texto e imágenes incrustadas) de posts del foro de Waze Discuss y genera un archivo HTML. El textarea de URLs se vacía al finalizar.",
+  "url": "https://greasyfork.org/scripts/536883-extractor-de-contenido-de-foro-waze-discuss-con-enlaces-http",
+  "code_url": "https://update.greasyfork.org/scripts/536883/Extractor%20de%20Contenido%20de%20Foro%20Waze%20Discuss%20con%20enlaces%20http.user.js",
+  "code_size": 36811,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

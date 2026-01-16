@@ -1,0 +1,59 @@
+{
+  "id": 509793,
+  "daily_installs": 0,
+  "total_installs": 139,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-09-23T11:19:26.000Z",
+  "code_updated_at": "2024-11-18T03:35:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1371842,
+      "name": "Javeline947 & IHETHENOOB",
+      "created_at": "2024-09-23T08:32:14.000Z",
+      "url": "https://greasyfork.org/users/1371842-javeline947-ihethenoob",
+      "scripts": [
+        {
+          "id": 509793,
+          "daily_installs": 0,
+          "total_installs": 139,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-09-23T11:19:26.000Z",
+          "code_updated_at": "2024-11-18T03:35:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "HPS Counter Bloxd.io",
+          "description": "Bloxd.io HPS Counter",
+          "url": "https://greasyfork.org/scripts/509793-hps-counter-bloxd-io",
+          "code_url": "https://update.greasyfork.org/scripts/509793/HPS%20Counter%20Bloxdio.user.js",
+          "code_size": 15245,
+          "license": "MIT License",
+          "version": "5.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "HPS Counter Bloxd.io",
+  "description": "Bloxd.io HPS Counter",
+  "url": "https://greasyfork.org/scripts/509793-hps-counter-bloxd-io",
+  "code_url": "https://update.greasyfork.org/scripts/509793/HPS%20Counter%20Bloxdio.user.js",
+  "code_size": 15245,
+  "license": "MIT License",
+  "version": "5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

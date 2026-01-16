@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512078,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-10T07:39:08.000Z",
+    "code_updated_at": "2024-10-11T22:16:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378942,
+        "name": "עמית ארזי",
+        "created_at": "2024-10-10T07:34:58.000Z",
+        "url": "https://greasyfork.org/users/1378942-%D7%A2%D7%9E%D7%99%D7%AA-%D7%90%D7%A8%D7%96%D7%99"
+      }
+    ],
+    "name": "Super Compare Cart",
+    "description": "Create Cart",
+    "url": "https://greasyfork.org/scripts/512078-super-compare-cart",
+    "code_url": "https://update.greasyfork.org/scripts/512078/Super%20Compare%20Cart.user.js",
+    "code_size": 1297,
+    "license": null,
+    "version": "0.8",
+    "locale": "he",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

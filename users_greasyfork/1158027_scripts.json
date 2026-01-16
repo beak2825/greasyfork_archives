@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542224,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T19:24:22.000Z",
+    "code_updated_at": "2025-07-10T19:24:22.000Z",
+    "namespace": "https://greasyfork.org/users/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1158027,
+        "name": "kwon",
+        "created_at": "2023-08-24T06:02:12.000Z",
+        "url": "https://greasyfork.org/users/1158027-kwon"
+      }
+    ],
+    "name": "Fans/Watched Ratio - Letterboxd",
+    "description": "Calculates and appends the fans-to-watched percentage once elements are available.",
+    "url": "https://greasyfork.org/scripts/542224-fans-watched-ratio-letterboxd",
+    "code_url": "https://update.greasyfork.org/scripts/542224/FansWatched%20Ratio%20-%20Letterboxd.user.js",
+    "code_size": 3000,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

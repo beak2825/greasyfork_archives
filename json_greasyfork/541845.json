@@ -1,0 +1,59 @@
+{
+  "id": 541845,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-06T17:12:11.000Z",
+  "code_updated_at": "2025-07-06T17:12:11.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492274,
+      "name": "alejoh",
+      "created_at": "2025-07-06T16:40:44.000Z",
+      "url": "https://greasyfork.org/users/1492274-alejoh",
+      "scripts": [
+        {
+          "id": 541845,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-06T17:12:11.000Z",
+          "code_updated_at": "2025-07-06T17:12:11.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Remove automatic translations of Reddit posts",
+          "description": "This userscript removes the \"tl\" query parameter from Reddit URLs, effectively preventing the auto-translation junk you see whenever you go on Reddit. 06/07/2025, 18:30:29",
+          "url": "https://greasyfork.org/scripts/541845-remove-automatic-translations-of-reddit-posts",
+          "code_url": "https://update.greasyfork.org/scripts/541845/Remove%20automatic%20translations%20of%20Reddit%20posts.user.js",
+          "code_size": 650,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Remove automatic translations of Reddit posts",
+  "description": "This userscript removes the \"tl\" query parameter from Reddit URLs, effectively preventing the auto-translation junk you see whenever you go on Reddit. 06/07/2025, 18:30:29",
+  "url": "https://greasyfork.org/scripts/541845-remove-automatic-translations-of-reddit-posts",
+  "code_url": "https://update.greasyfork.org/scripts/541845/Remove%20automatic%20translations%20of%20Reddit%20posts.user.js",
+  "code_size": 650,
+  "license": "Do What The F*ck You Want To Public License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

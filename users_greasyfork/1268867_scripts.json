@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523124,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-07T14:48:27.000Z",
+    "code_updated_at": "2025-03-10T10:32:49.000Z",
+    "namespace": "https://greasyfork.org/en/users/30-opsomh",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1268867,
+        "name": "徐钰森",
+        "created_at": "2024-03-01T12:16:02.000Z",
+        "url": "https://greasyfork.org/users/1268867-%E5%BE%90%E9%92%B0%E6%A3%AE"
+      }
+    ],
+    "name": "Sage Journals Redirect",
+    "description": "将Sage期刊请求重定向至中国镜像站",
+    "url": "https://greasyfork.org/scripts/523124-sage-journals-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/523124/Sage%20Journals%20Redirect.user.js",
+    "code_size": 1166,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

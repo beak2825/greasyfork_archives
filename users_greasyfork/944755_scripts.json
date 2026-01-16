@@ -1,0 +1,35 @@
+[
+  {
+    "id": 504371,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-20T10:18:32.000Z",
+    "code_updated_at": "2024-08-20T10:18:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 944755,
+        "name": "Tornamic",
+        "created_at": "2022-08-09T15:18:21.000Z",
+        "url": "https://greasyfork.org/users/944755-tornamic"
+      }
+    ],
+    "name": "Free Atlassian Jira",
+    "description": "Removes annoying \"buy premium window\"",
+    "url": "https://greasyfork.org/scripts/504371-free-atlassian-jira",
+    "code_url": "https://update.greasyfork.org/scripts/504371/Free%20Atlassian%20Jira.user.js",
+    "code_size": 1323,
+    "license": "none",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

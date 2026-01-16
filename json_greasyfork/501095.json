@@ -1,0 +1,33 @@
+{
+  "id": 501095,
+  "daily_installs": 1,
+  "total_installs": 107,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-18T16:10:13.000Z",
+  "code_updated_at": "2024-07-19T01:40:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1336148,
+      "name": "Dwiky Aditya",
+      "created_at": "2024-07-18T15:42:45.000Z",
+      "url": "https://greasyfork.org/users/1336148-dwiky-aditya"
+    }
+  ],
+  "name": "10fastfingers hack",
+  "description": "Simulate typing and auto correct",
+  "url": "https://greasyfork.org/scripts/501095-10fastfingers-hack",
+  "code_url": "https://update.greasyfork.org/scripts/501095/10fastfingers%20hack.user.js",
+  "code_size": 2906,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

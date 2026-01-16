@@ -1,0 +1,134 @@
+[
+  {
+    "id": 522307,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T13:28:56.000Z",
+    "code_updated_at": "2024-12-30T13:28:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016050,
+        "name": "dianran",
+        "created_at": "2023-01-24T12:22:44.000Z",
+        "url": "https://greasyfork.org/users/1016050-dianran"
+      }
+    ],
+    "name": "家庭氪金和DLC助手",
+    "description": "Microsoft Family DLC",
+    "url": "https://greasyfork.org/scripts/522307-%E5%AE%B6%E5%BA%AD%E6%B0%AA%E9%87%91%E5%92%8Cdlc%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/522307/%E5%AE%B6%E5%BA%AD%E6%B0%AA%E9%87%91%E5%92%8CDLC%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 1764,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522300,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T13:18:36.000Z",
+    "code_updated_at": "2024-12-30T13:18:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016050,
+        "name": "dianran",
+        "created_at": "2023-01-24T12:22:44.000Z",
+        "url": "https://greasyfork.org/users/1016050-dianran"
+      }
+    ],
+    "name": "家庭金会员助手",
+    "description": "Microsoft Family Gold Membership",
+    "url": "https://greasyfork.org/scripts/522300-%E5%AE%B6%E5%BA%AD%E9%87%91%E4%BC%9A%E5%91%98%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/522300/%E5%AE%B6%E5%BA%AD%E9%87%91%E4%BC%9A%E5%91%98%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 17018,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 522298,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T13:16:39.000Z",
+    "code_updated_at": "2024-12-30T13:16:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016050,
+        "name": "dianran",
+        "created_at": "2023-01-24T12:22:44.000Z",
+        "url": "https://greasyfork.org/users/1016050-dianran"
+      }
+    ],
+    "name": "家庭购买授权助手",
+    "description": "Microsoft Family Purchase Authorization",
+    "url": "https://greasyfork.org/scripts/522298-%E5%AE%B6%E5%BA%AD%E8%B4%AD%E4%B9%B0%E6%8E%88%E6%9D%83%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/522298/%E5%AE%B6%E5%BA%AD%E8%B4%AD%E4%B9%B0%E6%8E%88%E6%9D%83%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 9202,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 522297,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T13:13:41.000Z",
+    "code_updated_at": "2024-12-30T13:13:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1016050,
+        "name": "dianran",
+        "created_at": "2023-01-24T12:22:44.000Z",
+        "url": "https://greasyfork.org/users/1016050-dianran"
+      }
+    ],
+    "name": "家庭组邀请助手",
+    "description": "Add member to Microsoft Family",
+    "url": "https://greasyfork.org/scripts/522297-%E5%AE%B6%E5%BA%AD%E7%BB%84%E9%82%80%E8%AF%B7%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/522297/%E5%AE%B6%E5%BA%AD%E7%BB%84%E9%82%80%E8%AF%B7%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 10835,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

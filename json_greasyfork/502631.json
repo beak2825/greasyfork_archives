@@ -1,0 +1,34 @@
+{
+  "id": 502631,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-04T19:12:24.000Z",
+  "code_updated_at": "2024-08-05T04:30:45.000Z",
+  "namespace": "Quickly opens up caption inspectors",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1345360,
+      "name": "Passionate Science Student",
+      "created_at": "2024-08-04T19:09:47.000Z",
+      "url": "https://greasyfork.org/users/1345360-passionate-science-student",
+      "scripts": []
+    }
+  ],
+  "name": "Caption Inspector - pogdeviv",
+  "description": "Quickly opens up caption inspectors",
+  "url": "https://greasyfork.org/scripts/502631-caption-inspector-pogdeviv",
+  "code_url": "https://update.greasyfork.org/scripts/502631/Caption%20Inspector%20-%20pogdeviv.user.js",
+  "code_size": 5810,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

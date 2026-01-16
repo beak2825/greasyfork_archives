@@ -1,0 +1,59 @@
+{
+  "id": 538895,
+  "daily_installs": 0,
+  "total_installs": 9,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T07:25:33.000Z",
+  "code_updated_at": "2025-06-10T03:39:12.000Z",
+  "namespace": "https://greasyfork.org/users/810491",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 810491,
+      "name": "Someday I Wish",
+      "created_at": "2021-08-30T21:46:57.000Z",
+      "url": "https://greasyfork.org/users/810491-someday-i-wish",
+      "scripts": [
+        {
+          "id": 538895,
+          "daily_installs": 0,
+          "total_installs": 9,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-09T07:25:33.000Z",
+          "code_updated_at": "2025-06-10T03:39:12.000Z",
+          "namespace": "https://greasyfork.org/users/810491",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Neopets - Neolodge fill-in",
+          "description": "auto adds all pets for max number of days",
+          "url": "https://greasyfork.org/scripts/538895-neopets-neolodge-fill-in",
+          "code_url": "https://update.greasyfork.org/scripts/538895/Neopets%20-%20Neolodge%20fill-in.user.js",
+          "code_size": 2506,
+          "license": "The Unlicense",
+          "version": "0.1.1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Neopets - Neolodge fill-in",
+  "description": "auto adds all pets for max number of days",
+  "url": "https://greasyfork.org/scripts/538895-neopets-neolodge-fill-in",
+  "code_url": "https://update.greasyfork.org/scripts/538895/Neopets%20-%20Neolodge%20fill-in.user.js",
+  "code_size": 2506,
+  "license": "The Unlicense",
+  "version": "0.1.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

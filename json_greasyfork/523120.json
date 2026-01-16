@@ -1,0 +1,59 @@
+{
+  "id": 523120,
+  "daily_installs": 1,
+  "total_installs": 15,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-07T12:53:12.000Z",
+  "code_updated_at": "2025-01-26T01:51:02.000Z",
+  "namespace": "https://heilo.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420586,
+      "name": "牛大大",
+      "created_at": "2025-01-07T12:42:26.000Z",
+      "url": "https://greasyfork.org/users/1420586-%E7%89%9B%E5%A4%A7%E5%A4%A7",
+      "scripts": [
+        {
+          "id": 523120,
+          "daily_installs": 1,
+          "total_installs": 15,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-07T12:53:12.000Z",
+          "code_updated_at": "2025-01-26T01:51:02.000Z",
+          "namespace": "https://heilo.cn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "嘿咯图床上传脚本",
+          "description": "嘿咯图床上传脚本，支持拖拽上传，多图上传，直接返回外链地址，可以直接复制DZ论坛格式及Markdown格式在论坛发布，任何网站需要都可以使用。",
+          "url": "https://greasyfork.org/scripts/523120-%E5%98%BF%E5%92%AF%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/523120/%E5%98%BF%E5%92%AF%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 13829,
+          "license": "GNU Affero General Public License v3.0 or later",
+          "version": "2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "嘿咯图床上传脚本",
+  "description": "嘿咯图床上传脚本，支持拖拽上传，多图上传，直接返回外链地址，可以直接复制DZ论坛格式及Markdown格式在论坛发布，任何网站需要都可以使用。",
+  "url": "https://greasyfork.org/scripts/523120-%E5%98%BF%E5%92%AF%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/523120/%E5%98%BF%E5%92%AF%E5%9B%BE%E5%BA%8A%E4%B8%8A%E4%BC%A0%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 13829,
+  "license": "GNU Affero General Public License v3.0 or later",
+  "version": "2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

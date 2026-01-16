@@ -1,0 +1,33 @@
+{
+  "id": 540928,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-27T09:38:30.000Z",
+  "code_updated_at": "2025-08-15T14:18:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1489200,
+      "name": "Ayaz Bikmaev",
+      "created_at": "2025-06-27T09:34:13.000Z",
+      "url": "https://greasyfork.org/users/1489200-ayaz-bikmaev"
+    }
+  ],
+  "name": "TMS Case Per-Case Smart Filter",
+  "description": "Фильтр кейсов с индивидуальным выбором сочетаний параметров для каждого кейса, поиском, названиями и перетаскиваемой кнопкой",
+  "url": "https://greasyfork.org/scripts/540928-tms-case-per-case-smart-filter",
+  "code_url": "https://update.greasyfork.org/scripts/540928/TMS%20Case%20Per-Case%20Smart%20Filter.user.js",
+  "code_size": 81248,
+  "license": "MIT License",
+  "version": "1.9.7",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

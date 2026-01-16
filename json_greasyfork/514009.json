@@ -1,0 +1,34 @@
+{
+  "id": 514009,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-25T13:24:26.000Z",
+  "code_updated_at": "2024-10-25T13:24:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1386115,
+      "name": "MaseYevon",
+      "created_at": "2024-10-25T12:58:52.000Z",
+      "url": "https://greasyfork.org/users/1386115-maseyevon",
+      "scripts": []
+    }
+  ],
+  "name": "Realism in IdleMMO",
+  "description": "Replaces some text to add more realism to the game.",
+  "url": "https://greasyfork.org/scripts/514009-realism-in-idlemmo",
+  "code_url": "https://update.greasyfork.org/scripts/514009/Realism%20in%20IdleMMO.user.js",
+  "code_size": 4013,
+  "license": "http://creativecommons.org/licenses/by-nc-nd/3.0/us/",
+  "version": "2024-10-25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

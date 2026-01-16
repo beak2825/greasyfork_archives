@@ -1,0 +1,101 @@
+[
+  {
+    "id": 528058,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-25T16:56:25.000Z",
+    "code_updated_at": "2025-02-26T08:09:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399419,
+        "name": "Cradms",
+        "created_at": "2024-11-20T06:17:12.000Z",
+        "url": "https://greasyfork.org/users/1399419-cradms"
+      }
+    ],
+    "name": "网易云音乐云盘清理工具多功能版",
+    "description": "自动清理网易云音乐云盘中的日文/韩文/百家讲坛/英文/特定字符/钢琴曲等内容",
+    "url": "https://greasyfork.org/scripts/528058-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%91%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/528058/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%91%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7%E5%A4%9A%E5%8A%9F%E8%83%BD%E7%89%88.user.js",
+    "code_size": 32144,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 528057,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-25T16:53:15.000Z",
+    "code_updated_at": "2025-02-25T16:54:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399419,
+        "name": "Cradms",
+        "created_at": "2024-11-20T06:17:12.000Z",
+        "url": "https://greasyfork.org/users/1399419-cradms"
+      }
+    ],
+    "name": "网易云音乐云盘清理工具",
+    "description": "自动清理网易云音乐云盘中的日文/韩文/百家讲坛/英文/特定字符等内容",
+    "url": "https://greasyfork.org/scripts/528057-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%91%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/528057/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E4%BA%91%E7%9B%98%E6%B8%85%E7%90%86%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 30629,
+    "license": null,
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518195,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T10:51:48.000Z",
+    "code_updated_at": "2024-11-20T23:37:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1399419,
+        "name": "Cradms",
+        "created_at": "2024-11-20T06:17:12.000Z",
+        "url": "https://greasyfork.org/users/1399419-cradms"
+      }
+    ],
+    "name": "妖火快速回顶部（改）",
+    "description": "美化内容：1.按钮样式：将按钮改为圆形，并增加阴影效果。2.颜色过渡：添加鼠标悬停时的颜色和缩放效果。3.平滑滚动：保持平滑滚动效果。",
+    "url": "https://greasyfork.org/scripts/518195-%E5%A6%96%E7%81%AB%E5%BF%AB%E9%80%9F%E5%9B%9E%E9%A1%B6%E9%83%A8-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/518195/%E5%A6%96%E7%81%AB%E5%BF%AB%E9%80%9F%E5%9B%9E%E9%A1%B6%E9%83%A8%EF%BC%88%E6%94%B9%EF%BC%89.user.js",
+    "code_size": 2226,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

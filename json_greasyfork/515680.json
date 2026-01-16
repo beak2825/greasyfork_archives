@@ -1,0 +1,34 @@
+{
+  "id": 515680,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-04T03:31:36.000Z",
+  "code_updated_at": "2024-11-04T03:31:36.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1390879,
+      "name": "Keksik_Dyson",
+      "created_at": "2024-11-04T03:24:32.000Z",
+      "url": "https://greasyfork.org/users/1390879-keksik-dyson",
+      "scripts": []
+    }
+  ],
+  "name": "Script for admin's Black Moscow by Keksik_Dyson",
+  "description": "02.11.2024, 20:58:20",
+  "url": "https://greasyfork.org/scripts/515680-script-for-admin-s-black-moscow-by-keksik-dyson",
+  "code_url": "https://update.greasyfork.org/scripts/515680/Script%20for%20admin%27s%20Black%20Moscow%20by%20Keksik_Dyson.user.js",
+  "code_size": 28687,
+  "license": "https://forumblackmoscow.ru/index.php",
+  "version": "development",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

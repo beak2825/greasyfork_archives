@@ -1,0 +1,59 @@
+{
+  "id": 540162,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T14:40:31.000Z",
+  "code_updated_at": "2025-06-20T14:40:31.000Z",
+  "namespace": "https://github.com/yourusername",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1486247,
+      "name": "arungeorgesaji",
+      "created_at": "2025-06-20T14:25:51.000Z",
+      "url": "https://greasyfork.org/users/1486247-arungeorgesaji",
+      "scripts": [
+        {
+          "id": 540162,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-20T14:40:31.000Z",
+          "code_updated_at": "2025-06-20T14:40:31.000Z",
+          "namespace": "https://github.com/yourusername",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Power UserScript",
+          "description": "Customize webpage appearance with dark mode, custom colors, font sizing and much more in the future.",
+          "url": "https://greasyfork.org/scripts/540162-power-userscript",
+          "code_url": "https://update.greasyfork.org/scripts/540162/Power%20UserScript.user.js",
+          "code_size": 6479,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Power UserScript",
+  "description": "Customize webpage appearance with dark mode, custom colors, font sizing and much more in the future.",
+  "url": "https://greasyfork.org/scripts/540162-power-userscript",
+  "code_url": "https://update.greasyfork.org/scripts/540162/Power%20UserScript.user.js",
+  "code_size": 6479,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

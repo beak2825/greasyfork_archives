@@ -1,0 +1,59 @@
+{
+  "id": 544819,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-06T12:07:43.000Z",
+  "code_updated_at": "2025-09-09T04:10:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433514,
+      "name": "bestjeans",
+      "created_at": "2025-02-10T07:54:14.000Z",
+      "url": "https://greasyfork.org/users/1433514-bestjeans",
+      "scripts": [
+        {
+          "id": 544819,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-06T12:07:43.000Z",
+          "code_updated_at": "2025-09-09T04:10:06.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AI Studio quick prompt via site search shortcut",
+          "description": "Create new AI Studio prompts quickly using site search shortcut",
+          "url": "https://greasyfork.org/scripts/544819-ai-studio-quick-prompt-via-site-search-shortcut",
+          "code_url": "https://update.greasyfork.org/scripts/544819/AI%20Studio%20quick%20prompt%20via%20site%20search%20shortcut.user.js",
+          "code_size": 6292,
+          "license": "MIT License",
+          "version": "1.04",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AI Studio quick prompt via site search shortcut",
+  "description": "Create new AI Studio prompts quickly using site search shortcut",
+  "url": "https://greasyfork.org/scripts/544819-ai-studio-quick-prompt-via-site-search-shortcut",
+  "code_url": "https://update.greasyfork.org/scripts/544819/AI%20Studio%20quick%20prompt%20via%20site%20search%20shortcut.user.js",
+  "code_size": 6292,
+  "license": "MIT License",
+  "version": "1.04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

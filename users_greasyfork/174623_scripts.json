@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554024,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-28T23:59:18.000Z",
+    "code_updated_at": "2025-10-28T23:59:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 174623,
+        "name": "yiha",
+        "created_at": "2018-03-12T23:19:01.000Z",
+        "url": "https://greasyfork.org/users/174623-yiha"
+      }
+    ],
+    "name": "alt+左键保存图片 (可自定义文件夹)",
+    "description": "使用 Alt+左键 下载图片。已对 Instagram 优化。可通过 Tampermonkey 菜单设置下载子文件夹。",
+    "url": "https://greasyfork.org/scripts/554024-alt-%E5%B7%A6%E9%94%AE%E4%BF%9D%E5%AD%98%E5%9B%BE%E7%89%87-%E5%8F%AF%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E4%BB%B6%E5%A4%B9",
+    "code_url": "https://update.greasyfork.org/scripts/554024/alt%2B%E5%B7%A6%E9%94%AE%E4%BF%9D%E5%AD%98%E5%9B%BE%E7%89%87%20%28%E5%8F%AF%E8%87%AA%E5%AE%9A%E4%B9%89%E6%96%87%E4%BB%B6%E5%A4%B9%29.user.js",
+    "code_size": 5325,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

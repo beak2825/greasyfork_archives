@@ -1,0 +1,59 @@
+{
+  "id": 517638,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-16T13:08:10.000Z",
+  "code_updated_at": "2024-11-16T13:08:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1333477,
+      "name": "luna-mae",
+      "created_at": "2024-07-14T23:13:54.000Z",
+      "url": "https://greasyfork.org/users/1333477-luna-mae",
+      "scripts": [
+        {
+          "id": 517740,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-17T06:57:07.000Z",
+          "code_updated_at": "2024-11-17T07:08:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fishtank GIF Clipper",
+          "description": "Records last 10 seconds of frames from fishtank.live video with a preview and editing options for exporting as GIF",
+          "url": "https://greasyfork.org/scripts/517740-fishtank-gif-clipper",
+          "code_url": "https://update.greasyfork.org/scripts/517740/Fishtank%20GIF%20Clipper.user.js",
+          "code_size": 23638,
+          "license": "GNU GPLv3",
+          "version": "1.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fishtank GIF Clipper",
+  "description": "Records last 10 seconds of frames from fishtank.live video with a preview and editing options for exporting as GIF",
+  "url": "https://greasyfork.org/scripts/517638-fishtank-gif-clipper",
+  "code_url": "https://update.greasyfork.org/scripts/517638/Fishtank%20GIF%20Clipper.user.js",
+  "code_size": 16235,
+  "license": "GNU GPLv3",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

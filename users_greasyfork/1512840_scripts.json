@@ -426,7 +426,7 @@
     "version": "1.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 552825,
@@ -460,5 +460,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 548755,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-08T01:15:31.000Z",
+    "code_updated_at": "2026-01-03T00:05:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512840,
+        "name": "lissa jo",
+        "created_at": "2025-09-08T01:11:42.000Z",
+        "url": "https://greasyfork.org/users/1512840-lissa-jo"
+      }
+    ],
+    "name": "P3 - Puma Mass Renamer + RNG Namer W/Dropdown",
+    "description": "Manual rename, random rename, prefix/suffix text, remove filter text, persistent settings, sticky panel, auto-open, dark mode",
+    "url": "https://greasyfork.org/scripts/548755-p3-puma-mass-renamer-rng-namer-w-dropdown",
+    "code_url": "https://update.greasyfork.org/scripts/548755/P3%20-%20Puma%20Mass%20Renamer%20%2B%20RNG%20Namer%20WDropdown.user.js",
+    "code_size": 419700,
+    "license": "MIT License",
+    "version": "7.24",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

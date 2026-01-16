@@ -1,0 +1,34 @@
+{
+  "id": 507976,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-11T14:45:44.000Z",
+  "code_updated_at": "2024-09-11T21:03:59.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1364194,
+      "name": "Lunara",
+      "created_at": "2024-09-07T01:09:39.000Z",
+      "url": "https://greasyfork.org/users/1364194-lunara",
+      "scripts": []
+    }
+  ],
+  "name": "Torn Cooldowns Status",
+  "description": "Displays cooldown statuses (drug, medical, booster) from the Torn API, colored for easier viewing.",
+  "url": "https://greasyfork.org/scripts/507976-torn-cooldowns-status",
+  "code_url": "https://update.greasyfork.org/scripts/507976/Torn%20Cooldowns%20Status.user.js",
+  "code_size": 7063,
+  "license": "GNU GLPv3",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

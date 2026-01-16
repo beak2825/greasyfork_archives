@@ -1,0 +1,134 @@
+[
+  {
+    "id": 527570,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-20T15:11:46.000Z",
+    "code_updated_at": "2025-02-20T15:11:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155287,
+        "name": "Miklós Botond",
+        "created_at": "2017-10-07T19:13:35.000Z",
+        "url": "https://greasyfork.org/users/155287-mikl%C3%B3s-botond"
+      }
+    ],
+    "name": "Gitlab Releases",
+    "description": "Fade out non-free sections in GitLab releases",
+    "url": "https://greasyfork.org/scripts/527570-gitlab-releases",
+    "code_url": "https://update.greasyfork.org/scripts/527570/Gitlab%20Releases.user.js",
+    "code_size": 1037,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511780,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T15:30:14.000Z",
+    "code_updated_at": "2024-10-07T15:30:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155287,
+        "name": "Miklós Botond",
+        "created_at": "2017-10-07T19:13:35.000Z",
+        "url": "https://greasyfork.org/users/155287-mikl%C3%B3s-botond"
+      }
+    ],
+    "name": "Disquss Decentizer",
+    "description": "Make dicsuss comments decent",
+    "url": "https://greasyfork.org/scripts/511780-disquss-decentizer",
+    "code_url": "https://update.greasyfork.org/scripts/511780/Disquss%20Decentizer.user.js",
+    "code_size": 523,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501340,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-21T08:06:30.000Z",
+    "code_updated_at": "2024-07-21T08:12:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155287,
+        "name": "Miklós Botond",
+        "created_at": "2017-10-07T19:13:35.000Z",
+        "url": "https://greasyfork.org/users/155287-mikl%C3%B3s-botond"
+      }
+    ],
+    "name": "Cloutgist skipper",
+    "description": "Skip some of the timers",
+    "url": "https://greasyfork.org/scripts/501340-cloutgist-skipper",
+    "code_url": "https://update.greasyfork.org/scripts/501340/Cloutgist%20skipper.user.js",
+    "code_size": 738,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498760,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-24T12:25:12.000Z",
+    "code_updated_at": "2025-04-29T06:53:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155287,
+        "name": "Miklós Botond",
+        "created_at": "2017-10-07T19:13:35.000Z",
+        "url": "https://greasyfork.org/users/155287-mikl%C3%B3s-botond"
+      }
+    ],
+    "name": "Azora Fixer",
+    "description": "Make this thing somewhat usable",
+    "url": "https://greasyfork.org/scripts/498760-azora-fixer",
+    "code_url": "https://update.greasyfork.org/scripts/498760/Azora%20Fixer.user.js",
+    "code_size": 1627,
+    "license": "MIT License",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

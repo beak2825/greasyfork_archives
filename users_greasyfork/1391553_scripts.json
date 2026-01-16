@@ -1,0 +1,35 @@
+[
+  {
+    "id": 515922,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-05T11:24:52.000Z",
+    "code_updated_at": "2024-11-05T11:38:49.000Z",
+    "namespace": "http://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391553,
+        "name": "Brooksx",
+        "created_at": "2024-11-05T11:10:35.000Z",
+        "url": "https://greasyfork.org/users/1391553-brooksx"
+      }
+    ],
+    "name": "氩洛谷+圆角化",
+    "description": "深度美化洛谷（改自 TLEWA），带背景，加了圆角化",
+    "url": "https://greasyfork.org/scripts/515922-%E6%B0%A9%E6%B4%9B%E8%B0%B7-%E5%9C%86%E8%A7%92%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/515922/%E6%B0%A9%E6%B4%9B%E8%B0%B7%2B%E5%9C%86%E8%A7%92%E5%8C%96.user.js",
+    "code_size": 67935,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

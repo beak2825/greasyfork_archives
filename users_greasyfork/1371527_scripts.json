@@ -1,0 +1,101 @@
+[
+  {
+    "id": 549008,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-10T08:52:36.000Z",
+    "code_updated_at": "2025-09-16T07:47:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371527,
+        "name": "lisisuidegithub",
+        "created_at": "2024-09-22T13:12:53.000Z",
+        "url": "https://greasyfork.org/users/1371527-lisisuidegithub"
+      }
+    ],
+    "name": "修改百度网盘视频宽度",
+    "description": "修改视频播放区域的宽度，使其完全贴合视频的大小",
+    "url": "https://greasyfork.org/scripts/549008-%E4%BF%AE%E6%94%B9%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E8%A7%86%E9%A2%91%E5%AE%BD%E5%BA%A6",
+    "code_url": "https://update.greasyfork.org/scripts/549008/%E4%BF%AE%E6%94%B9%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E8%A7%86%E9%A2%91%E5%AE%BD%E5%BA%A6.user.js",
+    "code_size": 5657,
+    "license": "GPL3",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518417,
+    "daily_installs": 0,
+    "total_installs": 90,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T02:45:01.000Z",
+    "code_updated_at": "2025-08-14T10:01:11.000Z",
+    "namespace": "http://github.com/lihaoze123/Baiduyun-subtitle-downloader",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371527,
+        "name": "lisisuidegithub",
+        "created_at": "2024-09-22T13:12:53.000Z",
+        "url": "https://greasyfork.org/users/1371527-lisisuidegithub"
+      }
+    ],
+    "name": "百度网盘智能字幕下载（改）",
+    "description": "下载当前使用的字幕，自动将百度网盘生成的智能字幕下载为 srt 文件，增加下载按钮",
+    "url": "https://greasyfork.org/scripts/518417-%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%99%BA%E8%83%BD%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD-%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/518417/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E6%99%BA%E8%83%BD%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD%EF%BC%88%E6%94%B9%EF%BC%89.user.js",
+    "code_size": 6784,
+    "license": "GPL3",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509684,
+    "daily_installs": 1,
+    "total_installs": 65,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-22T13:50:54.000Z",
+    "code_updated_at": "2025-12-04T07:33:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371527,
+        "name": "lisisuidegithub",
+        "created_at": "2024-09-22T13:12:53.000Z",
+        "url": "https://greasyfork.org/users/1371527-lisisuidegithub"
+      }
+    ],
+    "name": "bilibili字幕自动打开",
+    "description": "自动打开哔哩哔哩字幕，只在有播放列表时开启，方便看课程，不需要每次都点击字幕",
+    "url": "https://greasyfork.org/scripts/509684-bilibili%E5%AD%97%E5%B9%95%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/509684/bilibili%E5%AD%97%E5%B9%95%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80.user.js",
+    "code_size": 7246,
+    "license": "MIT License",
+    "version": "1.15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

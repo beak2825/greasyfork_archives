@@ -1,0 +1,101 @@
+[
+  {
+    "id": 504243,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-19T10:06:40.000Z",
+    "code_updated_at": "2024-08-20T05:46:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293268,
+        "name": "leihaohao",
+        "created_at": "2024-04-26T06:26:25.000Z",
+        "url": "https://greasyfork.org/users/1293268-leihaohao"
+      }
+    ],
+    "name": "Modify Image URLs on Etsy",
+    "description": "Modify image URLs by removing the query string in elements with class \"PDP_Large_Images\" and add a button to copy the modified URLs.",
+    "url": "https://greasyfork.org/scripts/504243-modify-image-urls-on-etsy",
+    "code_url": "https://update.greasyfork.org/scripts/504243/Modify%20Image%20URLs%20on%20Etsy.user.js",
+    "code_size": 2100,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502413,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-02T05:40:22.000Z",
+    "code_updated_at": "2024-08-02T05:40:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293268,
+        "name": "leihaohao",
+        "created_at": "2024-04-26T06:26:25.000Z",
+        "url": "https://greasyfork.org/users/1293268-leihaohao"
+      }
+    ],
+    "name": "Modify Image URLs in srcset with jQuery",
+    "description": "Modify image URLs by removing the query string in elements with class \"PDP_Large_Images\"",
+    "url": "https://greasyfork.org/scripts/502413-modify-image-urls-in-srcset-with-jquery",
+    "code_url": "https://update.greasyfork.org/scripts/502413/Modify%20Image%20URLs%20in%20srcset%20with%20jQuery.user.js",
+    "code_size": 1879,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498323,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-19T03:37:54.000Z",
+    "code_updated_at": "2024-06-19T04:00:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1293268,
+        "name": "leihaohao",
+        "created_at": "2024-04-26T06:26:25.000Z",
+        "url": "https://greasyfork.org/users/1293268-leihaohao"
+      }
+    ],
+    "name": "baiSiMaiScript",
+    "description": "bsm集中商品信息",
+    "url": "https://greasyfork.org/scripts/498323-baisimaiscript",
+    "code_url": "https://update.greasyfork.org/scripts/498323/baiSiMaiScript.user.js",
+    "code_size": 6208,
+    "license": "MIT License",
+    "version": "2024-06-19-3",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

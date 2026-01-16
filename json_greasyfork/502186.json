@@ -1,0 +1,59 @@
+{
+  "id": 502186,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-30T13:12:16.000Z",
+  "code_updated_at": "2024-07-30T13:12:16.000Z",
+  "namespace": "http://i.mi.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 889532,
+      "name": "hhhllll888",
+      "created_at": "2022-03-19T13:00:33.000Z",
+      "url": "https://greasyfork.org/users/889532-hhhllll888",
+      "scripts": [
+        {
+          "id": 502186,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-30T13:12:16.000Z",
+          "code_updated_at": "2024-07-30T13:12:16.000Z",
+          "namespace": "http://i.mi.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小米笔记转markdown",
+          "description": "将小米笔记中的笔记转换成markdown形式，可供其他笔记使用",
+          "url": "https://greasyfork.org/scripts/502186-%E5%B0%8F%E7%B1%B3%E7%AC%94%E8%AE%B0%E8%BD%ACmarkdown",
+          "code_url": "https://update.greasyfork.org/scripts/502186/%E5%B0%8F%E7%B1%B3%E7%AC%94%E8%AE%B0%E8%BD%ACmarkdown.user.js",
+          "code_size": 5390,
+          "license": "MIT License",
+          "version": "2024-07-14",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "小米笔记转markdown",
+  "description": "将小米笔记中的笔记转换成markdown形式，可供其他笔记使用",
+  "url": "https://greasyfork.org/scripts/502186-%E5%B0%8F%E7%B1%B3%E7%AC%94%E8%AE%B0%E8%BD%ACmarkdown",
+  "code_url": "https://update.greasyfork.org/scripts/502186/%E5%B0%8F%E7%B1%B3%E7%AC%94%E8%AE%B0%E8%BD%ACmarkdown.user.js",
+  "code_size": 5390,
+  "license": "MIT License",
+  "version": "2024-07-14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 525469,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T23:12:23.000Z",
+  "code_updated_at": "2025-01-31T23:12:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1429624,
+      "name": "Xielicemlinn Lanett",
+      "created_at": "2025-01-31T23:09:53.000Z",
+      "url": "https://greasyfork.org/users/1429624-xielicemlinn-lanett",
+      "scripts": []
+    }
+  ],
+  "name": "Нья вирус",
+  "description": "Make text on Roblox look like it's written by a cat-girl and apply a white-pink theme!",
+  "url": "https://greasyfork.org/scripts/525469-%D0%BD%D1%8C%D1%8F-%D0%B2%D0%B8%D1%80%D1%83%D1%81",
+  "code_url": "https://update.greasyfork.org/scripts/525469/%D0%9D%D1%8C%D1%8F%20%D0%B2%D0%B8%D1%80%D1%83%D1%81.user.js",
+  "code_size": 3394,
+  "license": "RatauCotl",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

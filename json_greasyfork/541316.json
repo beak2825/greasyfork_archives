@@ -1,0 +1,34 @@
+{
+  "id": 541316,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-01T06:39:41.000Z",
+  "code_updated_at": "2025-07-01T06:39:40.000Z",
+  "namespace": "https://ayouth.top/",
+  "support_url": "https://ayouth.top/msgboard/",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490532,
+      "name": "xy21807891",
+      "created_at": "2025-07-01T05:54:29.000Z",
+      "url": "https://greasyfork.org/users/1490532-xy21807891",
+      "scripts": []
+    }
+  ],
+  "name": "简单搜索—百度系优化 移动&桌面端通用🌊🌊🌊",
+  "description": "为清爽赋能，为搜索干杯，百度搜索，百度翻译，百度贴吧，百度地图，百度知道，百度百科，百度汉语，百度图片去广告等综合优化，全系移动&桌面端通用。",
+  "url": "https://greasyfork.org/scripts/541316-%E7%AE%80%E5%8D%95%E6%90%9C%E7%B4%A2-%E7%99%BE%E5%BA%A6%E7%B3%BB%E4%BC%98%E5%8C%96-%E7%A7%BB%E5%8A%A8-%E6%A1%8C%E9%9D%A2%E7%AB%AF%E9%80%9A%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/541316/%E7%AE%80%E5%8D%95%E6%90%9C%E7%B4%A2%E2%80%94%E7%99%BE%E5%BA%A6%E7%B3%BB%E4%BC%98%E5%8C%96%20%E7%A7%BB%E5%8A%A8%E6%A1%8C%E9%9D%A2%E7%AB%AF%E9%80%9A%E7%94%A8%F0%9F%8C%8A%F0%9F%8C%8A%F0%9F%8C%8A.user.js",
+  "code_size": 23937,
+  "license": null,
+  "version": "3.1.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

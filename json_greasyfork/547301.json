@@ -1,0 +1,33 @@
+{
+  "id": 547301,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-26T01:20:21.000Z",
+  "code_updated_at": "2025-08-26T01:25:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 713757,
+      "name": "shanlanwork",
+      "created_at": "2020-12-06T12:21:45.000Z",
+      "url": "https://greasyfork.org/users/713757-shanlanwork"
+    }
+  ],
+  "name": "自動轉址腳本（My Redirects 公司用）",
+  "description": "根據自訂規則自動轉址指定網址",
+  "url": "https://greasyfork.org/scripts/547301-%E8%87%AA%E5%8B%95%E8%BD%89%E5%9D%80%E8%85%B3%E6%9C%AC-my-redirects-%E5%85%AC%E5%8F%B8%E7%94%A8",
+  "code_url": "https://update.greasyfork.org/scripts/547301/%E8%87%AA%E5%8B%95%E8%BD%89%E5%9D%80%E8%85%B3%E6%9C%AC%EF%BC%88My%20Redirects%20%E5%85%AC%E5%8F%B8%E7%94%A8%EF%BC%89.user.js",
+  "code_size": 1086,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

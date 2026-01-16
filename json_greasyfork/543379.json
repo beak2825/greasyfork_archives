@@ -1,0 +1,33 @@
+{
+  "id": 543379,
+  "daily_installs": 0,
+  "total_installs": 120,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-23T01:34:40.000Z",
+  "code_updated_at": "2025-07-23T01:34:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1474960,
+      "name": "1heocodes2much",
+      "created_at": "2025-05-26T06:22:44.000Z",
+      "url": "https://greasyfork.org/users/1474960-1heocodes2much"
+    }
+  ],
+  "name": "Tribal.io Item Spawner",
+  "description": "Press J to toggle - item spawner",
+  "url": "https://greasyfork.org/scripts/543379-tribal-io-item-spawner",
+  "code_url": "https://update.greasyfork.org/scripts/543379/Tribalio%20Item%20Spawner.user.js",
+  "code_size": 9875,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

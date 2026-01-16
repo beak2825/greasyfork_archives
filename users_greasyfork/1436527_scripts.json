@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 527319,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T11:16:21.000Z",
+    "code_updated_at": "2025-02-18T11:18:39.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": "https://gitlab.com/fr0stb1rd/bypass-kariyer-net-signup-warning/-/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436527,
+        "name": "fr0stb1rd",
+        "created_at": "2025-02-18T11:05:50.000Z",
+        "url": "https://greasyfork.org/users/1436527-fr0stb1rd"
+      }
+    ],
+    "name": "Bypass Kariyer.net Signup Warning",
+    "description": "Removes the jobviewcount cookie on Kariyer.net to bypass job view limits",
+    "url": "https://greasyfork.org/scripts/527319-bypass-kariyer-net-signup-warning",
+    "code_url": "https://update.greasyfork.org/scripts/527319/Bypass%20Kariyernet%20Signup%20Warning.user.js",
+    "code_size": 665,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

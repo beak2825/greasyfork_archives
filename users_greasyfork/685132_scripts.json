@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523059,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-06T22:21:50.000Z",
+    "code_updated_at": "2025-01-06T22:21:50.000Z",
+    "namespace": "https://bgm.tv/user/662064",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 685132,
+        "name": "Lcwhhh",
+        "created_at": "2020-09-04T20:02:41.000Z",
+        "url": "https://greasyfork.org/users/685132-lcwhhh"
+      }
+    ],
+    "name": "Amazon Japan 预览图下载",
+    "description": "在 amazon.co.jp 的链接包含 /dp/ 或 /gp/ 的商品页下载产品的预览图",
+    "url": "https://greasyfork.org/scripts/523059-amazon-japan-%E9%A2%84%E8%A7%88%E5%9B%BE%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/523059/Amazon%20Japan%20%E9%A2%84%E8%A7%88%E5%9B%BE%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 6252,
+    "license": null,
+    "version": "1.1",
+    "locale": "cs",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

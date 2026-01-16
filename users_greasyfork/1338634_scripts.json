@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532683,
+    "daily_installs": 0,
+    "total_installs": 44,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-13T06:53:03.000Z",
+    "code_updated_at": "2025-04-13T06:53:03.000Z",
+    "namespace": "aio-ws-drk-beta",
+    "support_url": "https://darkie.vercel.app/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1338634,
+        "name": "DXRK1E",
+        "created_at": "2024-07-23T09:47:41.000Z",
+        "url": "https://greasyfork.org/users/1338634-dxrk1e"
+      }
+    ],
+    "name": "All-in-One Web Scanner [BETA]",
+    "description": "Combines scanners, persists state, stays on top, reliably appears in SPAs, with enhanced stream detection.",
+    "url": "https://greasyfork.org/scripts/532683-all-in-one-web-scanner-beta",
+    "code_url": "https://update.greasyfork.org/scripts/532683/All-in-One%20Web%20Scanner%20%5BBETA%5D.user.js",
+    "code_size": 78256,
+    "license": "MIT License",
+    "version": "1.7.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

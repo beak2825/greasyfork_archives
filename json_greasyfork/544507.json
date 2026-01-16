@@ -1,0 +1,34 @@
+{
+  "id": 544507,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-03T12:02:28.000Z",
+  "code_updated_at": "2025-08-03T12:08:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1501200,
+      "name": "musjk4",
+      "created_at": "2025-08-03T11:49:09.000Z",
+      "url": "https://greasyfork.org/users/1501200-musjk4",
+      "scripts": []
+    }
+  ],
+  "name": "XenForo Style Switcher",
+  "description": "Позволяет применять кастомные стили XenForo",
+  "url": "https://greasyfork.org/scripts/544507-xenforo-style-switcher",
+  "code_url": "https://update.greasyfork.org/scripts/544507/XenForo%20Style%20Switcher.user.js",
+  "code_size": 7867,
+  "license": null,
+  "version": "2.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

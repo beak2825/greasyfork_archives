@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502662,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-05T05:47:07.000Z",
+    "code_updated_at": "2024-08-05T23:15:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 755789,
+        "name": "Ysat",
+        "created_at": "2021-04-07T03:44:36.000Z",
+        "url": "https://greasyfork.org/users/755789-ysat"
+      }
+    ],
+    "name": "深圳图书馆北馆wifi 自动登录",
+    "description": "在深图北，隔没多久不用电脑，就要重新认证上网了...这实在让人有点苦恼，于是有了这个脚本",
+    "url": "https://greasyfork.org/scripts/502662-%E6%B7%B1%E5%9C%B3%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8C%97%E9%A6%86wifi-%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95",
+    "code_url": "https://update.greasyfork.org/scripts/502662/%E6%B7%B1%E5%9C%B3%E5%9B%BE%E4%B9%A6%E9%A6%86%E5%8C%97%E9%A6%86wifi%20%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95.user.js",
+    "code_size": 6137,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,7 +1,7 @@
 {
   "id": 552179,
-  "daily_installs": 3,
-  "total_installs": 274,
+  "daily_installs": 4,
+  "total_installs": 278,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1524890,
       "name": "Dũng Nguyễn Thành",
       "created_at": "2025-10-10T15:46:24.000Z",
-      "url": "https://greasyfork.org/users/1524890-d%C5%A9ng-nguy%E1%BB%85n-th%C3%A0nh",
-      "scripts": [
-        {
-          "id": 552179,
-          "daily_installs": 3,
-          "total_installs": 274,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-10-10T15:47:40.000Z",
-          "code_updated_at": "2025-10-10T16:00:25.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Scribd Downloader & Cleaner Pro",
-          "description": "Adds a download button, enhances the embed reader by force-loading pages, and adds a convenient print button.",
-          "url": "https://greasyfork.org/scripts/552179-scribd-downloader-cleaner-pro",
-          "code_url": "https://update.greasyfork.org/scripts/552179/Scribd%20Downloader%20%20Cleaner%20Pro.user.js",
-          "code_size": 4473,
-          "license": "MIT License",
-          "version": "2025-10-10.5",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1524890-d%C5%A9ng-nguy%E1%BB%85n-th%C3%A0nh"
     }
   ],
   "name": "Scribd Downloader & Cleaner Pro",

@@ -1,0 +1,33 @@
+{
+  "id": 544930,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-07T13:40:38.000Z",
+  "code_updated_at": "2025-08-07T13:40:38.000Z",
+  "namespace": "https://github.com/Stellaris-Shadow/Stardust-Companion",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1502529,
+      "name": "星辰的影",
+      "created_at": "2025-08-07T13:35:24.000Z",
+      "url": "https://greasyfork.org/users/1502529-%E6%98%9F%E8%BE%B0%E7%9A%84%E5%BD%B1"
+    }
+  ],
+  "name": "星尘：AI 智能管理",
+  "description": "您的终极AI工作室量子跃迁引擎。一个高度融合的次元模块化架构，提供原生量子态的对话折叠矩阵、沉浸式虚空全域、对话冥想核心，以及超维导出协议等无限潜能功能。由Stellaris-Shadow以星际匠心铸就，唤醒前所未有的流畅多维与效率光谱。",
+  "url": "https://greasyfork.org/scripts/544930-%E6%98%9F%E5%B0%98-ai-%E6%99%BA%E8%83%BD%E7%AE%A1%E7%90%86",
+  "code_url": "https://update.greasyfork.org/scripts/544930/%E6%98%9F%E5%B0%98%EF%BC%9AAI%20%E6%99%BA%E8%83%BD%E7%AE%A1%E7%90%86.user.js",
+  "code_size": 60128,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 500052,
+  "daily_installs": 0,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-08T22:41:37.000Z",
+  "code_updated_at": "2025-01-09T03:18:21.000Z",
+  "namespace": "https://github.com/fidwell/scRYMble",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1329246,
+      "name": "fidwell",
+      "created_at": "2024-07-06T14:07:28.000Z",
+      "url": "https://greasyfork.org/users/1329246-fidwell",
+      "scripts": [
+        {
+          "id": 500052,
+          "daily_installs": 0,
+          "total_installs": 48,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-08T22:41:37.000Z",
+          "code_updated_at": "2025-01-09T03:18:21.000Z",
+          "namespace": "https://github.com/fidwell/scRYMble",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "scRYMble",
+          "description": "Visit a release page on rateyourmusic.com and scrobble the songs you see!",
+          "url": "https://greasyfork.org/scripts/500052-scrymble",
+          "code_url": "https://update.greasyfork.org/scripts/500052/scRYMble.user.js",
+          "code_size": 24062,
+          "license": "MIT License",
+          "version": "2.20250109031512",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "scRYMble",
+  "description": "Visit a release page on rateyourmusic.com and scrobble the songs you see!",
+  "url": "https://greasyfork.org/scripts/500052-scrymble",
+  "code_url": "https://update.greasyfork.org/scripts/500052/scRYMble.user.js",
+  "code_size": 24062,
+  "license": "MIT License",
+  "version": "2.20250109031512",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

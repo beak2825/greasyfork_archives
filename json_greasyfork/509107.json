@@ -1,0 +1,59 @@
+{
+  "id": 509107,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-18T23:36:45.000Z",
+  "code_updated_at": "2024-09-19T01:01:48.000Z",
+  "namespace": "https://osmcha.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 895262,
+      "name": "ComradeRamen",
+      "created_at": "2022-03-30T06:07:06.000Z",
+      "url": "https://greasyfork.org/users/895262-comraderamen",
+      "scripts": [
+        {
+          "id": 442338,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-03-30T06:10:32.000Z",
+          "code_updated_at": "2022-07-24T22:27:39.000Z",
+          "namespace": "https://greasyfork.org/users/895262",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Link OpenStreetMap changesets to OSMCha",
+          "description": "Turns every changeset into a link that leads to this useful OSM change inspector.",
+          "url": "https://greasyfork.org/scripts/442338-link-openstreetmap-changesets-to-osmcha",
+          "code_url": "https://update.greasyfork.org/scripts/442338/Link%20OpenStreetMap%20changesets%20to%20OSMCha.user.js",
+          "code_size": 2792,
+          "license": "The Unlicense",
+          "version": "0.0.1.20220724222739",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "OSMCha Reversion List Helper (Space After ID Fix)",
+  "description": "Adds a '+' icon to add/remove changesets from a reversion list and ensures space after each ID",
+  "url": "https://greasyfork.org/scripts/509107-osmcha-reversion-list-helper-space-after-id-fix",
+  "code_url": "https://update.greasyfork.org/scripts/509107/OSMCha%20Reversion%20List%20Helper%20%28Space%20After%20ID%20Fix%29.user.js",
+  "code_size": 9304,
+  "license": null,
+  "version": "2.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

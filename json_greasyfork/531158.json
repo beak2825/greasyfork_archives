@@ -1,0 +1,33 @@
+{
+  "id": 531158,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-28T21:13:45.000Z",
+  "code_updated_at": "2025-03-28T21:32:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1432351,
+      "name": "psychogenik",
+      "created_at": "2025-02-06T22:34:03.000Z",
+      "url": "https://greasyfork.org/users/1432351-psychogenik"
+    }
+  ],
+  "name": "Psy's Ticker Reminders",
+  "description": "Inserts a custom reminders ticker below the header with vertical Swiper scrolling that persists via URL hash (#reminders). Also adds a Reminders page with a Notes-to-Self section. The navigation icon is placed appropriately for desktop and Torn PDA mobile layouts.",
+  "url": "https://greasyfork.org/scripts/531158-psy-s-ticker-reminders",
+  "code_url": "https://update.greasyfork.org/scripts/531158/Psy%27s%20Ticker%20Reminders.user.js",
+  "code_size": 25022,
+  "license": null,
+  "version": "2.0.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

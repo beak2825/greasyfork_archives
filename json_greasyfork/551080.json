@@ -1,0 +1,34 @@
+{
+  "id": 551080,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-29T18:56:46.000Z",
+  "code_updated_at": "2025-09-29T19:01:14.000Z",
+  "namespace": "dev.chib.torn.hospital-filters",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1466745,
+      "name": "Chib",
+      "created_at": "2025-05-07T08:02:34.000Z",
+      "url": "https://greasyfork.org/users/1466745-chib",
+      "scripts": []
+    }
+  ],
+  "name": "Revive filters",
+  "description": "Adds a simple revive filter to the hospital page + 1⇆2 page button",
+  "url": "https://greasyfork.org/scripts/551080-revive-filters",
+  "code_url": "https://update.greasyfork.org/scripts/551080/Revive%20filters.user.js",
+  "code_size": 5518,
+  "license": "MIT License",
+  "version": "1.1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519261,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-29T09:28:27.000Z",
+    "code_updated_at": "2024-11-29T09:37:51.000Z",
+    "namespace": "https://github.com/tonylou7/olvod_next",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 797664,
+        "name": "Tony Lou",
+        "created_at": "2021-07-27T09:06:12.000Z",
+        "url": "https://greasyfork.org/users/797664-tony-lou"
+      }
+    ],
+    "name": "下一集快捷键",
+    "description": "欧乐iyf\"]\"下一集快捷键",
+    "url": "https://greasyfork.org/scripts/519261-%E4%B8%8B%E4%B8%80%E9%9B%86%E5%BF%AB%E6%8D%B7%E9%94%AE",
+    "code_url": "https://update.greasyfork.org/scripts/519261/%E4%B8%8B%E4%B8%80%E9%9B%86%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+    "code_size": 1298,
+    "license": "MIT License",
+    "version": "2024-07-23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

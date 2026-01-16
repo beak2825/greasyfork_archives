@@ -1,0 +1,59 @@
+{
+  "id": 549454,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-13T23:12:00.000Z",
+  "code_updated_at": "2025-09-13T23:12:00.000Z",
+  "namespace": "https://julies-stuff.dev/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1514720,
+      "name": "colonthreeing",
+      "created_at": "2025-09-13T23:10:13.000Z",
+      "url": "https://greasyfork.org/users/1514720-colonthreeing",
+      "scripts": [
+        {
+          "id": 549454,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-13T23:12:00.000Z",
+          "code_updated_at": "2025-09-13T23:12:00.000Z",
+          "namespace": "https://julies-stuff.dev/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "One Word Stories With No Restrictions",
+          "description": "I remove the restrictions on the website",
+          "url": "https://greasyfork.org/scripts/549454-one-word-stories-with-no-restrictions",
+          "code_url": "https://update.greasyfork.org/scripts/549454/One%20Word%20Stories%20With%20No%20Restrictions.user.js",
+          "code_size": 1723,
+          "license": "AGPL-V3",
+          "version": "2025-09-13",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "One Word Stories With No Restrictions",
+  "description": "I remove the restrictions on the website",
+  "url": "https://greasyfork.org/scripts/549454-one-word-stories-with-no-restrictions",
+  "code_url": "https://update.greasyfork.org/scripts/549454/One%20Word%20Stories%20With%20No%20Restrictions.user.js",
+  "code_size": 1723,
+  "license": "AGPL-V3",
+  "version": "2025-09-13",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

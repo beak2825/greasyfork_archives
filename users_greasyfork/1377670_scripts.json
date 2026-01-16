@@ -1,0 +1,167 @@
+[
+  {
+    "id": 545137,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-09T05:57:28.000Z",
+    "code_updated_at": "2025-08-09T05:57:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377670,
+        "name": "motoe moto",
+        "created_at": "2024-10-07T04:14:27.000Z",
+        "url": "https://greasyfork.org/users/1377670-motoe-moto"
+      }
+    ],
+    "name": "Lemehost - Auto Extend Server Time",
+    "description": "Automatically clicks the 'Extend time' button on the Lemehost free server plan page every 10 minutes.",
+    "url": "https://greasyfork.org/scripts/545137-lemehost-auto-extend-server-time",
+    "code_url": "https://update.greasyfork.org/scripts/545137/Lemehost%20-%20Auto%20Extend%20Server%20Time.user.js",
+    "code_size": 1626,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535849,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-13T03:04:56.000Z",
+    "code_updated_at": "2025-05-13T03:04:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377670,
+        "name": "motoe moto",
+        "created_at": "2024-10-07T04:14:27.000Z",
+        "url": "https://greasyfork.org/users/1377670-motoe-moto"
+      }
+    ],
+    "name": "Factorio.zone Multi-Mod Uploader (v1.0 - Intercept Login Token)",
+    "description": "Intercepts the correct visitSecret from /api/user/login for multi-mod uploads.",
+    "url": "https://greasyfork.org/scripts/535849-factorio-zone-multi-mod-uploader-v1-0-intercept-login-token",
+    "code_url": "https://update.greasyfork.org/scripts/535849/Factoriozone%20Multi-Mod%20Uploader%20%28v10%20-%20Intercept%20Login%20Token%29.user.js",
+    "code_size": 11180,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527287,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T04:34:43.000Z",
+    "code_updated_at": "2025-02-18T04:34:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377670,
+        "name": "motoe moto",
+        "created_at": "2024-10-07T04:14:27.000Z",
+        "url": "https://greasyfork.org/users/1377670-motoe-moto"
+      }
+    ],
+    "name": "Always Show Copy and Edit Buttons",
+    "description": "Make copy and edit buttons always visible on Lambda Chat",
+    "url": "https://greasyfork.org/scripts/527287-always-show-copy-and-edit-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/527287/Always%20Show%20Copy%20and%20Edit%20Buttons.user.js",
+    "code_size": 1618,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526146,
+    "daily_installs": 0,
+    "total_installs": 89,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-07T01:42:21.000Z",
+    "code_updated_at": "2025-02-07T01:42:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377670,
+        "name": "motoe moto",
+        "created_at": "2024-10-07T04:14:27.000Z",
+        "url": "https://greasyfork.org/users/1377670-motoe-moto"
+      }
+    ],
+    "name": "Universal Download Link Finder Ultimate",
+    "description": "Advanced download link finder with intelligent detection and filtering",
+    "url": "https://greasyfork.org/scripts/526146-universal-download-link-finder-ultimate",
+    "code_url": "https://update.greasyfork.org/scripts/526146/Universal%20Download%20Link%20Finder%20Ultimate.user.js",
+    "code_size": 12890,
+    "license": "MIT License",
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 511718,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-07T04:21:04.000Z",
+    "code_updated_at": "2024-10-07T04:21:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377670,
+        "name": "motoe moto",
+        "created_at": "2024-10-07T04:14:27.000Z",
+        "url": "https://greasyfork.org/users/1377670-motoe-moto"
+      }
+    ],
+    "name": "Real-time Download Link Finder with Copy Button",
+    "description": "Finds and displays all download links, and allows copying them to clipboard",
+    "url": "https://greasyfork.org/scripts/511718-real-time-download-link-finder-with-copy-button",
+    "code_url": "https://update.greasyfork.org/scripts/511718/Real-time%20Download%20Link%20Finder%20with%20Copy%20Button.user.js",
+    "code_size": 3080,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

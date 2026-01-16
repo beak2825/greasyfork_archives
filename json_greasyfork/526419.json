@@ -1,0 +1,33 @@
+{
+  "id": 526419,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-10T01:33:14.000Z",
+  "code_updated_at": "2025-02-10T01:33:14.000Z",
+  "namespace": "http://github.com/sepehr",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 927527,
+      "name": "northsea4",
+      "created_at": "2022-06-20T08:58:22.000Z",
+      "url": "https://greasyfork.org/users/927527-northsea4"
+    }
+  ],
+  "name": "SCRIPT",
+  "description": "SCRIPT DESCRIPTION",
+  "url": "https://greasyfork.org/scripts/526419-script",
+  "code_url": "https://update.greasyfork.org/scripts/526419/SCRIPT.user.js",
+  "code_size": 1739,
+  "license": "GPLv3 - http://www.gnu.org/licenses/gpl-3.0.txt",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

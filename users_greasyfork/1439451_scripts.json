@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527949,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T14:14:51.000Z",
+    "code_updated_at": "2025-02-24T14:14:51.000Z",
+    "namespace": "https://onlinesequencer.net/members/149323",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439451,
+        "name": "K1ll3rB33",
+        "created_at": "2025-02-24T13:42:28.000Z",
+        "url": "https://greasyfork.org/users/1439451-k1ll3rb33"
+      }
+    ],
+    "name": "Coloured images",
+    "description": "Colourful!",
+    "url": "https://greasyfork.org/scripts/527949-coloured-images",
+    "code_url": "https://update.greasyfork.org/scripts/527949/Coloured%20images.user.js",
+    "code_size": 1230,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

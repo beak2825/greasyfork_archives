@@ -1,0 +1,34 @@
+{
+  "id": 522424,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-31T17:47:34.000Z",
+  "code_updated_at": "2024-12-31T18:16:37.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1418014,
+      "name": "Luciano Silva Souza",
+      "created_at": "2024-12-31T17:28:00.000Z",
+      "url": "https://greasyfork.org/users/1418014-luciano-silva-souza",
+      "scripts": []
+    }
+  ],
+  "name": "EarnBitMoon Auto Faucet",
+  "description": "Automate actions on",
+  "url": "https://greasyfork.org/scripts/522424-earnbitmoon-auto-faucet",
+  "code_url": "https://update.greasyfork.org/scripts/522424/EarnBitMoon%20Auto%20Faucet.user.js",
+  "code_size": 3415,
+  "license": null,
+  "version": "1.1",
+  "locale": "pt-BR",
+  "deleted": false,
+  "visibility": "public"
+}

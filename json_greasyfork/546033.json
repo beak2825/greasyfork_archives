@@ -1,0 +1,59 @@
+{
+  "id": 546033,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-16T03:48:46.000Z",
+  "code_updated_at": "2025-08-16T07:48:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505479,
+      "name": "castor",
+      "created_at": "2025-08-16T03:30:04.000Z",
+      "url": "https://greasyfork.org/users/1505479-castor",
+      "scripts": [
+        {
+          "id": 546033,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-16T03:48:46.000Z",
+          "code_updated_at": "2025-08-16T07:48:31.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Linux.do 自动滚动到底部",
+          "description": "在 linux.do 帖子页面右下角添加一个“翻至末尾”按钮，点击后自动滚动，直到全部帖子内容加载完成时停止。",
+          "url": "https://greasyfork.org/scripts/546033-linux-do-%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8",
+          "code_url": "https://update.greasyfork.org/scripts/546033/Linuxdo%20%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8.user.js",
+          "code_size": 4067,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Linux.do 自动滚动到底部",
+  "description": "在 linux.do 帖子页面右下角添加一个“翻至末尾”按钮，点击后自动滚动，直到全部帖子内容加载完成时停止。",
+  "url": "https://greasyfork.org/scripts/546033-linux-do-%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8",
+  "code_url": "https://update.greasyfork.org/scripts/546033/Linuxdo%20%E8%87%AA%E5%8A%A8%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8.user.js",
+  "code_size": 4067,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -97,5 +97,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 545015,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T07:26:24.000Z",
+    "code_updated_at": "2025-12-19T00:59:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502735,
+        "name": "deric",
+        "created_at": "2025-08-08T06:02:01.000Z",
+        "url": "https://greasyfork.org/users/1502735-deric"
+      }
+    ],
+    "name": "UploadAPI 工具",
+    "description": "UploadAPI 相关功能的 Tampermonkey 脚本，功能待定",
+    "url": "https://greasyfork.org/scripts/545015-uploadapi-%E5%B7%A5%E5%85%B7",
+    "code_url": "https://update.greasyfork.org/scripts/545015/UploadAPI%20%E5%B7%A5%E5%85%B7.user.js",
+    "code_size": 26882,
+    "license": "MIT License",
+    "version": "0.20",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545014,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T07:25:50.000Z",
+    "code_updated_at": "2025-12-26T03:33:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502735,
+        "name": "deric",
+        "created_at": "2025-08-08T06:02:01.000Z",
+        "url": "https://greasyfork.org/users/1502735-deric"
+      }
+    ],
+    "name": "auto click",
+    "description": "自动点击功能脚本，功能待定",
+    "url": "https://greasyfork.org/scripts/545014-auto-click",
+    "code_url": "https://update.greasyfork.org/scripts/545014/auto%20click.user.js",
+    "code_size": 36967,
+    "license": "MIT License",
+    "version": "1.26",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

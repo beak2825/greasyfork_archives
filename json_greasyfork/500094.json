@@ -1,0 +1,59 @@
+{
+  "id": 500094,
+  "daily_installs": 1,
+  "total_installs": 104,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-09T10:50:58.000Z",
+  "code_updated_at": "2024-07-10T01:53:23.000Z",
+  "namespace": "huelse/js-scripts/bing-filter",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330693,
+      "name": "crayon0",
+      "created_at": "2024-07-09T10:44:30.000Z",
+      "url": "https://greasyfork.org/users/1330693-crayon0",
+      "scripts": [
+        {
+          "id": 500094,
+          "daily_installs": 1,
+          "total_installs": 104,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-09T10:50:58.000Z",
+          "code_updated_at": "2024-07-10T01:53:23.000Z",
+          "namespace": "huelse/js-scripts/bing-filter",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "去除Bing搜索中的知乎",
+          "description": "Filters Bing search results based on keywords.",
+          "url": "https://greasyfork.org/scripts/500094-%E5%8E%BB%E9%99%A4bing%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84%E7%9F%A5%E4%B9%8E",
+          "code_url": "https://update.greasyfork.org/scripts/500094/%E5%8E%BB%E9%99%A4Bing%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84%E7%9F%A5%E4%B9%8E.user.js",
+          "code_size": 904,
+          "license": "GPLv3 License",
+          "version": "1.0.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "去除Bing搜索中的知乎",
+  "description": "Filters Bing search results based on keywords.",
+  "url": "https://greasyfork.org/scripts/500094-%E5%8E%BB%E9%99%A4bing%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84%E7%9F%A5%E4%B9%8E",
+  "code_url": "https://update.greasyfork.org/scripts/500094/%E5%8E%BB%E9%99%A4Bing%E6%90%9C%E7%B4%A2%E4%B8%AD%E7%9A%84%E7%9F%A5%E4%B9%8E.user.js",
+  "code_size": 904,
+  "license": "GPLv3 License",
+  "version": "1.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

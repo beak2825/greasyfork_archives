@@ -1,0 +1,59 @@
+{
+  "id": 517543,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-15T16:33:00.000Z",
+  "code_updated_at": "2024-11-15T16:33:00.000Z",
+  "namespace": "https://greasyfork.org/users/1397021",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1397021,
+      "name": "ricogof441",
+      "created_at": "2024-11-15T16:29:49.000Z",
+      "url": "https://greasyfork.org/users/1397021-ricogof441",
+      "scripts": [
+        {
+          "id": 517543,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-15T16:33:00.000Z",
+          "code_updated_at": "2024-11-15T16:33:00.000Z",
+          "namespace": "https://greasyfork.org/users/1397021",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MU Storage",
+          "description": "Selects you as default Target",
+          "url": "https://greasyfork.org/scripts/517543-mu-storage",
+          "code_url": "https://update.greasyfork.org/scripts/517543/MU%20Storage.user.js",
+          "code_size": 686,
+          "license": null,
+          "version": "2024-11-15v0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MU Storage",
+  "description": "Selects you as default Target",
+  "url": "https://greasyfork.org/scripts/517543-mu-storage",
+  "code_url": "https://update.greasyfork.org/scripts/517543/MU%20Storage.user.js",
+  "code_size": 686,
+  "license": null,
+  "version": "2024-11-15v0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

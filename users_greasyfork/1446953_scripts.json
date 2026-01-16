@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530109,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-17T19:01:27.000Z",
+    "code_updated_at": "2025-03-17T19:01:27.000Z",
+    "namespace": "Script Obras Bernoulli",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1446953,
+        "name": "CarvDev",
+        "created_at": "2025-03-17T17:58:37.000Z",
+        "url": "https://greasyfork.org/users/1446953-carvdev"
+      }
+    ],
+    "name": "Script Obras Literárias Bernoulli",
+    "description": "Habilita a opção de imprimir e selecionar o texto nas obras literárias do Guia Virtual",
+    "url": "https://greasyfork.org/scripts/530109-script-obras-liter%C3%A1rias-bernoulli",
+    "code_url": "https://update.greasyfork.org/scripts/530109/Script%20Obras%20Liter%C3%A1rias%20Bernoulli.user.js",
+    "code_size": 908,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

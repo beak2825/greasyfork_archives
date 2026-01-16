@@ -1,0 +1,34 @@
+{
+  "id": 506451,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-02T15:04:40.000Z",
+  "code_updated_at": "2024-09-02T15:04:40.000Z",
+  "namespace": "pbr/pvsp",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1322475,
+      "name": "Gashouse",
+      "created_at": "2024-06-23T04:41:45.000Z",
+      "url": "https://greasyfork.org/users/1322475-gashouse",
+      "scripts": []
+    }
+  ],
+  "name": "Player Value On Skill Point Page",
+  "description": "Calculates the player value from the skill point page. Corrected and fine tuned some math and many variable global glitches.",
+  "url": "https://greasyfork.org/scripts/506451-player-value-on-skill-point-page",
+  "code_url": "https://update.greasyfork.org/scripts/506451/Player%20Value%20On%20Skill%20Point%20Page.user.js",
+  "code_size": 4080,
+  "license": "(CC) Attribution Share Alike; http://creativecommons.org/licenses/by-sa/3.0/",
+  "version": "24.08.29",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

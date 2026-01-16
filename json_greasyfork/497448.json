@@ -1,0 +1,34 @@
+{
+  "id": 497448,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-09T13:11:26.000Z",
+  "code_updated_at": "2024-06-09T13:11:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 741643,
+      "name": "免费读秀ss号",
+      "created_at": "2021-02-27T04:12:07.000Z",
+      "url": "https://greasyfork.org/users/741643-%E5%85%8D%E8%B4%B9%E8%AF%BB%E7%A7%80ss%E5%8F%B7",
+      "scripts": []
+    }
+  ],
+  "name": "baidwang cookies",
+  "description": "通过百度网盘授权百度token，和cookies",
+  "url": "https://greasyfork.org/scripts/497448-baidwang-cookies",
+  "code_url": "https://update.greasyfork.org/scripts/497448/baidwang%20cookies.user.js",
+  "code_size": 2932,
+  "license": "MIT License",
+  "version": "0.01",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

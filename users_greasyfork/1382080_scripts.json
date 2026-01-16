@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 513139,
+    "daily_installs": 0,
+    "total_installs": 22,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-19T06:24:28.000Z",
+    "code_updated_at": "2024-10-24T08:09:15.000Z",
+    "namespace": "https://ihopefulchina.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1382080,
+        "name": "ihopefulChina",
+        "created_at": "2024-10-17T06:45:57.000Z",
+        "url": "https://greasyfork.org/users/1382080-ihopefulchina"
+      }
+    ],
+    "name": "爬蓝湖原型目录结构",
+    "description": "爬蓝湖原型目录结构，导出Excel文件，适用于飞书等开发项目在线文档",
+    "url": "https://greasyfork.org/scripts/513139-%E7%88%AC%E8%93%9D%E6%B9%96%E5%8E%9F%E5%9E%8B%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84",
+    "code_url": "https://update.greasyfork.org/scripts/513139/%E7%88%AC%E8%93%9D%E6%B9%96%E5%8E%9F%E5%9E%8B%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84.user.js",
+    "code_size": 10346,
+    "license": "MIT License",
+    "version": "1.0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

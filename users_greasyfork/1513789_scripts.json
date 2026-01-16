@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549100,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T03:13:55.000Z",
+    "code_updated_at": "2025-09-11T03:13:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513789,
+        "name": "chriszf",
+        "created_at": "2025-09-11T02:53:07.000Z",
+        "url": "https://greasyfork.org/users/1513789-chriszf"
+      }
+    ],
+    "name": "LunaTV输入YouTube网址观看的插件",
+    "description": "在LuaTV搜索YouTube视频页面，提供一个输入框可以输入网址观看视频，要点击以下视频中央的播放按钮才会在右上角出现输入框，获取YouTube视频网址v=Vo0n4PA_FbE，将LunaTV输入框网址中的embed/dQw4w9WgXcQ?修改为embed/Vo0n4PA_FbE?就可以点击刷新播放。",
+    "url": "https://greasyfork.org/scripts/549100-lunatv%E8%BE%93%E5%85%A5youtube%E7%BD%91%E5%9D%80%E8%A7%82%E7%9C%8B%E7%9A%84%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/549100/LunaTV%E8%BE%93%E5%85%A5YouTube%E7%BD%91%E5%9D%80%E8%A7%82%E7%9C%8B%E7%9A%84%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 6025,
+    "license": null,
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

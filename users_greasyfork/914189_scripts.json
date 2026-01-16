@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502006,
+    "daily_installs": 0,
+    "total_installs": 41,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-28T15:44:19.000Z",
+    "code_updated_at": "2024-07-28T16:02:09.000Z",
+    "namespace": "hyperzlib",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 914189,
+        "name": "hyperzlib",
+        "created_at": "2022-05-14T12:19:22.000Z",
+        "url": "https://greasyfork.org/users/914189-hyperzlib"
+      }
+    ],
+    "name": "雀魂郊狼监听器",
+    "description": "https://github.com/Hyperzlib/Coyote-Majsoul",
+    "url": "https://greasyfork.org/scripts/502006-%E9%9B%80%E9%AD%82%E9%83%8A%E7%8B%BC%E7%9B%91%E5%90%AC%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/502006/%E9%9B%80%E9%AD%82%E9%83%8A%E7%8B%BC%E7%9B%91%E5%90%AC%E5%99%A8.user.js",
+    "code_size": 4885,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

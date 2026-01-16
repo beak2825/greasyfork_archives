@@ -1,0 +1,134 @@
+[
+  {
+    "id": 543423,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T12:01:29.000Z",
+    "code_updated_at": "2025-09-13T10:48:23.000Z",
+    "namespace": "https://www.runningcheese.com/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94136,
+        "name": "runningcheese",
+        "created_at": "2017-01-12T06:58:26.000Z",
+        "url": "https://greasyfork.org/users/94136-runningcheese"
+      }
+    ],
+    "name": "YouTube 浏览助手",
+    "description": "可在当前页面查看YouTube的缩略图，支持字幕下载",
+    "url": "https://greasyfork.org/scripts/543423-youtube-%E6%B5%8F%E8%A7%88%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/543423/YouTube%20%E6%B5%8F%E8%A7%88%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 14240,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531394,
+    "daily_installs": 0,
+    "total_installs": 65,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-31T07:18:14.000Z",
+    "code_updated_at": "2026-01-02T04:57:49.000Z",
+    "namespace": "https://www.runningcheese.com/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94136,
+        "name": "runningcheese",
+        "created_at": "2017-01-12T06:58:26.000Z",
+        "url": "https://greasyfork.org/users/94136-runningcheese"
+      }
+    ],
+    "name": "Bilibili 浏览助手",
+    "description": "可在当前页面查看B站的字幕和封面，支持字幕下载",
+    "url": "https://greasyfork.org/scripts/531394-bilibili-%E6%B5%8F%E8%A7%88%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/531394/Bilibili%20%E6%B5%8F%E8%A7%88%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 30579,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531392,
+    "daily_installs": 0,
+    "total_installs": 48,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-31T06:56:44.000Z",
+    "code_updated_at": "2025-04-01T03:27:03.000Z",
+    "namespace": "https://www.runningcheese.com/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94136,
+        "name": "runningcheese",
+        "created_at": "2017-01-12T06:58:26.000Z",
+        "url": "https://greasyfork.org/users/94136-runningcheese"
+      }
+    ],
+    "name": "网易云音乐助手",
+    "description": "网易云音乐助手，展示一些有用的选项",
+    "url": "https://greasyfork.org/scripts/531392-%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/531392/%E7%BD%91%E6%98%93%E4%BA%91%E9%9F%B3%E4%B9%90%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 9443,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531387,
+    "daily_installs": 0,
+    "total_installs": 118,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-31T05:50:06.000Z",
+    "code_updated_at": "2025-09-13T11:02:22.000Z",
+    "namespace": "https://www.runningcheese.com/userscripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 94136,
+        "name": "runningcheese",
+        "created_at": "2017-01-12T06:58:26.000Z",
+        "url": "https://greasyfork.org/users/94136-runningcheese"
+      }
+    ],
+    "name": "一键查询社交网站",
+    "description": "查询用户在不同社交平台的主页链接",
+    "url": "https://greasyfork.org/scripts/531387-%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%E7%A4%BE%E4%BA%A4%E7%BD%91%E7%AB%99",
+    "code_url": "https://update.greasyfork.org/scripts/531387/%E4%B8%80%E9%94%AE%E6%9F%A5%E8%AF%A2%E7%A4%BE%E4%BA%A4%E7%BD%91%E7%AB%99.user.js",
+    "code_size": 18228,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

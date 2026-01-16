@@ -1,0 +1,33 @@
+{
+  "id": 496738,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-01T11:24:49.000Z",
+  "code_updated_at": "2024-06-02T03:09:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1310771,
+      "name": "desmondc9",
+      "created_at": "2024-06-01T11:15:00.000Z",
+      "url": "https://greasyfork.org/users/1310771-desmondc9"
+    }
+  ],
+  "name": "Storypark Medias (Images and Videos) Downloader",
+  "description": "Download media files including images and videos from a Storypark story",
+  "url": "https://greasyfork.org/scripts/496738-storypark-medias-images-and-videos-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/496738/Storypark%20Medias%20%28Images%20and%20Videos%29%20Downloader.user.js",
+  "code_size": 3809,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 545568,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-12T12:20:53.000Z",
+    "code_updated_at": "2025-08-12T12:20:53.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1116489,
+        "name": "szq2",
+        "created_at": "2023-07-01T10:33:56.000Z",
+        "url": "https://greasyfork.org/users/1116489-szq2"
+      }
+    ],
+    "name": "Open with MPV",
+    "description": "Open video in external video player",
+    "url": "https://greasyfork.org/scripts/545568-open-with-mpv",
+    "code_url": "https://update.greasyfork.org/scripts/545568/Open%20with%20MPV.user.js",
+    "code_size": 1247,
+    "license": "AGPL",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544810,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-06T08:20:01.000Z",
+    "code_updated_at": "2025-08-06T08:20:01.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1116489,
+        "name": "szq2",
+        "created_at": "2023-07-01T10:33:56.000Z",
+        "url": "https://greasyfork.org/users/1116489-szq2"
+      }
+    ],
+    "name": "Ozon.ru Barcode",
+    "description": "Show retrieval barcode on ozon.ru orders list on desktop site",
+    "url": "https://greasyfork.org/scripts/544810-ozon-ru-barcode",
+    "code_url": "https://update.greasyfork.org/scripts/544810/Ozonru%20Barcode.user.js",
+    "code_size": 2587,
+    "license": "BSD Zero Clause License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 522431,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-31T20:09:03.000Z",
+    "code_updated_at": "2025-01-02T12:56:41.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1116489,
+        "name": "szq2",
+        "created_at": "2023-07-01T10:33:56.000Z",
+        "url": "https://greasyfork.org/users/1116489-szq2"
+      }
+    ],
+    "name": "Add manga baka-updates links to nyaa",
+    "description": "Adds manga links rating and cover from mangaupdates.com to nyaa.si tracker",
+    "url": "https://greasyfork.org/scripts/522431-add-manga-baka-updates-links-to-nyaa",
+    "code_url": "https://update.greasyfork.org/scripts/522431/Add%20manga%20baka-updates%20links%20to%20nyaa.user.js",
+    "code_size": 3969,
+    "license": "BSD Zero Clause License",
+    "version": "2.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505289,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-26T15:23:16.000Z",
+    "code_updated_at": "2024-08-26T15:23:15.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1116489,
+        "name": "szq2",
+        "created_at": "2023-07-01T10:33:56.000Z",
+        "url": "https://greasyfork.org/users/1116489-szq2"
+      }
+    ],
+    "name": "Rutracker full size images embed",
+    "description": "Embeds full-size images instead of thumbnail from various image hosting sites. Also install https://github.com/Owyn/HandyImage",
+    "url": "https://greasyfork.org/scripts/505289-rutracker-full-size-images-embed",
+    "code_url": "https://update.greasyfork.org/scripts/505289/Rutracker%20full%20size%20images%20embed.user.js",
+    "code_size": 2043,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

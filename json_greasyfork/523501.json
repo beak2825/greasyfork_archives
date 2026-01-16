@@ -1,0 +1,34 @@
+{
+  "id": 523501,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-11T20:57:57.000Z",
+  "code_updated_at": "2025-01-11T20:57:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1239591,
+      "name": "Bernardo Ferreira (Ber)",
+      "created_at": "2023-12-26T21:02:31.000Z",
+      "url": "https://greasyfork.org/users/1239591-bernardo-ferreira-ber",
+      "scripts": []
+    }
+  ],
+  "name": "Replace Roblox Images with Cats",
+  "description": "Replaces all images on Roblox with random cat images",
+  "url": "https://greasyfork.org/scripts/523501-replace-roblox-images-with-cats",
+  "code_url": "https://update.greasyfork.org/scripts/523501/Replace%20Roblox%20Images%20with%20Cats.user.js",
+  "code_size": 1847,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

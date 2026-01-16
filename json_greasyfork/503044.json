@@ -1,0 +1,34 @@
+{
+  "id": 503044,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-09T03:55:53.000Z",
+  "code_updated_at": "2024-08-09T03:55:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 956446,
+      "name": "TorinMars",
+      "created_at": "2022-09-09T07:57:37.000Z",
+      "url": "https://greasyfork.org/users/956446-torinmars",
+      "scripts": []
+    }
+  ],
+  "name": "GPT识别入参 prompt 然后输入发送",
+  "description": "GPT识别入参 prompt 发送",
+  "url": "https://greasyfork.org/scripts/503044-gpt%E8%AF%86%E5%88%AB%E5%85%A5%E5%8F%82-prompt-%E7%84%B6%E5%90%8E%E8%BE%93%E5%85%A5%E5%8F%91%E9%80%81",
+  "code_url": "https://update.greasyfork.org/scripts/503044/GPT%E8%AF%86%E5%88%AB%E5%85%A5%E5%8F%82%20prompt%20%E7%84%B6%E5%90%8E%E8%BE%93%E5%85%A5%E5%8F%91%E9%80%81.user.js",
+  "code_size": 2023,
+  "license": "MIT License",
+  "version": "2024-08-09",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

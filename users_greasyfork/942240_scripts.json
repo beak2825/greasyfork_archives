@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521250,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-20T01:27:39.000Z",
+    "code_updated_at": "2025-10-13T05:17:03.000Z",
+    "namespace": "https://www.czzy77.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942240,
+        "name": "fu lafu",
+        "created_at": "2022-08-02T04:33:27.000Z",
+        "url": "https://greasyfork.org/users/942240-fu-lafu"
+      }
+    ],
+    "name": "豆瓣电影跳转厂长资源和片库网",
+    "description": "厂长影视是一个在线影视网站，片库网是一个影视资源下载站。安装脚本后豆瓣电影标题旁会显示logo，点击就可以直接观看，或者下载下来看。",
+    "url": "https://greasyfork.org/scripts/521250-%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%E8%B7%B3%E8%BD%AC%E5%8E%82%E9%95%BF%E8%B5%84%E6%BA%90%E5%92%8C%E7%89%87%E5%BA%93%E7%BD%91",
+    "code_url": "https://update.greasyfork.org/scripts/521250/%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%E8%B7%B3%E8%BD%AC%E5%8E%82%E9%95%BF%E8%B5%84%E6%BA%90%E5%92%8C%E7%89%87%E5%BA%93%E7%BD%91.user.js",
+    "code_size": 9601,
+    "license": "MIT License",
+    "version": "0.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

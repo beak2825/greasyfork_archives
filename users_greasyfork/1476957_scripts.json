@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537808,
+    "daily_installs": 1,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-31T02:11:19.000Z",
+    "code_updated_at": "2025-05-31T02:11:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1476957,
+        "name": "Benjamin Gilman",
+        "created_at": "2025-05-31T02:10:07.000Z",
+        "url": "https://greasyfork.org/users/1476957-benjamin-gilman"
+      }
+    ],
+    "name": "Chess.com Clock Enhancer - Right Side",
+    "description": "Makes chess.com clock readable with enhanced 3D effect, positioned on right side",
+    "url": "https://greasyfork.org/scripts/537808-chess-com-clock-enhancer-right-side",
+    "code_url": "https://update.greasyfork.org/scripts/537808/Chesscom%20Clock%20Enhancer%20-%20Right%20Side.user.js",
+    "code_size": 9274,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,167 @@
+[
+  {
+    "id": 538712,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T14:04:27.000Z",
+    "code_updated_at": "2025-06-07T14:04:26.000Z",
+    "namespace": "https://yourdomain.example/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474826,
+        "name": "Leon Sion",
+        "created_at": "2025-05-25T21:06:57.000Z",
+        "url": "https://greasyfork.org/users/1474826-leon-sion"
+      }
+    ],
+    "name": "Spotify Multi-View Redesign + Floating Style Panel",
+    "description": "Wechsel zwischen Spotify-Stilen (Apple, Terminal, Windows, Minimal) mit Floating Panel 🎛️",
+    "url": "https://greasyfork.org/scripts/538712-spotify-multi-view-redesign-floating-style-panel",
+    "code_url": "https://update.greasyfork.org/scripts/538712/Spotify%20Multi-View%20Redesign%20%2B%20Floating%20Style%20Panel.user.js",
+    "code_size": 5585,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 538710,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T13:57:47.000Z",
+    "code_updated_at": "2025-06-07T13:57:47.000Z",
+    "namespace": "https://yourdomain.example/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474826,
+        "name": "Leon Sion",
+        "created_at": "2025-05-25T21:06:57.000Z",
+        "url": "https://greasyfork.org/users/1474826-leon-sion"
+      }
+    ],
+    "name": "Spotify Multi-View Redesign + Floating Style Panel 2.0",
+    "description": "Wechsel zwischen Spotify-Stilen (Apple, Terminal, Windows, Minimal) mit Floating Panel 🎛️",
+    "url": "https://greasyfork.org/scripts/538710-spotify-multi-view-redesign-floating-style-panel-2-0",
+    "code_url": "https://update.greasyfork.org/scripts/538710/Spotify%20Multi-View%20Redesign%20%2B%20Floating%20Style%20Panel%2020.user.js",
+    "code_size": 6243,
+    "license": "MIT License",
+    "version": "4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 537250,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T21:29:56.000Z",
+    "code_updated_at": "2025-05-25T21:29:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474826,
+        "name": "Leon Sion",
+        "created_at": "2025-05-25T21:06:57.000Z",
+        "url": "https://greasyfork.org/users/1474826-leon-sion"
+      }
+    ],
+    "name": "YouTube Neon Glow + Hawaii + Loader + Scroll Effekte + Demos",
+    "description": "YouTube mit Neon-Glow-Buttons, Hawaii-Hover, Ladeanimation, Scroll- und Parallax-Effekten (AOS & Rellax.js) plus Demo-Elementen für AOS & Rellax.js erweitern.",
+    "url": "https://greasyfork.org/scripts/537250-youtube-neon-glow-hawaii-loader-scroll-effekte-demos",
+    "code_url": "https://update.greasyfork.org/scripts/537250/YouTube%20Neon%20Glow%20%2B%20Hawaii%20%2B%20Loader%20%2B%20Scroll%20Effekte%20%2B%20Demos.user.js",
+    "code_size": 5170,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537249,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T21:23:38.000Z",
+    "code_updated_at": "2025-05-25T21:23:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474826,
+        "name": "Leon Sion",
+        "created_at": "2025-05-25T21:06:57.000Z",
+        "url": "https://greasyfork.org/users/1474826-leon-sion"
+      }
+    ],
+    "name": "YouTube Neon Germany Redesign Complete",
+    "description": "Komplett neues Neon-Germany Design für YouTube, mit Parallax, Animationen, Mini-Player, Darkmode und mehr. iPad optimiert.",
+    "url": "https://greasyfork.org/scripts/537249-youtube-neon-germany-redesign-complete",
+    "code_url": "https://update.greasyfork.org/scripts/537249/YouTube%20Neon%20Germany%20Redesign%20Complete.user.js",
+    "code_size": 11925,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 537245,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-25T21:10:25.000Z",
+    "code_updated_at": "2025-05-25T21:10:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1474826,
+        "name": "Leon Sion",
+        "created_at": "2025-05-25T21:06:57.000Z",
+        "url": "https://greasyfork.org/users/1474826-leon-sion"
+      }
+    ],
+    "name": "YouTube Ultra Modern Redesign",
+    "description": "Modernisiert das YouTube-Design mit Parallax, Glas-Effekten und minimalistischer Ästhetik",
+    "url": "https://greasyfork.org/scripts/537245-youtube-ultra-modern-redesign",
+    "code_url": "https://update.greasyfork.org/scripts/537245/YouTube%20Ultra%20Modern%20Redesign.user.js",
+    "code_size": 3461,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

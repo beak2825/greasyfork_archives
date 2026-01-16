@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501296,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-20T17:13:47.000Z",
+    "code_updated_at": "2024-07-20T17:51:10.000Z",
+    "namespace": "https://greasyfork.org/users/1337296",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1337296,
+        "name": "new_yj",
+        "created_at": "2024-07-20T17:00:34.000Z",
+        "url": "https://greasyfork.org/users/1337296-new-yj"
+      }
+    ],
+    "name": "claudeSessionKeySwitch",
+    "description": "使用sessionKey自动登录claude（带蓝色切换按钮,使用下拉框持久显示当前Token，菜单在SessionKey按钮下方展开）",
+    "url": "https://greasyfork.org/scripts/501296-claudesessionkeyswitch",
+    "code_url": "https://update.greasyfork.org/scripts/501296/claudeSessionKeySwitch.user.js",
+    "code_size": 6171,
+    "license": "GNU GPLv3",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

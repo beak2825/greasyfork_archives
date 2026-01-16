@@ -64,5 +64,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unlisted"
+  },
+  {
+    "id": 550943,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-28T09:04:24.000Z",
+    "code_updated_at": "2025-09-28T09:05:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483892,
+        "name": "marcopolo123",
+        "created_at": "2025-06-15T03:21:38.000Z",
+        "url": "https://greasyfork.org/users/1483892-marcopolo123"
+      }
+    ],
+    "name": "Line of Action Auto Downloader",
+    "description": "automatically downloads reference pictures from Line of Action",
+    "url": "https://greasyfork.org/scripts/550943-line-of-action-auto-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/550943/Line%20of%20Action%20Auto%20Downloader.user.js",
+    "code_size": 2586,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 550056,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-19T12:29:14.000Z",
+    "code_updated_at": "2025-09-21T10:38:48.000Z",
+    "namespace": "marcpl.tools.srt-audio-slicer",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483892,
+        "name": "marcopolo123",
+        "created_at": "2025-06-15T03:21:38.000Z",
+        "url": "https://greasyfork.org/users/1483892-marcopolo123"
+      }
+    ],
+    "name": "anki helper-SRT Audio Slicer + CSV Exporter (WAV)",
+    "description": "Drag in one audio + one SRT → slice WAV clips per timestamps and export UTF-8 CSV for Anki",
+    "url": "https://greasyfork.org/scripts/550056-anki-helper-srt-audio-slicer-csv-exporter-wav",
+    "code_url": "https://update.greasyfork.org/scripts/550056/anki%20helper-SRT%20Audio%20Slicer%20%2B%20CSV%20Exporter%20%28WAV%29.user.js",
+    "code_size": 14842,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 549233,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T08:43:55.000Z",
+    "code_updated_at": "2025-09-12T08:43:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483892,
+        "name": "marcopolo123",
+        "created_at": "2025-06-15T03:21:38.000Z",
+        "url": "https://greasyfork.org/users/1483892-marcopolo123"
+      }
+    ],
+    "name": "Cambridge Dictionary Audio Downloader",
+    "description": "Automatically downloads audio from Cambridge Dictionary when you click the play button.",
+    "url": "https://greasyfork.org/scripts/549233-cambridge-dictionary-audio-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/549233/Cambridge%20Dictionary%20Audio%20Downloader.user.js",
+    "code_size": 2291,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

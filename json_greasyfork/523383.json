@@ -1,0 +1,34 @@
+{
+  "id": 523383,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-10T13:25:11.000Z",
+  "code_updated_at": "2025-01-10T13:25:49.000Z",
+  "namespace": "https://forum.dominexrp.ru/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1071970,
+      "name": "AnFiK",
+      "created_at": "2023-05-02T22:02:32.000Z",
+      "url": "https://greasyfork.org/users/1071970-anfik",
+      "scripts": []
+    }
+  ],
+  "name": "Curator's Team Miami",
+  "description": "По всем вопросам: https://vk.com/tomasflorence",
+  "url": "https://greasyfork.org/scripts/523383-curator-s-team-miami",
+  "code_url": "https://update.greasyfork.org/scripts/523383/Curator%27s%20Team%20Miami.user.js",
+  "code_size": 269436,
+  "license": "MIT License",
+  "version": "1.4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

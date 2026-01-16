@@ -1,0 +1,33 @@
+{
+  "id": 512788,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-16T04:45:41.000Z",
+  "code_updated_at": "2024-10-16T04:45:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1286997,
+      "name": "Emily Java",
+      "created_at": "2024-04-11T16:25:37.000Z",
+      "url": "https://greasyfork.org/users/1286997-emily-java"
+    }
+  ],
+  "name": "Stile App - Remove Naughty Pause Cover (Keybind)",
+  "description": "Deletes the \"pause-cover\" div element on Stile App with keybind",
+  "url": "https://greasyfork.org/scripts/512788-stile-app-remove-naughty-pause-cover-keybind",
+  "code_url": "https://update.greasyfork.org/scripts/512788/Stile%20App%20-%20Remove%20Naughty%20Pause%20Cover%20%28Keybind%29.user.js",
+  "code_size": 2353,
+  "license": "GNU",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

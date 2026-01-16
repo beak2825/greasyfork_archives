@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538529,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-06T07:34:23.000Z",
+    "code_updated_at": "2025-06-06T07:55:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479712,
+        "name": "cydenv",
+        "created_at": "2025-06-06T06:53:20.000Z",
+        "url": "https://greasyfork.org/users/1479712-cydenv"
+      }
+    ],
+    "name": "cyd油猴脚本测试",
+    "description": "获取url参数，并且六秒后点击百度搜索框清除按钮,0.31版",
+    "url": "https://greasyfork.org/scripts/538529-cyd%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%E6%B5%8B%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/538529/cyd%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%E6%B5%8B%E8%AF%95.user.js",
+    "code_size": 912,
+    "license": null,
+    "version": "0.31",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

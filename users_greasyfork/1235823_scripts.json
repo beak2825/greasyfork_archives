@@ -1,0 +1,68 @@
+[
+  {
+    "id": 531612,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-02T17:43:11.000Z",
+    "code_updated_at": "2025-04-02T17:43:11.000Z",
+    "namespace": "https://greasyfork.org/users/1235823",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235823,
+        "name": "柚木悠哉",
+        "created_at": "2023-12-18T12:43:53.000Z",
+        "url": "https://greasyfork.org/users/1235823-%E6%9F%9A%E6%9C%A8%E6%82%A0%E5%93%89"
+      }
+    ],
+    "name": "蓝奏云新域名重定向至lanzoui.com",
+    "description": "自动将新域名跳转至lanzoui.com",
+    "url": "https://greasyfork.org/scripts/531612-%E8%93%9D%E5%A5%8F%E4%BA%91%E6%96%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91%E8%87%B3lanzoui-com",
+    "code_url": "https://update.greasyfork.org/scripts/531612/%E8%93%9D%E5%A5%8F%E4%BA%91%E6%96%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91%E8%87%B3lanzouicom.user.js",
+    "code_size": 592,
+    "license": null,
+    "version": "2025040301",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525420,
+    "daily_installs": 0,
+    "total_installs": 55,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-31T14:23:16.000Z",
+    "code_updated_at": "2025-02-25T16:15:34.000Z",
+    "namespace": "https://greasyfork.org/users/1235823",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1235823,
+        "name": "柚木悠哉",
+        "created_at": "2023-12-18T12:43:53.000Z",
+        "url": "https://greasyfork.org/users/1235823-%E6%9F%9A%E6%9C%A8%E6%82%A0%E5%93%89"
+      }
+    ],
+    "name": "123云盘新域名重定向至123pan.com",
+    "description": "自动将新域名跳转至123pan.com",
+    "url": "https://greasyfork.org/scripts/525420-123%E4%BA%91%E7%9B%98%E6%96%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91%E8%87%B3123pan-com",
+    "code_url": "https://update.greasyfork.org/scripts/525420/123%E4%BA%91%E7%9B%98%E6%96%B0%E5%9F%9F%E5%90%8D%E9%87%8D%E5%AE%9A%E5%90%91%E8%87%B3123pancom.user.js",
+    "code_size": 477,
+    "license": null,
+    "version": "20250226",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

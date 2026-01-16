@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522970,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-06T02:20:31.000Z",
+    "code_updated_at": "2025-02-24T06:49:04.000Z",
+    "namespace": "http://amb-cn-extend.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1420057,
+        "name": "3d59 1f16 (b12bcdb5)",
+        "created_at": "2025-01-06T02:16:33.000Z",
+        "url": "https://greasyfork.org/users/1420057-3d59-1f16-b12bcdb5"
+      }
+    ],
+    "name": "A-3340 amb-cn extend",
+    "description": "function extension for amb-cn.com",
+    "url": "https://greasyfork.org/scripts/522970-a-3340-amb-cn-extend",
+    "code_url": "https://update.greasyfork.org/scripts/522970/A-3340%20amb-cn%20extend.user.js",
+    "code_size": 11720,
+    "license": "MIT License",
+    "version": "1.6.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

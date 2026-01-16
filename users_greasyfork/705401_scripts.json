@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534594,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-01T04:17:58.000Z",
+    "code_updated_at": "2025-05-01T04:22:24.000Z",
+    "namespace": "https://github.com/jimmyorz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 705401,
+        "name": "jimmyorz",
+        "created_at": "2020-11-15T18:26:28.000Z",
+        "url": "https://greasyfork.org/users/705401-jimmyorz"
+      }
+    ],
+    "name": "KKTV 隱藏浮水印",
+    "description": "移除 KKTV 影片上的浮水印，移植自mickey87910@github",
+    "url": "https://greasyfork.org/scripts/534594-kktv-%E9%9A%B1%E8%97%8F%E6%B5%AE%E6%B0%B4%E5%8D%B0",
+    "code_url": "https://update.greasyfork.org/scripts/534594/KKTV%20%E9%9A%B1%E8%97%8F%E6%B5%AE%E6%B0%B4%E5%8D%B0.user.js",
+    "code_size": 602,
+    "license": null,
+    "version": "1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511582,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-05T14:58:25.000Z",
+    "code_updated_at": "2025-04-21T11:52:05.000Z",
+    "namespace": "https://github.com/jimmyorz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 705401,
+        "name": "jimmyorz",
+        "created_at": "2020-11-15T18:26:28.000Z",
+        "url": "https://greasyfork.org/users/705401-jimmyorz"
+      }
+    ],
+    "name": "動畫瘋下載器 macOS Enhanced ver.",
+    "description": "取得動畫的 m3u8 網址並使用 iTerm2 下載，也可使用 IINA 播放",
+    "url": "https://greasyfork.org/scripts/511582-%E5%8B%95%E7%95%AB%E7%98%8B%E4%B8%8B%E8%BC%89%E5%99%A8-macos-enhanced-ver",
+    "code_url": "https://update.greasyfork.org/scripts/511582/%E5%8B%95%E7%95%AB%E7%98%8B%E4%B8%8B%E8%BC%89%E5%99%A8%20macOS%20Enhanced%20ver.user.js",
+    "code_size": 11931,
+    "license": null,
+    "version": "1.7.1e",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

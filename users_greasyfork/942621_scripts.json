@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548269,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-03T19:43:54.000Z",
+    "code_updated_at": "2025-10-28T00:15:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 942621,
+        "name": "Zedo",
+        "created_at": "2022-08-03T10:15:39.000Z",
+        "url": "https://greasyfork.org/users/942621-zedo"
+      }
+    ],
+    "name": "Bypass Mijia Geek Edition Chrome Warning",
+    "description": "用於忽略米家極客版的 Chrome 警告提示",
+    "url": "https://greasyfork.org/scripts/548269-bypass-mijia-geek-edition-chrome-warning",
+    "code_url": "https://update.greasyfork.org/scripts/548269/Bypass%20Mijia%20Geek%20Edition%20Chrome%20Warning.user.js",
+    "code_size": 5487,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "1.0.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

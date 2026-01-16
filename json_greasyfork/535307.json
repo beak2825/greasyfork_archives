@@ -1,0 +1,59 @@
+{
+  "id": 535307,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-08T05:20:19.000Z",
+  "code_updated_at": "2025-05-08T05:20:19.000Z",
+  "namespace": "https://greasyfork.org/users/991002",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 991002,
+      "name": "Alterem Liu",
+      "created_at": "2022-12-02T02:41:24.000Z",
+      "url": "https://greasyfork.org/users/991002-alterem-liu",
+      "scripts": [
+        {
+          "id": 535307,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-08T05:20:19.000Z",
+          "code_updated_at": "2025-05-08T05:20:19.000Z",
+          "namespace": "https://greasyfork.org/users/991002",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "nodeLoc Level",
+          "description": "Enhanced script to track progress towards next trust level on nodeloc.cc with added search functionality, adjusted posts read limit, and a breathing icon animation.",
+          "url": "https://greasyfork.org/scripts/535307-nodeloc-level",
+          "code_url": "https://update.greasyfork.org/scripts/535307/nodeLoc%20Level.user.js",
+          "code_size": 17084,
+          "license": "MIT License",
+          "version": "0.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "nodeLoc Level",
+  "description": "Enhanced script to track progress towards next trust level on nodeloc.cc with added search functionality, adjusted posts read limit, and a breathing icon animation.",
+  "url": "https://greasyfork.org/scripts/535307-nodeloc-level",
+  "code_url": "https://update.greasyfork.org/scripts/535307/nodeLoc%20Level.user.js",
+  "code_size": 17084,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

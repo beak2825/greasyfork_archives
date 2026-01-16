@@ -1,0 +1,59 @@
+{
+  "id": 527373,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-18T21:03:16.000Z",
+  "code_updated_at": "2025-02-18T22:08:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1436751,
+      "name": "paidlowered",
+      "created_at": "2025-02-18T20:52:19.000Z",
+      "url": "https://greasyfork.org/users/1436751-paidlowered",
+      "scripts": [
+        {
+          "id": 557142,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-27T19:48:21.000Z",
+          "code_updated_at": "2025-11-27T19:48:21.000Z",
+          "namespace": "Roblox scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Restore Roblox website play functionality on Firefox-based browsers",
+          "description": "Really hacky but better than nothing. DM me on Telegram if you have a better solution - @paidlowered",
+          "url": "https://greasyfork.org/scripts/557142-restore-roblox-website-play-functionality-on-firefox-based-browsers",
+          "code_url": "https://update.greasyfork.org/scripts/557142/Restore%20Roblox%20website%20play%20functionality%20on%20Firefox-based%20browsers.user.js",
+          "code_size": 672,
+          "license": "Do What The F*ck You Want To Public License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Nova Hill Off-white (Based on Nova Hill Flashbang)",
+  "description": "Change all text on Nova Hill to Montserrat Bold and apply a non-blinding off-white theme that repairs your vision slowly.",
+  "url": "https://greasyfork.org/scripts/527373-nova-hill-off-white-based-on-nova-hill-flashbang",
+  "code_url": "https://update.greasyfork.org/scripts/527373/Nova%20Hill%20Off-white%20%28Based%20on%20Nova%20Hill%20Flashbang%29.user.js",
+  "code_size": 2175,
+  "license": "none",
+  "version": "0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 503319,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-11T14:47:49.000Z",
+  "code_updated_at": "2024-08-11T14:47:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1147590,
+      "name": "NOABC",
+      "created_at": "2023-08-09T09:59:52.000Z",
+      "url": "https://greasyfork.org/users/1147590-noabc",
+      "scripts": [
+        {
+          "id": 473205,
+          "daily_installs": 9,
+          "total_installs": 11076,
+          "fan_score": "61.5",
+          "good_ratings": 17,
+          "ok_ratings": 2,
+          "bad_ratings": 3,
+          "created_at": "2023-08-16T15:41:54.000Z",
+          "code_updated_at": "2024-08-03T03:38:17.000Z",
+          "namespace": "https://bytedance.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "让你的飞书更好用(优化版)",
+          "description": "让飞书文档不受权限限制，可以复制任意内容，可以打开右键菜单(复制下载图片)",
+          "url": "https://greasyfork.org/scripts/473205-%E8%AE%A9%E4%BD%A0%E7%9A%84%E9%A3%9E%E4%B9%A6%E6%9B%B4%E5%A5%BD%E7%94%A8-%E4%BC%98%E5%8C%96%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/473205/%E8%AE%A9%E4%BD%A0%E7%9A%84%E9%A3%9E%E4%B9%A6%E6%9B%B4%E5%A5%BD%E7%94%A8%28%E4%BC%98%E5%8C%96%E7%89%88%29.user.js",
+          "code_size": 2849,
+          "license": "GPL License",
+          "version": "0.5",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "douyin-download",
+  "description": "下载抖音用户主页数据!",
+  "url": "https://greasyfork.org/scripts/503319-douyin-download",
+  "code_url": "https://update.greasyfork.org/scripts/503319/douyin-download.user.js",
+  "code_size": 44329,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

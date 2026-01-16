@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533641,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-22T15:05:30.000Z",
+    "code_updated_at": "2025-05-28T14:46:15.000Z",
+    "namespace": "a23187.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175398,
+        "name": "A23187",
+        "created_at": "2018-03-18T13:04:03.000Z",
+        "url": "https://greasyfork.org/users/175398-a23187"
+      }
+    ],
+    "name": "MoonBit ❤️ LeetCode",
+    "description": "add support of moonbit language to leetcode",
+    "url": "https://greasyfork.org/scripts/533641-moonbit-leetcode",
+    "code_url": "https://update.greasyfork.org/scripts/533641/MoonBit%20%E2%9D%A4%EF%B8%8F%20LeetCode.user.js",
+    "code_size": 13079,
+    "license": "MIT License",
+    "version": "1.1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512230,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-11T09:19:57.000Z",
+    "code_updated_at": "2024-10-11T09:19:57.000Z",
+    "namespace": "a23187.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 175398,
+        "name": "A23187",
+        "created_at": "2018-03-18T13:04:03.000Z",
+        "url": "https://greasyfork.org/users/175398-a23187"
+      }
+    ],
+    "name": "杜康自动审批",
+    "description": "【WIP】杜康自动审批",
+    "url": "https://greasyfork.org/scripts/512230-%E6%9D%9C%E5%BA%B7%E8%87%AA%E5%8A%A8%E5%AE%A1%E6%89%B9",
+    "code_url": "https://update.greasyfork.org/scripts/512230/%E6%9D%9C%E5%BA%B7%E8%87%AA%E5%8A%A8%E5%AE%A1%E6%89%B9.user.js",
+    "code_size": 4250,
+    "license": "MIT License",
+    "version": "0.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

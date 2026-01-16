@@ -1,0 +1,59 @@
+{
+  "id": 541661,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-04T20:20:43.000Z",
+  "code_updated_at": "2025-07-04T20:20:43.000Z",
+  "namespace": "https://rpproject-rp.vkweb.su/index.php?threads/%D0%A2%D0%B5%D1%81%D1%82-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2.1/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1427647,
+      "name": "McKing",
+      "created_at": "2025-01-26T15:41:38.000Z",
+      "url": "https://greasyfork.org/users/1427647-mcking",
+      "scripts": [
+        {
+          "id": 541661,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-04T20:20:43.000Z",
+          "code_updated_at": "2025-07-04T20:20:43.000Z",
+          "namespace": "https://rpproject-rp.vkweb.su/index.php?threads/%D0%A2%D0%B5%D1%81%D1%82-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%D0%BE%D0%B2.1/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "🌕SPB | Скрипт для Кураторов Форума By Tommy Card🌕",
+          "description": "Best Curators",
+          "url": "https://greasyfork.org/scripts/541661-spb-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-tommy-card",
+          "code_url": "https://update.greasyfork.org/scripts/541661/%F0%9F%8C%95SPB%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20By%20Tommy%20Card%F0%9F%8C%95.user.js",
+          "code_size": 35703,
+          "license": "MIT License",
+          "version": "2.5",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "🌕SPB | Скрипт для Кураторов Форума By Tommy Card🌕",
+  "description": "Best Curators",
+  "url": "https://greasyfork.org/scripts/541661-spb-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-tommy-card",
+  "code_url": "https://update.greasyfork.org/scripts/541661/%F0%9F%8C%95SPB%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20By%20Tommy%20Card%F0%9F%8C%95.user.js",
+  "code_size": 35703,
+  "license": "MIT License",
+  "version": "2.5",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

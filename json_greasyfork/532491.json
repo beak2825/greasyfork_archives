@@ -1,0 +1,33 @@
+{
+  "id": 532491,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-11T06:03:17.000Z",
+  "code_updated_at": "2025-04-11T06:03:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1456464,
+      "name": "Ben Whaley",
+      "created_at": "2025-04-11T05:57:36.000Z",
+      "url": "https://greasyfork.org/users/1456464-ben-whaley"
+    }
+  ],
+  "name": "Disable CMD+S",
+  "description": "Prevents websites from intercepting the CMD+S (Save) shortcut on Mac",
+  "url": "https://greasyfork.org/scripts/532491-disable-cmd-s",
+  "code_url": "https://update.greasyfork.org/scripts/532491/Disable%20CMD%2BS.user.js",
+  "code_size": 1516,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

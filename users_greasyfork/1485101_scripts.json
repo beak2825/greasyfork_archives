@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539802,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T00:57:36.000Z",
+    "code_updated_at": "2025-06-18T02:19:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485101,
+        "name": "opita04",
+        "created_at": "2025-06-18T00:44:49.000Z",
+        "url": "https://greasyfork.org/users/1485101-opita04"
+      }
+    ],
+    "name": "YouTube Filter & Sorter (Compact UI)",
+    "description": "STABLE & FINAL FIX. Live filtering is now reliable. Filter & Sort YouTube with a compact UI. Save your favorite settings as the new default.",
+    "url": "https://greasyfork.org/scripts/539802-youtube-filter-sorter-compact-ui",
+    "code_url": "https://update.greasyfork.org/scripts/539802/YouTube%20Filter%20%20Sorter%20%28Compact%20UI%29.user.js",
+    "code_size": 15977,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

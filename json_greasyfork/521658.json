@@ -1,0 +1,59 @@
+{
+  "id": 521658,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-24T10:32:13.000Z",
+  "code_updated_at": "2024-12-24T10:32:13.000Z",
+  "namespace": "FunnyMonkey_Youtebe_Theme",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1414474,
+      "name": "Zephyros",
+      "created_at": "2024-12-23T07:18:58.000Z",
+      "url": "https://greasyfork.org/users/1414474-zephyros",
+      "scripts": [
+        {
+          "id": 521658,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-24T10:32:13.000Z",
+          "code_updated_at": "2024-12-24T10:32:13.000Z",
+          "namespace": "FunnyMonkey_Youtebe_Theme",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Beautify YouTube's video progress bar",
+          "description": "The function of the script is very simple, which is to beautify the style of YouTube, such as beautifying the video progress bar~",
+          "url": "https://greasyfork.org/scripts/521658-beautify-youtube-s-video-progress-bar",
+          "code_url": "https://update.greasyfork.org/scripts/521658/Beautify%20YouTube%27s%20video%20progress%20bar.user.js",
+          "code_size": 9635,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Beautify YouTube's video progress bar",
+  "description": "The function of the script is very simple, which is to beautify the style of YouTube, such as beautifying the video progress bar~",
+  "url": "https://greasyfork.org/scripts/521658-beautify-youtube-s-video-progress-bar",
+  "code_url": "https://update.greasyfork.org/scripts/521658/Beautify%20YouTube%27s%20video%20progress%20bar.user.js",
+  "code_size": 9635,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

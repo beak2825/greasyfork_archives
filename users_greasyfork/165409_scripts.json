@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512290,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-11T17:57:02.000Z",
+    "code_updated_at": "2025-12-18T16:29:49.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 165409,
+        "name": "FaySmash",
+        "created_at": "2018-01-03T14:22:53.000Z",
+        "url": "https://greasyfork.org/users/165409-faysmash"
+      }
+    ],
+    "name": "Minyami",
+    "description": "Get Minyami download commands for supported sites",
+    "url": "https://greasyfork.org/scripts/512290-minyami",
+    "code_url": "https://update.greasyfork.org/scripts/512290/Minyami.user.js",
+    "code_size": 19804,
+    "license": null,
+    "version": "0.0.1.20251218162949",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

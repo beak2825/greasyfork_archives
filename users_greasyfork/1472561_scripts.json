@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536726,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-21T18:17:43.000Z",
+    "code_updated_at": "2025-05-26T21:02:55.000Z",
+    "namespace": "https://www.torn.com/profiles.php?XID=3164010",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1472561,
+        "name": "NoneTorn",
+        "created_at": "2025-05-20T19:53:03.000Z",
+        "url": "https://greasyfork.org/users/1472561-nonetorn"
+      }
+    ],
+    "name": "Torn Hospital SUPERHERO",
+    "description": "Continue reviving after each click, even after success or failed energy. Filters, QR, min %, page range and more.",
+    "url": "https://greasyfork.org/scripts/536726-torn-hospital-superhero",
+    "code_url": "https://update.greasyfork.org/scripts/536726/Torn%20Hospital%20SUPERHERO.user.js",
+    "code_size": 7760,
+    "license": "MIT License",
+    "version": "1.0.35",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

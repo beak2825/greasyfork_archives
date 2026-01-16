@@ -1,0 +1,134 @@
+[
+  {
+    "id": 517748,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T08:11:56.000Z",
+    "code_updated_at": "2024-11-17T08:11:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383585,
+        "name": "Justin Min",
+        "created_at": "2024-10-20T10:44:46.000Z",
+        "url": "https://greasyfork.org/users/1383585-justin-min"
+      }
+    ],
+    "name": "Clear sessionStorage, localStorage, and cookies for the current site",
+    "description": "在当前网站上清除 sessionStorage, localStorage 和 cookies。",
+    "url": "https://greasyfork.org/scripts/517748-clear-sessionstorage-localstorage-and-cookies-for-the-current-site",
+    "code_url": "https://update.greasyfork.org/scripts/517748/Clear%20sessionStorage%2C%20localStorage%2C%20and%20cookies%20for%20the%20current%20site.user.js",
+    "code_size": 1723,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "da",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513282,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-20T10:58:04.000Z",
+    "code_updated_at": "2024-10-20T10:58:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383585,
+        "name": "Justin Min",
+        "created_at": "2024-10-20T10:44:46.000Z",
+        "url": "https://greasyfork.org/users/1383585-justin-min"
+      }
+    ],
+    "name": "Disable setInterval Globally",
+    "description": "禁止所有网站执行 setInterval 函数",
+    "url": "https://greasyfork.org/scripts/513282-disable-setinterval-globally",
+    "code_url": "https://update.greasyfork.org/scripts/513282/Disable%20setInterval%20Globally.user.js",
+    "code_size": 1756,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513281,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-20T10:56:47.000Z",
+    "code_updated_at": "2024-10-20T10:56:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383585,
+        "name": "Justin Min",
+        "created_at": "2024-10-20T10:44:46.000Z",
+        "url": "https://greasyfork.org/users/1383585-justin-min"
+      }
+    ],
+    "name": "Disable close current page",
+    "description": "disable close current page when open devtools.",
+    "url": "https://greasyfork.org/scripts/513281-disable-close-current-page",
+    "code_url": "https://update.greasyfork.org/scripts/513281/Disable%20close%20current%20page.user.js",
+    "code_size": 1428,
+    "license": "MIT License",
+    "version": "2024-10-18",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513278,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-20T10:54:41.000Z",
+    "code_updated_at": "2024-10-20T10:54:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383585,
+        "name": "Justin Min",
+        "created_at": "2024-10-20T10:44:46.000Z",
+        "url": "https://greasyfork.org/users/1383585-justin-min"
+      }
+    ],
+    "name": "Persistent Console Logger",
+    "description": "记录所有 console.log 即使控制台被清除也能查看",
+    "url": "https://greasyfork.org/scripts/513278-persistent-console-logger",
+    "code_url": "https://update.greasyfork.org/scripts/513278/Persistent%20Console%20Logger.user.js",
+    "code_size": 6672,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

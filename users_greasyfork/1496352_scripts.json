@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543010,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-19T12:53:51.000Z",
+    "code_updated_at": "2025-08-17T18:18:21.000Z",
+    "namespace": "ViolentMonkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1496352,
+        "name": "Tasteless Void",
+        "created_at": "2025-07-19T12:47:57.000Z",
+        "url": "https://greasyfork.org/users/1496352-tasteless-void"
+      }
+    ],
+    "name": "SteamDB App Parser",
+    "description": "Parse SteamDB Related Apps and DLC into structured format for SLSsteam.",
+    "url": "https://greasyfork.org/scripts/543010-steamdb-app-parser",
+    "code_url": "https://update.greasyfork.org/scripts/543010/SteamDB%20App%20Parser.user.js",
+    "code_size": 10417,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

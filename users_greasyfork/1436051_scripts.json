@@ -31,5 +31,170 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 550124,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-20T04:21:19.000Z",
+    "code_updated_at": "2025-09-20T04:21:18.000Z",
+    "namespace": "https://greasyfork.org/users/1436051",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436051,
+        "name": "dogxii",
+        "created_at": "2025-02-17T11:21:47.000Z",
+        "url": "https://greasyfork.org/users/1436051-dogxii"
+      }
+    ],
+    "name": "zzuli统一身份认证自服务平台资料可编辑",
+    "description": "让资料页面所有字段可编辑，恢复上传图片，请将手机号，身份证号手动补全，避免影响学校信息。仅供学习参考，请勿用于违法用途。",
+    "url": "https://greasyfork.org/scripts/550124-zzuli%E7%BB%9F%E4%B8%80%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E8%87%AA%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%E8%B5%84%E6%96%99%E5%8F%AF%E7%BC%96%E8%BE%91",
+    "code_url": "https://update.greasyfork.org/scripts/550124/zzuli%E7%BB%9F%E4%B8%80%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81%E8%87%AA%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%E8%B5%84%E6%96%99%E5%8F%AF%E7%BC%96%E8%BE%91.user.js",
+    "code_size": 5374,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538935,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-09T18:01:01.000Z",
+    "code_updated_at": "2025-06-09T18:01:01.000Z",
+    "namespace": "http://tampermonkey.net/1436051",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436051,
+        "name": "dogxii",
+        "created_at": "2025-02-17T11:21:47.000Z",
+        "url": "https://greasyfork.org/users/1436051-dogxii"
+      }
+    ],
+    "name": "V2ex Better Comment",
+    "description": "在 V2ex 评论中支持--自定义表情/快速上传图片",
+    "url": "https://greasyfork.org/scripts/538935-v2ex-better-comment",
+    "code_url": "https://update.greasyfork.org/scripts/538935/V2ex%20Better%20Comment.user.js",
+    "code_size": 42121,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538513,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-06T05:41:04.000Z",
+    "code_updated_at": "2025-07-28T14:45:04.000Z",
+    "namespace": "http://tampermonkey.net/1436051",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436051,
+        "name": "dogxii",
+        "created_at": "2025-02-17T11:21:47.000Z",
+        "url": "https://greasyfork.org/users/1436051-dogxii"
+      }
+    ],
+    "name": "V2EX Image Uploader",
+    "description": "在 V2EX 评论区快速上传图片并插入链接",
+    "url": "https://greasyfork.org/scripts/538513-v2ex-image-uploader",
+    "code_url": "https://update.greasyfork.org/scripts/538513/V2EX%20Image%20Uploader.user.js",
+    "code_size": 20193,
+    "license": "MIT License",
+    "version": "1.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527893,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T04:15:35.000Z",
+    "code_updated_at": "2025-02-24T04:15:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436051,
+        "name": "dogxii",
+        "created_at": "2025-02-17T11:21:47.000Z",
+        "url": "https://greasyfork.org/users/1436051-dogxii"
+      }
+    ],
+    "name": "跳转QQ拦截网站",
+    "description": "自动跳转QQ拦截的网站，告别烦人的“已停止访问”",
+    "url": "https://greasyfork.org/scripts/527893-%E8%B7%B3%E8%BD%ACqq%E6%8B%A6%E6%88%AA%E7%BD%91%E7%AB%99",
+    "code_url": "https://update.greasyfork.org/scripts/527893/%E8%B7%B3%E8%BD%ACQQ%E6%8B%A6%E6%88%AA%E7%BD%91%E7%AB%99.user.js",
+    "code_size": 1583,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527208,
+    "daily_installs": 2,
+    "total_installs": 211,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-17T11:55:08.000Z",
+    "code_updated_at": "2025-02-21T08:42:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1436051,
+        "name": "dogxii",
+        "created_at": "2025-02-17T11:21:47.000Z",
+        "url": "https://greasyfork.org/users/1436051-dogxii"
+      }
+    ],
+    "name": "爱给网音频助手",
+    "description": "获取爱给网音频直链并下载，需先播放音频!!",
+    "url": "https://greasyfork.org/scripts/527208-%E7%88%B1%E7%BB%99%E7%BD%91%E9%9F%B3%E9%A2%91%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/527208/%E7%88%B1%E7%BB%99%E7%BD%91%E9%9F%B3%E9%A2%91%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 5087,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

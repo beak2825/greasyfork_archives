@@ -1,0 +1,59 @@
+{
+  "id": 538726,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-07T16:58:25.000Z",
+  "code_updated_at": "2025-07-15T21:37:42.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480358,
+      "name": "shadowghost69",
+      "created_at": "2025-06-07T16:51:48.000Z",
+      "url": "https://greasyfork.org/users/1480358-shadowghost69",
+      "scripts": [
+        {
+          "id": 538726,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-07T16:58:25.000Z",
+          "code_updated_at": "2025-07-15T21:37:42.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "RR search",
+          "description": "Handy search/find tool for royal road fictions.",
+          "url": "https://greasyfork.org/scripts/538726-rr-search",
+          "code_url": "https://update.greasyfork.org/scripts/538726/RR%20search.user.js",
+          "code_size": 11859,
+          "license": null,
+          "version": "0.3.4.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "RR search",
+  "description": "Handy search/find tool for royal road fictions.",
+  "url": "https://greasyfork.org/scripts/538726-rr-search",
+  "code_url": "https://update.greasyfork.org/scripts/538726/RR%20search.user.js",
+  "code_size": 11859,
+  "license": null,
+  "version": "0.3.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

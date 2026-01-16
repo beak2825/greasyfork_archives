@@ -1,0 +1,34 @@
+{
+  "id": 550580,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-24T16:54:42.000Z",
+  "code_updated_at": "2025-10-18T10:20:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1268083,
+      "name": "Giaosm",
+      "created_at": "2024-02-28T14:48:47.000Z",
+      "url": "https://greasyfork.org/users/1268083-giaosm",
+      "scripts": []
+    }
+  ],
+  "name": "烛光匿名聊天自动匹配",
+  "description": "自动点击烛光匿名聊天网站的匹配按钮",
+  "url": "https://greasyfork.org/scripts/550580-%E7%83%9B%E5%85%89%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D",
+  "code_url": "https://update.greasyfork.org/scripts/550580/%E7%83%9B%E5%85%89%E5%8C%BF%E5%90%8D%E8%81%8A%E5%A4%A9%E8%87%AA%E5%8A%A8%E5%8C%B9%E9%85%8D.user.js",
+  "code_size": 82719,
+  "license": null,
+  "version": "1.2.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

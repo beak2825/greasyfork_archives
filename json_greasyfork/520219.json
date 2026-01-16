@@ -1,0 +1,59 @@
+{
+  "id": 520219,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-09T09:49:39.000Z",
+  "code_updated_at": "2024-12-11T03:05:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1408578,
+      "name": "MengZexi",
+      "created_at": "2024-12-09T09:11:26.000Z",
+      "url": "https://greasyfork.org/users/1408578-mengzexi",
+      "scripts": [
+        {
+          "id": 520219,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-09T09:49:39.000Z",
+          "code_updated_at": "2024-12-11T03:05:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Latex_Automatic Formatting",
+          "description": "Typesetting the contents of the clipboard",
+          "url": "https://greasyfork.org/scripts/520219-latex-automatic-formatting",
+          "code_url": "https://update.greasyfork.org/scripts/520219/Latex_Automatic%20Formatting.user.js",
+          "code_size": 11411,
+          "license": "GNU GPLv3",
+          "version": "v0.61",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Latex_Automatic Formatting",
+  "description": "Typesetting the contents of the clipboard",
+  "url": "https://greasyfork.org/scripts/520219-latex-automatic-formatting",
+  "code_url": "https://update.greasyfork.org/scripts/520219/Latex_Automatic%20Formatting.user.js",
+  "code_size": 11411,
+  "license": "GNU GPLv3",
+  "version": "v0.61",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

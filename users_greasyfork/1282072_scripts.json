@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519466,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-01T16:45:41.000Z",
+    "code_updated_at": "2024-12-01T16:48:00.000Z",
+    "namespace": "http://violentmonkey.github.io",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1282072,
+        "name": "NotFenixio",
+        "created_at": "2024-03-31T12:58:00.000Z",
+        "url": "https://greasyfork.org/users/1282072-notfenixio"
+      }
+    ],
+    "name": "bossdeer upload",
+    "description": "Enable image pasting and ImgBB upload integration in bossdeer",
+    "url": "https://greasyfork.org/scripts/519466-bossdeer-upload",
+    "code_url": "https://update.greasyfork.org/scripts/519466/bossdeer%20upload.user.js",
+    "code_size": 3392,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

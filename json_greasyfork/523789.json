@@ -1,0 +1,33 @@
+{
+  "id": 523789,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-14T20:36:04.000Z",
+  "code_updated_at": "2025-01-14T20:44:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1372148,
+      "name": "ᗬƏɲᎥᏃ",
+      "created_at": "2024-09-23T21:07:59.000Z",
+      "url": "https://greasyfork.org/users/1372148-%E1%97%AC%C9%99%C9%B2%EA%AD%B5%EA%AE%93"
+    }
+  ],
+  "name": "Ares RedBOT v5.0",
+  "description": "Gartic io hack script",
+  "url": "https://greasyfork.org/scripts/523789-ares-redbot-v5-0",
+  "code_url": "https://update.greasyfork.org/scripts/523789/Ares%20RedBOT%20v50.user.js",
+  "code_size": 2491,
+  "license": null,
+  "version": "5.0",
+  "locale": "tr",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 529696,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-13T08:53:09.000Z",
+    "code_updated_at": "2025-03-13T08:53:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1292545,
+        "name": "QUAIXue",
+        "created_at": "2024-04-24T11:14:01.000Z",
+        "url": "https://greasyfork.org/users/1292545-quaixue"
+      }
+    ],
+    "name": "B站视频播放器调整视频比例",
+    "description": "播放器调整视频比例",
+    "url": "https://greasyfork.org/scripts/529696-b%E7%AB%99%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E8%B0%83%E6%95%B4%E8%A7%86%E9%A2%91%E6%AF%94%E4%BE%8B",
+    "code_url": "https://update.greasyfork.org/scripts/529696/B%E7%AB%99%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E8%B0%83%E6%95%B4%E8%A7%86%E9%A2%91%E6%AF%94%E4%BE%8B.user.js",
+    "code_size": 7954,
+    "license": "Creative Commons Attribution Non Commercial Share Alike 4.0 International",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 529108,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-07T16:25:41.000Z",
+    "code_updated_at": "2025-03-07T16:25:41.000Z",
+    "namespace": "无",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1292545,
+        "name": "QUAIXue",
+        "created_at": "2024-04-24T11:14:01.000Z",
+        "url": "https://greasyfork.org/users/1292545-quaixue"
+      }
+    ],
+    "name": "B站合集倒序",
+    "description": "为B站视频合集页面添加倒序播放功能，附带开关按钮及容错处理",
+    "url": "https://greasyfork.org/scripts/529108-b%E7%AB%99%E5%90%88%E9%9B%86%E5%80%92%E5%BA%8F",
+    "code_url": "https://update.greasyfork.org/scripts/529108/B%E7%AB%99%E5%90%88%E9%9B%86%E5%80%92%E5%BA%8F.user.js",
+    "code_size": 31659,
+    "license": "无",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

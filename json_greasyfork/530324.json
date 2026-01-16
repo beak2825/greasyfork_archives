@@ -1,0 +1,34 @@
+{
+  "id": 530324,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-20T05:54:09.000Z",
+  "code_updated_at": "2025-07-23T11:35:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1447649,
+      "name": "Константин Евсеев",
+      "created_at": "2025-03-19T10:17:24.000Z",
+      "url": "https://greasyfork.org/users/1447649-%D0%BA%D0%BE%D0%BD%D1%81%D1%82%D0%B0%D0%BD%D1%82%D0%B8%D0%BD-%D0%B5%D0%B2%D1%81%D0%B5%D0%B5%D0%B2",
+      "scripts": []
+    }
+  ],
+  "name": "AutoProblem Block Couriers",
+  "description": "Automatically create problems for blocked",
+  "url": "https://greasyfork.org/scripts/530324-autoproblem-block-couriers",
+  "code_url": "https://update.greasyfork.org/scripts/530324/AutoProblem%20Block%20Couriers.user.js",
+  "code_size": 11291,
+  "license": "MIT License",
+  "version": "2.2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

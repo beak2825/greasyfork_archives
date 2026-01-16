@@ -1,0 +1,33 @@
+{
+  "id": 513865,
+  "daily_installs": 0,
+  "total_installs": 4103,
+  "fan_score": "15.0",
+  "good_ratings": 1,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2024-10-24T14:37:24.000Z",
+  "code_updated_at": "2025-10-11T09:43:01.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1012443,
+      "name": "hukkers",
+      "created_at": "2023-01-15T11:49:52.000Z",
+      "url": "https://greasyfork.org/users/1012443-hukkers"
+    }
+  ],
+  "name": "🤔知乎自动展开全文/免登录查看内容😀/浏览优化",
+  "description": "帮助自动去除点击链接时的弹窗和自动展开全文，无痕浏览体验增强，如需留言需手动登录😔",
+  "url": "https://greasyfork.org/scripts/513865-%E7%9F%A5%E4%B9%8E%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E5%85%A8%E6%96%87-%E5%85%8D%E7%99%BB%E5%BD%95%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AE%B9-%E6%B5%8F%E8%A7%88%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/513865/%F0%9F%A4%94%E7%9F%A5%E4%B9%8E%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E5%85%A8%E6%96%87%E5%85%8D%E7%99%BB%E5%BD%95%E6%9F%A5%E7%9C%8B%E5%86%85%E5%AE%B9%F0%9F%98%80%E6%B5%8F%E8%A7%88%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 7934,
+  "license": "MIT License",
+  "version": "1.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

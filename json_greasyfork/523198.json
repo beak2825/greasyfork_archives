@@ -1,0 +1,34 @@
+{
+  "id": 523198,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-08T11:52:29.000Z",
+  "code_updated_at": "2025-01-08T11:52:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1418108,
+      "name": "winzan cheng",
+      "created_at": "2025-01-01T05:19:06.000Z",
+      "url": "https://greasyfork.org/users/1418108-winzan-cheng",
+      "scripts": []
+    }
+  ],
+  "name": "Auto SMS Registration for Alook Browser",
+  "description": "自动填写并发送短信验证码的脚本，适用于 Alook 安卓浏览器。",
+  "url": "https://greasyfork.org/scripts/523198-auto-sms-registration-for-alook-browser",
+  "code_url": "https://update.greasyfork.org/scripts/523198/Auto%20SMS%20Registration%20for%20Alook%20Browser.user.js",
+  "code_size": 5531,
+  "license": null,
+  "version": "2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -31,5 +31,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 514684,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-29T13:46:54.000Z",
+    "code_updated_at": "2026-01-02T14:04:45.000Z",
+    "namespace": "https://github.com/w4tchdoge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799732,
+        "name": "w4tchdoge",
+        "created_at": "2021-08-02T20:23:04.000Z",
+        "url": "https://greasyfork.org/users/799732-w4tchdoge"
+      }
+    ],
+    "name": "AO3: Go To Latest Chapter",
+    "description": "Adds a link to the chapter navigation bar to go to the latest chapter of a work. Alternative method is to add `/latest` to the end of an AO3 work URL. e.g. https://archiveofourown.org/works/{AO3_WORK_ID}/chapters/{AO3_CHAPTER_ID}/latest",
+    "url": "https://greasyfork.org/scripts/514684-ao3-go-to-latest-chapter",
+    "code_url": "https://update.greasyfork.org/scripts/514684/AO3%3A%20Go%20To%20Latest%20Chapter.user.js",
+    "code_size": 9093,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "2.0.0-20260102_220051",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 509990,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-24T14:16:45.000Z",
+    "code_updated_at": "2025-07-07T15:11:16.000Z",
+    "namespace": "https://github.com/w4tchdoge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799732,
+        "name": "w4tchdoge",
+        "created_at": "2021-08-02T20:23:04.000Z",
+        "url": "https://greasyfork.org/users/799732-w4tchdoge"
+      }
+    ],
+    "name": "Copy Wardle Guesses",
+    "description": "Copies a list of your Wardle guesses (spoilered for Discord) to your clipboard",
+    "url": "https://greasyfork.org/scripts/509990-copy-wardle-guesses",
+    "code_url": "https://update.greasyfork.org/scripts/509990/Copy%20Wardle%20Guesses.user.js",
+    "code_size": 6389,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.1-20250616_022536",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 506141,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-31T21:57:50.000Z",
+    "code_updated_at": "2024-08-31T21:57:50.000Z",
+    "namespace": "https://github.com/w4tchdoge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799732,
+        "name": "w4tchdoge",
+        "created_at": "2021-08-02T20:23:04.000Z",
+        "url": "https://greasyfork.org/users/799732-w4tchdoge"
+      }
+    ],
+    "name": "Discord Uncompressed Stickers Redirect",
+    "description": "Redirects sticker URLs to the uncompressed cdn.discordapp.com PNG URL",
+    "url": "https://greasyfork.org/scripts/506141-discord-uncompressed-stickers-redirect",
+    "code_url": "https://update.greasyfork.org/scripts/506141/Discord%20Uncompressed%20Stickers%20Redirect.user.js",
+    "code_size": 1825,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.0-20240901_025615",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504953,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-24T10:39:37.000Z",
+    "code_updated_at": "2024-08-24T11:30:10.000Z",
+    "namespace": "https://github.com/w4tchdoge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799732,
+        "name": "w4tchdoge",
+        "created_at": "2021-08-02T20:23:04.000Z",
+        "url": "https://greasyfork.org/users/799732-w4tchdoge"
+      }
+    ],
+    "name": "RES: Remove Reddit Gallery Link from RES Expando",
+    "description": "Removes the `https://www.reddit.com/gallery/*` link that is on images for the redditgallery expando",
+    "url": "https://greasyfork.org/scripts/504953-res-remove-reddit-gallery-link-from-res-expando",
+    "code_url": "https://update.greasyfork.org/scripts/504953/RES%3A%20Remove%20Reddit%20Gallery%20Link%20from%20RES%20Expando.user.js",
+    "code_size": 2321,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.1-20240824_162813",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504813,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-23T12:19:40.000Z",
+    "code_updated_at": "2025-01-01T13:11:16.000Z",
+    "namespace": "https://github.com/w4tchdoge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799732,
+        "name": "w4tchdoge",
+        "created_at": "2021-08-02T20:23:04.000Z",
+        "url": "https://greasyfork.org/users/799732-w4tchdoge"
+      }
+    ],
+    "name": "Worm Story Search: Change Threadmark page link to Thread page link",
+    "description": "Remove the `/threadmarks` at the end of all SV/SB/QQ URLs to have them go to the thread page instead of the threadmarks page",
+    "url": "https://greasyfork.org/scripts/504813-worm-story-search-change-threadmark-page-link-to-thread-page-link",
+    "code_url": "https://update.greasyfork.org/scripts/504813/Worm%20Story%20Search%3A%20Change%20Threadmark%20page%20link%20to%20Thread%20page%20link.user.js",
+    "code_size": 1894,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.1-20241208_120940",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502873,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-07T14:02:03.000Z",
+    "code_updated_at": "2024-08-07T14:02:03.000Z",
+    "namespace": "https://github.com/w4tchdoge",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 799732,
+        "name": "w4tchdoge",
+        "created_at": "2021-08-02T20:23:04.000Z",
+        "url": "https://greasyfork.org/users/799732-w4tchdoge"
+      }
+    ],
+    "name": "NVIDIA: Driver Download Direct Link",
+    "description": "Add a Direct Download link to nvidia.com/Download/driverResults.aspx/* pages",
+    "url": "https://greasyfork.org/scripts/502873-nvidia-driver-download-direct-link",
+    "code_url": "https://update.greasyfork.org/scripts/502873/NVIDIA%3A%20Driver%20Download%20Direct%20Link.user.js",
+    "code_size": 2454,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.0-20240807_185503",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

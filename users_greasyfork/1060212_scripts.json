@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544924,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-07T12:47:06.000Z",
+    "code_updated_at": "2025-08-07T13:39:55.000Z",
+    "namespace": "https://violentmonkey.github.io",
+    "support_url": "https://discord.gg/d4rKqZs",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1060212,
+        "name": "KOMETA",
+        "created_at": "2023-04-14T16:21:18.000Z",
+        "url": "https://greasyfork.org/users/1060212-kometa"
+      }
+    ],
+    "name": "Youtube auto rco=1",
+    "description": "Automatically adds rco=1 to avoid \"This video may be inappropriate for some users.\"",
+    "url": "https://greasyfork.org/scripts/544924-youtube-auto-rco-1",
+    "code_url": "https://update.greasyfork.org/scripts/544924/Youtube%20auto%20rco%3D1.user.js",
+    "code_size": 1163,
+    "license": "The Unlicense",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 536143,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T23:03:33.000Z",
+  "code_updated_at": "2025-06-23T16:11:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1363629,
+      "name": "Rennege",
+      "created_at": "2024-09-05T18:37:24.000Z",
+      "url": "https://greasyfork.org/users/1363629-rennege",
+      "scripts": []
+    }
+  ],
+  "name": "Калькулятор лун",
+  "description": "Просто калькулятор... Считает в какой день вашему персонажу стукнет N лун",
+  "url": "https://greasyfork.org/scripts/536143-%D0%BA%D0%B0%D0%BB%D1%8C%D0%BA%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80-%D0%BB%D1%83%D0%BD",
+  "code_url": "https://update.greasyfork.org/scripts/536143/%D0%9A%D0%B0%D0%BB%D1%8C%D0%BA%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80%20%D0%BB%D1%83%D0%BD.user.js",
+  "code_size": 9047,
+  "license": "CC BY-NC-ND 4.0",
+  "version": "1.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

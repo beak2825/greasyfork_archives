@@ -30,6 +30,39 @@
     "version": "1.1",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520758,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-15T06:40:29.000Z",
+    "code_updated_at": "2024-12-15T06:40:29.000Z",
+    "namespace": "https://greasyfork.org/users/1411063",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411063,
+        "name": "Juan Rigo",
+        "created_at": "2024-12-15T06:31:54.000Z",
+        "url": "https://greasyfork.org/users/1411063-juan-rigo"
+      }
+    ],
+    "name": "Blackhole for Bloxd.io",
+    "description": "Best free script atm, rewritten for clarity and compliance.",
+    "url": "https://greasyfork.org/scripts/520758-blackhole-for-bloxd-io",
+    "code_url": "https://update.greasyfork.org/scripts/520758/Blackhole%20for%20Bloxdio.user.js",
+    "code_size": 3646,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

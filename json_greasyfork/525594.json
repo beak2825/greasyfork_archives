@@ -1,0 +1,59 @@
+{
+  "id": 525594,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-02T01:48:13.000Z",
+  "code_updated_at": "2025-03-25T14:21:18.000Z",
+  "namespace": "none",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1080098,
+      "name": "klwaaa",
+      "created_at": "2023-05-16T14:42:57.000Z",
+      "url": "https://greasyfork.org/users/1080098-klwaaa",
+      "scripts": [
+        {
+          "id": 525594,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-02T01:48:13.000Z",
+          "code_updated_at": "2025-03-25T14:21:18.000Z",
+          "namespace": "none",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili动态页面图片去掉 .avif",
+          "description": "try to change the world!",
+          "url": "https://greasyfork.org/scripts/525594-bilibili%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E5%9B%BE%E7%89%87%E5%8E%BB%E6%8E%89-avif",
+          "code_url": "https://update.greasyfork.org/scripts/525594/bilibili%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E5%9B%BE%E7%89%87%E5%8E%BB%E6%8E%89%20avif.user.js",
+          "code_size": 4971,
+          "license": "GNU GPL-3.0",
+          "version": "0.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili动态页面图片去掉 .avif",
+  "description": "try to change the world!",
+  "url": "https://greasyfork.org/scripts/525594-bilibili%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E5%9B%BE%E7%89%87%E5%8E%BB%E6%8E%89-avif",
+  "code_url": "https://update.greasyfork.org/scripts/525594/bilibili%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E5%9B%BE%E7%89%87%E5%8E%BB%E6%8E%89%20avif.user.js",
+  "code_size": 4971,
+  "license": "GNU GPL-3.0",
+  "version": "0.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 531433,
+  "daily_installs": 1,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-31T17:18:44.000Z",
+  "code_updated_at": "2025-03-31T17:32:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1450676,
+      "name": "SnApeS / Lukas",
+      "created_at": "2025-03-26T21:33:13.000Z",
+      "url": "https://greasyfork.org/users/1450676-snapes-lukas",
+      "scripts": [
+        {
+          "id": 531433,
+          "daily_installs": 1,
+          "total_installs": 19,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-31T17:18:44.000Z",
+          "code_updated_at": "2025-03-31T17:32:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GeoGuesser: GeoSaver",
+          "description": "GeoSaver allows you to save and organize positions from single-player GeoGuessr rounds with descriptions, tags, and Street View links, use quicksaves in all modes, manage your saved data via a menu and settings, and ensures fair play by disabling advanced features in multiplayer.",
+          "url": "https://greasyfork.org/scripts/531433-geoguesser-geosaver",
+          "code_url": "https://update.greasyfork.org/scripts/531433/GeoGuesser%3A%20GeoSaver.user.js",
+          "code_size": 53602,
+          "license": "MIT License",
+          "version": "1.3 / 31.03.2025",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GeoGuesser: GeoSaver",
+  "description": "GeoSaver allows you to save and organize positions from single-player GeoGuessr rounds with descriptions, tags, and Street View links, use quicksaves in all modes, manage your saved data via a menu and settings, and ensures fair play by disabling advanced features in multiplayer.",
+  "url": "https://greasyfork.org/scripts/531433-geoguesser-geosaver",
+  "code_url": "https://update.greasyfork.org/scripts/531433/GeoGuesser%3A%20GeoSaver.user.js",
+  "code_size": 53602,
+  "license": "MIT License",
+  "version": "1.3 / 31.03.2025",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

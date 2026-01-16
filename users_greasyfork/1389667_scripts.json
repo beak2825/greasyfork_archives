@@ -1,0 +1,134 @@
+[
+  {
+    "id": 534544,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-30T17:46:34.000Z",
+    "code_updated_at": "2025-04-30T17:46:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389667,
+        "name": "ShadowBirb",
+        "created_at": "2024-11-01T15:36:31.000Z",
+        "url": "https://greasyfork.org/users/1389667-shadowbirb"
+      }
+    ],
+    "name": "Torn Item Price Comparator (TornTools Edition)",
+    "description": "Compares the MV of an item to the value a user defines.",
+    "url": "https://greasyfork.org/scripts/534544-torn-item-price-comparator-torntools-edition",
+    "code_url": "https://update.greasyfork.org/scripts/534544/Torn%20Item%20Price%20Comparator%20%28TornTools%20Edition%29.user.js",
+    "code_size": 5013,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 534543,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-30T17:45:07.000Z",
+    "code_updated_at": "2025-04-30T17:45:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389667,
+        "name": "ShadowBirb",
+        "created_at": "2024-11-01T15:36:31.000Z",
+        "url": "https://greasyfork.org/users/1389667-shadowbirb"
+      }
+    ],
+    "name": "Torn Item Price Comparator (Retorn Edition)",
+    "description": "Compares the MV of an item to the value a user defines.",
+    "url": "https://greasyfork.org/scripts/534543-torn-item-price-comparator-retorn-edition",
+    "code_url": "https://update.greasyfork.org/scripts/534543/Torn%20Item%20Price%20Comparator%20%28Retorn%20Edition%29.user.js",
+    "code_size": 5278,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520457,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T21:43:07.000Z",
+    "code_updated_at": "2024-12-16T16:20:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389667,
+        "name": "ShadowBirb",
+        "created_at": "2024-11-01T15:36:31.000Z",
+        "url": "https://greasyfork.org/users/1389667-shadowbirb"
+      }
+    ],
+    "name": "Torn Forum Timestamps Highlighter with Local Storage",
+    "description": "Matches forum threads with API data, displays their timestamps, and allows for custom highlighting of threads based on the number of days back a user wants highlighted, while using local storage to save API results.",
+    "url": "https://greasyfork.org/scripts/520457-torn-forum-timestamps-highlighter-with-local-storage",
+    "code_url": "https://update.greasyfork.org/scripts/520457/Torn%20Forum%20Timestamps%20Highlighter%20with%20Local%20Storage.user.js",
+    "code_size": 12076,
+    "license": "MIT License",
+    "version": "2.75",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515781,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-04T13:45:29.000Z",
+    "code_updated_at": "2024-11-04T13:47:01.000Z",
+    "namespace": "https://greasyfork.org/users/1389667",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1389667,
+        "name": "ShadowBirb",
+        "created_at": "2024-11-01T15:36:31.000Z",
+        "url": "https://greasyfork.org/users/1389667-shadowbirb"
+      }
+    ],
+    "name": "Armor Visuals be Gone",
+    "description": "Deletes armor images from the player models (Loader and Item Page)",
+    "url": "https://greasyfork.org/scripts/515781-armor-visuals-be-gone",
+    "code_url": "https://update.greasyfork.org/scripts/515781/Armor%20Visuals%20be%20Gone.user.js",
+    "code_size": 2336,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

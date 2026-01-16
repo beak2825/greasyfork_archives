@@ -1,0 +1,34 @@
+{
+  "id": 506152,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-31T23:40:43.000Z",
+  "code_updated_at": "2024-08-31T23:40:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1361098,
+      "name": "Ke Ns",
+      "created_at": "2024-08-31T23:33:54.000Z",
+      "url": "https://greasyfork.org/users/1361098-ke-ns",
+      "scripts": []
+    }
+  ],
+  "name": "Enlarge Bot PFP on Poe.com",
+  "description": "Enlarge and reshape the bot's profile picture to a rectangle on Poe.com",
+  "url": "https://greasyfork.org/scripts/506152-enlarge-bot-pfp-on-poe-com",
+  "code_url": "https://update.greasyfork.org/scripts/506152/Enlarge%20Bot%20PFP%20on%20Poecom.user.js",
+  "code_size": 1613,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507915,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-11T06:21:52.000Z",
+    "code_updated_at": "2024-09-11T06:21:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1204044,
+        "name": "zj520077",
+        "created_at": "2023-10-25T17:48:26.000Z",
+        "url": "https://greasyfork.org/users/1204044-zj520077"
+      }
+    ],
+    "name": "[IGPSPORT/迹驰] 轨迹地图放大",
+    "description": "修改页面的宽度为浏览器宽度的96%，地图高度为浏览器高度的80%,并自动放大两级地图,禁用地图扩展按钮",
+    "url": "https://greasyfork.org/scripts/507915-igpsport-%E8%BF%B9%E9%A9%B0-%E8%BD%A8%E8%BF%B9%E5%9C%B0%E5%9B%BE%E6%94%BE%E5%A4%A7",
+    "code_url": "https://update.greasyfork.org/scripts/507915/%5BIGPSPORT%E8%BF%B9%E9%A9%B0%5D%20%E8%BD%A8%E8%BF%B9%E5%9C%B0%E5%9B%BE%E6%94%BE%E5%A4%A7.user.js",
+    "code_size": 2268,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

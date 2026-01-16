@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513764,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-23T22:59:25.000Z",
+    "code_updated_at": "2024-10-24T13:52:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385267,
+        "name": "06T",
+        "created_at": "2024-10-23T22:55:48.000Z",
+        "url": "https://greasyfork.org/users/1385267-06t"
+      }
+    ],
+    "name": "HF Group Image \"OG\"",
+    "description": "Reduces group images",
+    "url": "https://greasyfork.org/scripts/513764-hf-group-image-og",
+    "code_url": "https://update.greasyfork.org/scripts/513764/HF%20Group%20Image%20%22OG%22.user.js",
+    "code_size": 1734,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

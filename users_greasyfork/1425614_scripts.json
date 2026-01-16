@@ -295,5 +295,71 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 535525,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T04:00:50.000Z",
+    "code_updated_at": "2025-07-03T13:30:09.000Z",
+    "namespace": "ikaikail@ikaikail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "B站提示屏蔽",
+    "description": "是否被b站烦人的顶部提示惹恼？这款插件可以自动帮您屏蔽b站顶部提示！",
+    "url": "https://greasyfork.org/scripts/535525-b%E7%AB%99%E6%8F%90%E7%A4%BA%E5%B1%8F%E8%94%BD",
+    "code_url": "https://update.greasyfork.org/scripts/535525/B%E7%AB%99%E6%8F%90%E7%A4%BA%E5%B1%8F%E8%94%BD.user.js",
+    "code_size": 1162,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524383,
+    "daily_installs": 2,
+    "total_installs": 109,
+    "fan_score": "43.8",
+    "good_ratings": 3,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-21T09:02:32.000Z",
+    "code_updated_at": "2025-07-16T07:01:36.000Z",
+    "namespace": "ikaikail@ikaikail.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1425614,
+        "name": "iKaiKail",
+        "created_at": "2025-01-21T06:35:49.000Z",
+        "url": "https://greasyfork.org/users/1425614-ikaikail"
+      }
+    ],
+    "name": "方正教务系统成绩分项下载",
+    "description": "期末成绩不理想？担心被穿小鞋？不用怕！这款脚本让你期末成绩和平时成绩一目了然！支持VPN环境！",
+    "url": "https://greasyfork.org/scripts/524383-%E6%96%B9%E6%AD%A3%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E6%88%90%E7%BB%A9%E5%88%86%E9%A1%B9%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/524383/%E6%96%B9%E6%AD%A3%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E6%88%90%E7%BB%A9%E5%88%86%E9%A1%B9%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 17668,
+    "license": null,
+    "version": "1.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

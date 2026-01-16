@@ -1,0 +1,59 @@
+{
+  "id": 525877,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-04T14:26:26.000Z",
+  "code_updated_at": "2025-02-04T14:26:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431393,
+      "name": "David Xiuperion",
+      "created_at": "2025-02-04T14:18:13.000Z",
+      "url": "https://greasyfork.org/users/1431393-david-xiuperion",
+      "scripts": [
+        {
+          "id": 525877,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-04T14:26:26.000Z",
+          "code_updated_at": "2025-02-04T14:26:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微信读书鼠标滚轮翻页",
+          "description": "try to roll out tencent!",
+          "url": "https://greasyfork.org/scripts/525877-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E9%BC%A0%E6%A0%87%E6%BB%9A%E8%BD%AE%E7%BF%BB%E9%A1%B5",
+          "code_url": "https://update.greasyfork.org/scripts/525877/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E9%BC%A0%E6%A0%87%E6%BB%9A%E8%BD%AE%E7%BF%BB%E9%A1%B5.user.js",
+          "code_size": 2275,
+          "license": "MIT License",
+          "version": "2025-02-04",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微信读书鼠标滚轮翻页",
+  "description": "try to roll out tencent!",
+  "url": "https://greasyfork.org/scripts/525877-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E9%BC%A0%E6%A0%87%E6%BB%9A%E8%BD%AE%E7%BF%BB%E9%A1%B5",
+  "code_url": "https://update.greasyfork.org/scripts/525877/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E9%BC%A0%E6%A0%87%E6%BB%9A%E8%BD%AE%E7%BF%BB%E9%A1%B5.user.js",
+  "code_size": 2275,
+  "license": "MIT License",
+  "version": "2025-02-04",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

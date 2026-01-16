@@ -1,0 +1,68 @@
+[
+  {
+    "id": 514112,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-26T07:27:31.000Z",
+    "code_updated_at": "2024-10-29T07:52:24.000Z",
+    "namespace": "http://jiangzhipeng.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173502,
+        "name": "c979654682",
+        "created_at": "2023-09-15T08:30:20.000Z",
+        "url": "https://greasyfork.org/users/1173502-c979654682"
+      }
+    ],
+    "name": "西部世界自动注册获取节点",
+    "description": "西部世界自动注册获取节点提交",
+    "url": "https://greasyfork.org/scripts/514112-%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E8%8E%B7%E5%8F%96%E8%8A%82%E7%82%B9",
+    "code_url": "https://update.greasyfork.org/scripts/514112/%E8%A5%BF%E9%83%A8%E4%B8%96%E7%95%8C%E8%87%AA%E5%8A%A8%E6%B3%A8%E5%86%8C%E8%8E%B7%E5%8F%96%E8%8A%82%E7%82%B9.user.js",
+    "code_size": 6658,
+    "license": "MIT License",
+    "version": "0.1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498425,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-20T08:01:33.000Z",
+    "code_updated_at": "2024-06-20T08:01:33.000Z",
+    "namespace": "http://jiangzhipeng.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1173502,
+        "name": "c979654682",
+        "created_at": "2023-09-15T08:30:20.000Z",
+        "url": "https://greasyfork.org/users/1173502-c979654682"
+      }
+    ],
+    "name": "CSDN 免关注查看文章",
+    "description": "CSDN 免关注查看完整文章",
+    "url": "https://greasyfork.org/scripts/498425-csdn-%E5%85%8D%E5%85%B3%E6%B3%A8%E6%9F%A5%E7%9C%8B%E6%96%87%E7%AB%A0",
+    "code_url": "https://update.greasyfork.org/scripts/498425/CSDN%20%E5%85%8D%E5%85%B3%E6%B3%A8%E6%9F%A5%E7%9C%8B%E6%96%87%E7%AB%A0.user.js",
+    "code_size": 581,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

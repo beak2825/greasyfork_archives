@@ -31,5 +31,203 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 546035,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-16T04:07:21.000Z",
+    "code_updated_at": "2025-11-17T05:34:37.000Z",
+    "namespace": "https://www.facebook.com/behesty7",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "PERBARUI",
+    "description": "Auto perbarui Marketplace dengan flow baru & tombol start/stop",
+    "url": "https://greasyfork.org/scripts/546035-perbarui",
+    "code_url": "https://update.greasyfork.org/scripts/546035/PERBARUI.user.js",
+    "code_size": 5981,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "id",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 546034,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-16T03:59:41.000Z",
+    "code_updated_at": "2026-01-15T00:36:49.000Z",
+    "namespace": "https://www.facebook.com/behesty7",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "HAPUS TAWARAN",
+    "description": "RELIST",
+    "url": "https://greasyfork.org/scripts/546034-hapus-tawaran",
+    "code_url": "https://update.greasyfork.org/scripts/546034/HAPUS%20TAWARAN.user.js",
+    "code_size": 6196,
+    "license": "MIT License",
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 544310,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T14:32:28.000Z",
+    "code_updated_at": "2025-08-01T14:32:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "FB Marketplace Auto Scroll (Simplified Input)",
+    "description": "Auto-scroll halus ke bawah di FB Marketplace, input detik dan skala px disederhanakan (s dan x10). Cocok buat pemakaian santai dan responsif visual scroll-nya 😎",
+    "url": "https://greasyfork.org/scripts/544310-fb-marketplace-auto-scroll-simplified-input",
+    "code_url": "https://update.greasyfork.org/scripts/544310/FB%20Marketplace%20Auto%20Scroll%20%28Simplified%20Input%29.user.js",
+    "code_size": 3404,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "id",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 542919,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-18T13:37:14.000Z",
+    "code_updated_at": "2025-07-18T13:37:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "Auto Delete Listing",
+    "description": "FBMP AUTO DELETE LISTING",
+    "url": "https://greasyfork.org/scripts/542919-auto-delete-listing",
+    "code_url": "https://update.greasyfork.org/scripts/542919/Auto%20Delete%20Listing.user.js",
+    "code_size": 19184,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 541418,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T09:23:21.000Z",
+    "code_updated_at": "2025-10-30T17:36:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "FBMP Listing Manager",
+    "description": "The ultimate Facebook Marketplace listing deletion machine - now with AI-powered evasion and ninja-like stealth",
+    "url": "https://greasyfork.org/scripts/541418-fbmp-listing-manager",
+    "code_url": "https://update.greasyfork.org/scripts/541418/FBMP%20Listing%20Manager.user.js",
+    "code_size": 65079,
+    "license": "MIT License",
+    "version": "6.8.0",
+    "locale": "id",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 540187,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T17:00:21.000Z",
+    "code_updated_at": "2026-01-16T03:57:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486306,
+        "name": "Behesty",
+        "created_at": "2025-06-20T16:55:22.000Z",
+        "url": "https://greasyfork.org/users/1486306-behesty"
+      }
+    ],
+    "name": "AutoBot FBMP Enhanced",
+    "description": "Perbaikan: stop tidak reload, jika kedua proses 0 berhenti, skip cooldown jika relist=0, dan safeguard pada redirect/countdown",
+    "url": "https://greasyfork.org/scripts/540187-autobot-fbmp-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/540187/AutoBot%20FBMP%20Enhanced.user.js",
+    "code_size": 18691,
+    "license": "MIT License",
+    "version": "5.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

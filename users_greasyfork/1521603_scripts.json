@@ -1,0 +1,68 @@
+[
+  {
+    "id": 554133,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-29T18:34:04.000Z",
+    "code_updated_at": "2025-10-29T18:39:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521603,
+        "name": "JanosGeo",
+        "created_at": "2025-10-02T13:04:36.000Z",
+        "url": "https://greasyfork.org/users/1521603-janosgeo"
+      }
+    ],
+    "name": "Geoguessr Duels summary - Open on Round 1",
+    "description": "Automatically open the first round instead of the last one in Geoguessr duel and team duel summaries.",
+    "url": "https://greasyfork.org/scripts/554133-geoguessr-duels-summary-open-on-round-1",
+    "code_url": "https://update.greasyfork.org/scripts/554133/Geoguessr%20Duels%20summary%20-%20Open%20on%20Round%201.user.js",
+    "code_size": 1922,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 551343,
+    "daily_installs": 1,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-02T13:06:45.000Z",
+    "code_updated_at": "2025-11-12T13:24:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1521603,
+        "name": "JanosGeo",
+        "created_at": "2025-10-02T13:04:36.000Z",
+        "url": "https://greasyfork.org/users/1521603-janosgeo"
+      }
+    ],
+    "name": "GeoGuessr Profile – Best/Worst Countries",
+    "description": "Show a player's best and worst countries on their profile page, below the level progressbar",
+    "url": "https://greasyfork.org/scripts/551343-geoguessr-profile-best-worst-countries",
+    "code_url": "https://update.greasyfork.org/scripts/551343/GeoGuessr%20Profile%20%E2%80%93%20BestWorst%20Countries.user.js",
+    "code_size": 5544,
+    "license": "MIT License",
+    "version": "0.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

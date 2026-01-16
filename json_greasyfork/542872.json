@@ -1,0 +1,33 @@
+{
+  "id": 542872,
+  "daily_installs": 2,
+  "total_installs": 92,
+  "fan_score": "51.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-18T01:01:06.000Z",
+  "code_updated_at": "2025-08-10T00:04:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1495910,
+      "name": "schildpath",
+      "created_at": "2025-07-18T00:51:58.000Z",
+      "url": "https://greasyfork.org/users/1495910-schildpath"
+    }
+  ],
+  "name": "AO3 Floaty Comment Box (Responsive)",
+  "description": "AO3 Floaty Comment Box (Responsive) is a userscript created to facilitate commenting on the fly while reading on archiveofourown - specifically for mobile browsing",
+  "url": "https://greasyfork.org/scripts/542872-ao3-floaty-comment-box-responsive",
+  "code_url": "https://update.greasyfork.org/scripts/542872/AO3%20Floaty%20Comment%20Box%20%28Responsive%29.user.js",
+  "code_size": 27053,
+  "license": "MIT License",
+  "version": "1.12.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

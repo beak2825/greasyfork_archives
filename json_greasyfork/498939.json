@@ -1,0 +1,33 @@
+{
+  "id": 498939,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-26T06:22:28.000Z",
+  "code_updated_at": "2024-06-26T06:22:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1274790,
+      "name": "laisheng li",
+      "created_at": "2024-03-15T09:34:10.000Z",
+      "url": "https://greasyfork.org/users/1274790-laisheng-li"
+    }
+  ],
+  "name": "[自制]湖南开放大学",
+  "description": "Simulate video activity on lms.ouchn.cn",
+  "url": "https://greasyfork.org/scripts/498939-%E8%87%AA%E5%88%B6-%E6%B9%96%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6",
+  "code_url": "https://update.greasyfork.org/scripts/498939/%5B%E8%87%AA%E5%88%B6%5D%E6%B9%96%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6.user.js",
+  "code_size": 12556,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

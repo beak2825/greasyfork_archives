@@ -1,0 +1,33 @@
+{
+  "id": 541915,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-07T13:15:16.000Z",
+  "code_updated_at": "2025-07-07T13:20:46.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492525,
+      "name": "Yoyo Kong",
+      "created_at": "2025-07-07T12:59:31.000Z",
+      "url": "https://greasyfork.org/users/1492525-yoyo-kong"
+    }
+  ],
+  "name": "SillyTavern 多角色TTS播放器 (v17.5 · 移动端适配版)",
+  "description": "[移动端适配] 1. 新增响应式UI，自动适配手机屏幕。 2. 新增触摸拖动支持。 3. 请在使用前，手动修改脚本顶部的IP地址为PC的局域网IP。",
+  "url": "https://greasyfork.org/scripts/541915-sillytavern-%E5%A4%9A%E8%A7%92%E8%89%B2tts%E6%92%AD%E6%94%BE%E5%99%A8-v17-5-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/541915/SillyTavern%20%E5%A4%9A%E8%A7%92%E8%89%B2TTS%E6%92%AD%E6%94%BE%E5%99%A8%20%28v175%20%C2%B7%20%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E7%89%88%29.user.js",
+  "code_size": 46286,
+  "license": null,
+  "version": "17.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 515654,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-04T00:04:41.000Z",
+  "code_updated_at": "2024-11-04T00:36:53.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265194,
+      "name": "루시퍼홍",
+      "created_at": "2024-02-22T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D",
+      "scripts": []
+    }
+  ],
+  "name": "[루시퍼홍] 네이버부동산 단지라벨 색상변경 모바일",
+  "description": "2024. 5. 27. 오후 16:43:18",
+  "url": "https://greasyfork.org/scripts/515654-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EB%84%A4%EC%9D%B4%EB%B2%84%EB%B6%80%EB%8F%99%EC%82%B0-%EB%8B%A8%EC%A7%80%EB%9D%BC%EB%B2%A8-%EC%83%89%EC%83%81%EB%B3%80%EA%B2%BD-%EB%AA%A8%EB%B0%94%EC%9D%BC",
+  "code_url": "https://update.greasyfork.org/scripts/515654/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EB%84%A4%EC%9D%B4%EB%B2%84%EB%B6%80%EB%8F%99%EC%82%B0%20%EB%8B%A8%EC%A7%80%EB%9D%BC%EB%B2%A8%20%EC%83%89%EC%83%81%EB%B3%80%EA%B2%BD%20%EB%AA%A8%EB%B0%94%EC%9D%BC.user.js",
+  "code_size": 99312,
+  "license": null,
+  "version": "1.05",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

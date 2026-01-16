@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549783,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-17T02:30:26.000Z",
+    "code_updated_at": "2025-09-23T21:53:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1511987,
+        "name": "Fer3on_Mod",
+        "created_at": "2025-09-05T04:44:01.000Z",
+        "url": "https://greasyfork.org/users/1511987-fer3on-mod"
+      }
+    ],
+    "name": "⚡ Night X Hub Bypass ⚡",
+    "description": "Auto-click To Direct Link (15x) | UI with Switch On/Off Manual Control| Dev: @Fer3on_Mod",
+    "url": "https://greasyfork.org/scripts/549783-night-x-hub-bypass",
+    "code_url": "https://update.greasyfork.org/scripts/549783/%E2%9A%A1%20Night%20X%20Hub%20Bypass%20%E2%9A%A1.user.js",
+    "code_size": 8099,
+    "license": "MIT License",
+    "version": "9.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

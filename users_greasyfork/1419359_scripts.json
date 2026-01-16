@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522778,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T07:42:50.000Z",
+    "code_updated_at": "2025-01-04T07:42:49.000Z",
+    "namespace": "http://www.chaochaogege.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419359,
+        "name": "Zdo0n Liu",
+        "created_at": "2025-01-04T07:36:02.000Z",
+        "url": "https://greasyfork.org/users/1419359-zdo0n-liu"
+      }
+    ],
+    "name": "fixed youtube captions",
+    "description": "Some of youtube entancer of mine",
+    "url": "https://greasyfork.org/scripts/522778-fixed-youtube-captions",
+    "code_url": "https://update.greasyfork.org/scripts/522778/fixed%20youtube%20captions.user.js",
+    "code_size": 1746,
+    "license": "MIT License",
+    "version": "0.9.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

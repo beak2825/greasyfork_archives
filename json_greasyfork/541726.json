@@ -1,0 +1,59 @@
+{
+  "id": 541726,
+  "daily_installs": 1,
+  "total_installs": 321,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-05T13:59:40.000Z",
+  "code_updated_at": "2025-07-05T13:59:39.000Z",
+  "namespace": "https://greasyfork.org/users/1491916",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1491916,
+      "name": "GamblerIX",
+      "created_at": "2025-07-05T13:44:23.000Z",
+      "url": "https://greasyfork.org/users/1491916-gamblerix",
+      "scripts": [
+        {
+          "id": 541726,
+          "daily_installs": 1,
+          "total_installs": 321,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-05T13:59:40.000Z",
+          "code_updated_at": "2025-07-05T13:59:39.000Z",
+          "namespace": "https://greasyfork.org/users/1491916",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "哔哩免登录看评论+1080p视频+免弹窗",
+          "description": "通过拦截B站API请求，实现免登录看评论、1080p视频和移除登录弹窗，提升未登录用户的浏览体验。",
+          "url": "https://greasyfork.org/scripts/541726-%E5%93%94%E5%93%A9%E5%85%8D%E7%99%BB%E5%BD%95%E7%9C%8B%E8%AF%84%E8%AE%BA-1080p%E8%A7%86%E9%A2%91-%E5%85%8D%E5%BC%B9%E7%AA%97",
+          "code_url": "https://update.greasyfork.org/scripts/541726/%E5%93%94%E5%93%A9%E5%85%8D%E7%99%BB%E5%BD%95%E7%9C%8B%E8%AF%84%E8%AE%BA%2B1080p%E8%A7%86%E9%A2%91%2B%E5%85%8D%E5%BC%B9%E7%AA%97.user.js",
+          "code_size": 20657,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "哔哩免登录看评论+1080p视频+免弹窗",
+  "description": "通过拦截B站API请求，实现免登录看评论、1080p视频和移除登录弹窗，提升未登录用户的浏览体验。",
+  "url": "https://greasyfork.org/scripts/541726-%E5%93%94%E5%93%A9%E5%85%8D%E7%99%BB%E5%BD%95%E7%9C%8B%E8%AF%84%E8%AE%BA-1080p%E8%A7%86%E9%A2%91-%E5%85%8D%E5%BC%B9%E7%AA%97",
+  "code_url": "https://update.greasyfork.org/scripts/541726/%E5%93%94%E5%93%A9%E5%85%8D%E7%99%BB%E5%BD%95%E7%9C%8B%E8%AF%84%E8%AE%BA%2B1080p%E8%A7%86%E9%A2%91%2B%E5%85%8D%E5%BC%B9%E7%AA%97.user.js",
+  "code_size": 20657,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

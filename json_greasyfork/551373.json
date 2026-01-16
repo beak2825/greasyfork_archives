@@ -1,0 +1,34 @@
+{
+  "id": 551373,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-02T17:30:14.000Z",
+  "code_updated_at": "2025-10-04T07:34:16.000Z",
+  "namespace": "https://greasyfork.org/users/43725",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 43725,
+      "name": "AllMight [1878147]",
+      "created_at": "2016-05-14T20:00:12.000Z",
+      "url": "https://greasyfork.org/users/43725-allmight-1878147",
+      "scripts": []
+    }
+  ],
+  "name": "Carbon OC helper",
+  "description": "Helper for which OC to join",
+  "url": "https://greasyfork.org/scripts/551373-carbon-oc-helper",
+  "code_url": "https://update.greasyfork.org/scripts/551373/Carbon%20OC%20helper.user.js",
+  "code_size": 9708,
+  "license": null,
+  "version": "1.0.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 526460,
+  "daily_installs": 1,
+  "total_installs": 48,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-10T14:24:07.000Z",
+  "code_updated_at": "2025-02-10T14:24:07.000Z",
+  "namespace": "https://your-unique-namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433647,
+      "name": "Matthieu Catherine",
+      "created_at": "2025-02-10T14:09:56.000Z",
+      "url": "https://greasyfork.org/users/1433647-matthieu-catherine",
+      "scripts": [
+        {
+          "id": 526460,
+          "daily_installs": 1,
+          "total_installs": 48,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-10T14:24:07.000Z",
+          "code_updated_at": "2025-02-10T14:24:07.000Z",
+          "namespace": "https://your-unique-namespace.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Chess.com Move Suggester",
+          "description": "Chess.com move suggestion bot using Stockfish",
+          "url": "https://greasyfork.org/scripts/526460-chess-com-move-suggester",
+          "code_url": "https://update.greasyfork.org/scripts/526460/Chesscom%20Move%20Suggester.user.js",
+          "code_size": 2031,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "es-419",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Chess.com Move Suggester",
+  "description": "Chess.com move suggestion bot using Stockfish",
+  "url": "https://greasyfork.org/scripts/526460-chess-com-move-suggester",
+  "code_url": "https://update.greasyfork.org/scripts/526460/Chesscom%20Move%20Suggester.user.js",
+  "code_size": 2031,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "es-419",
+  "deleted": false,
+  "visibility": "public"
+}

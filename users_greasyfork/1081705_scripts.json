@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498119,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-16T23:51:50.000Z",
+    "code_updated_at": "2024-06-23T01:55:02.000Z",
+    "namespace": "rtonne",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1081705,
+        "name": "Rtonne",
+        "created_at": "2023-05-19T21:23:58.000Z",
+        "url": "https://greasyfork.org/users/1081705-rtonne"
+      }
+    ],
+    "name": "setupCommands",
+    "description": "Library that creates regular, toggle, and radio menu commands for userscript managers",
+    "url": "https://greasyfork.org/scripts/498119-setupcommands",
+    "code_url": "https://update.greasyfork.org/scripts/498119/1399005/setupCommands.js",
+    "code_size": 8593,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

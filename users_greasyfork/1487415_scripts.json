@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540501,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T10:27:22.000Z",
+    "code_updated_at": "2025-06-23T10:41:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487415,
+        "name": "Олег Либа",
+        "created_at": "2025-06-23T10:21:57.000Z",
+        "url": "https://greasyfork.org/users/1487415-%D0%BE%D0%BB%D0%B5%D0%B3-%D0%BB%D0%B8%D0%B1%D0%B0"
+      }
+    ],
+    "name": "Auto-fill DOB BIN",
+    "description": "Automatically insert BIN from URL parameter and trigger search on NYC DOB NOW site",
+    "url": "https://greasyfork.org/scripts/540501-auto-fill-dob-bin",
+    "code_url": "https://update.greasyfork.org/scripts/540501/Auto-fill%20DOB%20BIN.user.js",
+    "code_size": 2197,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 519810,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-05T03:22:34.000Z",
+  "code_updated_at": "2024-12-05T15:27:48.000Z",
+  "namespace": "http://changan-university-invigilation-fixer/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1406753,
+      "name": "leavesflying",
+      "created_at": "2024-12-05T03:14:45.000Z",
+      "url": "https://greasyfork.org/users/1406753-leavesflying",
+      "scripts": [
+        {
+          "id": 519810,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-05T03:22:34.000Z",
+          "code_updated_at": "2024-12-05T15:27:48.000Z",
+          "namespace": "http://changan-university-invigilation-fixer/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "长安大学本科教务系统监考安排修复助手",
+          "description": "“长安大学本科教务系统监考安排修复助手” 解决了在监考安排功能中，当课程包含来自多个学院的学生时，无法正确查找监考老师的问题。可以通过单选框在所选学院中查找并安排监考老师。",
+          "url": "https://greasyfork.org/scripts/519810-%E9%95%BF%E5%AE%89%E5%A4%A7%E5%AD%A6%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%9B%91%E8%80%83%E5%AE%89%E6%8E%92%E4%BF%AE%E5%A4%8D%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/519810/%E9%95%BF%E5%AE%89%E5%A4%A7%E5%AD%A6%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%9B%91%E8%80%83%E5%AE%89%E6%8E%92%E4%BF%AE%E5%A4%8D%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 3295,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "长安大学本科教务系统监考安排修复助手",
+  "description": "“长安大学本科教务系统监考安排修复助手” 解决了在监考安排功能中，当课程包含来自多个学院的学生时，无法正确查找监考老师的问题。可以通过单选框在所选学院中查找并安排监考老师。",
+  "url": "https://greasyfork.org/scripts/519810-%E9%95%BF%E5%AE%89%E5%A4%A7%E5%AD%A6%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%9B%91%E8%80%83%E5%AE%89%E6%8E%92%E4%BF%AE%E5%A4%8D%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/519810/%E9%95%BF%E5%AE%89%E5%A4%A7%E5%AD%A6%E6%9C%AC%E7%A7%91%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E7%9B%91%E8%80%83%E5%AE%89%E6%8E%92%E4%BF%AE%E5%A4%8D%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 3295,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

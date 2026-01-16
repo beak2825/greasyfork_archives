@@ -1,0 +1,68 @@
+[
+  {
+    "id": 540897,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T02:42:27.000Z",
+    "code_updated_at": "2025-06-27T16:00:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356462,
+        "name": "doe jhon",
+        "created_at": "2024-08-23T08:56:05.000Z",
+        "url": "https://greasyfork.org/users/1356462-doe-jhon"
+      }
+    ],
+    "name": "Skip the MinBangWeeee video",
+    "description": "이딴거왜함",
+    "url": "https://greasyfork.org/scripts/540897-skip-the-minbangweeee-video",
+    "code_url": "https://update.greasyfork.org/scripts/540897/Skip%20the%20MinBangWeeee%20video.user.js",
+    "code_size": 5354,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505821,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-30T01:11:28.000Z",
+    "code_updated_at": "2025-05-25T07:55:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1356462,
+        "name": "doe jhon",
+        "created_at": "2024-08-23T08:56:05.000Z",
+        "url": "https://greasyfork.org/users/1356462-doe-jhon"
+      }
+    ],
+    "name": "AVDBS Favorite Button Fix",
+    "description": "광고 차단기를 우회하여 찜 버튼을 표시합니다.",
+    "url": "https://greasyfork.org/scripts/505821-avdbs-favorite-button-fix",
+    "code_url": "https://update.greasyfork.org/scripts/505821/AVDBS%20Favorite%20Button%20Fix.user.js",
+    "code_size": 3171,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497865,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-14T03:24:41.000Z",
+    "code_updated_at": "2024-06-14T03:24:41.000Z",
+    "namespace": "RyanCane26",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1069774,
+        "name": "RyanCane26",
+        "created_at": "2023-04-29T03:07:54.000Z",
+        "url": "https://greasyfork.org/users/1069774-ryancane26"
+      }
+    ],
+    "name": "Military Time Converter and Time Zone Adjuster with Preference",
+    "description": "Convert military time to regular time and adjust MST to EST, CST, PST with user preference and storage",
+    "url": "https://greasyfork.org/scripts/497865-military-time-converter-and-time-zone-adjuster-with-preference",
+    "code_url": "https://update.greasyfork.org/scripts/497865/Military%20Time%20Converter%20and%20Time%20Zone%20Adjuster%20with%20Preference.user.js",
+    "code_size": 4633,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 511618,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-05T23:13:11.000Z",
+    "code_updated_at": "2024-10-05T23:13:10.000Z",
+    "namespace": "com.zlef.idlepixel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1377219,
+        "name": "rngisbad",
+        "created_at": "2024-10-05T23:10:33.000Z",
+        "url": "https://greasyfork.org/users/1377219-rngisbad"
+      }
+    ],
+    "name": "IdlePixel+ Teams QoL modified by rng",
+    "description": "Various teams quality of life additions, quick deposit/withdraw fight points, better interface when clicking on stored items, storage organisation",
+    "url": "https://greasyfork.org/scripts/511618-idlepixel-teams-qol-modified-by-rng",
+    "code_url": "https://update.greasyfork.org/scripts/511618/IdlePixel%2B%20Teams%20QoL%20modified%20by%20rng.user.js",
+    "code_size": 71645,
+    "license": "MIT License",
+    "version": "2.1.1a",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

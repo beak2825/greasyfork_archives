@@ -1,0 +1,59 @@
+{
+  "id": 551091,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-29T22:59:30.000Z",
+  "code_updated_at": "2025-09-29T22:59:30.000Z",
+  "namespace": "https://kundayang.dev",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1520840,
+      "name": "Will Yang",
+      "created_at": "2025-09-29T22:56:06.000Z",
+      "url": "https://greasyfork.org/users/1520840-will-yang",
+      "scripts": [
+        {
+          "id": 551091,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-29T22:59:30.000Z",
+          "code_updated_at": "2025-09-29T22:59:30.000Z",
+          "namespace": "https://kundayang.dev",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ChatGPT Sidebar Auto-Collapse (CN precise)",
+          "description": "打开 ChatGPT 页面时默认折叠左侧侧边栏；适配 data-testid=\"close-sidebar-button\" 的新版按钮；SPA 路由变化也维持折叠。",
+          "url": "https://greasyfork.org/scripts/551091-chatgpt-sidebar-auto-collapse-cn-precise",
+          "code_url": "https://update.greasyfork.org/scripts/551091/ChatGPT%20Sidebar%20Auto-Collapse%20%28CN%20precise%29.user.js",
+          "code_size": 3966,
+          "license": "MIT License",
+          "version": "1.3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ChatGPT Sidebar Auto-Collapse (CN precise)",
+  "description": "打开 ChatGPT 页面时默认折叠左侧侧边栏；适配 data-testid=\"close-sidebar-button\" 的新版按钮；SPA 路由变化也维持折叠。",
+  "url": "https://greasyfork.org/scripts/551091-chatgpt-sidebar-auto-collapse-cn-precise",
+  "code_url": "https://update.greasyfork.org/scripts/551091/ChatGPT%20Sidebar%20Auto-Collapse%20%28CN%20precise%29.user.js",
+  "code_size": 3966,
+  "license": "MIT License",
+  "version": "1.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

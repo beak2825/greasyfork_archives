@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532615,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-12T09:28:07.000Z",
+    "code_updated_at": "2025-07-10T23:44:31.000Z",
+    "namespace": "volsandjezuz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1453146,
+        "name": "Vols and Jezuz",
+        "created_at": "2025-04-02T07:59:10.000Z",
+        "url": "https://greasyfork.org/users/1453146-vols-and-jezuz"
+      }
+    ],
+    "name": "Vols and Jezuzifier for GeoGuessr",
+    "description": "Become just like user Vols and Jezuz by using their tweaks and style preferences",
+    "url": "https://greasyfork.org/scripts/532615-vols-and-jezuzifier-for-geoguessr",
+    "code_url": "https://update.greasyfork.org/scripts/532615/Vols%20and%20Jezuzifier%20for%20GeoGuessr.user.js",
+    "code_size": 4731,
+    "license": "MIT License",
+    "version": "1.0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

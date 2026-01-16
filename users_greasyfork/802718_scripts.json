@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552394,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-12T15:46:15.000Z",
+    "code_updated_at": "2025-12-30T16:51:59.000Z",
+    "namespace": "http://example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 802718,
+        "name": "SadYuyuko",
+        "created_at": "2021-08-09T16:15:13.000Z",
+        "url": "https://greasyfork.org/users/802718-sadyuyuko"
+      }
+    ],
+    "name": "Bing/Google屏蔽搜索结果",
+    "description": "基于uBlacklist规则的Bing/Google搜索结果屏蔽工具",
+    "url": "https://greasyfork.org/scripts/552394-bing-google%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C",
+    "code_url": "https://update.greasyfork.org/scripts/552394/BingGoogle%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C.user.js",
+    "code_size": 30431,
+    "license": "MIT License",
+    "version": "3.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

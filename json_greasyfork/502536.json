@@ -1,0 +1,59 @@
+{
+  "id": 502536,
+  "daily_installs": 0,
+  "total_installs": 86,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-08-03T22:44:34.000Z",
+  "code_updated_at": "2024-08-04T17:11:36.000Z",
+  "namespace": "",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1344922,
+      "name": "sidetime",
+      "created_at": "2024-08-03T22:24:32.000Z",
+      "url": "https://greasyfork.org/users/1344922-sidetime",
+      "scripts": [
+        {
+          "id": 502536,
+          "daily_installs": 0,
+          "total_installs": 86,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-08-03T22:44:34.000Z",
+          "code_updated_at": "2024-08-04T17:11:36.000Z",
+          "namespace": "",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "2nd Gen Reddit UI",
+          "description": "Reverts Reddit to 2nd Generation UI (new.reddit.com)",
+          "url": "https://greasyfork.org/scripts/502536-2nd-gen-reddit-ui",
+          "code_url": "https://update.greasyfork.org/scripts/502536/2nd%20Gen%20Reddit%20UI.user.js",
+          "code_size": 5488,
+          "license": "MIT License",
+          "version": "1.2.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "2nd Gen Reddit UI",
+  "description": "Reverts Reddit to 2nd Generation UI (new.reddit.com)",
+  "url": "https://greasyfork.org/scripts/502536-2nd-gen-reddit-ui",
+  "code_url": "https://update.greasyfork.org/scripts/502536/2nd%20Gen%20Reddit%20UI.user.js",
+  "code_size": 5488,
+  "license": "MIT License",
+  "version": "1.2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

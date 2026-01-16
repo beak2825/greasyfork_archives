@@ -1,0 +1,33 @@
+{
+  "id": 524500,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-22T08:47:05.000Z",
+  "code_updated_at": "2025-02-11T07:58:58.000Z",
+  "namespace": "http://damafeng.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 248231,
+      "name": "阿斯旺加布",
+      "created_at": "2019-02-18T09:40:18.000Z",
+      "url": "https://greasyfork.org/users/248231-%E9%98%BF%E6%96%AF%E6%97%BA%E5%8A%A0%E5%B8%83"
+    }
+  ],
+  "name": "飞书多维表格，表单、查询页优化",
+  "description": "在飞书多维表格中，表单页面扩展中间区域，方便填写、查询页根据携带参数，字段填充并搜索",
+  "url": "https://greasyfork.org/scripts/524500-%E9%A3%9E%E4%B9%A6%E5%A4%9A%E7%BB%B4%E8%A1%A8%E6%A0%BC-%E8%A1%A8%E5%8D%95-%E6%9F%A5%E8%AF%A2%E9%A1%B5%E4%BC%98%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/524500/%E9%A3%9E%E4%B9%A6%E5%A4%9A%E7%BB%B4%E8%A1%A8%E6%A0%BC%EF%BC%8C%E8%A1%A8%E5%8D%95%E3%80%81%E6%9F%A5%E8%AF%A2%E9%A1%B5%E4%BC%98%E5%8C%96.user.js",
+  "code_size": 30073,
+  "license": "GNU General Public License v2.0 only",
+  "version": "1.1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

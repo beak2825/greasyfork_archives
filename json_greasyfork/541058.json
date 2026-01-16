@@ -1,0 +1,34 @@
+{
+  "id": 541058,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-28T16:55:23.000Z",
+  "code_updated_at": "2025-06-28T16:57:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1043348,
+      "name": "langlink-localization",
+      "created_at": "2023-03-17T02:28:11.000Z",
+      "url": "https://greasyfork.org/users/1043348-langlink-localization",
+      "scripts": []
+    }
+  ],
+  "name": "Smartling AI Translator (OpenRouter) - Fixed",
+  "description": "使用AI大语言模型翻译Smartling页面，修复翻译显示问题",
+  "url": "https://greasyfork.org/scripts/541058-smartling-ai-translator-openrouter-fixed",
+  "code_url": "https://update.greasyfork.org/scripts/541058/Smartling%20AI%20Translator%20%28OpenRouter%29%20-%20Fixed.user.js",
+  "code_size": 36922,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

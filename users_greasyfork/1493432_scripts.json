@@ -1,0 +1,68 @@
+[
+  {
+    "id": 542895,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-18T08:53:51.000Z",
+    "code_updated_at": "2025-09-25T02:55:17.000Z",
+    "namespace": "http://sync-data-plugins.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493432,
+        "name": "海波upupup",
+        "created_at": "2025-07-10T09:47:26.000Z",
+        "url": "https://greasyfork.org/users/1493432-%E6%B5%B7%E6%B3%A2upupup"
+      }
+    ],
+    "name": "同步数据插件",
+    "description": "支持美团、携程、飞猪、去哪、同城订单数据同步",
+    "url": "https://greasyfork.org/scripts/542895-%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/542895/%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 34392,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 542185,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-10T09:57:45.000Z",
+    "code_updated_at": "2025-07-11T09:50:44.000Z",
+    "namespace": "*://me.meituan.com/*",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493432,
+        "name": "海波upupup",
+        "created_at": "2025-07-10T09:47:26.000Z",
+        "url": "https://greasyfork.org/users/1493432-%E6%B5%B7%E6%B3%A2upupup"
+      }
+    ],
+    "name": "美团同步数据插件",
+    "description": "点击同步数据，内部使用",
+    "url": "https://greasyfork.org/scripts/542185-%E7%BE%8E%E5%9B%A2%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/542185/%E7%BE%8E%E5%9B%A2%E5%90%8C%E6%AD%A5%E6%95%B0%E6%8D%AE%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 4615,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

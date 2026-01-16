@@ -1,0 +1,33 @@
+{
+  "id": 539857,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-18T08:50:55.000Z",
+  "code_updated_at": "2025-12-29T13:24:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1427520,
+      "name": "BuiQuocDung1991",
+      "created_at": "2025-01-26T09:05:22.000Z",
+      "url": "https://greasyfork.org/users/1427520-buiquocdung1991"
+    }
+  ],
+  "name": "NotebookLM shows all citations",
+  "description": "Automatically appends source infomation in NotebookLM",
+  "url": "https://greasyfork.org/scripts/539857-notebooklm-shows-all-citations",
+  "code_url": "https://update.greasyfork.org/scripts/539857/NotebookLM%20shows%20all%20citations.user.js",
+  "code_size": 8310,
+  "license": null,
+  "version": "1.12",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

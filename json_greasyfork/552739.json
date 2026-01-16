@@ -1,7 +1,7 @@
 {
   "id": 552739,
-  "daily_installs": 0,
-  "total_installs": 31,
+  "daily_installs": 1,
+  "total_installs": 32,
   "fan_score": "20.7",
   "good_ratings": 1,
   "ok_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1527216,
       "name": "tongle2025",
       "created_at": "2025-10-16T02:42:55.000Z",
-      "url": "https://greasyfork.org/users/1527216-tongle2025",
-      "scripts": [
-        {
-          "id": 552739,
-          "daily_installs": 0,
-          "total_installs": 31,
-          "fan_score": "20.7",
-          "good_ratings": 1,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-10-16T03:04:29.000Z",
-          "code_updated_at": "2025-10-17T09:23:47.000Z",
-          "namespace": "https://github.com/tongle2025/bilibili-dynamic-jumper",
-          "support_url": "https://github.com/tongle2025/bilibili-dynamic-jumper/issues",
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "B站动态日期跳转助手",
-          "description": "快速跳转到B站UP主指定年月日的动态,支持自定义滚动参数和重试次数,适合查找历史动态",
-          "url": "https://greasyfork.org/scripts/552739-b%E7%AB%99%E5%8A%A8%E6%80%81%E6%97%A5%E6%9C%9F%E8%B7%B3%E8%BD%AC%E5%8A%A9%E6%89%8B",
-          "code_url": "https://update.greasyfork.org/scripts/552739/B%E7%AB%99%E5%8A%A8%E6%80%81%E6%97%A5%E6%9C%9F%E8%B7%B3%E8%BD%AC%E5%8A%A9%E6%89%8B.user.js",
-          "code_size": 40345,
-          "license": "MIT License",
-          "version": "1.0.3",
-          "locale": "zh-CN",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1527216-tongle2025"
     }
   ],
   "name": "B站动态日期跳转助手",

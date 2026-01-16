@@ -1,0 +1,33 @@
+{
+  "id": 549544,
+  "daily_installs": 0,
+  "total_installs": 30,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-14T17:08:56.000Z",
+  "code_updated_at": "2025-09-14T17:31:16.000Z",
+  "namespace": "Soop 추가 볼륨 슬라이더",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 816911,
+      "name": "채널샤메",
+      "created_at": "2021-09-19T08:03:10.000Z",
+      "url": "https://greasyfork.org/users/816911-%EC%B1%84%EB%84%90%EC%83%A4%EB%A9%94"
+    }
+  ],
+  "name": "Soop 추가 볼륨 슬라이더",
+  "description": "Soop 플레이어에 최대 16배 볼륨 증폭 슬라이더 추가",
+  "url": "https://greasyfork.org/scripts/549544-soop-%EC%B6%94%EA%B0%80-%EB%B3%BC%EB%A5%A8-%EC%8A%AC%EB%9D%BC%EC%9D%B4%EB%8D%94",
+  "code_url": "https://update.greasyfork.org/scripts/549544/Soop%20%EC%B6%94%EA%B0%80%20%EB%B3%BC%EB%A5%A8%20%EC%8A%AC%EB%9D%BC%EC%9D%B4%EB%8D%94.user.js",
+  "code_size": 4783,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 496664,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-05-31T16:39:40.000Z",
+  "code_updated_at": "2024-05-31T22:21:15.000Z",
+  "namespace": "nikku",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1018564,
+      "name": "nikku",
+      "created_at": "2023-01-29T16:36:49.000Z",
+      "url": "https://greasyfork.org/users/1018564-nikku"
+    }
+  ],
+  "name": "Archyvai.lt Downloader",
+  "description": "Генерирует ссылки для скачивания изображений с сайта eais.archyvai.lt",
+  "url": "https://greasyfork.org/scripts/496664-archyvai-lt-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/496664/Archyvailt%20Downloader.user.js",
+  "code_size": 2734,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

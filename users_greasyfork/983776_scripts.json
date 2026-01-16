@@ -1,0 +1,167 @@
+[
+  {
+    "id": 534112,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-27T00:43:55.000Z",
+    "code_updated_at": "2025-04-27T00:43:55.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "CSES copy button",
+    "description": "Add copy buttons for input and output",
+    "url": "https://greasyfork.org/scripts/534112-cses-copy-button",
+    "code_url": "https://update.greasyfork.org/scripts/534112/CSES%20copy%20button.user.js",
+    "code_size": 1992,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499212,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-29T11:06:44.000Z",
+    "code_updated_at": "2024-12-24T15:29:59.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "OI Wiki 複製程式碼按鈕",
+    "description": "程式碼右上角新增「複製」按鈕",
+    "url": "https://greasyfork.org/scripts/499212-oi-wiki-%E8%A4%87%E8%A3%BD%E7%A8%8B%E5%BC%8F%E7%A2%BC%E6%8C%89%E9%88%95",
+    "code_url": "https://update.greasyfork.org/scripts/499212/OI%20Wiki%20%E8%A4%87%E8%A3%BD%E7%A8%8B%E5%BC%8F%E7%A2%BC%E6%8C%89%E9%88%95.user.js",
+    "code_size": 2929,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.1.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499090,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-28T01:21:45.000Z",
+    "code_updated_at": "2024-06-28T01:21:45.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "CPE 測資網頁新增「複製」按鈕",
+    "description": "可複製「輸入」或「輸出」",
+    "url": "https://greasyfork.org/scripts/499090-cpe-%E6%B8%AC%E8%B3%87%E7%B6%B2%E9%A0%81%E6%96%B0%E5%A2%9E-%E8%A4%87%E8%A3%BD-%E6%8C%89%E9%88%95",
+    "code_url": "https://update.greasyfork.org/scripts/499090/CPE%20%E6%B8%AC%E8%B3%87%E7%B6%B2%E9%A0%81%E6%96%B0%E5%A2%9E%E3%80%8C%E8%A4%87%E8%A3%BD%E3%80%8D%E6%8C%89%E9%88%95.user.js",
+    "code_size": 1923,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499014,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-27T03:04:49.000Z",
+    "code_updated_at": "2024-06-27T03:04:49.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "在 CPE 歷屆試題網頁顯示難度星級及該題 vjudge 連結",
+    "description": "難度星級取自官方資料",
+    "url": "https://greasyfork.org/scripts/499014-%E5%9C%A8-cpe-%E6%AD%B7%E5%B1%86%E8%A9%A6%E9%A1%8C%E7%B6%B2%E9%A0%81%E9%A1%AF%E7%A4%BA%E9%9B%A3%E5%BA%A6%E6%98%9F%E7%B4%9A%E5%8F%8A%E8%A9%B2%E9%A1%8C-vjudge-%E9%80%A3%E7%B5%90",
+    "code_url": "https://update.greasyfork.org/scripts/499014/%E5%9C%A8%20CPE%20%E6%AD%B7%E5%B1%86%E8%A9%A6%E9%A1%8C%E7%B6%B2%E9%A0%81%E9%A1%AF%E7%A4%BA%E9%9B%A3%E5%BA%A6%E6%98%9F%E7%B4%9A%E5%8F%8A%E8%A9%B2%E9%A1%8C%20vjudge%20%E9%80%A3%E7%B5%90.user.js",
+    "code_size": 22950,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499009,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-27T01:59:37.000Z",
+    "code_updated_at": "2024-06-27T01:59:37.000Z",
+    "namespace": "https://github.com/zica87/self-made-userscipts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 983776,
+        "name": "zica87",
+        "created_at": "2022-11-16T01:35:36.000Z",
+        "url": "https://greasyfork.org/users/983776-zica87"
+      }
+    ],
+    "name": "auto click AtCoder clock once on page load",
+    "description": "to hide the clock",
+    "url": "https://greasyfork.org/scripts/499009-auto-click-atcoder-clock-once-on-page-load",
+    "code_url": "https://update.greasyfork.org/scripts/499009/auto%20click%20AtCoder%20clock%20once%20on%20page%20load.user.js",
+    "code_size": 458,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

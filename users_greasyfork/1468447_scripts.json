@@ -1,0 +1,200 @@
+[
+  {
+    "id": 536359,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T02:34:32.000Z",
+    "code_updated_at": "2025-05-18T02:34:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468447,
+        "name": "overhung1180",
+        "created_at": "2025-05-10T23:35:11.000Z",
+        "url": "https://greasyfork.org/users/1468447-overhung1180"
+      }
+    ],
+    "name": "심층제보 알리미",
+    "description": "arca.live/b/mabimobile에서 UI 표시 + 어디서든 알림 실행 가능한 심층제보 & 타이머 & 동그라미 스크립트",
+    "url": "https://greasyfork.org/scripts/536359-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+    "code_url": "https://update.greasyfork.org/scripts/536359/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+    "code_size": 14965,
+    "license": null,
+    "version": "1.8",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 536357,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T02:20:45.000Z",
+    "code_updated_at": "2025-05-18T02:20:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468447,
+        "name": "overhung1180",
+        "created_at": "2025-05-10T23:35:11.000Z",
+        "url": "https://greasyfork.org/users/1468447-overhung1180"
+      }
+    ],
+    "name": "심층제보 알리미",
+    "description": "기본 게시판에서 ON/OFF 토글·입력창·30분 카운트다운 타이머 유지 + 사용자 지정 타이머 + 추가 동그라미 UI + 상태 원형 복원 + 일일 동그라미 리셋 + 동그라미 전부 선택 시 자동 OFF",
+    "url": "https://greasyfork.org/scripts/536357-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+    "code_url": "https://update.greasyfork.org/scripts/536357/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+    "code_size": 13669,
+    "license": null,
+    "version": "1.8",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535636,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-11T08:45:59.000Z",
+    "code_updated_at": "2025-05-11T08:45:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468447,
+        "name": "overhung1180",
+        "created_at": "2025-05-10T23:35:11.000Z",
+        "url": "https://greasyfork.org/users/1468447-overhung1180"
+      }
+    ],
+    "name": "심층제보 알리미",
+    "description": "기본 게시판에서 ON/OFF 토글·입력창·상태원·30분 카운트다운 타이머 적용, 상태·타이머 유지",
+    "url": "https://greasyfork.org/scripts/535636-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+    "code_url": "https://update.greasyfork.org/scripts/535636/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+    "code_size": 6682,
+    "license": null,
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535635,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-11T08:32:11.000Z",
+    "code_updated_at": "2025-05-11T08:32:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468447,
+        "name": "overhung1180",
+        "created_at": "2025-05-10T23:35:11.000Z",
+        "url": "https://greasyfork.org/users/1468447-overhung1180"
+      }
+    ],
+    "name": "심층제보 알리미",
+    "description": "기본 게시판에서 ON/OFF 토글·입력창·상태원·30분 카운트다운 타이머 적용, 상태·타이머 유지",
+    "url": "https://greasyfork.org/scripts/535635-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+    "code_url": "https://update.greasyfork.org/scripts/535635/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+    "code_size": 6682,
+    "license": null,
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535598,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T23:47:26.000Z",
+    "code_updated_at": "2025-05-10T23:47:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468447,
+        "name": "overhung1180",
+        "created_at": "2025-05-10T23:35:11.000Z",
+        "url": "https://greasyfork.org/users/1468447-overhung1180"
+      }
+    ],
+    "name": "심층제보 알리미",
+    "description": "기본 게시판에서 ON/OFF 토글·입력창·상태원·30분 카운트다운 타이머 적용, 상태·타이머 유지",
+    "url": "https://greasyfork.org/scripts/535598-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+    "code_url": "https://update.greasyfork.org/scripts/535598/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+    "code_size": 6405,
+    "license": null,
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535597,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T23:44:44.000Z",
+    "code_updated_at": "2025-05-10T23:44:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1468447,
+        "name": "overhung1180",
+        "created_at": "2025-05-10T23:35:11.000Z",
+        "url": "https://greasyfork.org/users/1468447-overhung1180"
+      }
+    ],
+    "name": "심층제보 알리미",
+    "description": "기본 게시판에서 ON/OFF 토글·입력창·상태원·30분 카운트다운 타이머 적용, 상태·타이머 유지",
+    "url": "https://greasyfork.org/scripts/535597-%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4-%EC%95%8C%EB%A6%AC%EB%AF%B8",
+    "code_url": "https://update.greasyfork.org/scripts/535597/%EC%8B%AC%EC%B8%B5%EC%A0%9C%EB%B3%B4%20%EC%95%8C%EB%A6%AC%EB%AF%B8.user.js",
+    "code_size": 6405,
+    "license": null,
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

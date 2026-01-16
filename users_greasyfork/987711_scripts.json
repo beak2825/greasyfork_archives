@@ -97,5 +97,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 534597,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-01T05:19:07.000Z",
+    "code_updated_at": "2025-08-16T11:04:56.000Z",
+    "namespace": "https://github.com/MakotoArai-CN/A2P",
+    "support_url": "https://blog.ciy.cool",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 987711,
+        "name": "MakotoArai-CN",
+        "created_at": "2022-11-25T10:01:29.000Z",
+        "url": "https://greasyfork.org/users/987711-makotoarai-cn"
+      }
+    ],
+    "name": "A2P",
+    "description": "Anime2Potplayer，用Potplayer打开浏览器播放的动漫，然后本地使用SVP4补帧！Potplayer需要是安装版，否则不生效。",
+    "url": "https://greasyfork.org/scripts/534597-a2p",
+    "code_url": "https://update.greasyfork.org/scripts/534597/A2P.user.js",
+    "code_size": 13730,
+    "license": "GPL-v3",
+    "version": "1.1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

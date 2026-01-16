@@ -1,0 +1,59 @@
+{
+  "id": 533998,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-04-25T21:27:02.000Z",
+  "code_updated_at": "2025-04-25T21:27:02.000Z",
+  "namespace": "https://greasyfork.org/en/users/1462159-altron",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462159,
+      "name": "Altron",
+      "created_at": "2025-04-25T21:09:51.000Z",
+      "url": "https://greasyfork.org/users/1462159-altron",
+      "scripts": [
+        {
+          "id": 533998,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-04-25T21:27:02.000Z",
+          "code_updated_at": "2025-04-25T21:27:02.000Z",
+          "namespace": "https://greasyfork.org/en/users/1462159-altron",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Google AI Studio Auto System Instructions",
+          "description": "Automatically fill system instructions for new chats in Google AI Studio",
+          "url": "https://greasyfork.org/scripts/533998-google-ai-studio-auto-system-instructions",
+          "code_url": "https://update.greasyfork.org/scripts/533998/Google%20AI%20Studio%20Auto%20System%20Instructions.user.js",
+          "code_size": 4257,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Google AI Studio Auto System Instructions",
+  "description": "Automatically fill system instructions for new chats in Google AI Studio",
+  "url": "https://greasyfork.org/scripts/533998-google-ai-studio-auto-system-instructions",
+  "code_url": "https://update.greasyfork.org/scripts/533998/Google%20AI%20Studio%20Auto%20System%20Instructions.user.js",
+  "code_size": 4257,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

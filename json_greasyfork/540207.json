@@ -1,0 +1,34 @@
+{
+  "id": 540207,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T17:35:38.000Z",
+  "code_updated_at": "2025-06-20T17:58:23.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/scripts/497330-ios-eplus-ua-workaround",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 388706,
+      "name": "imbalaomao",
+      "created_at": "2019-10-19T16:14:13.000Z",
+      "url": "https://greasyfork.org/users/388706-imbalaomao",
+      "scripts": []
+    }
+  ],
+  "name": "iOS Eplus UA Workaround",
+  "description": "Attempts to access eplus.jp on iOS by re-fetching the page with a desktop User-Agent.",
+  "url": "https://greasyfork.org/scripts/540207-ios-eplus-ua-workaround",
+  "code_url": "https://update.greasyfork.org/scripts/540207/iOS%20Eplus%20UA%20Workaround.user.js",
+  "code_size": 3806,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

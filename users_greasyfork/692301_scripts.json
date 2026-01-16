@@ -1,0 +1,167 @@
+[
+  {
+    "id": 501821,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-26T05:09:01.000Z",
+    "code_updated_at": "2024-07-26T05:09:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692301,
+        "name": "mefengl",
+        "created_at": "2020-10-04T07:03:47.000Z",
+        "url": "https://greasyfork.org/users/692301-mefengl"
+      }
+    ],
+    "name": "Auto-activate Perplexity.ai Pro Button",
+    "description": "Auto-activates the Pro button on Perplexity.ai",
+    "url": "https://greasyfork.org/scripts/501821-auto-activate-perplexity-ai-pro-button",
+    "code_url": "https://update.greasyfork.org/scripts/501821/Auto-activate%20Perplexityai%20Pro%20Button.user.js",
+    "code_size": 719,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501820,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-26T05:06:26.000Z",
+    "code_updated_at": "2024-07-26T05:20:38.000Z",
+    "namespace": "https://github.com/mefengl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692301,
+        "name": "mefengl",
+        "created_at": "2020-10-04T07:03:47.000Z",
+        "url": "https://greasyfork.org/users/692301-mefengl"
+      }
+    ],
+    "name": "Perplexity Follow-Up Clicker",
+    "description": "Automatically clicks the follow-up button for \"Plexity follow up\" on Perplexity.ai every 10 seconds.",
+    "url": "https://greasyfork.org/scripts/501820-perplexity-follow-up-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/501820/Perplexity%20Follow-Up%20Clicker.user.js",
+    "code_size": 2732,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501753,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-25T09:30:24.000Z",
+    "code_updated_at": "2024-07-25T09:30:24.000Z",
+    "namespace": "https://github.com/mefengl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692301,
+        "name": "mefengl",
+        "created_at": "2020-10-04T07:03:47.000Z",
+        "url": "https://greasyfork.org/users/692301-mefengl"
+      }
+    ],
+    "name": "Auto Click Button on PlusAI",
+    "description": "Automatically clicks the button on PlusAI every second.",
+    "url": "https://greasyfork.org/scripts/501753-auto-click-button-on-plusai",
+    "code_url": "https://update.greasyfork.org/scripts/501753/Auto%20Click%20Button%20on%20PlusAI.user.js",
+    "code_size": 607,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500479,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-13T00:56:20.000Z",
+    "code_updated_at": "2024-07-13T00:58:27.000Z",
+    "namespace": "https://github.com/mefengl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692301,
+        "name": "mefengl",
+        "created_at": "2020-10-04T07:03:47.000Z",
+        "url": "https://greasyfork.org/users/692301-mefengl"
+      }
+    ],
+    "name": "OutLook Reader: Element Remove",
+    "description": "A script to remove specific elements on Outlook.com",
+    "url": "https://greasyfork.org/scripts/500479-outlook-reader-element-remove",
+    "code_url": "https://update.greasyfork.org/scripts/500479/OutLook%20Reader%3A%20Element%20Remove.user.js",
+    "code_size": 793,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500389,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-12T05:19:09.000Z",
+    "code_updated_at": "2024-07-12T05:19:08.000Z",
+    "namespace": "https://github.com/mefengl",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 692301,
+        "name": "mefengl",
+        "created_at": "2020-10-04T07:03:47.000Z",
+        "url": "https://greasyfork.org/users/692301-mefengl"
+      }
+    ],
+    "name": "Telegram Message Content Styler",
+    "description": "This script adjusts the width and max-width of all elements with the class 'message-content' to 100% every second.",
+    "url": "https://greasyfork.org/scripts/500389-telegram-message-content-styler",
+    "code_url": "https://update.greasyfork.org/scripts/500389/Telegram%20Message%20Content%20Styler.user.js",
+    "code_size": 737,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

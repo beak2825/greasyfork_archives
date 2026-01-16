@@ -1,0 +1,68 @@
+[
+  {
+    "id": 539865,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-18T09:52:22.000Z",
+    "code_updated_at": "2025-06-18T09:52:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473777,
+        "name": "Jhefferson15",
+        "created_at": "2025-05-23T10:38:47.000Z",
+        "url": "https://greasyfork.org/users/1473777-jhefferson15"
+      }
+    ],
+    "name": "Editora Versa - Dashboard - Calendário com Estuda.com",
+    "description": "Busca eventos do Estuda.com, clona o calendário do Versa, exibe os dados do Estuda no novo calendário e utiliza cache. Feedback apenas no console.",
+    "url": "https://greasyfork.org/scripts/539865-editora-versa-dashboard-calend%C3%A1rio-com-estuda-com",
+    "code_url": "https://update.greasyfork.org/scripts/539865/Editora%20Versa%20-%20Dashboard%20-%20Calend%C3%A1rio%20com%20Estudacom.user.js",
+    "code_size": 21154,
+    "license": "MIT License",
+    "version": "2.5.1",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 539794,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-17T21:44:54.000Z",
+    "code_updated_at": "2025-06-17T21:44:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473777,
+        "name": "Jhefferson15",
+        "created_at": "2025-05-23T10:38:47.000Z",
+        "url": "https://greasyfork.org/users/1473777-jhefferson15"
+      }
+    ],
+    "name": "Editora Versa - Modulos - Navegador de Questões",
+    "description": "Navegação inteligente que direciona para o gabarito ou para a página de resposta, conforme o status da questão. Melhora a visualização mobile da lista de questões.",
+    "url": "https://greasyfork.org/scripts/539794-editora-versa-modulos-navegador-de-quest%C3%B5es",
+    "code_url": "https://update.greasyfork.org/scripts/539794/Editora%20Versa%20-%20Modulos%20-%20Navegador%20de%20Quest%C3%B5es.user.js",
+    "code_size": 20766,
+    "license": "MIT License",
+    "version": "3.8",
+    "locale": "pt",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

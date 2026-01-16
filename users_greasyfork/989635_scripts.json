@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510610,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-28T15:47:54.000Z",
+    "code_updated_at": "2025-02-05T04:51:03.000Z",
+    "namespace": "https://greasyfork.org/users/989635",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 989635,
+        "name": "Canaan HS",
+        "created_at": "2022-11-29T09:39:19.000Z",
+        "url": "https://greasyfork.org/users/989635-canaan-hs"
+      }
+    ],
+    "name": "__簡易書籤__",
+    "description": "將網頁添加至書籤中保存, 一鍵快速導入導出, 一鍵快速開啟所有書籤",
+    "url": "https://greasyfork.org/scripts/510610-%E7%B0%A1%E6%98%93%E6%9B%B8%E7%B1%A4",
+    "code_url": "https://update.greasyfork.org/scripts/510610/__%E7%B0%A1%E6%98%93%E6%9B%B8%E7%B1%A4__.user.js",
+    "code_size": 19615,
+    "license": "Mozilla Public License 2.0",
+    "version": "0.0.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

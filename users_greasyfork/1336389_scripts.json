@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542555,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-14T14:32:09.000Z",
+    "code_updated_at": "2025-07-18T14:06:45.000Z",
+    "namespace": "https://greasyfork.org/users/1336389",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1336389,
+        "name": "SuperTUZKI",
+        "created_at": "2024-07-19T06:32:55.000Z",
+        "url": "https://greasyfork.org/users/1336389-supertuzki"
+      }
+    ],
+    "name": "通用视频播放器截图工具（测试）",
+    "description": "适用于所有视频播放器的截图脚本（H5、Flash、iframe等）",
+    "url": "https://greasyfork.org/scripts/542555-%E9%80%9A%E7%94%A8%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E6%88%AA%E5%9B%BE%E5%B7%A5%E5%85%B7-%E6%B5%8B%E8%AF%95",
+    "code_url": "https://update.greasyfork.org/scripts/542555/%E9%80%9A%E7%94%A8%E8%A7%86%E9%A2%91%E6%92%AD%E6%94%BE%E5%99%A8%E6%88%AA%E5%9B%BE%E5%B7%A5%E5%85%B7%EF%BC%88%E6%B5%8B%E8%AF%95%EF%BC%89.user.js",
+    "code_size": 25585,
+    "license": "GNU General Public License v3.0 only",
+    "version": "2025.07.18",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

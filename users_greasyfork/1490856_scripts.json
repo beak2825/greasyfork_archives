@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541409,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T07:50:58.000Z",
+    "code_updated_at": "2025-07-02T07:50:58.000Z",
+    "namespace": "https://github.com/teperyaemo/youtube-auto-speed",
+    "support_url": "https://github.com/teperyaemo/youtube-auto-speed/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1490856,
+        "name": "teperyaemo",
+        "created_at": "2025-07-02T07:15:26.000Z",
+        "url": "https://greasyfork.org/users/1490856-teperyaemo"
+      }
+    ],
+    "name": "YouTube Auto Speed",
+    "description": "Auto-adjust playback speed on YouTube videos (excluding music). Uses structured description detection, supports blacklist.",
+    "url": "https://greasyfork.org/scripts/541409-youtube-auto-speed",
+    "code_url": "https://update.greasyfork.org/scripts/541409/YouTube%20Auto%20Speed.user.js",
+    "code_size": 2939,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

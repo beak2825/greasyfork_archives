@@ -1,0 +1,34 @@
+{
+  "id": 542031,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-08T16:03:07.000Z",
+  "code_updated_at": "2025-07-09T22:04:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492902,
+      "name": "LMDMCEStats",
+      "created_at": "2025-07-08T16:00:40.000Z",
+      "url": "https://greasyfork.org/users/1492902-lmdmcestats",
+      "scripts": []
+    }
+  ],
+  "name": "Cartel Empire - Los Médicos Revive",
+  "description": "Adds a 'Revive Me' button to Cartel Empire user profiles if the player is in hospital, and sends formatted profile data to Discord with a role ping.",
+  "url": "https://greasyfork.org/scripts/542031-cartel-empire-los-m%C3%A9dicos-revive",
+  "code_url": "https://update.greasyfork.org/scripts/542031/Cartel%20Empire%20-%20Los%20M%C3%A9dicos%20Revive.user.js",
+  "code_size": 15484,
+  "license": null,
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

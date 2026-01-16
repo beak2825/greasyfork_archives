@@ -1,0 +1,35 @@
+[
+  {
+    "id": 503473,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-12T23:30:59.000Z",
+    "code_updated_at": "2024-09-01T02:16:44.000Z",
+    "namespace": "https://github.com/matthewwang16czap/TempermonkeyScripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 394590,
+        "name": "shihanasaku",
+        "created_at": "2019-11-03T16:25:07.000Z",
+        "url": "https://greasyfork.org/users/394590-shihanasaku"
+      }
+    ],
+    "name": "dataannotation tasks notification",
+    "description": "Auto login and auto refresh pages to find new available projects.",
+    "url": "https://greasyfork.org/scripts/503473-dataannotation-tasks-notification",
+    "code_url": "https://update.greasyfork.org/scripts/503473/dataannotation%20tasks%20notification.user.js",
+    "code_size": 4759,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 528820,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-05T02:47:01.000Z",
+  "code_updated_at": "2025-03-05T02:47:01.000Z",
+  "namespace": "ttjz_full_all_iframe",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1442258,
+      "name": "tongtianjiaozhu",
+      "created_at": "2025-03-04T13:38:38.000Z",
+      "url": "https://greasyfork.org/users/1442258-tongtianjiaozhu",
+      "scripts": [
+        {
+          "id": 528818,
+          "daily_installs": 0,
+          "total_installs": 58,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-05T02:40:49.000Z",
+          "code_updated_at": "2025-03-05T02:40:48.000Z",
+          "namespace": "qx-parse",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "七象影视解析",
+          "description": "优酷、爱奇艺、腾讯、B站等视频网站视频解析，悬浮面板",
+          "url": "https://greasyfork.org/scripts/528818-%E4%B8%83%E8%B1%A1%E5%BD%B1%E8%A7%86%E8%A7%A3%E6%9E%90",
+          "code_url": "https://update.greasyfork.org/scripts/528818/%E4%B8%83%E8%B1%A1%E5%BD%B1%E8%A7%86%E8%A7%A3%E6%9E%90.user.js",
+          "code_size": 33881,
+          "license": "GPLv3",
+          "version": "0.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "full all iframe",
+  "description": "所有iframe 设为宽高100%",
+  "url": "https://greasyfork.org/scripts/528820-full-all-iframe",
+  "code_url": "https://update.greasyfork.org/scripts/528820/full%20all%20iframe.user.js",
+  "code_size": 2614,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

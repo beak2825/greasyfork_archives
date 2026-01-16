@@ -1,0 +1,59 @@
+{
+  "id": 532804,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-04-14T10:05:49.000Z",
+  "code_updated_at": "2025-04-15T08:07:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 939767,
+      "name": "liepainian",
+      "created_at": "2022-07-27T02:16:40.000Z",
+      "url": "https://greasyfork.org/users/939767-liepainian",
+      "scripts": [
+        {
+          "id": 532804,
+          "daily_installs": 0,
+          "total_installs": 65,
+          "fan_score": "5.5",
+          "good_ratings": 0,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-04-14T10:05:49.000Z",
+          "code_updated_at": "2025-04-15T08:07:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "hlib图书馆下载",
+          "description": "自动下载小说网站的所有章节内容",
+          "url": "https://greasyfork.org/scripts/532804-hlib%E5%9B%BE%E4%B9%A6%E9%A6%86%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/532804/hlib%E5%9B%BE%E4%B9%A6%E9%A6%86%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 5033,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "hlib图书馆下载",
+  "description": "自动下载小说网站的所有章节内容",
+  "url": "https://greasyfork.org/scripts/532804-hlib%E5%9B%BE%E4%B9%A6%E9%A6%86%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/532804/hlib%E5%9B%BE%E4%B9%A6%E9%A6%86%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 5033,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

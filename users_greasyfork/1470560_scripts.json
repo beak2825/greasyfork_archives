@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536114,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T18:09:37.000Z",
+    "code_updated_at": "2025-05-15T18:09:37.000Z",
+    "namespace": "https://wendysmenuin.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1470560,
+        "name": "TAL 4YOU",
+        "created_at": "2025-05-15T17:56:04.000Z",
+        "url": "https://greasyfork.org/users/1470560-tal-4you"
+      }
+    ],
+    "name": "Wendy’s Menu Quick Link Enhancer",
+    "description": "Auto-detects Wendy’s menu mentions on web pages and adds a link to detailed prices and items at wendysmenuin.com",
+    "url": "https://greasyfork.org/scripts/536114-wendy-s-menu-quick-link-enhancer",
+    "code_url": "https://update.greasyfork.org/scripts/536114/Wendy%E2%80%99s%20Menu%20Quick%20Link%20Enhancer.user.js",
+    "code_size": 1825,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 515819,
+  "daily_installs": 13,
+  "total_installs": 11045,
+  "fan_score": "15.0",
+  "good_ratings": 1,
+  "ok_ratings": 2,
+  "bad_ratings": 1,
+  "created_at": "2024-11-04T18:41:47.000Z",
+  "code_updated_at": "2025-10-10T07:35:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1391209,
+      "name": "esxu",
+      "created_at": "2024-11-04T14:43:07.000Z",
+      "url": "https://greasyfork.org/users/1391209-esxu",
+      "scripts": [
+        {
+          "id": 515819,
+          "daily_installs": 13,
+          "total_installs": 11045,
+          "fan_score": "15.0",
+          "good_ratings": 1,
+          "ok_ratings": 2,
+          "bad_ratings": 1,
+          "created_at": "2024-11-04T18:41:47.000Z",
+          "code_updated_at": "2025-10-10T07:35:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "最新免费节点，科学上网，魔法上网，免费梯子，免费机场，翻墙节点",
+          "description": "最新免费节点，科学上网，魔法上网，免费梯子，免费机场，翻墙节点，ss/trojan/clash免费节点订阅地址分享，直连facebook、Youtube、Twitter、Tiktok、ChatGPT尽情看视频网站，流量用不玩。",
+          "url": "https://greasyfork.org/scripts/515819-%E6%9C%80%E6%96%B0%E5%85%8D%E8%B4%B9%E8%8A%82%E7%82%B9-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91-%E9%AD%94%E6%B3%95%E4%B8%8A%E7%BD%91-%E5%85%8D%E8%B4%B9%E6%A2%AF%E5%AD%90-%E5%85%8D%E8%B4%B9%E6%9C%BA%E5%9C%BA-%E7%BF%BB%E5%A2%99%E8%8A%82%E7%82%B9",
+          "code_url": "https://update.greasyfork.org/scripts/515819/%E6%9C%80%E6%96%B0%E5%85%8D%E8%B4%B9%E8%8A%82%E7%82%B9%EF%BC%8C%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91%EF%BC%8C%E9%AD%94%E6%B3%95%E4%B8%8A%E7%BD%91%EF%BC%8C%E5%85%8D%E8%B4%B9%E6%A2%AF%E5%AD%90%EF%BC%8C%E5%85%8D%E8%B4%B9%E6%9C%BA%E5%9C%BA%EF%BC%8C%E7%BF%BB%E5%A2%99%E8%8A%82%E7%82%B9.user.js",
+          "code_size": 4966,
+          "license": "MIT License",
+          "version": "1.0.14",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "最新免费节点，科学上网，魔法上网，免费梯子，免费机场，翻墙节点",
+  "description": "最新免费节点，科学上网，魔法上网，免费梯子，免费机场，翻墙节点，ss/trojan/clash免费节点订阅地址分享，直连facebook、Youtube、Twitter、Tiktok、ChatGPT尽情看视频网站，流量用不玩。",
+  "url": "https://greasyfork.org/scripts/515819-%E6%9C%80%E6%96%B0%E5%85%8D%E8%B4%B9%E8%8A%82%E7%82%B9-%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91-%E9%AD%94%E6%B3%95%E4%B8%8A%E7%BD%91-%E5%85%8D%E8%B4%B9%E6%A2%AF%E5%AD%90-%E5%85%8D%E8%B4%B9%E6%9C%BA%E5%9C%BA-%E7%BF%BB%E5%A2%99%E8%8A%82%E7%82%B9",
+  "code_url": "https://update.greasyfork.org/scripts/515819/%E6%9C%80%E6%96%B0%E5%85%8D%E8%B4%B9%E8%8A%82%E7%82%B9%EF%BC%8C%E7%A7%91%E5%AD%A6%E4%B8%8A%E7%BD%91%EF%BC%8C%E9%AD%94%E6%B3%95%E4%B8%8A%E7%BD%91%EF%BC%8C%E5%85%8D%E8%B4%B9%E6%A2%AF%E5%AD%90%EF%BC%8C%E5%85%8D%E8%B4%B9%E6%9C%BA%E5%9C%BA%EF%BC%8C%E7%BF%BB%E5%A2%99%E8%8A%82%E7%82%B9.user.js",
+  "code_size": 4966,
+  "license": "MIT License",
+  "version": "1.0.14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

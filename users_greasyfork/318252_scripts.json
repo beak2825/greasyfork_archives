@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510694,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-29T05:33:45.000Z",
+    "code_updated_at": "2024-10-02T11:49:17.000Z",
+    "namespace": "https://greasyfork.org/en/users/318252-obsidian",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 318252,
+        "name": "Obsidian",
+        "created_at": "2019-07-16T17:53:18.000Z",
+        "url": "https://greasyfork.org/users/318252-obsidian"
+      }
+    ],
+    "name": "SonicHackingContest Navbar Scroll (test3)",
+    "description": "Avoids navbar dropdown menus from being cut-off and inaccessible by adding scrolling.",
+    "url": "https://greasyfork.org/scripts/510694-sonichackingcontest-navbar-scroll-test3",
+    "code_url": "https://update.greasyfork.org/scripts/510694/SonicHackingContest%20Navbar%20Scroll%20%28test3%29.user.js",
+    "code_size": 32437,
+    "license": null,
+    "version": "2024.10.01.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

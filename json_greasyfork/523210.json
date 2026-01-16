@@ -1,0 +1,34 @@
+{
+  "id": 523210,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-08T15:11:47.000Z",
+  "code_updated_at": "2025-01-08T15:11:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1399657,
+      "name": "Vanakh Chea",
+      "created_at": "2024-11-20T13:25:12.000Z",
+      "url": "https://greasyfork.org/users/1399657-vanakh-chea",
+      "scripts": []
+    }
+  ],
+  "name": "Impressum-Links in PDFs umwandeln",
+  "description": "Dieses Skript durchsucht eine Webseite nach Links, deren Adressen die Wörter „mpressum“, „atenschutz“ oder „rivacy“ enthalten. Dann aktualisiert es diese Links so, dass sie alle zu einem bestimmten Dokument namens „example.pdf“ führen, wenn sie angeklickt werden. Im Wesentlichen leitet es diese bestimmten Weblinks auf ein neues Ziel um. Praktisch, um Klicks auf PDF-Link zu simulieren.",
+  "url": "https://greasyfork.org/scripts/523210-impressum-links-in-pdfs-umwandeln",
+  "code_url": "https://update.greasyfork.org/scripts/523210/Impressum-Links%20in%20PDFs%20umwandeln.user.js",
+  "code_size": 1168,
+  "license": null,
+  "version": "2025-01-08",
+  "locale": "de",
+  "deleted": false,
+  "visibility": "public"
+}

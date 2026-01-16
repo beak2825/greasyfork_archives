@@ -1,0 +1,59 @@
+{
+  "id": 500024,
+  "daily_installs": 0,
+  "total_installs": 2524,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 5,
+  "created_at": "2024-07-08T14:57:41.000Z",
+  "code_updated_at": "2024-07-08T14:57:41.000Z",
+  "namespace": "AliyunDriveOpenSource",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330133,
+      "name": "juzhixuange",
+      "created_at": "2024-07-08T09:27:13.000Z",
+      "url": "https://greasyfork.org/users/1330133-juzhixuange",
+      "scripts": [
+        {
+          "id": 500024,
+          "daily_installs": 0,
+          "total_installs": 2524,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 5,
+          "created_at": "2024-07-08T14:57:41.000Z",
+          "code_updated_at": "2024-07-08T14:57:41.000Z",
+          "namespace": "AliyunDriveOpenSource",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "阿里云盘直链提取+无限容量助手",
+          "description": "Aliyundrive阿里云盘直链秒传连接提取助手 —— 非常方便好用的阿里云盘网盘脚本；插件主要功能：1. 提取阿里云盘分享链接中所有文件和目录的真实链接完美配合IDM、Xdown、Aria2、Curl、比特彗星等工具高速下载；2. 修改各种文件后缀及扩展名称；3. 突破存储TB级空间限制&相当于无限扩容&不需要保存文件就可以下载或者观看；4. 支持第三方播放器ArtPlayer（破解视频2分钟时长限制/可以选集/长按倍速/历史播放等功能），可在不需要安装客户端的环境下使用，aliyunpan助手基于MIT免费开源，但引用需要获得授权！",
+          "url": "https://greasyfork.org/scripts/500024-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E7%9B%B4%E9%93%BE%E6%8F%90%E5%8F%96-%E6%97%A0%E9%99%90%E5%AE%B9%E9%87%8F%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/500024/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E7%9B%B4%E9%93%BE%E6%8F%90%E5%8F%96%2B%E6%97%A0%E9%99%90%E5%AE%B9%E9%87%8F%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 24168,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "阿里云盘直链提取+无限容量助手",
+  "description": "Aliyundrive阿里云盘直链秒传连接提取助手 —— 非常方便好用的阿里云盘网盘脚本；插件主要功能：1. 提取阿里云盘分享链接中所有文件和目录的真实链接完美配合IDM、Xdown、Aria2、Curl、比特彗星等工具高速下载；2. 修改各种文件后缀及扩展名称；3. 突破存储TB级空间限制&相当于无限扩容&不需要保存文件就可以下载或者观看；4. 支持第三方播放器ArtPlayer（破解视频2分钟时长限制/可以选集/长按倍速/历史播放等功能），可在不需要安装客户端的环境下使用，aliyunpan助手基于MIT免费开源，但引用需要获得授权！",
+  "url": "https://greasyfork.org/scripts/500024-%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E7%9B%B4%E9%93%BE%E6%8F%90%E5%8F%96-%E6%97%A0%E9%99%90%E5%AE%B9%E9%87%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/500024/%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%98%E7%9B%B4%E9%93%BE%E6%8F%90%E5%8F%96%2B%E6%97%A0%E9%99%90%E5%AE%B9%E9%87%8F%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 24168,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

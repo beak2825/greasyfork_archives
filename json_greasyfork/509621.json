@@ -1,0 +1,34 @@
+{
+  "id": 509621,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-22T03:54:22.000Z",
+  "code_updated_at": "2024-09-24T12:03:29.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1371297,
+      "name": "zhanzhan2020",
+      "created_at": "2024-09-22T02:06:26.000Z",
+      "url": "https://greasyfork.org/users/1371297-zhanzhan2020",
+      "scripts": []
+    }
+  ],
+  "name": "lib2024",
+  "description": "2024年9月22日上午",
+  "url": "https://greasyfork.org/scripts/509621-lib2024",
+  "code_url": "https://update.greasyfork.org/scripts/509621/1453326/lib2024.js",
+  "code_size": 108819,
+  "license": null,
+  "version": "2024",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

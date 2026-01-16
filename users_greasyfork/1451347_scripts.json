@@ -1,0 +1,35 @@
+[
+  {
+    "id": 531133,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-28T16:13:42.000Z",
+    "code_updated_at": "2025-03-28T17:16:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1451347,
+        "name": "letrahoo",
+        "created_at": "2025-03-28T16:11:41.000Z",
+        "url": "https://greasyfork.org/users/1451347-letrahoo"
+      }
+    ],
+    "name": "YouTube 4K 视频过滤器 - 高级版",
+    "description": "通过检查视频设置菜单识别并筛选YouTube上的4K视频",
+    "url": "https://greasyfork.org/scripts/531133-youtube-4k-%E8%A7%86%E9%A2%91%E8%BF%87%E6%BB%A4%E5%99%A8-%E9%AB%98%E7%BA%A7%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/531133/YouTube%204K%20%E8%A7%86%E9%A2%91%E8%BF%87%E6%BB%A4%E5%99%A8%20-%20%E9%AB%98%E7%BA%A7%E7%89%88.user.js",
+    "code_size": 26368,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

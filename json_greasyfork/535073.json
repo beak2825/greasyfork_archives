@@ -1,0 +1,34 @@
+{
+  "id": 535073,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-06T01:19:29.000Z",
+  "code_updated_at": "2025-07-11T16:43:50.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1465490,
+      "name": "Preston Henshaw",
+      "created_at": "2025-05-04T09:27:21.000Z",
+      "url": "https://greasyfork.org/users/1465490-preston-henshaw",
+      "scripts": []
+    }
+  ],
+  "name": "𝕏Spaces Pro",
+  "description": "Addon for X Spaces with custom emojis, enhanced transcript, and listener tracker",
+  "url": "https://greasyfork.org/scripts/535073-%F0%9D%95%8Fspaces-pro",
+  "code_url": "https://update.greasyfork.org/scripts/535073/%F0%9D%95%8FSpaces%20Pro.user.js",
+  "code_size": 140822,
+  "license": null,
+  "version": "2.531",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

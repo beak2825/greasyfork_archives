@@ -64,5 +64,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548566,
+    "daily_installs": 0,
+    "total_installs": 29,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T09:32:52.000Z",
+    "code_updated_at": "2025-09-06T09:32:52.000Z",
+    "namespace": "https://trophymanager.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512374,
+        "name": "mighty red",
+        "created_at": "2025-09-06T09:31:10.000Z",
+        "url": "https://greasyfork.org/users/1512374-mighty-red"
+      }
+    ],
+    "name": "TM Opponent Scouting",
+    "description": "Trophy Manager: Show match events for the last 5 games of next opponent. with adaptations from TMVN Match Event (Xpand Club_Id: 4423730) and TM League Match History (Irreal Madrid FC. Club ID: 4402745)",
+    "url": "https://greasyfork.org/scripts/548566-tm-opponent-scouting",
+    "code_url": "https://update.greasyfork.org/scripts/548566/TM%20Opponent%20Scouting.user.js",
+    "code_size": 34773,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

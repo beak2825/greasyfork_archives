@@ -30,6 +30,39 @@
     "version": "0.2.1",
     "locale": "ru",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548683,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-07T09:15:33.000Z",
+    "code_updated_at": "2025-10-03T18:35:01.000Z",
+    "namespace": "https://forum.blackrussia.online/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1512630,
+        "name": "AngelK",
+        "created_at": "2025-09-07T08:04:39.000Z",
+        "url": "https://greasyfork.org/users/1512630-angelk"
+      }
+    ],
+    "name": "Скрипт для Ilya_Gremory",
+    "description": "Скрипт для форума BlackRussia, для Ilya_Gremory. by A.Kobzev",
+    "url": "https://greasyfork.org/scripts/548683-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-ilya-gremory",
+    "code_url": "https://update.greasyfork.org/scripts/548683/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20Ilya_Gremory.user.js",
+    "code_size": 154439,
+    "license": "MIT License",
+    "version": "2.1.0",
+    "locale": "ru",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

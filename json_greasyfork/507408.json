@@ -1,0 +1,59 @@
+{
+  "id": 507408,
+  "daily_installs": 1,
+  "total_installs": 210,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-08T05:26:40.000Z",
+  "code_updated_at": "2025-05-30T13:44:37.000Z",
+  "namespace": "jpdb-immersion-kit-examples",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 100276,
+      "name": "awoo",
+      "created_at": "2017-02-06T04:55:58.000Z",
+      "url": "https://greasyfork.org/users/100276-awoo",
+      "scripts": [
+        {
+          "id": 507408,
+          "daily_installs": 1,
+          "total_installs": 210,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-08T05:26:40.000Z",
+          "code_updated_at": "2025-05-30T13:44:37.000Z",
+          "namespace": "jpdb-immersion-kit-examples",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "JPDB Immersion Kit Examples",
+          "description": "Embeds anime images & audio examples into JPDB review and vocabulary pages using Immersion Kit's API.",
+          "url": "https://greasyfork.org/scripts/507408-jpdb-immersion-kit-examples",
+          "code_url": "https://update.greasyfork.org/scripts/507408/JPDB%20Immersion%20Kit%20Examples.user.js",
+          "code_size": 100382,
+          "license": "MIT License",
+          "version": "1.24",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "JPDB Immersion Kit Examples",
+  "description": "Embeds anime images & audio examples into JPDB review and vocabulary pages using Immersion Kit's API.",
+  "url": "https://greasyfork.org/scripts/507408-jpdb-immersion-kit-examples",
+  "code_url": "https://update.greasyfork.org/scripts/507408/JPDB%20Immersion%20Kit%20Examples.user.js",
+  "code_size": 100382,
+  "license": "MIT License",
+  "version": "1.24",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

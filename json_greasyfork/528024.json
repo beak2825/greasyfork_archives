@@ -1,0 +1,59 @@
+{
+  "id": 528024,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-25T11:55:17.000Z",
+  "code_updated_at": "2025-02-25T11:55:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1439862,
+      "name": "Simple Solutions",
+      "created_at": "2025-02-25T11:52:51.000Z",
+      "url": "https://greasyfork.org/users/1439862-simple-solutions",
+      "scripts": [
+        {
+          "id": 528024,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-25T11:55:17.000Z",
+          "code_updated_at": "2025-02-25T11:55:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站全场景优质视频标记(完整版+UP主主页)",
+          "description": "支持主页、搜索页、视频推荐和UP主主页的优质视频标记，新增顶级标签，已修复标签颜色和位置问题",
+          "url": "https://greasyfork.org/scripts/528024-b%E7%AB%99%E5%85%A8%E5%9C%BA%E6%99%AF%E4%BC%98%E8%B4%A8%E8%A7%86%E9%A2%91%E6%A0%87%E8%AE%B0-%E5%AE%8C%E6%95%B4%E7%89%88-up%E4%B8%BB%E4%B8%BB%E9%A1%B5",
+          "code_url": "https://update.greasyfork.org/scripts/528024/B%E7%AB%99%E5%85%A8%E5%9C%BA%E6%99%AF%E4%BC%98%E8%B4%A8%E8%A7%86%E9%A2%91%E6%A0%87%E8%AE%B0%28%E5%AE%8C%E6%95%B4%E7%89%88%2BUP%E4%B8%BB%E4%B8%BB%E9%A1%B5%29.user.js",
+          "code_size": 13740,
+          "license": "MIT License",
+          "version": "4.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站全场景优质视频标记(完整版+UP主主页)",
+  "description": "支持主页、搜索页、视频推荐和UP主主页的优质视频标记，新增顶级标签，已修复标签颜色和位置问题",
+  "url": "https://greasyfork.org/scripts/528024-b%E7%AB%99%E5%85%A8%E5%9C%BA%E6%99%AF%E4%BC%98%E8%B4%A8%E8%A7%86%E9%A2%91%E6%A0%87%E8%AE%B0-%E5%AE%8C%E6%95%B4%E7%89%88-up%E4%B8%BB%E4%B8%BB%E9%A1%B5",
+  "code_url": "https://update.greasyfork.org/scripts/528024/B%E7%AB%99%E5%85%A8%E5%9C%BA%E6%99%AF%E4%BC%98%E8%B4%A8%E8%A7%86%E9%A2%91%E6%A0%87%E8%AE%B0%28%E5%AE%8C%E6%95%B4%E7%89%88%2BUP%E4%B8%BB%E4%B8%BB%E9%A1%B5%29.user.js",
+  "code_size": 13740,
+  "license": "MIT License",
+  "version": "4.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -196,5 +196,143 @@
     "locale": "de",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 538733,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T18:02:00.000Z",
+    "code_updated_at": "2025-06-12T18:25:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 956034,
+        "name": "Moritz Baumeister",
+        "created_at": "2022-09-08T08:50:47.000Z",
+        "url": "https://greasyfork.org/users/956034-moritz-baumeister"
+      }
+    ],
+    "name": "Kleinanzeigen-Datenexport (TO LLM) & Seitennavigation 🚀",
+    "description": "Erfasst sichtbare Inhalte und Metadaten als JSONL für LLM-Verarbeitung. Unterstützt kontinuierliches Sammeln über mehrere Seiten (persistenter Modus) und Seitennavigation mit A/D. Exportiert nur sichtbare/lesbare Daten + Anzeigen-ID.",
+    "url": "https://greasyfork.org/scripts/538733-kleinanzeigen-datenexport-to-llm-seitennavigation",
+    "code_url": "https://update.greasyfork.org/scripts/538733/Kleinanzeigen-Datenexport%20%28TO%20LLM%29%20%20Seitennavigation%20%F0%9F%9A%80.user.js",
+    "code_size": 36278,
+    "license": "MIT License",
+    "version": "22.8 // Version angehoben für A/D Navigation immer aktiv",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538590,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-06T14:45:45.000Z",
+    "code_updated_at": "2025-06-12T18:26:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 956034,
+        "name": "Moritz Baumeister",
+        "created_at": "2022-09-08T08:50:47.000Z",
+        "url": "https://greasyfork.org/users/956034-moritz-baumeister"
+      }
+    ],
+    "name": "Der ultimative Festplatten-Deal-Finder für Kleinanzeigen 🚀",
+    "description": "SVG-Filter, Tooltips, Hover-Effekte, DB-Reset mit Countdown - Polierte UI",
+    "url": "https://greasyfork.org/scripts/538590-der-ultimative-festplatten-deal-finder-f%C3%BCr-kleinanzeigen",
+    "code_url": "https://update.greasyfork.org/scripts/538590/Der%20ultimative%20Festplatten-Deal-Finder%20f%C3%BCr%20Kleinanzeigen%20%F0%9F%9A%80.user.js",
+    "code_size": 53032,
+    "license": "MIT License",
+    "version": "9.4",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538472,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-06-05T19:56:02.000Z",
+    "code_updated_at": "2025-10-09T16:16:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 956034,
+        "name": "Moritz Baumeister",
+        "created_at": "2022-09-08T08:50:47.000Z",
+        "url": "https://greasyfork.org/users/956034-moritz-baumeister"
+      }
+    ],
+    "name": "Kleinanzeigen Mietdashboard mit Preisanalyse",
+    "description": "A new userscript",
+    "url": "https://greasyfork.org/scripts/538472-kleinanzeigen-mietdashboard-mit-preisanalyse",
+    "code_url": "https://update.greasyfork.org/scripts/538472/Kleinanzeigen%20Mietdashboard%20mit%20Preisanalyse.user.js",
+    "code_size": 20102,
+    "license": "MIT License",
+    "version": "8.3",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536079,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T11:13:36.000Z",
+    "code_updated_at": "2025-12-07T12:44:10.000Z",
+    "namespace": "violentmonkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 956034,
+        "name": "Moritz Baumeister",
+        "created_at": "2022-09-08T08:50:47.000Z",
+        "url": "https://greasyfork.org/users/956034-moritz-baumeister"
+      },
+      {
+        "id": 1412069,
+        "name": "9jS2PL5T",
+        "created_at": "2024-12-17T10:01:22.000Z",
+        "url": "https://greasyfork.org/users/1412069-9js2pl5t"
+      }
+    ],
+    "name": "MyDealz_01_Deep_comment_extractor 🧠",
+    "description": "High-End Intelligence: Extrahiert OP & Metadaten direkt aus dem \"Deep State\" (Initial State), nutzt GraphQL für Kommentare und bietet 4 professionelle KI-Analyse-Modi.",
+    "url": "https://greasyfork.org/scripts/536079-mydealz-01-deep-comment-extractor",
+    "code_url": "https://update.greasyfork.org/scripts/536079/MyDealz_01_Deep_comment_extractor%20%F0%9F%A7%A0.user.js",
+    "code_size": 27957,
+    "license": null,
+    "version": "9.0",
+    "locale": "de",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

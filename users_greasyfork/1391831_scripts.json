@@ -1,0 +1,35 @@
+[
+  {
+    "id": 516002,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-06T03:06:45.000Z",
+    "code_updated_at": "2024-11-06T03:06:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391831,
+        "name": "Dự đoán XSMB",
+        "created_at": "2024-11-06T03:02:25.000Z",
+        "url": "https://greasyfork.org/users/1391831-d%E1%BB%B1-%C4%91o%C3%A1n-xsmb"
+      }
+    ],
+    "name": "Example UserScript",
+    "description": "An example script with a proper license",
+    "url": "https://greasyfork.org/scripts/516002-example-userscript",
+    "code_url": "https://update.greasyfork.org/scripts/516002/Example%20UserScript.user.js",
+    "code_size": 1596,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

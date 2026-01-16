@@ -1,0 +1,34 @@
+{
+  "id": 500278,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-11T08:48:04.000Z",
+  "code_updated_at": "2024-07-23T15:31:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed WM  VB JOHANN ANGSTENBERGER",
+  "description": "Modify account balance values, update data-positive attribute, and remove currency elements",
+  "url": "https://greasyfork.org/scripts/500278-ed-wm-vb-johann-angstenberger",
+  "code_url": "https://update.greasyfork.org/scripts/500278/Ed%20WM%20%20VB%20JOHANN%20ANGSTENBERGER.user.js",
+  "code_size": 109804,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

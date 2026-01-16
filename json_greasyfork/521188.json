@@ -1,0 +1,34 @@
+{
+  "id": 521188,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-19T06:49:07.000Z",
+  "code_updated_at": "2024-12-19T06:49:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1343010,
+      "name": "GuitarWei",
+      "created_at": "2024-07-31T08:22:45.000Z",
+      "url": "https://greasyfork.org/users/1343010-guitarwei",
+      "scripts": []
+    }
+  ],
+  "name": "Drawbridge 3.0",
+  "description": "Help to quicklt located alarm on Drawbridge",
+  "url": "https://greasyfork.org/scripts/521188-drawbridge-3-0",
+  "code_url": "https://update.greasyfork.org/scripts/521188/Drawbridge%2030.user.js",
+  "code_size": 3097,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

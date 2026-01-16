@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552010,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-09T05:49:45.000Z",
+    "code_updated_at": "2025-10-09T05:57:58.000Z",
+    "namespace": "https://github.com/IronKinoko/userscripts/tree/master/packages/linovelib",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1524237,
+        "name": "之之殿下",
+        "created_at": "2025-10-09T05:39:11.000Z",
+        "url": "https://greasyfork.org/users/1524237-%E4%B9%8B%E4%B9%8B%E6%AE%BF%E4%B8%8B"
+      }
+    ],
+    "name": "linovelib 优化edge大声朗读体验",
+    "description": "优化 linovelib 阅读体验，新增移除隐藏元素功能优化edge大声朗读体验",
+    "url": "https://greasyfork.org/scripts/552010-linovelib-%E4%BC%98%E5%8C%96edge%E5%A4%A7%E5%A3%B0%E6%9C%97%E8%AF%BB%E4%BD%93%E9%AA%8C",
+    "code_url": "https://update.greasyfork.org/scripts/552010/linovelib%20%E4%BC%98%E5%8C%96edge%E5%A4%A7%E5%A3%B0%E6%9C%97%E8%AF%BB%E4%BD%93%E9%AA%8C.user.js",
+    "code_size": 15425,
+    "license": "MIT License",
+    "version": "1.4.12",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

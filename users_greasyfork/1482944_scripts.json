@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539232,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-12T17:47:51.000Z",
+    "code_updated_at": "2025-06-12T17:47:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1482944,
+        "name": "Skullspider",
+        "created_at": "2025-06-12T17:46:24.000Z",
+        "url": "https://greasyfork.org/users/1482944-skullspider"
+      }
+    ],
+    "name": "iCampus Grade Editor (Optimized)",
+    "description": "Instantly replaces grades & GPA on iCampus when they appear (no delay)",
+    "url": "https://greasyfork.org/scripts/539232-icampus-grade-editor-optimized",
+    "code_url": "https://update.greasyfork.org/scripts/539232/iCampus%20Grade%20Editor%20%28Optimized%29.user.js",
+    "code_size": 2029,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

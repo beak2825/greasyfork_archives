@@ -1,0 +1,200 @@
+[
+  {
+    "id": 544779,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-08-05T23:09:32.000Z",
+    "code_updated_at": "2025-08-05T23:09:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1409671,
+        "name": "im tired of this",
+        "created_at": "2024-12-11T20:36:21.000Z",
+        "url": "https://greasyfork.org/users/1409671-im-tired-of-this"
+      }
+    ],
+    "name": "Roblox Friends List",
+    "description": "Showing \"hidden\" friend lists",
+    "url": "https://greasyfork.org/scripts/544779-roblox-friends-list",
+    "code_url": "https://update.greasyfork.org/scripts/544779/Roblox%20Friends%20List.user.js",
+    "code_size": 3135,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536731,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-21T18:47:07.000Z",
+    "code_updated_at": "2025-05-21T18:47:07.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1409671,
+        "name": "im tired of this",
+        "created_at": "2024-12-11T20:36:21.000Z",
+        "url": "https://greasyfork.org/users/1409671-im-tired-of-this"
+      }
+    ],
+    "name": "Google AI Studio Paste To File",
+    "description": "Intercepts large pastes and uploads as text files",
+    "url": "https://greasyfork.org/scripts/536731-google-ai-studio-paste-to-file",
+    "code_url": "https://update.greasyfork.org/scripts/536731/Google%20AI%20Studio%20Paste%20To%20File.user.js",
+    "code_size": 8091,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 535592,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-10T22:46:21.000Z",
+    "code_updated_at": "2025-05-10T22:46:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1409671,
+        "name": "im tired of this",
+        "created_at": "2024-12-11T20:36:21.000Z",
+        "url": "https://greasyfork.org/users/1409671-im-tired-of-this"
+      }
+    ],
+    "name": "OLX Premium Redesign with Background Images",
+    "description": "Completely transforms OLX listings with beautiful background images and modern design",
+    "url": "https://greasyfork.org/scripts/535592-olx-premium-redesign-with-background-images",
+    "code_url": "https://update.greasyfork.org/scripts/535592/OLX%20Premium%20Redesign%20with%20Background%20Images.user.js",
+    "code_size": 46471,
+    "license": null,
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 532353,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-09T18:26:33.000Z",
+    "code_updated_at": "2025-04-09T18:26:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1409671,
+        "name": "im tired of this",
+        "created_at": "2024-12-11T20:36:21.000Z",
+        "url": "https://greasyfork.org/users/1409671-im-tired-of-this"
+      }
+    ],
+    "name": "YouTube \"damn is 😂\" Button",
+    "description": "Adds a \"damn is 😂\" button to YouTube comments",
+    "url": "https://greasyfork.org/scripts/532353-youtube-damn-is-button",
+    "code_url": "https://update.greasyfork.org/scripts/532353/YouTube%20%22damn%20is%20%F0%9F%98%82%22%20Button.user.js",
+    "code_size": 9826,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531359,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-30T17:59:11.000Z",
+    "code_updated_at": "2025-03-30T17:59:11.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1409671,
+        "name": "im tired of this",
+        "created_at": "2024-12-11T20:36:21.000Z",
+        "url": "https://greasyfork.org/users/1409671-im-tired-of-this"
+      }
+    ],
+    "name": "Claude Up Arrow Edit",
+    "description": "Make Up Arrow press the edit button in Claude, similar to Discord",
+    "url": "https://greasyfork.org/scripts/531359-claude-up-arrow-edit",
+    "code_url": "https://update.greasyfork.org/scripts/531359/Claude%20Up%20Arrow%20Edit.user.js",
+    "code_size": 3988,
+    "license": "Skibidi",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 524813,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-25T09:09:26.000Z",
+    "code_updated_at": "2025-01-26T14:31:48.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1409671,
+        "name": "im tired of this",
+        "created_at": "2024-12-11T20:36:21.000Z",
+        "url": "https://greasyfork.org/users/1409671-im-tired-of-this"
+      }
+    ],
+    "name": "Shkolo++",
+    "description": "See the average grade for each subject.\\nSee potential term/annual averages for stipends.\\nExclude entry exams.",
+    "url": "https://greasyfork.org/scripts/524813-shkolo",
+    "code_url": "https://update.greasyfork.org/scripts/524813/Shkolo%2B%2B.user.js",
+    "code_size": 6329,
+    "license": "Sigma",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

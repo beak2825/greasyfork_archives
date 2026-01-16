@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522811,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-01-04T12:44:36.000Z",
+    "code_updated_at": "2025-01-04T12:44:36.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/193133-pana",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1419459,
+        "name": "Bridges Sam",
+        "created_at": "2025-01-04T12:33:21.000Z",
+        "url": "https://greasyfork.org/users/1419459-bridges-sam"
+      }
+    ],
+    "name": "X(Twitter) - Indexed DB Version Add notes to the user",
+    "description": "Add notes (aliases/tags) for users to help identify and search, optimized for large datasets",
+    "url": "https://greasyfork.org/scripts/522811-x-twitter-indexed-db-version-add-notes-to-the-user",
+    "code_url": "https://update.greasyfork.org/scripts/522811/X%28Twitter%29%20-%20Indexed%20DB%20Version%20Add%20notes%20to%20the%20user.user.js",
+    "code_size": 23471,
+    "license": "GNU General Public License v3.0",
+    "version": "6.1.15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

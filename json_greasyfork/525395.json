@@ -1,0 +1,59 @@
+{
+  "id": 525395,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T09:25:48.000Z",
+  "code_updated_at": "2025-01-31T09:25:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1052748,
+      "name": "cyke262",
+      "created_at": "2023-04-04T05:33:29.000Z",
+      "url": "https://greasyfork.org/users/1052748-cyke262",
+      "scripts": [
+        {
+          "id": 525395,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-31T09:25:48.000Z",
+          "code_updated_at": "2025-01-31T09:25:48.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili 根据是否存在置顶评论自动屏蔽评论区",
+          "description": "检测 Bilibili 页面是否有置顶评论，并根据结果显示或隐藏评论区。",
+          "url": "https://greasyfork.org/scripts/525395-bilibili-%E6%A0%B9%E6%8D%AE%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E7%BD%AE%E9%A1%B6%E8%AF%84%E8%AE%BA%E8%87%AA%E5%8A%A8%E5%B1%8F%E8%94%BD%E8%AF%84%E8%AE%BA%E5%8C%BA",
+          "code_url": "https://update.greasyfork.org/scripts/525395/Bilibili%20%E6%A0%B9%E6%8D%AE%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E7%BD%AE%E9%A1%B6%E8%AF%84%E8%AE%BA%E8%87%AA%E5%8A%A8%E5%B1%8F%E8%94%BD%E8%AF%84%E8%AE%BA%E5%8C%BA.user.js",
+          "code_size": 1888,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili 根据是否存在置顶评论自动屏蔽评论区",
+  "description": "检测 Bilibili 页面是否有置顶评论，并根据结果显示或隐藏评论区。",
+  "url": "https://greasyfork.org/scripts/525395-bilibili-%E6%A0%B9%E6%8D%AE%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E7%BD%AE%E9%A1%B6%E8%AF%84%E8%AE%BA%E8%87%AA%E5%8A%A8%E5%B1%8F%E8%94%BD%E8%AF%84%E8%AE%BA%E5%8C%BA",
+  "code_url": "https://update.greasyfork.org/scripts/525395/Bilibili%20%E6%A0%B9%E6%8D%AE%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E7%BD%AE%E9%A1%B6%E8%AF%84%E8%AE%BA%E8%87%AA%E5%8A%A8%E5%B1%8F%E8%94%BD%E8%AF%84%E8%AE%BA%E5%8C%BA.user.js",
+  "code_size": 1888,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518321,
+    "daily_installs": 0,
+    "total_installs": 1004,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-11-21T09:37:15.000Z",
+    "code_updated_at": "2024-11-21T09:37:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://nkeac.zya.me/nukedcheats/",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1400112,
+        "name": "NUKED RUST",
+        "created_at": "2024-11-21T09:21:38.000Z",
+        "url": "https://greasyfork.org/users/1400112-nuked-rust"
+      }
+    ],
+    "name": "Nuked Ware V2.0",
+    "description": "Best Level Medium Free Cheat for 1v1.lol with advanced features",
+    "url": "https://greasyfork.org/scripts/518321-nuked-ware-v2-0",
+    "code_url": "https://update.greasyfork.org/scripts/518321/Nuked%20Ware%20V20.user.js",
+    "code_size": 14339,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

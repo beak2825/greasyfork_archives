@@ -1,0 +1,59 @@
+{
+  "id": 538692,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-07T10:14:10.000Z",
+  "code_updated_at": "2025-06-07T10:19:20.000Z",
+  "namespace": "https://fotka.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480219,
+      "name": "q7uEP23SkaDd6A",
+      "created_at": "2025-06-07T10:10:59.000Z",
+      "url": "https://greasyfork.org/users/1480219-q7uep23skadd6a",
+      "scripts": [
+        {
+          "id": 538692,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-07T10:14:10.000Z",
+          "code_updated_at": "2025-06-07T10:19:20.000Z",
+          "namespace": "https://fotka.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Auto Liker Fotka.com",
+          "description": "Automatycznie klika \"Like\" na profilach fotka.com",
+          "url": "https://greasyfork.org/scripts/538692-auto-liker-fotka-com",
+          "code_url": "https://update.greasyfork.org/scripts/538692/Auto%20Liker%20Fotkacom.user.js",
+          "code_size": 5886,
+          "license": "MIT License",
+          "version": "0.11",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Auto Liker Fotka.com",
+  "description": "Automatycznie klika \"Like\" na profilach fotka.com",
+  "url": "https://greasyfork.org/scripts/538692-auto-liker-fotka-com",
+  "code_url": "https://update.greasyfork.org/scripts/538692/Auto%20Liker%20Fotkacom.user.js",
+  "code_size": 5886,
+  "license": "MIT License",
+  "version": "0.11",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

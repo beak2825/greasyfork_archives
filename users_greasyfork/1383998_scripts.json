@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513387,
+    "daily_installs": 0,
+    "total_installs": 490,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-21T09:08:08.000Z",
+    "code_updated_at": "2024-12-27T00:02:50.000Z",
+    "namespace": "blue-crosshair",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1383998,
+        "name": "foxitixation",
+        "created_at": "2024-10-21T08:17:21.000Z",
+        "url": "https://greasyfork.org/users/1383998-foxitixation"
+      }
+    ],
+    "name": "Blue crosshair",
+    "description": "Blue crosshair for .io fps games",
+    "url": "https://greasyfork.org/scripts/513387-blue-crosshair",
+    "code_url": "https://update.greasyfork.org/scripts/513387/Blue%20crosshair.user.js",
+    "code_size": 1087,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

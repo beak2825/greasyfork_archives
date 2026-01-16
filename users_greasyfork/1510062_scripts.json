@@ -1,0 +1,68 @@
+[
+  {
+    "id": 549883,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-17T21:33:47.000Z",
+    "code_updated_at": "2025-10-15T22:04:07.000Z",
+    "namespace": "https://github.com/dragonjpg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510062,
+        "name": "dragonjpg",
+        "created_at": "2025-08-29T19:39:05.000Z",
+        "url": "https://greasyfork.org/users/1510062-dragonjpg"
+      }
+    ],
+    "name": "Flight Rising: Forum & BBCode Tweaks",
+    "description": "Adds more button to the BBCode tag bar across the site, quick ping buttons to posts, and allows you to bookmark threads to quickly return to later. Optionally can also keep track of subscribed threads and add buttons to quickly jump to a user's avatar dragon, den, or to begin a forum search for posts by them. Supports settings backups via JSON. The settings menu can be found on the index page of the forums.",
+    "url": "https://greasyfork.org/scripts/549883-flight-rising-forum-bbcode-tweaks",
+    "code_url": "https://update.greasyfork.org/scripts/549883/Flight%20Rising%3A%20Forum%20%20BBCode%20Tweaks.user.js",
+    "code_size": 69246,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 547761,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-29T20:11:07.000Z",
+    "code_updated_at": "2025-09-06T08:14:43.000Z",
+    "namespace": "https://github.com/dragonjpg",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1510062,
+        "name": "dragonjpg",
+        "created_at": "2025-08-29T19:39:05.000Z",
+        "url": "https://greasyfork.org/users/1510062-dragonjpg"
+      }
+    ],
+    "name": "Flight Rising: Quick Ping",
+    "description": "Adds a button to the post controls that functions like Quick Reply. It appends a ping for the author of the post using FR's existing function for appending BBCode tags to textareas.",
+    "url": "https://greasyfork.org/scripts/547761-flight-rising-quick-ping",
+    "code_url": "https://update.greasyfork.org/scripts/547761/Flight%20Rising%3A%20Quick%20Ping.user.js",
+    "code_size": 5317,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

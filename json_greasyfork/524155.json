@@ -1,0 +1,33 @@
+{
+  "id": 524155,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-18T21:42:49.000Z",
+  "code_updated_at": "2025-01-18T21:44:54.000Z",
+  "namespace": "https://github.com/Limekys",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1424821,
+      "name": "Limekys",
+      "created_at": "2025-01-18T21:36:08.000Z",
+      "url": "https://greasyfork.org/users/1424821-limekys"
+    }
+  ],
+  "name": "Fix scrollbar on twitch.tv",
+  "description": "Fix the silly 1 pixel on right of the scrollbar on twitch.tv",
+  "url": "https://greasyfork.org/scripts/524155-fix-scrollbar-on-twitch-tv",
+  "code_url": "https://update.greasyfork.org/scripts/524155/Fix%20scrollbar%20on%20twitchtv.user.js",
+  "code_size": 1313,
+  "license": "MIT License",
+  "version": "2025-01-18",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549546,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-14T17:13:12.000Z",
+    "code_updated_at": "2025-09-14T20:09:30.000Z",
+    "namespace": "https://www.torn.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515118,
+        "name": "Bugz Marino",
+        "created_at": "2025-09-14T16:56:50.000Z",
+        "url": "https://greasyfork.org/users/1515118-bugz-marino"
+      }
+    ],
+    "name": "Torn PDA Inventory - Complete Mobile Version",
+    "description": "Fully mobile-optimized Torn PDA inventory script: auto-fill all items, editable prices & trends, color-coded values, bulk edit panel, persistent storage.",
+    "url": "https://greasyfork.org/scripts/549546-torn-pda-inventory-complete-mobile-version",
+    "code_url": "https://update.greasyfork.org/scripts/549546/Torn%20PDA%20Inventory%20-%20Complete%20Mobile%20Version.user.js",
+    "code_size": 11934,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

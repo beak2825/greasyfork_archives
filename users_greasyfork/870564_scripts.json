@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520449,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T19:58:55.000Z",
+    "code_updated_at": "2024-12-11T20:13:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 870564,
+        "name": "Tariteur",
+        "created_at": "2022-01-28T22:16:22.000Z",
+        "url": "https://greasyfork.org/users/870564-tariteur"
+      }
+    ],
+    "name": "Minimap Rescaler with Position and Size UI (Memory-Based)",
+    "description": "Change the position and size of the minimap in Diep.io by manipulating memory",
+    "url": "https://greasyfork.org/scripts/520449-minimap-rescaler-with-position-and-size-ui-memory-based",
+    "code_url": "https://update.greasyfork.org/scripts/520449/Minimap%20Rescaler%20with%20Position%20and%20Size%20UI%20%28Memory-Based%29.user.js",
+    "code_size": 6663,
+    "license": null,
+    "version": "2024-12-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

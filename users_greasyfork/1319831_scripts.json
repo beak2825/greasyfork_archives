@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498238,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-18T05:51:39.000Z",
+    "code_updated_at": "2025-03-14T12:19:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1319831,
+        "name": "Teliang Hung",
+        "created_at": "2024-06-18T04:27:50.000Z",
+        "url": "https://greasyfork.org/users/1319831-teliang-hung"
+      }
+    ],
+    "name": "Change the background color of Spotify lyrics.",
+    "description": "Spotifyの歌詞の背景色を変更するスクリプト。",
+    "url": "https://greasyfork.org/scripts/498238-change-the-background-color-of-spotify-lyrics",
+    "code_url": "https://update.greasyfork.org/scripts/498238/Change%20the%20background%20color%20of%20Spotify%20lyrics.user.js",
+    "code_size": 1368,
+    "license": null,
+    "version": "0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

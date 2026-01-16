@@ -1,0 +1,68 @@
+[
+  {
+    "id": 548702,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-07T14:02:45.000Z",
+    "code_updated_at": "2025-09-15T07:19:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 329377,
+        "name": "xida",
+        "created_at": "2019-08-19T08:33:59.000Z",
+        "url": "https://greasyfork.org/users/329377-xida"
+      }
+    ],
+    "name": "Emby Toolkit 搜索爱影助手",
+    "description": "只适用于爱影SVIP用户，在Emby Toolkit页面添加悬停搜索按钮，快速搜索影视资源，请把第7行更改为你自己的Emby Toolkit地址",
+    "url": "https://greasyfork.org/scripts/548702-emby-toolkit-%E6%90%9C%E7%B4%A2%E7%88%B1%E5%BD%B1%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/548702/Emby%20Toolkit%20%E6%90%9C%E7%B4%A2%E7%88%B1%E5%BD%B1%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 15473,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548427,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-05T07:29:18.000Z",
+    "code_updated_at": "2025-09-07T14:33:14.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 329377,
+        "name": "xida",
+        "created_at": "2019-08-19T08:33:59.000Z",
+        "url": "https://greasyfork.org/users/329377-xida"
+      }
+    ],
+    "name": "MoviePilot 爱影搜索助手",
+    "description": "仅适用于爱影SVIP订阅用户，在MoviePilot多个页面添加\"搜索爱影\"按钮，脚本安装后请把第7-9行的地址和端口改成你自己实际的MP地址和端口",
+    "url": "https://greasyfork.org/scripts/548427-moviepilot-%E7%88%B1%E5%BD%B1%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/548427/MoviePilot%20%E7%88%B1%E5%BD%B1%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 14903,
+    "license": null,
+    "version": "3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

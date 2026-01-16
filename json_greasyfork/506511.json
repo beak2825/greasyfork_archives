@@ -1,0 +1,33 @@
+{
+  "id": 506511,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-02T23:13:41.000Z",
+  "code_updated_at": "2024-09-02T23:13:41.000Z",
+  "namespace": "https://greasyfork.org/pt-BR/users/305931-emerson-bardusco",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 305931,
+      "name": "Emerson bardusco",
+      "created_at": "2019-05-30T18:53:18.000Z",
+      "url": "https://greasyfork.org/users/305931-emerson-bardusco"
+    }
+  ],
+  "name": "TikTok Video Downloader",
+  "description": "vídeos diretamente do tiktok sem logo e marca d'água com apenas um clique. Mais recursos em breve (B E T A)",
+  "url": "https://greasyfork.org/scripts/506511-tiktok-video-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/506511/TikTok%20Video%20Downloader.user.js",
+  "code_size": 3983,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "pt",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -97,5 +97,203 @@
     "locale": "ru",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 546336,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-18T22:07:20.000Z",
+    "code_updated_at": "2025-08-18T22:08:15.000Z",
+    "namespace": "https://greasyfork.org/ru/scripts/546336",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "LZT_AccountMenuScrollFix",
+    "description": "Добавляет адаптивную прокрутку в меню навигации и исправляет отображение на разных экранах.",
+    "url": "https://greasyfork.org/scripts/546336-lzt-accountmenuscrollfix",
+    "code_url": "https://update.greasyfork.org/scripts/546336/LZT_AccountMenuScrollFix.user.js",
+    "code_size": 1327,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 543063,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T00:17:21.000Z",
+    "code_updated_at": "2025-11-15T10:09:03.000Z",
+    "namespace": "https://github.com/nellimonix",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "LztStreamerModeRework",
+    "description": "Режим стримера для Lolzteam. Улучшенная и модифицированная версия!",
+    "url": "https://greasyfork.org/scripts/543063-lztstreamermoderework",
+    "code_url": "https://update.greasyfork.org/scripts/543063/LztStreamerModeRework.user.js",
+    "code_size": 64529,
+    "license": "MIT License",
+    "version": "1.3.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536164,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-16T03:13:44.000Z",
+    "code_updated_at": "2025-05-16T03:13:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "MentionsLolzNews",
+    "description": "Скрипт, который показывает количество упоминаний пользователя в новостном канале LOLZ NEWS",
+    "url": "https://greasyfork.org/scripts/536164-mentionslolznews",
+    "code_url": "https://update.greasyfork.org/scripts/536164/MentionsLolzNews.user.js",
+    "code_size": 14236,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519927,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-06T05:31:54.000Z",
+    "code_updated_at": "2024-12-12T09:45:45.000Z",
+    "namespace": ".....",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "LZT_Garland",
+    "description": "описание",
+    "url": "https://greasyfork.org/scripts/519927-lzt-garland",
+    "code_url": "https://update.greasyfork.org/scripts/519927/LZT_Garland.user.js",
+    "code_size": 3342,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 508308,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-13T14:57:33.000Z",
+    "code_updated_at": "2025-11-18T18:11:12.000Z",
+    "namespace": "llimonix/LZT",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "MinimalisticThreadLOLZ",
+    "description": "Удаляет лишнее из списка тем + добавляет нормальный предпросмотр",
+    "url": "https://greasyfork.org/scripts/508308-minimalisticthreadlolz",
+    "code_url": "https://update.greasyfork.org/scripts/508308/MinimalisticThreadLOLZ.user.js",
+    "code_size": 4454,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502999,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-08T16:13:45.000Z",
+    "code_updated_at": "2024-09-23T19:33:35.000Z",
+    "namespace": "22222",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1142494,
+        "name": "llimonix",
+        "created_at": "2023-08-03T02:03:43.000Z",
+        "url": "https://greasyfork.org/users/1142494-llimonix"
+      }
+    ],
+    "name": "fast report button main page 2024 v2.0 rtx ti pro max limited edition",
+    "description": "Крутое расширение",
+    "url": "https://greasyfork.org/scripts/502999-fast-report-button-main-page-2024-v2-0-rtx-ti-pro-max-limited-edition",
+    "code_url": "https://update.greasyfork.org/scripts/502999/fast%20report%20button%20main%20page%202024%20v20%20rtx%20ti%20pro%20max%20limited%20edition.user.js",
+    "code_size": 4159,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

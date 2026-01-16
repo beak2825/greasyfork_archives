@@ -1,0 +1,59 @@
+{
+  "id": 536053,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T08:02:32.000Z",
+  "code_updated_at": "2025-05-15T08:02:32.000Z",
+  "namespace": "https://tej.finances.gov.tn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1470182,
+      "name": "Maher Zghal",
+      "created_at": "2025-05-14T17:34:37.000Z",
+      "url": "https://greasyfork.org/users/1470182-maher-zghal",
+      "scripts": [
+        {
+          "id": 536053,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-15T08:02:32.000Z",
+          "code_updated_at": "2025-05-15T08:02:32.000Z",
+          "namespace": "https://tej.finances.gov.tn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TEJ Activer boutons désactivés",
+          "description": "Remplace class \"disabled\" par \"enabled\" et retire l'attribut \"disabled\" sur les boutons",
+          "url": "https://greasyfork.org/scripts/536053-tej-activer-boutons-d%C3%A9sactiv%C3%A9s",
+          "code_url": "https://update.greasyfork.org/scripts/536053/TEJ%20Activer%20boutons%20d%C3%A9sactiv%C3%A9s.user.js",
+          "code_size": 1482,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "fr",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TEJ Activer boutons désactivés",
+  "description": "Remplace class \"disabled\" par \"enabled\" et retire l'attribut \"disabled\" sur les boutons",
+  "url": "https://greasyfork.org/scripts/536053-tej-activer-boutons-d%C3%A9sactiv%C3%A9s",
+  "code_url": "https://update.greasyfork.org/scripts/536053/TEJ%20Activer%20boutons%20d%C3%A9sactiv%C3%A9s.user.js",
+  "code_size": 1482,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "fr",
+  "deleted": false,
+  "visibility": "public"
+}

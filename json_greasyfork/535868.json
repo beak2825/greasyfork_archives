@@ -1,0 +1,34 @@
+{
+  "id": 535868,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-13T08:11:53.000Z",
+  "code_updated_at": "2025-05-13T08:57:48.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1058048,
+      "name": "eich chou",
+      "created_at": "2023-04-11T09:09:57.000Z",
+      "url": "https://greasyfork.org/users/1058048-eich-chou",
+      "scripts": []
+    }
+  ],
+  "name": "AutoMusic音乐播放器增强",
+  "description": "替换度言CTI系统的等待音乐为自定义网易云音乐播放器，并根据外呼状态自动控制播放",
+  "url": "https://greasyfork.org/scripts/535868-automusic%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/535868/AutoMusic%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 25763,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

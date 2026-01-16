@@ -1,0 +1,59 @@
+{
+  "id": 546228,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-18T01:17:14.000Z",
+  "code_updated_at": "2025-08-18T01:17:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1423579,
+      "name": "玩转阿里国际站Jason",
+      "created_at": "2025-01-15T12:08:02.000Z",
+      "url": "https://greasyfork.org/users/1423579-%E7%8E%A9%E8%BD%AC%E9%98%BF%E9%87%8C%E5%9B%BD%E9%99%85%E7%AB%99jason",
+      "scripts": [
+        {
+          "id": 523848,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-15T12:21:49.000Z",
+          "code_updated_at": "2025-01-15T15:02:55.000Z",
+          "namespace": "https://qianpuyun.com/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Alibaba阿里国际站自动显示产品关键词/标题首字母大写-公众号：玩转阿里国际站",
+          "description": "阿里巴巴国际站快速显示产品关键词/标题首字母大写| 所有功能仅供个人学习研究使用，禁止用于非法用途",
+          "url": "https://greasyfork.org/scripts/523848-alibaba%E9%98%BF%E9%87%8C%E5%9B%BD%E9%99%85%E7%AB%99%E8%87%AA%E5%8A%A8%E6%98%BE%E7%A4%BA%E4%BA%A7%E5%93%81%E5%85%B3%E9%94%AE%E8%AF%8D-%E6%A0%87%E9%A2%98%E9%A6%96%E5%AD%97%E6%AF%8D%E5%A4%A7%E5%86%99-%E5%85%AC%E4%BC%97%E5%8F%B7-%E7%8E%A9%E8%BD%AC%E9%98%BF%E9%87%8C%E5%9B%BD%E9%99%85%E7%AB%99",
+          "code_url": "https://update.greasyfork.org/scripts/523848/Alibaba%E9%98%BF%E9%87%8C%E5%9B%BD%E9%99%85%E7%AB%99%E8%87%AA%E5%8A%A8%E6%98%BE%E7%A4%BA%E4%BA%A7%E5%93%81%E5%85%B3%E9%94%AE%E8%AF%8D%E6%A0%87%E9%A2%98%E9%A6%96%E5%AD%97%E6%AF%8D%E5%A4%A7%E5%86%99-%E5%85%AC%E4%BC%97%E5%8F%B7%EF%BC%9A%E7%8E%A9%E8%BD%AC%E9%98%BF%E9%87%8C%E5%9B%BD%E9%99%85%E7%AB%99.user.js",
+          "code_size": 5229,
+          "license": "MIT License",
+          "version": "2.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "阿里巴巴国际站询盘聊天记录导出",
+  "description": "导出阿里巴巴国际站聊天记录为Excel,接收定制和询盘导出明细一起,把聊天记录也一起放在单元格,或者帮你自动从聊天记录筛选出WhatsApp,WeChat,邮箱等联系方式到询盘导出明细的表格",
+  "url": "https://greasyfork.org/scripts/546228-%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E8%AF%A2%E7%9B%98%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA",
+  "code_url": "https://update.greasyfork.org/scripts/546228/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E5%9B%BD%E9%99%85%E7%AB%99%E8%AF%A2%E7%9B%98%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E5%AF%BC%E5%87%BA.user.js",
+  "code_size": 12956,
+  "license": "MPL",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

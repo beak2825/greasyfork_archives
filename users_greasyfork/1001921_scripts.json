@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524647,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T15:16:26.000Z",
+    "code_updated_at": "2025-01-23T15:16:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1001921,
+        "name": "hockeyrink",
+        "created_at": "2022-12-23T16:53:10.000Z",
+        "url": "https://greasyfork.org/users/1001921-hockeyrink"
+      }
+    ],
+    "name": "OptionStrat summary display",
+    "description": "Shows the cumulative change of the overall and daily totals of trades on the \"Saved Trades\" screen. Triggered with the \"C\" key",
+    "url": "https://greasyfork.org/scripts/524647-optionstrat-summary-display",
+    "code_url": "https://update.greasyfork.org/scripts/524647/OptionStrat%20summary%20display.user.js",
+    "code_size": 2777,
+    "license": "MIT License",
+    "version": "2025-01-23",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

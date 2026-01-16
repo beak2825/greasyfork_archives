@@ -1,0 +1,59 @@
+{
+  "id": 537716,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-30T04:53:34.000Z",
+  "code_updated_at": "2025-05-30T05:25:49.000Z",
+  "namespace": "https://greasyfork.org/users/1476593",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476593,
+      "name": "brutis88",
+      "created_at": "2025-05-30T04:37:46.000Z",
+      "url": "https://greasyfork.org/users/1476593-brutis88",
+      "scripts": [
+        {
+          "id": 537716,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-30T04:53:34.000Z",
+          "code_updated_at": "2025-05-30T05:25:49.000Z",
+          "namespace": "https://greasyfork.org/users/1476593",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Warn/Prevent Back button for Synology DSM",
+          "description": "Warns user before going back when browsing on your Synology DSM NAS",
+          "url": "https://greasyfork.org/scripts/537716-warn-prevent-back-button-for-synology-dsm",
+          "code_url": "https://update.greasyfork.org/scripts/537716/WarnPrevent%20Back%20button%20for%20Synology%20DSM.user.js",
+          "code_size": 1289,
+          "license": "MIT License",
+          "version": "1.5",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Warn/Prevent Back button for Synology DSM",
+  "description": "Warns user before going back when browsing on your Synology DSM NAS",
+  "url": "https://greasyfork.org/scripts/537716-warn-prevent-back-button-for-synology-dsm",
+  "code_url": "https://update.greasyfork.org/scripts/537716/WarnPrevent%20Back%20button%20for%20Synology%20DSM.user.js",
+  "code_size": 1289,
+  "license": "MIT License",
+  "version": "1.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

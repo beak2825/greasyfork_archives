@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540555,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T21:14:51.000Z",
+    "code_updated_at": "2025-06-23T21:14:51.000Z",
+    "namespace": "https://greasyfork.org/users/829707",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 829707,
+        "name": "Kap (k4ppa)",
+        "created_at": "2021-10-28T16:26:54.000Z",
+        "url": "https://greasyfork.org/users/829707-kap-k4ppa"
+      }
+    ],
+    "name": "漫畫櫃自動置中圖片",
+    "description": "Autoresize manhuagui to fit 100vh, with optional auto-scroll to center",
+    "url": "https://greasyfork.org/scripts/540555-%E6%BC%AB%E7%95%AB%E6%AB%83%E8%87%AA%E5%8B%95%E7%BD%AE%E4%B8%AD%E5%9C%96%E7%89%87",
+    "code_url": "https://update.greasyfork.org/scripts/540555/%E6%BC%AB%E7%95%AB%E6%AB%83%E8%87%AA%E5%8B%95%E7%BD%AE%E4%B8%AD%E5%9C%96%E7%89%87.user.js",
+    "code_size": 1262,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

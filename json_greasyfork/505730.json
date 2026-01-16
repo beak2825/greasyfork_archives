@@ -1,0 +1,59 @@
+{
+  "id": 505730,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-29T08:18:54.000Z",
+  "code_updated_at": "2025-06-03T01:20:31.000Z",
+  "namespace": "Muk Scripts - Download Daftar Tabel",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 126543,
+      "name": "ctrl_ahlul Karom",
+      "created_at": "2017-05-23T21:19:34.000Z",
+      "url": "https://greasyfork.org/users/126543-ctrl-ahlul-karom",
+      "scripts": [
+        {
+          "id": 503712,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-15T08:01:05.000Z",
+          "code_updated_at": "2024-08-15T08:01:05.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Better Nav Laravel Docs",
+          "description": "8/15/2024, 2:54:00 PM",
+          "url": "https://greasyfork.org/scripts/503712-better-nav-laravel-docs",
+          "code_url": "https://update.greasyfork.org/scripts/503712/Better%20Nav%20Laravel%20Docs.user.js",
+          "code_size": 874,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "mukscript",
+  "description": "03/06/2025, 08:09:11",
+  "url": "https://greasyfork.org/scripts/505730-mukscript",
+  "code_url": "https://update.greasyfork.org/scripts/505730/mukscript.user.js",
+  "code_size": 6897,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "id",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 521598,
+  "daily_installs": 0,
+  "total_installs": 34,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-23T19:49:01.000Z",
+  "code_updated_at": "2024-12-30T23:41:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1195312,
+      "name": "Yuusei Renji",
+      "created_at": "2023-10-13T15:23:15.000Z",
+      "url": "https://greasyfork.org/users/1195312-yuusei-renji"
+    }
+  ],
+  "name": "GitHub Utils",
+  "description": "GitHub utilities including file icons replacement and auto-fill repo name",
+  "url": "https://greasyfork.org/scripts/521598-github-utils",
+  "code_url": "https://update.greasyfork.org/scripts/521598/GitHub%20Utils.user.js",
+  "code_size": 8204,
+  "license": "GNU General Public License v3.0 only",
+  "version": "2024.12.30.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

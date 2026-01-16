@@ -1,0 +1,59 @@
+{
+  "id": 529782,
+  "daily_installs": 0,
+  "total_installs": 26,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-14T07:46:08.000Z",
+  "code_updated_at": "2025-10-22T06:08:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 223354,
+      "name": "bushnerd",
+      "created_at": "2018-11-03T03:55:57.000Z",
+      "url": "https://greasyfork.org/users/223354-bushnerd",
+      "scripts": [
+        {
+          "id": 529782,
+          "daily_installs": 0,
+          "total_installs": 26,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-14T07:46:08.000Z",
+          "code_updated_at": "2025-10-22T06:08:19.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "B站字幕快捷键切换 (Bilibili Subtitle Toggle with Shortcut)",
+          "description": "通过 'C' 键切换 Bilibili 视频字幕的开启和关闭状态，兼容 B站最新版页面。",
+          "url": "https://greasyfork.org/scripts/529782-b%E7%AB%99%E5%AD%97%E5%B9%95%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%88%87%E6%8D%A2-bilibili-subtitle-toggle-with-shortcut",
+          "code_url": "https://update.greasyfork.org/scripts/529782/B%E7%AB%99%E5%AD%97%E5%B9%95%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%88%87%E6%8D%A2%20%28Bilibili%20Subtitle%20Toggle%20with%20Shortcut%29.user.js",
+          "code_size": 3671,
+          "license": "MIT License",
+          "version": "2025-10-22",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "B站字幕快捷键切换 (Bilibili Subtitle Toggle with Shortcut)",
+  "description": "通过 'C' 键切换 Bilibili 视频字幕的开启和关闭状态，兼容 B站最新版页面。",
+  "url": "https://greasyfork.org/scripts/529782-b%E7%AB%99%E5%AD%97%E5%B9%95%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%88%87%E6%8D%A2-bilibili-subtitle-toggle-with-shortcut",
+  "code_url": "https://update.greasyfork.org/scripts/529782/B%E7%AB%99%E5%AD%97%E5%B9%95%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%88%87%E6%8D%A2%20%28Bilibili%20Subtitle%20Toggle%20with%20Shortcut%29.user.js",
+  "code_size": 3671,
+  "license": "MIT License",
+  "version": "2025-10-22",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

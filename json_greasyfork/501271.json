@@ -1,0 +1,59 @@
+{
+  "id": 501271,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-20T14:33:23.000Z",
+  "code_updated_at": "2025-03-15T18:39:21.000Z",
+  "namespace": "https://github.com/Hibi-10000/GitHubReleaseDownloads",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1337204,
+      "name": "Hibi-10000",
+      "created_at": "2024-07-20T14:32:37.000Z",
+      "url": "https://greasyfork.org/users/1337204-hibi-10000",
+      "scripts": [
+        {
+          "id": 501271,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-20T14:33:23.000Z",
+          "code_updated_at": "2025-03-15T18:39:21.000Z",
+          "namespace": "https://github.com/Hibi-10000/GitHubReleaseDownloads",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "GitHub Release Downloads",
+          "description": "Show download count for releases on Github",
+          "url": "https://greasyfork.org/scripts/501271-github-release-downloads",
+          "code_url": "https://update.greasyfork.org/scripts/501271/GitHub%20Release%20Downloads.user.js",
+          "code_size": 4847,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "GitHub Release Downloads",
+  "description": "Show download count for releases on Github",
+  "url": "https://greasyfork.org/scripts/501271-github-release-downloads",
+  "code_url": "https://update.greasyfork.org/scripts/501271/GitHub%20Release%20Downloads.user.js",
+  "code_size": 4847,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

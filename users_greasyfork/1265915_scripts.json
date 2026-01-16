@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507327,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-07T14:22:25.000Z",
+    "code_updated_at": "2024-09-07T14:22:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265915,
+        "name": "梅塔的长名字",
+        "created_at": "2024-02-23T12:36:49.000Z",
+        "url": "https://greasyfork.org/users/1265915-%E6%A2%85%E5%A1%94%E7%9A%84%E9%95%BF%E5%90%8D%E5%AD%97"
+      }
+    ],
+    "name": "【无用发明】将greasyfork的脚本安装按钮恢复至旧版样式",
+    "description": "没错，正与脚本标题所描述的一样:)",
+    "url": "https://greasyfork.org/scripts/507327-%E6%97%A0%E7%94%A8%E5%8F%91%E6%98%8E-%E5%B0%86greasyfork%E7%9A%84%E8%84%9A%E6%9C%AC%E5%AE%89%E8%A3%85%E6%8C%89%E9%92%AE%E6%81%A2%E5%A4%8D%E8%87%B3%E6%97%A7%E7%89%88%E6%A0%B7%E5%BC%8F",
+    "code_url": "https://update.greasyfork.org/scripts/507327/%E3%80%90%E6%97%A0%E7%94%A8%E5%8F%91%E6%98%8E%E3%80%91%E5%B0%86greasyfork%E7%9A%84%E8%84%9A%E6%9C%AC%E5%AE%89%E8%A3%85%E6%8C%89%E9%92%AE%E6%81%A2%E5%A4%8D%E8%87%B3%E6%97%A7%E7%89%88%E6%A0%B7%E5%BC%8F.user.js",
+    "code_size": 7547,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

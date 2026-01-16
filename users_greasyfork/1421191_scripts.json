@@ -1,0 +1,68 @@
+[
+  {
+    "id": 526900,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-14T15:27:53.000Z",
+    "code_updated_at": "2025-02-15T04:52:52.000Z",
+    "namespace": "https://weflab.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421191,
+        "name": "김나오",
+        "created_at": "2025-01-09T08:41:00.000Z",
+        "url": "https://greasyfork.org/users/1421191-%EA%B9%80%EB%82%98%EC%98%A4"
+      }
+    ],
+    "name": "룰렛 결과 + 닉네임 실시간 로그 저장 (수동 다운로드)",
+    "description": "룰렛이 멈출 때마다 결과와 닉네임을 확인하여 로그 파일에 저장하고, 원할 때 다운로드",
+    "url": "https://greasyfork.org/scripts/526900-%EB%A3%B0%EB%A0%9B-%EA%B2%B0%EA%B3%BC-%EB%8B%89%EB%84%A4%EC%9E%84-%EC%8B%A4%EC%8B%9C%EA%B0%84-%EB%A1%9C%EA%B7%B8-%EC%A0%80%EC%9E%A5-%EC%88%98%EB%8F%99-%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C",
+    "code_url": "https://update.greasyfork.org/scripts/526900/%EB%A3%B0%EB%A0%9B%20%EA%B2%B0%EA%B3%BC%20%2B%20%EB%8B%89%EB%84%A4%EC%9E%84%20%EC%8B%A4%EC%8B%9C%EA%B0%84%20%EB%A1%9C%EA%B7%B8%20%EC%A0%80%EC%9E%A5%20%28%EC%88%98%EB%8F%99%20%EB%8B%A4%EC%9A%B4%EB%A1%9C%EB%93%9C%29.user.js",
+    "code_size": 4051,
+    "license": null,
+    "version": "1.6",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 523290,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-09T08:43:08.000Z",
+    "code_updated_at": "2025-06-14T10:26:48.000Z",
+    "namespace": "https://chzzk-vote.vercel.app/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1421191,
+        "name": "김나오",
+        "created_at": "2025-01-09T08:41:00.000Z",
+        "url": "https://greasyfork.org/users/1421191-%EA%B9%80%EB%82%98%EC%98%A4"
+      }
+    ],
+    "name": "Add Comma to Viewer Nickname",
+    "description": "Add a comma after the viewer nickname in specific buttons",
+    "url": "https://greasyfork.org/scripts/523290-add-comma-to-viewer-nickname",
+    "code_url": "https://update.greasyfork.org/scripts/523290/Add%20Comma%20to%20Viewer%20Nickname.user.js",
+    "code_size": 1327,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

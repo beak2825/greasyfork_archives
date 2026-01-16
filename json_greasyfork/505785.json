@@ -1,0 +1,59 @@
+{
+  "id": 505785,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-29T18:28:15.000Z",
+  "code_updated_at": "2024-08-31T17:13:22.000Z",
+  "namespace": "https://pokerpatio.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1270784,
+      "name": "Kingh",
+      "created_at": "2024-03-05T23:48:26.000Z",
+      "url": "https://greasyfork.org/users/1270784-kingh",
+      "scripts": [
+        {
+          "id": 505614,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-28T14:20:21.000Z",
+          "code_updated_at": "2024-08-28T14:20:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "pokerpatio iframe blocker",
+          "description": "blocks iframe opening, just redirects to lobby",
+          "url": "https://greasyfork.org/scripts/505614-pokerpatio-iframe-blocker",
+          "code_url": "https://update.greasyfork.org/scripts/505614/pokerpatio%20iframe%20blocker.user.js",
+          "code_size": 526,
+          "license": null,
+          "version": "2024-08-28",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "pokerpatio websockets with button",
+  "description": "differnet",
+  "url": "https://greasyfork.org/scripts/505785-pokerpatio-websockets-with-button",
+  "code_url": "https://update.greasyfork.org/scripts/505785/pokerpatio%20websockets%20with%20button.user.js",
+  "code_size": 11131,
+  "license": null,
+  "version": "2024-08-32",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

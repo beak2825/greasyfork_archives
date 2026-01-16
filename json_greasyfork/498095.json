@@ -1,0 +1,59 @@
+{
+  "id": 498095,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-16T15:01:47.000Z",
+  "code_updated_at": "2024-06-16T15:01:47.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1314635,
+      "name": "nagipKa '",
+      "created_at": "2024-06-08T16:34:24.000Z",
+      "url": "https://greasyfork.org/users/1314635-nagipka",
+      "scripts": [
+        {
+          "id": 497374,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-08T17:05:08.000Z",
+          "code_updated_at": "2024-06-08T17:05:08.000Z",
+          "namespace": "https://forum.blackrussia.online",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Руководство 09",
+          "description": "kye",
+          "url": "https://greasyfork.org/scripts/497374-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE-09",
+          "code_url": "https://update.greasyfork.org/scripts/497374/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%2009.user.js",
+          "code_size": 113481,
+          "license": "MIT License",
+          "version": "0.5.0",
+          "locale": "ru",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Руководство 09",
+  "description": "kye",
+  "url": "https://greasyfork.org/scripts/498095-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE-09",
+  "code_url": "https://update.greasyfork.org/scripts/498095/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE%2009.user.js",
+  "code_size": 112925,
+  "license": "MIT License",
+  "version": "0.5.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

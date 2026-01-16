@@ -1,0 +1,35 @@
+[
+  {
+    "id": 543087,
+    "daily_installs": 1,
+    "total_installs": 66,
+    "fan_score": "46.7",
+    "good_ratings": 5,
+    "ok_ratings": 3,
+    "bad_ratings": 0,
+    "created_at": "2025-07-20T05:00:02.000Z",
+    "code_updated_at": "2025-10-11T09:31:18.000Z",
+    "namespace": "BawdyInkSlinger",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1086961,
+        "name": "Bawdy Ink Slinger",
+        "created_at": "2023-05-29T22:26:59.000Z",
+        "url": "https://greasyfork.org/users/1086961-bawdy-ink-slinger"
+      }
+    ],
+    "name": "Youtube channels open to \"Videos\" tab",
+    "description": "By default, clicking on a channel while browsing Youtube loads the \"Home\" tab. This loads the \"Videos\" tab instead.",
+    "url": "https://greasyfork.org/scripts/543087-youtube-channels-open-to-videos-tab",
+    "code_url": "https://update.greasyfork.org/scripts/543087/Youtube%20channels%20open%20to%20%22Videos%22%20tab.user.js",
+    "code_size": 6127,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

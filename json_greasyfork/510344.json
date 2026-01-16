@@ -1,0 +1,59 @@
+{
+  "id": 510344,
+  "daily_installs": 0,
+  "total_installs": 29,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-26T22:33:41.000Z",
+  "code_updated_at": "2024-09-26T22:33:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1373479,
+      "name": "spring67",
+      "created_at": "2024-09-26T22:32:22.000Z",
+      "url": "https://greasyfork.org/users/1373479-spring67",
+      "scripts": [
+        {
+          "id": 510344,
+          "daily_installs": 0,
+          "total_installs": 29,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-26T22:33:41.000Z",
+          "code_updated_at": "2024-09-26T22:33:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BetterBlox",
+          "description": "Filter unwanted roblox games and harmful content",
+          "url": "https://greasyfork.org/scripts/510344-betterblox",
+          "code_url": "https://update.greasyfork.org/scripts/510344/BetterBlox.user.js",
+          "code_size": 2998,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BetterBlox",
+  "description": "Filter unwanted roblox games and harmful content",
+  "url": "https://greasyfork.org/scripts/510344-betterblox",
+  "code_url": "https://update.greasyfork.org/scripts/510344/BetterBlox.user.js",
+  "code_size": 2998,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

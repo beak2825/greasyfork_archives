@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542376,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-12T07:49:18.000Z",
+    "code_updated_at": "2025-07-12T07:49:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 845899,
+        "name": "guanzo",
+        "created_at": "2021-11-28T23:57:20.000Z",
+        "url": "https://greasyfork.org/users/845899-guanzo"
+      }
+    ],
+    "name": "Peapods money sound",
+    "description": "Plays a money sound (the mario coin sound) whenever a lending position receives yield.",
+    "url": "https://greasyfork.org/scripts/542376-peapods-money-sound",
+    "code_url": "https://update.greasyfork.org/scripts/542376/Peapods%20money%20sound.user.js",
+    "code_size": 61698,
+    "license": "MIT License",
+    "version": "2025-07-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

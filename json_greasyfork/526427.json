@@ -1,0 +1,33 @@
+{
+  "id": 526427,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-10T05:10:26.000Z",
+  "code_updated_at": "2025-02-10T05:41:48.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1423747,
+      "name": "Anonyꪑꪮꪊsɨꀘ(Fꫀrrꪮ)",
+      "created_at": "2025-01-16T01:27:16.000Z",
+      "url": "https://greasyfork.org/users/1423747-anony%EA%AA%91%EA%AA%AE%EA%AA%8As%C9%A8%EA%80%98-f%EA%AB%80rr%EA%AA%AE"
+    }
+  ],
+  "name": "YT LIVE CHAT NEW TAB BUTTON",
+  "description": "Adds a live chat button that opens chat in new window",
+  "url": "https://greasyfork.org/scripts/526427-yt-live-chat-new-tab-button",
+  "code_url": "https://update.greasyfork.org/scripts/526427/YT%20LIVE%20CHAT%20NEW%20TAB%20BUTTON.user.js",
+  "code_size": 5225,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

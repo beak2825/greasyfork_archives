@@ -1,0 +1,101 @@
+[
+  {
+    "id": 518471,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T12:30:35.000Z",
+    "code_updated_at": "2025-01-11T19:35:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378764,
+        "name": "IDtwelve",
+        "created_at": "2024-10-09T19:34:40.000Z",
+        "url": "https://greasyfork.org/users/1378764-idtwelve"
+      }
+    ],
+    "name": "Boosty socionics style TEST",
+    "description": "Добавление тима рядом с именем, небольшие визуальные корректировки. Замена названия аспекта из двух букв- картинкой. Цветные тимы в тексте. Кнопки навигации по комментам",
+    "url": "https://greasyfork.org/scripts/518471-boosty-socionics-style-test",
+    "code_url": "https://update.greasyfork.org/scripts/518471/Boosty%20socionics%20style%20TEST.user.js",
+    "code_size": 35136,
+    "license": null,
+    "version": "1.5.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512097,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-10T11:14:43.000Z",
+    "code_updated_at": "2025-01-11T19:51:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378764,
+        "name": "IDtwelve",
+        "created_at": "2024-10-09T19:34:40.000Z",
+        "url": "https://greasyfork.org/users/1378764-idtwelve"
+      }
+    ],
+    "name": "Boosty socionics style",
+    "description": "Добавление тима рядом с именем, небольшие визуальные корректировки. Замена названия аспекта из двух букв- картинкой. Цветные тимы в тексте. Кнопки навигации",
+    "url": "https://greasyfork.org/scripts/512097-boosty-socionics-style",
+    "code_url": "https://update.greasyfork.org/scripts/512097/Boosty%20socionics%20style.user.js",
+    "code_size": 35315,
+    "license": null,
+    "version": "1.5.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512040,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-09T20:02:22.000Z",
+    "code_updated_at": "2024-10-09T20:02:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378764,
+        "name": "IDtwelve",
+        "created_at": "2024-10-09T19:34:40.000Z",
+        "url": "https://greasyfork.org/users/1378764-idtwelve"
+      }
+    ],
+    "name": "Boosty socionic style",
+    "description": "Добавление тима рядом с именем, увеличение ширины страницы, небольшие визуальные корректировки",
+    "url": "https://greasyfork.org/scripts/512040-boosty-socionic-style",
+    "code_url": "https://update.greasyfork.org/scripts/512040/Boosty%20socionic%20style.user.js",
+    "code_size": 5302,
+    "license": null,
+    "version": "2024-10-06",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

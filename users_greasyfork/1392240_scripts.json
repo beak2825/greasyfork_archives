@@ -1,0 +1,68 @@
+[
+  {
+    "id": 522293,
+    "daily_installs": 1,
+    "total_installs": 97,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-30T12:32:09.000Z",
+    "code_updated_at": "2024-12-30T13:03:46.000Z",
+    "namespace": "Cursor Reset Trial Scripts 1.4",
+    "support_url": "https://github.com/ovftank",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392240,
+        "name": "ovftank",
+        "created_at": "2024-11-07T00:28:47.000Z",
+        "url": "https://greasyfork.org/users/1392240-ovftank"
+      }
+    ],
+    "name": "Cursor Reset Trial",
+    "description": "Reset Cursor Trial - Reset their Cursor trial period",
+    "url": "https://greasyfork.org/scripts/522293-cursor-reset-trial",
+    "code_url": "https://update.greasyfork.org/scripts/522293/Cursor%20Reset%20Trial.user.js",
+    "code_size": 5409,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 516150,
+    "daily_installs": 1,
+    "total_installs": 657,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-07T00:55:34.000Z",
+    "code_updated_at": "2024-11-07T01:01:22.000Z",
+    "namespace": "custom-crosshair",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1392240,
+        "name": "ovftank",
+        "created_at": "2024-11-07T00:28:47.000Z",
+        "url": "https://greasyfork.org/users/1392240-ovftank"
+      }
+    ],
+    "name": "Custom Crosshair",
+    "description": "A versatile crosshair customization tool for Deadshot.io, allowing users to personalize crosshair color, size, thickness, gap, and dot visibility for enhanced gameplay precision.",
+    "url": "https://greasyfork.org/scripts/516150-custom-crosshair",
+    "code_url": "https://update.greasyfork.org/scripts/516150/Custom%20Crosshair.user.js",
+    "code_size": 11419,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517625,
+    "daily_installs": 0,
+    "total_installs": 76,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-16T10:03:20.000Z",
+    "code_updated_at": "2024-12-11T04:58:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1397407,
+        "name": "ddup",
+        "created_at": "2024-11-16T09:58:26.000Z",
+        "url": "https://greasyfork.org/users/1397407-ddup"
+      }
+    ],
+    "name": "NotebookLM Fullscreen",
+    "description": "Make NotebookLM dialog fullscreen with proper content scaling",
+    "url": "https://greasyfork.org/scripts/517625-notebooklm-fullscreen",
+    "code_url": "https://update.greasyfork.org/scripts/517625/NotebookLM%20Fullscreen.user.js",
+    "code_size": 12251,
+    "license": "MIT License",
+    "version": "0.9",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

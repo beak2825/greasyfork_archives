@@ -1,0 +1,59 @@
+{
+  "id": 514962,
+  "daily_installs": 0,
+  "total_installs": 37,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-31T02:35:05.000Z",
+  "code_updated_at": "2024-10-31T02:35:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1388885,
+      "name": "zzzhht1",
+      "created_at": "2024-10-31T02:24:04.000Z",
+      "url": "https://greasyfork.org/users/1388885-zzzhht1",
+      "scripts": [
+        {
+          "id": 514962,
+          "daily_installs": 0,
+          "total_installs": 37,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-31T02:35:05.000Z",
+          "code_updated_at": "2024-10-31T02:35:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "问卷星310题自动填写指定答案",
+          "description": "填写310题答案，答案集合为每行10个答案的矩阵",
+          "url": "https://greasyfork.org/scripts/514962-%E9%97%AE%E5%8D%B7%E6%98%9F310%E9%A2%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%8C%87%E5%AE%9A%E7%AD%94%E6%A1%88",
+          "code_url": "https://update.greasyfork.org/scripts/514962/%E9%97%AE%E5%8D%B7%E6%98%9F310%E9%A2%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%8C%87%E5%AE%9A%E7%AD%94%E6%A1%88.user.js",
+          "code_size": 4846,
+          "license": "GNU GPLv3",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "问卷星310题自动填写指定答案",
+  "description": "填写310题答案，答案集合为每行10个答案的矩阵",
+  "url": "https://greasyfork.org/scripts/514962-%E9%97%AE%E5%8D%B7%E6%98%9F310%E9%A2%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%8C%87%E5%AE%9A%E7%AD%94%E6%A1%88",
+  "code_url": "https://update.greasyfork.org/scripts/514962/%E9%97%AE%E5%8D%B7%E6%98%9F310%E9%A2%98%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%86%99%E6%8C%87%E5%AE%9A%E7%AD%94%E6%A1%88.user.js",
+  "code_size": 4846,
+  "license": "GNU GPLv3",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

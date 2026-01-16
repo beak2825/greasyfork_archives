@@ -1,0 +1,100 @@
+[
+  {
+    "id": 533169,
+    "daily_installs": 1,
+    "total_installs": 347,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-17T20:00:39.000Z",
+    "code_updated_at": "2026-01-12T16:10:33.000Z",
+    "namespace": "https://rentry.org/8chanMinusMinus",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459136,
+        "name": "DandelionLover",
+        "created_at": "2025-04-17T19:56:12.000Z",
+        "url": "https://greasyfork.org/users/1459136-dandelionlover",
+        "scripts": [
+          {
+            "id": 533169,
+            "daily_installs": 1,
+            "total_installs": 347,
+            "fan_score": "20.7",
+            "good_ratings": 1,
+            "ok_ratings": 0,
+            "bad_ratings": 0,
+            "created_at": "2025-04-17T20:00:39.000Z",
+            "code_updated_at": "2026-01-12T16:10:33.000Z",
+            "namespace": "https://rentry.org/8chanMinusMinus",
+            "support_url": null,
+            "contribution_url": null,
+            "contribution_amount": null,
+            "name": "LynxChan Extended Minus Minus",
+            "description": "LynxChan Extended with even more features",
+            "url": "https://greasyfork.org/scripts/533169-lynxchan-extended-minus-minus",
+            "code_url": "https://update.greasyfork.org/scripts/533169/LynxChan%20Extended%20Minus%20Minus.user.js",
+            "code_size": 99612,
+            "license": "The Unlicense",
+            "version": "2.4.15",
+            "locale": "en",
+            "deleted": false
+          }
+        ]
+      },
+      {
+        "id": 2789,
+        "name": "SaddestPanda",
+        "created_at": "2014-06-13T12:41:48.000Z",
+        "url": "https://greasyfork.org/users/2789-saddestpanda"
+      }
+    ],
+    "name": "LynxChan Extended Minus Minus",
+    "description": "LynxChan Extended with even more features",
+    "url": "https://greasyfork.org/scripts/533169-lynxchan-extended-minus-minus",
+    "code_url": "https://update.greasyfork.org/scripts/533169/LynxChan%20Extended%20Minus%20Minus.user.js",
+    "code_size": 99612,
+    "license": "The Unlicense",
+    "version": "2.4.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527784,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-22T22:08:00.000Z",
+    "code_updated_at": "2025-02-23T13:42:25.000Z",
+    "namespace": "4ch.nicovideo.titles",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 2789,
+        "name": "SaddestPanda",
+        "created_at": "2014-06-13T12:41:48.000Z",
+        "url": "https://greasyfork.org/users/2789-saddestpanda"
+      }
+    ],
+    "name": "4chan Niconico Titles",
+    "description": "Displays Niconico/nicovideo link titles and some more info on 4chan. THIS SCRIPT REQUIRES the \"Linkify\" option TURNED ON in 4chan-x(t) or the built-in 4chan extension.",
+    "url": "https://greasyfork.org/scripts/527784-4chan-niconico-titles",
+    "code_url": "https://update.greasyfork.org/scripts/527784/4chan%20Niconico%20Titles.user.js",
+    "code_size": 10528,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

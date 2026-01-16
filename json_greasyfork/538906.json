@@ -1,0 +1,33 @@
+{
+  "id": 538906,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-09T09:03:59.000Z",
+  "code_updated_at": "2025-06-09T19:27:28.000Z",
+  "namespace": "https://chatgpt.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1480963,
+      "name": "SadSalmonTwT",
+      "created_at": "2025-06-09T07:03:40.000Z",
+      "url": "https://greasyfork.org/users/1480963-sadsalmontwt"
+    }
+  ],
+  "name": "ChatGPT reduce react repaint duration",
+  "description": "Reduces react repaint duration by limiting initial number of messages",
+  "url": "https://greasyfork.org/scripts/538906-chatgpt-reduce-react-repaint-duration",
+  "code_url": "https://update.greasyfork.org/scripts/538906/ChatGPT%20reduce%20react%20repaint%20duration.user.js",
+  "code_size": 4396,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

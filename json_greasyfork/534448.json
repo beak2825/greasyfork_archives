@@ -1,0 +1,33 @@
+{
+  "id": 534448,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-29T23:44:48.000Z",
+  "code_updated_at": "2025-04-29T23:44:48.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1463782,
+      "name": "SuperLeeK",
+      "created_at": "2025-04-29T23:39:59.000Z",
+      "url": "https://greasyfork.org/users/1463782-superleek"
+    }
+  ],
+  "name": "Private Simple Tooltips",
+  "description": "Private Simple",
+  "url": "https://greasyfork.org/scripts/534448-private-simple-tooltips",
+  "code_url": "https://update.greasyfork.org/scripts/534448/1580338/Private%20Simple%20Tooltips.js",
+  "code_size": 5859,
+  "license": null,
+  "version": "0.0.1.20250429234448",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

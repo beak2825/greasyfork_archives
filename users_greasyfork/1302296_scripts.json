@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521835,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-26T06:40:18.000Z",
+    "code_updated_at": "2024-12-26T06:40:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1302296,
+        "name": "侯钰熙",
+        "created_at": "2024-05-16T03:07:37.000Z",
+        "url": "https://greasyfork.org/users/1302296-%E4%BE%AF%E9%92%B0%E7%86%99"
+      }
+    ],
+    "name": "本地答案答题助手",
+    "description": "从本地文档检索答案并自动选中",
+    "url": "https://greasyfork.org/scripts/521835-%E6%9C%AC%E5%9C%B0%E7%AD%94%E6%A1%88%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/521835/%E6%9C%AC%E5%9C%B0%E7%AD%94%E6%A1%88%E7%AD%94%E9%A2%98%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 30472,
+    "license": "MIT License",
+    "version": "0.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545291,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-10T11:22:22.000Z",
+    "code_updated_at": "2025-08-11T06:48:38.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/1503226-loom29",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1503226,
+        "name": "loom29",
+        "created_at": "2025-08-09T15:31:12.000Z",
+        "url": "https://greasyfork.org/users/1503226-loom29"
+      }
+    ],
+    "name": "ChatGPT Bubble Theme Pro",
+    "description": "自定义 ChatGPT 气泡：纯色/线性/放射/弥散光渐变、磨砂、外发光、描边、圆角/内边距……支持 Alt+G 打开面板；移动端优化与节流。",
+    "url": "https://greasyfork.org/scripts/545291-chatgpt-bubble-theme-pro",
+    "code_url": "https://update.greasyfork.org/scripts/545291/ChatGPT%20Bubble%20Theme%20Pro.user.js",
+    "code_size": 41168,
+    "license": "MIT License",
+    "version": "1.9.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

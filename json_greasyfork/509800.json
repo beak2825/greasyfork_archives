@@ -1,0 +1,34 @@
+{
+  "id": 509800,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-23T11:45:25.000Z",
+  "code_updated_at": "2024-09-27T07:29:32.000Z",
+  "namespace": "   http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1371931,
+      "name": "徐家浩",
+      "created_at": "2024-09-23T11:25:58.000Z",
+      "url": "https://greasyfork.org/users/1371931-%E5%BE%90%E5%AE%B6%E6%B5%A9",
+      "scripts": []
+    }
+  ],
+  "name": "风起",
+  "description": "个人使用",
+  "url": "https://greasyfork.org/scripts/509800-%E9%A3%8E%E8%B5%B7",
+  "code_url": "https://update.greasyfork.org/scripts/509800/%E9%A3%8E%E8%B5%B7.user.js",
+  "code_size": 2181,
+  "license": "MIT License",
+  "version": "     1.7",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

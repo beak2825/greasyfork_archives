@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513087,
+    "daily_installs": 0,
+    "total_installs": 388,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T17:12:02.000Z",
+    "code_updated_at": "2024-10-18T17:14:36.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 794027,
+        "name": "澱",
+        "created_at": "2021-07-16T04:18:39.000Z",
+        "url": "https://greasyfork.org/users/794027-%E6%BE%B1"
+      }
+    ],
+    "name": "翻译机",
+    "description": "该脚本用于翻译各类常用社交网站为中文，不会经过中间服务器，添加了bluesky的翻譯，現已可以翻譯網站https://bsky.app/（原作者HolynnChen）",
+    "url": "https://greasyfork.org/scripts/513087-%E7%BF%BB%E8%AF%91%E6%9C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/513087/%E7%BF%BB%E8%AF%91%E6%9C%BA.user.js",
+    "code_size": 48024,
+    "license": "MIT License",
+    "version": "0.93",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 541164,
+  "daily_installs": 0,
+  "total_installs": 62,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-30T04:10:54.000Z",
+  "code_updated_at": "2025-06-30T04:10:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490152,
+      "name": "scoop dunks",
+      "created_at": "2025-06-30T04:02:46.000Z",
+      "url": "https://greasyfork.org/users/1490152-scoop-dunks",
+      "scripts": [
+        {
+          "id": 541164,
+          "daily_installs": 0,
+          "total_installs": 62,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-30T04:10:54.000Z",
+          "code_updated_at": "2025-06-30T04:10:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Archive.org Direct Download Links with Sizes & Sort",
+          "description": "Show direct download links with file sizes, sorted largest first, on archive.org pages",
+          "url": "https://greasyfork.org/scripts/541164-archive-org-direct-download-links-with-sizes-sort",
+          "code_url": "https://update.greasyfork.org/scripts/541164/Archiveorg%20Direct%20Download%20Links%20with%20Sizes%20%20Sort.user.js",
+          "code_size": 3299,
+          "license": null,
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Archive.org Direct Download Links with Sizes & Sort",
+  "description": "Show direct download links with file sizes, sorted largest first, on archive.org pages",
+  "url": "https://greasyfork.org/scripts/541164-archive-org-direct-download-links-with-sizes-sort",
+  "code_url": "https://update.greasyfork.org/scripts/541164/Archiveorg%20Direct%20Download%20Links%20with%20Sizes%20%20Sort.user.js",
+  "code_size": 3299,
+  "license": null,
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

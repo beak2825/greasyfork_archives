@@ -1,0 +1,33 @@
+{
+  "id": 541829,
+  "daily_installs": 3,
+  "total_installs": 231,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-06T14:37:24.000Z",
+  "code_updated_at": "2025-12-02T15:25:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492237,
+      "name": "AINukeHere",
+      "created_at": "2025-07-06T14:30:35.000Z",
+      "url": "https://greasyfork.org/users/1492237-ainukehere"
+    }
+  ],
+  "name": "VOD Synchronizer (SOOP-SOOP 동기화)",
+  "description": "SOOP 다시보기 타임스탬프 표시 및 다른 스트리머의 다시보기와 동기화",
+  "url": "https://greasyfork.org/scripts/541829-vod-synchronizer-soop-soop-%EB%8F%99%EA%B8%B0%ED%99%94",
+  "code_url": "https://update.greasyfork.org/scripts/541829/VOD%20Synchronizer%20%28SOOP-SOOP%20%EB%8F%99%EA%B8%B0%ED%99%94%29.user.js",
+  "code_size": 54791,
+  "license": "MIT License",
+  "version": "0.4.3",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 527800,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-23T02:29:59.000Z",
+    "code_updated_at": "2025-02-23T02:29:59.000Z",
+    "namespace": "https://www.youtube.com/channel/UC62K5Rmg7L3-E5FBm2CbGMw?view_as=subscriber",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438788,
+        "name": "asjss",
+        "created_at": "2025-02-23T02:22:05.000Z",
+        "url": "https://greasyfork.org/users/1438788-asjss"
+      }
+    ],
+    "name": "Get Custom Titles For Nitro Type",
+    "description": "Nitro Type Get Custom Titles",
+    "url": "https://greasyfork.org/scripts/527800-get-custom-titles-for-nitro-type",
+    "code_url": "https://update.greasyfork.org/scripts/527800/Get%20Custom%20Titles%20For%20Nitro%20Type.user.js",
+    "code_size": 888,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527799,
+    "daily_installs": 1,
+    "total_installs": 331,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-23T02:26:21.000Z",
+    "code_updated_at": "2025-02-23T02:26:20.000Z",
+    "namespace": "https://greasyfork.org/users/858426",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438788,
+        "name": "asjss",
+        "created_at": "2025-02-23T02:22:05.000Z",
+        "url": "https://greasyfork.org/users/1438788-asjss"
+      }
+    ],
+    "name": "Nitro Type - Admin Panel",
+    "description": "Always displays the selected car, hue and trail on the race track.",
+    "url": "https://greasyfork.org/scripts/527799-nitro-type-admin-panel",
+    "code_url": "https://update.greasyfork.org/scripts/527799/Nitro%20Type%20-%20Admin%20Panel.user.js",
+    "code_size": 37429,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527798,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-23T02:23:13.000Z",
+    "code_updated_at": "2025-02-23T02:23:13.000Z",
+    "namespace": "https://greasyfork.org/users/900432",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1438788,
+        "name": "asjss",
+        "created_at": "2025-02-23T02:22:05.000Z",
+        "url": "https://greasyfork.org/users/1438788-asjss"
+      }
+    ],
+    "name": "Nitro Type Leaderboard Button",
+    "description": "For Nitro Math",
+    "url": "https://greasyfork.org/scripts/527798-nitro-type-leaderboard-button",
+    "code_url": "https://update.greasyfork.org/scripts/527798/Nitro%20Type%20Leaderboard%20Button.user.js",
+    "code_size": 1192,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

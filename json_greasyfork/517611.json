@@ -1,0 +1,34 @@
+{
+  "id": 517611,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-16T07:03:00.000Z",
+  "code_updated_at": "2024-11-30T15:14:10.000Z",
+  "namespace": "https://twitter.com/senanense",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1118815,
+      "name": "senanense",
+      "created_at": "2023-07-04T13:26:13.000Z",
+      "url": "https://greasyfork.org/users/1118815-senanense",
+      "scripts": []
+    }
+  ],
+  "name": "twitter-msec",
+  "description": "Twitter Web App で投稿時刻を詳細表示",
+  "url": "https://greasyfork.org/scripts/517611-twitter-msec",
+  "code_url": "https://update.greasyfork.org/scripts/517611/twitter-msec.user.js",
+  "code_size": 1313,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

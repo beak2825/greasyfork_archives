@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544268,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T08:11:01.000Z",
+    "code_updated_at": "2025-08-01T08:11:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1407503,
+        "name": "BerkeA111",
+        "created_at": "2024-12-06T17:57:24.000Z",
+        "url": "https://greasyfork.org/users/1407503-berkea111"
+      }
+    ],
+    "name": "Alt Click To Download Image",
+    "description": "Hold Alt key and click any image to download. Uses a robust method to bypass common download issues. Uses original filename and original download location.",
+    "url": "https://greasyfork.org/scripts/544268-alt-click-to-download-image",
+    "code_url": "https://update.greasyfork.org/scripts/544268/Alt%20Click%20To%20Download%20Image.user.js",
+    "code_size": 3832,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

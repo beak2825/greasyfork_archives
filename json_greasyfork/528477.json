@@ -1,0 +1,59 @@
+{
+  "id": 528477,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-01T19:52:35.000Z",
+  "code_updated_at": "2025-03-03T15:10:54.000Z",
+  "namespace": "https://zvv.quest/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441369,
+      "name": "DanielZhangyc",
+      "created_at": "2025-03-01T18:35:13.000Z",
+      "url": "https://greasyfork.org/users/1441369-danielzhangyc",
+      "scripts": [
+        {
+          "id": 528477,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-01T19:52:35.000Z",
+          "code_updated_at": "2025-03-03T15:10:54.000Z",
+          "namespace": "https://zvv.quest/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VVQuest - VV表情包助手",
+          "description": "基于 VVQuest 项目的表情包检索工具，适用于百度和知乎",
+          "url": "https://greasyfork.org/scripts/528477-vvquest-vv%E8%A1%A8%E6%83%85%E5%8C%85%E5%8A%A9%E6%89%8B",
+          "code_url": "https://update.greasyfork.org/scripts/528477/VVQuest%20-%20VV%E8%A1%A8%E6%83%85%E5%8C%85%E5%8A%A9%E6%89%8B.user.js",
+          "code_size": 49739,
+          "license": "CC BY-NC-SA 4.0",
+          "version": "0.1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VVQuest - VV表情包助手",
+  "description": "基于 VVQuest 项目的表情包检索工具，适用于百度和知乎",
+  "url": "https://greasyfork.org/scripts/528477-vvquest-vv%E8%A1%A8%E6%83%85%E5%8C%85%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/528477/VVQuest%20-%20VV%E8%A1%A8%E6%83%85%E5%8C%85%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 49739,
+  "license": "CC BY-NC-SA 4.0",
+  "version": "0.1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

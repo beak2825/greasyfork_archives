@@ -1,0 +1,33 @@
+{
+  "id": 533891,
+  "daily_installs": 0,
+  "total_installs": 38,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-25T04:15:12.000Z",
+  "code_updated_at": "2025-04-25T04:54:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461878,
+      "name": "IWasTheSyntaxError",
+      "created_at": "2025-04-25T04:08:15.000Z",
+      "url": "https://greasyfork.org/users/1461878-iwasthesyntaxerror"
+    }
+  ],
+  "name": "JanitorAI CSS Toggle",
+  "description": "Toggles JanitorAI custom CSS",
+  "url": "https://greasyfork.org/scripts/533891-janitorai-css-toggle",
+  "code_url": "https://update.greasyfork.org/scripts/533891/JanitorAI%20CSS%20Toggle.user.js",
+  "code_size": 9195,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

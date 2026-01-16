@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508880,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T14:50:53.000Z",
+    "code_updated_at": "2024-09-17T14:50:52.000Z",
+    "namespace": "TSS",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1264034,
+        "name": "MiseryOG",
+        "created_at": "2024-02-20T04:35:11.000Z",
+        "url": "https://greasyfork.org/users/1264034-miseryog"
+      }
+    ],
+    "name": "TSS",
+    "description": "Dead Frontier API",
+    "url": "https://greasyfork.org/scripts/508880-tss",
+    "code_url": "https://update.greasyfork.org/scripts/508880/TSS.user.js",
+    "code_size": 85892,
+    "license": null,
+    "version": "0.1.13",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

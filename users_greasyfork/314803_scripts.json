@@ -1,0 +1,68 @@
+[
+  {
+    "id": 531335,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-30T12:59:40.000Z",
+    "code_updated_at": "2025-04-22T09:38:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 314803,
+        "name": "malagebidi",
+        "created_at": "2019-07-02T04:34:52.000Z",
+        "url": "https://greasyfork.org/users/314803-malagebidi"
+      }
+    ],
+    "name": "RepoNotes",
+    "description": "RepoNotes is a lightweight browser extension script for Tampermonkey that enhances your GitHub stars with personalized notes. Ever starred a repository but later forgot why? RepoNotes solves this problem by allowing you to attach custom annotations to your starred repositories.",
+    "url": "https://greasyfork.org/scripts/531335-reponotes",
+    "code_url": "https://update.greasyfork.org/scripts/531335/RepoNotes.user.js",
+    "code_size": 16193,
+    "license": "MIT License",
+    "version": "2.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519526,
+    "daily_installs": 1,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-02T06:43:56.000Z",
+    "code_updated_at": "2024-12-04T11:07:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 314803,
+        "name": "malagebidi",
+        "created_at": "2019-07-02T04:34:52.000Z",
+        "url": "https://greasyfork.org/users/314803-malagebidi"
+      }
+    ],
+    "name": "芒果TV自动关闭弹幕",
+    "description": "芒果TV网页端，自动关闭弹幕。",
+    "url": "https://greasyfork.org/scripts/519526-%E8%8A%92%E6%9E%9Ctv%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E5%BC%B9%E5%B9%95",
+    "code_url": "https://update.greasyfork.org/scripts/519526/%E8%8A%92%E6%9E%9CTV%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E5%BC%B9%E5%B9%95.user.js",
+    "code_size": 2915,
+    "license": "MIT License",
+    "version": "0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

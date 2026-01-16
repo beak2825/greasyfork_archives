@@ -1,0 +1,59 @@
+{
+  "id": 520882,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-16T09:23:21.000Z",
+  "code_updated_at": "2024-12-16T09:23:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1076551,
+      "name": "叶子佩",
+      "created_at": "2023-05-10T09:49:11.000Z",
+      "url": "https://greasyfork.org/users/1076551-%E5%8F%B6%E5%AD%90%E4%BD%A9",
+      "scripts": [
+        {
+          "id": 520882,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-16T09:23:21.000Z",
+          "code_updated_at": "2024-12-16T09:23:21.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "BJTU评教一键好评",
+          "description": "控制鼠标点击评教页面优秀选项的模拟，并在评论框中输入 '无'",
+          "url": "https://greasyfork.org/scripts/520882-bjtu%E8%AF%84%E6%95%99%E4%B8%80%E9%94%AE%E5%A5%BD%E8%AF%84",
+          "code_url": "https://update.greasyfork.org/scripts/520882/BJTU%E8%AF%84%E6%95%99%E4%B8%80%E9%94%AE%E5%A5%BD%E8%AF%84.user.js",
+          "code_size": 2763,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "BJTU评教一键好评",
+  "description": "控制鼠标点击评教页面优秀选项的模拟，并在评论框中输入 '无'",
+  "url": "https://greasyfork.org/scripts/520882-bjtu%E8%AF%84%E6%95%99%E4%B8%80%E9%94%AE%E5%A5%BD%E8%AF%84",
+  "code_url": "https://update.greasyfork.org/scripts/520882/BJTU%E8%AF%84%E6%95%99%E4%B8%80%E9%94%AE%E5%A5%BD%E8%AF%84.user.js",
+  "code_size": 2763,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

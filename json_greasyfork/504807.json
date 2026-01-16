@@ -1,0 +1,34 @@
+{
+  "id": 504807,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-23T11:09:43.000Z",
+  "code_updated_at": "2024-08-26T09:17:59.000Z",
+  "namespace": "0x4076696e63766e",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1356506,
+      "name": "0x4076696e63766e",
+      "created_at": "2024-08-23T11:03:16.000Z",
+      "url": "https://greasyfork.org/users/1356506-0x4076696e63766e",
+      "scripts": []
+    }
+  ],
+  "name": "Add Encode / Decode Button for Voz",
+  "description": "Add encode / decode hex, base64 button for Voz",
+  "url": "https://greasyfork.org/scripts/504807-add-encode-decode-button-for-voz",
+  "code_url": "https://update.greasyfork.org/scripts/504807/Add%20Encode%20%20Decode%20Button%20for%20Voz.user.js",
+  "code_size": 5573,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.7",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

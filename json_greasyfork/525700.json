@@ -1,0 +1,34 @@
+{
+  "id": 525700,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T06:07:15.000Z",
+  "code_updated_at": "2025-02-03T06:07:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1430530,
+      "name": "110532",
+      "created_at": "2025-02-03T01:25:12.000Z",
+      "url": "https://greasyfork.org/users/1430530-110532",
+      "scripts": []
+    }
+  ],
+  "name": "小雅增强工具",
+  "description": "支持进度显示的智能下载工具",
+  "url": "https://greasyfork.org/scripts/525700-%E5%B0%8F%E9%9B%85%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/525700/%E5%B0%8F%E9%9B%85%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 12071,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

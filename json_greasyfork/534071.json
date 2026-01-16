@@ -1,0 +1,33 @@
+{
+  "id": 534071,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-26T13:34:18.000Z",
+  "code_updated_at": "2025-04-26T13:34:18.000Z",
+  "namespace": "seintz.torn.intercept-link",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 936962,
+      "name": "Joris B",
+      "created_at": "2022-07-18T14:00:27.000Z",
+      "url": "https://greasyfork.org/users/936962-joris-b"
+    }
+  ],
+  "name": "intercept-link",
+  "description": "add link on attack page for intercept",
+  "url": "https://greasyfork.org/scripts/534071-intercept-link",
+  "code_url": "https://update.greasyfork.org/scripts/534071/intercept-link.user.js",
+  "code_size": 3000,
+  "license": "GNU GPLv3",
+  "version": "6.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

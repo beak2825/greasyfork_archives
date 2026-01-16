@@ -1,0 +1,34 @@
+{
+  "id": 550435,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-23T07:44:17.000Z",
+  "code_updated_at": "2025-09-23T07:44:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1499380,
+      "name": "Clasher Yeuts",
+      "created_at": "2025-07-29T06:34:05.000Z",
+      "url": "https://greasyfork.org/users/1499380-clasher-yeuts",
+      "scripts": []
+    }
+  ],
+  "name": "Session B&B Tracker - With UI",
+  "description": "B&B tracking with visual interface",
+  "url": "https://greasyfork.org/scripts/550435-session-b-b-tracker-with-ui",
+  "code_url": "https://update.greasyfork.org/scripts/550435/Session%20BB%20Tracker%20-%20With%20UI.user.js",
+  "code_size": 36324,
+  "license": "MIT License",
+  "version": "4.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

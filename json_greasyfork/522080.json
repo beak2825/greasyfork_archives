@@ -1,0 +1,59 @@
+{
+  "id": 522080,
+  "daily_installs": 0,
+  "total_installs": 41,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-12-28T09:18:51.000Z",
+  "code_updated_at": "2025-10-27T01:48:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1121798,
+      "name": "༻𓊈𒆜ҪꚌЯ𒆜𓊉༺",
+      "created_at": "2023-07-08T12:26:39.000Z",
+      "url": "https://greasyfork.org/users/1121798-%F0%93%8A%88%F0%92%86%9C%D2%AB%EA%9A%8D%D1%8F%F0%92%86%9C%F0%93%8A%89",
+      "scripts": [
+        {
+          "id": 522080,
+          "daily_installs": 0,
+          "total_installs": 41,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-12-28T09:18:51.000Z",
+          "code_updated_at": "2025-10-27T01:48:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NoteQuota infinite script",
+          "description": "Inf NQ",
+          "url": "https://greasyfork.org/scripts/522080-notequota-infinite-script",
+          "code_url": "https://update.greasyfork.org/scripts/522080/NoteQuota%20infinite%20script.user.js",
+          "code_size": 1682,
+          "license": null,
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NoteQuota infinite script",
+  "description": "Inf NQ",
+  "url": "https://greasyfork.org/scripts/522080-notequota-infinite-script",
+  "code_url": "https://update.greasyfork.org/scripts/522080/NoteQuota%20infinite%20script.user.js",
+  "code_size": 1682,
+  "license": null,
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

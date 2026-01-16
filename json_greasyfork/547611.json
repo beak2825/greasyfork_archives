@@ -1,0 +1,33 @@
+{
+  "id": 547611,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-28T13:42:49.000Z",
+  "code_updated_at": "2025-08-30T16:23:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 173195,
+      "name": "DS2902",
+      "created_at": "2018-03-03T14:45:11.000Z",
+      "url": "https://greasyfork.org/users/173195-ds2902"
+    }
+  ],
+  "name": "[DS] Twitch Logged-In Chatters Counter",
+  "description": "Добавляет счетчик залогинившихся пользователей рядом с оригинальным счетчиком зрителей на Twitch.",
+  "url": "https://greasyfork.org/scripts/547611-ds-twitch-logged-in-chatters-counter",
+  "code_url": "https://update.greasyfork.org/scripts/547611/%5BDS%5D%20Twitch%20Logged-In%20Chatters%20Counter.user.js",
+  "code_size": 7623,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

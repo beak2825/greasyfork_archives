@@ -1,0 +1,34 @@
+{
+  "id": 504654,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-22T14:25:18.000Z",
+  "code_updated_at": "2024-08-26T07:40:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 929451,
+      "name": "文爱瑶",
+      "created_at": "2022-06-26T11:07:28.000Z",
+      "url": "https://greasyfork.org/users/929451-%E6%96%87%E7%88%B1%E7%91%B6",
+      "scripts": []
+    }
+  ],
+  "name": "m3u8 downloader",
+  "description": "m3u8 downloader tool",
+  "url": "https://greasyfork.org/scripts/504654-m3u8-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/504654/m3u8%20downloader.user.js",
+  "code_size": 29620,
+  "license": "MIT License",
+  "version": "0.1.10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

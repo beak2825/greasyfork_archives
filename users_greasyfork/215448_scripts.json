@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539414,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-14T16:51:35.000Z",
+    "code_updated_at": "2025-06-14T16:51:34.000Z",
+    "namespace": "https://github.com/ZhuningS",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 215448,
+        "name": "Skycloud",
+        "created_at": "2018-09-26T02:59:00.000Z",
+        "url": "https://greasyfork.org/users/215448-skycloud"
+      }
+    ],
+    "name": "抖音/Tiktok终极防护套件-视觉优化与强制防沉迷，对抗时间黑洞，节约生命",
+    "description": "综合反色模式/强制防沉迷/活动保护三合一系统 请关注Telegram新频道：https://t.me/ShareFreely2025",
+    "url": "https://greasyfork.org/scripts/539414-%E6%8A%96%E9%9F%B3-tiktok%E7%BB%88%E6%9E%81%E9%98%B2%E6%8A%A4%E5%A5%97%E4%BB%B6-%E8%A7%86%E8%A7%89%E4%BC%98%E5%8C%96%E4%B8%8E%E5%BC%BA%E5%88%B6%E9%98%B2%E6%B2%89%E8%BF%B7-%E5%AF%B9%E6%8A%97%E6%97%B6%E9%97%B4%E9%BB%91%E6%B4%9E-%E8%8A%82%E7%BA%A6%E7%94%9F%E5%91%BD",
+    "code_url": "https://update.greasyfork.org/scripts/539414/%E6%8A%96%E9%9F%B3Tiktok%E7%BB%88%E6%9E%81%E9%98%B2%E6%8A%A4%E5%A5%97%E4%BB%B6-%E8%A7%86%E8%A7%89%E4%BC%98%E5%8C%96%E4%B8%8E%E5%BC%BA%E5%88%B6%E9%98%B2%E6%B2%89%E8%BF%B7%EF%BC%8C%E5%AF%B9%E6%8A%97%E6%97%B6%E9%97%B4%E9%BB%91%E6%B4%9E%EF%BC%8C%E8%8A%82%E7%BA%A6%E7%94%9F%E5%91%BD.user.js",
+    "code_size": 7485,
+    "license": "MIT License",
+    "version": "3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

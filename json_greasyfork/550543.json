@@ -1,0 +1,33 @@
+{
+  "id": 550543,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-24T11:17:38.000Z",
+  "code_updated_at": "2025-09-24T11:17:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1518839,
+      "name": "Tony Garfild",
+      "created_at": "2025-09-24T11:08:58.000Z",
+      "url": "https://greasyfork.org/users/1518839-tony-garfild"
+    }
+  ],
+  "name": "Полный скрипт для Кураторов Форума by Tony Garfild || LIME",
+  "description": "Скрипт для Кураторов Форума 07 LIME",
+  "url": "https://greasyfork.org/scripts/550543-%D0%BF%D0%BE%D0%BB%D0%BD%D1%8B%D0%B9-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-by-tony-garfild-lime",
+  "code_url": "https://update.greasyfork.org/scripts/550543/%D0%9F%D0%BE%D0%BB%D0%BD%D1%8B%D0%B9%20%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20by%20Tony%20Garfild%20%7C%7C%20LIME.user.js",
+  "code_size": 161802,
+  "license": "MIT License",
+  "version": "2.1",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

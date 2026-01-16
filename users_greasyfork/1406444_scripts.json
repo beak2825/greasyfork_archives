@@ -1,0 +1,68 @@
+[
+  {
+    "id": 520536,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-13T00:24:26.000Z",
+    "code_updated_at": "2024-12-13T05:05:19.000Z",
+    "namespace": "Holobox",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406444,
+        "name": "pperero",
+        "created_at": "2024-12-04T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1406444-pperero"
+      }
+    ],
+    "name": "아카라이브 트위터첨부 오류수정",
+    "description": "아카라이브 트위터 첨부 정상화",
+    "url": "https://greasyfork.org/scripts/520536-%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C-%ED%8A%B8%EC%9C%84%ED%84%B0%EC%B2%A8%EB%B6%80-%EC%98%A4%EB%A5%98%EC%88%98%EC%A0%95",
+    "code_url": "https://update.greasyfork.org/scripts/520536/%EC%95%84%EC%B9%B4%EB%9D%BC%EC%9D%B4%EB%B8%8C%20%ED%8A%B8%EC%9C%84%ED%84%B0%EC%B2%A8%EB%B6%80%20%EC%98%A4%EB%A5%98%EC%88%98%EC%A0%95.user.js",
+    "code_size": 4382,
+    "license": "MIT License",
+    "version": "2024-12-13",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 519753,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-04T11:35:34.000Z",
+    "code_updated_at": "2024-12-05T02:59:55.000Z",
+    "namespace": "Holobox",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1406444,
+        "name": "pperero",
+        "created_at": "2024-12-04T10:58:44.000Z",
+        "url": "https://greasyfork.org/users/1406444-pperero"
+      }
+    ],
+    "name": "ezClip",
+    "description": "ytarchive와 yt-dlp로 유튜브 생방송/아카이브/영상 클립을 따기 쉽게 도와주는 툴",
+    "url": "https://greasyfork.org/scripts/519753-ezclip",
+    "code_url": "https://update.greasyfork.org/scripts/519753/ezClip.user.js",
+    "code_size": 12178,
+    "license": "MIT License",
+    "version": "2024-12-05",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

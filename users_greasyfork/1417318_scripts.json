@@ -1,0 +1,35 @@
+[
+  {
+    "id": 522228,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-29T18:27:36.000Z",
+    "code_updated_at": "2024-12-29T18:27:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417318,
+        "name": "Askas-db",
+        "created_at": "2024-12-29T17:39:24.000Z",
+        "url": "https://greasyfork.org/users/1417318-askas-db"
+      }
+    ],
+    "name": "UnShorts",
+    "description": "Simple script for replace all shorts links on youtube page.",
+    "url": "https://greasyfork.org/scripts/522228-unshorts",
+    "code_url": "https://update.greasyfork.org/scripts/522228/UnShorts.user.js",
+    "code_size": 2742,
+    "license": "MIT License",
+    "version": "29.12.2024",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

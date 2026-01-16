@@ -1,0 +1,35 @@
+[
+  {
+    "id": 504669,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-22T16:01:54.000Z",
+    "code_updated_at": "2024-11-29T13:39:45.000Z",
+    "namespace": "https://github.com/AlexandrePicavet/Google-Cloud-SDK-Autoconnect",
+    "support_url": "https://github.com/AlexandrePicavet/Google-Cloud-SDK-Autoconnect/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 173942,
+        "name": "Alexandre Picavet",
+        "created_at": "2018-03-08T13:50:48.000Z",
+        "url": "https://greasyfork.org/users/173942-alexandre-picavet"
+      }
+    ],
+    "name": "Google Cloud SDK Autoconnect",
+    "description": "Auto connect to your gcloud account when using 'gcloud auth login' command",
+    "url": "https://greasyfork.org/scripts/504669-google-cloud-sdk-autoconnect",
+    "code_url": "https://update.greasyfork.org/scripts/504669/Google%20Cloud%20SDK%20Autoconnect.user.js",
+    "code_size": 3833,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

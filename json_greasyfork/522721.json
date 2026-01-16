@@ -1,0 +1,33 @@
+{
+  "id": 522721,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-03T18:02:14.000Z",
+  "code_updated_at": "2025-01-24T12:06:37.000Z",
+  "namespace": "https://www.torn.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1419175,
+      "name": "Mossa Jehad",
+      "created_at": "2025-01-03T17:46:57.000Z",
+      "url": "https://greasyfork.org/users/1419175-mossa-jehad"
+    }
+  ],
+  "name": "Torn City Add to Your List",
+  "description": "Adds a button to player profiles to save them to a custom list and a new menu to access the list.",
+  "url": "https://greasyfork.org/scripts/522721-torn-city-add-to-your-list",
+  "code_url": "https://update.greasyfork.org/scripts/522721/Torn%20City%20Add%20to%20Your%20List.user.js",
+  "code_size": 15877,
+  "license": null,
+  "version": "1.3.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

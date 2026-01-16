@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549089,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T02:22:27.000Z",
+    "code_updated_at": "2025-09-11T02:22:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1281782,
+        "name": "Em2Pro4You (Em2Pro4You)",
+        "created_at": "2024-03-30T22:38:40.000Z",
+        "url": "https://greasyfork.org/users/1281782-em2pro4you-em2pro4you"
+      }
+    ],
+    "name": "Bookies % based on Odds",
+    "description": "This script will allow you to see a % sign next to the odds in the bookies.",
+    "url": "https://greasyfork.org/scripts/549089-bookies-based-on-odds",
+    "code_url": "https://update.greasyfork.org/scripts/549089/Bookies%20%25%20based%20on%20Odds.user.js",
+    "code_size": 1439,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

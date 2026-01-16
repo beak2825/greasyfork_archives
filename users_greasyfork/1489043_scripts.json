@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540898,
+    "daily_installs": 2,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-27T02:46:04.000Z",
+    "code_updated_at": "2025-06-27T06:40:06.000Z",
+    "namespace": "https://github.com/Nriver",
+    "support_url": "https://github.com/Nriver/monkey-scripts/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1489043,
+        "name": "Nriver",
+        "created_at": "2025-06-27T02:21:01.000Z",
+        "url": "https://greasyfork.org/users/1489043-nriver"
+      }
+    ],
+    "name": "bilibili 批量取关",
+    "description": "批量取消 B 站关注",
+    "url": "https://greasyfork.org/scripts/540898-bilibili-%E6%89%B9%E9%87%8F%E5%8F%96%E5%85%B3",
+    "code_url": "https://update.greasyfork.org/scripts/540898/bilibili%20%E6%89%B9%E9%87%8F%E5%8F%96%E5%85%B3.user.js",
+    "code_size": 2652,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

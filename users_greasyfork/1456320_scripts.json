@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532450,
+    "daily_installs": 0,
+    "total_installs": 40,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T18:01:33.000Z",
+    "code_updated_at": "2025-04-12T20:13:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1456320,
+        "name": "黄瓜战神",
+        "created_at": "2025-04-10T17:41:37.000Z",
+        "url": "https://greasyfork.org/users/1456320-%E9%BB%84%E7%93%9C%E6%88%98%E7%A5%9E"
+      }
+    ],
+    "name": "百度百科精简【电脑端】",
+    "description": "隐藏百度百科中的广告和杂项内容",
+    "url": "https://greasyfork.org/scripts/532450-%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91%E7%B2%BE%E7%AE%80-%E7%94%B5%E8%84%91%E7%AB%AF",
+    "code_url": "https://update.greasyfork.org/scripts/532450/%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91%E7%B2%BE%E7%AE%80%E3%80%90%E7%94%B5%E8%84%91%E7%AB%AF%E3%80%91.user.js",
+    "code_size": 3728,
+    "license": "GNU Affero General Public License v3.0",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

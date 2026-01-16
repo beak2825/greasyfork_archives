@@ -1,0 +1,59 @@
+{
+  "id": 547672,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-29T01:21:17.000Z",
+  "code_updated_at": "2025-08-29T01:21:16.000Z",
+  "namespace": "https://greasyfork.org/users/eruma19",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1509802,
+      "name": "Elmer Pariona",
+      "created_at": "2025-08-29T01:11:48.000Z",
+      "url": "https://greasyfork.org/users/1509802-elmer-pariona",
+      "scripts": [
+        {
+          "id": 547672,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-29T01:21:17.000Z",
+          "code_updated_at": "2025-08-29T01:21:16.000Z",
+          "namespace": "https://greasyfork.org/users/eruma19",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YouTube Mass Unsubscribe + Auto Scroll",
+          "description": "Desuscribe masivamente todos tus canales en YouTube. Funciona en cualquier página de YouTube, pero el proceso solo tendrá efecto en /feed/channels (lista de suscripciones).",
+          "url": "https://greasyfork.org/scripts/547672-youtube-mass-unsubscribe-auto-scroll",
+          "code_url": "https://update.greasyfork.org/scripts/547672/YouTube%20Mass%20Unsubscribe%20%2B%20Auto%20Scroll.user.js",
+          "code_size": 3333,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "es",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YouTube Mass Unsubscribe + Auto Scroll",
+  "description": "Desuscribe masivamente todos tus canales en YouTube. Funciona en cualquier página de YouTube, pero el proceso solo tendrá efecto en /feed/channels (lista de suscripciones).",
+  "url": "https://greasyfork.org/scripts/547672-youtube-mass-unsubscribe-auto-scroll",
+  "code_url": "https://update.greasyfork.org/scripts/547672/YouTube%20Mass%20Unsubscribe%20%2B%20Auto%20Scroll.user.js",
+  "code_size": 3333,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "es",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524731,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-24T14:37:57.000Z",
+    "code_updated_at": "2025-01-24T14:37:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426904,
+        "name": "DevzGod",
+        "created_at": "2025-01-24T14:31:10.000Z",
+        "url": "https://greasyfork.org/users/1426904-devzgod"
+      }
+    ],
+    "name": "Cavegame Join Notification",
+    "description": "Notify when someone joins Cavegame with a blue box message",
+    "url": "https://greasyfork.org/scripts/524731-cavegame-join-notification",
+    "code_url": "https://update.greasyfork.org/scripts/524731/Cavegame%20Join%20Notification.user.js",
+    "code_size": 2120,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

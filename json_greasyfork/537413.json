@@ -1,0 +1,59 @@
+{
+  "id": 537413,
+  "daily_installs": 6,
+  "total_installs": 355,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-27T09:29:57.000Z",
+  "code_updated_at": "2025-05-28T00:58:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1340929,
+      "name": "thadike",
+      "created_at": "2024-07-27T15:18:54.000Z",
+      "url": "https://greasyfork.org/users/1340929-thadike",
+      "scripts": [
+        {
+          "id": 537413,
+          "daily_installs": 6,
+          "total_installs": 355,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-27T09:29:57.000Z",
+          "code_updated_at": "2025-05-28T00:58:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "【FSU扩展插件】自动点击领取奖励按钮",
+          "description": "【EAFCFUT模式】SBC任务便捷操作增强器辅助，自动在0.5秒后点击\"领取奖励\"按钮",
+          "url": "https://greasyfork.org/scripts/537413-fsu%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E9%A2%86%E5%8F%96%E5%A5%96%E5%8A%B1%E6%8C%89%E9%92%AE",
+          "code_url": "https://update.greasyfork.org/scripts/537413/%E3%80%90FSU%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E3%80%91%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E9%A2%86%E5%8F%96%E5%A5%96%E5%8A%B1%E6%8C%89%E9%92%AE.user.js",
+          "code_size": 10005,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "【FSU扩展插件】自动点击领取奖励按钮",
+  "description": "【EAFCFUT模式】SBC任务便捷操作增强器辅助，自动在0.5秒后点击\"领取奖励\"按钮",
+  "url": "https://greasyfork.org/scripts/537413-fsu%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E9%A2%86%E5%8F%96%E5%A5%96%E5%8A%B1%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/537413/%E3%80%90FSU%E6%89%A9%E5%B1%95%E6%8F%92%E4%BB%B6%E3%80%91%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E9%A2%86%E5%8F%96%E5%A5%96%E5%8A%B1%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 10005,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

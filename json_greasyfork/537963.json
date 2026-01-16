@@ -1,0 +1,34 @@
+{
+  "id": 537963,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-01T12:50:44.000Z",
+  "code_updated_at": "2025-06-01T12:50:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1464293,
+      "name": "Chan Kui Hei 6B04 陳炬熹",
+      "created_at": "2025-05-01T06:34:42.000Z",
+      "url": "https://greasyfork.org/users/1464293-chan-kui-hei-6b04-%E9%99%B3%E7%82%AC%E7%86%B9",
+      "scripts": []
+    }
+  ],
+  "name": "Cute Font in Narrow One :3",
+  "description": "Font Style Changed :3",
+  "url": "https://greasyfork.org/scripts/537963-cute-font-in-narrow-one-3",
+  "code_url": "https://update.greasyfork.org/scripts/537963/Cute%20Font%20in%20Narrow%20One%20%3A3.user.js",
+  "code_size": 1052,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517805,
+    "daily_installs": 0,
+    "total_installs": 59,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-17T20:07:20.000Z",
+    "code_updated_at": "2024-11-21T19:53:28.000Z",
+    "namespace": "https://greasyfork.org/users/1398226",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1398226,
+        "name": "Boon!",
+        "created_at": "2024-11-17T19:30:05.000Z",
+        "url": "https://greasyfork.org/users/1398226-boon"
+      }
+    ],
+    "name": "🚫 ShortsOff! - YouTube Shorts Remover",
+    "description": "Disables elements that lead to YouTube Shorts.",
+    "url": "https://greasyfork.org/scripts/517805-shortsoff-youtube-shorts-remover",
+    "code_url": "https://update.greasyfork.org/scripts/517805/%F0%9F%9A%AB%20ShortsOff%21%20-%20YouTube%20Shorts%20Remover.user.js",
+    "code_size": 1760,
+    "license": "GNU GPL v3.0; http://www.gnu.org/licenses/gpl-3.0.txt",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

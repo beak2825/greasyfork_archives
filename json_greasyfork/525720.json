@@ -1,0 +1,33 @@
+{
+  "id": 525720,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-03T08:43:29.000Z",
+  "code_updated_at": "2025-02-10T14:55:46.000Z",
+  "namespace": "http://your.namespace.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1365175,
+      "name": "Dhudean",
+      "created_at": "2024-09-09T06:36:10.000Z",
+      "url": "https://greasyfork.org/users/1365175-dhudean"
+    }
+  ],
+  "name": "屏蔽指定论坛并带解锁倒计时（点击10次显示按钮）",
+  "description": "屏蔽指定论坛页面，默认屏蔽提示页面隐藏解锁选项，需点击任意处10次后显示“解锁1分钟”、“解锁10分钟”和“解锁30分钟”三个选项（附每日点击上限与剩余次数显示）。解锁后在页面右上角显示倒计时，倒计时结束后重新屏蔽。",
+  "url": "https://greasyfork.org/scripts/525720-%E5%B1%8F%E8%94%BD%E6%8C%87%E5%AE%9A%E8%AE%BA%E5%9D%9B%E5%B9%B6%E5%B8%A6%E8%A7%A3%E9%94%81%E5%80%92%E8%AE%A1%E6%97%B6-%E7%82%B9%E5%87%BB10%E6%AC%A1%E6%98%BE%E7%A4%BA%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/525720/%E5%B1%8F%E8%94%BD%E6%8C%87%E5%AE%9A%E8%AE%BA%E5%9D%9B%E5%B9%B6%E5%B8%A6%E8%A7%A3%E9%94%81%E5%80%92%E8%AE%A1%E6%97%B6%EF%BC%88%E7%82%B9%E5%87%BB10%E6%AC%A1%E6%98%BE%E7%A4%BA%E6%8C%89%E9%92%AE%EF%BC%89.user.js",
+  "code_size": 12754,
+  "license": null,
+  "version": "1.10",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

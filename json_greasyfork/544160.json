@@ -1,0 +1,59 @@
+{
+  "id": 544160,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-31T03:30:10.000Z",
+  "code_updated_at": "2025-07-31T22:51:39.000Z",
+  "namespace": "http://www.amazon.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1500030,
+      "name": "mikeoxlong",
+      "created_at": "2025-07-31T02:49:54.000Z",
+      "url": "https://greasyfork.org/users/1500030-mikeoxlong",
+      "scripts": [
+        {
+          "id": 544160,
+          "daily_installs": 0,
+          "total_installs": 42,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-31T03:30:10.000Z",
+          "code_updated_at": "2025-07-31T22:51:39.000Z",
+          "namespace": "http://www.amazon.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Amazon Search++ (Full Tooltips & Logic)",
+          "description": "Amazon filter/sort tools and clean URL copier with smart tooltips",
+          "url": "https://greasyfork.org/scripts/544160-amazon-search-full-tooltips-logic",
+          "code_url": "https://update.greasyfork.org/scripts/544160/Amazon%20Search%2B%2B%20%28Full%20Tooltips%20%20Logic%29.user.js",
+          "code_size": 7316,
+          "license": "CC BY-NC-SA 4.0",
+          "version": "2.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Amazon Search++ (Full Tooltips & Logic)",
+  "description": "Amazon filter/sort tools and clean URL copier with smart tooltips",
+  "url": "https://greasyfork.org/scripts/544160-amazon-search-full-tooltips-logic",
+  "code_url": "https://update.greasyfork.org/scripts/544160/Amazon%20Search%2B%2B%20%28Full%20Tooltips%20%20Logic%29.user.js",
+  "code_size": 7316,
+  "license": "CC BY-NC-SA 4.0",
+  "version": "2.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

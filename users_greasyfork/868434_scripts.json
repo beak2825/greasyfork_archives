@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526560,
+    "daily_installs": 1,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-11T15:20:18.000Z",
+    "code_updated_at": "2025-02-11T15:20:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 868434,
+        "name": "Dj Dragkan",
+        "created_at": "2022-01-23T23:25:50.000Z",
+        "url": "https://greasyfork.org/users/868434-dj-dragkan"
+      }
+    ],
+    "name": "Auto Loop and Autoplay for All Video Players",
+    "description": "Enables loop and autoplay on all video players online",
+    "url": "https://greasyfork.org/scripts/526560-auto-loop-and-autoplay-for-all-video-players",
+    "code_url": "https://update.greasyfork.org/scripts/526560/Auto%20Loop%20and%20Autoplay%20for%20All%20Video%20Players.user.js",
+    "code_size": 1376,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

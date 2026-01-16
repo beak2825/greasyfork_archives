@@ -1,0 +1,59 @@
+{
+  "id": 512543,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-14T05:02:19.000Z",
+  "code_updated_at": "2024-10-14T05:06:27.000Z",
+  "namespace": "https://gitee.com/gux/t_script/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 38351,
+      "name": "everyone",
+      "created_at": "2016-04-12T10:53:42.000Z",
+      "url": "https://greasyfork.org/users/38351-everyone",
+      "scripts": [
+        {
+          "id": 18709,
+          "daily_installs": 0,
+          "total_installs": 208,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2016-04-12T10:56:23.000Z",
+          "code_updated_at": "2016-05-04T08:20:25.000Z",
+          "namespace": "cnbeta-antiabp",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "fuck cnbeta-antiabp",
+          "description": "no ads!",
+          "url": "https://greasyfork.org/scripts/18709-cnbeta-antiabp",
+          "code_url": "https://update.greasyfork.org/scripts/18709/fuck%20cnbeta-antiabp.user.js",
+          "code_size": 964,
+          "license": null,
+          "version": "2.2",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "wlmqcol hacker",
+  "description": "wlmqcol hacker blur!",
+  "url": "https://greasyfork.org/scripts/512543-wlmqcol-hacker",
+  "code_url": "https://update.greasyfork.org/scripts/512543/wlmqcol%20hacker.user.js",
+  "code_size": 809,
+  "license": "MIT License",
+  "version": "2024-10-14",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

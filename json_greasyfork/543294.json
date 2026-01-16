@@ -1,0 +1,33 @@
+{
+  "id": 543294,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-22T07:22:24.000Z",
+  "code_updated_at": "2025-10-20T16:18:27.000Z",
+  "namespace": "https://www.linkedin.com/in/bernando-jr-minguita/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 12506,
+      "name": "Bernando Jr Minguita",
+      "created_at": "2015-06-18T13:59:09.000Z",
+      "url": "https://greasyfork.org/users/12506-bernando-jr-minguita"
+    }
+  ],
+  "name": "Real Discount 'Get Course' Auto-Redirect",
+  "description": "Automatically redirects to a Udemy course link with a coupon on real.discount offer pages, including dynamic content handling and Linksynergy deep links.",
+  "url": "https://greasyfork.org/scripts/543294-real-discount-get-course-auto-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/543294/Real%20Discount%20%27Get%20Course%27%20Auto-Redirect.user.js",
+  "code_size": 8311,
+  "license": "MIT License",
+  "version": "1.1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 521756,
+  "daily_installs": 0,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-25T10:47:24.000Z",
+  "code_updated_at": "2025-02-18T16:57:48.000Z",
+  "namespace": "3dRipper",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 151668,
+      "name": "3dRipper",
+      "created_at": "2017-09-05T12:15:00.000Z",
+      "url": "https://greasyfork.org/users/151668-3dripper"
+    }
+  ],
+  "name": "3dRipper-assistant",
+  "description": "A userscript to assist with using 3dRipper",
+  "url": "https://greasyfork.org/scripts/521756-3dripper-assistant",
+  "code_url": "https://update.greasyfork.org/scripts/521756/3dRipper-assistant.user.js",
+  "code_size": 19198,
+  "license": "MIT License",
+  "version": "0.0.178-BETA",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

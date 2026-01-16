@@ -1,0 +1,35 @@
+[
+  {
+    "id": 538288,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-04T09:30:29.000Z",
+    "code_updated_at": "2025-06-04T09:30:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1478764,
+        "name": "Csomák Gábor",
+        "created_at": "2025-06-04T09:28:22.000Z",
+        "url": "https://greasyfork.org/users/1478764-csom%C3%A1k-g%C3%A1bor"
+      }
+    ],
+    "name": "Low Fuel Mobile Improvements",
+    "description": "This is to optimise mobile view of https://lowfuelmotorsport.com/ lowfuelmotorsport AKA LFM. This helps get rid of lots of clutter.",
+    "url": "https://greasyfork.org/scripts/538288-low-fuel-mobile-improvements",
+    "code_url": "https://update.greasyfork.org/scripts/538288/Low%20Fuel%20Mobile%20Improvements.user.js",
+    "code_size": 5060,
+    "license": "MIT License",
+    "version": "2025-06-04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

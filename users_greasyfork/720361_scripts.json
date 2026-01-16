@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532599,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-12T04:51:38.000Z",
+    "code_updated_at": "2025-04-12T04:51:38.000Z",
+    "namespace": "https://greasyfork.org/users/720361",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 720361,
+        "name": "土豆养团团",
+        "created_at": "2020-12-24T04:10:07.000Z",
+        "url": "https://greasyfork.org/users/720361-%E5%9C%9F%E8%B1%86%E5%85%BB%E5%9B%A2%E5%9B%A2"
+      }
+    ],
+    "name": "湖南人社-湖南开放大学专业技术教育基地",
+    "description": "湖南人社-湖南开放大学专业技术教育基地，可无人值守自动化挂机播放,自动跳过弹窗检测，可自动完成所有未完成课程，包括2025、2024年课程！",
+    "url": "https://greasyfork.org/scripts/532599-%E6%B9%96%E5%8D%97%E4%BA%BA%E7%A4%BE-%E6%B9%96%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E6%95%99%E8%82%B2%E5%9F%BA%E5%9C%B0",
+    "code_url": "https://update.greasyfork.org/scripts/532599/%E6%B9%96%E5%8D%97%E4%BA%BA%E7%A4%BE-%E6%B9%96%E5%8D%97%E5%BC%80%E6%94%BE%E5%A4%A7%E5%AD%A6%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E6%95%99%E8%82%B2%E5%9F%BA%E5%9C%B0.user.js",
+    "code_size": 53744,
+    "license": null,
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

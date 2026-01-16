@@ -1,0 +1,34 @@
+{
+  "id": 536321,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-17T16:20:54.000Z",
+  "code_updated_at": "2025-05-17T16:20:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1257681,
+      "name": "Virág Attila",
+      "created_at": "2024-02-05T09:36:10.000Z",
+      "url": "https://greasyfork.org/users/1257681-vir%C3%A1g-attila",
+      "scripts": []
+    }
+  ],
+  "name": "Hírstart Admin - Forrás zóna szerkesztő - leggyakoribb beállítások",
+  "description": "link ikonok site-0 (page) és site-rss (rss) alatti boxokhoz + partner-link a title-re",
+  "url": "https://greasyfork.org/scripts/536321-h%C3%ADrstart-admin-forr%C3%A1s-z%C3%B3na-szerkeszt%C5%91-leggyakoribb-be%C3%A1ll%C3%ADt%C3%A1sok",
+  "code_url": "https://update.greasyfork.org/scripts/536321/H%C3%ADrstart%20Admin%20-%20Forr%C3%A1s%20z%C3%B3na%20szerkeszt%C5%91%20-%20leggyakoribb%20be%C3%A1ll%C3%ADt%C3%A1sok.user.js",
+  "code_size": 8627,
+  "license": null,
+  "version": "2.31",
+  "locale": "hu",
+  "deleted": false,
+  "visibility": "public"
+}

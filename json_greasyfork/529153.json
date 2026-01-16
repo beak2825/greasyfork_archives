@@ -1,0 +1,59 @@
+{
+  "id": 529153,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-08T03:26:05.000Z",
+  "code_updated_at": "2025-03-11T07:14:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 846045,
+      "name": "JoffreyN",
+      "created_at": "2021-11-29T07:20:42.000Z",
+      "url": "https://greasyfork.org/users/846045-joffreyn",
+      "scripts": [
+        {
+          "id": 529153,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-08T03:26:05.000Z",
+          "code_updated_at": "2025-03-11T07:14:54.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动勾选登录协议",
+          "description": "自动勾选登录协议框。不定时更新",
+          "url": "https://greasyfork.org/scripts/529153-%E8%87%AA%E5%8A%A8%E5%8B%BE%E9%80%89%E7%99%BB%E5%BD%95%E5%8D%8F%E8%AE%AE",
+          "code_url": "https://update.greasyfork.org/scripts/529153/%E8%87%AA%E5%8A%A8%E5%8B%BE%E9%80%89%E7%99%BB%E5%BD%95%E5%8D%8F%E8%AE%AE.user.js",
+          "code_size": 1364,
+          "license": "MIT License",
+          "version": "2025-03-11",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动勾选登录协议",
+  "description": "自动勾选登录协议框。不定时更新",
+  "url": "https://greasyfork.org/scripts/529153-%E8%87%AA%E5%8A%A8%E5%8B%BE%E9%80%89%E7%99%BB%E5%BD%95%E5%8D%8F%E8%AE%AE",
+  "code_url": "https://update.greasyfork.org/scripts/529153/%E8%87%AA%E5%8A%A8%E5%8B%BE%E9%80%89%E7%99%BB%E5%BD%95%E5%8D%8F%E8%AE%AE.user.js",
+  "code_size": 1364,
+  "license": "MIT License",
+  "version": "2025-03-11",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 523043,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-06T17:11:44.000Z",
+  "code_updated_at": "2025-01-06T17:11:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420339,
+      "name": "luofuchang",
+      "created_at": "2025-01-06T17:07:36.000Z",
+      "url": "https://greasyfork.org/users/1420339-luofuchang",
+      "scripts": [
+        {
+          "id": 523043,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-06T17:11:44.000Z",
+          "code_updated_at": "2025-01-06T17:11:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "淘宝商品名称提取",
+          "description": "提取淘宝商品页面上的特定名称并复制到剪贴板",
+          "url": "https://greasyfork.org/scripts/523043-%E6%B7%98%E5%AE%9D%E5%95%86%E5%93%81%E5%90%8D%E7%A7%B0%E6%8F%90%E5%8F%96",
+          "code_url": "https://update.greasyfork.org/scripts/523043/%E6%B7%98%E5%AE%9D%E5%95%86%E5%93%81%E5%90%8D%E7%A7%B0%E6%8F%90%E5%8F%96.user.js",
+          "code_size": 2497,
+          "license": "MIT License",
+          "version": "0.8",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "淘宝商品名称提取",
+  "description": "提取淘宝商品页面上的特定名称并复制到剪贴板",
+  "url": "https://greasyfork.org/scripts/523043-%E6%B7%98%E5%AE%9D%E5%95%86%E5%93%81%E5%90%8D%E7%A7%B0%E6%8F%90%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/523043/%E6%B7%98%E5%AE%9D%E5%95%86%E5%93%81%E5%90%8D%E7%A7%B0%E6%8F%90%E5%8F%96.user.js",
+  "code_size": 2497,
+  "license": "MIT License",
+  "version": "0.8",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

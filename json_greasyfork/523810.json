@@ -1,0 +1,59 @@
+{
+  "id": 523810,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-15T05:44:51.000Z",
+  "code_updated_at": "2025-01-15T05:44:51.000Z",
+  "namespace": "https://github.com/Crazyokd/quickRefresh",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1423011,
+      "name": "Crazyokd",
+      "created_at": "2025-01-14T01:28:03.000Z",
+      "url": "https://greasyfork.org/users/1423011-crazyokd",
+      "scripts": [
+        {
+          "id": 523810,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-15T05:44:51.000Z",
+          "code_updated_at": "2025-01-15T05:44:51.000Z",
+          "namespace": "https://github.com/Crazyokd/quickRefresh",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "为TypingClub重新开始打字添加快捷键",
+          "description": "按Ctrl+I重新开始打字",
+          "url": "https://greasyfork.org/scripts/523810-%E4%B8%BAtypingclub%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E6%89%93%E5%AD%97%E6%B7%BB%E5%8A%A0%E5%BF%AB%E6%8D%B7%E9%94%AE",
+          "code_url": "https://update.greasyfork.org/scripts/523810/%E4%B8%BATypingClub%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E6%89%93%E5%AD%97%E6%B7%BB%E5%8A%A0%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+          "code_size": 1291,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "为TypingClub重新开始打字添加快捷键",
+  "description": "按Ctrl+I重新开始打字",
+  "url": "https://greasyfork.org/scripts/523810-%E4%B8%BAtypingclub%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E6%89%93%E5%AD%97%E6%B7%BB%E5%8A%A0%E5%BF%AB%E6%8D%B7%E9%94%AE",
+  "code_url": "https://update.greasyfork.org/scripts/523810/%E4%B8%BATypingClub%E9%87%8D%E6%96%B0%E5%BC%80%E5%A7%8B%E6%89%93%E5%AD%97%E6%B7%BB%E5%8A%A0%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+  "code_size": 1291,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

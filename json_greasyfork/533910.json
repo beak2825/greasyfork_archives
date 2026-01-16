@@ -1,0 +1,34 @@
+{
+  "id": 533910,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-25T08:59:50.000Z",
+  "code_updated_at": "2025-04-25T09:01:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461956,
+      "name": "yunyan2025",
+      "created_at": "2025-04-25T08:57:29.000Z",
+      "url": "https://greasyfork.org/users/1461956-yunyan2025",
+      "scripts": []
+    }
+  ],
+  "name": "飞书多维表格开启自动化",
+  "description": "页面包含“自动化中心”文本后才开始，仅点击未启用的自动化开关，显示飞书风格提示。",
+  "url": "https://greasyfork.org/scripts/533910-%E9%A3%9E%E4%B9%A6%E5%A4%9A%E7%BB%B4%E8%A1%A8%E6%A0%BC%E5%BC%80%E5%90%AF%E8%87%AA%E5%8A%A8%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/533910/%E9%A3%9E%E4%B9%A6%E5%A4%9A%E7%BB%B4%E8%A1%A8%E6%A0%BC%E5%BC%80%E5%90%AF%E8%87%AA%E5%8A%A8%E5%8C%96.user.js",
+  "code_size": 4557,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

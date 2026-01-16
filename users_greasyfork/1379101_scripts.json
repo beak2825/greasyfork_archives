@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513146,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-19T07:22:17.000Z",
+    "code_updated_at": "2024-10-19T07:22:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1379101,
+        "name": "ABX0420",
+        "created_at": "2024-10-10T14:00:06.000Z",
+        "url": "https://greasyfork.org/users/1379101-abx0420"
+      }
+    ],
+    "name": "ABX的简单文本复制",
+    "description": "copy everything!",
+    "url": "https://greasyfork.org/scripts/513146-abx%E7%9A%84%E7%AE%80%E5%8D%95%E6%96%87%E6%9C%AC%E5%A4%8D%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/513146/ABX%E7%9A%84%E7%AE%80%E5%8D%95%E6%96%87%E6%9C%AC%E5%A4%8D%E5%88%B6.user.js",
+    "code_size": 2240,
+    "license": "MIT License",
+    "version": "2024-10-10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

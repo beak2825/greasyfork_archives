@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501173,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-19T12:38:25.000Z",
+    "code_updated_at": "2024-07-19T12:38:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1336588,
+        "name": "mlldzi",
+        "created_at": "2024-07-19T12:37:22.000Z",
+        "url": "https://greasyfork.org/users/1336588-mlldzi"
+      }
+    ],
+    "name": "LMS Progress Updater",
+    "description": "ШОК ЧТО ТВОРЯТ ПЕРВАКИ ЕБАНУЛИСЬ ВООБЩЕ.",
+    "url": "https://greasyfork.org/scripts/501173-lms-progress-updater",
+    "code_url": "https://update.greasyfork.org/scripts/501173/LMS%20Progress%20Updater.user.js",
+    "code_size": 1440,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

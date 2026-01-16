@@ -1,0 +1,59 @@
+{
+  "id": 503155,
+  "daily_installs": 0,
+  "total_installs": 450,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-10T03:53:12.000Z",
+  "code_updated_at": "2024-08-11T16:39:19.000Z",
+  "namespace": "shllwetalk",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1348781,
+      "name": "wedance shall",
+      "created_at": "2024-08-10T03:45:56.000Z",
+      "url": "https://greasyfork.org/users/1348781-wedance-shall",
+      "scripts": [
+        {
+          "id": 503155,
+          "daily_installs": 0,
+          "total_installs": 450,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-10T03:53:12.000Z",
+          "code_updated_at": "2024-08-11T16:39:19.000Z",
+          "namespace": "shllwetalk",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "叔叔不约只配女并自动问好，自动重开",
+          "description": "叔叔不约只配女 并自动问好，自动重开",
+          "url": "https://greasyfork.org/scripts/503155-%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6%E5%8F%AA%E9%85%8D%E5%A5%B3%E5%B9%B6%E8%87%AA%E5%8A%A8%E9%97%AE%E5%A5%BD-%E8%87%AA%E5%8A%A8%E9%87%8D%E5%BC%80",
+          "code_url": "https://update.greasyfork.org/scripts/503155/%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6%E5%8F%AA%E9%85%8D%E5%A5%B3%E5%B9%B6%E8%87%AA%E5%8A%A8%E9%97%AE%E5%A5%BD%EF%BC%8C%E8%87%AA%E5%8A%A8%E9%87%8D%E5%BC%80.user.js",
+          "code_size": 3081,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "叔叔不约只配女并自动问好，自动重开",
+  "description": "叔叔不约只配女 并自动问好，自动重开",
+  "url": "https://greasyfork.org/scripts/503155-%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6%E5%8F%AA%E9%85%8D%E5%A5%B3%E5%B9%B6%E8%87%AA%E5%8A%A8%E9%97%AE%E5%A5%BD-%E8%87%AA%E5%8A%A8%E9%87%8D%E5%BC%80",
+  "code_url": "https://update.greasyfork.org/scripts/503155/%E5%8F%94%E5%8F%94%E4%B8%8D%E7%BA%A6%E5%8F%AA%E9%85%8D%E5%A5%B3%E5%B9%B6%E8%87%AA%E5%8A%A8%E9%97%AE%E5%A5%BD%EF%BC%8C%E8%87%AA%E5%8A%A8%E9%87%8D%E5%BC%80.user.js",
+  "code_size": 3081,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

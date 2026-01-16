@@ -1,0 +1,33 @@
+{
+  "id": 549780,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-17T02:13:23.000Z",
+  "code_updated_at": "2025-09-17T02:13:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1236048,
+      "name": "Shawn_oo",
+      "created_at": "2023-12-19T01:14:27.000Z",
+      "url": "https://greasyfork.org/users/1236048-shawn-oo"
+    }
+  ],
+  "name": "Ozon SKU重量获取工具",
+  "description": "批量获取Ozon平台商品SKU对应的重量信息",
+  "url": "https://greasyfork.org/scripts/549780-ozon-sku%E9%87%8D%E9%87%8F%E8%8E%B7%E5%8F%96%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/549780/Ozon%20SKU%E9%87%8D%E9%87%8F%E8%8E%B7%E5%8F%96%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 12326,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

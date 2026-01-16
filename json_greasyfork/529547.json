@@ -1,0 +1,34 @@
+{
+  "id": 529547,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-11T23:43:47.000Z",
+  "code_updated_at": "2025-03-11T23:43:47.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354731,
+      "name": "tesnon wan",
+      "created_at": "2024-08-19T20:58:09.000Z",
+      "url": "https://greasyfork.org/users/1354731-tesnon-wan",
+      "scripts": []
+    }
+  ],
+  "name": "GGn Staff PM to Forum Post",
+  "description": "Convert old staff PMs into forum posts",
+  "url": "https://greasyfork.org/scripts/529547-ggn-staff-pm-to-forum-post",
+  "code_url": "https://update.greasyfork.org/scripts/529547/GGn%20Staff%20PM%20to%20Forum%20Post.user.js",
+  "code_size": 6912,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 512041,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-09T20:05:29.000Z",
+  "code_updated_at": "2024-10-09T21:11:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1308592,
+      "name": "Jacob Freind",
+      "created_at": "2024-05-28T16:06:31.000Z",
+      "url": "https://greasyfork.org/users/1308592-jacob-freind",
+      "scripts": []
+    }
+  ],
+  "name": "Hide Non Weather Report Posts from Havel",
+  "description": "Hide posts within אייוועלט בולעטין that's not containing hurricane-related texts and allow them to be toggled",
+  "url": "https://greasyfork.org/scripts/512041-hide-non-weather-report-posts-from-havel",
+  "code_url": "https://update.greasyfork.org/scripts/512041/Hide%20Non%20Weather%20Report%20Posts%20from%20Havel.user.js",
+  "code_size": 3873,
+  "license": null,
+  "version": "2.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508765,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-16T23:16:46.000Z",
+    "code_updated_at": "2025-01-08T05:10:33.000Z",
+    "namespace": "https://www.geoguessr.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368777,
+        "name": "54_maps",
+        "created_at": "2024-09-16T22:49:24.000Z",
+        "url": "https://greasyfork.org/users/1368777-54-maps"
+      }
+    ],
+    "name": "An Easy World: Tips",
+    "description": "Display tips on An Easy World, fetched from the database",
+    "url": "https://greasyfork.org/scripts/508765-an-easy-world-tips",
+    "code_url": "https://update.greasyfork.org/scripts/508765/An%20Easy%20World%3A%20Tips.user.js",
+    "code_size": 45470,
+    "license": "GNU GPLv3",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

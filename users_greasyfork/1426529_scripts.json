@@ -1,0 +1,134 @@
+[
+  {
+    "id": 534937,
+    "daily_installs": 0,
+    "total_installs": 135,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-04T17:22:30.000Z",
+    "code_updated_at": "2025-12-07T16:04:18.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426529,
+        "name": "FlyingGorae",
+        "created_at": "2025-01-23T14:46:42.000Z",
+        "url": "https://greasyfork.org/users/1426529-flyinggorae"
+      }
+    ],
+    "name": "Bypass Google Search Region",
+    "description": "Add button to bypass Google Search region",
+    "url": "https://greasyfork.org/scripts/534937-bypass-google-search-region",
+    "code_url": "https://update.greasyfork.org/scripts/534937/Bypass%20Google%20Search%20Region.user.js",
+    "code_size": 10845,
+    "license": "MIT License",
+    "version": "2.9",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527901,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T05:53:59.000Z",
+    "code_updated_at": "2025-11-05T03:44:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426529,
+        "name": "FlyingGorae",
+        "created_at": "2025-01-23T14:46:42.000Z",
+        "url": "https://greasyfork.org/users/1426529-flyinggorae"
+      }
+    ],
+    "name": "Two-Finger Long Press for Extend Selection",
+    "description": "Press and hold with two fingers to select the entire text block",
+    "url": "https://greasyfork.org/scripts/527901-two-finger-long-press-for-extend-selection",
+    "code_url": "https://update.greasyfork.org/scripts/527901/Two-Finger%20Long%20Press%20for%20Extend%20Selection.user.js",
+    "code_size": 1324,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 527900,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T05:48:33.000Z",
+    "code_updated_at": "2025-11-05T03:33:26.000Z",
+    "namespace": "https://greasyfork.org/users/1426529",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426529,
+        "name": "FlyingGorae",
+        "created_at": "2025-01-23T14:46:42.000Z",
+        "url": "https://greasyfork.org/users/1426529-flyinggorae"
+      }
+    ],
+    "name": "Devtool mobile",
+    "description": "Enables you to open developer tools on mobile",
+    "url": "https://greasyfork.org/scripts/527900-devtool-mobile",
+    "code_url": "https://update.greasyfork.org/scripts/527900/Devtool%20mobile.user.js",
+    "code_size": 1983,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524654,
+    "daily_installs": 0,
+    "total_installs": 71,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T15:55:57.000Z",
+    "code_updated_at": "2025-12-05T06:15:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426529,
+        "name": "FlyingGorae",
+        "created_at": "2025-01-23T14:46:42.000Z",
+        "url": "https://greasyfork.org/users/1426529-flyinggorae"
+      }
+    ],
+    "name": "Mobile Video Seek Gesture",
+    "description": "On mobile, swipe left or right to seek the video, long press to speed up",
+    "url": "https://greasyfork.org/scripts/524654-mobile-video-seek-gesture",
+    "code_url": "https://update.greasyfork.org/scripts/524654/Mobile%20Video%20Seek%20Gesture.user.js",
+    "code_size": 9196,
+    "license": "MIT License",
+    "version": "8.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

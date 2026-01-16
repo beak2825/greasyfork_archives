@@ -1,0 +1,33 @@
+{
+  "id": 544453,
+  "daily_installs": 1,
+  "total_installs": 42,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-03T00:18:10.000Z",
+  "code_updated_at": "2025-08-03T00:19:35.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1485145,
+      "name": "Rubystance",
+      "created_at": "2025-06-18T03:53:36.000Z",
+      "url": "https://greasyfork.org/users/1485145-rubystance"
+    }
+  ],
+  "name": "Bagi Auto Faucet",
+  "description": "IDK",
+  "url": "https://greasyfork.org/scripts/544453-bagi-auto-faucet",
+  "code_url": "https://update.greasyfork.org/scripts/544453/Bagi%20Auto%20Faucet.user.js",
+  "code_size": 5796,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

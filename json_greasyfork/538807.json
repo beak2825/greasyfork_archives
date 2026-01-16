@@ -1,0 +1,34 @@
+{
+  "id": 538807,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-08T11:35:35.000Z",
+  "code_updated_at": "2025-12-27T11:40:57.000Z",
+  "namespace": "https://greasyfork.org/ja/users/864059",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 864059,
+      "name": "七色の彩り",
+      "created_at": "2022-01-12T15:56:50.000Z",
+      "url": "https://greasyfork.org/users/864059-%E4%B8%83%E8%89%B2%E3%81%AE%E5%BD%A9%E3%82%8A",
+      "scripts": []
+    }
+  ],
+  "name": "Open2ch NG Word Akuton dev",
+  "description": "Open2chでNGワード/ネーム/行数/IDもしくはL指定で自動アク禁。権限切れ・他者アク禁検知で、賢く安全に送信を制御（タイトル指定で自動起動）。",
+  "url": "https://greasyfork.org/scripts/538807-open2ch-ng-word-akuton-dev",
+  "code_url": "https://update.greasyfork.org/scripts/538807/Open2ch%20NG%20Word%20Akuton%20dev.user.js",
+  "code_size": 80203,
+  "license": "MIT License",
+  "version": "1.9.6",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

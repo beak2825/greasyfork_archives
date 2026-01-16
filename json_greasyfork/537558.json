@@ -1,0 +1,34 @@
+{
+  "id": 537558,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-28T15:28:02.000Z",
+  "code_updated_at": "2025-11-21T15:31:21.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1440358,
+      "name": "Anne Belle",
+      "created_at": "2025-02-26T18:08:43.000Z",
+      "url": "https://greasyfork.org/users/1440358-anne-belle",
+      "scripts": []
+    }
+  ],
+  "name": "Loadout Reveal",
+  "description": "NST: Loadout reveal for those in gunshops",
+  "url": "https://greasyfork.org/scripts/537558-loadout-reveal",
+  "code_url": "https://update.greasyfork.org/scripts/537558/Loadout%20Reveal.user.js",
+  "code_size": 14799,
+  "license": "Attribution-NonCommercial-NoDerivatives 4.0 International",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

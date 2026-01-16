@@ -1,0 +1,59 @@
+{
+  "id": 512471,
+  "daily_installs": 0,
+  "total_installs": 56,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-13T15:04:13.000Z",
+  "code_updated_at": "2024-10-13T15:04:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1380431,
+      "name": "CHANXINx",
+      "created_at": "2024-10-13T15:01:35.000Z",
+      "url": "https://greasyfork.org/users/1380431-chanxinx",
+      "scripts": [
+        {
+          "id": 512471,
+          "daily_installs": 0,
+          "total_installs": 56,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-13T15:04:13.000Z",
+          "code_updated_at": "2024-10-13T15:04:13.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bilibili 自动设置播放速度、开启字幕及网页全屏快捷键",
+          "description": "自动将 B站视频播放速度设置为2.3倍速，开启字幕，并添加网页全屏快捷键（按 'G' 键）",
+          "url": "https://greasyfork.org/scripts/512471-bilibili-%E8%87%AA%E5%8A%A8%E8%AE%BE%E7%BD%AE%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6-%E5%BC%80%E5%90%AF%E5%AD%97%E5%B9%95%E5%8F%8A%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E5%BF%AB%E6%8D%B7%E9%94%AE",
+          "code_url": "https://update.greasyfork.org/scripts/512471/Bilibili%20%E8%87%AA%E5%8A%A8%E8%AE%BE%E7%BD%AE%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6%E3%80%81%E5%BC%80%E5%90%AF%E5%AD%97%E5%B9%95%E5%8F%8A%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+          "code_size": 5081,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bilibili 自动设置播放速度、开启字幕及网页全屏快捷键",
+  "description": "自动将 B站视频播放速度设置为2.3倍速，开启字幕，并添加网页全屏快捷键（按 'G' 键）",
+  "url": "https://greasyfork.org/scripts/512471-bilibili-%E8%87%AA%E5%8A%A8%E8%AE%BE%E7%BD%AE%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6-%E5%BC%80%E5%90%AF%E5%AD%97%E5%B9%95%E5%8F%8A%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E5%BF%AB%E6%8D%B7%E9%94%AE",
+  "code_url": "https://update.greasyfork.org/scripts/512471/Bilibili%20%E8%87%AA%E5%8A%A8%E8%AE%BE%E7%BD%AE%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6%E3%80%81%E5%BC%80%E5%90%AF%E5%AD%97%E5%B9%95%E5%8F%8A%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+  "code_size": 5081,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

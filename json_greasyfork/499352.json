@@ -1,0 +1,59 @@
+{
+  "id": 499352,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-01T07:06:13.000Z",
+  "code_updated_at": "2024-07-20T04:38:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1075350,
+      "name": "RaInSLc",
+      "created_at": "2023-05-08T06:51:54.000Z",
+      "url": "https://greasyfork.org/users/1075350-rainslc",
+      "scripts": [
+        {
+          "id": 499352,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-01T07:06:13.000Z",
+          "code_updated_at": "2024-07-20T04:38:17.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bili尺寸切换/自动连播",
+          "description": "3为4:3 4为16:9 实际是从第一行到第二行按顺序从0排列",
+          "url": "https://greasyfork.org/scripts/499352-bili%E5%B0%BA%E5%AF%B8%E5%88%87%E6%8D%A2-%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD",
+          "code_url": "https://update.greasyfork.org/scripts/499352/bili%E5%B0%BA%E5%AF%B8%E5%88%87%E6%8D%A2%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD.user.js",
+          "code_size": 10734,
+          "license": null,
+          "version": "2024-07-20",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bili尺寸切换/自动连播",
+  "description": "3为4:3 4为16:9 实际是从第一行到第二行按顺序从0排列",
+  "url": "https://greasyfork.org/scripts/499352-bili%E5%B0%BA%E5%AF%B8%E5%88%87%E6%8D%A2-%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD",
+  "code_url": "https://update.greasyfork.org/scripts/499352/bili%E5%B0%BA%E5%AF%B8%E5%88%87%E6%8D%A2%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%92%AD.user.js",
+  "code_size": 10734,
+  "license": null,
+  "version": "2024-07-20",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

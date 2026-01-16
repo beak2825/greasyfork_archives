@@ -1,0 +1,68 @@
+[
+  {
+    "id": 541095,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-29T07:35:30.000Z",
+    "code_updated_at": "2025-06-29T07:35:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083392,
+        "name": "Gwen0x4c3",
+        "created_at": "2023-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/1083392-gwen0x4c3"
+      }
+    ],
+    "name": "百度教育自动展示答案｜粘贴自动搜索｜自动关闭页面",
+    "description": "在百度易学天工页面自动处理粘贴和点击操作",
+    "url": "https://greasyfork.org/scripts/541095-%E7%99%BE%E5%BA%A6%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E5%B1%95%E7%A4%BA%E7%AD%94%E6%A1%88-%E7%B2%98%E8%B4%B4%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2-%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E9%A1%B5%E9%9D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/541095/%E7%99%BE%E5%BA%A6%E6%95%99%E8%82%B2%E8%87%AA%E5%8A%A8%E5%B1%95%E7%A4%BA%E7%AD%94%E6%A1%88%EF%BD%9C%E7%B2%98%E8%B4%B4%E8%87%AA%E5%8A%A8%E6%90%9C%E7%B4%A2%EF%BD%9C%E8%87%AA%E5%8A%A8%E5%85%B3%E9%97%AD%E9%A1%B5%E9%9D%A2.user.js",
+    "code_size": 5278,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505578,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T10:51:02.000Z",
+    "code_updated_at": "2024-08-28T10:51:02.000Z",
+    "namespace": "https://greasyfork.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1083392,
+        "name": "Gwen0x4c3",
+        "created_at": "2023-05-23T09:05:17.000Z",
+        "url": "https://greasyfork.org/users/1083392-gwen0x4c3"
+      }
+    ],
+    "name": "penguinreaders下载pdf",
+    "description": "免费下载penguinreaders的书pdf",
+    "url": "https://greasyfork.org/scripts/505578-penguinreaders%E4%B8%8B%E8%BD%BDpdf",
+    "code_url": "https://update.greasyfork.org/scripts/505578/penguinreaders%E4%B8%8B%E8%BD%BDpdf.user.js",
+    "code_size": 3138,
+    "license": "GPL",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

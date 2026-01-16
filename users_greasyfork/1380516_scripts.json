@@ -30,6 +30,243 @@
     "version": "5.8",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 545965,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-15T12:54:18.000Z",
+    "code_updated_at": "2025-08-16T19:35:18.000Z",
+    "namespace": "comfy.torn.tools.allinone",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "Discord↔Torn Reviver (All-in-One v1.3.5 — Lean UI, blocklist only)",
+    "description": "Lean UI: block by faction phrases (bots only, case-insensitive, exact phrase w/ flexible whitespace). Keeps Doctor-once, per-message/XID dedupe, 2s coalesce, and Torn auto-close.",
+    "url": "https://greasyfork.org/scripts/545965-discord-torn-reviver-all-in-one-v1-3-5-lean-ui-blocklist-only",
+    "code_url": "https://update.greasyfork.org/scripts/545965/Discord%E2%86%94Torn%20Reviver%20%28All-in-One%20v135%20%E2%80%94%20Lean%20UI%2C%20blocklist%20only%29.user.js",
+    "code_size": 31474,
+    "license": "MIT License",
+    "version": "1.3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 544127,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-30T18:46:24.000Z",
+    "code_updated_at": "2025-07-30T18:46:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "Torn Revive Booster - Fast Load Edition",
+    "description": "Boost revive button, hide extras, and strip non-essential styles/images for faster loading on Torn.com. Includes a Fast Mode toggle and darkmode interface.",
+    "url": "https://greasyfork.org/scripts/544127-torn-revive-booster-fast-load-edition",
+    "code_url": "https://update.greasyfork.org/scripts/544127/Torn%20Revive%20Booster%20-%20Fast%20Load%20Edition.user.js",
+    "code_size": 7819,
+    "license": "MIT License",
+    "version": "4.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 544126,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-30T18:44:57.000Z",
+    "code_updated_at": "2025-07-30T18:44:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "Torn Profile Button Hider (Darkmode + Drag + Memory)",
+    "description": "Toggle visibility of Torn.com profile buttons (dark mode, collapsible UI, global ON/OFF, draggable)",
+    "url": "https://greasyfork.org/scripts/544126-torn-profile-button-hider-darkmode-drag-memory",
+    "code_url": "https://update.greasyfork.org/scripts/544126/Torn%20Profile%20Button%20Hider%20%28Darkmode%20%2B%20Drag%20%2B%20Memory%29.user.js",
+    "code_size": 6947,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543914,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T20:07:13.000Z",
+    "code_updated_at": "2025-07-28T20:07:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "Torn Action Button Hider (Instant + Customizable)",
+    "description": "Instantly hide Mug, Leave, and Hospitalize buttons on Torn attack pages with a draggable, live UI panel.",
+    "url": "https://greasyfork.org/scripts/543914-torn-action-button-hider-instant-customizable",
+    "code_url": "https://update.greasyfork.org/scripts/543914/Torn%20Action%20Button%20Hider%20%28Instant%20%2B%20Customizable%29.user.js",
+    "code_size": 7363,
+    "license": null,
+    "version": "2.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543547,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-24T20:54:44.000Z",
+    "code_updated_at": "2025-07-24T20:54:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "DF`s Revive Booster",
+    "description": "Enlarges revive button, hides extras with per-button control, adds stats tracker.",
+    "url": "https://greasyfork.org/scripts/543547-df-s-revive-booster",
+    "code_url": "https://update.greasyfork.org/scripts/543547/DF%60s%20Revive%20Booster.user.js",
+    "code_size": 11793,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543431,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-23T14:28:37.000Z",
+    "code_updated_at": "2025-07-23T16:10:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "Torn Revive Booster",
+    "description": "Enlarges the revive button, hides extras, and adds a toggleable NoConfirm Revive on Torn.com profiles with a dark mode compact toggle menu.",
+    "url": "https://greasyfork.org/scripts/543431-torn-revive-booster",
+    "code_url": "https://update.greasyfork.org/scripts/543431/Torn%20Revive%20Booster.user.js",
+    "code_size": 8913,
+    "license": "MIT License",
+    "version": "3.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512502,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T19:19:57.000Z",
+    "code_updated_at": "2024-11-28T00:23:38.000Z",
+    "namespace": "medicare.private.revivepercentage",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321816,
+        "name": "Medicare",
+        "created_at": "2024-06-21T19:44:14.000Z",
+        "url": "https://greasyfork.org/users/1321816-medicare"
+      },
+      {
+        "id": 1380516,
+        "name": "Dirt-fairy",
+        "created_at": "2024-10-13T18:56:35.000Z",
+        "url": "https://greasyfork.org/users/1380516-dirt-fairy"
+      }
+    ],
+    "name": "TORN: Revive Percentage2",
+    "description": "Show whether a revive would be covered under the contract.",
+    "url": "https://greasyfork.org/scripts/512502-torn-revive-percentage2",
+    "code_url": "https://update.greasyfork.org/scripts/512502/TORN%3A%20Revive%20Percentage2.user.js",
+    "code_size": 4892,
+    "license": null,
+    "version": "1.0.5.3",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "id": 526350,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-09T05:58:43.000Z",
+  "code_updated_at": "2025-02-11T03:28:37.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1019419,
+      "name": "owell",
+      "created_at": "2023-01-31T11:01:15.000Z",
+      "url": "https://greasyfork.org/users/1019419-owell",
+      "scripts": []
+    }
+  ],
+  "name": "shuke excel write",
+  "description": "数科网页快捷填写-按照从页面识别出来的字段顺序从excel整行填入到input中",
+  "url": "https://greasyfork.org/scripts/526350-shuke-excel-write",
+  "code_url": "https://update.greasyfork.org/scripts/526350/shuke%20excel%20write.user.js",
+  "code_size": 3158,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

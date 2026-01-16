@@ -1,0 +1,34 @@
+{
+  "id": 540104,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T08:28:28.000Z",
+  "code_updated_at": "2025-06-20T08:28:28.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1478402,
+      "name": "悪殺会V1",
+      "created_at": "2025-06-03T12:47:10.000Z",
+      "url": "https://greasyfork.org/users/1478402-%E6%82%AA%E6%AE%BA%E4%BC%9Av1",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube自動コメント投稿",
+  "description": "YouTubeのコメント欄を自動でアクティブにし、0.01秒ごとにコメントを自動投稿します。",
+  "url": "https://greasyfork.org/scripts/540104-youtube%E8%87%AA%E5%8B%95%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E6%8A%95%E7%A8%BF",
+  "code_url": "https://update.greasyfork.org/scripts/540104/YouTube%E8%87%AA%E5%8B%95%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88%E6%8A%95%E7%A8%BF.user.js",
+  "code_size": 4633,
+  "license": null,
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

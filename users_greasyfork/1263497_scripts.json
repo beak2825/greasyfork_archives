@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547522,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-27T21:13:03.000Z",
+    "code_updated_at": "2025-08-27T21:13:02.000Z",
+    "namespace": "franz.tools.scholar.copybib",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1263497,
+        "name": "nvs91",
+        "created_at": "2024-02-19T07:50:14.000Z",
+        "url": "https://greasyfork.org/users/1263497-nvs91"
+      }
+    ],
+    "name": "Google Scholar: One-Click Copy BibTeX (GM_xmlhttpRequest fix)",
+    "description": "Add a \"Copy BibTeX\" button to each Google Scholar result and copy BibTeX in one click. Uses GM_xmlhttpRequest to bypass CORS issues.",
+    "url": "https://greasyfork.org/scripts/547522-google-scholar-one-click-copy-bibtex-gm-xmlhttprequest-fix",
+    "code_url": "https://update.greasyfork.org/scripts/547522/Google%20Scholar%3A%20One-Click%20Copy%20BibTeX%20%28GM_xmlhttpRequest%20fix%29.user.js",
+    "code_size": 7773,
+    "license": "MIT License",
+    "version": "0.5.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527409,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-19T07:48:16.000Z",
+    "code_updated_at": "2025-02-19T07:48:16.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 91205,
+        "name": "夏花",
+        "created_at": "2016-12-31T23:00:47.000Z",
+        "url": "https://greasyfork.org/users/91205-%E5%A4%8F%E8%8A%B1"
+      }
+    ],
+    "name": "浙大 DeepSeek 免登陆",
+    "description": "浙大 DeepSeek 免登陆，打开即用",
+    "url": "https://greasyfork.org/scripts/527409-%E6%B5%99%E5%A4%A7-deepseek-%E5%85%8D%E7%99%BB%E9%99%86",
+    "code_url": "https://update.greasyfork.org/scripts/527409/%E6%B5%99%E5%A4%A7%20DeepSeek%20%E5%85%8D%E7%99%BB%E9%99%86.user.js",
+    "code_size": 806,
+    "license": "MIT License",
+    "version": "2025-02-19",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502720,
+    "daily_installs": 0,
+    "total_installs": 87,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-05T20:29:35.000Z",
+    "code_updated_at": "2024-08-06T05:02:20.000Z",
+    "namespace": "linux.do",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 91205,
+        "name": "夏花",
+        "created_at": "2016-12-31T23:00:47.000Z",
+        "url": "https://greasyfork.org/users/91205-%E5%A4%8F%E8%8A%B1"
+      }
+    ],
+    "name": "和家亲分享永久直链",
+    "description": "linux.do",
+    "url": "https://greasyfork.org/scripts/502720-%E5%92%8C%E5%AE%B6%E4%BA%B2%E5%88%86%E4%BA%AB%E6%B0%B8%E4%B9%85%E7%9B%B4%E9%93%BE",
+    "code_url": "https://update.greasyfork.org/scripts/502720/%E5%92%8C%E5%AE%B6%E4%BA%B2%E5%88%86%E4%BA%AB%E6%B0%B8%E4%B9%85%E7%9B%B4%E9%93%BE.user.js",
+    "code_size": 7165,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 511681,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-06T14:57:39.000Z",
+  "code_updated_at": "2024-10-06T14:57:39.000Z",
+  "namespace": "https://greasyfork.org/users/1377504",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1377504,
+      "name": "Sebastian Krupczatka",
+      "created_at": "2024-10-06T14:55:06.000Z",
+      "url": "https://greasyfork.org/users/1377504-sebastian-krupczatka",
+      "scripts": [
+        {
+          "id": 511681,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-06T14:57:39.000Z",
+          "code_updated_at": "2024-10-06T14:57:39.000Z",
+          "namespace": "https://greasyfork.org/users/1377504",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Bettermod Dorgathon [NI]",
+          "description": "Ramki",
+          "url": "https://greasyfork.org/scripts/511681-bettermod-dorgathon-ni",
+          "code_url": "https://update.greasyfork.org/scripts/511681/Bettermod%20Dorgathon%20%5BNI%5D.user.js",
+          "code_size": 849,
+          "license": null,
+          "version": "0.0.1.20241006145739",
+          "locale": "pl",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Bettermod Dorgathon [NI]",
+  "description": "Ramki",
+  "url": "https://greasyfork.org/scripts/511681-bettermod-dorgathon-ni",
+  "code_url": "https://update.greasyfork.org/scripts/511681/Bettermod%20Dorgathon%20%5BNI%5D.user.js",
+  "code_size": 849,
+  "license": null,
+  "version": "0.0.1.20241006145739",
+  "locale": "pl",
+  "deleted": false,
+  "visibility": "public"
+}

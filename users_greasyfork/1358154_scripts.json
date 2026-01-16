@@ -1,0 +1,35 @@
+[
+  {
+    "id": 505277,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-26T14:06:13.000Z",
+    "code_updated_at": "2024-08-26T14:37:15.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1358154,
+        "name": "PA733",
+        "created_at": "2024-08-26T13:55:03.000Z",
+        "url": "https://greasyfork.org/users/1358154-pa733"
+      }
+    ],
+    "name": "兰州理工大学教务系统课程表修正",
+    "description": "修正教务系统课程表的显示问题（如课程名称被显示成开课班级）",
+    "url": "https://greasyfork.org/scripts/505277-%E5%85%B0%E5%B7%9E%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E8%A1%A8%E4%BF%AE%E6%AD%A3",
+    "code_url": "https://update.greasyfork.org/scripts/505277/%E5%85%B0%E5%B7%9E%E7%90%86%E5%B7%A5%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AF%BE%E7%A8%8B%E8%A1%A8%E4%BF%AE%E6%AD%A3.user.js",
+    "code_size": 2175,
+    "license": "MIT License",
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

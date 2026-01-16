@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536994,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-23T15:08:06.000Z",
+    "code_updated_at": "2025-08-07T12:44:08.000Z",
+    "namespace": "https://github.com/eddiehe99/douban-ranker",
+    "support_url": "https://github.com/eddiehe99/douban-ranker/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1473889,
+        "name": "eddiehe99",
+        "created_at": "2025-05-23T15:00:58.000Z",
+        "url": "https://greasyfork.org/users/1473889-eddiehe99"
+      }
+    ],
+    "name": "豆瓣榜单助手·Douban-Ranker",
+    "description": "在豆瓣电影、播客、音乐页面展示作品在不同榜单中的排名",
+    "url": "https://greasyfork.org/scripts/536994-%E8%B1%86%E7%93%A3%E6%A6%9C%E5%8D%95%E5%8A%A9%E6%89%8B-douban-ranker",
+    "code_url": "https://update.greasyfork.org/scripts/536994/%E8%B1%86%E7%93%A3%E6%A6%9C%E5%8D%95%E5%8A%A9%E6%89%8B%C2%B7Douban-Ranker.user.js",
+    "code_size": 15186,
+    "license": "MIT License",
+    "version": "0.4.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

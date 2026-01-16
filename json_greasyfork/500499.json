@@ -1,0 +1,33 @@
+{
+  "id": 500499,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-13T04:59:34.000Z",
+  "code_updated_at": "2024-07-22T03:36:23.000Z",
+  "namespace": "fireloong",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 768378,
+      "name": "itsky71",
+      "created_at": "2021-05-04T12:11:07.000Z",
+      "url": "https://greasyfork.org/users/768378-itsky71"
+    }
+  ],
+  "name": "api platform 翻译文档 Debugging",
+  "description": "翻译文档 distribution/debugging",
+  "url": "https://greasyfork.org/scripts/500499-api-platform-%E7%BF%BB%E8%AF%91%E6%96%87%E6%A1%A3-debugging",
+  "code_url": "https://update.greasyfork.org/scripts/500499/api%20platform%20%E7%BF%BB%E8%AF%91%E6%96%87%E6%A1%A3%20Debugging.user.js",
+  "code_size": 841,
+  "license": "MIT License",
+  "version": "0.0.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

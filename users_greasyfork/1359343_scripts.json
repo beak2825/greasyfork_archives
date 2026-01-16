@@ -1,0 +1,68 @@
+[
+  {
+    "id": 505610,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T13:56:21.000Z",
+    "code_updated_at": "2024-08-28T13:56:20.000Z",
+    "namespace": "http://userstyles.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1359343,
+        "name": "That1Kid",
+        "created_at": "2024-08-28T13:50:54.000Z",
+        "url": "https://greasyfork.org/users/1359343-that1kid"
+      }
+    ],
+    "name": "CustomYT2",
+    "description": "paired with CustomYT1",
+    "url": "https://greasyfork.org/scripts/505610-customyt2",
+    "code_url": "https://update.greasyfork.org/scripts/505610/CustomYT2.user.js",
+    "code_size": 26043,
+    "license": null,
+    "version": "0.20200404133325",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 505609,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T13:54:00.000Z",
+    "code_updated_at": "2024-08-28T13:54:00.000Z",
+    "namespace": "http://userstyles.org",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1359343,
+        "name": "That1Kid",
+        "created_at": "2024-08-28T13:50:54.000Z",
+        "url": "https://greasyfork.org/users/1359343-that1kid"
+      }
+    ],
+    "name": "CustomYT1",
+    "description": "You will like this one cuz of special looks (other one is CustomYT2, and add them together)",
+    "url": "https://greasyfork.org/scripts/505609-customyt1",
+    "code_url": "https://update.greasyfork.org/scripts/505609/CustomYT1.user.js",
+    "code_size": 62809,
+    "license": null,
+    "version": "0.20201103193756",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

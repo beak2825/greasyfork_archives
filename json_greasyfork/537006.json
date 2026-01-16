@@ -1,0 +1,59 @@
+{
+  "id": 537006,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-23T16:41:35.000Z",
+  "code_updated_at": "2025-05-23T16:41:35.000Z",
+  "namespace": "https://space.bilibili.com/28106105?spm_id_from=333.1007.0.0",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473935,
+      "name": "wuyyi",
+      "created_at": "2025-05-23T16:38:36.000Z",
+      "url": "https://greasyfork.org/users/1473935-wuyyi",
+      "scripts": [
+        {
+          "id": 537006,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-23T16:41:35.000Z",
+          "code_updated_at": "2025-05-23T16:41:35.000Z",
+          "namespace": "https://space.bilibili.com/28106105?spm_id_from=333.1007.0.0",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bilibili弹幕结尾自动添加desuwa",
+          "description": "原作者@阿琴-kotori",
+          "url": "https://greasyfork.org/scripts/537006-bilibili%E5%BC%B9%E5%B9%95%E7%BB%93%E5%B0%BE%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0desuwa",
+          "code_url": "https://update.greasyfork.org/scripts/537006/bilibili%E5%BC%B9%E5%B9%95%E7%BB%93%E5%B0%BE%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0desuwa.user.js",
+          "code_size": 11140,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bilibili弹幕结尾自动添加desuwa",
+  "description": "原作者@阿琴-kotori",
+  "url": "https://greasyfork.org/scripts/537006-bilibili%E5%BC%B9%E5%B9%95%E7%BB%93%E5%B0%BE%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0desuwa",
+  "code_url": "https://update.greasyfork.org/scripts/537006/bilibili%E5%BC%B9%E5%B9%95%E7%BB%93%E5%B0%BE%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0desuwa.user.js",
+  "code_size": 11140,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

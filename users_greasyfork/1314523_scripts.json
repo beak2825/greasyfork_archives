@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497361,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-08T13:24:26.000Z",
+    "code_updated_at": "2024-06-08T13:26:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1314523,
+        "name": "Patrick ibsen",
+        "created_at": "2024-06-08T13:18:23.000Z",
+        "url": "https://greasyfork.org/users/1314523-patrick-ibsen"
+      }
+    ],
+    "name": "Are You Still Watching blocker",
+    "description": "A simple script looking for the pop up of \"Are You Still Watching?\" and closes it.",
+    "url": "https://greasyfork.org/scripts/497361-are-you-still-watching-blocker",
+    "code_url": "https://update.greasyfork.org/scripts/497361/Are%20You%20Still%20Watching%20blocker.user.js",
+    "code_size": 879,
+    "license": "MIT License",
+    "version": "2024-06-08",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

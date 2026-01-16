@@ -30,6 +30,39 @@
     "version": "7.2.2",
     "locale": "zh-CN",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543876,
+    "daily_installs": 1,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-28T13:23:16.000Z",
+    "code_updated_at": "2025-08-05T13:35:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499174,
+        "name": "inchliao",
+        "created_at": "2025-07-28T13:00:01.000Z",
+        "url": "https://greasyfork.org/users/1499174-inchliao"
+      }
+    ],
+    "name": "Threads 瀏覽次數工具 - 版本 7.2.1 - tf-ads.com",
+    "description": "UI/狀態最佳化：Panel寬度限制/白底半透明/按鈕狀態正確自動切換",
+    "url": "https://greasyfork.org/scripts/543876-threads-%E7%80%8F%E8%A6%BD%E6%AC%A1%E6%95%B8%E5%B7%A5%E5%85%B7-%E7%89%88%E6%9C%AC-7-2-1-tf-ads-com",
+    "code_url": "https://update.greasyfork.org/scripts/543876/Threads%20%E7%80%8F%E8%A6%BD%E6%AC%A1%E6%95%B8%E5%B7%A5%E5%85%B7%20-%20%E7%89%88%E6%9C%AC%20721%20-%20tf-adscom.user.js",
+    "code_size": 18132,
+    "license": "MIT License",
+    "version": "7.2.1",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

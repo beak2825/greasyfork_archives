@@ -1,0 +1,33 @@
+{
+  "id": 531254,
+  "daily_installs": 0,
+  "total_installs": 96,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-29T17:12:59.000Z",
+  "code_updated_at": "2025-03-29T17:23:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451750,
+      "name": "you boots.you",
+      "created_at": "2025-03-29T17:05:02.000Z",
+      "url": "https://greasyfork.org/users/1451750-you-boots-you"
+    }
+  ],
+  "name": "BLOOKET Gui",
+  "description": "I didn't make the script go to  https://github.com/randomstuff69/blooketcheatsplus/blob/main/GUI/Gui.js to get it",
+  "url": "https://greasyfork.org/scripts/531254-blooket-gui",
+  "code_url": "https://update.greasyfork.org/scripts/531254/BLOOKET%20Gui.user.js",
+  "code_size": 368981,
+  "license": "MIT License",
+  "version": "2025-03-29",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

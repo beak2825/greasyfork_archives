@@ -1,0 +1,35 @@
+[
+  {
+    "id": 530860,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-25T21:22:51.000Z",
+    "code_updated_at": "2025-03-25T22:34:04.000Z",
+    "namespace": "https://greasyfork.org/users/your-username",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1450263,
+        "name": "Maciek Dobaczewski",
+        "created_at": "2025-03-25T21:19:36.000Z",
+        "url": "https://greasyfork.org/users/1450263-maciek-dobaczewski"
+      }
+    ],
+    "name": "ChatGPT Vim-Style Scrolling (Ctrl+U / Ctrl+D)",
+    "description": "Scroll ChatGPT with keyboard like Vim (Ctrl+U to scroll up, Ctrl+D to scroll down)",
+    "url": "https://greasyfork.org/scripts/530860-chatgpt-vim-style-scrolling-ctrl-u-ctrl-d",
+    "code_url": "https://update.greasyfork.org/scripts/530860/ChatGPT%20Vim-Style%20Scrolling%20%28Ctrl%2BU%20%20Ctrl%2BD%29.user.js",
+    "code_size": 1009,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

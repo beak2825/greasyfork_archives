@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 497496,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-10T05:07:34.000Z",
+    "code_updated_at": "2024-06-10T05:07:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 854175,
+        "name": "YC白白",
+        "created_at": "2021-12-16T15:47:22.000Z",
+        "url": "https://greasyfork.org/users/854175-yc%E7%99%BD%E7%99%BD"
+      }
+    ],
+    "name": "jcbstar",
+    "description": "starbucks at JCB is especially delicious",
+    "url": "https://greasyfork.org/scripts/497496-jcbstar",
+    "code_url": "https://update.greasyfork.org/scripts/497496/jcbstar.user.js",
+    "code_size": 3377,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
   }
 ]

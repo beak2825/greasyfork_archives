@@ -1,0 +1,59 @@
+{
+  "id": 546347,
+  "daily_installs": 0,
+  "total_installs": 58,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T00:48:55.000Z",
+  "code_updated_at": "2025-08-25T07:36:45.000Z",
+  "namespace": ".\\/.",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1503318,
+      "name": "Frreal",
+      "created_at": "2025-08-09T22:34:58.000Z",
+      "url": "https://greasyfork.org/users/1503318-frreal",
+      "scripts": [
+        {
+          "id": 546347,
+          "daily_installs": 0,
+          "total_installs": 58,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-19T00:48:55.000Z",
+          "code_updated_at": "2025-08-25T07:36:45.000Z",
+          "namespace": ".\\/.",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Diep.io - Custom Builds",
+          "description": "Create and save builds that upgrade automatically. T to toggle menu.",
+          "url": "https://greasyfork.org/scripts/546347-diep-io-custom-builds",
+          "code_url": "https://update.greasyfork.org/scripts/546347/Diepio%20-%20Custom%20Builds.user.js",
+          "code_size": 33359,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Diep.io - Custom Builds",
+  "description": "Create and save builds that upgrade automatically. T to toggle menu.",
+  "url": "https://greasyfork.org/scripts/546347-diep-io-custom-builds",
+  "code_url": "https://update.greasyfork.org/scripts/546347/Diepio%20-%20Custom%20Builds.user.js",
+  "code_size": 33359,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

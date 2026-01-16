@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533734,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-23T14:22:47.000Z",
+    "code_updated_at": "2025-04-23T14:22:47.000Z",
+    "namespace": "https://greasyfork.org/en/users/112088",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 112088,
+        "name": "島民",
+        "created_at": "2017-03-23T10:29:52.000Z",
+        "url": "https://greasyfork.org/users/112088-%E5%B3%B6%E6%B0%91"
+      }
+    ],
+    "name": "Komica Keyman",
+    "description": "Easy manage hide.keywords on Komica",
+    "url": "https://greasyfork.org/scripts/533734-komica-keyman",
+    "code_url": "https://update.greasyfork.org/scripts/533734/Komica%20Keyman.user.js",
+    "code_size": 23940,
+    "license": null,
+    "version": "0.1a",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526393,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-09T13:48:06.000Z",
+    "code_updated_at": "2025-02-11T13:00:14.000Z",
+    "namespace": "https://github.com/usausausausak",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 112088,
+        "name": "島民",
+        "created_at": "2017-03-23T10:29:52.000Z",
+        "url": "https://greasyfork.org/users/112088-%E5%B3%B6%E6%B0%91"
+      }
+    ],
+    "name": "Komica Blur",
+    "description": "Blur images on Komica",
+    "url": "https://greasyfork.org/scripts/526393-komica-blur",
+    "code_url": "https://update.greasyfork.org/scripts/526393/Komica%20Blur.user.js",
+    "code_size": 30540,
+    "license": null,
+    "version": "0.2a",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

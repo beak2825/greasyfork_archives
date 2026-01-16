@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519804,
+    "daily_installs": 0,
+    "total_installs": 57,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-05T02:13:23.000Z",
+    "code_updated_at": "2024-12-06T04:22:07.000Z",
+    "namespace": "http*://*.tiancai9.click",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1347411,
+        "name": "OnesZhang",
+        "created_at": "2024-08-08T03:24:24.000Z",
+        "url": "https://greasyfork.org/users/1347411-oneszhang"
+      }
+    ],
+    "name": "飞向未来增强辅助",
+    "description": "飞向未来游戏增强辅助",
+    "url": "https://greasyfork.org/scripts/519804-%E9%A3%9E%E5%90%91%E6%9C%AA%E6%9D%A5%E5%A2%9E%E5%BC%BA%E8%BE%85%E5%8A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/519804/%E9%A3%9E%E5%90%91%E6%9C%AA%E6%9D%A5%E5%A2%9E%E5%BC%BA%E8%BE%85%E5%8A%A9.user.js",
+    "code_size": 20527,
+    "license": "GNU General Public License v3.0 only",
+    "version": "3.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

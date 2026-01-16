@@ -1,0 +1,59 @@
+{
+  "id": 537171,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-25T05:05:09.000Z",
+  "code_updated_at": "2025-09-25T13:46:44.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 112234,
+      "name": "SZ NB",
+      "created_at": "2017-03-24T06:13:06.000Z",
+      "url": "https://greasyfork.org/users/112234-sz-nb",
+      "scripts": [
+        {
+          "id": 537171,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-25T05:05:09.000Z",
+          "code_updated_at": "2025-09-25T13:46:44.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Claude AI Response Model Modifier",
+          "description": "Modifies 'model' field via Tampermonkey menu, with performance improvements.",
+          "url": "https://greasyfork.org/scripts/537171-claude-ai-response-model-modifier",
+          "code_url": "https://update.greasyfork.org/scripts/537171/Claude%20AI%20Response%20Model%20Modifier.user.js",
+          "code_size": 8450,
+          "license": "MIT License",
+          "version": "2.1.4 (Optimized and Cleaned Logs)",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Claude AI Response Model Modifier",
+  "description": "Modifies 'model' field via Tampermonkey menu, with performance improvements.",
+  "url": "https://greasyfork.org/scripts/537171-claude-ai-response-model-modifier",
+  "code_url": "https://update.greasyfork.org/scripts/537171/Claude%20AI%20Response%20Model%20Modifier.user.js",
+  "code_size": 8450,
+  "license": "MIT License",
+  "version": "2.1.4 (Optimized and Cleaned Logs)",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 553778,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-26T16:05:54.000Z",
+    "code_updated_at": "2025-10-26T16:20:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291037,
+        "name": "Stefan leon",
+        "created_at": "2024-04-21T00:07:38.000Z",
+        "url": "https://greasyfork.org/users/1291037-stefan-leon"
+      }
+    ],
+    "name": "Auto Claim Inteligente — @sivermsc",
+    "description": "Da clic automáticamente, muestra balance y tiempo restante, con ventanita flotante — @sivermsc",
+    "url": "https://greasyfork.org/scripts/553778-auto-claim-inteligente-sivermsc",
+    "code_url": "https://update.greasyfork.org/scripts/553778/Auto%20Claim%20Inteligente%20%E2%80%94%20%40sivermsc.user.js",
+    "code_size": 3474,
+    "license": null,
+    "version": "1.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 527830,
+  "daily_installs": 0,
+  "total_installs": 28,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-23T12:01:46.000Z",
+  "code_updated_at": "2025-03-12T00:13:14.000Z",
+  "namespace": "https://greasyfork.org/en/users/1438773-thezealot",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1438773,
+      "name": "TheZealot",
+      "created_at": "2025-02-23T00:18:50.000Z",
+      "url": "https://greasyfork.org/users/1438773-thezealot",
+      "scripts": [
+        {
+          "id": 527830,
+          "daily_installs": 0,
+          "total_installs": 28,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-23T12:01:46.000Z",
+          "code_updated_at": "2025-03-12T00:13:14.000Z",
+          "namespace": "https://greasyfork.org/en/users/1438773-thezealot",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Hide Spoiler/NSFW Titles on Reddit",
+          "description": "Hides titles of posts marked as spoilers and/or NSFW on Reddit. Includes a toggle button to show/hide titles, and settings to 1). choose between blur and censor bar styles and 2). hide spoiler and/or NSFW titles. Settings are persistent across sessions. Script mostly made using AI.",
+          "url": "https://greasyfork.org/scripts/527830-hide-spoiler-nsfw-titles-on-reddit",
+          "code_url": "https://update.greasyfork.org/scripts/527830/Hide%20SpoilerNSFW%20Titles%20on%20Reddit.user.js",
+          "code_size": 41926,
+          "license": "MIT License",
+          "version": "2.0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Hide Spoiler/NSFW Titles on Reddit",
+  "description": "Hides titles of posts marked as spoilers and/or NSFW on Reddit. Includes a toggle button to show/hide titles, and settings to 1). choose between blur and censor bar styles and 2). hide spoiler and/or NSFW titles. Settings are persistent across sessions. Script mostly made using AI.",
+  "url": "https://greasyfork.org/scripts/527830-hide-spoiler-nsfw-titles-on-reddit",
+  "code_url": "https://update.greasyfork.org/scripts/527830/Hide%20SpoilerNSFW%20Titles%20on%20Reddit.user.js",
+  "code_size": 41926,
+  "license": "MIT License",
+  "version": "2.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

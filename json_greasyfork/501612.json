@@ -1,0 +1,33 @@
+{
+  "id": 501612,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-23T19:12:32.000Z",
+  "code_updated_at": "2024-07-23T19:19:46.000Z",
+  "namespace": "https://greasyfork.org/users/1338817",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1338817,
+      "name": "Millor",
+      "created_at": "2024-07-23T19:05:12.000Z",
+      "url": "https://greasyfork.org/users/1338817-millor"
+    }
+  ],
+  "name": "DAMGrid EM Manipulator",
+  "description": "Provides features for Energy Manager to make you rich",
+  "url": "https://greasyfork.org/scripts/501612-damgrid-em-manipulator",
+  "code_url": "https://update.greasyfork.org/scripts/501612/DAMGrid%20EM%20Manipulator.user.js",
+  "code_size": 6711,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

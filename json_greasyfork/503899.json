@@ -1,0 +1,34 @@
+{
+  "id": 503899,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-16T21:46:18.000Z",
+  "code_updated_at": "2024-08-16T22:00:53.000Z",
+  "namespace": "https://github.com/sergshap/Web-Page-Scribbler/blob/68252de90964c3d40a4d16e4429510cd058f4170/Notes%20on%20websites%20in%20the%20form%20of%20text%20and%20drawing-1.3.user.js",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1353010,
+      "name": "sergshap",
+      "created_at": "2024-08-16T21:31:39.000Z",
+      "url": "https://greasyfork.org/users/1353010-sergshap",
+      "scripts": []
+    }
+  ],
+  "name": "Notes on websites in the form of text and drawing",
+  "description": "Leave text notes and notes in the form of a picture on any pages. Everything is saved automatically, when you re-enter everything is saved.",
+  "url": "https://greasyfork.org/scripts/503899-notes-on-websites-in-the-form-of-text-and-drawing",
+  "code_url": "https://update.greasyfork.org/scripts/503899/Notes%20on%20websites%20in%20the%20form%20of%20text%20and%20drawing.user.js",
+  "code_size": 12459,
+  "license": "Immortal",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

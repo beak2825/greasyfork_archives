@@ -1,0 +1,59 @@
+{
+  "id": 515639,
+  "daily_installs": 1,
+  "total_installs": 154,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-03T21:11:55.000Z",
+  "code_updated_at": "2024-11-09T22:57:08.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1387319,
+      "name": "Lavin Sai P",
+      "created_at": "2024-10-27T21:24:22.000Z",
+      "url": "https://greasyfork.org/users/1387319-lavin-sai-p",
+      "scripts": [
+        {
+          "id": 515639,
+          "daily_installs": 1,
+          "total_installs": 154,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-03T21:11:55.000Z",
+          "code_updated_at": "2024-11-09T22:57:08.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sun vs Moon Auto Click (Switchable)",
+          "description": "Automatically clicks either the Sun or Moon Button on pressing \"S\" and Stops Clicking on pressing \"M\" on https://neal.fun/sun-vs-moon/",
+          "url": "https://greasyfork.org/scripts/515639-sun-vs-moon-auto-click-switchable",
+          "code_url": "https://update.greasyfork.org/scripts/515639/Sun%20vs%20Moon%20Auto%20Click%20%28Switchable%29.user.js",
+          "code_size": 8071,
+          "license": "MIT License",
+          "version": "3.3.2Beta",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Sun vs Moon Auto Click (Switchable)",
+  "description": "Automatically clicks either the Sun or Moon Button on pressing \"S\" and Stops Clicking on pressing \"M\" on https://neal.fun/sun-vs-moon/",
+  "url": "https://greasyfork.org/scripts/515639-sun-vs-moon-auto-click-switchable",
+  "code_url": "https://update.greasyfork.org/scripts/515639/Sun%20vs%20Moon%20Auto%20Click%20%28Switchable%29.user.js",
+  "code_size": 8071,
+  "license": "MIT License",
+  "version": "3.3.2Beta",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

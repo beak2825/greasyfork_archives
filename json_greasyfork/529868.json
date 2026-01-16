@@ -1,0 +1,59 @@
+{
+  "id": 529868,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-15T03:35:03.000Z",
+  "code_updated_at": "2025-03-15T03:35:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1445845,
+      "name": "EricZhou05",
+      "created_at": "2025-03-15T03:26:38.000Z",
+      "url": "https://greasyfork.org/users/1445845-ericzhou05",
+      "scripts": [
+        {
+          "id": 529868,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-15T03:35:03.000Z",
+          "code_updated_at": "2025-03-15T03:35:03.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "修改B站粉丝数（本地）",
+          "description": "自动更改b站前端任意up主主页的粉丝数为脚本内设定值",
+          "url": "https://greasyfork.org/scripts/529868-%E4%BF%AE%E6%94%B9b%E7%AB%99%E7%B2%89%E4%B8%9D%E6%95%B0-%E6%9C%AC%E5%9C%B0",
+          "code_url": "https://update.greasyfork.org/scripts/529868/%E4%BF%AE%E6%94%B9B%E7%AB%99%E7%B2%89%E4%B8%9D%E6%95%B0%EF%BC%88%E6%9C%AC%E5%9C%B0%EF%BC%89.user.js",
+          "code_size": 864,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "修改B站粉丝数（本地）",
+  "description": "自动更改b站前端任意up主主页的粉丝数为脚本内设定值",
+  "url": "https://greasyfork.org/scripts/529868-%E4%BF%AE%E6%94%B9b%E7%AB%99%E7%B2%89%E4%B8%9D%E6%95%B0-%E6%9C%AC%E5%9C%B0",
+  "code_url": "https://update.greasyfork.org/scripts/529868/%E4%BF%AE%E6%94%B9B%E7%AB%99%E7%B2%89%E4%B8%9D%E6%95%B0%EF%BC%88%E6%9C%AC%E5%9C%B0%EF%BC%89.user.js",
+  "code_size": 864,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 500913,
+  "daily_installs": 0,
+  "total_installs": 875,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-17T06:20:34.000Z",
+  "code_updated_at": "2024-07-18T07:00:48.000Z",
+  "namespace": "https://github.com/dldxz/NGA-BBS-plugin",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1335039,
+      "name": "dldxz",
+      "created_at": "2024-07-17T06:07:16.000Z",
+      "url": "https://greasyfork.org/users/1335039-dldxz",
+      "scripts": [
+        {
+          "id": 500913,
+          "daily_installs": 0,
+          "total_installs": 875,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-17T06:20:34.000Z",
+          "code_updated_at": "2024-07-18T07:00:48.000Z",
+          "namespace": "https://github.com/dldxz/NGA-BBS-plugin",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NGA优化摸鱼体验插件-代码图片直接浏览",
+          "description": "自动替换帖子内代码图片链接，优化跟车体验",
+          "url": "https://greasyfork.org/scripts/500913-nga%E4%BC%98%E5%8C%96%E6%91%B8%E9%B1%BC%E4%BD%93%E9%AA%8C%E6%8F%92%E4%BB%B6-%E4%BB%A3%E7%A0%81%E5%9B%BE%E7%89%87%E7%9B%B4%E6%8E%A5%E6%B5%8F%E8%A7%88",
+          "code_url": "https://update.greasyfork.org/scripts/500913/NGA%E4%BC%98%E5%8C%96%E6%91%B8%E9%B1%BC%E4%BD%93%E9%AA%8C%E6%8F%92%E4%BB%B6-%E4%BB%A3%E7%A0%81%E5%9B%BE%E7%89%87%E7%9B%B4%E6%8E%A5%E6%B5%8F%E8%A7%88.user.js",
+          "code_size": 4124,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NGA优化摸鱼体验插件-代码图片直接浏览",
+  "description": "自动替换帖子内代码图片链接，优化跟车体验",
+  "url": "https://greasyfork.org/scripts/500913-nga%E4%BC%98%E5%8C%96%E6%91%B8%E9%B1%BC%E4%BD%93%E9%AA%8C%E6%8F%92%E4%BB%B6-%E4%BB%A3%E7%A0%81%E5%9B%BE%E7%89%87%E7%9B%B4%E6%8E%A5%E6%B5%8F%E8%A7%88",
+  "code_url": "https://update.greasyfork.org/scripts/500913/NGA%E4%BC%98%E5%8C%96%E6%91%B8%E9%B1%BC%E4%BD%93%E9%AA%8C%E6%8F%92%E4%BB%B6-%E4%BB%A3%E7%A0%81%E5%9B%BE%E7%89%87%E7%9B%B4%E6%8E%A5%E6%B5%8F%E8%A7%88.user.js",
+  "code_size": 4124,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

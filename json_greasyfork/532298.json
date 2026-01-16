@@ -1,0 +1,59 @@
+{
+  "id": 532298,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-09T09:26:57.000Z",
+  "code_updated_at": "2025-04-09T09:26:57.000Z",
+  "namespace": "https://greasyfork.org/users/1441951",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441951,
+      "name": "azuki_0306",
+      "created_at": "2025-03-03T16:34:55.000Z",
+      "url": "https://greasyfork.org/users/1441951-azuki-0306",
+      "scripts": [
+        {
+          "id": 528890,
+          "daily_installs": 21,
+          "total_installs": 6293,
+          "fan_score": "80.1",
+          "good_ratings": 36,
+          "ok_ratings": 2,
+          "bad_ratings": 2,
+          "created_at": "2025-03-05T16:06:07.000Z",
+          "code_updated_at": "2025-08-25T13:41:08.000Z",
+          "namespace": "https://greasyfork.org/users/1441951",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "X/Twitter メディア一括ダウンローダー（iPhone/Android 対応)",
+          "description": "X/Twitterの画像や動画、GIFをワンクリックでダウンロードして、デフォルトの設定ではユーザーIDとポストIDで保存します。ダウンロードされるファイルの名前は任意に変更できます。iPhone/Androidでもzipを利用することで添付されたメディアをワンクリックでダウンロードすることができます。また、ダウンロード履歴をブックマークと同期します。さらに、オプションでX/Twitterのブックマーク機能を利用することでダウンロード履歴のオンライン同期が可能です。",
+          "url": "https://greasyfork.org/scripts/528890-x-twitter-%E3%83%A1%E3%83%87%E3%82%A3%E3%82%A2%E4%B8%80%E6%8B%AC%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%80%E3%83%BC-iphone-android-%E5%AF%BE%E5%BF%9C",
+          "code_url": "https://update.greasyfork.org/scripts/528890/XTwitter%20%E3%83%A1%E3%83%87%E3%82%A3%E3%82%A2%E4%B8%80%E6%8B%AC%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%80%E3%83%BC%EF%BC%88iPhoneAndroid%20%E5%AF%BE%E5%BF%9C%29.user.js",
+          "code_size": 44717,
+          "license": "MIT License",
+          "version": "1.4.5",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "X/Twitter home timeline image only",
+  "description": "X/Twitterのホームタイムラインに画像だけ表示する",
+  "url": "https://greasyfork.org/scripts/532298-x-twitter-home-timeline-image-only",
+  "code_url": "https://update.greasyfork.org/scripts/532298/XTwitter%20home%20timeline%20image%20only.user.js",
+  "code_size": 4223,
+  "license": "MIT License",
+  "version": "0.1.0",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

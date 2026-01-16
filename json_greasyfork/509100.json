@@ -1,0 +1,59 @@
+{
+  "id": 509100,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-18T22:31:40.000Z",
+  "code_updated_at": "2024-09-18T22:38:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 985972,
+      "name": "铭泉",
+      "created_at": "2022-11-21T08:36:08.000Z",
+      "url": "https://greasyfork.org/users/985972-%E9%93%AD%E6%B3%89",
+      "scripts": [
+        {
+          "id": 509100,
+          "daily_installs": 0,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-18T22:31:40.000Z",
+          "code_updated_at": "2024-09-18T22:38:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Neat Reader Font and Size Adjuster (4 Working Fonts)",
+          "description": "Adjust font size and choose from 4 working Chinese fonts with persistent settings on Neat Reader web app.",
+          "url": "https://greasyfork.org/scripts/509100-neat-reader-font-and-size-adjuster-4-working-fonts",
+          "code_url": "https://update.greasyfork.org/scripts/509100/Neat%20Reader%20Font%20and%20Size%20Adjuster%20%284%20Working%20Fonts%29.user.js",
+          "code_size": 3785,
+          "license": null,
+          "version": "2.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Neat Reader Font and Size Adjuster (4 Working Fonts)",
+  "description": "Adjust font size and choose from 4 working Chinese fonts with persistent settings on Neat Reader web app.",
+  "url": "https://greasyfork.org/scripts/509100-neat-reader-font-and-size-adjuster-4-working-fonts",
+  "code_url": "https://update.greasyfork.org/scripts/509100/Neat%20Reader%20Font%20and%20Size%20Adjuster%20%284%20Working%20Fonts%29.user.js",
+  "code_size": 3785,
+  "license": null,
+  "version": "2.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

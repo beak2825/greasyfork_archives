@@ -1,0 +1,33 @@
+{
+  "id": 531677,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T06:31:48.000Z",
+  "code_updated_at": "2025-06-19T09:49:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 877879,
+      "name": "jerry.qin@youniverse.cc",
+      "created_at": "2022-02-18T10:15:15.000Z",
+      "url": "https://greasyfork.org/users/877879-jerry-qin-youniverse-cc"
+    }
+  ],
+  "name": "TEMU 下载报名记录",
+  "description": "temu",
+  "url": "https://greasyfork.org/scripts/531677-temu-%E4%B8%8B%E8%BD%BD%E6%8A%A5%E5%90%8D%E8%AE%B0%E5%BD%95",
+  "code_url": "https://update.greasyfork.org/scripts/531677/TEMU%20%E4%B8%8B%E8%BD%BD%E6%8A%A5%E5%90%8D%E8%AE%B0%E5%BD%95.user.js",
+  "code_size": 34286,
+  "license": "MIT License",
+  "version": "2025.0.21",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 497008,
+  "daily_installs": 0,
+  "total_installs": 21,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-06-04T06:25:24.000Z",
+  "code_updated_at": "2024-06-04T06:25:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1311610,
+      "name": "leahana",
+      "created_at": "2024-06-03T03:15:36.000Z",
+      "url": "https://greasyfork.org/users/1311610-leahana",
+      "scripts": [
+        {
+          "id": 497008,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-06-04T06:25:24.000Z",
+          "code_updated_at": "2024-06-04T06:25:24.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "d2-dim-equip",
+          "description": "A Tampermonkey script to automatically click items in Destiny 2 DIM and equip them to your character.",
+          "url": "https://greasyfork.org/scripts/497008-d2-dim-equip",
+          "code_url": "https://update.greasyfork.org/scripts/497008/d2-dim-equip.user.js",
+          "code_size": 913,
+          "license": null,
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "d2-dim-equip",
+  "description": "A Tampermonkey script to automatically click items in Destiny 2 DIM and equip them to your character.",
+  "url": "https://greasyfork.org/scripts/497008-d2-dim-equip",
+  "code_url": "https://update.greasyfork.org/scripts/497008/d2-dim-equip.user.js",
+  "code_size": 913,
+  "license": null,
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527413,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-19T08:24:38.000Z",
+    "code_updated_at": "2025-02-19T08:24:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1417846,
+        "name": "吴杉",
+        "created_at": "2024-12-31T07:25:35.000Z",
+        "url": "https://greasyfork.org/users/1417846-%E5%90%B4%E6%9D%89"
+      }
+    ],
+    "name": "heck.ai 净化",
+    "description": "移除指定div之后的所有内容",
+    "url": "https://greasyfork.org/scripts/527413-heck-ai-%E5%87%80%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/527413/heckai%20%E5%87%80%E5%8C%96.user.js",
+    "code_size": 1395,
+    "license": "MIT License",
+    "version": "2025-02-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

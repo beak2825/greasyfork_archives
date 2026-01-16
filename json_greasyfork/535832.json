@@ -1,0 +1,33 @@
+{
+  "id": 535832,
+  "daily_installs": 1,
+  "total_installs": 44,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-05-12T23:14:38.000Z",
+  "code_updated_at": "2025-05-12T23:14:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1469369,
+      "name": "Blublubdude",
+      "created_at": "2025-05-12T23:11:16.000Z",
+      "url": "https://greasyfork.org/users/1469369-blublubdude"
+    }
+  ],
+  "name": "All Google Websites Dark UI",
+  "description": "Full dark mode for all Google websites including Docs, Sheets, Slides, and Classroom. Icons in Classroom keep their original color. White gridlines in Sheets and dark rulers in editors included.",
+  "url": "https://greasyfork.org/scripts/535832-all-google-websites-dark-ui",
+  "code_url": "https://update.greasyfork.org/scripts/535832/All%20Google%20Websites%20Dark%20UI.user.js",
+  "code_size": 3079,
+  "license": null,
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

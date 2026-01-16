@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548240,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-03T11:52:41.000Z",
+    "code_updated_at": "2025-09-03T11:52:41.000Z",
+    "namespace": "https://github.com/rvoortman/gitlab-review-automove-after-view",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1504080,
+        "name": "rvoortman",
+        "created_at": "2025-08-12T09:14:44.000Z",
+        "url": "https://greasyfork.org/users/1504080-rvoortman"
+      }
+    ],
+    "name": "GitLab Review Automove After View",
+    "description": "Moves to the next file after marking the current one as viewed",
+    "url": "https://greasyfork.org/scripts/548240-gitlab-review-automove-after-view",
+    "code_url": "https://update.greasyfork.org/scripts/548240/GitLab%20Review%20Automove%20After%20View.user.js",
+    "code_size": 1240,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

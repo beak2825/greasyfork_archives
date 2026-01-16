@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549246,
+    "daily_installs": 3,
+    "total_installs": 68,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-12T10:44:29.000Z",
+    "code_updated_at": "2025-12-10T15:44:23.000Z",
+    "namespace": "https://vndb.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514234,
+        "name": "Sirush",
+        "created_at": "2025-09-12T10:41:55.000Z",
+        "url": "https://greasyfork.org/users/1514234-sirush"
+      }
+    ],
+    "name": "VNDB Character Count",
+    "description": "Fetch and display character count, difficulty, and more from jiten.moe API on VNDB pages",
+    "url": "https://greasyfork.org/scripts/549246-vndb-character-count",
+    "code_url": "https://update.greasyfork.org/scripts/549246/VNDB%20Character%20Count.user.js",
+    "code_size": 16597,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

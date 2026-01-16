@@ -1,0 +1,34 @@
+{
+  "id": 540594,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-24T08:26:24.000Z",
+  "code_updated_at": "2025-06-24T08:26:24.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 972766,
+      "name": "Alexander Faber",
+      "created_at": "2022-10-19T14:39:53.000Z",
+      "url": "https://greasyfork.org/users/972766-alexander-faber",
+      "scripts": []
+    }
+  ],
+  "name": "Ed 4Rec  lux.chris-nando@hotmail.de",
+  "description": "with minus bal handling",
+  "url": "https://greasyfork.org/scripts/540594-ed-4rec-lux-chris-nando-hotmail-de",
+  "code_url": "https://update.greasyfork.org/scripts/540594/Ed%204Rec%20%20luxchris-nando%40hotmailde.user.js",
+  "code_size": 3893,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

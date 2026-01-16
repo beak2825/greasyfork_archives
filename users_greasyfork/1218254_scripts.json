@@ -1,0 +1,233 @@
+[
+  {
+    "id": 540111,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T09:16:54.000Z",
+    "code_updated_at": "2025-06-20T09:16:54.000Z",
+    "namespace": "npm/vite-plugin-monkey",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "msu-marketplace-tool",
+    "description": "mus marketplace tool",
+    "url": "https://greasyfork.org/scripts/540111-msu-marketplace-tool",
+    "code_url": "https://update.greasyfork.org/scripts/540111/msu-marketplace-tool.user.js",
+    "code_size": 219762,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536564,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-20T03:44:53.000Z",
+    "code_updated_at": "2025-05-20T03:44:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "$import",
+    "description": "import npm package from jsdelivr to devtools",
+    "url": "https://greasyfork.org/scripts/536564-import",
+    "code_url": "https://update.greasyfork.org/scripts/536564/%24import.user.js",
+    "code_size": 1253,
+    "license": "GNU AGPLv3",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536561,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-20T03:28:29.000Z",
+    "code_updated_at": "2025-05-20T03:28:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "utils function",
+    "description": "sleep, waitUntil, tryCatch...",
+    "url": "https://greasyfork.org/scripts/536561-utils-function",
+    "code_url": "https://update.greasyfork.org/scripts/536561/1592185/utils%20function.js",
+    "code_size": 1744,
+    "license": null,
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 529383,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-10T10:00:24.000Z",
+    "code_updated_at": "2025-03-10T10:00:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "stackem simulate space key",
+    "description": ".....",
+    "url": "https://greasyfork.org/scripts/529383-stackem-simulate-space-key",
+    "code_url": "https://update.greasyfork.org/scripts/529383/stackem%20simulate%20space%20key.user.js",
+    "code_size": 1053,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 527908,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T06:59:20.000Z",
+    "code_updated_at": "2025-02-24T06:59:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "x.com photo full preview",
+    "description": "解决推特预览图被裁剪，显示不全问题",
+    "url": "https://greasyfork.org/scripts/527908-x-com-photo-full-preview",
+    "code_url": "https://update.greasyfork.org/scripts/527908/xcom%20photo%20full%20preview.user.js",
+    "code_size": 521,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517485,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T10:19:09.000Z",
+    "code_updated_at": "2024-12-06T02:29:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "飞向未来",
+    "description": "自动砍树，自动升级建筑脚本",
+    "url": "https://greasyfork.org/scripts/517485-%E9%A3%9E%E5%90%91%E6%9C%AA%E6%9D%A5",
+    "code_url": "https://update.greasyfork.org/scripts/517485/%E9%A3%9E%E5%90%91%E6%9C%AA%E6%9D%A5.user.js",
+    "code_size": 3667,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 515806,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-04T16:54:45.000Z",
+    "code_updated_at": "2024-11-06T12:56:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218254,
+        "name": "zhowiny",
+        "created_at": "2023-11-16T02:24:43.000Z",
+        "url": "https://greasyfork.org/users/1218254-zhowiny"
+      }
+    ],
+    "name": "vidhub ad blocked",
+    "description": "vidhub 广告屏蔽",
+    "url": "https://greasyfork.org/scripts/515806-vidhub-ad-blocked",
+    "code_url": "https://update.greasyfork.org/scripts/515806/vidhub%20ad%20blocked.user.js",
+    "code_size": 1224,
+    "license": "MIT License",
+    "version": "2024-11-04",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

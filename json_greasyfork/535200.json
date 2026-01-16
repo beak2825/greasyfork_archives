@@ -1,0 +1,59 @@
+{
+  "id": 535200,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-07T07:20:35.000Z",
+  "code_updated_at": "2025-06-22T10:59:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1258461,
+      "name": "azazlf09",
+      "created_at": "2024-02-07T03:48:57.000Z",
+      "url": "https://greasyfork.org/users/1258461-azazlf09",
+      "scripts": [
+        {
+          "id": 555297,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-09T12:11:25.000Z",
+          "code_updated_at": "2025-11-09T12:11:25.000Z",
+          "namespace": "https://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "小红书链接收藏家",
+          "description": "在收藏弹窗内直接管理文档，快速查找和操作",
+          "url": "https://greasyfork.org/scripts/555297-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E9%93%BE%E6%8E%A5%E6%94%B6%E8%97%8F%E5%AE%B6",
+          "code_url": "https://update.greasyfork.org/scripts/555297/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E9%93%BE%E6%8E%A5%E6%94%B6%E8%97%8F%E5%AE%B6.user.js",
+          "code_size": 21294,
+          "license": "Copyright (c) [大佬的鼠DonRat] All rights reserved.",
+          "version": "1.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "豆包图片源地址提取器",
+  "description": "从豆包界面提取图片的源地址、提示词并支持下载，支持点击预览大图，一键复制表格数据",
+  "url": "https://greasyfork.org/scripts/535200-%E8%B1%86%E5%8C%85%E5%9B%BE%E7%89%87%E6%BA%90%E5%9C%B0%E5%9D%80%E6%8F%90%E5%8F%96%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/535200/%E8%B1%86%E5%8C%85%E5%9B%BE%E7%89%87%E6%BA%90%E5%9C%B0%E5%9D%80%E6%8F%90%E5%8F%96%E5%99%A8.user.js",
+  "code_size": 36203,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.46",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

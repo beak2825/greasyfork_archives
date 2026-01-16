@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529193,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-08T12:13:09.000Z",
+    "code_updated_at": "2025-03-08T12:13:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443548,
+        "name": "Land Nomans (oyoguneko)",
+        "created_at": "2025-03-08T12:03:53.000Z",
+        "url": "https://greasyfork.org/users/1443548-land-nomans-oyoguneko"
+      }
+    ],
+    "name": "Claude Menu Click Blocker with Compact Hidden Controls",
+    "description": "Blocks accidental clicks on Claude menu with space-saving hidden controls",
+    "url": "https://greasyfork.org/scripts/529193-claude-menu-click-blocker-with-compact-hidden-controls",
+    "code_url": "https://update.greasyfork.org/scripts/529193/Claude%20Menu%20Click%20Blocker%20with%20Compact%20Hidden%20Controls.user.js",
+    "code_size": 14882,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

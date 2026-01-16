@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520425,
+    "daily_installs": 1,
+    "total_installs": 275,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-11T14:04:08.000Z",
+    "code_updated_at": "2025-01-24T05:44:39.000Z",
+    "namespace": "https://greasyfork.org/users/155581",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 155581,
+        "name": "lslqtz",
+        "created_at": "2017-10-10T11:37:57.000Z",
+        "url": "https://greasyfork.org/users/155581-lslqtz"
+      }
+    ],
+    "name": "YouTube 直播聊天实时翻译",
+    "description": "Same as the name",
+    "url": "https://greasyfork.org/scripts/520425-youtube-%E7%9B%B4%E6%92%AD%E8%81%8A%E5%A4%A9%E5%AE%9E%E6%97%B6%E7%BF%BB%E8%AF%91",
+    "code_url": "https://update.greasyfork.org/scripts/520425/YouTube%20%E7%9B%B4%E6%92%AD%E8%81%8A%E5%A4%A9%E5%AE%9E%E6%97%B6%E7%BF%BB%E8%AF%91.user.js",
+    "code_size": 11408,
+    "license": "GPL",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

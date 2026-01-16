@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507896,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-11T03:58:09.000Z",
+    "code_updated_at": "2025-02-13T02:26:46.000Z",
+    "namespace": "doubanBookSearchAndInfoExport",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1117672,
+        "name": "ersan23",
+        "created_at": "2023-07-03T02:58:35.000Z",
+        "url": "https://greasyfork.org/users/1117672-ersan23"
+      }
+    ],
+    "name": "豆瓣电影图书主页一键搜索",
+    "description": "豆瓣电影、图书主页添加资源网站的搜索链接，图书主页添加复制信息按钮，一键复制作者/译者/出版社等信息，可直接粘贴到excel",
+    "url": "https://greasyfork.org/scripts/507896-%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%E5%9B%BE%E4%B9%A6%E4%B8%BB%E9%A1%B5%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/507896/%E8%B1%86%E7%93%A3%E7%94%B5%E5%BD%B1%E5%9B%BE%E4%B9%A6%E4%B8%BB%E9%A1%B5%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2.user.js",
+    "code_size": 10340,
+    "license": null,
+    "version": "3.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

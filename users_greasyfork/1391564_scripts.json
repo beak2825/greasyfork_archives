@@ -64,5 +64,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 526173,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-07T08:40:38.000Z",
+    "code_updated_at": "2025-02-07T08:40:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391564,
+        "name": "laoshi big",
+        "created_at": "2024-11-05T11:36:12.000Z",
+        "url": "https://greasyfork.org/users/1391564-laoshi-big"
+      }
+    ],
+    "name": "问卷星选项填空检测",
+    "description": "选项检测，定位选项，返回顶部",
+    "url": "https://greasyfork.org/scripts/526173-%E9%97%AE%E5%8D%B7%E6%98%9F%E9%80%89%E9%A1%B9%E5%A1%AB%E7%A9%BA%E6%A3%80%E6%B5%8B",
+    "code_url": "https://update.greasyfork.org/scripts/526173/%E9%97%AE%E5%8D%B7%E6%98%9F%E9%80%89%E9%A1%B9%E5%A1%AB%E7%A9%BA%E6%A3%80%E6%B5%8B.user.js",
+    "code_size": 11433,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516415,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-08T15:18:19.000Z",
+    "code_updated_at": "2024-11-08T15:18:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391564,
+        "name": "laoshi big",
+        "created_at": "2024-11-05T11:36:12.000Z",
+        "url": "https://greasyfork.org/users/1391564-laoshi-big"
+      }
+    ],
+    "name": "问卷星数题目增强版-矩阵题计数",
+    "description": "在问卷星问卷的右上角显示题目数量以及各题型的数量，增强版",
+    "url": "https://greasyfork.org/scripts/516415-%E9%97%AE%E5%8D%B7%E6%98%9F%E6%95%B0%E9%A2%98%E7%9B%AE%E5%A2%9E%E5%BC%BA%E7%89%88-%E7%9F%A9%E9%98%B5%E9%A2%98%E8%AE%A1%E6%95%B0",
+    "code_url": "https://update.greasyfork.org/scripts/516415/%E9%97%AE%E5%8D%B7%E6%98%9F%E6%95%B0%E9%A2%98%E7%9B%AE%E5%A2%9E%E5%BC%BA%E7%89%88-%E7%9F%A9%E9%98%B5%E9%A2%98%E8%AE%A1%E6%95%B0.user.js",
+    "code_size": 6895,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 515923,
+    "daily_installs": 0,
+    "total_installs": 46,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-05T11:39:47.000Z",
+    "code_updated_at": "2024-11-08T15:13:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1391564,
+        "name": "laoshi big",
+        "created_at": "2024-11-05T11:36:12.000Z",
+        "url": "https://greasyfork.org/users/1391564-laoshi-big"
+      }
+    ],
+    "name": "自动展开问卷星分页问卷并显示提示",
+    "description": "自动展开问卷星的分页问卷，并在左上角显示提示",
+    "url": "https://greasyfork.org/scripts/515923-%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E9%97%AE%E5%8D%B7%E6%98%9F%E5%88%86%E9%A1%B5%E9%97%AE%E5%8D%B7%E5%B9%B6%E6%98%BE%E7%A4%BA%E6%8F%90%E7%A4%BA",
+    "code_url": "https://update.greasyfork.org/scripts/515923/%E8%87%AA%E5%8A%A8%E5%B1%95%E5%BC%80%E9%97%AE%E5%8D%B7%E6%98%9F%E5%88%86%E9%A1%B5%E9%97%AE%E5%8D%B7%E5%B9%B6%E6%98%BE%E7%A4%BA%E6%8F%90%E7%A4%BA.user.js",
+    "code_size": 2092,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

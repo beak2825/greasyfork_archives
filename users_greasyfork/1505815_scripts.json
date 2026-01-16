@@ -1,0 +1,35 @@
+[
+  {
+    "id": 546119,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-17T03:25:12.000Z",
+    "code_updated_at": "2025-08-17T03:26:39.000Z",
+    "namespace": "https://labs.google/fx/ja/library",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505815,
+        "name": "Nyampasu",
+        "created_at": "2025-08-17T03:08:53.000Z",
+        "url": "https://greasyfork.org/users/1505815-nyampasu"
+      }
+    ],
+    "name": "Google Labs FX (ImageFX) ダウンロード名変更（フック版）",
+    "description": "即時ダウンロードのファイル名を「プロンプト_シード_連番(5桁)」に変更",
+    "url": "https://greasyfork.org/scripts/546119-google-labs-fx-imagefx-%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E5%90%8D%E5%A4%89%E6%9B%B4-%E3%83%95%E3%83%83%E3%82%AF%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/546119/Google%20Labs%20FX%20%28ImageFX%29%20%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89%E5%90%8D%E5%A4%89%E6%9B%B4%EF%BC%88%E3%83%95%E3%83%83%E3%82%AF%E7%89%88%EF%BC%89.user.js",
+    "code_size": 1657,
+    "license": "MIT License",
+    "version": "2025-08-17",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

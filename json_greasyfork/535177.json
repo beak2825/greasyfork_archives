@@ -1,0 +1,33 @@
+{
+  "id": 535177,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-07T01:49:16.000Z",
+  "code_updated_at": "2025-05-07T21:21:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462131,
+      "name": "萧遥（木木）",
+      "created_at": "2025-04-25T18:21:35.000Z",
+      "url": "https://greasyfork.org/users/1462131-%E8%90%A7%E9%81%A5-%E6%9C%A8%E6%9C%A8"
+    }
+  ],
+  "name": "王中王缅甸火腿肠 V888",
+  "description": "AI assistant for Telegram Web: Adds Smart Reply, AI Expand, Comprehensive Reply & Auto English->Chinese Translation. Telegram-style UI with minimalist design, elegant color scheme, and seamless integration.",
+  "url": "https://greasyfork.org/scripts/535177-%E7%8E%8B%E4%B8%AD%E7%8E%8B%E7%BC%85%E7%94%B8%E7%81%AB%E8%85%BF%E8%82%A0-v888",
+  "code_url": "https://update.greasyfork.org/scripts/535177/%E7%8E%8B%E4%B8%AD%E7%8E%8B%E7%BC%85%E7%94%B8%E7%81%AB%E8%85%BF%E8%82%A0%20V888.user.js",
+  "code_size": 290093,
+  "license": null,
+  "version": "5.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

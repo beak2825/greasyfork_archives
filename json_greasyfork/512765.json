@@ -1,0 +1,59 @@
+{
+  "id": 512765,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-16T00:47:26.000Z",
+  "code_updated_at": "2024-11-19T13:15:17.000Z",
+  "namespace": "https://greasyfork.org/users/1381446",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1381446,
+      "name": "geoCode",
+      "created_at": "2024-10-16T00:18:01.000Z",
+      "url": "https://greasyfork.org/users/1381446-geocode",
+      "scripts": [
+        {
+          "id": 512765,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-16T00:47:26.000Z",
+          "code_updated_at": "2024-11-19T13:15:17.000Z",
+          "namespace": "https://greasyfork.org/users/1381446",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Fix Outlook Mac Hotkeys Hijacking",
+          "description": "Disables Outlook from highjacking Mac keyboard shortcuts",
+          "url": "https://greasyfork.org/scripts/512765-fix-outlook-mac-hotkeys-hijacking",
+          "code_url": "https://update.greasyfork.org/scripts/512765/Fix%20Outlook%20Mac%20Hotkeys%20Hijacking.user.js",
+          "code_size": 2871,
+          "license": "Mozilla Public License 2.0",
+          "version": "0.1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Fix Outlook Mac Hotkeys Hijacking",
+  "description": "Disables Outlook from highjacking Mac keyboard shortcuts",
+  "url": "https://greasyfork.org/scripts/512765-fix-outlook-mac-hotkeys-hijacking",
+  "code_url": "https://update.greasyfork.org/scripts/512765/Fix%20Outlook%20Mac%20Hotkeys%20Hijacking.user.js",
+  "code_size": 2871,
+  "license": "Mozilla Public License 2.0",
+  "version": "0.1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

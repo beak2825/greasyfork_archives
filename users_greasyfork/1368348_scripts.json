@@ -1,0 +1,68 @@
+[
+  {
+    "id": 546108,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-17T01:15:45.000Z",
+    "code_updated_at": "2025-08-17T01:15:45.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368348,
+        "name": "张翔俊",
+        "created_at": "2024-09-16T04:39:39.000Z",
+        "url": "https://greasyfork.org/users/1368348-%E5%BC%A0%E7%BF%94%E4%BF%8A"
+      }
+    ],
+    "name": "autoResForSevenFish",
+    "description": "七鱼自动回复",
+    "url": "https://greasyfork.org/scripts/546108-autoresforsevenfish",
+    "code_url": "https://update.greasyfork.org/scripts/546108/autoResForSevenFish.user.js",
+    "code_size": 5241,
+    "license": "MIT License",
+    "version": "2025-08-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 526732,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-13T04:35:09.000Z",
+    "code_updated_at": "2025-02-13T04:35:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368348,
+        "name": "张翔俊",
+        "created_at": "2024-09-16T04:39:39.000Z",
+        "url": "https://greasyfork.org/users/1368348-%E5%BC%A0%E7%BF%94%E4%BF%8A"
+      }
+    ],
+    "name": "autoRes",
+    "description": "七鱼自动回复",
+    "url": "https://greasyfork.org/scripts/526732-autores",
+    "code_url": "https://update.greasyfork.org/scripts/526732/autoRes.user.js",
+    "code_size": 3216,
+    "license": null,
+    "version": "2025-02-10",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

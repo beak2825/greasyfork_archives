@@ -1,0 +1,33 @@
+{
+  "id": 545974,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T13:56:41.000Z",
+  "code_updated_at": "2025-08-15T13:56:41.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": "https://vk.com/lies_are_good",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1317310,
+      "name": "Anubis Goodman",
+      "created_at": "2024-06-13T13:55:47.000Z",
+      "url": "https://greasyfork.org/users/1317310-anubis-goodman"
+    }
+  ],
+  "name": "FC | VLADIMIR | Goodman ЖБ без фото",
+  "description": "Suggestions for improving the script write here > https://vk.com/lies_are_good",
+  "url": "https://greasyfork.org/scripts/545974-fc-vladimir-goodman-%D0%B6%D0%B1-%D0%B1%D0%B5%D0%B7-%D1%84%D0%BE%D1%82%D0%BE",
+  "code_url": "https://update.greasyfork.org/scripts/545974/FC%20%7C%20VLADIMIR%20%7C%20Goodman%20%D0%96%D0%91%20%D0%B1%D0%B5%D0%B7%20%D1%84%D0%BE%D1%82%D0%BE.user.js",
+  "code_size": 129519,
+  "license": "MIT License",
+  "version": "0.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

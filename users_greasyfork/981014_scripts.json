@@ -1,0 +1,35 @@
+[
+  {
+    "id": 546266,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-18T10:04:04.000Z",
+    "code_updated_at": "2025-08-18T10:57:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 981014,
+        "name": "Vita Huang",
+        "created_at": "2022-11-09T06:11:29.000Z",
+        "url": "https://greasyfork.org/users/981014-vita-huang"
+      }
+    ],
+    "name": "V2EX内容过滤器",
+    "description": "屏蔽V2EX标题包含关键词的内容，并记录被屏蔽的内容",
+    "url": "https://greasyfork.org/scripts/546266-v2ex%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/546266/V2EX%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4%E5%99%A8.user.js",
+    "code_size": 24629,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

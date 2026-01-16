@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540119,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-20T10:03:27.000Z",
+    "code_updated_at": "2025-06-20T10:03:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486128,
+        "name": "tco",
+        "created_at": "2025-06-20T09:58:12.000Z",
+        "url": "https://greasyfork.org/users/1486128-tco"
+      }
+    ],
+    "name": "Reddit Comment/Post Mass Deleter",
+    "description": "Mass delete Reddit comments and posts",
+    "url": "https://greasyfork.org/scripts/540119-reddit-comment-post-mass-deleter",
+    "code_url": "https://update.greasyfork.org/scripts/540119/Reddit%20CommentPost%20Mass%20Deleter.user.js",
+    "code_size": 13459,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

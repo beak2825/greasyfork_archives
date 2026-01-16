@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502548,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-04T02:45:51.000Z",
+    "code_updated_at": "2024-08-04T02:55:01.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/scripts/502548-getimagefrombilibilicomments",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1344717,
+        "name": "ouyu69",
+        "created_at": "2024-08-03T11:59:35.000Z",
+        "url": "https://greasyfork.org/users/1344717-ouyu69"
+      }
+    ],
+    "name": "GetImageFrombilibiliComments",
+    "description": "便捷地从b站评论区下载图片",
+    "url": "https://greasyfork.org/scripts/502548-getimagefrombilibilicomments",
+    "code_url": "https://update.greasyfork.org/scripts/502548/GetImageFrombilibiliComments.user.js",
+    "code_size": 3660,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

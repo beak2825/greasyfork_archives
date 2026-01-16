@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542646,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-15T16:18:27.000Z",
+    "code_updated_at": "2025-07-15T16:18:26.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1495160,
+        "name": "sum233",
+        "created_at": "2025-07-15T14:46:46.000Z",
+        "url": "https://greasyfork.org/users/1495160-sum233"
+      }
+    ],
+    "name": "木一",
+    "description": "自动匹配并填写",
+    "url": "https://greasyfork.org/scripts/542646-%E6%9C%A8%E4%B8%80",
+    "code_url": "https://update.greasyfork.org/scripts/542646/%E6%9C%A8%E4%B8%80.user.js",
+    "code_size": 94043,
+    "license": null,
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

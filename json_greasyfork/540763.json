@@ -1,0 +1,34 @@
+{
+  "id": 540763,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-25T18:22:51.000Z",
+  "code_updated_at": "2025-10-04T15:37:53.000Z",
+  "namespace": "https://greasyfork.org/users/1488493",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1488493,
+      "name": "moonrabbit2",
+      "created_at": "2025-06-25T18:16:20.000Z",
+      "url": "https://greasyfork.org/users/1488493-moonrabbit2",
+      "scripts": []
+    }
+  ],
+  "name": "bigcoach 리뷰 개선 스크립트",
+  "description": "일치율, 악수율, 레이팅을 계산합니다.",
+  "url": "https://greasyfork.org/scripts/540763-bigcoach-%EB%A6%AC%EB%B7%B0-%EA%B0%9C%EC%84%A0-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8",
+  "code_url": "https://update.greasyfork.org/scripts/540763/bigcoach%20%EB%A6%AC%EB%B7%B0%20%EA%B0%9C%EC%84%A0%20%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8.user.js",
+  "code_size": 5341,
+  "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+  "version": "12345",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

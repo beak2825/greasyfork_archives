@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540058,
+    "daily_installs": 3,
+    "total_installs": 323,
+    "fan_score": "46.3",
+    "good_ratings": 4,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2025-06-19T20:43:43.000Z",
+    "code_updated_at": "2025-11-15T21:30:50.000Z",
+    "namespace": "https://milkiway.market/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1485883,
+        "name": "mathewcst",
+        "created_at": "2025-06-19T20:40:58.000Z",
+        "url": "https://greasyfork.org/users/1485883-mathewcst"
+      }
+    ],
+    "name": "MWI Market Addon",
+    "description": "Market addon using mwi-moonitoring library for WebSocket events",
+    "url": "https://greasyfork.org/scripts/540058-mwi-market-addon",
+    "code_url": "https://update.greasyfork.org/scripts/540058/MWI%20Market%20Addon.user.js",
+    "code_size": 29324,
+    "license": "MIT License",
+    "version": "v1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

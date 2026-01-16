@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 533484,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-21T07:02:27.000Z",
+    "code_updated_at": "2025-04-21T23:08:12.000Z",
+    "namespace": "https://github.com/nbkelly/jinteki-beanstalk-tracker",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1460378,
+        "name": "NBKelly",
+        "created_at": "2025-04-21T06:10:12.000Z",
+        "url": "https://greasyfork.org/users/1460378-nbkelly"
+      }
+    ],
+    "name": "Beanteki",
+    "description": "Shows bean scores on jinteki.net",
+    "url": "https://greasyfork.org/scripts/533484-beanteki",
+    "code_url": "https://update.greasyfork.org/scripts/533484/Beanteki.user.js",
+    "code_size": 7887,
+    "license": "MIT License",
+    "version": "2025-04-22",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

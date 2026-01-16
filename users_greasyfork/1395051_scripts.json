@@ -1,0 +1,35 @@
+[
+  {
+    "id": 517221,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-13T20:45:48.000Z",
+    "code_updated_at": "2024-11-21T20:28:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1395051,
+        "name": "voxxys",
+        "created_at": "2024-11-12T19:57:59.000Z",
+        "url": "https://greasyfork.org/users/1395051-voxxys"
+      }
+    ],
+    "name": "2ch graph",
+    "description": "...",
+    "url": "https://greasyfork.org/scripts/517221-2ch-graph",
+    "code_url": "https://update.greasyfork.org/scripts/517221/2ch%20graph.user.js",
+    "code_size": 33756,
+    "license": null,
+    "version": "1.0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

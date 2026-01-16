@@ -1,0 +1,101 @@
+[
+  {
+    "id": 505202,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-26T02:37:47.000Z",
+    "code_updated_at": "2024-08-26T02:37:46.000Z",
+    "namespace": "https://greasyfork.org/en/users/1291009",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291009,
+        "name": "BadOrBest",
+        "created_at": "2024-04-20T20:28:18.000Z",
+        "url": "https://greasyfork.org/users/1291009-badorbest"
+      }
+    ],
+    "name": "Dynamic Graph (Calc Extension)",
+    "description": "A script to plot graphs with improved plotting and axis markings",
+    "url": "https://greasyfork.org/scripts/505202-dynamic-graph-calc-extension",
+    "code_url": "https://update.greasyfork.org/scripts/505202/Dynamic%20Graph%20%28Calc%20Extension%29.user.js",
+    "code_size": 9683,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 503150,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-10T02:55:05.000Z",
+    "code_updated_at": "2024-08-10T21:20:24.000Z",
+    "namespace": "https://greasyfork.org/en/users/1291009",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291009,
+        "name": "BadOrBest",
+        "created_at": "2024-04-20T20:28:18.000Z",
+        "url": "https://greasyfork.org/users/1291009-badorbest"
+      }
+    ],
+    "name": "Graphing Plugin",
+    "description": "Library for Calculator (Graphing)",
+    "url": "https://greasyfork.org/scripts/503150-graphing-plugin",
+    "code_url": "https://update.greasyfork.org/scripts/503150/1425747/Graphing%20Plugin.js",
+    "code_size": 4375,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502482,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-03T03:11:08.000Z",
+    "code_updated_at": "2024-08-03T03:11:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291009,
+        "name": "BadOrBest",
+        "created_at": "2024-04-20T20:28:18.000Z",
+        "url": "https://greasyfork.org/users/1291009-badorbest"
+      }
+    ],
+    "name": "Skip Button Logger",
+    "description": "Creates a \"Skip Button\" that logs its click count",
+    "url": "https://greasyfork.org/scripts/502482-skip-button-logger",
+    "code_url": "https://update.greasyfork.org/scripts/502482/Skip%20Button%20Logger.user.js",
+    "code_size": 1444,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 541618,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T12:47:26.000Z",
+    "code_updated_at": "2025-07-19T01:50:36.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/541618-discord-twitch-chatlog-viewercard-hover-popup-shortcut-menu-for-moderators",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1125888,
+        "name": "Cragsand",
+        "created_at": "2023-07-13T16:21:37.000Z",
+        "url": "https://greasyfork.org/users/1125888-cragsand"
+      }
+    ],
+    "name": "Discord / Twitch chatlog viewercard hover popup shortcut menu for moderators",
+    "description": "Show a popup with viewercard options when hovering over Twitch links, staying in place until the mouse leaves the link or popup, ensuring it's always on top, and disappearing after 4 seconds. Ignores clips and vods.",
+    "url": "https://greasyfork.org/scripts/541618-discord-twitch-chatlog-viewercard-hover-popup-shortcut-menu-for-moderators",
+    "code_url": "https://update.greasyfork.org/scripts/541618/Discord%20%20Twitch%20chatlog%20viewercard%20hover%20popup%20shortcut%20menu%20for%20moderators.user.js",
+    "code_size": 3593,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 539762,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-17T15:06:20.000Z",
+    "code_updated_at": "2025-06-17T15:09:53.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/539762-discord-force-single-color-usernames",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1125888,
+        "name": "Cragsand",
+        "created_at": "2023-07-13T16:21:37.000Z",
+        "url": "https://greasyfork.org/users/1125888-cragsand"
+      }
+    ],
+    "name": "Discord: Force Single‑Color Usernames (Disable gradient role colors)",
+    "description": "Override gradient usernames so color‑2 always equals color‑1 on Discord Web. Hopefully obfuscation resistant.",
+    "url": "https://greasyfork.org/scripts/539762-discord-force-single-color-usernames-disable-gradient-role-colors",
+    "code_url": "https://update.greasyfork.org/scripts/539762/Discord%3A%20Force%20Single%E2%80%91Color%20Usernames%20%28Disable%20gradient%20role%20colors%29.user.js",
+    "code_size": 2025,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533235,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-18T11:18:31.000Z",
+    "code_updated_at": "2025-04-18T11:19:15.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/533235-discord-image-unwrapper-obfuscation-resistant",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1125888,
+        "name": "Cragsand",
+        "created_at": "2023-07-13T16:21:37.000Z",
+        "url": "https://greasyfork.org/users/1125888-cragsand"
+      }
+    ],
+    "name": "Discord Image Unwrapper (Obfuscation-Resistant)",
+    "description": "Removes image wrappers on Discord.com regardless of class obfuscation, useful when opening images",
+    "url": "https://greasyfork.org/scripts/533235-discord-image-unwrapper-obfuscation-resistant",
+    "code_url": "https://update.greasyfork.org/scripts/533235/Discord%20Image%20Unwrapper%20%28Obfuscation-Resistant%29.user.js",
+    "code_size": 1463,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 531175,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-29T00:38:14.000Z",
+    "code_updated_at": "2025-03-29T00:39:38.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/531175-discord-emoji-url-extractor-shift-modifier",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1125888,
+        "name": "Cragsand",
+        "created_at": "2023-07-13T16:21:37.000Z",
+        "url": "https://greasyfork.org/users/1125888-cragsand"
+      }
+    ],
+    "name": "Discord Emoji URL Extractor (Shift Modifier)",
+    "description": "Quickly extract emoji URL from Discord when Shift+Clicking and copy it to clipboard with size=48, otherwise use default behavior. This is useful if you don't have nitro and still want to use animated emotes or any emote as a gif instead as a cheap mans emoji.",
+    "url": "https://greasyfork.org/scripts/531175-discord-emoji-url-extractor-shift-modifier",
+    "code_url": "https://update.greasyfork.org/scripts/531175/Discord%20Emoji%20URL%20Extractor%20%28Shift%20Modifier%29.user.js",
+    "code_size": 1828,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

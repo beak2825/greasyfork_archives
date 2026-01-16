@@ -1,0 +1,34 @@
+{
+  "id": 536294,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-17T11:56:07.000Z",
+  "code_updated_at": "2025-12-05T10:46:41.000Z",
+  "namespace": "https://github.com/Timesient/manga-download-scripts",
+  "support_url": "https://github.com/Timesient/manga-download-scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 295034,
+      "name": "Timesient",
+      "created_at": "2019-04-24T12:38:14.000Z",
+      "url": "https://greasyfork.org/users/295034-timesient",
+      "scripts": []
+    }
+  ],
+  "name": "MagapokeDownloader",
+  "description": "Manga downloader for pocket.shonenmagazine.com",
+  "url": "https://greasyfork.org/scripts/536294-magapokedownloader",
+  "code_url": "https://update.greasyfork.org/scripts/536294/MagapokeDownloader.user.js",
+  "code_size": 6183,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

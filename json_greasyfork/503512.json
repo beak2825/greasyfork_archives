@@ -1,0 +1,59 @@
+{
+  "id": 503512,
+  "daily_installs": 0,
+  "total_installs": 11,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-13T08:21:54.000Z",
+  "code_updated_at": "2025-06-06T01:59:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1348003,
+      "name": "DrMuda",
+      "created_at": "2024-08-09T02:26:54.000Z",
+      "url": "https://greasyfork.org/users/1348003-drmuda",
+      "scripts": [
+        {
+          "id": 503512,
+          "daily_installs": 0,
+          "total_installs": 11,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-13T08:21:54.000Z",
+          "code_updated_at": "2025-06-06T01:59:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Knife4j 接口文档功能增强",
+          "description": "当前兼容版本： v3.0.3、 v4.5.0。 1. 在 knife4j-v3.0.3 的接口文档页面生成请求参数与响应参数的 TS 类型 2. 增加菜单筛选栏 3. 自动滚动选中的菜单项到视图中间 4. 接口路径前缀替换与点击复制 5. 同步多个标签页打开的接口， 点击顶部同步按钮开始同步",
+          "url": "https://greasyfork.org/scripts/503512-knife4j-%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA",
+          "code_url": "https://update.greasyfork.org/scripts/503512/Knife4j%20%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA.user.js",
+          "code_size": 41966,
+          "license": "MIT License",
+          "version": "2025-03-05",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Knife4j 接口文档功能增强",
+  "description": "当前兼容版本： v3.0.3、 v4.5.0。 1. 在 knife4j-v3.0.3 的接口文档页面生成请求参数与响应参数的 TS 类型 2. 增加菜单筛选栏 3. 自动滚动选中的菜单项到视图中间 4. 接口路径前缀替换与点击复制 5. 同步多个标签页打开的接口， 点击顶部同步按钮开始同步",
+  "url": "https://greasyfork.org/scripts/503512-knife4j-%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA",
+  "code_url": "https://update.greasyfork.org/scripts/503512/Knife4j%20%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3%E5%8A%9F%E8%83%BD%E5%A2%9E%E5%BC%BA.user.js",
+  "code_size": 41966,
+  "license": "MIT License",
+  "version": "2025-03-05",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

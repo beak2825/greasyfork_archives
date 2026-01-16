@@ -1,0 +1,59 @@
+{
+  "id": 517873,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-18T09:09:00.000Z",
+  "code_updated_at": "2024-11-19T01:39:15.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1338439,
+      "name": "刘智勇（KendallUuio）",
+      "created_at": "2024-07-23T02:08:32.000Z",
+      "url": "https://greasyfork.org/users/1338439-%E5%88%98%E6%99%BA%E5%8B%87-kendalluuio",
+      "scripts": [
+        {
+          "id": 517873,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-18T09:09:00.000Z",
+          "code_updated_at": "2024-11-19T01:39:15.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "手动更新住小橙Cookie2",
+          "description": "在网页右上角显示一个小窗口",
+          "url": "https://greasyfork.org/scripts/517873-%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BD%8F%E5%B0%8F%E6%A9%99cookie2",
+          "code_url": "https://update.greasyfork.org/scripts/517873/%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BD%8F%E5%B0%8F%E6%A9%99Cookie2.user.js",
+          "code_size": 12569,
+          "license": "MIT License",
+          "version": "0.2.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "手动更新住小橙Cookie2",
+  "description": "在网页右上角显示一个小窗口",
+  "url": "https://greasyfork.org/scripts/517873-%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BD%8F%E5%B0%8F%E6%A9%99cookie2",
+  "code_url": "https://update.greasyfork.org/scripts/517873/%E6%89%8B%E5%8A%A8%E6%9B%B4%E6%96%B0%E4%BD%8F%E5%B0%8F%E6%A9%99Cookie2.user.js",
+  "code_size": 12569,
+  "license": "MIT License",
+  "version": "0.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

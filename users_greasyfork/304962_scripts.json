@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541458,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T15:53:13.000Z",
+    "code_updated_at": "2025-07-05T12:06:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 304962,
+        "name": "The Devil",
+        "created_at": "2019-05-26T18:29:11.000Z",
+        "url": "https://greasyfork.org/users/304962-the-devil"
+      }
+    ],
+    "name": "Betfred All Games Random + Provider Filter + Random Favorite (No Provider Search)",
+    "description": "Improved random game picker with provider filter, scan, export, favorites, draggable UI, and more for Betfred All Games page. (No provider search box.)",
+    "url": "https://greasyfork.org/scripts/541458-betfred-all-games-random-provider-filter-random-favorite-no-provider-search",
+    "code_url": "https://update.greasyfork.org/scripts/541458/Betfred%20All%20Games%20Random%20%2B%20Provider%20Filter%20%2B%20Random%20Favorite%20%28No%20Provider%20Search%29.user.js",
+    "code_size": 40562,
+    "license": "MIT License",
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

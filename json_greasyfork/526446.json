@@ -1,0 +1,33 @@
+{
+  "id": 526446,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-10T10:28:27.000Z",
+  "code_updated_at": "2025-02-10T10:28:27.000Z",
+  "namespace": "https://github.com/Ahaochan/Tampermonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433568,
+      "name": "NorthWolf8192",
+      "created_at": "2025-02-10T10:18:24.000Z",
+      "url": "https://greasyfork.org/users/1433568-northwolf8192"
+    }
+  ],
+  "name": "修改 bilibili 选集列表高度（video-pod__body）",
+  "description": "修改 bilibili 视频页面中选集列表的高度，使用 class \"video-pod__body\"",
+  "url": "https://greasyfork.org/scripts/526446-%E4%BF%AE%E6%94%B9-bilibili-%E9%80%89%E9%9B%86%E5%88%97%E8%A1%A8%E9%AB%98%E5%BA%A6-video-pod-body",
+  "code_url": "https://update.greasyfork.org/scripts/526446/%E4%BF%AE%E6%94%B9%20bilibili%20%E9%80%89%E9%9B%86%E5%88%97%E8%A1%A8%E9%AB%98%E5%BA%A6%EF%BC%88video-pod__body%EF%BC%89.user.js",
+  "code_size": 1384,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

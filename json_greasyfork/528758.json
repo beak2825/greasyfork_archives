@@ -1,0 +1,34 @@
+{
+  "id": 528758,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-04T13:26:45.000Z",
+  "code_updated_at": "2025-03-04T13:26:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1441936,
+      "name": "Bisse",
+      "created_at": "2025-03-03T15:26:47.000Z",
+      "url": "https://greasyfork.org/users/1441936-bisse",
+      "scripts": []
+    }
+  ],
+  "name": "Check/Uncheck",
+  "description": "Check or uncheck checkboxes",
+  "url": "https://greasyfork.org/scripts/528758-check-uncheck",
+  "code_url": "https://update.greasyfork.org/scripts/528758/CheckUncheck.user.js",
+  "code_size": 604,
+  "license": null,
+  "version": "1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

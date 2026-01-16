@@ -64,5 +64,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 546269,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-18T10:35:44.000Z",
+    "code_updated_at": "2025-08-18T10:35:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431469,
+        "name": "jackiechan285",
+        "created_at": "2025-02-04T17:26:02.000Z",
+        "url": "https://greasyfork.org/users/1431469-jackiechan285"
+      }
+    ],
+    "name": "Google - Full result titles",
+    "description": "Expands truncated search result titles, using a simple clever fetching method. Also adds tooltips to see the full title on \"top stories\" and \"what people are saying\" ('title' attribute, no fetching necessary). If you disable auto expansion, you can hold Shift to fetch per-title, Shift+T expands all.",
+    "url": "https://greasyfork.org/scripts/546269-google-full-result-titles",
+    "code_url": "https://update.greasyfork.org/scripts/546269/Google%20-%20Full%20result%20titles.user.js",
+    "code_size": 24790,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529758,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-13T22:50:35.000Z",
+    "code_updated_at": "2025-03-13T22:50:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431469,
+        "name": "jackiechan285",
+        "created_at": "2025-02-04T17:26:02.000Z",
+        "url": "https://greasyfork.org/users/1431469-jackiechan285"
+      }
+    ],
+    "name": "Termo Helper (Dicio)",
+    "description": "Helper que usa a pesquisa do Dicio e um algoritmo para encontrar as melhores palavras.",
+    "url": "https://greasyfork.org/scripts/529758-termo-helper-dicio",
+    "code_url": "https://update.greasyfork.org/scripts/529758/Termo%20Helper%20%28Dicio%29.user.js",
+    "code_size": 38833,
+    "license": null,
+    "version": "2025-03-13",
+    "locale": "pt-BR",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529517,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-11T16:13:50.000Z",
+    "code_updated_at": "2025-03-11T16:22:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431469,
+        "name": "jackiechan285",
+        "created_at": "2025-02-04T17:26:02.000Z",
+        "url": "https://greasyfork.org/users/1431469-jackiechan285"
+      }
+    ],
+    "name": "DeepSeek - Chat title on tab title",
+    "description": "Chat title on tab title",
+    "url": "https://greasyfork.org/scripts/529517-deepseek-chat-title-on-tab-title",
+    "code_url": "https://update.greasyfork.org/scripts/529517/DeepSeek%20-%20Chat%20title%20on%20tab%20title.user.js",
+    "code_size": 4211,
+    "license": null,
+    "version": "2025-03-11",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 525906,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-04T17:59:58.000Z",
+    "code_updated_at": "2025-02-04T19:30:10.000Z",
+    "namespace": "https://greasyfork.org/en/scripts/525906-wikipedia-keep-style-preferences-in-incognito",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1431469,
+        "name": "jackiechan285",
+        "created_at": "2025-02-04T17:26:02.000Z",
+        "url": "https://greasyfork.org/users/1431469-jackiechan285"
+      }
+    ],
+    "name": "Wikipedia - Keep style preferences in incognito",
+    "description": "Immediately apply the user's style preferences in incognito sessions, for a seamless experience, without needing to manually set them every time.",
+    "url": "https://greasyfork.org/scripts/525906-wikipedia-keep-style-preferences-in-incognito",
+    "code_url": "https://update.greasyfork.org/scripts/525906/Wikipedia%20-%20Keep%20style%20preferences%20in%20incognito.user.js",
+    "code_size": 4220,
+    "license": null,
+    "version": "2025-02-04.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

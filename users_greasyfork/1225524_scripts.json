@@ -1,0 +1,233 @@
+[
+  {
+    "id": 535830,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T22:37:43.000Z",
+    "code_updated_at": "2025-08-25T04:16:28.000Z",
+    "namespace": "Grundo's Cafe",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - Underwater Fishing Mods",
+    "description": "Fishing rewards sorting and logging with combined results.",
+    "url": "https://greasyfork.org/scripts/535830-gc-underwater-fishing-mods",
+    "code_url": "https://update.greasyfork.org/scripts/535830/%5BGC%5D%20-%20Underwater%20Fishing%20Mods.user.js",
+    "code_size": 1251,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 534984,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T04:43:23.000Z",
+    "code_updated_at": "2025-08-25T04:15:23.000Z",
+    "namespace": "https://www.grundos.cafe/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - Dailies Preferences Wizard",
+    "description": "Set preferences including redirects for dailies with expanded functionality.",
+    "url": "https://greasyfork.org/scripts/534984-gc-dailies-preferences-wizard",
+    "code_url": "https://update.greasyfork.org/scripts/534984/%5BGC%5D%20-%20Dailies%20Preferences%20Wizard.user.js",
+    "code_size": 737,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512412,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T05:07:54.000Z",
+    "code_updated_at": "2025-08-25T04:14:05.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - Music Skills Sorting",
+    "description": "Sorts instruments by smallest to largest so you can more easily see what you're missing.",
+    "url": "https://greasyfork.org/scripts/512412-gc-music-skills-sorting",
+    "code_url": "https://update.greasyfork.org/scripts/512412/%5BGC%5D%20-%20Music%20Skills%20Sorting.user.js",
+    "code_size": 678,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512409,
+    "daily_installs": 0,
+    "total_installs": 138,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-13T04:40:13.000Z",
+    "code_updated_at": "2025-08-25T03:53:19.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - Virtupets.net Quest Calculator",
+    "description": "Calculate cost of quests using Virtupets API without having to check each item and do mental math. Staff approved script via ticket.",
+    "url": "https://greasyfork.org/scripts/512409-gc-virtupets-net-quest-calculator",
+    "code_url": "https://update.greasyfork.org/scripts/512409/%5BGC%5D%20-%20Virtupetsnet%20Quest%20Calculator.user.js",
+    "code_size": 1088,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 510368,
+    "daily_installs": 0,
+    "total_installs": 85,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T02:53:02.000Z",
+    "code_updated_at": "2025-08-25T04:02:47.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - Stock Enhancements",
+    "description": "Sort stocks listed on the portfolio page in descending order by percentage with highest profit percentages first. Original highlight script by Shalane., edited for compatibility after CSS changes.",
+    "url": "https://greasyfork.org/scripts/510368-gc-stock-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/510368/%5BGC%5D%20-%20Stock%20Enhancements.user.js",
+    "code_size": 869,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 504769,
+    "daily_installs": 0,
+    "total_installs": 80,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-23T06:40:34.000Z",
+    "code_updated_at": "2025-08-25T04:00:49.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - Virtupets.net Search Link",
+    "description": "Add virtupets.net search link to sitewide search helper.",
+    "url": "https://greasyfork.org/scripts/504769-gc-virtupets-net-search-link",
+    "code_url": "https://update.greasyfork.org/scripts/504769/%5BGC%5D%20-%20Virtupetsnet%20Search%20Link.user.js",
+    "code_size": 586,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501312,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-20T20:45:28.000Z",
+    "code_updated_at": "2025-08-25T04:13:21.000Z",
+    "namespace": "https://greasyfork.org/en/users/1225524-kaitlin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1225524,
+        "name": "Kaitlin",
+        "created_at": "2023-11-30T01:58:02.000Z",
+        "url": "https://greasyfork.org/users/1225524-kaitlin"
+      }
+    ],
+    "name": "[GC] - TP Enhancements",
+    "description": "Tp",
+    "url": "https://greasyfork.org/scripts/501312-gc-tp-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/501312/%5BGC%5D%20-%20TP%20Enhancements.user.js",
+    "code_size": 808,
+    "license": "MIT License",
+    "version": "86",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

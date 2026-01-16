@@ -1,0 +1,33 @@
+{
+  "id": 537722,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-30T06:18:59.000Z",
+  "code_updated_at": "2025-06-03T05:02:31.000Z",
+  "namespace": "https://chat.openai.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1476609,
+      "name": "重音",
+      "created_at": "2025-05-30T05:42:12.000Z",
+      "url": "https://greasyfork.org/users/1476609-%E9%87%8D%E9%9F%B3"
+    }
+  ],
+  "name": "通用网页水印屏蔽器（结构特征识别）",
+  "description": "隐藏基于样式渲染的网页水印，不依赖具体文字内容",
+  "url": "https://greasyfork.org/scripts/537722-%E9%80%9A%E7%94%A8%E7%BD%91%E9%A1%B5%E6%B0%B4%E5%8D%B0%E5%B1%8F%E8%94%BD%E5%99%A8-%E7%BB%93%E6%9E%84%E7%89%B9%E5%BE%81%E8%AF%86%E5%88%AB",
+  "code_url": "https://update.greasyfork.org/scripts/537722/%E9%80%9A%E7%94%A8%E7%BD%91%E9%A1%B5%E6%B0%B4%E5%8D%B0%E5%B1%8F%E8%94%BD%E5%99%A8%EF%BC%88%E7%BB%93%E6%9E%84%E7%89%B9%E5%BE%81%E8%AF%86%E5%88%AB%EF%BC%89.user.js",
+  "code_size": 2630,
+  "license": null,
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

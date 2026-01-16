@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518250,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T18:16:17.000Z",
+    "code_updated_at": "2024-11-20T18:16:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 930007,
+        "name": "SilverAndJade",
+        "created_at": "2022-06-28T08:14:20.000Z",
+        "url": "https://greasyfork.org/users/930007-silverandjade"
+      }
+    ],
+    "name": "Civitai Date Range Picker",
+    "description": "Civitai date range picker and update URL with selected range",
+    "url": "https://greasyfork.org/scripts/518250-civitai-date-range-picker",
+    "code_url": "https://update.greasyfork.org/scripts/518250/Civitai%20Date%20Range%20Picker.user.js",
+    "code_size": 4829,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

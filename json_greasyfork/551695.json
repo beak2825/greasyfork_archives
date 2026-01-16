@@ -1,0 +1,33 @@
+{
+  "id": 551695,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-05T18:36:49.000Z",
+  "code_updated_at": "2025-10-05T18:38:53.000Z",
+  "namespace": "AnimeBytes Nightly",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1522591,
+      "name": "mitsuki haruko",
+      "created_at": "2025-10-05T18:33:30.000Z",
+      "url": "https://greasyfork.org/users/1522591-mitsuki-haruko"
+    }
+  ],
+  "name": "AniList Integration",
+  "description": "AniList Integration seamlessly adds a direct link to the anime or manga’s AniList page in the links section and displays a \"Next Episode Airing in\" timer for ongoing series, pulled from AniList’s GraphQL API. With smart matching based on release year and format (e.g., TV, OVA, Movie), it ensures accurate results for both anime and manga Part of the AnimeBytes Nightly userscript collection, this script enhances your browsing experience with minimal setup and robust error handling.",
+  "url": "https://greasyfork.org/scripts/551695-anilist-integration",
+  "code_url": "https://update.greasyfork.org/scripts/551695/AniList%20Integration.user.js",
+  "code_size": 18182,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

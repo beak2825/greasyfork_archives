@@ -1,0 +1,33 @@
+{
+  "id": 523015,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-06T13:18:16.000Z",
+  "code_updated_at": "2025-01-19T13:16:27.000Z",
+  "namespace": "https://greasyfork.org/users/1420266",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1420266,
+      "name": "Jazzmedo",
+      "created_at": "2025-01-06T13:12:37.000Z",
+      "url": "https://greasyfork.org/users/1420266-jazzmedo"
+    }
+  ],
+  "name": "TryHackMe Copy to Clipboard and add notes",
+  "description": "this script will allow you to copy the content from the room and save notes at the bottom right of the page",
+  "url": "https://greasyfork.org/scripts/523015-tryhackme-copy-to-clipboard-and-add-notes",
+  "code_url": "https://update.greasyfork.org/scripts/523015/TryHackMe%20Copy%20to%20Clipboard%20and%20add%20notes.user.js",
+  "code_size": 27866,
+  "license": "JazzMedo",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,59 @@
+{
+  "id": 531112,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-28T11:51:29.000Z",
+  "code_updated_at": "2025-03-29T12:49:38.000Z",
+  "namespace": "teatools",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1451021,
+      "name": "i000Tea",
+      "created_at": "2025-03-27T16:39:12.000Z",
+      "url": "https://greasyfork.org/users/1451021-i000tea",
+      "scripts": [
+        {
+          "id": 531112,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-28T11:51:29.000Z",
+          "code_updated_at": "2025-03-29T12:49:38.000Z",
+          "namespace": "teatools",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "驱入虚空，扒Tap公告转Wikitext",
+          "description": "自动提取TapTap公告内容并转换为Wikitext格式",
+          "url": "https://greasyfork.org/scripts/531112-%E9%A9%B1%E5%85%A5%E8%99%9A%E7%A9%BA-%E6%89%92tap%E5%85%AC%E5%91%8A%E8%BD%ACwikitext",
+          "code_url": "https://update.greasyfork.org/scripts/531112/%E9%A9%B1%E5%85%A5%E8%99%9A%E7%A9%BA%EF%BC%8C%E6%89%92Tap%E5%85%AC%E5%91%8A%E8%BD%ACWikitext.user.js",
+          "code_size": 10087,
+          "license": "MIT License",
+          "version": "1.2.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "驱入虚空，扒Tap公告转Wikitext",
+  "description": "自动提取TapTap公告内容并转换为Wikitext格式",
+  "url": "https://greasyfork.org/scripts/531112-%E9%A9%B1%E5%85%A5%E8%99%9A%E7%A9%BA-%E6%89%92tap%E5%85%AC%E5%91%8A%E8%BD%ACwikitext",
+  "code_url": "https://update.greasyfork.org/scripts/531112/%E9%A9%B1%E5%85%A5%E8%99%9A%E7%A9%BA%EF%BC%8C%E6%89%92Tap%E5%85%AC%E5%91%8A%E8%BD%ACWikitext.user.js",
+  "code_size": 10087,
+  "license": "MIT License",
+  "version": "1.2.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

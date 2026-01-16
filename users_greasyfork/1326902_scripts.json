@@ -1,0 +1,68 @@
+[
+  {
+    "id": 549151,
+    "daily_installs": 0,
+    "total_installs": 62,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T14:38:01.000Z",
+    "code_updated_at": "2025-09-11T14:38:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1326902,
+        "name": "AndroidXL",
+        "created_at": "2024-07-01T23:23:20.000Z",
+        "url": "https://greasyfork.org/users/1326902-androidxl"
+      }
+    ],
+    "name": "Civitai Better Model Search",
+    "description": "Adds a floating search panel to Civitai with saved filters, infinite scroll, and No BS Unintuitive Filters.",
+    "url": "https://greasyfork.org/scripts/549151-civitai-better-model-search",
+    "code_url": "https://update.greasyfork.org/scripts/549151/Civitai%20Better%20Model%20Search.user.js",
+    "code_size": 24445,
+    "license": "GNU GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 526933,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-15T00:28:23.000Z",
+    "code_updated_at": "2025-03-18T21:38:42.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1326902,
+        "name": "AndroidXL",
+        "created_at": "2024-07-01T23:23:20.000Z",
+        "url": "https://greasyfork.org/users/1326902-androidxl"
+      }
+    ],
+    "name": "Civitai Prompt Autocomplete & Tag Wiki",
+    "description": "Adds tag autocomplete and wiki lookup features",
+    "url": "https://greasyfork.org/scripts/526933-civitai-prompt-autocomplete-tag-wiki",
+    "code_url": "https://update.greasyfork.org/scripts/526933/Civitai%20Prompt%20Autocomplete%20%20Tag%20Wiki.user.js",
+    "code_size": 59801,
+    "license": "MIT License",
+    "version": "4.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "id": 512502,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-13T19:19:57.000Z",
+  "code_updated_at": "2024-11-28T00:23:38.000Z",
+  "namespace": "medicare.private.revivepercentage",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1321816,
+      "name": "Medicare",
+      "created_at": "2024-06-21T19:44:14.000Z",
+      "url": "https://greasyfork.org/users/1321816-medicare"
+    },
+    {
+      "id": 1380516,
+      "name": "Dirt-fairy",
+      "created_at": "2024-10-13T18:56:35.000Z",
+      "url": "https://greasyfork.org/users/1380516-dirt-fairy",
+      "scripts": []
+    }
+  ],
+  "name": "TORN: Revive Percentage2",
+  "description": "Show whether a revive would be covered under the contract.",
+  "url": "https://greasyfork.org/scripts/512502-torn-revive-percentage2",
+  "code_url": "https://update.greasyfork.org/scripts/512502/TORN%3A%20Revive%20Percentage2.user.js",
+  "code_size": 4892,
+  "license": null,
+  "version": "1.0.5.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

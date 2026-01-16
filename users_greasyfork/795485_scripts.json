@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497893,
+    "daily_installs": 0,
+    "total_installs": 284,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-06-14T09:30:49.000Z",
+    "code_updated_at": "2025-01-09T09:55:00.000Z",
+    "namespace": "Hai",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795485,
+        "name": "Samer Kizi",
+        "created_at": "2021-07-20T09:52:24.000Z",
+        "url": "https://greasyfork.org/users/795485-samer-kizi"
+      }
+    ],
+    "name": "florr.io | Text & Color Changer",
+    "description": "Redecorate florr.io with your style.",
+    "url": "https://greasyfork.org/scripts/497893-florr-io-text-color-changer",
+    "code_url": "https://update.greasyfork.org/scripts/497893/florrio%20%7C%20Text%20%20Color%20Changer.user.js",
+    "code_size": 44713,
+    "license": "MIT License",
+    "version": "2.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

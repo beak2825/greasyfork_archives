@@ -1,0 +1,35 @@
+[
+  {
+    "id": 513813,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T08:42:53.000Z",
+    "code_updated_at": "2024-10-24T08:42:53.000Z",
+    "namespace": "https://greasyfork.org/users/824858",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1385455,
+        "name": "naconako",
+        "created_at": "2024-10-24T08:39:33.000Z",
+        "url": "https://greasyfork.org/users/1385455-naconako"
+      }
+    ],
+    "name": "스테이크 10분 리로드 stake.jp 사용",
+    "description": "Automatic reloads every 10 minutes. updated for latest Stake website. Will work forever!",
+    "url": "https://greasyfork.org/scripts/513813-%EC%8A%A4%ED%85%8C%EC%9D%B4%ED%81%AC-10%EB%B6%84-%EB%A6%AC%EB%A1%9C%EB%93%9C-stake-jp-%EC%82%AC%EC%9A%A9",
+    "code_url": "https://update.greasyfork.org/scripts/513813/%EC%8A%A4%ED%85%8C%EC%9D%B4%ED%81%AC%2010%EB%B6%84%20%EB%A6%AC%EB%A1%9C%EB%93%9C%20stakejp%20%EC%82%AC%EC%9A%A9.user.js",
+    "code_size": 1023,
+    "license": null,
+    "version": "2023.14.23",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548329,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T08:46:12.000Z",
+    "code_updated_at": "2025-09-04T08:46:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 921558,
+        "name": "Huisk",
+        "created_at": "2022-06-03T08:48:26.000Z",
+        "url": "https://greasyfork.org/users/921558-huisk"
+      }
+    ],
+    "name": "Ozon.ru Force Full Titles",
+    "description": "Показывать названия товаров на Озоне без сокращений",
+    "url": "https://greasyfork.org/scripts/548329-ozon-ru-force-full-titles",
+    "code_url": "https://update.greasyfork.org/scripts/548329/Ozonru%20Force%20Full%20Titles.user.js",
+    "code_size": 3848,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

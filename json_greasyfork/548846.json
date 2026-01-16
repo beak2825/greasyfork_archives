@@ -1,0 +1,33 @@
+{
+  "id": 548846,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-08T17:20:27.000Z",
+  "code_updated_at": "2025-12-27T12:47:13.000Z",
+  "namespace": "https://www.sooplive.co.kr/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1511650,
+      "name": "해인",
+      "created_at": "2025-09-04T04:34:25.000Z",
+      "url": "https://greasyfork.org/users/1511650-%ED%95%B4%EC%9D%B8"
+    }
+  ],
+  "name": "SOOP 투표+추첨 패널 — 채팅수집 안정화(재파싱)",
+  "description": "버그 수정 9.8 (UI변경 대응/렉 완화)",
+  "url": "https://greasyfork.org/scripts/548846-soop-%ED%88%AC%ED%91%9C-%EC%B6%94%EC%B2%A8-%ED%8C%A8%EB%84%90-%EC%B1%84%ED%8C%85%EC%88%98%EC%A7%91-%EC%95%88%EC%A0%95%ED%99%94-%EC%9E%AC%ED%8C%8C%EC%8B%B1",
+  "code_url": "https://update.greasyfork.org/scripts/548846/SOOP%20%ED%88%AC%ED%91%9C%2B%EC%B6%94%EC%B2%A8%20%ED%8C%A8%EB%84%90%20%E2%80%94%20%EC%B1%84%ED%8C%85%EC%88%98%EC%A7%91%20%EC%95%88%EC%A0%95%ED%99%94%28%EC%9E%AC%ED%8C%8C%EC%8B%B1%29.user.js",
+  "code_size": 44070,
+  "license": "MIT License",
+  "version": "2025-09-08.r25",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

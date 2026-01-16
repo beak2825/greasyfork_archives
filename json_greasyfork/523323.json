@@ -1,0 +1,34 @@
+{
+  "id": 523323,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-09T19:22:40.000Z",
+  "code_updated_at": "2025-01-09T19:22:40.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421396,
+      "name": "HmTici",
+      "created_at": "2025-01-09T19:20:34.000Z",
+      "url": "https://greasyfork.org/users/1421396-hmtici",
+      "scripts": []
+    }
+  ],
+  "name": "SENSE Crossword Auto Solver",
+  "description": "Automatically solves crossword puzzles on specified pages",
+  "url": "https://greasyfork.org/scripts/523323-sense-crossword-auto-solver",
+  "code_url": "https://update.greasyfork.org/scripts/523323/SENSE%20Crossword%20Auto%20Solver.user.js",
+  "code_size": 2961,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 539703,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-17T05:53:33.000Z",
+  "code_updated_at": "2025-06-21T04:16:22.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1484782,
+      "name": "awakenedjeremy",
+      "created_at": "2025-06-17T05:41:13.000Z",
+      "url": "https://greasyfork.org/users/1484782-awakenedjeremy"
+    }
+  ],
+  "name": "Auto check \"Non-Corrupted\" for path of exile1 trade site 流放之路交易网站自动选择未腐化",
+  "description": "自动选择未腐化,Auto uncheck \"Corrupted\", path of exile, 流放之路，支持Clear按钮后重新选择",
+  "url": "https://greasyfork.org/scripts/539703-auto-check-non-corrupted-for-path-of-exile1-trade-site-%E6%B5%81%E6%94%BE%E4%B9%8B%E8%B7%AF%E4%BA%A4%E6%98%93%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E9%80%89%E6%8B%A9%E6%9C%AA%E8%85%90%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/539703/Auto%20check%20%22Non-Corrupted%22%20for%20path%20of%20exile1%20trade%20site%20%E6%B5%81%E6%94%BE%E4%B9%8B%E8%B7%AF%E4%BA%A4%E6%98%93%E7%BD%91%E7%AB%99%E8%87%AA%E5%8A%A8%E9%80%89%E6%8B%A9%E6%9C%AA%E8%85%90%E5%8C%96.user.js",
+  "code_size": 3527,
+  "license": "MIT License",
+  "version": "0.4.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

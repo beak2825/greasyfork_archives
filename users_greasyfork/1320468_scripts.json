@@ -34,7 +34,7 @@
   },
   {
     "id": 552581,
-    "daily_installs": 3,
+    "daily_installs": 1,
     "total_installs": 40,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -127,6 +127,72 @@
     "code_size": 23558,
     "license": null,
     "version": "2.6",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520787,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-15T13:35:37.000Z",
+    "code_updated_at": "2024-12-16T19:45:04.000Z",
+    "namespace": "https://www.sooplive.co.kr/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1320468,
+        "name": "dontong",
+        "created_at": "2024-06-19T08:00:04.000Z",
+        "url": "https://greasyfork.org/users/1320468-dontong"
+      }
+    ],
+    "name": "SOOP 채팅창 아이디 복사 버튼",
+    "description": "SOOP 채팅창에 아이디 복사 버튼을 추가합니다.",
+    "url": "https://greasyfork.org/scripts/520787-soop-%EC%B1%84%ED%8C%85%EC%B0%BD-%EC%95%84%EC%9D%B4%EB%94%94-%EB%B3%B5%EC%82%AC-%EB%B2%84%ED%8A%BC",
+    "code_url": "https://update.greasyfork.org/scripts/520787/SOOP%20%EC%B1%84%ED%8C%85%EC%B0%BD%20%EC%95%84%EC%9D%B4%EB%94%94%20%EB%B3%B5%EC%82%AC%20%EB%B2%84%ED%8A%BC.user.js",
+    "code_size": 1924,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 499939,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-07T16:53:11.000Z",
+    "code_updated_at": "2025-10-11T18:32:53.000Z",
+    "namespace": "https://cafe.naver.com/kanetv",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1320468,
+        "name": "dontong",
+        "created_at": "2024-06-19T08:00:04.000Z",
+        "url": "https://greasyfork.org/users/1320468-dontong"
+      }
+    ],
+    "name": "[케인] 댓글사진확대 + 글씨확대 + 트게더스킨",
+    "description": "[케인/도꼬미 팬카페 전용]",
+    "url": "https://greasyfork.org/scripts/499939-%EC%BC%80%EC%9D%B8-%EB%8C%93%EA%B8%80%EC%82%AC%EC%A7%84%ED%99%95%EB%8C%80-%EA%B8%80%EC%94%A8%ED%99%95%EB%8C%80-%ED%8A%B8%EA%B2%8C%EB%8D%94%EC%8A%A4%ED%82%A8",
+    "code_url": "https://update.greasyfork.org/scripts/499939/%5B%EC%BC%80%EC%9D%B8%5D%20%EB%8C%93%EA%B8%80%EC%82%AC%EC%A7%84%ED%99%95%EB%8C%80%20%2B%20%EA%B8%80%EC%94%A8%ED%99%95%EB%8C%80%20%2B%20%ED%8A%B8%EA%B2%8C%EB%8D%94%EC%8A%A4%ED%82%A8.user.js",
+    "code_size": 338374,
+    "license": "MIT License",
+    "version": "8.7",
     "locale": "ko",
     "deleted": false,
     "visibility": "unknown"

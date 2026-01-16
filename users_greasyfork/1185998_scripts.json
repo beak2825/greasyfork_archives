@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497970,
+    "daily_installs": 0,
+    "total_installs": 54,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-15T06:07:20.000Z",
+    "code_updated_at": "2024-06-25T08:32:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1185998,
+        "name": "cuizhenzhi",
+        "created_at": "2023-10-02T10:23:31.000Z",
+        "url": "https://greasyfork.org/users/1185998-cuizhenzhi"
+      }
+    ],
+    "name": "BlogFocusPro - 旨在优化博客网站布局 (长期更新)",
+    "description": "此用户脚本部分基于Blog-UI, 旨在提供一个更清爽的浏览体验，专门针对 blog.csdn, cloud.tencent.com/developer/*,  等技术博客页面。它通过移除页面上的非核心内容（如广告、推荐栏目、订阅通知等），同时保留必要元素(如超链接小标题等), 使用户能专注于阅读技术文章，无干扰。该脚本适用于希望提高阅读效率的开发者和技术爱好者。特此感谢: https://greasyfork.org/zh-CN/scripts/451555",
+    "url": "https://greasyfork.org/scripts/497970-blogfocuspro-%E6%97%A8%E5%9C%A8%E4%BC%98%E5%8C%96%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E5%B8%83%E5%B1%80-%E9%95%BF%E6%9C%9F%E6%9B%B4%E6%96%B0",
+    "code_url": "https://update.greasyfork.org/scripts/497970/BlogFocusPro%20-%20%E6%97%A8%E5%9C%A8%E4%BC%98%E5%8C%96%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E5%B8%83%E5%B1%80%20%28%E9%95%BF%E6%9C%9F%E6%9B%B4%E6%96%B0%29.user.js",
+    "code_size": 182993,
+    "license": "MIT License",
+    "version": "2024.06.25.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

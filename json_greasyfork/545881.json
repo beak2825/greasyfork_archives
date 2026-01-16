@@ -1,0 +1,33 @@
+{
+  "id": 545881,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-15T01:50:55.000Z",
+  "code_updated_at": "2025-08-15T01:50:55.000Z",
+  "namespace": "https://nitrotype.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1505135,
+      "name": "akaday",
+      "created_at": "2025-08-15T01:34:19.000Z",
+      "url": "https://greasyfork.org/users/1505135-akaday"
+    }
+  ],
+  "name": "Nitro Type WS Logger (UI only on /race)",
+  "description": "Captures all WS frames site-wide; shows roster panel ONLY on /race (with Copy WS)",
+  "url": "https://greasyfork.org/scripts/545881-nitro-type-ws-logger-ui-only-on-race",
+  "code_url": "https://update.greasyfork.org/scripts/545881/Nitro%20Type%20WS%20Logger%20%28UI%20only%20on%20race%29.user.js",
+  "code_size": 10656,
+  "license": "MIT License",
+  "version": "3.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,34 @@
+{
+  "id": 537782,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-30T19:45:13.000Z",
+  "code_updated_at": "2025-05-30T21:28:05.000Z",
+  "namespace": "https://forum.arizona-rp.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1175573,
+      "name": "Бисага Дмитро",
+      "created_at": "2023-09-18T07:30:51.000Z",
+      "url": "https://greasyfork.org/users/1175573-%D0%B1%D0%B8%D1%81%D0%B0%D0%B3%D0%B0-%D0%B4%D0%BC%D0%B8%D1%82%D1%80%D0%BE",
+      "scripts": []
+    }
+  ],
+  "name": "Arizona-RP Complete Profile Customizer",
+  "description": "Меняет баннеры, стили и сохраняет настройки",
+  "url": "https://greasyfork.org/scripts/537782-arizona-rp-complete-profile-customizer",
+  "code_url": "https://update.greasyfork.org/scripts/537782/Arizona-RP%20Complete%20Profile%20Customizer.user.js",
+  "code_size": 6154,
+  "license": null,
+  "version": "17.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

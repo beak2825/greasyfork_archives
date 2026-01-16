@@ -1,0 +1,59 @@
+{
+  "id": 545778,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-14T07:14:24.000Z",
+  "code_updated_at": "2025-08-14T07:14:24.000Z",
+  "namespace": "http://zhihu.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1504812,
+      "name": "View12138",
+      "created_at": "2025-08-14T02:32:15.000Z",
+      "url": "https://greasyfork.org/users/1504812-view12138",
+      "scripts": [
+        {
+          "id": 545778,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-14T07:14:24.000Z",
+          "code_updated_at": "2025-08-14T07:14:24.000Z",
+          "namespace": "http://zhihu.com",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "知乎问题标题隐藏",
+          "description": "添加隐藏/显示问题按钮以切换问题的显示情况",
+          "url": "https://greasyfork.org/scripts/545778-%E7%9F%A5%E4%B9%8E%E9%97%AE%E9%A2%98%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F",
+          "code_url": "https://update.greasyfork.org/scripts/545778/%E7%9F%A5%E4%B9%8E%E9%97%AE%E9%A2%98%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F.user.js",
+          "code_size": 1590,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "知乎问题标题隐藏",
+  "description": "添加隐藏/显示问题按钮以切换问题的显示情况",
+  "url": "https://greasyfork.org/scripts/545778-%E7%9F%A5%E4%B9%8E%E9%97%AE%E9%A2%98%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F",
+  "code_url": "https://update.greasyfork.org/scripts/545778/%E7%9F%A5%E4%B9%8E%E9%97%AE%E9%A2%98%E6%A0%87%E9%A2%98%E9%9A%90%E8%97%8F.user.js",
+  "code_size": 1590,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

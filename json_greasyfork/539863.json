@@ -1,0 +1,33 @@
+{
+  "id": 539863,
+  "daily_installs": 0,
+  "total_installs": 113,
+  "fan_score": "51.0",
+  "good_ratings": 4,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-18T09:29:20.000Z",
+  "code_updated_at": "2025-06-19T00:41:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1294978,
+      "name": "wangwangit",
+      "created_at": "2024-04-30T02:32:57.000Z",
+      "url": "https://greasyfork.org/users/1294978-wangwangit"
+    }
+  ],
+  "name": "✨ 网站油猴脚本发现器：智能匹配、高效管理，您的专属脚本宝库！ ✨",
+  "description": "Finds, filters, and sorts userscripts for the current site from GreasyFork. Now with a responsive design for desktop and mobile!",
+  "url": "https://greasyfork.org/scripts/539863-%E7%BD%91%E7%AB%99%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%E5%8F%91%E7%8E%B0%E5%99%A8-%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D-%E9%AB%98%E6%95%88%E7%AE%A1%E7%90%86-%E6%82%A8%E7%9A%84%E4%B8%93%E5%B1%9E%E8%84%9A%E6%9C%AC%E5%AE%9D%E5%BA%93",
+  "code_url": "https://update.greasyfork.org/scripts/539863/%E2%9C%A8%20%E7%BD%91%E7%AB%99%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC%E5%8F%91%E7%8E%B0%E5%99%A8%EF%BC%9A%E6%99%BA%E8%83%BD%E5%8C%B9%E9%85%8D%E3%80%81%E9%AB%98%E6%95%88%E7%AE%A1%E7%90%86%EF%BC%8C%E6%82%A8%E7%9A%84%E4%B8%93%E5%B1%9E%E8%84%9A%E6%9C%AC%E5%AE%9D%E5%BA%93%EF%BC%81%20%E2%9C%A8.user.js",
+  "code_size": 28168,
+  "license": "MIT License",
+  "version": "5.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519287,
+    "daily_installs": 0,
+    "total_installs": 534,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-11-29T14:07:07.000Z",
+    "code_updated_at": "2024-11-30T10:58:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1404140,
+        "name": "iwangit",
+        "created_at": "2024-11-29T13:49:33.000Z",
+        "url": "https://greasyfork.org/users/1404140-iwangit"
+      }
+    ],
+    "name": "🎬 YouTube AI 翻译助手 Pro - 实时翻译+AI配音",
+    "description": "🚀 强大的 YouTube 视频翻译工具 | ✨ 实时英译中 | 🎯 智能AI翻译 | 🔊 自然语音朗读 | 📝 内容智能总结 | 💫 支持多种AI模型和语音引擎 | 🎨 优雅界面设计 | 让观看YouTube视频更轻松愉快!",
+    "url": "https://greasyfork.org/scripts/519287-youtube-ai-%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B-pro-%E5%AE%9E%E6%97%B6%E7%BF%BB%E8%AF%91-ai%E9%85%8D%E9%9F%B3",
+    "code_url": "https://update.greasyfork.org/scripts/519287/%F0%9F%8E%AC%20YouTube%20AI%20%E7%BF%BB%E8%AF%91%E5%8A%A9%E6%89%8B%20Pro%20-%20%E5%AE%9E%E6%97%B6%E7%BF%BB%E8%AF%91%2BAI%E9%85%8D%E9%9F%B3.user.js",
+    "code_size": 127183,
+    "license": "MIT License",
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

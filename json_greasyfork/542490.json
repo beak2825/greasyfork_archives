@@ -1,0 +1,59 @@
+{
+  "id": 542490,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-13T21:04:29.000Z",
+  "code_updated_at": "2025-07-14T12:10:35.000Z",
+  "namespace": "https://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1424769,
+      "name": "dakovisuals",
+      "created_at": "2025-01-18T17:42:44.000Z",
+      "url": "https://greasyfork.org/users/1424769-dakovisuals",
+      "scripts": [
+        {
+          "id": 542490,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-13T21:04:29.000Z",
+          "code_updated_at": "2025-07-14T12:10:35.000Z",
+          "namespace": "https://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Cytos Color Manager",
+          "description": "Unique color modes",
+          "url": "https://greasyfork.org/scripts/542490-cytos-color-manager",
+          "code_url": "https://update.greasyfork.org/scripts/542490/Cytos%20Color%20Manager.user.js",
+          "code_size": 9608,
+          "license": "MIT License",
+          "version": "1.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Cytos Color Manager",
+  "description": "Unique color modes",
+  "url": "https://greasyfork.org/scripts/542490-cytos-color-manager",
+  "code_url": "https://update.greasyfork.org/scripts/542490/Cytos%20Color%20Manager.user.js",
+  "code_size": 9608,
+  "license": "MIT License",
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

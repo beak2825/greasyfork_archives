@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544974,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-08T01:11:00.000Z",
+    "code_updated_at": "2025-08-08T01:11:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1502660,
+        "name": "drxnk_calypso",
+        "created_at": "2025-08-08T01:08:46.000Z",
+        "url": "https://greasyfork.org/users/1502660-drxnk-calypso"
+      }
+    ],
+    "name": "C.AI Theme & Background Customizer v3.2",
+    "description": "Customize Character.AI theme with hex colors, background thumbnails, and palette previews.",
+    "url": "https://greasyfork.org/scripts/544974-c-ai-theme-background-customizer-v3-2",
+    "code_url": "https://update.greasyfork.org/scripts/544974/CAI%20Theme%20%20Background%20Customizer%20v32.user.js",
+    "code_size": 8719,
+    "license": null,
+    "version": "3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 529455,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-11T02:54:47.000Z",
+  "code_updated_at": "2025-07-14T04:42:31.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444449,
+      "name": "Alan_IFT",
+      "created_at": "2025-03-11T02:43:45.000Z",
+      "url": "https://greasyfork.org/users/1444449-alan-ift"
+    }
+  ],
+  "name": "Google Ads Media Extractor",
+  "description": "从Google Ads透明度中心提取视频和图片链接",
+  "url": "https://greasyfork.org/scripts/529455-google-ads-media-extractor",
+  "code_url": "https://update.greasyfork.org/scripts/529455/Google%20Ads%20Media%20Extractor.user.js",
+  "code_size": 57240,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

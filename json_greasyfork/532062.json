@@ -1,0 +1,59 @@
+{
+  "id": 532062,
+  "daily_installs": 2,
+  "total_installs": 253,
+  "fan_score": "19.8",
+  "good_ratings": 1,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-04-07T08:41:43.000Z",
+  "code_updated_at": "2025-04-07T08:41:43.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1454939,
+      "name": "Blake Wollston",
+      "created_at": "2025-04-07T08:40:40.000Z",
+      "url": "https://greasyfork.org/users/1454939-blake-wollston",
+      "scripts": [
+        {
+          "id": 532062,
+          "daily_installs": 2,
+          "total_installs": 253,
+          "fan_score": "19.8",
+          "good_ratings": 1,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-04-07T08:41:43.000Z",
+          "code_updated_at": "2025-04-07T08:41:43.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SaveMyExams Bypass",
+          "description": "Allows you to view unlimited notes, exam questions and past papers for free.",
+          "url": "https://greasyfork.org/scripts/532062-savemyexams-bypass",
+          "code_url": "https://update.greasyfork.org/scripts/532062/SaveMyExams%20Bypass.user.js",
+          "code_size": 679,
+          "license": "MIT License",
+          "version": "2025-04-07",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SaveMyExams Bypass",
+  "description": "Allows you to view unlimited notes, exam questions and past papers for free.",
+  "url": "https://greasyfork.org/scripts/532062-savemyexams-bypass",
+  "code_url": "https://update.greasyfork.org/scripts/532062/SaveMyExams%20Bypass.user.js",
+  "code_size": 679,
+  "license": "MIT License",
+  "version": "2025-04-07",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

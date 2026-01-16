@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550689,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-25T19:18:29.000Z",
+    "code_updated_at": "2025-09-25T19:18:29.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1519364,
+        "name": "smoothxhale",
+        "created_at": "2025-09-25T19:13:35.000Z",
+        "url": "https://greasyfork.org/users/1519364-smoothxhale"
+      }
+    ],
+    "name": "AI Studio Legacy Keybinds",
+    "description": "Remaps Enter to Shift+Enter, and Ctrl+Enter to Enter on aistudio.google.com.",
+    "url": "https://greasyfork.org/scripts/550689-ai-studio-legacy-keybinds",
+    "code_url": "https://update.greasyfork.org/scripts/550689/AI%20Studio%20Legacy%20Keybinds.user.js",
+    "code_size": 1643,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

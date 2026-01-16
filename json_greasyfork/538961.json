@@ -1,0 +1,59 @@
+{
+  "id": 538961,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-10T03:00:53.000Z",
+  "code_updated_at": "2025-06-10T03:15:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1481382,
+      "name": "GolOcea",
+      "created_at": "2025-06-10T02:59:27.000Z",
+      "url": "https://greasyfork.org/users/1481382-golocea",
+      "scripts": [
+        {
+          "id": 538961,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-10T03:00:53.000Z",
+          "code_updated_at": "2025-06-10T03:15:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "微博图片别裂",
+          "description": "感恩戴德地为新浪图片添加微博Referer，支持单独访问和页面嵌入两种情况",
+          "url": "https://greasyfork.org/scripts/538961-%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E5%88%AB%E8%A3%82",
+          "code_url": "https://update.greasyfork.org/scripts/538961/%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E5%88%AB%E8%A3%82.user.js",
+          "code_size": 13496,
+          "license": "MIT License",
+          "version": "2.4",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "微博图片别裂",
+  "description": "感恩戴德地为新浪图片添加微博Referer，支持单独访问和页面嵌入两种情况",
+  "url": "https://greasyfork.org/scripts/538961-%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E5%88%AB%E8%A3%82",
+  "code_url": "https://update.greasyfork.org/scripts/538961/%E5%BE%AE%E5%8D%9A%E5%9B%BE%E7%89%87%E5%88%AB%E8%A3%82.user.js",
+  "code_size": 13496,
+  "license": "MIT License",
+  "version": "2.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

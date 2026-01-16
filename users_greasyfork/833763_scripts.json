@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527919,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-24T08:00:28.000Z",
+    "code_updated_at": "2025-02-24T08:00:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 833763,
+        "name": "wst2048",
+        "created_at": "2021-11-09T01:25:51.000Z",
+        "url": "https://greasyfork.org/users/833763-wst2048"
+      }
+    ],
+    "name": "处理秘境探索",
+    "description": "\"我的放置仙途\" 探索自动点击",
+    "url": "https://greasyfork.org/scripts/527919-%E5%A4%84%E7%90%86%E7%A7%98%E5%A2%83%E6%8E%A2%E7%B4%A2",
+    "code_url": "https://update.greasyfork.org/scripts/527919/%E5%A4%84%E7%90%86%E7%A7%98%E5%A2%83%E6%8E%A2%E7%B4%A2.user.js",
+    "code_size": 3125,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

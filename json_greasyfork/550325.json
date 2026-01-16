@@ -1,0 +1,59 @@
+{
+  "id": 550325,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-22T07:28:22.000Z",
+  "code_updated_at": "2025-09-22T07:28:22.000Z",
+  "namespace": "https://greasyfork.org/de/users/1517997",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1517997,
+      "name": "Kirbs",
+      "created_at": "2025-09-22T07:09:12.000Z",
+      "url": "https://greasyfork.org/users/1517997-kirbs",
+      "scripts": [
+        {
+          "id": 550325,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-22T07:28:22.000Z",
+          "code_updated_at": "2025-09-22T07:28:22.000Z",
+          "namespace": "https://greasyfork.org/de/users/1517997",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Torn Race Creating",
+          "description": "Autofills the race form and moves the start button for easier custom race creation.",
+          "url": "https://greasyfork.org/scripts/550325-torn-race-creating",
+          "code_url": "https://update.greasyfork.org/scripts/550325/Torn%20Race%20Creating.user.js",
+          "code_size": 2306,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Torn Race Creating",
+  "description": "Autofills the race form and moves the start button for easier custom race creation.",
+  "url": "https://greasyfork.org/scripts/550325-torn-race-creating",
+  "code_url": "https://update.greasyfork.org/scripts/550325/Torn%20Race%20Creating.user.js",
+  "code_size": 2306,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520727,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-14T22:03:51.000Z",
+    "code_updated_at": "2024-12-14T22:03:51.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1388071,
+        "name": "Miooko",
+        "created_at": "2024-10-29T10:37:03.000Z",
+        "url": "https://greasyfork.org/users/1388071-miooko"
+      }
+    ],
+    "name": "Linux.do 帖子（从头阅读）",
+    "description": "修改帖子阅读请求URL",
+    "url": "https://greasyfork.org/scripts/520727-linux-do-%E5%B8%96%E5%AD%90-%E4%BB%8E%E5%A4%B4%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/520727/Linuxdo%20%E5%B8%96%E5%AD%90%EF%BC%88%E4%BB%8E%E5%A4%B4%E9%98%85%E8%AF%BB%EF%BC%89.user.js",
+    "code_size": 854,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

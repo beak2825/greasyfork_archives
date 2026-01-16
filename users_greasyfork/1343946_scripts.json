@@ -1,0 +1,68 @@
+[
+  {
+    "id": 546195,
+    "daily_installs": 0,
+    "total_installs": 30,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-17T19:35:34.000Z",
+    "code_updated_at": "2025-08-17T19:35:34.000Z",
+    "namespace": "https://www.aliexpress.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1343946,
+        "name": "Glitchy",
+        "created_at": "2024-08-02T04:18:32.000Z",
+        "url": "https://greasyfork.org/users/1343946-glitchy"
+      }
+    ],
+    "name": "AliExpress hide search ads",
+    "description": "Hides ads in AliExpress search results",
+    "url": "https://greasyfork.org/scripts/546195-aliexpress-hide-search-ads",
+    "code_url": "https://update.greasyfork.org/scripts/546195/AliExpress%20hide%20search%20ads.user.js",
+    "code_size": 1016,
+    "license": null,
+    "version": "2025-06-28",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502409,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-02T04:39:56.000Z",
+    "code_updated_at": "2024-08-02T04:39:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1343946,
+        "name": "Glitchy",
+        "created_at": "2024-08-02T04:18:32.000Z",
+        "url": "https://greasyfork.org/users/1343946-glitchy"
+      }
+    ],
+    "name": "Remove Reddit Comments",
+    "description": "Removes Reddit Comments",
+    "url": "https://greasyfork.org/scripts/502409-remove-reddit-comments",
+    "code_url": "https://update.greasyfork.org/scripts/502409/Remove%20Reddit%20Comments.user.js",
+    "code_size": 5991,
+    "license": null,
+    "version": "2024-08-01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

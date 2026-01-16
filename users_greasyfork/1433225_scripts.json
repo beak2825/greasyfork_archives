@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526377,
+    "daily_installs": 0,
+    "total_installs": 53,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-09T11:25:19.000Z",
+    "code_updated_at": "2025-02-09T11:25:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1433225,
+        "name": "Contatos Contatos",
+        "created_at": "2025-02-09T10:13:02.000Z",
+        "url": "https://greasyfork.org/users/1433225-contatos-contatos"
+      }
+    ],
+    "name": "Gota.io Center-to-Mouse Line YASXI💋💋",
+    "description": "Draws a line from the center to the mouse in Gota.io with the option to change the line color.",
+    "url": "https://greasyfork.org/scripts/526377-gota-io-center-to-mouse-line-yasxi",
+    "code_url": "https://update.greasyfork.org/scripts/526377/Gotaio%20Center-to-Mouse%20Line%20YASXI%F0%9F%92%8B%F0%9F%92%8B.user.js",
+    "code_size": 3216,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

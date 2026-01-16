@@ -1,0 +1,59 @@
+{
+  "id": 545705,
+  "daily_installs": 1,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-13T14:28:45.000Z",
+  "code_updated_at": "2025-08-13T14:28:45.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1504658,
+      "name": "ksol8",
+      "created_at": "2025-08-13T14:21:36.000Z",
+      "url": "https://greasyfork.org/users/1504658-ksol8",
+      "scripts": [
+        {
+          "id": 545705,
+          "daily_installs": 1,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-08-13T14:28:45.000Z",
+          "code_updated_at": "2025-08-13T14:28:45.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pin ChatGPT Chats",
+          "description": "Pin/Unpin ChatGPT chats with local-storage persistence",
+          "url": "https://greasyfork.org/scripts/545705-pin-chatgpt-chats",
+          "code_url": "https://update.greasyfork.org/scripts/545705/Pin%20ChatGPT%20Chats.user.js",
+          "code_size": 5102,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pin ChatGPT Chats",
+  "description": "Pin/Unpin ChatGPT chats with local-storage persistence",
+  "url": "https://greasyfork.org/scripts/545705-pin-chatgpt-chats",
+  "code_url": "https://update.greasyfork.org/scripts/545705/Pin%20ChatGPT%20Chats.user.js",
+  "code_size": 5102,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

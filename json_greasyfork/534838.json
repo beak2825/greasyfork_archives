@@ -1,0 +1,59 @@
+{
+  "id": 534838,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-03T18:39:01.000Z",
+  "code_updated_at": "2025-05-03T19:01:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1461452,
+      "name": "Kirogii",
+      "created_at": "2025-04-23T18:02:16.000Z",
+      "url": "https://greasyfork.org/users/1461452-kirogii",
+      "scripts": [
+        {
+          "id": 534838,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-05-03T18:39:01.000Z",
+          "code_updated_at": "2025-05-03T19:01:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "ORCBin Modernify",
+          "description": "Replace ORCBin title with base64 logo and use transparent links",
+          "url": "https://greasyfork.org/scripts/534838-orcbin-modernify",
+          "code_url": "https://update.greasyfork.org/scripts/534838/ORCBin%20Modernify.user.js",
+          "code_size": 34681,
+          "license": null,
+          "version": "1.6-1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "ORCBin Modernify",
+  "description": "Replace ORCBin title with base64 logo and use transparent links",
+  "url": "https://greasyfork.org/scripts/534838-orcbin-modernify",
+  "code_url": "https://update.greasyfork.org/scripts/534838/ORCBin%20Modernify.user.js",
+  "code_size": 34681,
+  "license": null,
+  "version": "1.6-1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

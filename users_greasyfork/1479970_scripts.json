@@ -1,0 +1,68 @@
+[
+  {
+    "id": 546078,
+    "daily_installs": 0,
+    "total_installs": 14,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-16T15:51:58.000Z",
+    "code_updated_at": "2025-08-19T15:04:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479970,
+        "name": "J4C",
+        "created_at": "2025-06-06T17:44:23.000Z",
+        "url": "https://greasyfork.org/users/1479970-j4c"
+      }
+    ],
+    "name": "Routine Navigator",
+    "description": "One-click navigation through your routine!",
+    "url": "https://greasyfork.org/scripts/546078-routine-navigator",
+    "code_url": "https://update.greasyfork.org/scripts/546078/Routine%20Navigator.user.js",
+    "code_size": 8717,
+    "license": null,
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538681,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-07T07:58:07.000Z",
+    "code_updated_at": "2025-08-11T08:47:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1479970,
+        "name": "J4C",
+        "created_at": "2025-06-06T17:44:23.000Z",
+        "url": "https://greasyfork.org/users/1479970-j4c"
+      }
+    ],
+    "name": "BazNav",
+    "description": "An enhanced Torn City bazaar navigator with customization options to make this tool YOURS",
+    "url": "https://greasyfork.org/scripts/538681-baznav",
+    "code_url": "https://update.greasyfork.org/scripts/538681/BazNav.user.js",
+    "code_size": 22801,
+    "license": null,
+    "version": "2.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

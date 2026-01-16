@@ -1,0 +1,59 @@
+{
+  "id": 538352,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-04T19:15:24.000Z",
+  "code_updated_at": "2025-06-04T19:15:24.000Z",
+  "namespace": "au.benjithatfoxguy.vrcw.net",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1479012,
+      "name": "BenjiThatFoxGuy",
+      "created_at": "2025-06-04T19:13:48.000Z",
+      "url": "https://greasyfork.org/users/1479012-benjithatfoxguy",
+      "scripts": [
+        {
+          "id": 538352,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-04T19:15:24.000Z",
+          "code_updated_at": "2025-06-04T19:15:24.000Z",
+          "namespace": "au.benjithatfoxguy.vrcw.net",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "VRCW.net World ID to VRCX Deeplink",
+          "description": "Converts VRChat world IDs to VRCX deeplinks on vrcw.net",
+          "url": "https://greasyfork.org/scripts/538352-vrcw-net-world-id-to-vrcx-deeplink",
+          "code_url": "https://update.greasyfork.org/scripts/538352/VRCWnet%20World%20ID%20to%20VRCX%20Deeplink.user.js",
+          "code_size": 2168,
+          "license": "MIT License",
+          "version": "1.2.3",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "VRCW.net World ID to VRCX Deeplink",
+  "description": "Converts VRChat world IDs to VRCX deeplinks on vrcw.net",
+  "url": "https://greasyfork.org/scripts/538352-vrcw-net-world-id-to-vrcx-deeplink",
+  "code_url": "https://update.greasyfork.org/scripts/538352/VRCWnet%20World%20ID%20to%20VRCX%20Deeplink.user.js",
+  "code_size": 2168,
+  "license": "MIT License",
+  "version": "1.2.3",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

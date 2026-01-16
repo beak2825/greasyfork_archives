@@ -1,0 +1,33 @@
+{
+  "id": 547946,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-31T14:36:43.000Z",
+  "code_updated_at": "2025-08-31T14:36:43.000Z",
+  "namespace": "https://discord.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1496525,
+      "name": "blancoleopardo",
+      "created_at": "2025-07-20T03:06:34.000Z",
+      "url": "https://greasyfork.org/users/1496525-blancoleopardo"
+    }
+  ],
+  "name": "Discord Friends Bulk Checker + Remover (Panel Selection)",
+  "description": "Select friends from an in-panel list (no inline checkboxes). Scan All to harvest names/IDs, then bulk remove safely.",
+  "url": "https://greasyfork.org/scripts/547946-discord-friends-bulk-checker-remover-panel-selection",
+  "code_url": "https://update.greasyfork.org/scripts/547946/Discord%20Friends%20Bulk%20Checker%20%2B%20Remover%20%28Panel%20Selection%29.user.js",
+  "code_size": 19759,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

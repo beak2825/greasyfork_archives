@@ -1,0 +1,34 @@
+{
+  "id": 541334,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-01T10:56:40.000Z",
+  "code_updated_at": "2025-09-07T11:37:48.000Z",
+  "namespace": "https://zmpt.cc/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1171837,
+      "name": "jzbqy",
+      "created_at": "2023-09-12T23:38:04.000Z",
+      "url": "https://greasyfork.org/users/1171837-jzbqy",
+      "scripts": []
+    }
+  ],
+  "name": "一键收纳/展开勋章按钮",
+  "description": "只在指定站点的用户详情页收纳/展开勋章，兼容慢加载",
+  "url": "https://greasyfork.org/scripts/541334-%E4%B8%80%E9%94%AE%E6%94%B6%E7%BA%B3-%E5%B1%95%E5%BC%80%E5%8B%8B%E7%AB%A0%E6%8C%89%E9%92%AE",
+  "code_url": "https://update.greasyfork.org/scripts/541334/%E4%B8%80%E9%94%AE%E6%94%B6%E7%BA%B3%E5%B1%95%E5%BC%80%E5%8B%8B%E7%AB%A0%E6%8C%89%E9%92%AE.user.js",
+  "code_size": 2952,
+  "license": null,
+  "version": "1.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

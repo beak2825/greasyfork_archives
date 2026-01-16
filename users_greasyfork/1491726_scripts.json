@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541677,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T00:42:21.000Z",
+    "code_updated_at": "2025-07-05T00:43:35.000Z",
+    "namespace": "https://steamdb.info/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491726,
+        "name": "anonynonymous",
+        "created_at": "2025-07-05T00:38:21.000Z",
+        "url": "https://greasyfork.org/users/1491726-anonynonymous"
+      }
+    ],
+    "name": "Clean Affiliate and Tracking from Steam Store Links on SteamDB",
+    "description": "Remove affiliate and tracking parameters from Steam store links on SteamDB",
+    "url": "https://greasyfork.org/scripts/541677-clean-affiliate-and-tracking-from-steam-store-links-on-steamdb",
+    "code_url": "https://update.greasyfork.org/scripts/541677/Clean%20Affiliate%20and%20Tracking%20from%20Steam%20Store%20Links%20on%20SteamDB.user.js",
+    "code_size": 972,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

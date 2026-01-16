@@ -1,0 +1,34 @@
+{
+  "id": 541860,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-06T20:52:32.000Z",
+  "code_updated_at": "2025-08-03T22:14:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492319,
+      "name": "AliG372",
+      "created_at": "2025-07-06T20:45:38.000Z",
+      "url": "https://greasyfork.org/users/1492319-alig372",
+      "scripts": []
+    }
+  ],
+  "name": "Faction HUB",
+  "description": "Track rations, influence and deposits of your Faction Members. LocalStorage-backed. To make it work: Scan logs while in Activities Screen",
+  "url": "https://greasyfork.org/scripts/541860-faction-hub",
+  "code_url": "https://update.greasyfork.org/scripts/541860/Faction%20HUB.user.js",
+  "code_size": 68477,
+  "license": "MIT License",
+  "version": "1.065",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

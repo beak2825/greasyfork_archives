@@ -1,0 +1,59 @@
+{
+  "id": 554217,
+  "daily_installs": 1,
+  "total_installs": 52,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-10-30T14:18:29.000Z",
+  "code_updated_at": "2025-10-30T16:42:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1460644,
+      "name": "ThetaCursed",
+      "created_at": "2025-04-21T16:41:51.000Z",
+      "url": "https://greasyfork.org/users/1460644-thetacursed",
+      "scripts": [
+        {
+          "id": 554217,
+          "daily_installs": 1,
+          "total_installs": 52,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-10-30T14:18:29.000Z",
+          "code_updated_at": "2025-10-30T16:42:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Udio Bulk MP3 Downloader",
+          "description": "Scans the library page for all songs, collects the MP3 links, and provides a GUI for bulk downloading.",
+          "url": "https://greasyfork.org/scripts/554217-udio-bulk-mp3-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/554217/Udio%20Bulk%20MP3%20Downloader.user.js",
+          "code_size": 11785,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Udio Bulk MP3 Downloader",
+  "description": "Scans the library page for all songs, collects the MP3 links, and provides a GUI for bulk downloading.",
+  "url": "https://greasyfork.org/scripts/554217-udio-bulk-mp3-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/554217/Udio%20Bulk%20MP3%20Downloader.user.js",
+  "code_size": 11785,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

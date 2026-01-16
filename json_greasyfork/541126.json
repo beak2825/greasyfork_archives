@@ -1,0 +1,59 @@
+{
+  "id": 541126,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-29T17:18:42.000Z",
+  "code_updated_at": "2025-06-29T17:18:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490041,
+      "name": "mindscarp",
+      "created_at": "2025-06-29T16:38:40.000Z",
+      "url": "https://greasyfork.org/users/1490041-mindscarp",
+      "scripts": [
+        {
+          "id": 541126,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-29T17:18:42.000Z",
+          "code_updated_at": "2025-06-29T17:18:41.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MKWRS MKWorld dark mode & sort",
+          "description": "Adds dark mode & sorting on mkwrs.com MKWorld track pages",
+          "url": "https://greasyfork.org/scripts/541126-mkwrs-mkworld-dark-mode-sort",
+          "code_url": "https://update.greasyfork.org/scripts/541126/MKWRS%20MKWorld%20dark%20mode%20%20sort.user.js",
+          "code_size": 33692,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MKWRS MKWorld dark mode & sort",
+  "description": "Adds dark mode & sorting on mkwrs.com MKWorld track pages",
+  "url": "https://greasyfork.org/scripts/541126-mkwrs-mkworld-dark-mode-sort",
+  "code_url": "https://update.greasyfork.org/scripts/541126/MKWRS%20MKWorld%20dark%20mode%20%20sort.user.js",
+  "code_size": 33692,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

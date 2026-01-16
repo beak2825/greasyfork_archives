@@ -1,0 +1,68 @@
+[
+  {
+    "id": 520953,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T21:55:28.000Z",
+    "code_updated_at": "2024-12-18T15:10:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375522,
+        "name": "tbrauning",
+        "created_at": "2024-10-01T19:39:15.000Z",
+        "url": "https://greasyfork.org/users/1375522-tbrauning"
+      }
+    ],
+    "name": "Bricklink Toolbar",
+    "description": "Restore toolbar as far as possible",
+    "url": "https://greasyfork.org/scripts/520953-bricklink-toolbar",
+    "code_url": "https://update.greasyfork.org/scripts/520953/Bricklink%20Toolbar.user.js",
+    "code_size": 5412,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511086,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-01T19:41:50.000Z",
+    "code_updated_at": "2024-10-01T19:41:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1375522,
+        "name": "tbrauning",
+        "created_at": "2024-10-01T19:39:15.000Z",
+        "url": "https://greasyfork.org/users/1375522-tbrauning"
+      }
+    ],
+    "name": "Bricklink order remarks",
+    "description": "Show seller remarks on orders placed",
+    "url": "https://greasyfork.org/scripts/511086-bricklink-order-remarks",
+    "code_url": "https://update.greasyfork.org/scripts/511086/Bricklink%20order%20remarks.user.js",
+    "code_size": 31532,
+    "license": "MIT License",
+    "version": "2024-10-01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

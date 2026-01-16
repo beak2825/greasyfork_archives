@@ -1,0 +1,33 @@
+{
+  "id": 535096,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-06T07:14:39.000Z",
+  "code_updated_at": "2025-05-06T07:14:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1466299,
+      "name": "kneehurtzxd",
+      "created_at": "2025-05-06T07:08:08.000Z",
+      "url": "https://greasyfork.org/users/1466299-kneehurtzxd"
+    }
+  ],
+  "name": "Gemini JSON Wrapper – Highlight-Safe,",
+  "description": "Unwraps Gemini JSON, soft-fixes \\\\n, preserves highlight",
+  "url": "https://greasyfork.org/scripts/535096-gemini-json-wrapper-highlight-safe",
+  "code_url": "https://update.greasyfork.org/scripts/535096/Gemini%20JSON%20Wrapper%20%E2%80%93%20Highlight-Safe%2C.user.js",
+  "code_size": 4352,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

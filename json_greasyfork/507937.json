@@ -1,0 +1,34 @@
+{
+  "id": 507937,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-11T09:46:04.000Z",
+  "code_updated_at": "2025-04-11T10:11:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1366088,
+      "name": "buggy",
+      "created_at": "2024-09-11T09:44:13.000Z",
+      "url": "https://greasyfork.org/users/1366088-buggy",
+      "scripts": []
+    }
+  ],
+  "name": "Improve Keycloak user search",
+  "description": "When you do a search for a user in Keycloak, it drops a focus from the input field. This script fixes the issue",
+  "url": "https://greasyfork.org/scripts/507937-improve-keycloak-user-search",
+  "code_url": "https://update.greasyfork.org/scripts/507937/Improve%20Keycloak%20user%20search.user.js",
+  "code_size": 3725,
+  "license": null,
+  "version": "2025-04-11",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,33 @@
+{
+  "id": 549749,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-16T16:37:22.000Z",
+  "code_updated_at": "2025-10-24T21:57:04.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1383221,
+      "name": "Gold Chell",
+      "created_at": "2024-10-19T14:00:52.000Z",
+      "url": "https://greasyfork.org/users/1383221-gold-chell"
+    }
+  ],
+  "name": "Для кураторов форума N. Novgorod (урез)",
+  "description": "Скрипт для облегчения работы кураторов форума. Урезанная версия только для кф без логирования. Связь с разработчиком: https://vk.com/gold_chell",
+  "url": "https://greasyfork.org/scripts/549749-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-n-novgorod-%D1%83%D1%80%D0%B5%D0%B7",
+  "code_url": "https://update.greasyfork.org/scripts/549749/%D0%94%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20N%20Novgorod%20%28%D1%83%D1%80%D0%B5%D0%B7%29.user.js",
+  "code_size": 52995,
+  "license": "MIT License",
+  "version": "0.4beta",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

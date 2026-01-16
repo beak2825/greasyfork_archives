@@ -1,0 +1,35 @@
+[
+  {
+    "id": 547245,
+    "daily_installs": 0,
+    "total_installs": 31,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-25T14:35:46.000Z",
+    "code_updated_at": "2025-08-25T14:35:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1508720,
+        "name": "ahmed emad",
+        "created_at": "2025-08-25T14:30:37.000Z",
+        "url": "https://greasyfork.org/users/1508720-ahmed-emad"
+      }
+    ],
+    "name": "TypeRacer Racer (v3.4)",
+    "description": "[IMPORTANT] This is a non-functional, educational tool to demonstrate the vulnerability of image-based CAPTCHAs. It is intentionally designed to FAIL the CAPTCHA and DOES NOT provide any gameplay advantage. Use for learning purposes only.",
+    "url": "https://greasyfork.org/scripts/547245-typeracer-racer-v3-4",
+    "code_url": "https://update.greasyfork.org/scripts/547245/TypeRacer%20Racer%20%28v34%29.user.js",
+    "code_size": 16193,
+    "license": "MIT License",
+    "version": "3.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

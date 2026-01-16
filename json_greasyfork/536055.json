@@ -1,0 +1,34 @@
+{
+  "id": 536055,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-15T08:12:33.000Z",
+  "code_updated_at": "2025-05-15T08:16:46.000Z",
+  "namespace": "https://greasyfork.org/en/users/1470365-moodymadi101",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1470365,
+      "name": "moodymadi101",
+      "created_at": "2025-05-15T08:08:36.000Z",
+      "url": "https://greasyfork.org/users/1470365-moodymadi101",
+      "scripts": []
+    }
+  ],
+  "name": "AO3: [Wrangling] Smaller Tag Search - NEW includes new tag status options",
+  "description": "makes the new Tag Search form take up less space (best on desktop/landscape screens) - Now includes the tag status options for Synonymous, Canonical and Synonymous, and Non-canonical and non-synonymous",
+  "url": "https://greasyfork.org/scripts/536055-ao3-wrangling-smaller-tag-search-new-includes-new-tag-status-options",
+  "code_url": "https://update.greasyfork.org/scripts/536055/AO3%3A%20%5BWrangling%5D%20Smaller%20Tag%20Search%20-%20NEW%20includes%20new%20tag%20status%20options.user.js",
+  "code_size": 8721,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

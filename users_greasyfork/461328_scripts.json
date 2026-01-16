@@ -1,0 +1,68 @@
+[
+  {
+    "id": 551524,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-04T09:14:22.000Z",
+    "code_updated_at": "2025-10-04T09:14:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 461328,
+        "name": "公众号:代码简单说",
+        "created_at": "2020-03-18T08:21:43.000Z",
+        "url": "https://greasyfork.org/users/461328-%E5%85%AC%E4%BC%97%E5%8F%B7-%E4%BB%A3%E7%A0%81%E7%AE%80%E5%8D%95%E8%AF%B4"
+      }
+    ],
+    "name": "X自动跳转到sotwe（按用户名）",
+    "description": "访问 x.com 的用户页或推文页时，截取用户名并跳转到 https://www.sotwe.com/<username>",
+    "url": "https://greasyfork.org/scripts/551524-x%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E5%88%B0sotwe-%E6%8C%89%E7%94%A8%E6%88%B7%E5%90%8D",
+    "code_url": "https://update.greasyfork.org/scripts/551524/X%E8%87%AA%E5%8A%A8%E8%B7%B3%E8%BD%AC%E5%88%B0sotwe%EF%BC%88%E6%8C%89%E7%94%A8%E6%88%B7%E5%90%8D%EF%BC%89.user.js",
+    "code_size": 1798,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 536176,
+    "daily_installs": 0,
+    "total_installs": 67,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-16T06:32:56.000Z",
+    "code_updated_at": "2025-11-21T14:13:11.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 461328,
+        "name": "公众号:代码简单说",
+        "created_at": "2020-03-18T08:21:43.000Z",
+        "url": "https://greasyfork.org/users/461328-%E5%85%AC%E4%BC%97%E5%8F%B7-%E4%BB%A3%E7%A0%81%E7%AE%80%E5%8D%95%E8%AF%B4"
+      }
+    ],
+    "name": "豆包AI生图无水印下载",
+    "description": "在豆包AI生图页面自动下载无水印原图",
+    "url": "https://greasyfork.org/scripts/536176-%E8%B1%86%E5%8C%85ai%E7%94%9F%E5%9B%BE%E6%97%A0%E6%B0%B4%E5%8D%B0%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/536176/%E8%B1%86%E5%8C%85AI%E7%94%9F%E5%9B%BE%E6%97%A0%E6%B0%B4%E5%8D%B0%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 1657,
+    "license": null,
+    "version": "1.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

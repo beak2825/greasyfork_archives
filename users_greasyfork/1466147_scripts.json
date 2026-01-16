@@ -1,0 +1,35 @@
+[
+  {
+    "id": 535059,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-05T21:52:09.000Z",
+    "code_updated_at": "2025-05-05T21:52:09.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1466147,
+        "name": "sandijs",
+        "created_at": "2025-05-05T21:29:25.000Z",
+        "url": "https://greasyfork.org/users/1466147-sandijs"
+      }
+    ],
+    "name": "Hide login ID field",
+    "description": "A simple script that hides the ID field of a login page",
+    "url": "https://greasyfork.org/scripts/535059-hide-login-id-field",
+    "code_url": "https://update.greasyfork.org/scripts/535059/Hide%20login%20ID%20field.user.js",
+    "code_size": 848,
+    "license": null,
+    "version": "2025-04-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

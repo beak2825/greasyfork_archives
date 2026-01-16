@@ -1,0 +1,59 @@
+{
+  "id": 529604,
+  "daily_installs": 0,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-03-12T12:50:33.000Z",
+  "code_updated_at": "2025-10-19T17:01:24.000Z",
+  "namespace": "hoixw",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444955,
+      "name": "hoixw",
+      "created_at": "2025-03-12T12:47:34.000Z",
+      "url": "https://greasyfork.org/users/1444955-hoixw",
+      "scripts": [
+        {
+          "id": 529604,
+          "daily_installs": 0,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-03-12T12:50:33.000Z",
+          "code_updated_at": "2025-10-19T17:01:24.000Z",
+          "namespace": "hoixw",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "SmartFrame Downloader",
+          "description": "Allows for the download of SmartFrame images, using a TamperMonkey script",
+          "url": "https://greasyfork.org/scripts/529604-smartframe-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/529604/SmartFrame%20Downloader.user.js",
+          "code_size": 2875,
+          "license": "MIT License",
+          "version": "2.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "SmartFrame Downloader",
+  "description": "Allows for the download of SmartFrame images, using a TamperMonkey script",
+  "url": "https://greasyfork.org/scripts/529604-smartframe-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/529604/SmartFrame%20Downloader.user.js",
+  "code_size": 2875,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

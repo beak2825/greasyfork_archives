@@ -1,0 +1,59 @@
+{
+  "id": 550731,
+  "daily_installs": 1,
+  "total_installs": 17,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-26T07:12:06.000Z",
+  "code_updated_at": "2025-09-26T07:12:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1519505,
+      "name": "zhang super",
+      "created_at": "2025-09-26T06:19:06.000Z",
+      "url": "https://greasyfork.org/users/1519505-zhang-super",
+      "scripts": [
+        {
+          "id": 550731,
+          "daily_installs": 1,
+          "total_installs": 17,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-26T07:12:06.000Z",
+          "code_updated_at": "2025-09-26T07:12:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "新版百度网盘共享文件库目录导出工具",
+          "description": "用于导出百度网盘共享文件库目录和文件列表",
+          "url": "https://greasyfork.org/scripts/550731-%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7",
+          "code_url": "https://update.greasyfork.org/scripts/550731/%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7.user.js",
+          "code_size": 79043,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "新版百度网盘共享文件库目录导出工具",
+  "description": "用于导出百度网盘共享文件库目录和文件列表",
+  "url": "https://greasyfork.org/scripts/550731-%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/550731/%E6%96%B0%E7%89%88%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E5%85%B1%E4%BA%AB%E6%96%87%E4%BB%B6%E5%BA%93%E7%9B%AE%E5%BD%95%E5%AF%BC%E5%87%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 79043,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

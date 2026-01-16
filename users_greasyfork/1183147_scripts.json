@@ -1,0 +1,101 @@
+[
+  {
+    "id": 513041,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T07:29:50.000Z",
+    "code_updated_at": "2025-05-22T04:37:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/mz-ir/mazyar",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183147,
+        "name": "mz-ir",
+        "created_at": "2023-09-28T19:08:20.000Z",
+        "url": "https://greasyfork.org/users/1183147-mz-ir"
+      }
+    ],
+    "name": "MazyarTools",
+    "description": "Mazyar Tools & Utilities",
+    "url": "https://greasyfork.org/scripts/513041-mazyartools",
+    "code_url": "https://update.greasyfork.org/scripts/513041/1593345/MazyarTools.js",
+    "code_size": 49707,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 513035,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T07:02:19.000Z",
+    "code_updated_at": "2024-10-20T20:00:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/mz-ir/mazyar",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183147,
+        "name": "mz-ir",
+        "created_at": "2023-09-28T19:08:20.000Z",
+        "url": "https://greasyfork.org/users/1183147-mz-ir"
+      }
+    ],
+    "name": "MazyarConstants",
+    "description": "Mazyar Constants",
+    "url": "https://greasyfork.org/scripts/513035-mazyarconstants",
+    "code_url": "https://update.greasyfork.org/scripts/513035/1468419/MazyarConstants.js",
+    "code_size": 12901,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 513029,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-18T05:38:26.000Z",
+    "code_updated_at": "2025-05-22T04:37:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/mz-ir/mazyar",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1183147,
+        "name": "mz-ir",
+        "created_at": "2023-09-28T19:08:20.000Z",
+        "url": "https://greasyfork.org/users/1183147-mz-ir"
+      }
+    ],
+    "name": "MazyarStyles",
+    "description": "Styles used by Mazyar userscript",
+    "url": "https://greasyfork.org/scripts/513029-mazyarstyles",
+    "code_url": "https://update.greasyfork.org/scripts/513029/MazyarStyles.user.css",
+    "code_size": 7944,
+    "license": "MIT License",
+    "version": "2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

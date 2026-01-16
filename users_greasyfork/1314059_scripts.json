@@ -1,0 +1,35 @@
+[
+  {
+    "id": 497304,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-07T15:42:07.000Z",
+    "code_updated_at": "2024-06-13T09:13:06.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1314059,
+        "name": "Fernando_x",
+        "created_at": "2024-06-07T15:34:51.000Z",
+        "url": "https://greasyfork.org/users/1314059-fernando-x"
+      }
+    ],
+    "name": "Etiquetador de Usuarios para Menéame",
+    "description": "Añade etiquetas personalizadas a los nombres de los usuarios en Menéame con edición controlada",
+    "url": "https://greasyfork.org/scripts/497304-etiquetador-de-usuarios-para-men%C3%A9ame",
+    "code_url": "https://update.greasyfork.org/scripts/497304/Etiquetador%20de%20Usuarios%20para%20Men%C3%A9ame.user.js",
+    "code_size": 2439,
+    "license": "public domain",
+    "version": "0.3.1",
+    "locale": "es",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

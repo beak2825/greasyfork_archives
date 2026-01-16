@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 529873,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-15T04:29:31.000Z",
+    "code_updated_at": "2025-06-22T14:34:35.000Z",
+    "namespace": "https://greasyfork.org/users/437453",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 437453,
+        "name": "Atail",
+        "created_at": "2020-01-22T05:00:10.000Z",
+        "url": "https://greasyfork.org/users/437453-atail"
+      }
+    ],
+    "name": "鱼糕V2 钓饵统计器",
+    "description": "智能实时统计鱼糕V2钓饵，统一元素等待机制，修复 ReferenceError。",
+    "url": "https://greasyfork.org/scripts/529873-%E9%B1%BC%E7%B3%95v2-%E9%92%93%E9%A5%B5%E7%BB%9F%E8%AE%A1%E5%99%A8",
+    "code_url": "https://update.greasyfork.org/scripts/529873/%E9%B1%BC%E7%B3%95V2%20%E9%92%93%E9%A5%B5%E7%BB%9F%E8%AE%A1%E5%99%A8.user.js",
+    "code_size": 13748,
+    "license": null,
+    "version": "3.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

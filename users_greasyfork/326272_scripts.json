@@ -1,0 +1,200 @@
+[
+  {
+    "id": 533997,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T21:27:00.000Z",
+    "code_updated_at": "2025-08-05T18:01:47.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326272,
+        "name": "na na",
+        "created_at": "2019-08-14T21:03:57.000Z",
+        "url": "https://greasyfork.org/users/326272-na-na"
+      }
+    ],
+    "name": "Grok Chat Navigation Improvements",
+    "description": "Keyboard navigation and message interaction for Grok chat",
+    "url": "https://greasyfork.org/scripts/533997-grok-chat-navigation-improvements",
+    "code_url": "https://update.greasyfork.org/scripts/533997/Grok%20Chat%20Navigation%20Improvements.user.js",
+    "code_size": 21496,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 533064,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-16T20:30:29.000Z",
+    "code_updated_at": "2025-04-17T15:59:30.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326272,
+        "name": "na na",
+        "created_at": "2019-08-14T21:03:57.000Z",
+        "url": "https://greasyfork.org/users/326272-na-na"
+      }
+    ],
+    "name": "OpenAI Playground Hotkeys and Accessibility Enhancements",
+    "description": "OpenAI playground accessibility enhancements with keyboard navigation. Quickly edit/delete/expand messages.",
+    "url": "https://greasyfork.org/scripts/533064-openai-playground-hotkeys-and-accessibility-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/533064/OpenAI%20Playground%20Hotkeys%20and%20Accessibility%20Enhancements.user.js",
+    "code_size": 8964,
+    "license": "MIT License",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532789,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-14T06:25:18.000Z",
+    "code_updated_at": "2025-05-09T07:49:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326272,
+        "name": "na na",
+        "created_at": "2019-08-14T21:03:57.000Z",
+        "url": "https://greasyfork.org/users/326272-na-na"
+      }
+    ],
+    "name": "OpenRouter Chat Enhancements",
+    "description": "Navigation hotkeys, message highlight, floating speaker, scroll protections, perfect collapse/expand handling, and enhanced edit scroll lock.",
+    "url": "https://greasyfork.org/scripts/532789-openrouter-chat-enhancements",
+    "code_url": "https://update.greasyfork.org/scripts/532789/OpenRouter%20Chat%20Enhancements.user.js",
+    "code_size": 54421,
+    "license": "MIT License",
+    "version": "1.4.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 524601,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T04:30:41.000Z",
+    "code_updated_at": "2025-11-27T05:41:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326272,
+        "name": "na na",
+        "created_at": "2019-08-14T21:03:57.000Z",
+        "url": "https://greasyfork.org/users/326272-na-na"
+      }
+    ],
+    "name": "Next Image/Previous Image with Alignment and Large Image Support",
+    "description": "Scroll down/up by aligning images with proper large image section handling",
+    "url": "https://greasyfork.org/scripts/524601-next-image-previous-image-with-alignment-and-large-image-support",
+    "code_url": "https://update.greasyfork.org/scripts/524601/Next%20ImagePrevious%20Image%20with%20Alignment%20and%20Large%20Image%20Support.user.js",
+    "code_size": 20230,
+    "license": "MIT License",
+    "version": "1.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 520527,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-12T18:04:23.000Z",
+    "code_updated_at": "2024-12-12T18:04:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326272,
+        "name": "na na",
+        "created_at": "2019-08-14T21:03:57.000Z",
+        "url": "https://greasyfork.org/users/326272-na-na"
+      }
+    ],
+    "name": "Enhanced Scroll Position Cycler",
+    "description": "Cycle through recent scroll positions with enhanced functionality",
+    "url": "https://greasyfork.org/scripts/520527-enhanced-scroll-position-cycler",
+    "code_url": "https://update.greasyfork.org/scripts/520527/Enhanced%20Scroll%20Position%20Cycler.user.js",
+    "code_size": 3111,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 512536,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-14T04:02:56.000Z",
+    "code_updated_at": "2024-10-14T04:02:56.000Z",
+    "namespace": "https://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 326272,
+        "name": "na na",
+        "created_at": "2019-08-14T21:03:57.000Z",
+        "url": "https://greasyfork.org/users/326272-na-na"
+      }
+    ],
+    "name": "Subscript and Superscript Converter",
+    "description": "Convert text to subscript or superscript using keyboard shortcuts",
+    "url": "https://greasyfork.org/scripts/512536-subscript-and-superscript-converter",
+    "code_url": "https://update.greasyfork.org/scripts/512536/Subscript%20and%20Superscript%20Converter.user.js",
+    "code_size": 2329,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

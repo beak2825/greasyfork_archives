@@ -1,0 +1,35 @@
+[
+  {
+    "id": 542330,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-11T20:36:29.000Z",
+    "code_updated_at": "2025-07-11T20:36:28.000Z",
+    "namespace": "https://bluee.dev",
+    "support_url": "https://github.com/Panonim/openwebui-userscript/discussions",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1493895,
+        "name": "Panonim",
+        "created_at": "2025-07-11T20:30:50.000Z",
+        "url": "https://greasyfork.org/users/1493895-panonim"
+      }
+    ],
+    "name": "Open WebUI Message Fetcher from URL",
+    "description": "Automatically injects and sends a message in Open WebUI if a `?message=` parameter is present in the URL. Useful for automation, testing, or scripted interactions.",
+    "url": "https://greasyfork.org/scripts/542330-open-webui-message-fetcher-from-url",
+    "code_url": "https://update.greasyfork.org/scripts/542330/Open%20WebUI%20Message%20Fetcher%20from%20URL.user.js",
+    "code_size": 2186,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

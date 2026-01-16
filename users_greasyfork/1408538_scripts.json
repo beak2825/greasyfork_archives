@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529258,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-09T05:36:35.000Z",
+    "code_updated_at": "2025-03-09T05:36:35.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1408538,
+        "name": "earth_developer",
+        "created_at": "2024-12-09T07:12:07.000Z",
+        "url": "https://greasyfork.org/users/1408538-earth-developer"
+      }
+    ],
+    "name": "来个OC-城市省份筛选器(临时)",
+    "description": "单省份选择+可拖动浮窗（适配givemeoc）",
+    "url": "https://greasyfork.org/scripts/529258-%E6%9D%A5%E4%B8%AAoc-%E5%9F%8E%E5%B8%82%E7%9C%81%E4%BB%BD%E7%AD%9B%E9%80%89%E5%99%A8-%E4%B8%B4%E6%97%B6",
+    "code_url": "https://update.greasyfork.org/scripts/529258/%E6%9D%A5%E4%B8%AAOC-%E5%9F%8E%E5%B8%82%E7%9C%81%E4%BB%BD%E7%AD%9B%E9%80%89%E5%99%A8%28%E4%B8%B4%E6%97%B6%29.user.js",
+    "code_size": 9876,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

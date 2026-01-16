@@ -1,0 +1,34 @@
+{
+  "id": 546393,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-19T13:13:04.000Z",
+  "code_updated_at": "2025-08-19T13:13:04.000Z",
+  "namespace": "https://greasyfork.org/users/000000   // replace with your own GreasyFork ID if you want",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1496729,
+      "name": "Jake Julian",
+      "created_at": "2025-07-20T17:44:58.000Z",
+      "url": "https://greasyfork.org/users/1496729-jake-julian",
+      "scripts": []
+    }
+  ],
+  "name": "YouTube Shorts Blocker (m.youtube.com)",
+  "description": "Completely remove YouTube Shorts from search results and recommendations on m.youtube.com",
+  "url": "https://greasyfork.org/scripts/546393-youtube-shorts-blocker-m-youtube-com",
+  "code_url": "https://update.greasyfork.org/scripts/546393/YouTube%20Shorts%20Blocker%20%28myoutubecom%29.user.js",
+  "code_size": 1097,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

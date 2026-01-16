@@ -130,5 +130,71 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 548640,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T21:22:21.000Z",
+    "code_updated_at": "2025-10-23T07:05:49.000Z",
+    "namespace": "universal-antirestrict",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223978,
+        "name": "Rishabh",
+        "created_at": "2023-11-26T19:23:43.000Z",
+        "url": "https://greasyfork.org/users/1223978-rishabh"
+      }
+    ],
+    "name": "Universal Anti-Restriction (Copy/Paste/Context/LongPress/Zoom)",
+    "description": "Bypass website restrictions and restore copy, paste, right-click, text selection, zoom, and long press",
+    "url": "https://greasyfork.org/scripts/548640-universal-anti-restriction-copy-paste-context-longpress-zoom",
+    "code_url": "https://update.greasyfork.org/scripts/548640/Universal%20Anti-Restriction%20%28CopyPasteContextLongPressZoom%29.user.js",
+    "code_size": 3498,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 548615,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-06T16:51:38.000Z",
+    "code_updated_at": "2025-10-11T08:35:40.000Z",
+    "namespace": "youtube-mobile-redirect",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1223978,
+        "name": "Rishabh",
+        "created_at": "2023-11-26T19:23:43.000Z",
+        "url": "https://greasyfork.org/users/1223978-rishabh"
+      }
+    ],
+    "name": "YouTube Mobile Redirect (Safe)",
+    "description": "Redirects to m.youtube.com only if user agent is mobile",
+    "url": "https://greasyfork.org/scripts/548615-youtube-mobile-redirect-safe",
+    "code_url": "https://update.greasyfork.org/scripts/548615/YouTube%20Mobile%20Redirect%20%28Safe%29.user.js",
+    "code_size": 643,
+    "license": null,
+    "version": "2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

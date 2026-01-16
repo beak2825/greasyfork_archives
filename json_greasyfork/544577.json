@@ -1,0 +1,33 @@
+{
+  "id": 544577,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-04T04:44:28.000Z",
+  "code_updated_at": "2025-08-04T04:44:28.000Z",
+  "namespace": "http://penguinmod.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1356830,
+      "name": "pooiod",
+      "created_at": "2024-08-24T04:13:07.000Z",
+      "url": "https://greasyfork.org/users/1356830-pooiod"
+    }
+  ],
+  "name": "Penguinmod editor profile card",
+  "description": "A simple userscript that adds a profile card to the top right corner in the Penguinmod editor",
+  "url": "https://greasyfork.org/scripts/544577-penguinmod-editor-profile-card",
+  "code_url": "https://update.greasyfork.org/scripts/544577/Penguinmod%20editor%20profile%20card.user.js",
+  "code_size": 2434,
+  "license": null,
+  "version": "2025-08-04",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

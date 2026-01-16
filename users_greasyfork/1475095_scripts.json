@@ -1,0 +1,35 @@
+[
+  {
+    "id": 537323,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-26T12:50:09.000Z",
+    "code_updated_at": "2025-08-22T06:47:16.000Z",
+    "namespace": "https://github.com/Xeron2000/twitter-scroll-refresh",
+    "support_url": "https://github.com/Xeron2000/twitter-scroll-refresh/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1475095,
+        "name": "Xeron2000",
+        "created_at": "2025-05-26T12:46:50.000Z",
+        "url": "https://greasyfork.org/users/1475095-xeron2000"
+      }
+    ],
+    "name": "Twitter Scroll Refresh",
+    "description": "Refresh Twitter timeline by scrolling up at the top of the page",
+    "url": "https://greasyfork.org/scripts/537323-twitter-scroll-refresh",
+    "code_url": "https://update.greasyfork.org/scripts/537323/Twitter%20Scroll%20Refresh.user.js",
+    "code_size": 25013,
+    "license": "MIT License",
+    "version": "1.4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

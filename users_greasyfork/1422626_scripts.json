@@ -1,0 +1,35 @@
+[
+  {
+    "id": 523596,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-13T01:53:48.000Z",
+    "code_updated_at": "2025-01-13T01:53:47.000Z",
+    "namespace": "https://greasyfork.org/users/1422626",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1422626,
+        "name": "Organic_Bit8258",
+        "created_at": "2025-01-13T01:47:19.000Z",
+        "url": "https://greasyfork.org/users/1422626-organic-bit8258"
+      }
+    ],
+    "name": "Close google docs tab UI automatically",
+    "description": "Close google docs tab UI automatically (Left arrow button on lefthand side of page) by automatically closing it",
+    "url": "https://greasyfork.org/scripts/523596-close-google-docs-tab-ui-automatically",
+    "code_url": "https://update.greasyfork.org/scripts/523596/Close%20google%20docs%20tab%20UI%20automatically.user.js",
+    "code_size": 1334,
+    "license": "MIT License",
+    "version": "2025-01-12",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "id": 539351,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-14T04:17:11.000Z",
+  "code_updated_at": "2025-06-14T04:17:10.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1483493,
+      "name": "雷志权",
+      "created_at": "2025-06-14T03:49:44.000Z",
+      "url": "https://greasyfork.org/users/1483493-%E9%9B%B7%E5%BF%97%E6%9D%83",
+      "scripts": [
+        {
+          "id": 539351,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-14T04:17:11.000Z",
+          "code_updated_at": "2025-06-14T04:17:10.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "lol英雄名字替换",
+          "description": "自动将中文英雄名、称号、昵称转换为英文，支持160+英雄别名（如“盲僧”→“Lee Sin”）",
+          "url": "https://greasyfork.org/scripts/539351-lol%E8%8B%B1%E9%9B%84%E5%90%8D%E5%AD%97%E6%9B%BF%E6%8D%A2",
+          "code_url": "https://update.greasyfork.org/scripts/539351/lol%E8%8B%B1%E9%9B%84%E5%90%8D%E5%AD%97%E6%9B%BF%E6%8D%A2.user.js",
+          "code_size": 14703,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "lol英雄名字替换",
+  "description": "自动将中文英雄名、称号、昵称转换为英文，支持160+英雄别名（如“盲僧”→“Lee Sin”）",
+  "url": "https://greasyfork.org/scripts/539351-lol%E8%8B%B1%E9%9B%84%E5%90%8D%E5%AD%97%E6%9B%BF%E6%8D%A2",
+  "code_url": "https://update.greasyfork.org/scripts/539351/lol%E8%8B%B1%E9%9B%84%E5%90%8D%E5%AD%97%E6%9B%BF%E6%8D%A2.user.js",
+  "code_size": 14703,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

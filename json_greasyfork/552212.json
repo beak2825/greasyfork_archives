@@ -17,33 +17,7 @@
       "id": 1524989,
       "name": "Kelly Stuard",
       "created_at": "2025-10-11T01:52:14.000Z",
-      "url": "https://greasyfork.org/users/1524989-kelly-stuard",
-      "scripts": [
-        {
-          "id": 552212,
-          "daily_installs": 0,
-          "total_installs": 1,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-10-11T01:57:14.000Z",
-          "code_updated_at": "2025-10-11T01:57:13.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Star Trek Timelines Auto Fetch & Paste Player Data",
-          "description": "Fetch player data, copy to clipboard, and trigger onPaste handler in textarea",
-          "url": "https://greasyfork.org/scripts/552212-star-trek-timelines-auto-fetch-paste-player-data",
-          "code_url": "https://update.greasyfork.org/scripts/552212/Star%20Trek%20Timelines%20Auto%20Fetch%20%20Paste%20Player%20Data.user.js",
-          "code_size": 3529,
-          "license": "MIT License",
-          "version": "1.6",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1524989-kelly-stuard"
     }
   ],
   "name": "Star Trek Timelines Auto Fetch & Paste Player Data",

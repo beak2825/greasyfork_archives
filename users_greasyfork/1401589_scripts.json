@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518665,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-24T07:37:59.000Z",
+    "code_updated_at": "2024-11-24T07:37:59.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1401589,
+        "name": "虹雨",
+        "created_at": "2024-11-24T07:23:48.000Z",
+        "url": "https://greasyfork.org/users/1401589-%E8%99%B9%E9%9B%A8"
+      }
+    ],
+    "name": "Fix Scrollbar Position on Page Up/Page Down in ContentEditable",
+    "description": "Prevents scrollbar misalignment when pressing Page Up/Page Down in the prompt input area of contenteditable elements by handling key events and adjusting cursor position accordingly.",
+    "url": "https://greasyfork.org/scripts/518665-fix-scrollbar-position-on-page-up-page-down-in-contenteditable",
+    "code_url": "https://update.greasyfork.org/scripts/518665/Fix%20Scrollbar%20Position%20on%20Page%20UpPage%20Down%20in%20ContentEditable.user.js",
+    "code_size": 4073,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

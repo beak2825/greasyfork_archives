@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526602,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-11T21:22:28.000Z",
+    "code_updated_at": "2025-11-09T17:10:26.000Z",
+    "namespace": "https://www.albumoftheyear.org/",
+    "support_url": "https://gist.github.com/chappy84/86eb4aeeca7fff5f5ae79ee451ecc4cd",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434087,
+        "name": "Chappy84",
+        "created_at": "2025-02-11T20:45:31.000Z",
+        "url": "https://greasyfork.org/users/1434087-chappy84"
+      }
+    ],
+    "name": "Album of the Year Last.fm integration",
+    "description": "Adds link to a user's scrobble pages for artist and album names",
+    "url": "https://greasyfork.org/scripts/526602-album-of-the-year-last-fm-integration",
+    "code_url": "https://update.greasyfork.org/scripts/526602/Album%20of%20the%20Year%20Lastfm%20integration.user.js",
+    "code_size": 28808,
+    "license": "MIT License",
+    "version": "0.3.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

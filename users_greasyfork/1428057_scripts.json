@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525094,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-27T20:15:13.000Z",
+    "code_updated_at": "2025-01-27T20:15:12.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1428057,
+        "name": "hellozhangjun",
+        "created_at": "2025-01-27T19:46:03.000Z",
+        "url": "https://greasyfork.org/users/1428057-hellozhangjun"
+      }
+    ],
+    "name": "爱卡黑名单",
+    "description": "在爱卡论坛中隐藏某些作者的帖子或者评论",
+    "url": "https://greasyfork.org/scripts/525094-%E7%88%B1%E5%8D%A1%E9%BB%91%E5%90%8D%E5%8D%95",
+    "code_url": "https://update.greasyfork.org/scripts/525094/%E7%88%B1%E5%8D%A1%E9%BB%91%E5%90%8D%E5%8D%95.user.js",
+    "code_size": 38613,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

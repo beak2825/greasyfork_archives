@@ -1,0 +1,59 @@
+{
+  "id": 539852,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-18T08:11:40.000Z",
+  "code_updated_at": "2025-06-18T08:54:50.000Z",
+  "namespace": "https://bbs.tampermonkey.net.cn/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453427,
+      "name": "Hello WEI",
+      "created_at": "2025-04-03T03:31:45.000Z",
+      "url": "https://greasyfork.org/users/1453427-hello-wei",
+      "scripts": [
+        {
+          "id": 539852,
+          "daily_installs": 0,
+          "total_installs": 3,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-18T08:11:40.000Z",
+          "code_updated_at": "2025-06-18T08:54:50.000Z",
+          "namespace": "https://bbs.tampermonkey.net.cn/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Sudoku backup (International)",
+          "description": "点击插件图标显示功能按钮：备份和恢复 sudoku.com 的进度数据 / Backup and restore progress data for sudoku.com.",
+          "url": "https://greasyfork.org/scripts/539852-sudoku-backup-international",
+          "code_url": "https://update.greasyfork.org/scripts/539852/Sudoku%20backup%20%28International%29.user.js",
+          "code_size": 4298,
+          "license": "MIT License",
+          "version": "1.2.6",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Sudoku backup (International)",
+  "description": "点击插件图标显示功能按钮：备份和恢复 sudoku.com 的进度数据 / Backup and restore progress data for sudoku.com.",
+  "url": "https://greasyfork.org/scripts/539852-sudoku-backup-international",
+  "code_url": "https://update.greasyfork.org/scripts/539852/Sudoku%20backup%20%28International%29.user.js",
+  "code_size": 4298,
+  "license": "MIT License",
+  "version": "1.2.6",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

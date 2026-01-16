@@ -1,0 +1,59 @@
+{
+  "id": 499378,
+  "daily_installs": 0,
+  "total_installs": 25,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-01T09:50:07.000Z",
+  "code_updated_at": "2024-07-01T09:50:07.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326597,
+      "name": "sancun",
+      "created_at": "2024-07-01T09:27:25.000Z",
+      "url": "https://greasyfork.org/users/1326597-sancun",
+      "scripts": [
+        {
+          "id": 499378,
+          "daily_installs": 0,
+          "total_installs": 25,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-01T09:50:07.000Z",
+          "code_updated_at": "2024-07-01T09:50:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "其乐社区-自动点击下一页",
+          "description": "其乐社区自动点击下一页",
+          "url": "https://greasyfork.org/scripts/499378-%E5%85%B6%E4%B9%90%E7%A4%BE%E5%8C%BA-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E9%A1%B5",
+          "code_url": "https://update.greasyfork.org/scripts/499378/%E5%85%B6%E4%B9%90%E7%A4%BE%E5%8C%BA-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E9%A1%B5.user.js",
+          "code_size": 976,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "其乐社区-自动点击下一页",
+  "description": "其乐社区自动点击下一页",
+  "url": "https://greasyfork.org/scripts/499378-%E5%85%B6%E4%B9%90%E7%A4%BE%E5%8C%BA-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E9%A1%B5",
+  "code_url": "https://update.greasyfork.org/scripts/499378/%E5%85%B6%E4%B9%90%E7%A4%BE%E5%8C%BA-%E8%87%AA%E5%8A%A8%E7%82%B9%E5%87%BB%E4%B8%8B%E4%B8%80%E9%A1%B5.user.js",
+  "code_size": 976,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

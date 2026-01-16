@@ -1,0 +1,33 @@
+{
+  "id": 539003,
+  "daily_installs": 0,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-10T12:26:27.000Z",
+  "code_updated_at": "2025-12-14T12:59:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 92419,
+      "name": "南有樛木",
+      "created_at": "2017-01-05T16:09:06.000Z",
+      "url": "https://greasyfork.org/users/92419-%E5%8D%97%E6%9C%89%E6%A8%9B%E6%9C%A8"
+    }
+  ],
+  "name": "仿青轻查词",
+  "description": "在英文句子上左滑显示弹窗 (修复高亮冲突及句子识别不精确问题，目标：精确到句子，兼容复杂网站，解决沉浸式翻译冲突，添加全选按钮，并附带翻译) - 扁平化UI (无关闭按钮) - AI缓存自动显示",
+  "url": "https://greasyfork.org/scripts/539003-%E4%BB%BF%E9%9D%92%E8%BD%BB%E6%9F%A5%E8%AF%8D",
+  "code_url": "https://update.greasyfork.org/scripts/539003/%E4%BB%BF%E9%9D%92%E8%BD%BB%E6%9F%A5%E8%AF%8D.user.js",
+  "code_size": 86863,
+  "license": null,
+  "version": "5.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

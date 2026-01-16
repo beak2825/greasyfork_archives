@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501813,
+    "daily_installs": 0,
+    "total_installs": 1177,
+    "fan_score": "5.5",
+    "good_ratings": 0,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-07-26T02:15:34.000Z",
+    "code_updated_at": "2024-07-26T02:15:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1339898,
+        "name": "ejmkod",
+        "created_at": "2024-07-26T02:11:23.000Z",
+        "url": "https://greasyfork.org/users/1339898-ejmkod"
+      }
+    ],
+    "name": "115原石会员转存助手-突破500限制",
+    "description": "115原石会员批量转存助手，可批量转存>500个文件",
+    "url": "https://greasyfork.org/scripts/501813-115%E5%8E%9F%E7%9F%B3%E4%BC%9A%E5%91%98%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B-%E7%AA%81%E7%A0%B4500%E9%99%90%E5%88%B6",
+    "code_url": "https://update.greasyfork.org/scripts/501813/115%E5%8E%9F%E7%9F%B3%E4%BC%9A%E5%91%98%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B-%E7%AA%81%E7%A0%B4500%E9%99%90%E5%88%B6.user.js",
+    "code_size": 9205,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

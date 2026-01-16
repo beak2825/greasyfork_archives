@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548070,
+    "daily_installs": 1,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-01T20:52:04.000Z",
+    "code_updated_at": "2025-09-01T20:55:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 840295,
+        "name": "jaywang",
+        "created_at": "2021-11-17T18:16:58.000Z",
+        "url": "https://greasyfork.org/users/840295-jaywang"
+      }
+    ],
+    "name": "抖音-观看体验优化",
+    "description": "移除抖音礼物栏，全屏自动关闭右侧聊天栏，删除右上角充值和壁纸按钮",
+    "url": "https://greasyfork.org/scripts/548070-%E6%8A%96%E9%9F%B3-%E8%A7%82%E7%9C%8B%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/548070/%E6%8A%96%E9%9F%B3-%E8%A7%82%E7%9C%8B%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 3838,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

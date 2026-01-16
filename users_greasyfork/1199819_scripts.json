@@ -1,0 +1,200 @@
+[
+  {
+    "id": 539108,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-11T11:58:19.000Z",
+    "code_updated_at": "2025-10-11T03:15:38.000Z",
+    "namespace": "https://sss.921069.xyz",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199819,
+        "name": "521069",
+        "created_at": "2023-10-19T17:19:50.000Z",
+        "url": "https://greasyfork.org/users/1199819-521069"
+      }
+    ],
+    "name": "Discuz帖子列表IFrame打开展示(电脑版)",
+    "description": "在Discuz论坛列表页面旁生成一个iframe，点击帖子后在iframe中打开显示",
+    "url": "https://greasyfork.org/scripts/539108-discuz%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8iframe%E6%89%93%E5%BC%80%E5%B1%95%E7%A4%BA-%E7%94%B5%E8%84%91%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/539108/Discuz%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8IFrame%E6%89%93%E5%BC%80%E5%B1%95%E7%A4%BA%28%E7%94%B5%E8%84%91%E7%89%88%29.user.js",
+    "code_size": 4724,
+    "license": "MIT License",
+    "version": "0.13",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 531347,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-30T14:14:48.000Z",
+    "code_updated_at": "2025-03-30T14:14:48.000Z",
+    "namespace": "yaohuo.me",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199819,
+        "name": "521069",
+        "created_at": "2023-10-19T17:19:50.000Z",
+        "url": "https://greasyfork.org/users/1199819-521069"
+      }
+    ],
+    "name": "妖火去除帖子列表滑动底部加载重复帖子",
+    "description": "2025/3/30 17:27:21",
+    "url": "https://greasyfork.org/scripts/531347-%E5%A6%96%E7%81%AB%E5%8E%BB%E9%99%A4%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8%E6%BB%91%E5%8A%A8%E5%BA%95%E9%83%A8%E5%8A%A0%E8%BD%BD%E9%87%8D%E5%A4%8D%E5%B8%96%E5%AD%90",
+    "code_url": "https://update.greasyfork.org/scripts/531347/%E5%A6%96%E7%81%AB%E5%8E%BB%E9%99%A4%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8%E6%BB%91%E5%8A%A8%E5%BA%95%E9%83%A8%E5%8A%A0%E8%BD%BD%E9%87%8D%E5%A4%8D%E5%B8%96%E5%AD%90.user.js",
+    "code_size": 1856,
+    "license": "MIT License",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529683,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-13T06:02:16.000Z",
+    "code_updated_at": "2025-08-06T06:55:45.000Z",
+    "namespace": "https://yaohuo.me/bbs/userinfo.aspx?touserid=25038",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199819,
+        "name": "521069",
+        "created_at": "2023-10-19T17:19:50.000Z",
+        "url": "https://greasyfork.org/users/1199819-521069"
+      }
+    ],
+    "name": "妖火帖子列表IFrame打开展示(电脑版)",
+    "description": "在妖火论坛列表页面旁生成一个iframe，点击帖子后在iframe中打开显示",
+    "url": "https://greasyfork.org/scripts/529683-%E5%A6%96%E7%81%AB%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8iframe%E6%89%93%E5%BC%80%E5%B1%95%E7%A4%BA-%E7%94%B5%E8%84%91%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/529683/%E5%A6%96%E7%81%AB%E5%B8%96%E5%AD%90%E5%88%97%E8%A1%A8IFrame%E6%89%93%E5%BC%80%E5%B1%95%E7%A4%BA%28%E7%94%B5%E8%84%91%E7%89%88%29.user.js",
+    "code_size": 3835,
+    "license": "MIT License",
+    "version": "0.17",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 525841,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-04T08:23:01.000Z",
+    "code_updated_at": "2025-02-04T16:43:09.000Z",
+    "namespace": "https://18cm.me",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199819,
+        "name": "521069",
+        "created_at": "2023-10-19T17:19:50.000Z",
+        "url": "https://greasyfork.org/users/1199819-521069"
+      }
+    ],
+    "name": "过滤帖子用户ID",
+    "description": "过滤指定用户ID的帖子",
+    "url": "https://greasyfork.org/scripts/525841-%E8%BF%87%E6%BB%A4%E5%B8%96%E5%AD%90%E7%94%A8%E6%88%B7id",
+    "code_url": "https://update.greasyfork.org/scripts/525841/%E8%BF%87%E6%BB%A4%E5%B8%96%E5%AD%90%E7%94%A8%E6%88%B7ID.user.js",
+    "code_size": 17221,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 512715,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-15T10:30:04.000Z",
+    "code_updated_at": "2024-10-15T11:15:42.000Z",
+    "namespace": "https://yaohuo.me/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199819,
+        "name": "521069",
+        "created_at": "2023-10-19T17:19:50.000Z",
+        "url": "https://greasyfork.org/users/1199819-521069"
+      }
+    ],
+    "name": "🔥拓展增强🔥妖火不跳转页面打开",
+    "description": "当前页面弹出框查阅",
+    "url": "https://greasyfork.org/scripts/512715-%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA-%E5%A6%96%E7%81%AB%E4%B8%8D%E8%B7%B3%E8%BD%AC%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/512715/%F0%9F%94%A5%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA%F0%9F%94%A5%E5%A6%96%E7%81%AB%E4%B8%8D%E8%B7%B3%E8%BD%AC%E9%A1%B5%E9%9D%A2%E6%89%93%E5%BC%80.user.js",
+    "code_size": 4352,
+    "license": null,
+    "version": "0.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502510,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-03T11:27:21.000Z",
+    "code_updated_at": "2024-08-03T11:27:21.000Z",
+    "namespace": "https://www.dlsite.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1199819,
+        "name": "521069",
+        "created_at": "2023-10-19T17:19:50.000Z",
+        "url": "https://greasyfork.org/users/1199819-521069"
+      }
+    ],
+    "name": "🔥拓展增强🔥它人帖子管理按钮替换",
+    "description": "把其他用户页面的管理操作替换成感谢，直接发送感谢分享",
+    "url": "https://greasyfork.org/scripts/502510-%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA-%E5%AE%83%E4%BA%BA%E5%B8%96%E5%AD%90%E7%AE%A1%E7%90%86%E6%8C%89%E9%92%AE%E6%9B%BF%E6%8D%A2",
+    "code_url": "https://update.greasyfork.org/scripts/502510/%F0%9F%94%A5%E6%8B%93%E5%B1%95%E5%A2%9E%E5%BC%BA%F0%9F%94%A5%E5%AE%83%E4%BA%BA%E5%B8%96%E5%AD%90%E7%AE%A1%E7%90%86%E6%8C%89%E9%92%AE%E6%9B%BF%E6%8D%A2.user.js",
+    "code_size": 2203,
+    "license": "MIT License",
+    "version": "0.31",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

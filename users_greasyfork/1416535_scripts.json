@@ -1,0 +1,68 @@
+[
+  {
+    "id": 535816,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-12T17:59:19.000Z",
+    "code_updated_at": "2025-06-13T12:57:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416535,
+        "name": "Jes_Malfoy",
+        "created_at": "2024-12-27T17:41:58.000Z",
+        "url": "https://greasyfork.org/users/1416535-jes-malfoy"
+      }
+    ],
+    "name": "Скрипт для ОЗГА Jes_Malfoy || Purple",
+    "description": "Скрипт для ОЗГА",
+    "url": "https://greasyfork.org/scripts/535816-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BE%D0%B7%D0%B3%D0%B0-jes-malfoy-purple",
+    "code_url": "https://update.greasyfork.org/scripts/535816/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9E%D0%97%D0%93%D0%90%20Jes_Malfoy%20%7C%7C%20Purple.user.js",
+    "code_size": 77474,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532627,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-12T13:26:59.000Z",
+    "code_updated_at": "2025-07-18T19:59:08.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416535,
+        "name": "Jes_Malfoy",
+        "created_at": "2024-12-27T17:41:58.000Z",
+        "url": "https://greasyfork.org/users/1416535-jes-malfoy"
+      }
+    ],
+    "name": "Скрипт для Кураторов Форума по БИО by Jes_Malfoy || Purple",
+    "description": "Скрипт для Кураторов Форума по БИО 06 PURPLE",
+    "url": "https://greasyfork.org/scripts/532627-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%BF%D0%BE-%D0%B1%D0%B8%D0%BE-by-jes-malfoy-purple",
+    "code_url": "https://update.greasyfork.org/scripts/532627/%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%D0%BF%D0%BE%20%D0%91%D0%98%D0%9E%20by%20Jes_Malfoy%20%7C%7C%20Purple.user.js",
+    "code_size": 37694,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "sr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

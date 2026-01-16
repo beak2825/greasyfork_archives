@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526748,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-13T07:27:12.000Z",
+    "code_updated_at": "2025-02-13T07:27:12.000Z",
+    "namespace": "-/-",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434566,
+        "name": "Dattaraj Dhadas",
+        "created_at": "2025-02-13T07:20:50.000Z",
+        "url": "https://greasyfork.org/users/1434566-dattaraj-dhadas"
+      }
+    ],
+    "name": "YT Speed Controller",
+    "description": "Lightweight speed control for YouTube with persistence",
+    "url": "https://greasyfork.org/scripts/526748-yt-speed-controller",
+    "code_url": "https://update.greasyfork.org/scripts/526748/YT%20Speed%20Controller.user.js",
+    "code_size": 4890,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

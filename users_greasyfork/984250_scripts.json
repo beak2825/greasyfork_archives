@@ -1,0 +1,101 @@
+[
+  {
+    "id": 507851,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-10T20:15:29.000Z",
+    "code_updated_at": "2024-09-23T11:06:21.000Z",
+    "namespace": "https://github.com/SnowAgar25",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984250,
+        "name": "Tsuyumi25",
+        "created_at": "2022-11-17T02:01:25.000Z",
+        "url": "https://greasyfork.org/users/984250-tsuyumi25"
+      }
+    ],
+    "name": "DLsite 譯者工具 檢查作品翻譯狀態",
+    "description": "當滑鼠對準任何含有RJ號href的物件時，將顯示一個預覽框，顯示翻譯報酬和申請情況",
+    "url": "https://greasyfork.org/scripts/507851-dlsite-%E8%AD%AF%E8%80%85%E5%B7%A5%E5%85%B7-%E6%AA%A2%E6%9F%A5%E4%BD%9C%E5%93%81%E7%BF%BB%E8%AD%AF%E7%8B%80%E6%85%8B",
+    "code_url": "https://update.greasyfork.org/scripts/507851/DLsite%20%E8%AD%AF%E8%80%85%E5%B7%A5%E5%85%B7%20%E6%AA%A2%E6%9F%A5%E4%BD%9C%E5%93%81%E7%BF%BB%E8%AD%AF%E7%8B%80%E6%85%8B.user.js",
+    "code_size": 41601,
+    "license": "MIT License",
+    "version": "3.3.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 500506,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-13T05:53:05.000Z",
+    "code_updated_at": "2024-07-13T07:41:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984250,
+        "name": "Tsuyumi25",
+        "created_at": "2022-11-17T02:01:25.000Z",
+        "url": "https://greasyfork.org/users/984250-tsuyumi25"
+      }
+    ],
+    "name": "修復Apexlegendsstatus的Total Score計算",
+    "description": "如題",
+    "url": "https://greasyfork.org/scripts/500506-%E4%BF%AE%E5%BE%A9apexlegendsstatus%E7%9A%84total-score%E8%A8%88%E7%AE%97",
+    "code_url": "https://update.greasyfork.org/scripts/500506/%E4%BF%AE%E5%BE%A9Apexlegendsstatus%E7%9A%84Total%20Score%E8%A8%88%E7%AE%97.user.js",
+    "code_size": 11223,
+    "license": "MIT License",
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499436,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-01T23:52:53.000Z",
+    "code_updated_at": "2024-07-13T06:18:25.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 984250,
+        "name": "Tsuyumi25",
+        "created_at": "2022-11-17T02:01:25.000Z",
+        "url": "https://greasyfork.org/users/984250-tsuyumi25"
+      }
+    ],
+    "name": "澈日盃自用圖片生成插件",
+    "description": "None",
+    "url": "https://greasyfork.org/scripts/499436-%E6%BE%88%E6%97%A5%E7%9B%83%E8%87%AA%E7%94%A8%E5%9C%96%E7%89%87%E7%94%9F%E6%88%90%E6%8F%92%E4%BB%B6",
+    "code_url": "https://update.greasyfork.org/scripts/499436/%E6%BE%88%E6%97%A5%E7%9B%83%E8%87%AA%E7%94%A8%E5%9C%96%E7%89%87%E7%94%9F%E6%88%90%E6%8F%92%E4%BB%B6.user.js",
+    "code_size": 3669,
+    "license": "MIT License",
+    "version": "2.1",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

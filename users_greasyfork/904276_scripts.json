@@ -1,0 +1,68 @@
+[
+  {
+    "id": 534740,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-02T16:01:31.000Z",
+    "code_updated_at": "2025-05-02T16:01:31.000Z",
+    "namespace": "https://greasyfork.org/users/904276",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 904276,
+        "name": "weizhiqimail",
+        "created_at": "2022-04-19T10:14:13.000Z",
+        "url": "https://greasyfork.org/users/904276-weizhiqimail"
+      }
+    ],
+    "name": "【日本 IPA IT 认证考试真题网站，解除复制和右键限制】【日本のIPA IT認定試験の実際の問題サイト、コピーと右クリックの制限を解除します。】",
+    "description": "日本 IPA IT 认证考试真题网站，解除复制和右键限制",
+    "url": "https://greasyfork.org/scripts/534740-%E6%97%A5%E6%9C%AC-ipa-it-%E8%AE%A4%E8%AF%81%E8%80%83%E8%AF%95%E7%9C%9F%E9%A2%98%E7%BD%91%E7%AB%99-%E8%A7%A3%E9%99%A4%E5%A4%8D%E5%88%B6%E5%92%8C%E5%8F%B3%E9%94%AE%E9%99%90%E5%88%B6-%E6%97%A5%E6%9C%AC%E3%81%AEipa-it%E8%AA%8D%E5%AE%9A%E8%A9%A6%E9%A8%93%E3%81%AE%E5%AE%9F%E9%9A%9B%E3%81%AE%E5%95%8F%E9%A1%8C%E3%82%B5%E3%82%A4%E3%83%88-%E3%82%B3%E3%83%94%E3%83%BC%E3%81%A8%E5%8F%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%AE%E5%88%B6%E9%99%90%E3%82%92%E8%A7%A3%E9%99%A4%E3%81%97%E3%81%BE%E3%81%99",
+    "code_url": "https://update.greasyfork.org/scripts/534740/%E3%80%90%E6%97%A5%E6%9C%AC%20IPA%20IT%20%E8%AE%A4%E8%AF%81%E8%80%83%E8%AF%95%E7%9C%9F%E9%A2%98%E7%BD%91%E7%AB%99%EF%BC%8C%E8%A7%A3%E9%99%A4%E5%A4%8D%E5%88%B6%E5%92%8C%E5%8F%B3%E9%94%AE%E9%99%90%E5%88%B6%E3%80%91%E3%80%90%E6%97%A5%E6%9C%AC%E3%81%AEIPA%20IT%E8%AA%8D%E5%AE%9A%E8%A9%A6%E9%A8%93%E3%81%AE%E5%AE%9F%E9%9A%9B%E3%81%AE%E5%95%8F%E9%A1%8C%E3%82%B5%E3%82%A4%E3%83%88%E3%80%81%E3%82%B3%E3%83%94%E3%83%BC%E3%81%A8%E5%8F%B3%E3%82%AF%E3%83%AA%E3%83%83%E3%82%AF%E3%81%AE%E5%88%B6%E9%99%90%E3%82%92%E8%A7%A3%E9%99%A4%E3%81%97%E3%81%BE%E3%81%99%E3%80%82%E3%80%91.user.js",
+    "code_size": 1607,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 511673,
+    "daily_installs": 0,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-06T12:41:37.000Z",
+    "code_updated_at": "2025-11-14T01:20:08.000Z",
+    "namespace": "http://tampermonkey.net",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 904276,
+        "name": "weizhiqimail",
+        "created_at": "2022-04-19T10:14:13.000Z",
+        "url": "https://greasyfork.org/users/904276-weizhiqimail"
+      }
+    ],
+    "name": "知乎单个回答详情页移除多余元素",
+    "description": "知乎单个回答详情页移除多余元素，用来截图或分享图",
+    "url": "https://greasyfork.org/scripts/511673-%E7%9F%A5%E4%B9%8E%E5%8D%95%E4%B8%AA%E5%9B%9E%E7%AD%94%E8%AF%A6%E6%83%85%E9%A1%B5%E7%A7%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E5%85%83%E7%B4%A0",
+    "code_url": "https://update.greasyfork.org/scripts/511673/%E7%9F%A5%E4%B9%8E%E5%8D%95%E4%B8%AA%E5%9B%9E%E7%AD%94%E8%AF%A6%E6%83%85%E9%A1%B5%E7%A7%BB%E9%99%A4%E5%A4%9A%E4%BD%99%E5%85%83%E7%B4%A0.user.js",
+    "code_size": 5812,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

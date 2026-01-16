@@ -1,0 +1,33 @@
+{
+  "id": 511974,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-09T07:48:36.000Z",
+  "code_updated_at": "2024-10-09T08:20:27.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1378258,
+      "name": "Noann",
+      "created_at": "2024-10-08T13:06:18.000Z",
+      "url": "https://greasyfork.org/users/1378258-noann"
+    }
+  ],
+  "name": "BetterMoodle (Dcode feature)",
+  "description": "Calcul des matrices de Moodle automatiquement",
+  "url": "https://greasyfork.org/scripts/511974-bettermoodle-dcode-feature",
+  "code_url": "https://update.greasyfork.org/scripts/511974/BetterMoodle%20%28Dcode%20feature%29.user.js",
+  "code_size": 4657,
+  "license": "MIT License",
+  "version": "v0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

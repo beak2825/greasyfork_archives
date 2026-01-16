@@ -1,0 +1,33 @@
+{
+  "id": 536756,
+  "daily_installs": 0,
+  "total_installs": 80,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-21T23:21:17.000Z",
+  "code_updated_at": "2025-05-21T23:21:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1473145,
+      "name": "deeeeone",
+      "created_at": "2025-05-21T23:19:35.000Z",
+      "url": "https://greasyfork.org/users/1473145-deeeeone"
+    }
+  ],
+  "name": "Remove Sponsored Listings on Amazon",
+  "description": "Automatically removes sponsored product listings from Amazon search results.",
+  "url": "https://greasyfork.org/scripts/536756-remove-sponsored-listings-on-amazon",
+  "code_url": "https://update.greasyfork.org/scripts/536756/Remove%20Sponsored%20Listings%20on%20Amazon.user.js",
+  "code_size": 1059,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

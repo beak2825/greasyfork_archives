@@ -1,0 +1,59 @@
+{
+  "id": 550340,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-22T09:28:25.000Z",
+  "code_updated_at": "2025-09-22T09:40:29.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1518043,
+      "name": "廖某某",
+      "created_at": "2025-09-22T09:25:25.000Z",
+      "url": "https://greasyfork.org/users/1518043-%E5%BB%96%E6%9F%90%E6%9F%90",
+      "scripts": [
+        {
+          "id": 550340,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-09-22T09:28:25.000Z",
+          "code_updated_at": "2025-09-22T09:40:29.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "青书学堂看视频",
+          "description": "由于青书视频得分是按照时长来的，因此开多个窗口一直放着就行（视频最好开四个，ppt不限制），脚本会自动重复播放视频和关闭挂机检测弹窗，理论上你一个学科选择一个窗口打开视频或者ppt就行，一个窗口5分钟2分，5小时60分。",
+          "url": "https://greasyfork.org/scripts/550340-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%9C%8B%E8%A7%86%E9%A2%91",
+          "code_url": "https://update.greasyfork.org/scripts/550340/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%9C%8B%E8%A7%86%E9%A2%91.user.js",
+          "code_size": 2495,
+          "license": "MIT License",
+          "version": "2025-09-25",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "青书学堂看视频",
+  "description": "由于青书视频得分是按照时长来的，因此开多个窗口一直放着就行（视频最好开四个，ppt不限制），脚本会自动重复播放视频和关闭挂机检测弹窗，理论上你一个学科选择一个窗口打开视频或者ppt就行，一个窗口5分钟2分，5小时60分。",
+  "url": "https://greasyfork.org/scripts/550340-%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%9C%8B%E8%A7%86%E9%A2%91",
+  "code_url": "https://update.greasyfork.org/scripts/550340/%E9%9D%92%E4%B9%A6%E5%AD%A6%E5%A0%82%E7%9C%8B%E8%A7%86%E9%A2%91.user.js",
+  "code_size": 2495,
+  "license": "MIT License",
+  "version": "2025-09-25",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

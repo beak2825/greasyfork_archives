@@ -1,0 +1,34 @@
+{
+  "id": 520847,
+  "daily_installs": 0,
+  "total_installs": 3,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-16T00:31:52.000Z",
+  "code_updated_at": "2025-04-05T17:21:55.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1411343,
+      "name": "まぃ姫",
+      "created_at": "2024-12-15T19:07:39.000Z",
+      "url": "https://greasyfork.org/users/1411343-%E3%81%BE%E3%81%83%E5%A7%AB",
+      "scripts": []
+    }
+  ],
+  "name": "覗きアリア削除",
+  "description": "指定された浮動ボタン要素を検出し削除します。",
+  "url": "https://greasyfork.org/scripts/520847-%E8%A6%97%E3%81%8D%E3%82%A2%E3%83%AA%E3%82%A2%E5%89%8A%E9%99%A4",
+  "code_url": "https://update.greasyfork.org/scripts/520847/%E8%A6%97%E3%81%8D%E3%82%A2%E3%83%AA%E3%82%A2%E5%89%8A%E9%99%A4.user.js",
+  "code_size": 1317,
+  "license": null,
+  "version": "0.4",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

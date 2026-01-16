@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520808,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-15T15:54:30.000Z",
+    "code_updated_at": "2025-03-28T13:33:33.000Z",
+    "namespace": "https://github.com/maxmiku",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 950796,
+        "name": "maxmiku",
+        "created_at": "2022-08-25T22:44:05.000Z",
+        "url": "https://greasyfork.org/users/950796-maxmiku"
+      }
+    ],
+    "name": "Qsirch缩小间距提高信息量",
+    "description": "该脚本可以用于减少Qsirch的空白区域，提升查询文件时的效率。V3解决智能关键字部分在缩放页面时闪动。V4增加隐藏标题栏功能",
+    "url": "https://greasyfork.org/scripts/520808-qsirch%E7%BC%A9%E5%B0%8F%E9%97%B4%E8%B7%9D%E6%8F%90%E9%AB%98%E4%BF%A1%E6%81%AF%E9%87%8F",
+    "code_url": "https://update.greasyfork.org/scripts/520808/Qsirch%E7%BC%A9%E5%B0%8F%E9%97%B4%E8%B7%9D%E6%8F%90%E9%AB%98%E4%BF%A1%E6%81%AF%E9%87%8F.user.js",
+    "code_size": 13575,
+    "license": "MIT License",
+    "version": "V4.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

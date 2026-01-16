@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498363,
+    "daily_installs": 0,
+    "total_installs": 33,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-19T14:17:28.000Z",
+    "code_updated_at": "2025-10-05T12:12:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1320637,
+        "name": "YuriyKarpenko",
+        "created_at": "2024-06-19T14:10:58.000Z",
+        "url": "https://greasyfork.org/users/1320637-yuriykarpenko"
+      }
+    ],
+    "name": "WideView",
+    "description": "Removes sidebars + stretches post area to full browser width",
+    "url": "https://greasyfork.org/scripts/498363-wideview",
+    "code_url": "https://update.greasyfork.org/scripts/498363/WideView.user.js",
+    "code_size": 3626,
+    "license": "MIT License",
+    "version": "0.1.3.3",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

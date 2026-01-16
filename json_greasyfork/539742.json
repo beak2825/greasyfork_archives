@@ -1,0 +1,34 @@
+{
+  "id": 539742,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-17T12:02:05.000Z",
+  "code_updated_at": "2025-07-21T08:49:41.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1348614,
+      "name": "R4Derd",
+      "created_at": "2024-08-09T18:36:12.000Z",
+      "url": "https://greasyfork.org/users/1348614-r4derd",
+      "scripts": []
+    }
+  ],
+  "name": "EP Timestamp",
+  "description": "Format timestamps with name and time on one line, no date, intervals in minutes only (now includes seconds)",
+  "url": "https://greasyfork.org/scripts/539742-ep-timestamp",
+  "code_url": "https://update.greasyfork.org/scripts/539742/EP%20Timestamp.user.js",
+  "code_size": 3756,
+  "license": null,
+  "version": "1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

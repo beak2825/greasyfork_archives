@@ -1,0 +1,34 @@
+{
+  "id": 524999,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-26T22:04:54.000Z",
+  "code_updated_at": "2025-01-26T22:19:39.000Z",
+  "namespace": "https://forum.blackrussia.online",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 970725,
+      "name": "ĐēĀđ Fîłł",
+      "created_at": "2022-10-14T14:35:57.000Z",
+      "url": "https://greasyfork.org/users/970725-%C4%91%C4%93%C4%81%C4%91-f%C3%AE%C5%82%C5%82",
+      "scripts": []
+    }
+  ],
+  "name": "Для технических чоколадок 50 / K. Stoyn",
+  "description": "Для модерирования и работы на форуме",
+  "url": "https://greasyfork.org/scripts/524999-%D0%B4%D0%BB%D1%8F-%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D1%85-%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BE%D0%BA-50-k-stoyn",
+  "code_url": "https://update.greasyfork.org/scripts/524999/%D0%94%D0%BB%D1%8F%20%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D1%85%20%D1%87%D0%BE%D0%BA%D0%BE%D0%BB%D0%B0%D0%B4%D0%BE%D0%BA%2050%20%20K%20Stoyn.user.js",
+  "code_size": 95410,
+  "license": "MIT License",
+  "version": "1.00",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

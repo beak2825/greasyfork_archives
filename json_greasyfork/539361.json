@@ -1,0 +1,33 @@
+{
+  "id": 539361,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-14T07:23:35.000Z",
+  "code_updated_at": "2025-06-14T08:33:43.000Z",
+  "namespace": null,
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462202,
+      "name": "Darkness_Koc",
+      "created_at": "2025-04-26T00:46:53.000Z",
+      "url": "https://greasyfork.org/users/1462202-darkness-koc"
+    }
+  ],
+  "name": "chatv4",
+  "description": "chatv4test",
+  "url": "https://greasyfork.org/scripts/539361-chatv4",
+  "code_url": "https://update.greasyfork.org/scripts/539361/1607399/chatv4.js",
+  "code_size": 11478,
+  "license": null,
+  "version": "0.0.1.20250614083343",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

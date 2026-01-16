@@ -1,0 +1,35 @@
+[
+  {
+    "id": 552757,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-16T08:13:02.000Z",
+    "code_updated_at": "2025-10-16T08:13:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1526636,
+        "name": "lunzi cao",
+        "created_at": "2025-10-14T14:54:38.000Z",
+        "url": "https://greasyfork.org/users/1526636-lunzi-cao"
+      }
+    ],
+    "name": "DeepSeek 输出内容区宽度调整 - Padding版",
+    "description": "通过调整padding来增加DeepSeek聊天页面输出内容区的宽度",
+    "url": "https://greasyfork.org/scripts/552757-deepseek-%E8%BE%93%E5%87%BA%E5%86%85%E5%AE%B9%E5%8C%BA%E5%AE%BD%E5%BA%A6%E8%B0%83%E6%95%B4-padding%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/552757/DeepSeek%20%E8%BE%93%E5%87%BA%E5%86%85%E5%AE%B9%E5%8C%BA%E5%AE%BD%E5%BA%A6%E8%B0%83%E6%95%B4%20-%20Padding%E7%89%88.user.js",
+    "code_size": 7379,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

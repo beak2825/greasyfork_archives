@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528917,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-05T21:06:21.000Z",
+    "code_updated_at": "2025-03-05T21:06:21.000Z",
+    "namespace": "https://greasyfork.org/users/1442693",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1442693,
+        "name": "snunez",
+        "created_at": "2025-03-05T21:01:08.000Z",
+        "url": "https://greasyfork.org/users/1442693-snunez"
+      }
+    ],
+    "name": "Acme Markets For U Coupon Clipper",
+    "description": "Clip all the coupons on the current (as of 3/5/2025) Acme Markets For U coupon system.",
+    "url": "https://greasyfork.org/scripts/528917-acme-markets-for-u-coupon-clipper",
+    "code_url": "https://update.greasyfork.org/scripts/528917/Acme%20Markets%20For%20U%20Coupon%20Clipper.user.js",
+    "code_size": 1611,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

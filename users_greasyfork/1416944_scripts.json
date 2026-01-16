@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532419,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-10T11:33:10.000Z",
+    "code_updated_at": "2025-04-10T11:33:10.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1416944,
+        "name": "cclc",
+        "created_at": "2024-12-28T17:47:32.000Z",
+        "url": "https://greasyfork.org/users/1416944-cclc"
+      }
+    ],
+    "name": "ElectricUnicycles.eu Filter Models + Focus",
+    "description": "Filter model cards by name on electricunicycles.eu and focus input automatically",
+    "url": "https://greasyfork.org/scripts/532419-electricunicycles-eu-filter-models-focus",
+    "code_url": "https://update.greasyfork.org/scripts/532419/ElectricUnicycleseu%20Filter%20Models%20%2B%20Focus.user.js",
+    "code_size": 1915,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

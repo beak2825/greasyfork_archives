@@ -1,0 +1,34 @@
+{
+  "id": 548624,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-06T19:30:00.000Z",
+  "code_updated_at": "2025-09-06T20:08:51.000Z",
+  "namespace": "https://markg.dev/userscripts/shopee-pdp-capture",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1326401,
+      "name": "Mark Gallardo",
+      "created_at": "2024-07-01T00:49:34.000Z",
+      "url": "https://greasyfork.org/users/1326401-mark-gallardo",
+      "scripts": []
+    }
+  ],
+  "name": "SHOPEE PRODUCT CAPTURE",
+  "description": "Intercept https://shopee.ph/api/v4/pdp/get_pc, capture title + video + up to 8 images; GUI + LocalStorage; push to Google Sheets (adds COMBINED column) with SPA-safe toggle UI",
+  "url": "https://greasyfork.org/scripts/548624-shopee-product-capture",
+  "code_url": "https://update.greasyfork.org/scripts/548624/SHOPEE%20PRODUCT%20CAPTURE.user.js",
+  "code_size": 20335,
+  "license": null,
+  "version": "1.6.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

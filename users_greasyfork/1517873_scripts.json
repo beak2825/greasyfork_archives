@@ -1,0 +1,35 @@
+[
+  {
+    "id": 550276,
+    "daily_installs": 1,
+    "total_installs": 67,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-21T21:28:14.000Z",
+    "code_updated_at": "2025-12-25T21:18:26.000Z",
+    "namespace": "NukaExpress",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1517873,
+        "name": "NukaExpress",
+        "created_at": "2025-09-21T21:26:35.000Z",
+        "url": "https://greasyfork.org/users/1517873-nukaexpress"
+      }
+    ],
+    "name": "Auto Slow Download Nexus Mods 2025-12-25",
+    "description": "Auto click \"Slow download\" button and close page",
+    "url": "https://greasyfork.org/scripts/550276-auto-slow-download-nexus-mods-2025-12-25",
+    "code_url": "https://update.greasyfork.org/scripts/550276/Auto%20Slow%20Download%20Nexus%20Mods%202025-12-25.user.js",
+    "code_size": 2785,
+    "license": "MIT License",
+    "version": "v2025.12.25",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

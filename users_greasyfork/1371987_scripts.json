@@ -1,0 +1,35 @@
+[
+  {
+    "id": 509810,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-23T12:59:58.000Z",
+    "code_updated_at": "2024-09-23T13:49:38.000Z",
+    "namespace": "https://github.com/hmjz100",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1371987,
+        "name": "Yijian Tso",
+        "created_at": "2024-09-23T12:53:46.000Z",
+        "url": "https://greasyfork.org/users/1371987-yijian-tso"
+      }
+    ],
+    "name": "lib2classFix2024",
+    "description": "青骄第二课堂题库修复版 | 2023年版 | 同时包含期末考试与知识竞赛 | 与现有脚本格式不通用",
+    "url": "https://greasyfork.org/scripts/509810-lib2classfix2024",
+    "code_url": "https://update.greasyfork.org/scripts/509810/1452725/lib2classFix2024.js",
+    "code_size": 93666,
+    "license": null,
+    "version": "2024.9.23",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

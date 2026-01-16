@@ -1,0 +1,34 @@
+{
+  "id": 533304,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-19T06:43:44.000Z",
+  "code_updated_at": "2025-04-19T06:43:44.000Z",
+  "namespace": "43vn",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1459634,
+      "name": "43vn",
+      "created_at": "2025-04-19T06:40:04.000Z",
+      "url": "https://greasyfork.org/users/1459634-43vn",
+      "scripts": []
+    }
+  ],
+  "name": "Xem ThapCam-XoiLac-VeBo với MPV",
+  "description": "1 userscript đơn giản để xem ThapCam-XoiLac-VeBo với MPV",
+  "url": "https://greasyfork.org/scripts/533304-xem-thapcam-xoilac-vebo-v%E1%BB%9Bi-mpv",
+  "code_url": "https://update.greasyfork.org/scripts/533304/Xem%20ThapCam-XoiLac-VeBo%20v%E1%BB%9Bi%20MPV.user.js",
+  "code_size": 4326,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "vi",
+  "deleted": false,
+  "visibility": "public"
+}

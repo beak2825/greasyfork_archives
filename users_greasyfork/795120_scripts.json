@@ -64,5 +64,104 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 530521,
+    "daily_installs": 0,
+    "total_installs": 69,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-22T08:59:48.000Z",
+    "code_updated_at": "2025-03-22T08:59:48.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795120,
+        "name": "h7ml",
+        "created_at": "2021-07-19T07:39:26.000Z",
+        "url": "https://greasyfork.org/users/795120-h7ml"
+      }
+    ],
+    "name": "Chrome Extension Button Enabler",
+    "description": "Enables the \"Add to Chrome\" button for extensions marked as not following best practices",
+    "url": "https://greasyfork.org/scripts/530521-chrome-extension-button-enabler",
+    "code_url": "https://update.greasyfork.org/scripts/530521/Chrome%20Extension%20Button%20Enabler.user.js",
+    "code_size": 11147,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 530156,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-18T06:56:57.000Z",
+    "code_updated_at": "2025-03-18T07:33:52.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795120,
+        "name": "h7ml",
+        "created_at": "2021-07-19T07:39:26.000Z",
+        "url": "https://greasyfork.org/users/795120-h7ml"
+      }
+    ],
+    "name": "Ollama Chat 助手",
+    "description": "一个基于 Ollama 的聊天助手，随时随地与您的本地大语言模型交流",
+    "url": "https://greasyfork.org/scripts/530156-ollama-chat-%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/530156/Ollama%20Chat%20%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 77706,
+    "license": null,
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 529775,
+    "daily_installs": 0,
+    "total_installs": 42,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-14T06:20:14.000Z",
+    "code_updated_at": "2025-03-18T05:23:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 795120,
+        "name": "h7ml",
+        "created_at": "2021-07-19T07:39:26.000Z",
+        "url": "https://greasyfork.org/users/795120-h7ml"
+      }
+    ],
+    "name": "网页文章总结助手",
+    "description": "自动总结网页文章内容，支持多种格式输出，适用于各类文章网站",
+    "url": "https://greasyfork.org/scripts/529775-%E7%BD%91%E9%A1%B5%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/529775/%E7%BD%91%E9%A1%B5%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 112665,
+    "license": null,
+    "version": "0.2.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,59 @@
+{
+  "id": 514134,
+  "daily_installs": 0,
+  "total_installs": 24,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-26T11:14:19.000Z",
+  "code_updated_at": "2024-10-26T11:17:16.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1386609,
+      "name": "AeonOfTime",
+      "created_at": "2024-10-26T11:01:27.000Z",
+      "url": "https://greasyfork.org/users/1386609-aeonoftime",
+      "scripts": [
+        {
+          "id": 514134,
+          "daily_installs": 0,
+          "total_installs": 24,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-10-26T11:14:19.000Z",
+          "code_updated_at": "2024-10-26T11:17:16.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Nexusmods without Ratings",
+          "description": "Removes endorsements and download counts from all mods for unbiased browsing.",
+          "url": "https://greasyfork.org/scripts/514134-nexusmods-without-ratings",
+          "code_url": "https://update.greasyfork.org/scripts/514134/Nexusmods%20without%20Ratings.user.js",
+          "code_size": 1721,
+          "license": "MIT License",
+          "version": "1.0.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Nexusmods without Ratings",
+  "description": "Removes endorsements and download counts from all mods for unbiased browsing.",
+  "url": "https://greasyfork.org/scripts/514134-nexusmods-without-ratings",
+  "code_url": "https://update.greasyfork.org/scripts/514134/Nexusmods%20without%20Ratings.user.js",
+  "code_size": 1721,
+  "license": "MIT License",
+  "version": "1.0.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

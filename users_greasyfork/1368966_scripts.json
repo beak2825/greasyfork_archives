@@ -1,0 +1,167 @@
+[
+  {
+    "id": 508832,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T08:28:21.000Z",
+    "code_updated_at": "2024-09-29T10:53:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368966,
+        "name": "menderes acarsoy",
+        "created_at": "2024-09-17T07:01:31.000Z",
+        "url": "https://greasyfork.org/users/1368966-menderes-acarsoy"
+      }
+    ],
+    "name": "Chat - BackOffice",
+    "description": "Chat - BackOffice otomatik üye arama",
+    "url": "https://greasyfork.org/scripts/508832-chat-backoffice",
+    "code_url": "https://update.greasyfork.org/scripts/508832/Chat%20-%20BackOffice.user.js",
+    "code_size": 7653,
+    "license": null,
+    "version": "1.2",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508831,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T08:27:48.000Z",
+    "code_updated_at": "2024-11-07T21:52:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368966,
+        "name": "menderes acarsoy",
+        "created_at": "2024-09-17T07:01:31.000Z",
+        "url": "https://greasyfork.org/users/1368966-menderes-acarsoy"
+      }
+    ],
+    "name": "Today",
+    "description": "BackOffice today yönlendirme",
+    "url": "https://greasyfork.org/scripts/508831-today",
+    "code_url": "https://update.greasyfork.org/scripts/508831/Today.user.js",
+    "code_size": 1516,
+    "license": null,
+    "version": "1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508806,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T07:10:34.000Z",
+    "code_updated_at": "2024-09-22T04:46:27.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368966,
+        "name": "menderes acarsoy",
+        "created_at": "2024-09-17T07:01:31.000Z",
+        "url": "https://greasyfork.org/users/1368966-menderes-acarsoy"
+      }
+    ],
+    "name": "Spor Çevrimli Bonus",
+    "description": "Otomatik çevrimli spor bonusu yükleme",
+    "url": "https://greasyfork.org/scripts/508806-spor-%C3%A7evrimli-bonus",
+    "code_url": "https://update.greasyfork.org/scripts/508806/Spor%20%C3%87evrimli%20Bonus.user.js",
+    "code_size": 1456,
+    "license": null,
+    "version": "1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 508805,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T07:08:15.000Z",
+    "code_updated_at": "2024-10-01T04:46:28.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368966,
+        "name": "menderes acarsoy",
+        "created_at": "2024-09-17T07:01:31.000Z",
+        "url": "https://greasyfork.org/users/1368966-menderes-acarsoy"
+      }
+    ],
+    "name": "BackOffice - Search",
+    "description": "Gelişmiş Üye Arama",
+    "url": "https://greasyfork.org/scripts/508805-backoffice-search",
+    "code_url": "https://update.greasyfork.org/scripts/508805/BackOffice%20-%20Search.user.js",
+    "code_size": 10549,
+    "license": null,
+    "version": "1.2.4",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
+    "id": 508804,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-17T07:06:38.000Z",
+    "code_updated_at": "2024-12-31T07:45:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1368966,
+        "name": "menderes acarsoy",
+        "created_at": "2024-09-17T07:01:31.000Z",
+        "url": "https://greasyfork.org/users/1368966-menderes-acarsoy"
+      }
+    ],
+    "name": "BackOffice v3",
+    "description": "Yeni bir BackOffice!",
+    "url": "https://greasyfork.org/scripts/508804-backoffice-v3",
+    "code_url": "https://update.greasyfork.org/scripts/508804/BackOffice%20v3.user.js",
+    "code_size": 124824,
+    "license": null,
+    "version": "3.4.1",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "unlisted"
+  }
+]

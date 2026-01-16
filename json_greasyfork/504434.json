@@ -1,0 +1,59 @@
+{
+  "id": 504434,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-21T01:57:21.000Z",
+  "code_updated_at": "2024-08-21T01:57:21.000Z",
+  "namespace": "Xenokore",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1355274,
+      "name": "Yanikore",
+      "created_at": "2024-08-21T01:51:08.000Z",
+      "url": "https://greasyfork.org/users/1355274-yanikore",
+      "scripts": [
+        {
+          "id": 504434,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-21T01:57:21.000Z",
+          "code_updated_at": "2024-08-21T01:57:21.000Z",
+          "namespace": "Xenokore",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "F-Droid QR code generator",
+          "description": "Generate QR codes for F-Droid packages",
+          "url": "https://greasyfork.org/scripts/504434-f-droid-qr-code-generator",
+          "code_url": "https://update.greasyfork.org/scripts/504434/F-Droid%20QR%20code%20generator.user.js",
+          "code_size": 883,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "F-Droid QR code generator",
+  "description": "Generate QR codes for F-Droid packages",
+  "url": "https://greasyfork.org/scripts/504434-f-droid-qr-code-generator",
+  "code_url": "https://update.greasyfork.org/scripts/504434/F-Droid%20QR%20code%20generator.user.js",
+  "code_size": 883,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

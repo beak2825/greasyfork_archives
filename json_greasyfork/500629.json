@@ -1,0 +1,33 @@
+{
+  "id": 500629,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-14T15:06:48.000Z",
+  "code_updated_at": "2024-07-14T17:18:14.000Z",
+  "namespace": "https://github.com/Mehver",
+  "support_url": null,
+  "contribution_url": "https://github.com/SynRGB/HqPCB-MMImpedance",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 867050,
+      "name": "Mehver",
+      "created_at": "2022-01-20T06:28:10.000Z",
+      "url": "https://greasyfork.org/users/867050-mehver"
+    }
+  ],
+  "name": "HqPCB-MMImpedance",
+  "description": "华秋PCB阻抗计算页面本来只有mil，添加单位选择，可以切换到mm。",
+  "url": "https://greasyfork.org/scripts/500629-hqpcb-mmimpedance",
+  "code_url": "https://update.greasyfork.org/scripts/500629/HqPCB-MMImpedance.user.js",
+  "code_size": 16197,
+  "license": "Mozilla Public License 2.0",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

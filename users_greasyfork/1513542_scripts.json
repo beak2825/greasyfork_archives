@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549112,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-11T08:31:34.000Z",
+    "code_updated_at": "2025-09-11T08:31:34.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1513542,
+        "name": "GitHub-qixi",
+        "created_at": "2025-09-10T07:48:59.000Z",
+        "url": "https://greasyfork.org/users/1513542-github-qixi"
+      }
+    ],
+    "name": "微信读书快捷键",
+    "description": "直接找到button会出现由于放大缩小页面导致上一页按钮无法成功按到，由于动态加载的问题，只能通过上级div拿到button;j上一页，k下一页；需要打开允许油猴允许js脚本权限",
+    "url": "https://greasyfork.org/scripts/549112-%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%BF%AB%E6%8D%B7%E9%94%AE",
+    "code_url": "https://update.greasyfork.org/scripts/549112/%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E5%BF%AB%E6%8D%B7%E9%94%AE.user.js",
+    "code_size": 1097,
+    "license": "MIT License",
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

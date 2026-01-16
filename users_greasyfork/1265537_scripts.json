@@ -30,6 +30,171 @@
     "version": "2.4",
     "locale": "en",
     "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 548391,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-04T22:50:19.000Z",
+    "code_updated_at": "2025-09-04T22:50:19.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265537,
+        "name": "kloob",
+        "created_at": "2024-02-22T18:21:33.000Z",
+        "url": "https://greasyfork.org/users/1265537-kloob"
+      }
+    ],
+    "name": "Auto-select \"Don't Notify Topic Creator\" - GaiaOnline",
+    "description": "Automatically selects \"Don't notify topic creator\" radio option on GaiaOnline mod pages",
+    "url": "https://greasyfork.org/scripts/548391-auto-select-don-t-notify-topic-creator-gaiaonline",
+    "code_url": "https://update.greasyfork.org/scripts/548391/Auto-select%20%22Don%27t%20Notify%20Topic%20Creator%22%20-%20GaiaOnline.user.js",
+    "code_size": 1333,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 516893,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-11T17:36:54.000Z",
+    "code_updated_at": "2025-09-04T22:47:32.000Z",
+    "namespace": "https://greasyfork.org/en/users/1265537-kloob",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265537,
+        "name": "kloob",
+        "created_at": "2024-02-22T18:21:33.000Z",
+        "url": "https://greasyfork.org/users/1265537-kloob"
+      }
+    ],
+    "name": "Gaia Online - Post Tools w/ Movable Box (Break BBCode, Group and Insert Reports, etc)",
+    "description": "Adds features in a draggable overlay with persistent position: break BBCode tags, highlight, wrap URLs, and group/insert moderation reports by thread ID, with support for warnings; each Unknown-thread report gets its own quote block.",
+    "url": "https://greasyfork.org/scripts/516893-gaia-online-post-tools-w-movable-box-break-bbcode-group-and-insert-reports-etc",
+    "code_url": "https://update.greasyfork.org/scripts/516893/Gaia%20Online%20-%20Post%20Tools%20w%20Movable%20Box%20%28Break%20BBCode%2C%20Group%20and%20Insert%20Reports%2C%20etc%29.user.js",
+    "code_size": 10949,
+    "license": null,
+    "version": "2.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 502355,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-01T13:24:08.000Z",
+    "code_updated_at": "2024-08-04T14:48:00.000Z",
+    "namespace": "https://greasyfork.org/en/users/1265537-kloob",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265537,
+        "name": "kloob",
+        "created_at": "2024-02-22T18:21:33.000Z",
+        "url": "https://greasyfork.org/users/1265537-kloob"
+      }
+    ],
+    "name": "GaiaOnline - AviChat Mod Suite",
+    "description": "Adds QoL improvements for moderating AviChat.",
+    "url": "https://greasyfork.org/scripts/502355-gaiaonline-avichat-mod-suite",
+    "code_url": "https://update.greasyfork.org/scripts/502355/GaiaOnline%20-%20AviChat%20Mod%20Suite.user.js",
+    "code_size": 10199,
+    "license": null,
+    "version": "1.3.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 499534,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-02T23:51:25.000Z",
+    "code_updated_at": "2024-07-02T23:51:25.000Z",
+    "namespace": "https://greasyfork.org/en/users/1265537-kloob",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265537,
+        "name": "kloob",
+        "created_at": "2024-02-22T18:21:33.000Z",
+        "url": "https://greasyfork.org/users/1265537-kloob"
+      }
+    ],
+    "name": "GaiaOnline FA Action Logger",
+    "description": "Capture the contents of your thread moves to make logging your actions easier/more efficient!",
+    "url": "https://greasyfork.org/scripts/499534-gaiaonline-fa-action-logger",
+    "code_url": "https://update.greasyfork.org/scripts/499534/GaiaOnline%20FA%20Action%20Logger.user.js",
+    "code_size": 6516,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 498921,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-26T02:36:39.000Z",
+    "code_updated_at": "2024-08-01T13:22:13.000Z",
+    "namespace": "https://greasyfork.org/en/users/1265537-kloob",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1265537,
+        "name": "kloob",
+        "created_at": "2024-02-22T18:21:33.000Z",
+        "url": "https://greasyfork.org/users/1265537-kloob"
+      }
+    ],
+    "name": "GaiaOnline Quick View ModDog Comments",
+    "description": "Quick view comments on GaiaOnline entries",
+    "url": "https://greasyfork.org/scripts/498921-gaiaonline-quick-view-moddog-comments",
+    "code_url": "https://update.greasyfork.org/scripts/498921/GaiaOnline%20Quick%20View%20ModDog%20Comments.user.js",
+    "code_size": 9894,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
     "visibility": "unknown"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521814,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-26T01:11:19.000Z",
+    "code_updated_at": "2024-12-26T01:11:19.000Z",
+    "namespace": "https://openuserjs.org/users/SB100",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1415814,
+        "name": "张远标",
+        "created_at": "2024-12-26T01:09:06.000Z",
+        "url": "https://greasyfork.org/users/1415814-%E5%BC%A0%E8%BF%9C%E6%A0%87"
+      }
+    ],
+    "name": "靓仔专用DC开水",
+    "description": "Auto post a message to a discord channel every random interval within a range",
+    "url": "https://greasyfork.org/scripts/521814-%E9%9D%93%E4%BB%94%E4%B8%93%E7%94%A8dc%E5%BC%80%E6%B0%B4",
+    "code_url": "https://update.greasyfork.org/scripts/521814/%E9%9D%93%E4%BB%94%E4%B8%93%E7%94%A8DC%E5%BC%80%E6%B0%B4.user.js",
+    "code_size": 7372,
+    "license": "MIT License",
+    "version": "1.3.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

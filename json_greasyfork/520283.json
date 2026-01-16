@@ -1,0 +1,59 @@
+{
+  "id": 520283,
+  "daily_installs": 0,
+  "total_installs": 18,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-10T05:46:32.000Z",
+  "code_updated_at": "2024-12-10T05:46:32.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1408931,
+      "name": "devaslw",
+      "created_at": "2024-12-10T05:42:24.000Z",
+      "url": "https://greasyfork.org/users/1408931-devaslw",
+      "scripts": [
+        {
+          "id": 520283,
+          "daily_installs": 0,
+          "total_installs": 18,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-10T05:46:32.000Z",
+          "code_updated_at": "2024-12-10T05:46:32.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "天猫图片下载",
+          "description": "天猫商品图片下载",
+          "url": "https://greasyfork.org/scripts/520283-%E5%A4%A9%E7%8C%AB%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD",
+          "code_url": "https://update.greasyfork.org/scripts/520283/%E5%A4%A9%E7%8C%AB%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD.user.js",
+          "code_size": 1577,
+          "license": "MIT License",
+          "version": "2024-12-08",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "天猫图片下载",
+  "description": "天猫商品图片下载",
+  "url": "https://greasyfork.org/scripts/520283-%E5%A4%A9%E7%8C%AB%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD",
+  "code_url": "https://update.greasyfork.org/scripts/520283/%E5%A4%A9%E7%8C%AB%E5%9B%BE%E7%89%87%E4%B8%8B%E8%BD%BD.user.js",
+  "code_size": 1577,
+  "license": "MIT License",
+  "version": "2024-12-08",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

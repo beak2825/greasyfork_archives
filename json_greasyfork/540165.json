@@ -1,0 +1,34 @@
+{
+  "id": 540165,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-20T14:45:51.000Z",
+  "code_updated_at": "2025-07-23T14:18:20.000Z",
+  "namespace": "EzyBot - The Concert (Beta)",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1431338,
+      "name": "EzyBot - อีซี่บอท",
+      "created_at": "2025-02-04T12:10:05.000Z",
+      "url": "https://greasyfork.org/users/1431338-ezybot-%E0%B8%AD%E0%B8%B5%E0%B8%8B%E0%B8%B5-%E0%B8%9A%E0%B8%AD%E0%B8%97",
+      "scripts": []
+    }
+  ],
+  "name": "EzyBot - The Concert (Beta)",
+  "description": "Let me go to The Concert!",
+  "url": "https://greasyfork.org/scripts/540165-ezybot-the-concert-beta",
+  "code_url": "https://update.greasyfork.org/scripts/540165/EzyBot%20-%20The%20Concert%20%28Beta%29.user.js",
+  "code_size": 113850,
+  "license": "GPLv3",
+  "version": "1.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

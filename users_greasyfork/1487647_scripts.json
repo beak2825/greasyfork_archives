@@ -1,0 +1,134 @@
+[
+  {
+    "id": 551365,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-10-02T15:44:16.000Z",
+    "code_updated_at": "2025-10-07T14:51:06.000Z",
+    "namespace": "https://gazellegames.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487647,
+        "name": "vgtal",
+        "created_at": "2025-06-23T22:37:24.000Z",
+        "url": "https://greasyfork.org/users/1487647-vgtal"
+      }
+    ],
+    "name": "GGn PDF Screenshots Studio",
+    "description": "Takes one or more PDFs or images, shows a modal with thumbnails to select pages, returns full-page screenshots uploaded to the cloud, and automatically fills screenshot URLs into screenshots inputs.",
+    "url": "https://greasyfork.org/scripts/551365-ggn-pdf-screenshots-studio",
+    "code_url": "https://update.greasyfork.org/scripts/551365/GGn%20PDF%20Screenshots%20Studio.user.js",
+    "code_size": 128199,
+    "license": "The Unlicense",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 551012,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-29T01:28:41.000Z",
+    "code_updated_at": "2025-09-29T15:46:05.000Z",
+    "namespace": "https://gazellegames.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487647,
+        "name": "vgtal",
+        "created_at": "2025-06-23T22:37:24.000Z",
+        "url": "https://greasyfork.org/users/1487647-vgtal"
+      }
+    ],
+    "name": "GGn Torrent File Dropzone Creator",
+    "description": "Adds a dropzone and folder selection button to create a private .torrent, preserving sub-folder structures.",
+    "url": "https://greasyfork.org/scripts/551012-ggn-torrent-file-dropzone-creator",
+    "code_url": "https://update.greasyfork.org/scripts/551012/GGn%20Torrent%20File%20Dropzone%20Creator.user.js",
+    "code_size": 18215,
+    "license": "The Unlicense",
+    "version": "1.1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 543815,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-27T23:53:02.000Z",
+    "code_updated_at": "2025-09-28T14:21:59.000Z",
+    "namespace": "https://gazellegames.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487647,
+        "name": "vgtal",
+        "created_at": "2025-06-23T22:37:24.000Z",
+        "url": "https://greasyfork.org/users/1487647-vgtal"
+      }
+    ],
+    "name": "GGn Infobox Builder",
+    "description": "Add fields to automatically build an infobox in description.",
+    "url": "https://greasyfork.org/scripts/543815-ggn-infobox-builder",
+    "code_url": "https://update.greasyfork.org/scripts/543815/GGn%20Infobox%20Builder.user.js",
+    "code_size": 27553,
+    "license": "The Unlicense",
+    "version": "0.7.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 540557,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-23T22:47:45.000Z",
+    "code_updated_at": "2025-08-10T22:36:22.000Z",
+    "namespace": "https://gazellegames.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1487647,
+        "name": "vgtal",
+        "created_at": "2025-06-23T22:37:24.000Z",
+        "url": "https://greasyfork.org/users/1487647-vgtal"
+      }
+    ],
+    "name": "GGn i18n group filters toolbar",
+    "description": "On a group page, filters the releases list based on the locale.",
+    "url": "https://greasyfork.org/scripts/540557-ggn-i18n-group-filters-toolbar",
+    "code_url": "https://update.greasyfork.org/scripts/540557/GGn%20i18n%20group%20filters%20toolbar.user.js",
+    "code_size": 10273,
+    "license": "The Unlicense",
+    "version": "2.2.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 537841,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-31T09:46:04.000Z",
+  "code_updated_at": "2025-05-31T13:02:52.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1446019,
+      "name": "dami16z",
+      "created_at": "2025-03-15T13:01:54.000Z",
+      "url": "https://greasyfork.org/users/1446019-dami16z"
+    }
+  ],
+  "name": "Infinex Auto Clicker Enhanced",
+  "description": "Enhanced auto click elements on infinex.xyz with better waiting and retry logic",
+  "url": "https://greasyfork.org/scripts/537841-infinex-auto-clicker-enhanced",
+  "code_url": "https://update.greasyfork.org/scripts/537841/Infinex%20Auto%20Clicker%20Enhanced.user.js",
+  "code_size": 17026,
+  "license": "MIT License",
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

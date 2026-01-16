@@ -1,0 +1,34 @@
+{
+  "id": 508561,
+  "daily_installs": 1,
+  "total_installs": 245,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-15T13:22:28.000Z",
+  "code_updated_at": "2024-10-15T07:30:46.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1265194,
+      "name": "루시퍼홍",
+      "created_at": "2024-02-22T04:51:34.000Z",
+      "url": "https://greasyfork.org/users/1265194-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D",
+      "scripts": []
+    }
+  ],
+  "name": "[루시퍼홍] 아실 아파트 연식라벨",
+  "description": "2024. 7. 17. 오후 1:50:03",
+  "url": "https://greasyfork.org/scripts/508561-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EC%95%84%EC%8B%A4-%EC%95%84%ED%8C%8C%ED%8A%B8-%EC%97%B0%EC%8B%9D%EB%9D%BC%EB%B2%A8",
+  "code_url": "https://update.greasyfork.org/scripts/508561/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EC%95%84%EC%8B%A4%20%EC%95%84%ED%8C%8C%ED%8A%B8%20%EC%97%B0%EC%8B%9D%EB%9D%BC%EB%B2%A8.user.js",
+  "code_size": 50961,
+  "license": null,
+  "version": "1.07",
+  "locale": "ko",
+  "deleted": false,
+  "visibility": "public"
+}

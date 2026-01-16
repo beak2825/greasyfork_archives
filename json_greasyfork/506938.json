@@ -1,0 +1,34 @@
+{
+  "id": 506938,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-05T10:09:00.000Z",
+  "code_updated_at": "2024-09-05T10:09:00.000Z",
+  "namespace": "https://www.bestmafia.com/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1275827,
+      "name": "script234",
+      "created_at": "2024-03-17T16:48:36.000Z",
+      "url": "https://greasyfork.org/users/1275827-script234",
+      "scripts": []
+    }
+  ],
+  "name": "Ревы в созда+хвост новый",
+  "description": "новый",
+  "url": "https://greasyfork.org/scripts/506938-%D1%80%D0%B5%D0%B2%D1%8B-%D0%B2-%D1%81%D0%BE%D0%B7%D0%B4%D0%B0-%D1%85%D0%B2%D0%BE%D1%81%D1%82-%D0%BD%D0%BE%D0%B2%D1%8B%D0%B9",
+  "code_url": "https://update.greasyfork.org/scripts/506938/%D0%A0%D0%B5%D0%B2%D1%8B%20%D0%B2%20%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%2B%D1%85%D0%B2%D0%BE%D1%81%D1%82%20%D0%BD%D0%BE%D0%B2%D1%8B%D0%B9.user.js",
+  "code_size": 1300,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

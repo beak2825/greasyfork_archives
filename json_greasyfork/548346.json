@@ -1,0 +1,33 @@
+{
+  "id": 548346,
+  "daily_installs": 2,
+  "total_installs": 80,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-04T12:19:33.000Z",
+  "code_updated_at": "2026-01-04T06:41:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": "https://nowpayments.io/donation/axl_script",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1439595,
+      "name": "Axl_script",
+      "created_at": "2025-02-25T02:34:33.000Z",
+      "url": "https://greasyfork.org/users/1439595-axl-script"
+    }
+  ],
+  "name": "QuickNav for Google AI Studio",
+  "description": "Restores classic chat navigation in Google AI Studio, adding essential UI controls for precise, message-by-message browsing, and a powerful message index menu for efficient conversation navigation. This script operates entirely locally in your browser, does not collect any personal data, and makes no requests to external servers.",
+  "url": "https://greasyfork.org/scripts/548346-quicknav-for-google-ai-studio",
+  "code_url": "https://update.greasyfork.org/scripts/548346/QuickNav%20for%20Google%20AI%20Studio.user.js",
+  "code_size": 273165,
+  "license": "MIT License",
+  "version": "21.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

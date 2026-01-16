@@ -1,0 +1,35 @@
+[
+  {
+    "id": 545928,
+    "daily_installs": 0,
+    "total_installs": 74,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-08-15T07:31:07.000Z",
+    "code_updated_at": "2025-08-15T07:31:07.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1505217,
+        "name": "1421 Software",
+        "created_at": "2025-08-15T07:29:28.000Z",
+        "url": "https://greasyfork.org/users/1505217-1421-software"
+      }
+    ],
+    "name": "GoztePlace - Enhanced Wplace Overlay",
+    "description": "Enhanced fork of Wplace Overlay Pro with additional features. Overlays tiles on wplace.live. Can also resize, and color-match your overlay to wplace's palette. Make sure to comply with the site's Terms of Service, and rules! This script is not affiliated with Wplace.live in any way, use at your own risk.",
+    "url": "https://greasyfork.org/scripts/545928-gozteplace-enhanced-wplace-overlay",
+    "code_url": "https://update.greasyfork.org/scripts/545928/GoztePlace%20-%20Enhanced%20Wplace%20Overlay.user.js",
+    "code_size": 135473,
+    "license": "GPLv3",
+    "version": "1.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

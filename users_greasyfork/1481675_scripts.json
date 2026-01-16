@@ -1,0 +1,35 @@
+[
+  {
+    "id": 539014,
+    "daily_installs": 1,
+    "total_installs": 57,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-10T14:45:58.000Z",
+    "code_updated_at": "2025-07-27T06:10:53.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1481675,
+        "name": "0xbbbb",
+        "created_at": "2025-06-10T14:19:39.000Z",
+        "url": "https://greasyfork.org/users/1481675-0xbbbb"
+      }
+    ],
+    "name": "AI平台_Web体验优化",
+    "description": "【强力拦截版】1. 彻底阻止Enter键直接发送，改为Ctrl+Enter发送。为Qwen增加ID选择器，优先点击按钮发送。2. 支持点击复制数学公式的LaTeX代码（已为Copilot修复v5-final）。",
+    "url": "https://greasyfork.org/scripts/539014-ai%E5%B9%B3%E5%8F%B0-web%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96",
+    "code_url": "https://update.greasyfork.org/scripts/539014/AI%E5%B9%B3%E5%8F%B0_Web%E4%BD%93%E9%AA%8C%E4%BC%98%E5%8C%96.user.js",
+    "code_size": 14905,
+    "license": null,
+    "version": "6.5.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

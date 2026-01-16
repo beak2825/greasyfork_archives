@@ -1,0 +1,35 @@
+[
+  {
+    "id": 525574,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-01T20:00:01.000Z",
+    "code_updated_at": "2025-02-01T20:00:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1349132,
+        "name": "KnewOne",
+        "created_at": "2024-08-10T12:23:02.000Z",
+        "url": "https://greasyfork.org/users/1349132-knewone"
+      }
+    ],
+    "name": "Remove blur blocks on mangaUP",
+    "description": "Removes blur block on mangaUP",
+    "url": "https://greasyfork.org/scripts/525574-remove-blur-blocks-on-mangaup",
+    "code_url": "https://update.greasyfork.org/scripts/525574/Remove%20blur%20blocks%20on%20mangaUP.user.js",
+    "code_size": 711,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

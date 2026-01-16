@@ -1,0 +1,35 @@
+[
+  {
+    "id": 506747,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-04T07:57:39.000Z",
+    "code_updated_at": "2025-12-02T07:07:34.000Z",
+    "namespace": "http://alist3.lee7723.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 753404,
+        "name": "Lee-7723",
+        "created_at": "2021-03-31T12:05:40.000Z",
+        "url": "https://greasyfork.org/users/753404-lee-7723"
+      }
+    ],
+    "name": "iHR quiz tool V2",
+    "description": "Don't be a bitch, don't snitch 🤫",
+    "url": "https://greasyfork.org/scripts/506747-ihr-quiz-tool-v2",
+    "code_url": "https://update.greasyfork.org/scripts/506747/iHR%20quiz%20tool%20V2.user.js",
+    "code_size": 9746,
+    "license": "MIT License",
+    "version": "2025-12-02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

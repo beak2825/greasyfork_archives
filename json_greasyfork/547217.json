@@ -1,0 +1,34 @@
+{
+  "id": 547217,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-25T09:11:30.000Z",
+  "code_updated_at": "2025-08-25T09:12:32.000Z",
+  "namespace": "https://github.com/Timesient/manga-download-scripts",
+  "support_url": "https://github.com/Timesient/manga-download-scripts/issues",
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 295034,
+      "name": "Timesient",
+      "created_at": "2019-04-24T12:38:14.000Z",
+      "url": "https://greasyfork.org/users/295034-timesient",
+      "scripts": []
+    }
+  ],
+  "name": "WeloveMangaDownloader",
+  "description": "Manga downloader for welovemanga.one",
+  "url": "https://greasyfork.org/scripts/547217-welovemangadownloader",
+  "code_url": "https://update.greasyfork.org/scripts/547217/WeloveMangaDownloader.user.js",
+  "code_size": 2107,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

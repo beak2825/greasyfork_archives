@@ -1,0 +1,35 @@
+[
+  {
+    "id": 524627,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-01-23T10:59:33.000Z",
+    "code_updated_at": "2025-01-23T10:59:33.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1426454,
+        "name": "gexge",
+        "created_at": "2025-01-23T10:57:53.000Z",
+        "url": "https://greasyfork.org/users/1426454-gexge"
+      }
+    ],
+    "name": "Depozite TBI Bank",
+    "description": "Calculeaza profitul si randamentul pentru depozitele de la TBI bank",
+    "url": "https://greasyfork.org/scripts/524627-depozite-tbi-bank",
+    "code_url": "https://update.greasyfork.org/scripts/524627/Depozite%20TBI%20Bank.user.js",
+    "code_size": 2277,
+    "license": null,
+    "version": "2025-01-23",
+    "locale": "ro",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

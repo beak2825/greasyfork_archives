@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532667,
+    "daily_installs": 1,
+    "total_installs": 64,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-13T01:32:04.000Z",
+    "code_updated_at": "2025-04-13T01:32:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1457153,
+        "name": "Serhii Tatarynov",
+        "created_at": "2025-04-13T01:22:44.000Z",
+        "url": "https://greasyfork.org/users/1457153-serhii-tatarynov"
+      }
+    ],
+    "name": "Akari (明かり) - Minimal UI for Bloxd.io",
+    "description": "Clean PvP HUD for Bloxd.io - by MinimalKash",
+    "url": "https://greasyfork.org/scripts/532667-akari-%E6%98%8E%E3%81%8B%E3%82%8A-minimal-ui-for-bloxd-io",
+    "code_url": "https://update.greasyfork.org/scripts/532667/Akari%20%28%E6%98%8E%E3%81%8B%E3%82%8A%29%20-%20Minimal%20UI%20for%20Bloxdio.user.js",
+    "code_size": 7112,
+    "license": null,
+    "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

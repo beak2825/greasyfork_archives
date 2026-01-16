@@ -1,0 +1,59 @@
+{
+  "id": 528189,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-27T02:30:58.000Z",
+  "code_updated_at": "2025-02-27T02:34:18.000Z",
+  "namespace": "https://greasyfork.org/zh-CN/users/1278689-endorsie",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1278689,
+      "name": "Endorsie",
+      "created_at": "2024-03-24T06:26:03.000Z",
+      "url": "https://greasyfork.org/users/1278689-endorsie",
+      "scripts": [
+        {
+          "id": 528189,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-27T02:30:58.000Z",
+          "code_updated_at": "2025-02-27T02:34:18.000Z",
+          "namespace": "https://greasyfork.org/zh-CN/users/1278689-endorsie",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "YangtzeRain-AutoQuiz",
+          "description": "长江雨课堂课堂习题监控",
+          "url": "https://greasyfork.org/scripts/528189-yangtzerain-autoquiz",
+          "code_url": "https://update.greasyfork.org/scripts/528189/YangtzeRain-AutoQuiz.user.js",
+          "code_size": 2589,
+          "license": "MIT License",
+          "version": "0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "YangtzeRain-AutoQuiz",
+  "description": "长江雨课堂课堂习题监控",
+  "url": "https://greasyfork.org/scripts/528189-yangtzerain-autoquiz",
+  "code_url": "https://update.greasyfork.org/scripts/528189/YangtzeRain-AutoQuiz.user.js",
+  "code_size": 2589,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

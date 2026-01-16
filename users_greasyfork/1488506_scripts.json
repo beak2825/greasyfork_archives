@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540775,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-25T19:13:36.000Z",
+    "code_updated_at": "2025-06-25T19:17:49.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488506,
+        "name": "legendsciber",
+        "created_at": "2025-06-25T19:06:15.000Z",
+        "url": "https://greasyfork.org/users/1488506-legendsciber"
+      }
+    ],
+    "name": "Kodlabuyu Beta Sürüm",
+    "description": "Bölümleri çözer, tıklamadan önce kısa bir süre bekler ve sonraki bölüme geçer.",
+    "url": "https://greasyfork.org/scripts/540775-kodlabuyu-beta-s%C3%BCr%C3%BCm",
+    "code_url": "https://update.greasyfork.org/scripts/540775/Kodlabuyu%20Beta%20S%C3%BCr%C3%BCm.user.js",
+    "code_size": 8137,
+    "license": "GNU GPLv3",
+    "version": "2.8.2",
+    "locale": "tr",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

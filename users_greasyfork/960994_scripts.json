@@ -1,0 +1,68 @@
+[
+  {
+    "id": 505387,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-27T08:01:35.000Z",
+    "code_updated_at": "2024-09-09T09:09:37.000Z",
+    "namespace": "http://netoday.cn",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960994,
+        "name": "236212005",
+        "created_at": "2022-09-19T04:19:05.000Z",
+        "url": "https://greasyfork.org/users/960994-236212005"
+      }
+    ],
+    "name": "feiszw_remove_advs_dark",
+    "description": "Remove divs of advertisements at https://m.feiszw.com",
+    "url": "https://greasyfork.org/scripts/505387-feiszw-remove-advs-dark",
+    "code_url": "https://update.greasyfork.org/scripts/505387/feiszw_remove_advs_dark.user.js",
+    "code_size": 3661,
+    "license": "MIT License",
+    "version": "0.1.37",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503262,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-11T04:46:59.000Z",
+    "code_updated_at": "2024-08-11T11:34:32.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 960994,
+        "name": "236212005",
+        "created_at": "2022-09-19T04:19:05.000Z",
+        "url": "https://greasyfork.org/users/960994-236212005"
+      }
+    ],
+    "name": "jinnanyq_remove_advs",
+    "description": "try to take over the world!",
+    "url": "https://greasyfork.org/scripts/503262-jinnanyq-remove-advs",
+    "code_url": "https://update.greasyfork.org/scripts/503262/jinnanyq_remove_advs.user.js",
+    "code_size": 1315,
+    "license": "MIT License",
+    "version": "2024-08-11-2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

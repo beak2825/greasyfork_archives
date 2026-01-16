@@ -1,0 +1,33 @@
+{
+  "id": 536437,
+  "daily_installs": 8,
+  "total_installs": 708,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-05-19T00:51:11.000Z",
+  "code_updated_at": "2025-05-19T00:51:11.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1406728,
+      "name": "When I'm in blooket the hack doesn't even work",
+      "created_at": "2024-12-05T02:13:55.000Z",
+      "url": "https://greasyfork.org/users/1406728-when-i-m-in-blooket-the-hack-doesn-t-even-work"
+    }
+  ],
+  "name": "Poxel.io Dev Premium Unlock (Client-Side)",
+  "description": "Unlock premium items for dev/test accounts in Poxel.io for testing purposes",
+  "url": "https://greasyfork.org/scripts/536437-poxel-io-dev-premium-unlock-client-side",
+  "code_url": "https://update.greasyfork.org/scripts/536437/Poxelio%20Dev%20Premium%20Unlock%20%28Client-Side%29.user.js",
+  "code_size": 1411,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

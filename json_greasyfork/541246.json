@@ -1,0 +1,59 @@
+{
+  "id": 541246,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-30T16:25:14.000Z",
+  "code_updated_at": "2025-06-30T16:25:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1490376,
+      "name": "Dark-ninja_lord",
+      "created_at": "2025-06-30T16:14:53.000Z",
+      "url": "https://greasyfork.org/users/1490376-dark-ninja-lord",
+      "scripts": [
+        {
+          "id": 541246,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-06-30T16:25:14.000Z",
+          "code_updated_at": "2025-06-30T16:25:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "LordsWM - Hide Rented Artifacts",
+          "description": "Hide rented artifacts which cannot be worn(Expired Time/Exhausted Battles) on inventory page of LordsWM.com.",
+          "url": "https://greasyfork.org/scripts/541246-lordswm-hide-rented-artifacts",
+          "code_url": "https://update.greasyfork.org/scripts/541246/LordsWM%20-%20Hide%20Rented%20Artifacts.user.js",
+          "code_size": 1784,
+          "license": null,
+          "version": "1.0",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "LordsWM - Hide Rented Artifacts",
+  "description": "Hide rented artifacts which cannot be worn(Expired Time/Exhausted Battles) on inventory page of LordsWM.com.",
+  "url": "https://greasyfork.org/scripts/541246-lordswm-hide-rented-artifacts",
+  "code_url": "https://update.greasyfork.org/scripts/541246/LordsWM%20-%20Hide%20Rented%20Artifacts.user.js",
+  "code_size": 1784,
+  "license": null,
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

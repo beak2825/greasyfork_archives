@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498522,
+    "daily_installs": 0,
+    "total_installs": 47,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-21T10:08:23.000Z",
+    "code_updated_at": "2024-06-21T10:08:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321126,
+        "name": "apple-phi",
+        "created_at": "2024-06-20T13:18:35.000Z",
+        "url": "https://greasyfork.org/users/1321126-apple-phi"
+      }
+    ],
+    "name": "SharePoint list download link",
+    "description": "Add download link to SharePoint list items that contain links to files",
+    "url": "https://greasyfork.org/scripts/498522-sharepoint-list-download-link",
+    "code_url": "https://update.greasyfork.org/scripts/498522/SharePoint%20list%20download%20link.user.js",
+    "code_size": 1846,
+    "license": "MIT; https://opensource.org/licenses/MIT",
+    "version": "0.1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

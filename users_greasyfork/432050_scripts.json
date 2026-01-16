@@ -1,0 +1,35 @@
+[
+  {
+    "id": 518510,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-22T19:42:00.000Z",
+    "code_updated_at": "2025-09-02T17:40:44.000Z",
+    "namespace": "http://hierosoft.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 432050,
+        "name": "Poikilos",
+        "created_at": "2020-01-03T17:43:17.000Z",
+        "url": "https://greasyfork.org/users/432050-poikilos"
+      }
+    ],
+    "name": "Wix Order E-mail Link",
+    "description": "Generate a mailto link with order# in subject.",
+    "url": "https://greasyfork.org/scripts/518510-wix-order-e-mail-link",
+    "code_url": "https://update.greasyfork.org/scripts/518510/Wix%20Order%20E-mail%20Link.user.js",
+    "code_size": 5262,
+    "license": "MIT License",
+    "version": "2025.9.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

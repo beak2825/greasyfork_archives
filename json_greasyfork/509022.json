@@ -1,0 +1,59 @@
+{
+  "id": 509022,
+  "daily_installs": 0,
+  "total_installs": 34990,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-18T10:15:47.000Z",
+  "code_updated_at": "2025-08-05T10:10:35.000Z",
+  "namespace": "picasso310_haha_script_001",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1358942,
+      "name": "picasso310",
+      "created_at": "2024-08-28T02:01:06.000Z",
+      "url": "https://greasyfork.org/users/1358942-picasso310",
+      "scripts": [
+        {
+          "id": 509022,
+          "daily_installs": 0,
+          "total_installs": 34990,
+          "fan_score": "34.2",
+          "good_ratings": 2,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-09-18T10:15:47.000Z",
+          "code_updated_at": "2025-08-05T10:10:35.000Z",
+          "namespace": "picasso310_haha_script_001",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动查询淘宝、天猫、京东等隐藏的大额优惠券和优惠活动，不花冤枉钱。脚本持续维护更新~",
+          "description": "支持平台：京东、淘宝、天猫、天猫超市、天猫国际、京东国际、京东图书、京东大药房、阿里大药房、唯品会等；功能：1、搜索商品时会自动查询标注有优惠券和活动的商品，无需进入详情页，方便快捷；2、浏览商品详情页时脚本会自动查询商品是否有隐藏的优惠券；3、浏览记录标注（本地存储、可手动清空）；4、网页显示优化；脚本长期维护更新，非常好用~",
+          "url": "https://greasyfork.org/scripts/509022-%E8%87%AA%E5%8A%A8%E6%9F%A5%E8%AF%A2%E6%B7%98%E5%AE%9D-%E5%A4%A9%E7%8C%AB-%E4%BA%AC%E4%B8%9C%E7%AD%89%E9%9A%90%E8%97%8F%E7%9A%84%E5%A4%A7%E9%A2%9D%E4%BC%98%E6%83%A0%E5%88%B8%E5%92%8C%E4%BC%98%E6%83%A0%E6%B4%BB%E5%8A%A8-%E4%B8%8D%E8%8A%B1%E5%86%A4%E6%9E%89%E9%92%B1-%E8%84%9A%E6%9C%AC%E6%8C%81%E7%BB%AD%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0",
+          "code_url": "https://update.greasyfork.org/scripts/509022/%E8%87%AA%E5%8A%A8%E6%9F%A5%E8%AF%A2%E6%B7%98%E5%AE%9D%E3%80%81%E5%A4%A9%E7%8C%AB%E3%80%81%E4%BA%AC%E4%B8%9C%E7%AD%89%E9%9A%90%E8%97%8F%E7%9A%84%E5%A4%A7%E9%A2%9D%E4%BC%98%E6%83%A0%E5%88%B8%E5%92%8C%E4%BC%98%E6%83%A0%E6%B4%BB%E5%8A%A8%EF%BC%8C%E4%B8%8D%E8%8A%B1%E5%86%A4%E6%9E%89%E9%92%B1%E3%80%82%E8%84%9A%E6%9C%AC%E6%8C%81%E7%BB%AD%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0~.user.js",
+          "code_size": 29584,
+          "license": "AGPL License",
+          "version": "1.0.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动查询淘宝、天猫、京东等隐藏的大额优惠券和优惠活动，不花冤枉钱。脚本持续维护更新~",
+  "description": "支持平台：京东、淘宝、天猫、天猫超市、天猫国际、京东国际、京东图书、京东大药房、阿里大药房、唯品会等；功能：1、搜索商品时会自动查询标注有优惠券和活动的商品，无需进入详情页，方便快捷；2、浏览商品详情页时脚本会自动查询商品是否有隐藏的优惠券；3、浏览记录标注（本地存储、可手动清空）；4、网页显示优化；脚本长期维护更新，非常好用~",
+  "url": "https://greasyfork.org/scripts/509022-%E8%87%AA%E5%8A%A8%E6%9F%A5%E8%AF%A2%E6%B7%98%E5%AE%9D-%E5%A4%A9%E7%8C%AB-%E4%BA%AC%E4%B8%9C%E7%AD%89%E9%9A%90%E8%97%8F%E7%9A%84%E5%A4%A7%E9%A2%9D%E4%BC%98%E6%83%A0%E5%88%B8%E5%92%8C%E4%BC%98%E6%83%A0%E6%B4%BB%E5%8A%A8-%E4%B8%8D%E8%8A%B1%E5%86%A4%E6%9E%89%E9%92%B1-%E8%84%9A%E6%9C%AC%E6%8C%81%E7%BB%AD%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0",
+  "code_url": "https://update.greasyfork.org/scripts/509022/%E8%87%AA%E5%8A%A8%E6%9F%A5%E8%AF%A2%E6%B7%98%E5%AE%9D%E3%80%81%E5%A4%A9%E7%8C%AB%E3%80%81%E4%BA%AC%E4%B8%9C%E7%AD%89%E9%9A%90%E8%97%8F%E7%9A%84%E5%A4%A7%E9%A2%9D%E4%BC%98%E6%83%A0%E5%88%B8%E5%92%8C%E4%BC%98%E6%83%A0%E6%B4%BB%E5%8A%A8%EF%BC%8C%E4%B8%8D%E8%8A%B1%E5%86%A4%E6%9E%89%E9%92%B1%E3%80%82%E8%84%9A%E6%9C%AC%E6%8C%81%E7%BB%AD%E7%BB%B4%E6%8A%A4%E6%9B%B4%E6%96%B0~.user.js",
+  "code_size": 29584,
+  "license": "AGPL License",
+  "version": "1.0.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

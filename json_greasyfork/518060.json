@@ -1,0 +1,59 @@
+{
+  "id": 518060,
+  "daily_installs": 0,
+  "total_installs": 155,
+  "fan_score": "9.5",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2024-11-19T12:37:17.000Z",
+  "code_updated_at": "2024-11-22T03:09:00.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1399034,
+      "name": "BaoPaper",
+      "created_at": "2024-11-19T11:45:03.000Z",
+      "url": "https://greasyfork.org/users/1399034-baopaper",
+      "scripts": [
+        {
+          "id": 518060,
+          "daily_installs": 0,
+          "total_installs": 155,
+          "fan_score": "9.5",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2024-11-19T12:37:17.000Z",
+          "code_updated_at": "2024-11-22T03:09:00.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "自动填充闯关",
+          "description": "自动填充全国大学生职业规划大赛生涯闯关系统",
+          "url": "https://greasyfork.org/scripts/518060-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E9%97%AF%E5%85%B3",
+          "code_url": "https://update.greasyfork.org/scripts/518060/%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E9%97%AF%E5%85%B3.user.js",
+          "code_size": 5561,
+          "license": "MIT License",
+          "version": "0.9",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "自动填充闯关",
+  "description": "自动填充全国大学生职业规划大赛生涯闯关系统",
+  "url": "https://greasyfork.org/scripts/518060-%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E9%97%AF%E5%85%B3",
+  "code_url": "https://update.greasyfork.org/scripts/518060/%E8%87%AA%E5%8A%A8%E5%A1%AB%E5%85%85%E9%97%AF%E5%85%B3.user.js",
+  "code_size": 5561,
+  "license": "MIT License",
+  "version": "0.9",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

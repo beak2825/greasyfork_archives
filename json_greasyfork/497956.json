@@ -1,0 +1,33 @@
+{
+  "id": 497956,
+  "daily_installs": 0,
+  "total_installs": 13,
+  "fan_score": "5.5",
+  "good_ratings": 0,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2024-06-15T01:54:59.000Z",
+  "code_updated_at": "2025-02-12T18:34:38.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1318110,
+      "name": "eaglesemanation",
+      "created_at": "2024-06-15T01:46:07.000Z",
+      "url": "https://greasyfork.org/users/1318110-eaglesemanation"
+    }
+  ],
+  "name": "NeoFinancial export transactions as CSV",
+  "description": "Adds a button to transactions page that exports all transactions into a CSV file. Developed for use with \"Actual\" budgeting tool, will probably work fine with any other importer.",
+  "url": "https://greasyfork.org/scripts/497956-neofinancial-export-transactions-as-csv",
+  "code_url": "https://update.greasyfork.org/scripts/497956/NeoFinancial%20export%20transactions%20as%20CSV.user.js",
+  "code_size": 21247,
+  "license": "MIT License",
+  "version": "1.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

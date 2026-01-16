@@ -1,0 +1,33 @@
+{
+  "id": 534070,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-26T13:29:53.000Z",
+  "code_updated_at": "2025-04-26T13:43:51.000Z",
+  "namespace": "MoodyMonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1462028,
+      "name": "MoodyMonkey",
+      "created_at": "2025-04-25T12:38:27.000Z",
+      "url": "https://greasyfork.org/users/1462028-moodymonkey"
+    }
+  ],
+  "name": "Patreon Kemono Buttons",
+  "description": "Adds links to Kemono pages on Patreon links 😤✅🧠",
+  "url": "https://greasyfork.org/scripts/534070-patreon-kemono-buttons",
+  "code_url": "https://update.greasyfork.org/scripts/534070/Patreon%20Kemono%20Buttons.user.js",
+  "code_size": 8936,
+  "license": null,
+  "version": "3.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

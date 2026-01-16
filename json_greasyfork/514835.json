@@ -1,0 +1,33 @@
+{
+  "id": 514835,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-30T09:54:42.000Z",
+  "code_updated_at": "2025-11-19T08:55:30.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1194996,
+      "name": "Andrey Mokeev",
+      "created_at": "2023-10-13T08:25:35.000Z",
+      "url": "https://greasyfork.org/users/1194996-andrey-mokeev"
+    }
+  ],
+  "name": "YouTube Shorts Blocker (Pro Version)",
+  "description": "Блокирует Shorts, устойчив к смене классов и оптимизирован",
+  "url": "https://greasyfork.org/scripts/514835-youtube-shorts-blocker-pro-version",
+  "code_url": "https://update.greasyfork.org/scripts/514835/YouTube%20Shorts%20Blocker%20%28Pro%20Version%29.user.js",
+  "code_size": 3538,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

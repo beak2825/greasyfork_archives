@@ -1,0 +1,35 @@
+[
+  {
+    "id": 501116,
+    "daily_installs": 0,
+    "total_installs": 9,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-19T00:02:21.000Z",
+    "code_updated_at": "2024-09-05T17:51:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1336275,
+        "name": "Jason W Cooper",
+        "created_at": "2024-07-19T00:00:57.000Z",
+        "url": "https://greasyfork.org/users/1336275-jason-w-cooper"
+      }
+    ],
+    "name": "CSN Odoo Enhanced Functionality",
+    "description": "Combines phone number hyperlinks, email copying, and name copying functionalities for CSN Odoo",
+    "url": "https://greasyfork.org/scripts/501116-csn-odoo-enhanced-functionality",
+    "code_url": "https://update.greasyfork.org/scripts/501116/CSN%20Odoo%20Enhanced%20Functionality.user.js",
+    "code_size": 11042,
+    "license": "MIT License",
+    "version": "4.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

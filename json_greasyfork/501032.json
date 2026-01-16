@@ -1,0 +1,59 @@
+{
+  "id": 501032,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-18T06:07:11.000Z",
+  "code_updated_at": "2024-07-18T06:10:57.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 904644,
+      "name": "antdz",
+      "created_at": "2022-04-20T07:14:11.000Z",
+      "url": "https://greasyfork.org/users/904644-antdz",
+      "scripts": [
+        {
+          "id": 501032,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-18T06:07:11.000Z",
+          "code_updated_at": "2024-07-18T06:10:57.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "步步高资料下载页增加产品分类",
+          "description": "将步步高下载中心(新版)没有的一些老产品显示出来。",
+          "url": "https://greasyfork.org/scripts/501032-%E6%AD%A5%E6%AD%A5%E9%AB%98%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD%E9%A1%B5%E5%A2%9E%E5%8A%A0%E4%BA%A7%E5%93%81%E5%88%86%E7%B1%BB",
+          "code_url": "https://update.greasyfork.org/scripts/501032/%E6%AD%A5%E6%AD%A5%E9%AB%98%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD%E9%A1%B5%E5%A2%9E%E5%8A%A0%E4%BA%A7%E5%93%81%E5%88%86%E7%B1%BB.user.js",
+          "code_size": 1295,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "步步高资料下载页增加产品分类",
+  "description": "将步步高下载中心(新版)没有的一些老产品显示出来。",
+  "url": "https://greasyfork.org/scripts/501032-%E6%AD%A5%E6%AD%A5%E9%AB%98%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD%E9%A1%B5%E5%A2%9E%E5%8A%A0%E4%BA%A7%E5%93%81%E5%88%86%E7%B1%BB",
+  "code_url": "https://update.greasyfork.org/scripts/501032/%E6%AD%A5%E6%AD%A5%E9%AB%98%E8%B5%84%E6%96%99%E4%B8%8B%E8%BD%BD%E9%A1%B5%E5%A2%9E%E5%8A%A0%E4%BA%A7%E5%93%81%E5%88%86%E7%B1%BB.user.js",
+  "code_size": 1295,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

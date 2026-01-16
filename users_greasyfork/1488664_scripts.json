@@ -1,0 +1,35 @@
+[
+  {
+    "id": 540825,
+    "daily_installs": 0,
+    "total_installs": 25,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-26T06:56:44.000Z",
+    "code_updated_at": "2025-06-26T06:56:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1488664,
+        "name": "Shenaiou",
+        "created_at": "2025-06-26T06:47:47.000Z",
+        "url": "https://greasyfork.org/users/1488664-shenaiou"
+      }
+    ],
+    "name": "wf.xuerian.net Fix",
+    "description": "Fixes localization issues forcing English properly",
+    "url": "https://greasyfork.org/scripts/540825-wf-xuerian-net-fix",
+    "code_url": "https://update.greasyfork.org/scripts/540825/wfxueriannet%20Fix.user.js",
+    "code_size": 1005,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

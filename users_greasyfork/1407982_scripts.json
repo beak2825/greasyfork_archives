@@ -1,0 +1,68 @@
+[
+  {
+    "id": 527309,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-18T09:03:01.000Z",
+    "code_updated_at": "2025-02-18T09:03:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1407982,
+        "name": "Roonfu",
+        "created_at": "2024-12-07T23:11:07.000Z",
+        "url": "https://greasyfork.org/users/1407982-roonfu"
+      }
+    ],
+    "name": "去除Bilibili首页广告",
+    "description": "Remove Bilibili Ads",
+    "url": "https://greasyfork.org/scripts/527309-%E5%8E%BB%E9%99%A4bilibili%E9%A6%96%E9%A1%B5%E5%B9%BF%E5%91%8A",
+    "code_url": "https://update.greasyfork.org/scripts/527309/%E5%8E%BB%E9%99%A4Bilibili%E9%A6%96%E9%A1%B5%E5%B9%BF%E5%91%8A.user.js",
+    "code_size": 776,
+    "license": "MIT License",
+    "version": "0.1.0.2502181659",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520241,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-09T12:34:06.000Z",
+    "code_updated_at": "2025-04-27T05:53:49.000Z",
+    "namespace": "Badminton court reservation @Roonfu",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1407982,
+        "name": "Roonfu",
+        "created_at": "2024-12-07T23:11:07.000Z",
+        "url": "https://greasyfork.org/users/1407982-roonfu"
+      }
+    ],
+    "name": "抢场地",
+    "description": "Badminton court reservation script",
+    "url": "https://greasyfork.org/scripts/520241-%E6%8A%A2%E5%9C%BA%E5%9C%B0",
+    "code_url": "https://update.greasyfork.org/scripts/520241/%E6%8A%A2%E5%9C%BA%E5%9C%B0.user.js",
+    "code_size": 8690,
+    "license": "MIT License",
+    "version": "3.2.0.2504271353",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

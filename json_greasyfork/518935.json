@@ -1,0 +1,59 @@
+{
+  "id": 518935,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-26T13:17:45.000Z",
+  "code_updated_at": "2024-11-26T13:17:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1402747,
+      "name": "BoChosx",
+      "created_at": "2024-11-26T13:14:10.000Z",
+      "url": "https://greasyfork.org/users/1402747-bochosx",
+      "scripts": [
+        {
+          "id": 518935,
+          "daily_installs": 0,
+          "total_installs": 15,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-26T13:17:45.000Z",
+          "code_updated_at": "2024-11-26T13:17:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "E享学院 - 东软信息安全考试自动答题脚本",
+          "description": "进入答题页面，点击右上角“执行自动答题”按钮即可完成答题，两把斗地主时间后请手动提交考试，题库不全欢迎补充，通过 GitHub Pr 提交，做好事不留名，你只需要知道我是东软某部门好心人，即将离职，分享出来方便你我他",
+          "url": "https://greasyfork.org/scripts/518935-e%E4%BA%AB%E5%AD%A6%E9%99%A2-%E4%B8%9C%E8%BD%AF%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC",
+          "code_url": "https://update.greasyfork.org/scripts/518935/E%E4%BA%AB%E5%AD%A6%E9%99%A2%20-%20%E4%B8%9C%E8%BD%AF%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+          "code_size": 18579,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "E享学院 - 东软信息安全考试自动答题脚本",
+  "description": "进入答题页面，点击右上角“执行自动答题”按钮即可完成答题，两把斗地主时间后请手动提交考试，题库不全欢迎补充，通过 GitHub Pr 提交，做好事不留名，你只需要知道我是东软某部门好心人，即将离职，分享出来方便你我他",
+  "url": "https://greasyfork.org/scripts/518935-e%E4%BA%AB%E5%AD%A6%E9%99%A2-%E4%B8%9C%E8%BD%AF%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC",
+  "code_url": "https://update.greasyfork.org/scripts/518935/E%E4%BA%AB%E5%AD%A6%E9%99%A2%20-%20%E4%B8%9C%E8%BD%AF%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E8%80%83%E8%AF%95%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98%E8%84%9A%E6%9C%AC.user.js",
+  "code_size": 18579,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 519354,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-30T09:27:27.000Z",
+    "code_updated_at": "2024-11-30T12:40:55.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1075476,
+        "name": "lorent",
+        "created_at": "2023-05-08T10:24:39.000Z",
+        "url": "https://greasyfork.org/users/1075476-lorent"
+      }
+    ],
+    "name": "qBittorrent utils",
+    "description": "some qBittorrent utils",
+    "url": "https://greasyfork.org/scripts/519354-qbittorrent-utils",
+    "code_url": "https://update.greasyfork.org/scripts/519354/qBittorrent%20utils.user.js",
+    "code_size": 5372,
+    "license": "GPL-3.0 License",
+    "version": "2024-11-30",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

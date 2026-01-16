@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502138,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-30T04:09:20.000Z",
+    "code_updated_at": "2024-07-30T06:03:23.000Z",
+    "namespace": "Supreme7",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 443899,
+        "name": "Supreme7",
+        "created_at": "2020-02-11T14:51:30.000Z",
+        "url": "https://greasyfork.org/users/443899-supreme7"
+      }
+    ],
+    "name": "SUPREME7 Emag CloudFlare Turnstile Solver",
+    "description": "Solve Cloudflare turnstile captcha on emag.hu",
+    "url": "https://greasyfork.org/scripts/502138-supreme7-emag-cloudflare-turnstile-solver",
+    "code_url": "https://update.greasyfork.org/scripts/502138/SUPREME7%20Emag%20CloudFlare%20Turnstile%20Solver.user.js",
+    "code_size": 7698,
+    "license": "MIT License",
+    "version": "0.6",
+    "locale": "hu",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 537085,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-24T07:57:42.000Z",
+  "code_updated_at": "2025-05-24T07:57:41.000Z",
+  "namespace": "http://tampermonkey.net/qhtx-modules",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1384389,
+      "name": "yuan99999",
+      "created_at": "2024-10-22T05:11:46.000Z",
+      "url": "https://greasyfork.org/users/1384389-yuan99999",
+      "scripts": []
+    }
+  ],
+  "name": "questionBankDatasj",
+  "description": "存储岐黄天使刷课助手的题库数据。",
+  "url": "https://greasyfork.org/scripts/537085-questionbankdatasj",
+  "code_url": "https://update.greasyfork.org/scripts/537085/1594868/questionBankDatasj.js",
+  "code_size": 673415,
+  "license": null,
+  "version": "1.3.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 508092,
+    "daily_installs": 2,
+    "total_installs": 1611,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-12T08:38:24.000Z",
+    "code_updated_at": "2024-09-12T08:38:23.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229543,
+        "name": "Alen Chen",
+        "created_at": "2023-12-07T02:30:01.000Z",
+        "url": "https://greasyfork.org/users/1229543-alen-chen"
+      }
+    ],
+    "name": "如意文档",
+    "description": "所有文档平台免费文档下载",
+    "url": "https://greasyfork.org/scripts/508092-%E5%A6%82%E6%84%8F%E6%96%87%E6%A1%A3",
+    "code_url": "https://update.greasyfork.org/scripts/508092/%E5%A6%82%E6%84%8F%E6%96%87%E6%A1%A3.user.js",
+    "code_size": 66032,
+    "license": "Apache License 2.0",
+    "version": "6.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502655,
+    "daily_installs": 3,
+    "total_installs": 8998,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-08-05T03:13:22.000Z",
+    "code_updated_at": "2024-11-11T01:20:02.000Z",
+    "namespace": "https://github.com/AFANOOO/sspan",
+    "support_url": "http://bds.yt3166.com",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229543,
+        "name": "Alen Chen",
+        "created_at": "2023-12-07T02:30:01.000Z",
+        "url": "https://greasyfork.org/users/1229543-alen-chen"
+      }
+    ],
+    "name": "网盘提速",
+    "description": "支持夸克/百度/阿里/天翼/迅雷/移动六大网盘，不限制速度下载的网盘解析脚本，无视黑号，拥有IDM/Aria2/Motrix三种方式任意体验极速下载！支持Microsoft Edge、Google Chrome、Firefox等浏览器 面向所有网友免费交流学习使用，更多功能正在完善中...",
+    "url": "https://greasyfork.org/scripts/502655-%E7%BD%91%E7%9B%98%E6%8F%90%E9%80%9F",
+    "code_url": "https://update.greasyfork.org/scripts/502655/%E7%BD%91%E7%9B%98%E6%8F%90%E9%80%9F.user.js",
+    "code_size": 410750,
+    "license": "MIT License",
+    "version": "1.3.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 501749,
+    "daily_installs": 1,
+    "total_installs": 2767,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-07-25T07:46:23.000Z",
+    "code_updated_at": "2024-11-11T00:54:38.000Z",
+    "namespace": "shipin_downspace_20240121",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229543,
+        "name": "Alen Chen",
+        "created_at": "2023-12-07T02:30:01.000Z",
+        "url": "https://greasyfork.org/users/1229543-alen-chen"
+      }
+    ],
+    "name": "视频实时下载解析，支持抖音、快手",
+    "description": "功能短视频去水印下载：支持抖音、快手【脚本长期维护更新，完全免费，无广告，仅限学习交流！！QQ:2394856795微信：ahonker999】",
+    "url": "https://greasyfork.org/scripts/501749-%E8%A7%86%E9%A2%91%E5%AE%9E%E6%97%B6%E4%B8%8B%E8%BD%BD%E8%A7%A3%E6%9E%90-%E6%94%AF%E6%8C%81%E6%8A%96%E9%9F%B3-%E5%BF%AB%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/501749/%E8%A7%86%E9%A2%91%E5%AE%9E%E6%97%B6%E4%B8%8B%E8%BD%BD%E8%A7%A3%E6%9E%90%EF%BC%8C%E6%94%AF%E6%8C%81%E6%8A%96%E9%9F%B3%E3%80%81%E5%BF%AB%E6%89%8B.user.js",
+    "code_size": 233035,
+    "license": "AGPL License",
+    "version": "1.2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 498758,
+    "daily_installs": 2,
+    "total_installs": 2640,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-24T12:09:28.000Z",
+    "code_updated_at": "2024-11-11T01:47:40.000Z",
+    "namespace": "https://www.softrr.cn/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1229543,
+        "name": "Alen Chen",
+        "created_at": "2023-12-07T02:30:01.000Z",
+        "url": "https://greasyfork.org/users/1229543-alen-chen"
+      }
+    ],
+    "name": "视频下载",
+    "description": "全面解析，电脑打开抖音首页www.douyin.com可以对任意抖音视频进行下载！",
+    "url": "https://greasyfork.org/scripts/498758-%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/498758/%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 155610,
+    "license": "MIT License",
+    "version": "5.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

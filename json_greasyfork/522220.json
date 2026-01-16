@@ -1,0 +1,34 @@
+{
+  "id": 522220,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-29T16:24:48.000Z",
+  "code_updated_at": "2024-12-29T17:04:39.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 778136,
+      "name": "galahal",
+      "created_at": "2021-05-31T08:41:34.000Z",
+      "url": "https://greasyfork.org/users/778136-galahal",
+      "scripts": []
+    }
+  ],
+  "name": "Download Grade Sheet Button with Dynamic Options",
+  "description": "Replace ID in the URL, open in a new tab, and dynamically adjust movement options",
+  "url": "https://greasyfork.org/scripts/522220-download-grade-sheet-button-with-dynamic-options",
+  "code_url": "https://update.greasyfork.org/scripts/522220/Download%20Grade%20Sheet%20Button%20with%20Dynamic%20Options.user.js",
+  "code_size": 10394,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

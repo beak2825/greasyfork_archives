@@ -1,0 +1,68 @@
+[
+  {
+    "id": 530637,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-03-23T17:03:31.000Z",
+    "code_updated_at": "2025-10-16T01:32:32.000Z",
+    "namespace": "http://yuhang0000.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363485,
+        "name": "yuhang0000",
+        "created_at": "2024-09-05T13:22:39.000Z",
+        "url": "https://greasyfork.org/users/1363485-yuhang0000"
+      }
+    ],
+    "name": "B站評論區修復",
+    "description": "修复B站视频底下评论区 css 样式表。",
+    "url": "https://greasyfork.org/scripts/530637-b%E7%AB%99%E8%A9%95%E8%AB%96%E5%8D%80%E4%BF%AE%E5%BE%A9",
+    "code_url": "https://update.greasyfork.org/scripts/530637/B%E7%AB%99%E8%A9%95%E8%AB%96%E5%8D%80%E4%BF%AE%E5%BE%A9.user.js",
+    "code_size": 93441,
+    "license": "GPLv3",
+    "version": "v1.18_2025-10-16",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 517541,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-15T16:30:05.000Z",
+    "code_updated_at": "2025-05-05T06:00:47.000Z",
+    "namespace": "http://yuhang0000.github.io/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1363485,
+        "name": "yuhang0000",
+        "created_at": "2024-09-05T13:22:39.000Z",
+        "url": "https://greasyfork.org/users/1363485-yuhang0000"
+      }
+    ],
+    "name": "B站動態導航 (歸檔員自用)",
+    "description": "能導航到指定日期的動態，僅對 https://space.bilibili.com/<你UID>/dynamic/ 作用，僅歸檔員自用。",
+    "url": "https://greasyfork.org/scripts/517541-b%E7%AB%99%E5%8B%95%E6%85%8B%E5%B0%8E%E8%88%AA-%E6%AD%B8%E6%AA%94%E5%93%A1%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/517541/B%E7%AB%99%E5%8B%95%E6%85%8B%E5%B0%8E%E8%88%AA%20%28%E6%AD%B8%E6%AA%94%E5%93%A1%E8%87%AA%E7%94%A8%29.user.js",
+    "code_size": 26162,
+    "license": "GPLv3",
+    "version": "v1.10_2025-5-5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 521007,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-17T11:07:24.000Z",
+    "code_updated_at": "2025-01-03T08:57:35.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": "https://vk.com/lies_are_good",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291481,
+        "name": "Chip Chip",
+        "created_at": "2024-04-21T22:28:25.000Z",
+        "url": "https://greasyfork.org/users/1291481-chip-chip"
+      }
+    ],
+    "name": "FC | KEMEROVO | M.Kreee ЖБ",
+    "description": "Suggestions for improving the script write here > https://vk.com/lies_are_good",
+    "url": "https://greasyfork.org/scripts/521007-fc-kemerovo-m-kreee-%D0%B6%D0%B1",
+    "code_url": "https://update.greasyfork.org/scripts/521007/FC%20%7C%20KEMEROVO%20%7C%20MKreee%20%D0%96%D0%91.user.js",
+    "code_size": 115993,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 518214,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T14:12:49.000Z",
+    "code_updated_at": "2024-11-20T14:12:49.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": "https://vk.com/lies_are_good",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291481,
+        "name": "Chip Chip",
+        "created_at": "2024-04-21T22:28:25.000Z",
+        "url": "https://greasyfork.org/users/1291481-chip-chip"
+      }
+    ],
+    "name": "Для Стаса Ананаса | KEMEROVO | A.Goodman ЖБ",
+    "description": "Suggestions for improving the script write here > https://vk.com/lies_are_good",
+    "url": "https://greasyfork.org/scripts/518214-%D0%B4%D0%BB%D1%8F-%D1%81%D1%82%D0%B0%D1%81%D0%B0-%D0%B0%D0%BD%D0%B0%D0%BD%D0%B0%D1%81%D0%B0-kemerovo-a-goodman-%D0%B6%D0%B1",
+    "code_url": "https://update.greasyfork.org/scripts/518214/%D0%94%D0%BB%D1%8F%20%D0%A1%D1%82%D0%B0%D1%81%D0%B0%20%D0%90%D0%BD%D0%B0%D0%BD%D0%B0%D1%81%D0%B0%20%7C%20KEMEROVO%20%7C%20AGoodman%20%D0%96%D0%91.user.js",
+    "code_size": 119942,
+    "license": "MIT License",
+    "version": "0.0.52",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 501867,
+    "daily_installs": 0,
+    "total_installs": 34,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-26T18:26:49.000Z",
+    "code_updated_at": "2024-07-26T18:27:34.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": "https://vk.com/vinni_shock",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291481,
+        "name": "Chip Chip",
+        "created_at": "2024-04-21T22:28:25.000Z",
+        "url": "https://greasyfork.org/users/1291481-chip-chip"
+      }
+    ],
+    "name": "FC | KEMEROVO | A.Goodman",
+    "description": "Suggestions for improving the script write here > не",
+    "url": "https://greasyfork.org/scripts/501867-fc-kemerovo-a-goodman",
+    "code_url": "https://update.greasyfork.org/scripts/501867/FC%20%7C%20KEMEROVO%20%7C%20AGoodman.user.js",
+    "code_size": 16704,
+    "license": "MIT License",
+    "version": "0.0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

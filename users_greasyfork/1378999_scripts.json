@@ -1,0 +1,35 @@
+[
+  {
+    "id": 512108,
+    "daily_installs": 0,
+    "total_installs": 141,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-10-10T12:17:15.000Z",
+    "code_updated_at": "2024-10-14T00:43:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1378999,
+        "name": "zzakhar",
+        "created_at": "2024-10-10T09:51:19.000Z",
+        "url": "https://greasyfork.org/users/1378999-zzakhar"
+      }
+    ],
+    "name": "Yandex CleanSearch",
+    "description": "Блокировка страниц по домену и заголовкам, рекламы и прочего дерьма в яндекс.",
+    "url": "https://greasyfork.org/scripts/512108-yandex-cleansearch",
+    "code_url": "https://update.greasyfork.org/scripts/512108/Yandex%20CleanSearch.user.js",
+    "code_size": 25875,
+    "license": "CC BY-NC-ND",
+    "version": "3.3.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

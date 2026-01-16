@@ -1,0 +1,33 @@
+{
+  "id": 525404,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-31T10:56:07.000Z",
+  "code_updated_at": "2025-01-31T10:56:07.000Z",
+  "namespace": "https://t.livepocket.jp/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 192794,
+      "name": "4y4m3",
+      "created_at": "2018-06-23T14:18:43.000Z",
+      "url": "https://greasyfork.org/users/192794-4y4m3"
+    }
+  ],
+  "name": "Livepocket add info",
+  "description": "Show event_ticket_groups",
+  "url": "https://greasyfork.org/scripts/525404-livepocket-add-info",
+  "code_url": "https://update.greasyfork.org/scripts/525404/Livepocket%20add%20info.user.js",
+  "code_size": 1153,
+  "license": "MIT License",
+  "version": "0.1",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

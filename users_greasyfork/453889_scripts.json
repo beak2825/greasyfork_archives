@@ -1,0 +1,68 @@
+[
+  {
+    "id": 513918,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T22:00:20.000Z",
+    "code_updated_at": "2024-10-24T22:00:20.000Z",
+    "namespace": "http://fybgame.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453889,
+        "name": "dlpufan",
+        "created_at": "2020-03-04T10:54:43.000Z",
+        "url": "https://greasyfork.org/users/453889-dlpufan"
+      }
+    ],
+    "name": "掌心纵横四海-任务通用",
+    "description": "现在还不能做商店买东西的任务，同时有时候打怪如果怪物在后面位置可能会重复打前面的怪",
+    "url": "https://greasyfork.org/scripts/513918-%E6%8E%8C%E5%BF%83%E7%BA%B5%E6%A8%AA%E5%9B%9B%E6%B5%B7-%E4%BB%BB%E5%8A%A1%E9%80%9A%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/513918/%E6%8E%8C%E5%BF%83%E7%BA%B5%E6%A8%AA%E5%9B%9B%E6%B5%B7-%E4%BB%BB%E5%8A%A1%E9%80%9A%E7%94%A8.user.js",
+    "code_size": 5749,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 513907,
+    "daily_installs": 0,
+    "total_installs": 16,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-24T20:22:52.000Z",
+    "code_updated_at": "2024-10-29T05:13:21.000Z",
+    "namespace": "http://fybgame.top/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 453889,
+        "name": "dlpufan",
+        "created_at": "2020-03-04T10:54:43.000Z",
+        "url": "https://greasyfork.org/users/453889-dlpufan"
+      }
+    ],
+    "name": "掌心纵横四海-副本通用",
+    "description": "进副本后再开这个脚本",
+    "url": "https://greasyfork.org/scripts/513907-%E6%8E%8C%E5%BF%83%E7%BA%B5%E6%A8%AA%E5%9B%9B%E6%B5%B7-%E5%89%AF%E6%9C%AC%E9%80%9A%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/513907/%E6%8E%8C%E5%BF%83%E7%BA%B5%E6%A8%AA%E5%9B%9B%E6%B5%B7-%E5%89%AF%E6%9C%AC%E9%80%9A%E7%94%A8.user.js",
+    "code_size": 10702,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

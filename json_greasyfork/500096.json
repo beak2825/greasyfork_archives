@@ -1,0 +1,59 @@
+{
+  "id": 500096,
+  "daily_installs": 0,
+  "total_installs": 8,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-09T11:12:26.000Z",
+  "code_updated_at": "2024-07-09T11:12:26.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1330702,
+      "name": "portlet-z",
+      "created_at": "2024-07-09T11:10:59.000Z",
+      "url": "https://greasyfork.org/users/1330702-portlet-z",
+      "scripts": [
+        {
+          "id": 500096,
+          "daily_installs": 0,
+          "total_installs": 8,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-07-09T11:12:26.000Z",
+          "code_updated_at": "2024-07-09T11:12:26.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "bing搜索去除CSDN",
+          "description": "bing搜索结果去除CSDN",
+          "url": "https://greasyfork.org/scripts/500096-bing%E6%90%9C%E7%B4%A2%E5%8E%BB%E9%99%A4csdn",
+          "code_url": "https://update.greasyfork.org/scripts/500096/bing%E6%90%9C%E7%B4%A2%E5%8E%BB%E9%99%A4CSDN.user.js",
+          "code_size": 852,
+          "license": "MIT License",
+          "version": "2024-07-09",
+          "locale": "zh-TW",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "bing搜索去除CSDN",
+  "description": "bing搜索结果去除CSDN",
+  "url": "https://greasyfork.org/scripts/500096-bing%E6%90%9C%E7%B4%A2%E5%8E%BB%E9%99%A4csdn",
+  "code_url": "https://update.greasyfork.org/scripts/500096/bing%E6%90%9C%E7%B4%A2%E5%8E%BB%E9%99%A4CSDN.user.js",
+  "code_size": 852,
+  "license": "MIT License",
+  "version": "2024-07-09",
+  "locale": "zh-TW",
+  "deleted": false,
+  "visibility": "public"
+}

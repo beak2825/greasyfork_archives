@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549975,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-18T15:37:03.000Z",
+    "code_updated_at": "2025-09-18T15:37:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516653,
+        "name": "NathanDrake2406",
+        "created_at": "2025-09-18T15:35:12.000Z",
+        "url": "https://greasyfork.org/users/1516653-nathandrake2406"
+      }
+    ],
+    "name": "RT Critics Averages",
+    "description": "Shows actual critic scores instead of just percentages",
+    "url": "https://greasyfork.org/scripts/549975-rt-critics-averages",
+    "code_url": "https://update.greasyfork.org/scripts/549975/RT%20Critics%20Averages.user.js",
+    "code_size": 2619,
+    "license": "MIT License",
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

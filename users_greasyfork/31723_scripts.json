@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541743,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-05T16:57:34.000Z",
+    "code_updated_at": "2025-07-05T16:57:34.000Z",
+    "namespace": "https://copilot.microsoft.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 31723,
+        "name": "ChrisHvide",
+        "created_at": "2016-02-25T19:49:11.000Z",
+        "url": "https://greasyfork.org/users/31723-chrishvide"
+      }
+    ],
+    "name": "Copilot Text-to-Speech",
+    "description": "Adds text-to-speech functionality to Copilot / Bing chat for all web browsers.",
+    "url": "https://greasyfork.org/scripts/541743-copilot-text-to-speech",
+    "code_url": "https://update.greasyfork.org/scripts/541743/Copilot%20Text-to-Speech.user.js",
+    "code_size": 3069,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

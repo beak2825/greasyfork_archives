@@ -1,0 +1,59 @@
+{
+  "id": 541927,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-07T15:04:14.000Z",
+  "code_updated_at": "2025-07-08T03:23:18.000Z",
+  "namespace": "https://github.com/dccif",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1492553,
+      "name": "Treyhr",
+      "created_at": "2025-07-07T14:52:38.000Z",
+      "url": "https://greasyfork.org/users/1492553-treyhr",
+      "scripts": [
+        {
+          "id": 541927,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-07T15:04:14.000Z",
+          "code_updated_at": "2025-07-08T03:23:18.000Z",
+          "namespace": "https://github.com/dccif",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TouchGal VNDB链接转换器",
+          "description": "自动将TouchGal网站上的VNDB ID转换为可点击的链接",
+          "url": "https://greasyfork.org/scripts/541927-touchgal-vndb%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/541927/TouchGal%20VNDB%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2%E5%99%A8.user.js",
+          "code_size": 4305,
+          "license": "MIT License",
+          "version": "1.0.6",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TouchGal VNDB链接转换器",
+  "description": "自动将TouchGal网站上的VNDB ID转换为可点击的链接",
+  "url": "https://greasyfork.org/scripts/541927-touchgal-vndb%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/541927/TouchGal%20VNDB%E9%93%BE%E6%8E%A5%E8%BD%AC%E6%8D%A2%E5%99%A8.user.js",
+  "code_size": 4305,
+  "license": "MIT License",
+  "version": "1.0.6",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

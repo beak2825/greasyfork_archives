@@ -1,0 +1,59 @@
+{
+  "id": 516119,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-06T22:19:33.000Z",
+  "code_updated_at": "2024-11-06T22:23:02.000Z",
+  "namespace": "NDYC",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1392218,
+      "name": "NoahC500",
+      "created_at": "2024-11-06T22:01:12.000Z",
+      "url": "https://greasyfork.org/users/1392218-noahc500",
+      "scripts": [
+        {
+          "id": 516119,
+          "daily_installs": 0,
+          "total_installs": 1,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-06T22:19:33.000Z",
+          "code_updated_at": "2024-11-06T22:23:02.000Z",
+          "namespace": "NDYC",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "EE:DB 500 Error Redirect",
+          "description": "Works around a bug in HabboUK's EE:DB code to redirect to the log in page if signed out.",
+          "url": "https://greasyfork.org/scripts/516119-ee-db-500-error-redirect",
+          "code_url": "https://update.greasyfork.org/scripts/516119/EE%3ADB%20500%20Error%20Redirect.user.js",
+          "code_size": 683,
+          "license": "GNU General Public License v3.0 only",
+          "version": "1.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "EE:DB 500 Error Redirect",
+  "description": "Works around a bug in HabboUK's EE:DB code to redirect to the log in page if signed out.",
+  "url": "https://greasyfork.org/scripts/516119-ee-db-500-error-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/516119/EE%3ADB%20500%20Error%20Redirect.user.js",
+  "code_size": 683,
+  "license": "GNU General Public License v3.0 only",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

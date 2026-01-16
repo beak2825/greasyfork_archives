@@ -1,0 +1,34 @@
+{
+  "id": 500550,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-13T16:34:31.000Z",
+  "code_updated_at": "2024-07-13T16:34:31.000Z",
+  "namespace": "https://openuserjs.org/users/Kingston007",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1331999,
+      "name": "Kornus Fame",
+      "created_at": "2024-07-11T23:42:03.000Z",
+      "url": "https://greasyfork.org/users/1331999-kornus-fame",
+      "scripts": []
+    }
+  ],
+  "name": "KOSTROMA | ГС ГОСС by L.Kiar",
+  "description": "my skills",
+  "url": "https://greasyfork.org/scripts/500550-kostroma-%D0%B3%D1%81-%D0%B3%D0%BE%D1%81%D1%81-by-l-kiar",
+  "code_url": "https://update.greasyfork.org/scripts/500550/KOSTROMA%20%7C%20%D0%93%D0%A1%20%D0%93%D0%9E%D0%A1%D0%A1%20by%20LKiar.user.js",
+  "code_size": 27436,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

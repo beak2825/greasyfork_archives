@@ -1,0 +1,33 @@
+{
+  "id": 522427,
+  "daily_installs": 0,
+  "total_installs": 49,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-31T17:52:23.000Z",
+  "code_updated_at": "2024-12-31T17:52:23.000Z",
+  "namespace": "https://sinisterpixel.tv",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1417989,
+      "name": "Sinister Pixel",
+      "created_at": "2024-12-31T15:45:11.000Z",
+      "url": "https://greasyfork.org/users/1417989-sinister-pixel"
+    }
+  ],
+  "name": "Google Search: Remove AI Results",
+  "description": "Appends Google Search queries with a string of phrases designed to exclude webpages that use AI, without you manually having to append arguments. If you want to stop these arguments getting added, add an underscore as the last character of your search query.",
+  "url": "https://greasyfork.org/scripts/522427-google-search-remove-ai-results",
+  "code_url": "https://update.greasyfork.org/scripts/522427/Google%20Search%3A%20Remove%20AI%20Results.user.js",
+  "code_size": 1752,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

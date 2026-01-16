@@ -1,0 +1,59 @@
+{
+  "id": 503534,
+  "daily_installs": 0,
+  "total_installs": 27,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-13T12:42:25.000Z",
+  "code_updated_at": "2025-01-25T05:31:36.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1341451,
+      "name": "threeqc",
+      "created_at": "2024-07-28T13:36:01.000Z",
+      "url": "https://greasyfork.org/users/1341451-threeqc",
+      "scripts": [
+        {
+          "id": 503534,
+          "daily_installs": 0,
+          "total_installs": 27,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-08-13T12:42:25.000Z",
+          "code_updated_at": "2025-01-25T05:31:36.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "AO3 Length Comparator",
+          "description": "Categorize works by length as though they were published books. Additionally, compare long works to original texts of similar length.",
+          "url": "https://greasyfork.org/scripts/503534-ao3-length-comparator",
+          "code_url": "https://update.greasyfork.org/scripts/503534/AO3%20Length%20Comparator.user.js",
+          "code_size": 14562,
+          "license": "GNU GPLv3",
+          "version": "2024-1-25",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "AO3 Length Comparator",
+  "description": "Categorize works by length as though they were published books. Additionally, compare long works to original texts of similar length.",
+  "url": "https://greasyfork.org/scripts/503534-ao3-length-comparator",
+  "code_url": "https://update.greasyfork.org/scripts/503534/AO3%20Length%20Comparator.user.js",
+  "code_size": 14562,
+  "license": "GNU GPLv3",
+  "version": "2024-1-25",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

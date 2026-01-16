@@ -1,0 +1,34 @@
+{
+  "id": 499764,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-05T12:38:37.000Z",
+  "code_updated_at": "2024-07-05T17:21:34.000Z",
+  "namespace": "wprs-predictions",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1328700,
+      "name": "kubasto",
+      "created_at": "2024-07-05T12:26:47.000Z",
+      "url": "https://greasyfork.org/users/1328700-kubasto",
+      "scripts": []
+    }
+  ],
+  "name": "WPRS predictions for you",
+  "description": "Adds data from WPRS-forecast.org and calculates probable points for you.",
+  "url": "https://greasyfork.org/scripts/499764-wprs-predictions-for-you",
+  "code_url": "https://update.greasyfork.org/scripts/499764/WPRS%20predictions%20for%20you.user.js",
+  "code_size": 14057,
+  "license": "MIT License",
+  "version": "0.1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

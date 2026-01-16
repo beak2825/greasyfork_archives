@@ -1,0 +1,68 @@
+[
+  {
+    "id": 541629,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T14:36:42.000Z",
+    "code_updated_at": "2025-07-04T14:37:31.000Z",
+    "namespace": "https://nodeseek.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1333817,
+        "name": "fengyuanluo",
+        "created_at": "2024-07-15T13:44:17.000Z",
+        "url": "https://greasyfork.org/users/1333817-fengyuanluo"
+      }
+    ],
+    "name": "NodeSeek抽奖提醒助手",
+    "description": "在NodeSeek论坛方便地管理抽奖活动并获取开奖提醒",
+    "url": "https://greasyfork.org/scripts/541629-nodeseek%E6%8A%BD%E5%A5%96%E6%8F%90%E9%86%92%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/541629/NodeSeek%E6%8A%BD%E5%A5%96%E6%8F%90%E9%86%92%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 44366,
+    "license": "GPLV3",
+    "version": "0.6",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 500722,
+    "daily_installs": 0,
+    "total_installs": 26,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-07-15T13:58:41.000Z",
+    "code_updated_at": "2024-07-15T13:58:41.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1333817,
+        "name": "fengyuanluo",
+        "created_at": "2024-07-15T13:44:17.000Z",
+        "url": "https://greasyfork.org/users/1333817-fengyuanluo"
+      }
+    ],
+    "name": "Miniflux订阅源管理",
+    "description": "为每个订阅源添加勾选框，并在页面上方生成“删除”“全部标为已读”“编辑”“全选”“一键勾选错误订阅源”五个点击栏。删除时自动点击确认按钮，并美化按钮样式。同时删除指定的元素，并在订阅页面自动展开高级选项并勾选“Fetch Full Content”。",
+    "url": "https://greasyfork.org/scripts/500722-miniflux%E8%AE%A2%E9%98%85%E6%BA%90%E7%AE%A1%E7%90%86",
+    "code_url": "https://update.greasyfork.org/scripts/500722/Miniflux%E8%AE%A2%E9%98%85%E6%BA%90%E7%AE%A1%E7%90%86.user.js",
+    "code_size": 6530,
+    "license": "MIT License",
+    "version": "0.8",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

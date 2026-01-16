@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 544699,
+    "daily_installs": 0,
+    "total_installs": 27,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-05T08:31:21.000Z",
+    "code_updated_at": "2026-01-14T04:04:46.000Z",
+    "namespace": "https://github.com/p65536",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1476418,
+        "name": "p65536",
+        "created_at": "2025-05-29T15:00:40.000Z",
+        "url": "https://greasyfork.org/users/1476418-p65536"
+      }
+    ],
+    "name": "Quick-Text-Buttons",
+    "description": "Adds customizable buttons to paste predefined text into the input field on ChatGPT/Gemini.",
+    "url": "https://greasyfork.org/scripts/544699-quick-text-buttons",
+    "code_url": "https://update.greasyfork.org/scripts/544699/Quick-Text-Buttons.user.js",
+    "code_size": 324456,
+    "license": "MIT License",
+    "version": "3.0.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498565,
+    "daily_installs": 0,
+    "total_installs": 1045,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-22T03:29:50.000Z",
+    "code_updated_at": "2024-06-22T03:29:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1321882,
+        "name": "zqhq",
+        "created_at": "2024-06-22T02:11:34.000Z",
+        "url": "https://greasyfork.org/users/1321882-zqhq"
+      }
+    ],
+    "name": "2024广东省教师继续教育信息管理平台公需课",
+    "description": "蹩脚的代码小子写的，不太认识前端语言，拼拼凑凑脚本小子，能跑起来的代码就是好代码",
+    "url": "https://greasyfork.org/scripts/498565-2024%E5%B9%BF%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%85%AC%E9%9C%80%E8%AF%BE",
+    "code_url": "https://update.greasyfork.org/scripts/498565/2024%E5%B9%BF%E4%B8%9C%E7%9C%81%E6%95%99%E5%B8%88%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E4%BF%A1%E6%81%AF%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E5%85%AC%E9%9C%80%E8%AF%BE.user.js",
+    "code_size": 2961,
+    "license": "ZQH",
+    "version": "2024-06-21",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

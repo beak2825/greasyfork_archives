@@ -1,0 +1,68 @@
+[
+  {
+    "id": 533914,
+    "daily_installs": 0,
+    "total_installs": 19,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-25T09:15:56.000Z",
+    "code_updated_at": "2025-04-25T09:59:00.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1456470,
+        "name": "owl Xeon",
+        "created_at": "2025-04-11T06:09:56.000Z",
+        "url": "https://greasyfork.org/users/1456470-owl-xeon"
+      }
+    ],
+    "name": "Yandex双列显示（修复版）",
+    "description": "将Yandex搜索结果改为双列显示布局（修复版）",
+    "url": "https://greasyfork.org/scripts/533914-yandex%E5%8F%8C%E5%88%97%E6%98%BE%E7%A4%BA-%E4%BF%AE%E5%A4%8D%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/533914/Yandex%E5%8F%8C%E5%88%97%E6%98%BE%E7%A4%BA%EF%BC%88%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%89.user.js",
+    "code_size": 4735,
+    "license": null,
+    "version": "0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532493,
+    "daily_installs": 0,
+    "total_installs": 102,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-11T06:12:43.000Z",
+    "code_updated_at": "2025-04-11T06:12:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1456470,
+        "name": "owl Xeon",
+        "created_at": "2025-04-11T06:09:56.000Z",
+        "url": "https://greasyfork.org/users/1456470-owl-xeon"
+      }
+    ],
+    "name": "Inject Ruffle (Flash Player)",
+    "description": "自动注入 Ruffle 脚本到网页中，让 Flash 内容可以运行",
+    "url": "https://greasyfork.org/scripts/532493-inject-ruffle-flash-player",
+    "code_url": "https://update.greasyfork.org/scripts/532493/Inject%20Ruffle%20%28Flash%20Player%29.user.js",
+    "code_size": 599,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

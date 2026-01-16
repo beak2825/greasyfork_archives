@@ -1,0 +1,35 @@
+[
+  {
+    "id": 521169,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-19T02:38:57.000Z",
+    "code_updated_at": "2024-12-19T11:02:22.000Z",
+    "namespace": "学习公社/中国教育干部网络学院 1.0",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1412801,
+        "name": "shamelo",
+        "created_at": "2024-12-19T02:36:43.000Z",
+        "url": "https://greasyfork.org/users/1412801-shamelo"
+      }
+    ],
+    "name": "学习公社/中国教育干部网络学院（shamelo自用）",
+    "description": "学习公社自动看视频、自动刷新，经过测试非常好用 中国教育干部网络学院 国家教育行政学院 网络党校",
+    "url": "https://greasyfork.org/scripts/521169-%E5%AD%A6%E4%B9%A0%E5%85%AC%E7%A4%BE-%E4%B8%AD%E5%9B%BD%E6%95%99%E8%82%B2%E5%B9%B2%E9%83%A8%E7%BD%91%E7%BB%9C%E5%AD%A6%E9%99%A2-shamelo%E8%87%AA%E7%94%A8",
+    "code_url": "https://update.greasyfork.org/scripts/521169/%E5%AD%A6%E4%B9%A0%E5%85%AC%E7%A4%BE%E4%B8%AD%E5%9B%BD%E6%95%99%E8%82%B2%E5%B9%B2%E9%83%A8%E7%BD%91%E7%BB%9C%E5%AD%A6%E9%99%A2%EF%BC%88shamelo%E8%87%AA%E7%94%A8%EF%BC%89.user.js",
+    "code_size": 4617,
+    "license": "MIT License",
+    "version": "0.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

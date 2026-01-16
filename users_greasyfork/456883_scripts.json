@@ -1,0 +1,35 @@
+[
+  {
+    "id": 514351,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-27T16:10:18.000Z",
+    "code_updated_at": "2024-12-05T16:05:27.000Z",
+    "namespace": "https://github.com/AreCie",
+    "support_url": "https://github.com/AreCie/B-Global-SubtitleDown/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 456883,
+        "name": "AreCie",
+        "created_at": "2020-03-10T08:18:20.000Z",
+        "url": "https://greasyfork.org/users/456883-arecie"
+      }
+    ],
+    "name": "哔哩哔哩国际版(B-Global)字幕下载",
+    "description": "下载bilibili国际版字幕；注意：切勿频繁请求，可能会造成风控！",
+    "url": "https://greasyfork.org/scripts/514351-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%9B%BD%E9%99%85%E7%89%88-b-global-%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/514351/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%9B%BD%E9%99%85%E7%89%88%28B-Global%29%E5%AD%97%E5%B9%95%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 18076,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

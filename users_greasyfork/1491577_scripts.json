@@ -1,0 +1,35 @@
+[
+  {
+    "id": 541616,
+    "daily_installs": 0,
+    "total_installs": 24,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-04T12:07:21.000Z",
+    "code_updated_at": "2025-07-04T12:35:00.000Z",
+    "namespace": "0u0.one",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1491577,
+        "name": "lyy2182",
+        "created_at": "2025-07-04T11:32:48.000Z",
+        "url": "https://greasyfork.org/users/1491577-lyy2182"
+      }
+    ],
+    "name": "TunnelBroker 更多地区",
+    "description": "awa!",
+    "url": "https://greasyfork.org/scripts/541616-tunnelbroker-%E6%9B%B4%E5%A4%9A%E5%9C%B0%E5%8C%BA",
+    "code_url": "https://update.greasyfork.org/scripts/541616/TunnelBroker%20%E6%9B%B4%E5%A4%9A%E5%9C%B0%E5%8C%BA.user.js",
+    "code_size": 868,
+    "license": "3BSD",
+    "version": "v0.3.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "id": 527264,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-17T22:07:00.000Z",
+  "code_updated_at": "2025-02-17T22:17:07.000Z",
+  "namespace": "https://example.com",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1436231,
+      "name": "bVector",
+      "created_at": "2025-02-17T21:59:47.000Z",
+      "url": "https://greasyfork.org/users/1436231-bvector",
+      "scripts": []
+    }
+  ],
+  "name": "Amazon Search - Show Item Weight in JSON Popout",
+  "description": "Fetch item weight from Amazon product pages and display it in JSON on a new page when a button is clicked.",
+  "url": "https://greasyfork.org/scripts/527264-amazon-search-show-item-weight-in-json-popout",
+  "code_url": "https://update.greasyfork.org/scripts/527264/Amazon%20Search%20-%20Show%20Item%20Weight%20in%20JSON%20Popout.user.js",
+  "code_size": 7680,
+  "license": "MIT License",
+  "version": "1.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

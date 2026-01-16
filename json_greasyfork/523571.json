@@ -1,0 +1,59 @@
+{
+  "id": 523571,
+  "daily_installs": 0,
+  "total_installs": 65,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-12T18:23:00.000Z",
+  "code_updated_at": "2026-01-03T21:59:57.000Z",
+  "namespace": "MrSelenix",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1421056,
+      "name": "MrSelenix",
+      "created_at": "2025-01-08T21:54:47.000Z",
+      "url": "https://greasyfork.org/users/1421056-mrselenix",
+      "scripts": [
+        {
+          "id": 523571,
+          "daily_installs": 0,
+          "total_installs": 65,
+          "fan_score": "20.7",
+          "good_ratings": 1,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-01-12T18:23:00.000Z",
+          "code_updated_at": "2026-01-03T21:59:57.000Z",
+          "namespace": "MrSelenix",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "TwitchTranslate",
+          "description": "Automatically translates messages in Twitch chat to other languages.",
+          "url": "https://greasyfork.org/scripts/523571-twitchtranslate",
+          "code_url": "https://update.greasyfork.org/scripts/523571/TwitchTranslate.user.js",
+          "code_size": 51010,
+          "license": "MIT License",
+          "version": "1.0.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "TwitchTranslate",
+  "description": "Automatically translates messages in Twitch chat to other languages.",
+  "url": "https://greasyfork.org/scripts/523571-twitchtranslate",
+  "code_url": "https://update.greasyfork.org/scripts/523571/TwitchTranslate.user.js",
+  "code_size": 51010,
+  "license": "MIT License",
+  "version": "1.0.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

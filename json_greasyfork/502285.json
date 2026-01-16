@@ -1,0 +1,34 @@
+{
+  "id": 502285,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-07-31T18:03:31.000Z",
+  "code_updated_at": "2024-07-31T18:08:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1343187,
+      "name": "76552004",
+      "created_at": "2024-07-31T13:58:38.000Z",
+      "url": "https://greasyfork.org/users/1343187-76552004",
+      "scripts": []
+    }
+  ],
+  "name": "【自己更改的小助手】",
+  "description": "❌倍速播放✅视频助手✅屏蔽或者跳过课堂签到、提醒、疲劳✅考试助手（试错算法仅面向可多次提交的考试）✅双模选择：单刷视频or视频+考试🚑如果你想对脚本表示肯定或意见，可以通过赞赏码备注；如果要与我反复交流，则需移步到下载本脚本的页面，在“反馈”区留下意见或直接私信我。",
+  "url": "https://greasyfork.org/scripts/502285-%E8%87%AA%E5%B7%B1%E6%9B%B4%E6%94%B9%E7%9A%84%E5%B0%8F%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/502285/%E3%80%90%E8%87%AA%E5%B7%B1%E6%9B%B4%E6%94%B9%E7%9A%84%E5%B0%8F%E5%8A%A9%E6%89%8B%E3%80%91.user.js",
+  "code_size": 109328,
+  "license": "AGPL License",
+  "version": "1.2.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

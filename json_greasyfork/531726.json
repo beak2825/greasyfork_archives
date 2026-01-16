@@ -1,0 +1,59 @@
+{
+  "id": 531726,
+  "daily_installs": 0,
+  "total_installs": 10,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-03T15:18:04.000Z",
+  "code_updated_at": "2025-04-03T15:25:12.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1291502,
+      "name": "RT X",
+      "created_at": "2024-04-22T00:33:03.000Z",
+      "url": "https://greasyfork.org/users/1291502-rt-x",
+      "scripts": [
+        {
+          "id": 531726,
+          "daily_installs": 0,
+          "total_installs": 10,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-03T15:18:04.000Z",
+          "code_updated_at": "2025-04-03T15:25:12.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "CSDN去登录弹窗（仅此，没有其他更改）",
+          "description": "CSDN去登录弹窗（仅此，没有其他更改）。",
+          "url": "https://greasyfork.org/scripts/531726-csdn%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97-%E4%BB%85%E6%AD%A4-%E6%B2%A1%E6%9C%89%E5%85%B6%E4%BB%96%E6%9B%B4%E6%94%B9",
+          "code_url": "https://update.greasyfork.org/scripts/531726/CSDN%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97%EF%BC%88%E4%BB%85%E6%AD%A4%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%85%B6%E4%BB%96%E6%9B%B4%E6%94%B9%EF%BC%89.user.js",
+          "code_size": 1570,
+          "license": "MIT License",
+          "version": "1.1",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "CSDN去登录弹窗（仅此，没有其他更改）",
+  "description": "CSDN去登录弹窗（仅此，没有其他更改）。",
+  "url": "https://greasyfork.org/scripts/531726-csdn%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97-%E4%BB%85%E6%AD%A4-%E6%B2%A1%E6%9C%89%E5%85%B6%E4%BB%96%E6%9B%B4%E6%94%B9",
+  "code_url": "https://update.greasyfork.org/scripts/531726/CSDN%E5%8E%BB%E7%99%BB%E5%BD%95%E5%BC%B9%E7%AA%97%EF%BC%88%E4%BB%85%E6%AD%A4%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%85%B6%E4%BB%96%E6%9B%B4%E6%94%B9%EF%BC%89.user.js",
+  "code_size": 1570,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

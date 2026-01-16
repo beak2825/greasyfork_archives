@@ -1,0 +1,33 @@
+{
+  "id": 524388,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-21T10:43:27.000Z",
+  "code_updated_at": "2025-01-21T10:43:27.000Z",
+  "namespace": "http://greasyfork.org/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1424994,
+      "name": "Taeyang Lasher",
+      "created_at": "2025-01-19T10:49:11.000Z",
+      "url": "https://greasyfork.org/users/1424994-taeyang-lasher"
+    }
+  ],
+  "name": "OceanHero Requester",
+  "description": "Send repeated requests to OceanHero in a controlled way.",
+  "url": "https://greasyfork.org/scripts/524388-oceanhero-requester",
+  "code_url": "https://update.greasyfork.org/scripts/524388/OceanHero%20Requester.user.js",
+  "code_size": 1807,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

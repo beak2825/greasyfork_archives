@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498022,
+    "daily_installs": 0,
+    "total_installs": 111,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-15T17:49:57.000Z",
+    "code_updated_at": "2024-06-27T20:55:13.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1318645,
+        "name": "5TFG4",
+        "created_at": "2024-06-15T17:37:36.000Z",
+        "url": "https://greasyfork.org/users/1318645-5tfg4"
+      }
+    ],
+    "name": "uCertify Hero",
+    "description": "Automates answering questions on uCertify using online searches and ChatGPT 4",
+    "url": "https://greasyfork.org/scripts/498022-ucertify-hero",
+    "code_url": "https://update.greasyfork.org/scripts/498022/uCertify%20Hero.user.js",
+    "code_size": 18549,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

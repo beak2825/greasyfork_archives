@@ -1,0 +1,35 @@
+[
+  {
+    "id": 508629,
+    "daily_installs": 1,
+    "total_installs": 1859,
+    "fan_score": "9.5",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2024-09-16T03:24:31.000Z",
+    "code_updated_at": "2024-11-13T02:34:16.000Z",
+    "namespace": "https://github.com/Brembo19",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1345290,
+        "name": "Brembo19",
+        "created_at": "2024-08-04T15:10:53.000Z",
+        "url": "https://greasyfork.org/users/1345290-brembo19"
+      }
+    ],
+    "name": "Twitch Turbo + Updated",
+    "description": "Block all Twitch ads, auto-claim bonus points, auto-join raids, add clip download link, and promote Discord server",
+    "url": "https://greasyfork.org/scripts/508629-twitch-turbo-updated",
+    "code_url": "https://update.greasyfork.org/scripts/508629/Twitch%20Turbo%20%2B%20Updated.user.js",
+    "code_size": 3772,
+    "license": null,
+    "version": "1.6.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

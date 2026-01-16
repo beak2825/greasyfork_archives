@@ -1,0 +1,33 @@
+{
+  "id": 543363,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-22T20:42:15.000Z",
+  "code_updated_at": "2025-07-22T20:42:14.000Z",
+  "namespace": "https://greasyfork.org/users/1497419",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1497419,
+      "name": "lynoure",
+      "created_at": "2025-07-22T20:30:06.000Z",
+      "url": "https://greasyfork.org/users/1497419-lynoure"
+    }
+  ],
+  "name": "Startpage.com search term to page title",
+  "description": "Adds the Startpage.com search term to page title for making it easier to tell tabs apart",
+  "url": "https://greasyfork.org/scripts/543363-startpage-com-search-term-to-page-title",
+  "code_url": "https://update.greasyfork.org/scripts/543363/Startpagecom%20search%20term%20to%20page%20title.user.js",
+  "code_size": 1525,
+  "license": "     GPL v3+",
+  "version": "     1.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

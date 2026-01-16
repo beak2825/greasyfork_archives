@@ -1,0 +1,35 @@
+[
+  {
+    "id": 544293,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-01T12:16:04.000Z",
+    "code_updated_at": "2025-08-01T12:16:04.000Z",
+    "namespace": "http://www.comicat.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 598584,
+        "name": "msojocs",
+        "created_at": "2020-06-17T09:36:03.000Z",
+        "url": "https://greasyfork.org/users/598584-msojocs"
+      }
+    ],
+    "name": "Fix Comicat Data",
+    "description": "Fix download url of comicat!",
+    "url": "https://greasyfork.org/scripts/544293-fix-comicat-data",
+    "code_url": "https://update.greasyfork.org/scripts/544293/Fix%20Comicat%20Data.user.js",
+    "code_size": 1020,
+    "license": "MIT License",
+    "version": "2025-08-01",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

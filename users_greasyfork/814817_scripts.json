@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507673,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-09T17:56:59.000Z",
+    "code_updated_at": "2024-09-09T17:56:59.000Z",
+    "namespace": "https://github.com/kevin823lin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 814817,
+        "name": "kevin823lin",
+        "created_at": "2021-09-12T21:41:35.000Z",
+        "url": "https://greasyfork.org/users/814817-kevin823lin"
+      }
+    ],
+    "name": "Apple 直播字幕簡轉繁（使用OpenCC）",
+    "description": "使用 OpenCC 將 Apple 官網直播簡體字幕翻譯成繁體",
+    "url": "https://greasyfork.org/scripts/507673-apple-%E7%9B%B4%E6%92%AD%E5%AD%97%E5%B9%95%E7%B0%A1%E8%BD%89%E7%B9%81-%E4%BD%BF%E7%94%A8opencc",
+    "code_url": "https://update.greasyfork.org/scripts/507673/Apple%20%E7%9B%B4%E6%92%AD%E5%AD%97%E5%B9%95%E7%B0%A1%E8%BD%89%E7%B9%81%EF%BC%88%E4%BD%BF%E7%94%A8OpenCC%EF%BC%89.user.js",
+    "code_size": 2002,
+    "license": null,
+    "version": "2024-09-09",
+    "locale": "zh-TW",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

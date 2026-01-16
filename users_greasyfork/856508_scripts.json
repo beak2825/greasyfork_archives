@@ -1,0 +1,101 @@
+[
+  {
+    "id": 528013,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-25T08:29:32.000Z",
+    "code_updated_at": "2025-02-25T08:38:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 856508,
+        "name": "waahah",
+        "created_at": "2021-12-22T12:24:34.000Z",
+        "url": "https://greasyfork.org/users/856508-waahah"
+      }
+    ],
+    "name": "研招网移动端成绩单修改",
+    "description": "研招网成绩单修改",
+    "url": "https://greasyfork.org/scripts/528013-%E7%A0%94%E6%8B%9B%E7%BD%91%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%88%90%E7%BB%A9%E5%8D%95%E4%BF%AE%E6%94%B9",
+    "code_url": "https://update.greasyfork.org/scripts/528013/%E7%A0%94%E6%8B%9B%E7%BD%91%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%88%90%E7%BB%A9%E5%8D%95%E4%BF%AE%E6%94%B9.user.js",
+    "code_size": 1142,
+    "license": null,
+    "version": "1.1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 520259,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-09T18:35:51.000Z",
+    "code_updated_at": "2024-12-09T18:35:51.000Z",
+    "namespace": "https://greasyfork.org/zh-CN/users/856508",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 856508,
+        "name": "waahah",
+        "created_at": "2021-12-22T12:24:34.000Z",
+        "url": "https://greasyfork.org/users/856508-waahah"
+      }
+    ],
+    "name": "Example of how to use Tampermonkey API",
+    "description": "This is a test script for the usage of Tampermonkey API functions, please open the website \"https://www.example.com\" to test it",
+    "url": "https://greasyfork.org/scripts/520259-example-of-how-to-use-tampermonkey-api",
+    "code_url": "https://update.greasyfork.org/scripts/520259/Example%20of%20how%20to%20use%20Tampermonkey%20API.user.js",
+    "code_size": 11919,
+    "license": "GNU General Public License v3.0 or later",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 513511,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-10-22T11:02:30.000Z",
+    "code_updated_at": "2024-10-22T13:41:46.000Z",
+    "namespace": "https://waahah.xyz/about",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 856508,
+        "name": "waahah",
+        "created_at": "2021-12-22T12:24:34.000Z",
+        "url": "https://greasyfork.org/users/856508-waahah"
+      }
+    ],
+    "name": "CRX Downloader",
+    "description": "Allows you to download \".crx\" files directly from Chrome Web Store and Microsoft Edge Addons websites.",
+    "url": "https://greasyfork.org/scripts/513511-crx-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/513511/CRX%20Downloader.user.js",
+    "code_size": 3660,
+    "license": "GNU Affero General Public License v3.0 or later",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

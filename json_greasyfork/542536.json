@@ -1,0 +1,34 @@
+{
+  "id": 542536,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-07-14T09:05:30.000Z",
+  "code_updated_at": "2025-07-14T09:21:32.000Z",
+  "namespace": "https://greasyfork.org/users/1405902",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1405902,
+      "name": "Shawson",
+      "created_at": "2024-12-03T12:04:00.000Z",
+      "url": "https://greasyfork.org/users/1405902-shawson",
+      "scripts": []
+    }
+  ],
+  "name": "TMDB-API信息获取",
+  "description": "在TMDB页面插入按钮，通过API获取信息并复制结果内容到剪贴板（搭配https://github.com/Pixel-LH/TMDBGen项目食用）",
+  "url": "https://greasyfork.org/scripts/542536-tmdb-api%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96",
+  "code_url": "https://update.greasyfork.org/scripts/542536/TMDB-API%E4%BF%A1%E6%81%AF%E8%8E%B7%E5%8F%96.user.js",
+  "code_size": 3371,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

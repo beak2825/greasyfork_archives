@@ -1,0 +1,35 @@
+[
+  {
+    "id": 527864,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-23T20:33:01.000Z",
+    "code_updated_at": "2025-02-23T20:33:01.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1439036,
+        "name": "Tincho402",
+        "created_at": "2025-02-23T20:27:19.000Z",
+        "url": "https://greasyfork.org/users/1439036-tincho402"
+      }
+    ],
+    "name": "Simple Calendly Tennis Monitor",
+    "description": "Monitor Calendly tennis class availability",
+    "url": "https://greasyfork.org/scripts/527864-simple-calendly-tennis-monitor",
+    "code_url": "https://update.greasyfork.org/scripts/527864/Simple%20Calendly%20Tennis%20Monitor.user.js",
+    "code_size": 4053,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

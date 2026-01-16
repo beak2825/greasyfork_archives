@@ -1,0 +1,68 @@
+[
+  {
+    "id": 532048,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T04:29:55.000Z",
+    "code_updated_at": "2025-04-07T04:29:55.000Z",
+    "namespace": "shredsauce",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454801,
+        "name": "gheat _",
+        "created_at": "2025-04-07T01:43:40.000Z",
+        "url": "https://greasyfork.org/users/1454801-gheat"
+      }
+    ],
+    "name": "Shredsauce Color Grade (Blue → Gray)",
+    "description": "Applies a cool desaturated color grade to shredsauce by Gheat",
+    "url": "https://greasyfork.org/scripts/532048-shredsauce-color-grade-blue-gray",
+    "code_url": "https://update.greasyfork.org/scripts/532048/Shredsauce%20Color%20Grade%20%28Blue%20%E2%86%92%20Gray%29.user.js",
+    "code_size": 653,
+    "license": "Creative Commons Attribution 4.0 International",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 532035,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T01:55:55.000Z",
+    "code_updated_at": "2025-04-27T07:51:48.000Z",
+    "namespace": "stylish",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1454801,
+        "name": "gheat _",
+        "created_at": "2025-04-07T01:43:40.000Z",
+        "url": "https://greasyfork.org/users/1454801-gheat"
+      }
+    ],
+    "name": "Shredsauce dark Theme",
+    "description": "All black dark theme for Shredsauce by Gheat",
+    "url": "https://greasyfork.org/scripts/532035-shredsauce-dark-theme",
+    "code_url": "https://update.greasyfork.org/scripts/532035/Shredsauce%20dark%20Theme.user.js",
+    "code_size": 35395,
+    "license": "CC BY-NC-ND 4.0",
+    "version": "2.0.5Beta",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -31,5 +31,137 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 541459,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-07-02T16:22:57.000Z",
+    "code_updated_at": "2026-01-11T21:16:47.000Z",
+    "namespace": "https://news.ycombinator.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819916,
+        "name": "xdpirate",
+        "created_at": "2021-09-28T15:32:38.000Z",
+        "url": "https://greasyfork.org/users/819916-xdpirate"
+      }
+    ],
+    "name": "Colourise Hacker News Hierarchy",
+    "description": "Applies a pastel colour palette to the the comments hierarchy on Hacker News to make it easier to see which level of comments a comment belongs to",
+    "url": "https://greasyfork.org/scripts/541459-colourise-hacker-news-hierarchy",
+    "code_url": "https://update.greasyfork.org/scripts/541459/Colourise%20Hacker%20News%20Hierarchy.user.js",
+    "code_size": 2572,
+    "license": "GPLv3",
+    "version": "1.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 521249,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-19T23:10:05.000Z",
+    "code_updated_at": "2024-12-19T23:10:04.000Z",
+    "namespace": "https://www.newsnow.co.uk/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819916,
+        "name": "xdpirate",
+        "created_at": "2021-09-28T15:32:38.000Z",
+        "url": "https://greasyfork.org/users/819916-xdpirate"
+      }
+    ],
+    "name": "Skip NewsNow Premium Begging",
+    "description": "Bypass NewsNow begging you to give them money when clicking outbound links",
+    "url": "https://greasyfork.org/scripts/521249-skip-newsnow-premium-begging",
+    "code_url": "https://update.greasyfork.org/scripts/521249/Skip%20NewsNow%20Premium%20Begging.user.js",
+    "code_size": 637,
+    "license": "GPLv3",
+    "version": "2024-12-19",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 518255,
+    "daily_installs": 1,
+    "total_installs": 32,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-20T19:12:28.000Z",
+    "code_updated_at": "2024-11-20T19:12:28.000Z",
+    "namespace": "https://web.snapchat.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819916,
+        "name": "xdpirate",
+        "created_at": "2021-09-28T15:32:38.000Z",
+        "url": "https://greasyfork.org/users/819916-xdpirate"
+      }
+    ],
+    "name": "Remove placeholder text on Snapchat for Web",
+    "description": "Remove the placeholder text on Snapchat for Web",
+    "url": "https://greasyfork.org/scripts/518255-remove-placeholder-text-on-snapchat-for-web",
+    "code_url": "https://update.greasyfork.org/scripts/518255/Remove%20placeholder%20text%20on%20Snapchat%20for%20Web.user.js",
+    "code_size": 780,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505591,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T12:16:02.000Z",
+    "code_updated_at": "2024-08-28T12:16:02.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 819916,
+        "name": "xdpirate",
+        "created_at": "2021-09-28T15:32:38.000Z",
+        "url": "https://greasyfork.org/users/819916-xdpirate"
+      }
+    ],
+    "name": "Tidy Qwant Results",
+    "description": "Make Qwant look tidier by removing favicon and replacing superfluous elements",
+    "url": "https://greasyfork.org/scripts/505591-tidy-qwant-results",
+    "code_url": "https://update.greasyfork.org/scripts/505591/Tidy%20Qwant%20Results.user.js",
+    "code_size": 1378,
+    "license": "GPLv3",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

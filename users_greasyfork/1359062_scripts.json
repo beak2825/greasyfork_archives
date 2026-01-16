@@ -1,0 +1,68 @@
+[
+  {
+    "id": 505555,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T07:01:28.000Z",
+    "code_updated_at": "2024-08-28T07:01:28.000Z",
+    "namespace": "shitkiller",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1359062,
+        "name": "ShitKiller1",
+        "created_at": "2024-08-28T06:20:23.000Z",
+        "url": "https://greasyfork.org/users/1359062-killer1"
+      }
+    ],
+    "name": "Disable image/title overlapping on mobile on notebookcheck",
+    "description": "UX designers are awesome, they can play nicely with opacity, but I want to see full images without hurting my eyes",
+    "url": "https://greasyfork.org/scripts/505555-disable-image-title-overlapping-on-mobile-on-notebookcheck",
+    "code_url": "https://update.greasyfork.org/scripts/505555/Disable%20imagetitle%20overlapping%20on%20mobile%20on%20notebookcheck.user.js",
+    "code_size": 728,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 505551,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-28T06:23:27.000Z",
+    "code_updated_at": "2024-08-28T06:23:27.000Z",
+    "namespace": "shitkiller",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1359062,
+        "name": "ShitKiller1",
+        "created_at": "2024-08-28T06:20:23.000Z",
+        "url": "https://greasyfork.org/users/1359062-killer1"
+      }
+    ],
+    "name": "Hide ads-shit-brands news and reviews on notebookcheck",
+    "description": "Hide Garmin, Anker, Philips and other ads-shit-brands on notebookcheck",
+    "url": "https://greasyfork.org/scripts/505551-hide-ads-brands-news-and-reviews-on-notebookcheck",
+    "code_url": "https://update.greasyfork.org/scripts/505551/Hide%20ads-shit-brands%20news%20and%20reviews%20on%20notebookcheck.user.js",
+    "code_size": 881,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

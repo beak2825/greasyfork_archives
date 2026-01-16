@@ -1,0 +1,59 @@
+{
+  "id": 521487,
+  "daily_installs": 0,
+  "total_installs": 51,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-12-22T20:03:16.000Z",
+  "code_updated_at": "2025-03-20T04:46:05.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1414332,
+      "name": "Kugel",
+      "created_at": "2024-12-22T19:55:46.000Z",
+      "url": "https://greasyfork.org/users/1414332-kugel",
+      "scripts": [
+        {
+          "id": 521487,
+          "daily_installs": 0,
+          "total_installs": 51,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-12-22T20:03:16.000Z",
+          "code_updated_at": "2025-03-20T04:46:05.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Roblox Server Utils",
+          "description": "Adds useful features related to roblox servers",
+          "url": "https://greasyfork.org/scripts/521487-roblox-server-utils",
+          "code_url": "https://update.greasyfork.org/scripts/521487/Roblox%20Server%20Utils.user.js",
+          "code_size": 3956,
+          "license": "MIT License",
+          "version": "1.0.1",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Roblox Server Utils",
+  "description": "Adds useful features related to roblox servers",
+  "url": "https://greasyfork.org/scripts/521487-roblox-server-utils",
+  "code_url": "https://update.greasyfork.org/scripts/521487/Roblox%20Server%20Utils.user.js",
+  "code_size": 3956,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

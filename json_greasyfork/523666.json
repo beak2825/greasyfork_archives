@@ -1,0 +1,59 @@
+{
+  "id": 523666,
+  "daily_installs": 2,
+  "total_installs": 356,
+  "fan_score": "51.7",
+  "good_ratings": 5,
+  "ok_ratings": 1,
+  "bad_ratings": 0,
+  "created_at": "2025-01-13T15:08:06.000Z",
+  "code_updated_at": "2025-03-17T15:53:34.000Z",
+  "namespace": "calary.tampermonkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1419889,
+      "name": "eyeyani",
+      "created_at": "2025-01-05T14:25:36.000Z",
+      "url": "https://greasyfork.org/users/1419889-eyeyani",
+      "scripts": [
+        {
+          "id": 523666,
+          "daily_installs": 2,
+          "total_installs": 356,
+          "fan_score": "51.7",
+          "good_ratings": 5,
+          "ok_ratings": 1,
+          "bad_ratings": 0,
+          "created_at": "2025-01-13T15:08:06.000Z",
+          "code_updated_at": "2025-03-17T15:53:34.000Z",
+          "namespace": "calary.tampermonkey",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Pixiv Novel Download King",
+          "description": "Your best Pixiv novel downloader, supporting downloads of single works, series, author collections, tag-based collections, and bookmarks",
+          "url": "https://greasyfork.org/scripts/523666-pixiv-novel-download-king",
+          "code_url": "https://update.greasyfork.org/scripts/523666/Pixiv%20Novel%20Download%20King.user.js",
+          "code_size": 54618,
+          "license": "GNU General Public License v3.0 only",
+          "version": "0.2.2",
+          "locale": "da",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Pixiv Novel Download King",
+  "description": "Your best Pixiv novel downloader, supporting downloads of single works, series, author collections, tag-based collections, and bookmarks",
+  "url": "https://greasyfork.org/scripts/523666-pixiv-novel-download-king",
+  "code_url": "https://update.greasyfork.org/scripts/523666/Pixiv%20Novel%20Download%20King.user.js",
+  "code_size": 54618,
+  "license": "GNU General Public License v3.0 only",
+  "version": "0.2.2",
+  "locale": "da",
+  "deleted": false,
+  "visibility": "public"
+}

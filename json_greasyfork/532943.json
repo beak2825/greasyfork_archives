@@ -1,0 +1,59 @@
+{
+  "id": 532943,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-15T17:19:23.000Z",
+  "code_updated_at": "2025-04-15T17:19:23.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1306516,
+      "name": "Sander De Langhe (PcLover2)",
+      "created_at": "2024-05-24T16:51:20.000Z",
+      "url": "https://greasyfork.org/users/1306516-sander-de-langhe-pclover2",
+      "scripts": [
+        {
+          "id": 532943,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-15T17:19:23.000Z",
+          "code_updated_at": "2025-04-15T17:19:23.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Issuu CBZ Downloader",
+          "description": "Easily download all pages of an Issuu publication as a CBZ file",
+          "url": "https://greasyfork.org/scripts/532943-issuu-cbz-downloader",
+          "code_url": "https://update.greasyfork.org/scripts/532943/Issuu%20CBZ%20Downloader.user.js",
+          "code_size": 3827,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Issuu CBZ Downloader",
+  "description": "Easily download all pages of an Issuu publication as a CBZ file",
+  "url": "https://greasyfork.org/scripts/532943-issuu-cbz-downloader",
+  "code_url": "https://update.greasyfork.org/scripts/532943/Issuu%20CBZ%20Downloader.user.js",
+  "code_size": 3827,
+  "license": "MIT License",
+  "version": "1.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

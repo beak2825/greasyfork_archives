@@ -1,0 +1,35 @@
+[
+  {
+    "id": 520895,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-12-16T12:08:22.000Z",
+    "code_updated_at": "2024-12-16T12:08:22.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1411493,
+        "name": "FalconY",
+        "created_at": "2024-12-16T06:03:09.000Z",
+        "url": "https://greasyfork.org/users/1411493-falcony"
+      }
+    ],
+    "name": "通过UI触发播放速度设置并移除blur事件_amac",
+    "description": "自动移除 iframe 中的 blur 事件，并通过模拟点击设置视频播放速度为 2.0x（针对 https://peixun.amac.org.cn/）",
+    "url": "https://greasyfork.org/scripts/520895-%E9%80%9A%E8%BF%87ui%E8%A7%A6%E5%8F%91%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6%E8%AE%BE%E7%BD%AE%E5%B9%B6%E7%A7%BB%E9%99%A4blur%E4%BA%8B%E4%BB%B6-amac",
+    "code_url": "https://update.greasyfork.org/scripts/520895/%E9%80%9A%E8%BF%87UI%E8%A7%A6%E5%8F%91%E6%92%AD%E6%94%BE%E9%80%9F%E5%BA%A6%E8%AE%BE%E7%BD%AE%E5%B9%B6%E7%A7%BB%E9%99%A4blur%E4%BA%8B%E4%BB%B6_amac.user.js",
+    "code_size": 2956,
+    "license": null,
+    "version": "1.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

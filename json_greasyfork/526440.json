@@ -1,0 +1,59 @@
+{
+  "id": 526440,
+  "daily_installs": 0,
+  "total_installs": 5,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-10T08:10:31.000Z",
+  "code_updated_at": "2025-02-10T08:10:31.000Z",
+  "namespace": "http://yhgzs-111.github.io/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1433507,
+      "name": "NNNNH",
+      "created_at": "2025-02-10T07:36:17.000Z",
+      "url": "https://greasyfork.org/users/1433507-nnnnh",
+      "scripts": [
+        {
+          "id": 526440,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-02-10T08:10:31.000Z",
+          "code_updated_at": "2025-02-10T08:10:31.000Z",
+          "namespace": "http://yhgzs-111.github.io/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Wikipedia AI Summary (维基百科AI总结)",
+          "description": "维基百科 AI 摘要脚本，兼容适配OpenAI API格式的所有LLM。",
+          "url": "https://greasyfork.org/scripts/526440-wikipedia-ai-summary-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91ai%E6%80%BB%E7%BB%93",
+          "code_url": "https://update.greasyfork.org/scripts/526440/Wikipedia%20AI%20Summary%20%28%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91AI%E6%80%BB%E7%BB%93%29.user.js",
+          "code_size": 8828,
+          "license": "MIT License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Wikipedia AI Summary (维基百科AI总结)",
+  "description": "维基百科 AI 摘要脚本，兼容适配OpenAI API格式的所有LLM。",
+  "url": "https://greasyfork.org/scripts/526440-wikipedia-ai-summary-%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91ai%E6%80%BB%E7%BB%93",
+  "code_url": "https://update.greasyfork.org/scripts/526440/Wikipedia%20AI%20Summary%20%28%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91AI%E6%80%BB%E7%BB%93%29.user.js",
+  "code_size": 8828,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

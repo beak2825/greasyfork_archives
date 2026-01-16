@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536026,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-15T02:15:05.000Z",
+    "code_updated_at": "2025-05-22T16:07:31.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": "https://github.com/s5kf/airport_flair/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1311838,
+        "name": "s5kf",
+        "created_at": "2024-06-03T13:00:47.000Z",
+        "url": "https://greasyfork.org/users/1311838-s5kf"
+      }
+    ],
+    "name": "Nitan Airport Flair",
+    "description": "Enhances webpages by identifying airport and multi-airport codes, styling them, and adding interactive tooltips/hyperlinks. Dismiss reverts instances.",
+    "url": "https://greasyfork.org/scripts/536026-nitan-airport-flair",
+    "code_url": "https://update.greasyfork.org/scripts/536026/Nitan%20Airport%20Flair.user.js",
+    "code_size": 33650,
+    "license": "CC BY-NC-ND 4.0; https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "version": "0.5.7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

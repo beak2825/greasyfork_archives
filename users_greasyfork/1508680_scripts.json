@@ -1,0 +1,68 @@
+[
+  {
+    "id": 547272,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-25T17:44:20.000Z",
+    "code_updated_at": "2025-08-25T17:44:20.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1508680,
+        "name": "yurum",
+        "created_at": "2025-08-25T12:21:47.000Z",
+        "url": "https://greasyfork.org/users/1508680-yurum"
+      }
+    ],
+    "name": "Market Filter TornW3B",
+    "description": "Filter bazaar listings by max price and min quantity, with per-item saved settings",
+    "url": "https://greasyfork.org/scripts/547272-market-filter-tornw3b",
+    "code_url": "https://update.greasyfork.org/scripts/547272/Market%20Filter%20TornW3B.user.js",
+    "code_size": 4821,
+    "license": "MIT License",
+    "version": "2025-09-03",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 547235,
+    "daily_installs": 0,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-08-25T12:25:42.000Z",
+    "code_updated_at": "2025-08-25T16:46:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1508680,
+        "name": "yurum",
+        "created_at": "2025-08-25T12:21:47.000Z",
+        "url": "https://greasyfork.org/users/1508680-yurum"
+      }
+    ],
+    "name": "Market Resale Helper TornW3B",
+    "description": "Calculate suggested resale prices (quantile, median, cluster) on TornW3B",
+    "url": "https://greasyfork.org/scripts/547235-market-resale-helper-tornw3b",
+    "code_url": "https://update.greasyfork.org/scripts/547235/Market%20Resale%20Helper%20TornW3B.user.js",
+    "code_size": 9733,
+    "license": "MIT License",
+    "version": "2025-08-26 v2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

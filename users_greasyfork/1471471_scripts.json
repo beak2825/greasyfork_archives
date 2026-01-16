@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536366,
+    "daily_installs": 1,
+    "total_installs": 63,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-18T03:57:12.000Z",
+    "code_updated_at": "2025-05-18T12:32:22.000Z",
+    "namespace": "https://viayoo.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1471471,
+        "name": "Jc-2k",
+        "created_at": "2025-05-18T03:53:28.000Z",
+        "url": "https://greasyfork.org/users/1471471-jc-2k"
+      }
+    ],
+    "name": "YouTube Toolkit+: NewPipe button + H264 ≤30FPS + YouTube Adblock",
+    "description": "NewPipe button + H.264 ≤30FPS + auto-hide overlays + auto-skip YouTube ads",
+    "url": "https://greasyfork.org/scripts/536366-youtube-toolkit-newpipe-button-h264-30fps-youtube-adblock",
+    "code_url": "https://update.greasyfork.org/scripts/536366/YouTube%20Toolkit%2B%3A%20NewPipe%20button%20%2B%20H264%20%E2%89%A430FPS%20%2B%20YouTube%20Adblock.user.js",
+    "code_size": 4422,
+    "license": null,
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

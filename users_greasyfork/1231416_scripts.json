@@ -1,0 +1,68 @@
+[
+  {
+    "id": 515250,
+    "daily_installs": 8,
+    "total_installs": 1906,
+    "fan_score": "67.6",
+    "good_ratings": 8,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-11-01T17:13:29.000Z",
+    "code_updated_at": "2025-12-22T08:15:15.000Z",
+    "namespace": "https://github.com/ewigl/gofile-enhanced",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231416,
+        "name": "ewiglichtl",
+        "created_at": "2023-12-10T04:32:58.000Z",
+        "url": "https://greasyfork.org/users/1231416-ewiglichtl"
+      }
+    ],
+    "name": "GoFile Enhanced",
+    "description": "Directly batch-download GoFiles. Supports recursive folder download, Supports direct links. Built-in support for download managers like AB Download Manager, Aria2, and IDM.",
+    "url": "https://greasyfork.org/scripts/515250-gofile-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/515250/GoFile%20%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 39782,
+    "license": "MIT License",
+    "version": "0.8.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502411,
+    "daily_installs": 1,
+    "total_installs": 406,
+    "fan_score": "59.8",
+    "good_ratings": 7,
+    "ok_ratings": 1,
+    "bad_ratings": 0,
+    "created_at": "2024-08-02T05:31:08.000Z",
+    "code_updated_at": "2025-09-21T04:40:59.000Z",
+    "namespace": "https://github.com/ewigl/hifini-enhanced",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1231416,
+        "name": "ewiglichtl",
+        "created_at": "2023-12-10T04:32:58.000Z",
+        "url": "https://greasyfork.org/users/1231416-ewiglichtl"
+      }
+    ],
+    "name": "HIFINI 音乐磁场 增强",
+    "description": "一键自动回帖，汇总网盘链接，自动填充网盘提取码。",
+    "url": "https://greasyfork.org/scripts/502411-hifini-%E9%9F%B3%E4%B9%90%E7%A3%81%E5%9C%BA-%E5%A2%9E%E5%BC%BA",
+    "code_url": "https://update.greasyfork.org/scripts/502411/HIFINI%20%E9%9F%B3%E4%B9%90%E7%A3%81%E5%9C%BA%20%E5%A2%9E%E5%BC%BA.user.js",
+    "code_size": 22849,
+    "license": "MIT License",
+    "version": "0.5.5",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

@@ -1,0 +1,134 @@
+[
+  {
+    "id": 510875,
+    "daily_installs": 0,
+    "total_installs": 21,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-30T09:10:20.000Z",
+    "code_updated_at": "2024-09-30T09:10:19.000Z",
+    "namespace": "http://www.example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1346323,
+        "name": "静美书斋",
+        "created_at": "2024-08-06T07:03:56.000Z",
+        "url": "https://greasyfork.org/users/1346323-%E9%9D%99%E7%BE%8E%E4%B9%A6%E6%96%8B"
+      }
+    ],
+    "name": "腾讯云开发者社区沉浸式阅读",
+    "description": "为腾讯云开发者社区PC网站的沉浸阅读作扩展，原来沉浸阅读只是将部分元素隐藏，扩展后将不需要的元素隐藏，便于阅读",
+    "url": "https://greasyfork.org/scripts/510875-%E8%85%BE%E8%AE%AF%E4%BA%91%E5%BC%80%E5%8F%91%E8%80%85%E7%A4%BE%E5%8C%BA%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/510875/%E8%85%BE%E8%AE%AF%E4%BA%91%E5%BC%80%E5%8F%91%E8%80%85%E7%A4%BE%E5%8C%BA%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB.user.js",
+    "code_size": 7201,
+    "license": "MIT Licensed",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 510385,
+    "daily_installs": 0,
+    "total_installs": 37,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-27T05:40:46.000Z",
+    "code_updated_at": "2024-09-27T05:40:46.000Z",
+    "namespace": "http://www.example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1346323,
+        "name": "静美书斋",
+        "created_at": "2024-08-06T07:03:56.000Z",
+        "url": "https://greasyfork.org/users/1346323-%E9%9D%99%E7%BE%8E%E4%B9%A6%E6%96%8B"
+      }
+    ],
+    "name": "51CTO沉浸式阅读",
+    "description": "为 51CTO PC网站上的文章添加沉浸阅读按钮，进入沉浸后将文章主体扩展至100%，便于阅读和采集",
+    "url": "https://greasyfork.org/scripts/510385-51cto%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/510385/51CTO%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB.user.js",
+    "code_size": 12214,
+    "license": "MIT Licensed",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 507586,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-09T05:24:54.000Z",
+    "code_updated_at": "2025-04-22T02:20:26.000Z",
+    "namespace": "http://www.example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1346323,
+        "name": "静美书斋",
+        "created_at": "2024-08-06T07:03:56.000Z",
+        "url": "https://greasyfork.org/users/1346323-%E9%9D%99%E7%BE%8E%E4%B9%A6%E6%96%8B"
+      }
+    ],
+    "name": "掘金沉浸式阅读",
+    "description": "为掘金PC网站的沉浸阅读作扩展，原来沉浸阅读只是将部分元素隐藏，扩展后将主体文章放大至100%，便于阅读",
+    "url": "https://greasyfork.org/scripts/507586-%E6%8E%98%E9%87%91%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/507586/%E6%8E%98%E9%87%91%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB.user.js",
+    "code_size": 8800,
+    "license": "MIT Licensed",
+    "version": "2.0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 502756,
+    "daily_installs": 0,
+    "total_installs": 68,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-06T07:23:20.000Z",
+    "code_updated_at": "2024-09-30T09:18:56.000Z",
+    "namespace": "http://www.example.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1346323,
+        "name": "静美书斋",
+        "created_at": "2024-08-06T07:03:56.000Z",
+        "url": "https://greasyfork.org/users/1346323-%E9%9D%99%E7%BE%8E%E4%B9%A6%E6%96%8B"
+      }
+    ],
+    "name": "今日头条沉浸式阅读",
+    "description": "①为今日头条PC网站添加沉浸式阅读功能，优化按钮布局 ②进入沉浸阅读后，添加黑名单，拦截因滚轮到底部后触发的一系列加载事件",
+    "url": "https://greasyfork.org/scripts/502756-%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB",
+    "code_url": "https://update.greasyfork.org/scripts/502756/%E4%BB%8A%E6%97%A5%E5%A4%B4%E6%9D%A1%E6%B2%89%E6%B5%B8%E5%BC%8F%E9%98%85%E8%AF%BB.user.js",
+    "code_size": 10743,
+    "license": "MIT Licensed",
+    "version": "2.1.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

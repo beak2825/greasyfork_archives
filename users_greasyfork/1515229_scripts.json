@@ -1,0 +1,35 @@
+[
+  {
+    "id": 549579,
+    "daily_installs": 0,
+    "total_installs": 5,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-15T03:29:44.000Z",
+    "code_updated_at": "2025-09-15T03:29:44.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1515229,
+        "name": "Hongsheng Xu",
+        "created_at": "2025-09-15T03:20:52.000Z",
+        "url": "https://greasyfork.org/users/1515229-hongsheng-xu"
+      }
+    ],
+    "name": "番茄小说 快捷键下一章 伪装页面404",
+    "description": "D+空格显示顶层 Edge 风格 404 页面，A+空格隐藏，C+空格跳下一章",
+    "url": "https://greasyfork.org/scripts/549579-%E7%95%AA%E8%8C%84%E5%B0%8F%E8%AF%B4-%E5%BF%AB%E6%8D%B7%E9%94%AE%E4%B8%8B%E4%B8%80%E7%AB%A0-%E4%BC%AA%E8%A3%85%E9%A1%B5%E9%9D%A2404",
+    "code_url": "https://update.greasyfork.org/scripts/549579/%E7%95%AA%E8%8C%84%E5%B0%8F%E8%AF%B4%20%E5%BF%AB%E6%8D%B7%E9%94%AE%E4%B8%8B%E4%B8%80%E7%AB%A0%20%E4%BC%AA%E8%A3%85%E9%A1%B5%E9%9D%A2404.user.js",
+    "code_size": 7362,
+    "license": "MIT License",
+    "version": "2025-09-15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

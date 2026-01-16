@@ -1,0 +1,35 @@
+[
+  {
+    "id": 548937,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-09-09T09:49:43.000Z",
+    "code_updated_at": "2025-09-09T09:49:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 777797,
+        "name": "pixcati",
+        "created_at": "2021-05-30T09:04:06.000Z",
+        "url": "https://greasyfork.org/users/777797-pixcati"
+      }
+    ],
+    "name": "哆啦新番社页面精简",
+    "description": "用于哆啦新番社的简易页面美化、精简脚本",
+    "url": "https://greasyfork.org/scripts/548937-%E5%93%86%E5%95%A6%E6%96%B0%E7%95%AA%E7%A4%BE%E9%A1%B5%E9%9D%A2%E7%B2%BE%E7%AE%80",
+    "code_url": "https://update.greasyfork.org/scripts/548937/%E5%93%86%E5%95%A6%E6%96%B0%E7%95%AA%E7%A4%BE%E9%A1%B5%E9%9D%A2%E7%B2%BE%E7%AE%80.user.js",
+    "code_size": 2244,
+    "license": null,
+    "version": "0.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

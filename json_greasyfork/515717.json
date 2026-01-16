@@ -1,0 +1,59 @@
+{
+  "id": 515717,
+  "daily_installs": 0,
+  "total_installs": 45,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-11-04T06:36:35.000Z",
+  "code_updated_at": "2024-11-04T06:36:35.000Z",
+  "namespace": "https://github.com/Wijipedia",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1354608,
+      "name": "Wijipedia",
+      "created_at": "2024-08-19T14:47:47.000Z",
+      "url": "https://greasyfork.org/users/1354608-wijipedia",
+      "scripts": [
+        {
+          "id": 515717,
+          "daily_installs": 0,
+          "total_installs": 45,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2024-11-04T06:36:35.000Z",
+          "code_updated_at": "2024-11-04T06:36:35.000Z",
+          "namespace": "https://github.com/Wijipedia",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "PDF复制翻译自动去掉换行符",
+          "description": "移除换行符",
+          "url": "https://greasyfork.org/scripts/515717-pdf%E5%A4%8D%E5%88%B6%E7%BF%BB%E8%AF%91%E8%87%AA%E5%8A%A8%E5%8E%BB%E6%8E%89%E6%8D%A2%E8%A1%8C%E7%AC%A6",
+          "code_url": "https://update.greasyfork.org/scripts/515717/PDF%E5%A4%8D%E5%88%B6%E7%BF%BB%E8%AF%91%E8%87%AA%E5%8A%A8%E5%8E%BB%E6%8E%89%E6%8D%A2%E8%A1%8C%E7%AC%A6.user.js",
+          "code_size": 870,
+          "license": null,
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "PDF复制翻译自动去掉换行符",
+  "description": "移除换行符",
+  "url": "https://greasyfork.org/scripts/515717-pdf%E5%A4%8D%E5%88%B6%E7%BF%BB%E8%AF%91%E8%87%AA%E5%8A%A8%E5%8E%BB%E6%8E%89%E6%8D%A2%E8%A1%8C%E7%AC%A6",
+  "code_url": "https://update.greasyfork.org/scripts/515717/PDF%E5%A4%8D%E5%88%B6%E7%BF%BB%E8%AF%91%E8%87%AA%E5%8A%A8%E5%8E%BB%E6%8E%89%E6%8D%A2%E8%A1%8C%E7%AC%A6.user.js",
+  "code_size": 870,
+  "license": null,
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

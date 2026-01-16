@@ -1,0 +1,59 @@
+{
+  "id": 509872,
+  "daily_installs": 0,
+  "total_installs": 15,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-23T19:23:13.000Z",
+  "code_updated_at": "2024-09-23T19:50:45.000Z",
+  "namespace": "http://www.sumit.co.il/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 870986,
+      "name": "Effy Teva",
+      "created_at": "2022-01-30T05:56:19.000Z",
+      "url": "https://greasyfork.org/users/870986-effy-teva",
+      "scripts": [
+        {
+          "id": 439348,
+          "daily_installs": 0,
+          "total_installs": 80,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2022-01-30T05:57:44.000Z",
+          "code_updated_at": "2025-08-16T13:04:25.000Z",
+          "namespace": "http://www.sumit.co.il/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Notion RTL support for written text",
+          "description": "Add RTL support for Notion, as all other solutions don't seem to work. Not really optimized currently.",
+          "url": "https://greasyfork.org/scripts/439348-notion-rtl-support-for-written-text",
+          "code_url": "https://update.greasyfork.org/scripts/439348/Notion%20RTL%20support%20for%20written%20text.user.js",
+          "code_size": 5532,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "Set ClickUp RTL",
+  "description": "Sets ClickUp to RTL",
+  "url": "https://greasyfork.org/scripts/509872-set-clickup-rtl",
+  "code_url": "https://update.greasyfork.org/scripts/509872/Set%20ClickUp%20RTL.user.js",
+  "code_size": 3100,
+  "license": "MIT License",
+  "version": "0.2",
+  "locale": "hr",
+  "deleted": false,
+  "visibility": "public"
+}

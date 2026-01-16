@@ -1,0 +1,35 @@
+[
+  {
+    "id": 510224,
+    "daily_installs": 0,
+    "total_installs": 727,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-26T06:46:22.000Z",
+    "code_updated_at": "2024-12-23T11:20:39.000Z",
+    "namespace": "https://github.com/yikuaibaiban/gb688_downloader",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 508973,
+        "name": "yikuaibaiban",
+        "created_at": "2020-04-14T14:04:47.000Z",
+        "url": "https://greasyfork.org/users/508973-yikuaibaiban"
+      }
+    ],
+    "name": "GB688 downloader;国标网下载",
+    "description": "基于国标网显示规律在本地拼合成PDF并提供下载",
+    "url": "https://greasyfork.org/scripts/510224-gb688-downloader-%E5%9B%BD%E6%A0%87%E7%BD%91%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/510224/GB688%20downloader%3B%E5%9B%BD%E6%A0%87%E7%BD%91%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 18447,
+    "license": "Apache License 2.0",
+    "version": "2024.12.23.01",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

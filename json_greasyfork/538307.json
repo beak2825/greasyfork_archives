@@ -1,0 +1,34 @@
+{
+  "id": 538307,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-06-04T11:59:20.000Z",
+  "code_updated_at": "2025-06-04T11:59:20.000Z",
+  "namespace": "vite-plugin-monkey",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1444380,
+      "name": "renjianjike",
+      "created_at": "2025-03-10T17:32:12.000Z",
+      "url": "https://greasyfork.org/users/1444380-renjianjike",
+      "scripts": []
+    }
+  ],
+  "name": "Youtube Page Enhancer",
+  "description": "添加隐藏/显示\"已看视频和MIX视频\"的切换按钮；在历史记录页面不隐藏视频；净化左侧导航栏；搜索结果去重；部分链接在新窗口打开；隐藏视频结束后的推荐内容；隐藏部分弹窗；隐藏带货橱窗；在搜索结果页隐藏\"People also search for\"的ytd-horizontal-card-list-renderer",
+  "url": "https://greasyfork.org/scripts/538307-youtube-page-enhancer",
+  "code_url": "https://update.greasyfork.org/scripts/538307/Youtube%20Page%20Enhancer.user.js",
+  "code_size": 16933,
+  "license": "MIT License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

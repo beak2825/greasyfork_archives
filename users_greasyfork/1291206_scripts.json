@@ -30,6 +30,72 @@
     "version": "2025-11-30",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
+  },
+  {
+    "id": 509151,
+    "daily_installs": 0,
+    "total_installs": 11,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-19T08:11:13.000Z",
+    "code_updated_at": "2025-11-30T13:28:06.000Z",
+    "namespace": "https://lai-0602.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291206,
+        "name": "Lai-0602",
+        "created_at": "2024-04-21T07:48:02.000Z",
+        "url": "https://greasyfork.org/users/1291206-lai-0602"
+      }
+    ],
+    "name": "Auto highlight all links",
+    "description": "This script highlight all the links in a webpage automatically.",
+    "url": "https://greasyfork.org/scripts/509151-auto-highlight-all-links",
+    "code_url": "https://update.greasyfork.org/scripts/509151/Auto%20highlight%20all%20links.user.js",
+    "code_size": 636,
+    "license": "GNU GPLv3",
+    "version": "1764509279",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 503976,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-17T14:31:24.000Z",
+    "code_updated_at": "2024-08-17T14:31:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1291206,
+        "name": "Lai-0602",
+        "created_at": "2024-04-21T07:48:02.000Z",
+        "url": "https://greasyfork.org/users/1291206-lai-0602"
+      }
+    ],
+    "name": "Remove startup popup on teleprompter",
+    "description": "Remove the popup on every time you view https://cueprompter.com/teleprompter.php",
+    "url": "https://greasyfork.org/scripts/503976-remove-startup-popup-on-teleprompter",
+    "code_url": "https://update.greasyfork.org/scripts/503976/Remove%20startup%20popup%20on%20teleprompter.user.js",
+    "code_size": 587,
+    "license": "MIT License",
+    "version": "2024-08-17",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

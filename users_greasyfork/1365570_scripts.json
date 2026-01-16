@@ -1,0 +1,35 @@
+[
+  {
+    "id": 507756,
+    "daily_installs": 0,
+    "total_installs": 8,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-09-10T08:08:28.000Z",
+    "code_updated_at": "2024-09-10T08:12:05.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1365570,
+        "name": "zhangwei12318",
+        "created_at": "2024-09-10T07:06:57.000Z",
+        "url": "https://greasyfork.org/users/1365570-zhangwei12318"
+      }
+    ],
+    "name": "头条标签页显示账户名称",
+    "description": "获取账户名称并修改浏览器标签页的title",
+    "url": "https://greasyfork.org/scripts/507756-%E5%A4%B4%E6%9D%A1%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%98%BE%E7%A4%BA%E8%B4%A6%E6%88%B7%E5%90%8D%E7%A7%B0",
+    "code_url": "https://update.greasyfork.org/scripts/507756/%E5%A4%B4%E6%9D%A1%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%98%BE%E7%A4%BA%E8%B4%A6%E6%88%B7%E5%90%8D%E7%A7%B0.user.js",
+    "code_size": 2024,
+    "license": "MIT License",
+    "version": "2024-09-10",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

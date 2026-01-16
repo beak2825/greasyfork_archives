@@ -1,0 +1,68 @@
+[
+  {
+    "id": 538779,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T05:05:14.000Z",
+    "code_updated_at": "2025-06-08T05:09:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025215,
+        "name": "Al Arcus",
+        "created_at": "2023-02-11T03:50:37.000Z",
+        "url": "https://greasyfork.org/users/1025215-al-arcus"
+      }
+    ],
+    "name": "Dedao article2markdown",
+    "description": "Convert Dedao articles to Markdown format",
+    "url": "https://greasyfork.org/scripts/538779-dedao-article2markdown",
+    "code_url": "https://update.greasyfork.org/scripts/538779/Dedao%20article2markdown.user.js",
+    "code_size": 7582,
+    "license": "MIT License",
+    "version": "2025-06-02",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 538778,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-08T05:04:27.000Z",
+    "code_updated_at": "2025-06-08T05:10:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1025215,
+        "name": "Al Arcus",
+        "created_at": "2023-02-11T03:50:37.000Z",
+        "url": "https://greasyfork.org/users/1025215-al-arcus"
+      }
+    ],
+    "name": "Better Tencent YuanBao",
+    "description": "Enhanced UI for Tencent YuanBao chat",
+    "url": "https://greasyfork.org/scripts/538778-better-tencent-yuanbao",
+    "code_url": "https://update.greasyfork.org/scripts/538778/Better%20Tencent%20YuanBao.user.js",
+    "code_size": 11587,
+    "license": "MIT License",
+    "version": "2025-06-06",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

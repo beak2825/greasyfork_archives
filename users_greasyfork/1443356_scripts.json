@@ -1,0 +1,35 @@
+[
+  {
+    "id": 529129,
+    "daily_installs": 2,
+    "total_installs": 279,
+    "fan_score": "20.8",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-03-07T20:57:04.000Z",
+    "code_updated_at": "2025-03-09T06:33:08.000Z",
+    "namespace": "Bhunter",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443356,
+        "name": "Redux Op",
+        "created_at": "2025-03-07T20:55:25.000Z",
+        "url": "https://greasyfork.org/users/1443356-redux-op"
+      }
+    ],
+    "name": "Bypass FileCrypt (New)",
+    "description": "Bypass FileCrypt",
+    "url": "https://greasyfork.org/scripts/529129-bypass-filecrypt-new",
+    "code_url": "https://update.greasyfork.org/scripts/529129/Bypass%20FileCrypt%20%28New%29.user.js",
+    "code_size": 24288,
+    "license": "MIT License",
+    "version": "1.0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

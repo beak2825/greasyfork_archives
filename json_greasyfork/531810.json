@@ -1,0 +1,59 @@
+{
+  "id": 531810,
+  "daily_installs": 0,
+  "total_installs": 7,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-04-04T08:01:56.000Z",
+  "code_updated_at": "2025-04-04T08:14:14.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1453689,
+      "name": "biebiele",
+      "created_at": "2025-04-03T17:21:39.000Z",
+      "url": "https://greasyfork.org/users/1453689-biebiele",
+      "scripts": [
+        {
+          "id": 531810,
+          "daily_installs": 0,
+          "total_installs": 7,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-04-04T08:01:56.000Z",
+          "code_updated_at": "2025-04-04T08:14:14.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "NodeSeek Plugin",
+          "description": "NodeSeek插件: 图床粘贴",
+          "url": "https://greasyfork.org/scripts/531810-nodeseek-plugin",
+          "code_url": "https://update.greasyfork.org/scripts/531810/NodeSeek%20Plugin.user.js",
+          "code_size": 10427,
+          "license": "GPL License",
+          "version": "1.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "NodeSeek Plugin",
+  "description": "NodeSeek插件: 图床粘贴",
+  "url": "https://greasyfork.org/scripts/531810-nodeseek-plugin",
+  "code_url": "https://update.greasyfork.org/scripts/531810/NodeSeek%20Plugin.user.js",
+  "code_size": 10427,
+  "license": "GPL License",
+  "version": "1.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

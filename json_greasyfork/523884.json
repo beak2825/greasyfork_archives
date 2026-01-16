@@ -1,0 +1,59 @@
+{
+  "id": 523884,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-01-16T02:46:33.000Z",
+  "code_updated_at": "2025-01-16T03:37:56.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1081763,
+      "name": "不染伤痕",
+      "created_at": "2023-05-20T01:55:21.000Z",
+      "url": "https://greasyfork.org/users/1081763-%E4%B8%8D%E6%9F%93%E4%BC%A4%E7%97%95",
+      "scripts": [
+        {
+          "id": 466691,
+          "daily_installs": 0,
+          "total_installs": 96,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2023-05-20T05:00:02.000Z",
+          "code_updated_at": "2023-07-20T06:54:51.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "人才呀自动刷课",
+          "description": "该脚本能够快速刷完人才呀平台的课！",
+          "url": "https://greasyfork.org/scripts/466691-%E4%BA%BA%E6%89%8D%E5%91%80%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE",
+          "code_url": "https://update.greasyfork.org/scripts/466691/%E4%BA%BA%E6%89%8D%E5%91%80%E8%87%AA%E5%8A%A8%E5%88%B7%E8%AF%BE.user.js",
+          "code_size": 1010,
+          "license": "Every one",
+          "version": "1.09",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "请求过滤器（控制台版）",
+  "description": "欢迎华章公司人员使用",
+  "url": "https://greasyfork.org/scripts/523884-%E8%AF%B7%E6%B1%82%E8%BF%87%E6%BB%A4%E5%99%A8-%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/523884/%E8%AF%B7%E6%B1%82%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88%E6%8E%A7%E5%88%B6%E5%8F%B0%E7%89%88%EF%BC%89.user.js",
+  "code_size": 3454,
+  "license": "版权所有© [安徽华章信息技术有限公司]，保留所有权利。",
+  "version": "2025-1-17",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

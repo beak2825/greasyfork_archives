@@ -1,0 +1,33 @@
+{
+  "id": 550674,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-09-25T16:06:31.000Z",
+  "code_updated_at": "2025-09-25T16:16:31.000Z",
+  "namespace": "Violentmonkey Scripts",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1303216,
+      "name": "Octothorp",
+      "created_at": "2024-05-17T15:24:52.000Z",
+      "url": "https://greasyfork.org/users/1303216-octothorp"
+    }
+  ],
+  "name": "Комментарии и Информация из Битрикса | Сайды",
+  "description": "Adds author info to A24 order summary and applies minimal CSS fixes",
+  "url": "https://greasyfork.org/scripts/550674-%D0%BA%D0%BE%D0%BC%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%80%D0%B8%D0%B8-%D0%B8-%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8F-%D0%B8%D0%B7-%D0%B1%D0%B8%D1%82%D1%80%D0%B8%D0%BA%D1%81%D0%B0-%D1%81%D0%B0%D0%B9%D0%B4%D1%8B",
+  "code_url": "https://update.greasyfork.org/scripts/550674/%D0%9A%D0%BE%D0%BC%D0%BC%D0%B5%D0%BD%D1%82%D0%B0%D1%80%D0%B8%D0%B8%20%D0%B8%20%D0%98%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B0%D1%86%D0%B8%D1%8F%20%D0%B8%D0%B7%20%D0%91%D0%B8%D1%82%D1%80%D0%B8%D0%BA%D1%81%D0%B0%20%7C%20%D0%A1%D0%B0%D0%B9%D0%B4%D1%8B.user.js",
+  "code_size": 18519,
+  "license": null,
+  "version": "3.2",
+  "locale": "ru",
+  "deleted": false,
+  "visibility": "public"
+}

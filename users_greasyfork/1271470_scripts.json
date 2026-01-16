@@ -1,0 +1,35 @@
+[
+  {
+    "id": 536466,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-05-19T07:44:45.000Z",
+    "code_updated_at": "2025-09-29T10:45:42.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1271470,
+        "name": "jonas-moreonion",
+        "created_at": "2024-03-07T15:31:59.000Z",
+        "url": "https://greasyfork.org/users/1271470-jonas-moreonion"
+      }
+    ],
+    "name": "Notion.so Clean Todo Lists - no strikethrough or fading",
+    "description": "This script prevents notion from adding a strikethrough and fading checked off items in a todo list.",
+    "url": "https://greasyfork.org/scripts/536466-notion-so-clean-todo-lists-no-strikethrough-or-fading",
+    "code_url": "https://update.greasyfork.org/scripts/536466/Notionso%20Clean%20Todo%20Lists%20-%20no%20strikethrough%20or%20fading.user.js",
+    "code_size": 1004,
+    "license": "AGPLv3",
+    "version": "1.2.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

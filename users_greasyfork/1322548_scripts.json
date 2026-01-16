@@ -1,0 +1,35 @@
+[
+  {
+    "id": 498635,
+    "daily_installs": 0,
+    "total_installs": 39,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-06-23T07:49:45.000Z",
+    "code_updated_at": "2024-06-23T07:49:45.000Z",
+    "namespace": "Dummyuniquenamespace.abc",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1322548,
+        "name": "datalens",
+        "created_at": "2024-06-23T07:41:10.000Z",
+        "url": "https://greasyfork.org/users/1322548-datalens"
+      }
+    ],
+    "name": "ChatGPT automatic JavaScript executor",
+    "description": "Automatically execute JavaScript that ChatGPT generates using eval() and feed results back to ChatGPT",
+    "url": "https://greasyfork.org/scripts/498635-chatgpt-automatic-javascript-executor",
+    "code_url": "https://update.greasyfork.org/scripts/498635/ChatGPT%20automatic%20JavaScript%20executor.user.js",
+    "code_size": 8793,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

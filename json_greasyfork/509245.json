@@ -1,0 +1,34 @@
+{
+  "id": 509245,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-09-19T19:24:51.000Z",
+  "code_updated_at": "2024-09-19T20:16:19.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 475350,
+      "name": "Huanian",
+      "created_at": "2020-04-05T07:11:37.000Z",
+      "url": "https://greasyfork.org/users/475350-huanian",
+      "scripts": []
+    }
+  ],
+  "name": "斗鱼自动发送弹幕脚本V3.4 none",
+  "description": "V3.4",
+  "url": "https://greasyfork.org/scripts/509245-%E6%96%97%E9%B1%BC%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95%E8%84%9A%E6%9C%ACv3-4-none",
+  "code_url": "https://update.greasyfork.org/scripts/509245/%E6%96%97%E9%B1%BC%E8%87%AA%E5%8A%A8%E5%8F%91%E9%80%81%E5%BC%B9%E5%B9%95%E8%84%9A%E6%9C%ACV34%20none.user.js",
+  "code_size": 29630,
+  "license": "MIT License",
+  "version": "3.4",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

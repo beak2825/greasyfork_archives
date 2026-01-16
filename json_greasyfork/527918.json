@@ -1,0 +1,59 @@
+{
+  "id": 527918,
+  "daily_installs": 292,
+  "total_installs": 46096,
+  "fan_score": "44.9",
+  "good_ratings": 11,
+  "ok_ratings": 8,
+  "bad_ratings": 4,
+  "created_at": "2025-02-24T07:41:37.000Z",
+  "code_updated_at": "2025-11-27T04:22:51.000Z",
+  "namespace": "enochLiu_self_script",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1426810,
+      "name": "ThalixMurne",
+      "created_at": "2025-01-24T09:54:32.000Z",
+      "url": "https://greasyfork.org/users/1426810-thalixmurne",
+      "scripts": [
+        {
+          "id": 527918,
+          "daily_installs": 292,
+          "total_installs": 46096,
+          "fan_score": "44.9",
+          "good_ratings": 11,
+          "ok_ratings": 8,
+          "bad_ratings": 4,
+          "created_at": "2025-02-24T07:41:37.000Z",
+          "code_updated_at": "2025-11-27T04:22:51.000Z",
+          "namespace": "enochLiu_self_script",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "XMaster: Power Tools for X (Twitter)",
+          "description": "The script enhances Twitter (X) and TikTok by improving features such as date format, image and video downloads, and more for Twitter (X), and video downloads for TikTok. It will be continuously maintained and updated, so you can use it with confidence.",
+          "url": "https://greasyfork.org/scripts/527918-xmaster-power-tools-for-x-twitter",
+          "code_url": "https://update.greasyfork.org/scripts/527918/XMaster%3A%20Power%20Tools%20for%20X%20%28Twitter%29.user.js",
+          "code_size": 67671,
+          "license": "MIT License",
+          "version": "1.1.9",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "XMaster: Power Tools for X (Twitter)",
+  "description": "The script enhances Twitter (X) and TikTok by improving features such as date format, image and video downloads, and more for Twitter (X), and video downloads for TikTok. It will be continuously maintained and updated, so you can use it with confidence.",
+  "url": "https://greasyfork.org/scripts/527918-xmaster-power-tools-for-x-twitter",
+  "code_url": "https://update.greasyfork.org/scripts/527918/XMaster%3A%20Power%20Tools%20for%20X%20%28Twitter%29.user.js",
+  "code_size": 67671,
+  "license": "MIT License",
+  "version": "1.1.9",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

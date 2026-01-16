@@ -1,0 +1,34 @@
+{
+  "id": 503551,
+  "daily_installs": 0,
+  "total_installs": 2,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-08-13T15:49:03.000Z",
+  "code_updated_at": "2024-08-13T15:49:03.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1351212,
+      "name": "hezex hezex",
+      "created_at": "2024-08-13T15:47:55.000Z",
+      "url": "https://greasyfork.org/users/1351212-hezex-hezex",
+      "scripts": []
+    }
+  ],
+  "name": "Screenshoter tiggo pro max 8 pro",
+  "description": "...",
+  "url": "https://greasyfork.org/scripts/503551-screenshoter-tiggo-pro-max-8-pro",
+  "code_url": "https://update.greasyfork.org/scripts/503551/Screenshoter%20tiggo%20pro%20max%208%20pro.user.js",
+  "code_size": 2856,
+  "license": "MIT License",
+  "version": "0.5",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

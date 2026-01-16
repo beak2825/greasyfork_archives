@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526617,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-12T04:44:35.000Z",
+    "code_updated_at": "2025-02-19T02:04:08.000Z",
+    "namespace": "https://github.com/aortizu/gyropad",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1434144,
+        "name": "aortizu",
+        "created_at": "2025-02-12T03:47:56.000Z",
+        "url": "https://greasyfork.org/users/1434144-aortizu"
+      }
+    ],
+    "name": "Gyropad",
+    "description": "Simulate a gamepad with the device's gyroscope",
+    "url": "https://greasyfork.org/scripts/526617-gyropad",
+    "code_url": "https://update.greasyfork.org/scripts/526617/Gyropad.user.js",
+    "code_size": 43907,
+    "license": "MIT License",
+    "version": "1.0.4",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

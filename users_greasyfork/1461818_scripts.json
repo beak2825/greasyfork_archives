@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533869,
+    "daily_installs": 1,
+    "total_installs": 33,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-24T20:42:39.000Z",
+    "code_updated_at": "2025-04-24T20:42:39.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1461818,
+        "name": "reg chan",
+        "created_at": "2025-04-24T20:38:07.000Z",
+        "url": "https://greasyfork.org/users/1461818-reg-chan"
+      }
+    ],
+    "name": "SnapTagger (Improved)",
+    "description": "Tag and save Snapchat chats seamlessly using localStorage.",
+    "url": "https://greasyfork.org/scripts/533869-snaptagger-improved",
+    "code_url": "https://update.greasyfork.org/scripts/533869/SnapTagger%20%28Improved%29.user.js",
+    "code_size": 12765,
+    "license": "MIT // Added MIT License",
+    "version": "0.3 // Increment version for the change",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

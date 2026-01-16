@@ -1,0 +1,35 @@
+[
+  {
+    "id": 528119,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-26T09:18:39.000Z",
+    "code_updated_at": "2025-03-04T05:25:15.000Z",
+    "namespace": "https://example.com",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1440185,
+        "name": "bw jx",
+        "created_at": "2025-02-26T09:01:24.000Z",
+        "url": "https://greasyfork.org/users/1440185-bw-jx"
+      }
+    ],
+    "name": "智能AI助手",
+    "description": "鼠标左键选中文本后，根据日志自动生成原因和解决方案",
+    "url": "https://greasyfork.org/scripts/528119-%E6%99%BA%E8%83%BDai%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/528119/%E6%99%BA%E8%83%BDAI%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 16845,
+    "license": "MIT License",
+    "version": "1.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

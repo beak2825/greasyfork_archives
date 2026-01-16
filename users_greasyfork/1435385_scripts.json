@@ -1,0 +1,35 @@
+[
+  {
+    "id": 526992,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-02-15T13:54:01.000Z",
+    "code_updated_at": "2025-02-15T14:06:21.000Z",
+    "namespace": "https://xizo.xyz/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1435385,
+        "name": "Xizo-114514",
+        "created_at": "2025-02-15T13:41:52.000Z",
+        "url": "https://greasyfork.org/users/1435385-xizo-114514"
+      }
+    ],
+    "name": "bgm.tv条目页系列索引",
+    "description": "在番剧条目下添加系列索引",
+    "url": "https://greasyfork.org/scripts/526992-bgm-tv%E6%9D%A1%E7%9B%AE%E9%A1%B5%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95",
+    "code_url": "https://update.greasyfork.org/scripts/526992/bgmtv%E6%9D%A1%E7%9B%AE%E9%A1%B5%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95.user.js",
+    "code_size": 6796,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

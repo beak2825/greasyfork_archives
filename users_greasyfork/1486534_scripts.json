@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 540298,
+    "daily_installs": 0,
+    "total_installs": 52,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-06-21T07:47:58.000Z",
+    "code_updated_at": "2025-07-14T09:50:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1486534,
+        "name": "yh xxx",
+        "created_at": "2025-06-21T07:41:03.000Z",
+        "url": "https://greasyfork.org/users/1486534-yh-xxx"
+      }
+    ],
+    "name": "粉笔网 - 增强版视频隐藏+答案一键展开",
+    "description": "默认隐藏视频模块。提供独立按钮控制视频模块的显示/隐藏，以及答案的展开/收拢。",
+    "url": "https://greasyfork.org/scripts/540298-%E7%B2%89%E7%AC%94%E7%BD%91-%E5%A2%9E%E5%BC%BA%E7%89%88%E8%A7%86%E9%A2%91%E9%9A%90%E8%97%8F-%E7%AD%94%E6%A1%88%E4%B8%80%E9%94%AE%E5%B1%95%E5%BC%80",
+    "code_url": "https://update.greasyfork.org/scripts/540298/%E7%B2%89%E7%AC%94%E7%BD%91%20-%20%E5%A2%9E%E5%BC%BA%E7%89%88%E8%A7%86%E9%A2%91%E9%9A%90%E8%97%8F%2B%E7%AD%94%E6%A1%88%E4%B8%80%E9%94%AE%E5%B1%95%E5%BC%80.user.js",
+    "code_size": 9614,
+    "license": "MIT License",
+    "version": "2.7 // Version increased for two independent buttons",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -1,0 +1,33 @@
+{
+  "id": 512359,
+  "daily_installs": 0,
+  "total_installs": 14,
+  "fan_score": "20.7",
+  "good_ratings": 1,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2024-10-12T14:29:17.000Z",
+  "code_updated_at": "2024-10-12T15:14:09.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1379963,
+      "name": "QingLiuJun",
+      "created_at": "2024-10-12T13:50:36.000Z",
+      "url": "https://greasyfork.org/users/1379963-qingliujun"
+    }
+  ],
+  "name": "🔥「CSDN_Editor」编辑优化插件 | 一键美化",
+  "description": "🔥「持续更新」，【美化博客】自动替换文章中`英文单词`为标红样式 | 替换`字母`与`数字`为行内公式样式 | `图片`居中并指定大小 | 防止对链接的误操作。",
+  "url": "https://greasyfork.org/scripts/512359-csdn-editor-%E7%BC%96%E8%BE%91%E4%BC%98%E5%8C%96%E6%8F%92%E4%BB%B6-%E4%B8%80%E9%94%AE%E7%BE%8E%E5%8C%96",
+  "code_url": "https://update.greasyfork.org/scripts/512359/%F0%9F%94%A5%E3%80%8CCSDN_Editor%E3%80%8D%E7%BC%96%E8%BE%91%E4%BC%98%E5%8C%96%E6%8F%92%E4%BB%B6%20%7C%20%E4%B8%80%E9%94%AE%E7%BE%8E%E5%8C%96.user.js",
+  "code_size": 9046,
+  "license": "MIT License",
+  "version": "2.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

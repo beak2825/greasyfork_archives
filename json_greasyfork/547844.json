@@ -1,0 +1,59 @@
+{
+  "id": 547844,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-08-30T13:48:13.000Z",
+  "code_updated_at": "2025-08-30T13:48:13.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1491460,
+      "name": "KoWming",
+      "created_at": "2025-07-04T03:12:25.000Z",
+      "url": "https://greasyfork.org/users/1491460-kowming",
+      "scripts": [
+        {
+          "id": 541587,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-07-04T03:19:52.000Z",
+          "code_updated_at": "2025-07-04T03:19:52.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "朱雀自动转盘抽奖及统计",
+          "description": "实现朱雀的抽奖功能，自动获取CSRF Token与Cookie，并显示抽奖结果，支持进度显示和停止功能，抽奖之后可以一键出售道具和上传，可以设置一键出售预设",
+          "url": "https://greasyfork.org/scripts/541587-%E6%9C%B1%E9%9B%80%E8%87%AA%E5%8A%A8%E8%BD%AC%E7%9B%98%E6%8A%BD%E5%A5%96%E5%8F%8A%E7%BB%9F%E8%AE%A1",
+          "code_url": "https://update.greasyfork.org/scripts/541587/%E6%9C%B1%E9%9B%80%E8%87%AA%E5%8A%A8%E8%BD%AC%E7%9B%98%E6%8A%BD%E5%A5%96%E5%8F%8A%E7%BB%9F%E8%AE%A1.user.js",
+          "code_size": 18842,
+          "license": "MIT License",
+          "version": "1.4",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "矿神源套件下载助手",
+  "description": "在无法下载矿神套件时，使用此脚本进行套件下载(恶意下载会被封禁！)",
+  "url": "https://greasyfork.org/scripts/547844-%E7%9F%BF%E7%A5%9E%E6%BA%90%E5%A5%97%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B",
+  "code_url": "https://update.greasyfork.org/scripts/547844/%E7%9F%BF%E7%A5%9E%E6%BA%90%E5%A5%97%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js",
+  "code_size": 42724,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

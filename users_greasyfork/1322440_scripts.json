@@ -1,0 +1,35 @@
+[
+  {
+    "id": 502435,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2024-08-02T13:09:35.000Z",
+    "code_updated_at": "2024-08-02T13:09:35.000Z",
+    "namespace": "https://greasyfork.org/users/1322440",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1322440,
+        "name": "Sininen Blue",
+        "created_at": "2024-06-23T03:14:08.000Z",
+        "url": "https://greasyfork.org/users/1322440-sininen-blue"
+      }
+    ],
+    "name": "ao3 slightly enhanced",
+    "description": "hides extra tags for each tag category, made for personal use",
+    "url": "https://greasyfork.org/scripts/502435-ao3-slightly-enhanced",
+    "code_url": "https://update.greasyfork.org/scripts/502435/ao3%20slightly%20enhanced.user.js",
+    "code_size": 2811,
+    "license": null,
+    "version": "1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

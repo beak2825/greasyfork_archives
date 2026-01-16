@@ -1,0 +1,35 @@
+[
+  {
+    "id": 533310,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-19T07:52:58.000Z",
+    "code_updated_at": "2025-04-19T07:52:57.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1459664,
+        "name": "Ivean Liu",
+        "created_at": "2025-04-19T07:47:53.000Z",
+        "url": "https://greasyfork.org/users/1459664-ivean-liu"
+      }
+    ],
+    "name": "快速搜索选中内容",
+    "description": "选中网页文本或双击Alt/Option键弹出搜索框，输入内容按回车默认Google搜索，输入网址按回车直接跳转。根据页面背景适配深/浅色模式。",
+    "url": "https://greasyfork.org/scripts/533310-%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2%E9%80%89%E4%B8%AD%E5%86%85%E5%AE%B9",
+    "code_url": "https://update.greasyfork.org/scripts/533310/%E5%BF%AB%E9%80%9F%E6%90%9C%E7%B4%A2%E9%80%89%E4%B8%AD%E5%86%85%E5%AE%B9.user.js",
+    "code_size": 18359,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

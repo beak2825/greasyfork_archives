@@ -1,0 +1,35 @@
+[
+  {
+    "id": 532119,
+    "daily_installs": 0,
+    "total_installs": 23,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-04-07T18:42:24.000Z",
+    "code_updated_at": "2025-04-07T18:42:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1455156,
+        "name": "山泥若猪猪",
+        "created_at": "2025-04-07T18:24:23.000Z",
+        "url": "https://greasyfork.org/users/1455156-%E5%B1%B1%E6%B3%A5%E8%8B%A5%E7%8C%AA%E7%8C%AA"
+      }
+    ],
+    "name": "B站视频外挂字幕工具(自动版)",
+    "description": "为B站视频添加外挂字幕功能，支持手动选择字幕和样式调整",
+    "url": "https://greasyfork.org/scripts/532119-b%E7%AB%99%E8%A7%86%E9%A2%91%E5%A4%96%E6%8C%82%E5%AD%97%E5%B9%95%E5%B7%A5%E5%85%B7-%E8%87%AA%E5%8A%A8%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/532119/B%E7%AB%99%E8%A7%86%E9%A2%91%E5%A4%96%E6%8C%82%E5%AD%97%E5%B9%95%E5%B7%A5%E5%85%B7%28%E8%87%AA%E5%8A%A8%E7%89%88%29.user.js",
+    "code_size": 26341,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

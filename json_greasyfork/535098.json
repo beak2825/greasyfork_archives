@@ -1,0 +1,33 @@
+{
+  "id": 535098,
+  "daily_installs": 1,
+  "total_installs": 528,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-05-06T07:19:18.000Z",
+  "code_updated_at": "2025-05-06T07:19:17.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1466307,
+      "name": "DevingWithHulu",
+      "created_at": "2025-05-06T07:17:28.000Z",
+      "url": "https://greasyfork.org/users/1466307-devingwithhulu"
+    }
+  ],
+  "name": "HuluMenu (Krunker Aimbot & ESP)",
+  "description": "aimbot and ESP for Krunker this auto locks on and tracks through walls USE M TO OPEN THE MENU B TO TOGGLE AIMBOT AND L TO TOGGLE AIM THROUGH WALLS OR AIMBOT ONLY WHEN AIMING",
+  "url": "https://greasyfork.org/scripts/535098-hulumenu-krunker-aimbot-esp",
+  "code_url": "https://update.greasyfork.org/scripts/535098/HuluMenu%20%28Krunker%20Aimbot%20%20ESP%29.user.js",
+  "code_size": 8810,
+  "license": null,
+  "version": "0.4.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

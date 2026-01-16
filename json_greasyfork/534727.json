@@ -1,0 +1,33 @@
+{
+  "id": 534727,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-02T14:10:18.000Z",
+  "code_updated_at": "2025-05-02T14:10:18.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1418564,
+      "name": "Andrew N",
+      "created_at": "2025-01-02T08:41:53.000Z",
+      "url": "https://greasyfork.org/users/1418564-andrew-n"
+    }
+  ],
+  "name": "Bla Bla Bla Twitter Rewriter",
+  "description": "Replaces all Twitter tweet text with \"bla bla bla\"",
+  "url": "https://greasyfork.org/scripts/534727-bla-bla-bla-twitter-rewriter",
+  "code_url": "https://update.greasyfork.org/scripts/534727/Bla%20Bla%20Bla%20Twitter%20Rewriter.user.js",
+  "code_size": 940,
+  "license": "MIT License",
+  "version": "1.1",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

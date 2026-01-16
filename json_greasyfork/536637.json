@@ -1,0 +1,33 @@
+{
+  "id": 536637,
+  "daily_installs": 0,
+  "total_installs": 32,
+  "fan_score": "34.2",
+  "good_ratings": 2,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-05-20T21:16:42.000Z",
+  "code_updated_at": "2025-09-20T01:33:57.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1460678,
+      "name": "deeeeeerp",
+      "created_at": "2025-04-21T19:06:01.000Z",
+      "url": "https://greasyfork.org/users/1460678-deeeeeerp"
+    }
+  ],
+  "name": "Twatter Feed Doctor",
+  "description": "Enhance your X (Twitter) experience with Twat Doc: a powerful userscript featuring customizable content filters to hide spam, foreign languages, they/them lib content (🏳️‍⚧️, 🏳‍🌈, 🍉, 💉, etc), and low-quality posts; automuting based on user scores; visual tweaks like relative timestamps, larger buttons, and direct video links to view videos with your brower's native player",
+  "url": "https://greasyfork.org/scripts/536637-twatter-feed-doctor",
+  "code_url": "https://update.greasyfork.org/scripts/536637/Twatter%20Feed%20Doctor.user.js",
+  "code_size": 249563,
+  "license": null,
+  "version": "2025.09.19.4",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

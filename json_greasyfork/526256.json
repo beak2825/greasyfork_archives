@@ -1,0 +1,34 @@
+{
+  "id": 526256,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-02-08T08:10:57.000Z",
+  "code_updated_at": "2025-02-08T13:57:14.000Z",
+  "namespace": "挂机就好了",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1432867,
+      "name": "潘崇",
+      "created_at": "2025-02-08T07:47:58.000Z",
+      "url": "https://greasyfork.org/users/1432867-%E6%BD%98%E5%B4%87",
+      "scripts": []
+    }
+  ],
+  "name": "公需课 - 优化版",
+  "description": "挂机就好了 - 自动学习和刷新功能优化版，支持多课程处理，并正确区分课程与视频进度，解决了因网速问题导致的加载失败问题，并增加了页面刷新倒计时提示（格式化为*分*秒），且不受非活动标签影响。",
+  "url": "https://greasyfork.org/scripts/526256-%E5%85%AC%E9%9C%80%E8%AF%BE-%E4%BC%98%E5%8C%96%E7%89%88",
+  "code_url": "https://update.greasyfork.org/scripts/526256/%E5%85%AC%E9%9C%80%E8%AF%BE%20-%20%E4%BC%98%E5%8C%96%E7%89%88.user.js",
+  "code_size": 4493,
+  "license": "MIT License",
+  "version": "创世0.12",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}
