@@ -1,13 +1,10 @@
 // ==UserScript==
 // @name         TVDB Episode Matcher
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.6
 // @description  Match torrent episodes with TheTVDB data
 // @author       Dooky
 // @match        https://*/*torrents*
-// @match        https://*/*torrent*
-// @match        https://*/details.php*
-// @match        https://*/details*
 // @connect      api4.thetvdb.com
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
@@ -27,251 +24,6 @@
     const TVDB_API_KEY_STORAGE = "tvdb_api_key";
     const TVDB_TOKEN_STORAGE = "tvdb_token";
     const TVDB_TOKEN_EXPIRY = "tvdb_token_expiry";
-
-    GM_addStyle(`
-        .tvdb-matcher-container {
-            margin: 8px 0;
-            padding: 8px 10px;
-            background-color: #1e2332 !important;
-            color: #fff !important;
-            border-radius: 6px;
-            font-size: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            max-width: 500px;
-        }
-        .tvdb-matcher-container * {
-            color: #fff !important;
-            box-sizing: border-box !important;
-        }
-        .tvdb-matcher-title {
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #fff !important;
-        }
-        .tvdb-matcher-button {
-            display: inline-block !important;
-            padding: 5px 10px !important;
-            margin: 3px 3px 3px 0 !important;
-            background: #2e3445 !important;
-            background-color: #2e3445 !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 4px !important;
-            cursor: pointer !important;
-            font-size: 11px !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-        }
-        .tvdb-matcher-button:hover:not(:disabled) {
-            background: #2d6cd3 !important;
-            background-color: #2d6cd3 !important;
-        }
-        .tvdb-matcher-button:disabled {
-            background: #181C25 !important;
-            background-color: #181C25 !important;
-            cursor: not-allowed !important;
-        }
-        .tvdb-series-select {
-            margin: 6px 0;
-            padding: 6px;
-            width: 100%;
-            max-width: 500px;
-            background: #2e3445;
-            color: #fff;
-            border: 1px solid #3e4455;
-            border-radius: 4px;
-        }
-        .tvdb-results {
-            margin-top: 8px;
-            padding: 8px;
-            background: #0d1117;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-        .tvdb-episode-match {
-            color: #4caf50;
-            margin: 3px 0;
-            font-size: 11px;
-        }
-        .tvdb-episode-mismatch {
-            color: #f44336;
-            margin: 3px 0;
-            font-size: 11px;
-        }
-        .tvdb-episode-missing {
-            color: #ff9800;
-            margin: 3px 0;
-            font-size: 11px;
-        }
-        .tvdb-episode-title-match {
-            color: #4caf50;
-            margin: 3px 0;
-            font-size: 11px;
-        }
-        .tvdb-episode-title-mismatch {
-            color: #ff9800;
-            margin: 3px 0;
-            font-size: 11px;
-        }
-        .tvdb-episode-no_title {
-            color: #4caf50;
-            margin: 3px 0;
-            font-size: 11px;
-        }
-        .tvdb-title-info {
-            font-size: 10px;
-            margin-left: 12px;
-            color: #a0a0a0;
-        }
-        .tvdb-api-key-input {
-            padding: 6px;
-            margin: 5px 0;
-            width: 100%;
-            background: #2e3445;
-            color: #fff;
-            border: 1px solid #3e4455;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .tvdb-modal {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .tvdb-modal-content {
-            background-color: #1e2332;
-            color: #fff;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #2e3445;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-        .tvdb-modal-content * {
-            color: #fff !important;
-        }
-        .tvdb-modal-close {
-            color: #fff;
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .tvdb-modal-close:hover {
-            color: #a0a0a0;
-        }
-        .tvdb-series-option {
-            padding: 8px;
-            margin: 4px 0;
-            background: #2e3445;
-            border: 1px solid #3e4455;
-            border-radius: 4px;
-            cursor: pointer;
-            color: #fff;
-        }
-        .tvdb-series-option:hover {
-            background: #3e4455;
-        }
-        .tvdb-settings-button {
-            display: inline-block !important;
-            padding: 5px 10px !important;
-            margin: 3px 3px 3px 0 !important;
-            background: #2e3445 !important;
-            background-color: #2e3445 !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 4px !important;
-            cursor: pointer !important;
-            font-size: 11px !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-        }
-        .tvdb-settings-button:hover {
-            background: #2d6cd3 !important;
-            background-color: #2d6cd3 !important;
-        }
-        .tvdb-settings-modal {
-            display: none;
-            position: fixed;
-            z-index: 10001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        .tvdb-settings-modal-content {
-            background-color: #1e2332;
-            color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #2e3445;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-        .tvdb-settings-modal-content * {
-            color: #fff !important;
-        }
-        .tvdb-settings-form-group {
-            margin: 12px 0;
-        }
-        .tvdb-settings-label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: bold;
-            color: #fff;
-            font-size: 12px;
-        }
-        .tvdb-settings-input {
-            width: 100%;
-            padding: 6px;
-            background: #2e3445;
-            color: #fff;
-            border: 1px solid #3e4455;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .tvdb-settings-help {
-            font-size: 11px;
-            color: #a0a0a0;
-            margin-top: 4px;
-        }
-        .tvdb-settings-help a {
-            color: #2d6cd3 !important;
-        }
-        .tvdb-settings-buttons {
-            margin-top: 16px;
-            text-align: right;
-        }
-        .tvdb-settings-status {
-            margin-top: 8px;
-            padding: 6px;
-            border-radius: 4px;
-            display: none;
-            font-size: 11px;
-        }
-        .tvdb-settings-status.success {
-            background: rgba(76, 175, 80, 0.2);
-            color: #4caf50;
-            border: 1px solid #4caf50;
-        }
-        .tvdb-settings-status.error {
-            background: rgba(244, 67, 54, 0.2);
-            color: #f44336;
-            border: 1px solid #f44336;
-        }
-    `);
 
     function extractSeriesInfo() {
         const torrentNameEl = document.querySelector('h1.torrent__name');
@@ -493,7 +245,8 @@
                 url: `${TVDB_API_BASE}/search?query=${encodeURIComponent(query)}&type=series`,
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Accept-Language": "eng"
                 },
                 onload: function(response) {
                     if (response.status === 200) {
@@ -521,7 +274,8 @@
                 url: `${TVDB_API_BASE}/episodes/${episodeId}`,
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Accept-Language": "eng"
                 },
                 onload: function(response) {
                     if (response.status === 200) {
@@ -549,7 +303,8 @@
                 url: `${TVDB_API_BASE}/series/${seriesId}/episodes/default/${seasonNumber}`,
                 headers: {
                     "Authorization": `Bearer ${token}`,
-                    "Accept": "application/json"
+                    "Accept": "application/json",
+                    "Accept-Language": "eng"
                 },
                 onload: async function(response) {
                     if (response.status === 200) {
@@ -569,8 +324,9 @@
                             
                             if (episodes.length > 0) {
                                 const needsDetails = episodes.some(ep => {
-                                    const hasName = ep.name || ep.episodeName || ep.title || ep.episodeTitle ||
-                                                   ep.nameTranslations?.en || ep.translations?.en?.name;
+                                    const hasName = ep.nameTranslations?.eng || ep.nameTranslations?.en ||
+                                                   ep.translations?.eng?.name || ep.translations?.en?.name ||
+                                                   ep.name || ep.episodeName || ep.title || ep.episodeTitle;
                                     return !hasName && (ep.id || ep.episodeId || ep.episode_id);
                                 });
                                 
@@ -579,8 +335,9 @@
                                         const episodesWithDetails = await Promise.all(
                                             episodes.map(async (ep) => {
                                                 const epId = ep.id || ep.episodeId || ep.episode_id;
-                                                const hasName = ep.name || ep.episodeName || ep.title || ep.episodeTitle ||
-                                                               ep.nameTranslations?.en || ep.translations?.en?.name;
+                                                const hasName = ep.nameTranslations?.eng || ep.nameTranslations?.en ||
+                                                               ep.translations?.eng?.name || ep.translations?.en?.name ||
+                                                               ep.name || ep.episodeName || ep.title || ep.episodeTitle;
                                                 if (epId && !hasName) {
                                                     try {
                                                         const details = await getTVDBEpisodeDetails(epId, token);
@@ -613,6 +370,80 @@
         });
     }
 
+    function getTVDBAbsoluteEpisodes(seriesId, token, page = 0) {
+        return new Promise(async (resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `${TVDB_API_BASE}/series/${seriesId}/episodes/absolute?page=${page}`,
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json",
+                    "Accept-Language": "eng"
+                },
+                onload: async function(response) {
+                    if (response.status === 200) {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            
+                            let episodes = [];
+                            if (data.data) {
+                                if (Array.isArray(data.data)) {
+                                    episodes = data.data;
+                                } else if (data.data.episodes) {
+                                    episodes = data.data.episodes;
+                                } else if (data.data.episode) {
+                                    episodes = [data.data.episode];
+                                }
+                            }
+                            
+                            if (episodes.length > 0) {
+                                const needsDetails = episodes.some(ep => {
+                                    const hasName = ep.nameTranslations?.eng || ep.nameTranslations?.en ||
+                                                   ep.translations?.eng?.name || ep.translations?.en?.name ||
+                                                   ep.name || ep.episodeName || ep.title || ep.episodeTitle;
+                                    return !hasName && (ep.id || ep.episodeId || ep.episode_id);
+                                });
+                                
+                                if (needsDetails) {
+                                    try {
+                                        const episodesWithDetails = await Promise.all(
+                                            episodes.map(async (ep) => {
+                                                const epId = ep.id || ep.episodeId || ep.episode_id;
+                                                const hasName = ep.nameTranslations?.eng || ep.nameTranslations?.en ||
+                                                               ep.translations?.eng?.name || ep.translations?.en?.name ||
+                                                               ep.name || ep.episodeName || ep.title || ep.episodeTitle;
+                                                if (epId && !hasName) {
+                                                    try {
+                                                        const details = await getTVDBEpisodeDetails(epId, token);
+                                                        return { ...ep, ...details };
+                                                    } catch (e) {
+                                                        return ep;
+                                                    }
+                                                }
+                                                return ep;
+                                            })
+                                        );
+                                        episodes = episodesWithDetails;
+                                    } catch (e) {
+                                    }
+                                }
+                            }
+                            
+                            resolve({ episodes: episodes, isAbsolute: true });
+                        } catch (e) {
+                            reject(new Error("Failed to parse episodes response: " + e.message));
+                        }
+                    } else {
+                        reject(new Error(`Failed to get absolute episodes: ${response.status} ${response.statusText}`));
+                    }
+                },
+                onerror: function(error) {
+                    reject(new Error("Network error: " + error));
+                }
+            });
+        });
+    }
+
     function extractEpisodeFiles() {
         const files = [];
         const videoExtensions = ['.mkv', '.mp4', '.avi', '.m4v', '.mov', '.webm'];
@@ -636,7 +467,7 @@
                         const text = summary.textContent.trim();
                         if (text.match(/[Ss]\d+[Ee]\d+/) && 
                             videoExtensions.some(ext => text.toLowerCase().includes(ext))) {
-                            const match = text.match(/([^\s]+\.(mkv|mp4|avi|m4v|mov|webm))/i);
+                            const match = text.match(/(.+\.(mkv|mp4|avi|m4v|mov|webm))$/i);
                             if (match && !files.includes(match[1])) {
                                 files.push(match[1]);
                             }
@@ -663,14 +494,25 @@
 
             if (files.length === 0) {
                 const allText = dialog.textContent || dialog.innerText;
-                const episodeMatches = allText.match(/[Ss]\d+[Ee]\d+[^\s]*\.(mkv|mp4|avi|m4v|mov|webm)/gi);
+                const episodeMatches = allText.match(/[Ss]\d+[Ee]\d+.*?\.(mkv|mp4|avi|m4v|mov|webm)/gi);
                 if (episodeMatches) {
                     episodeMatches.forEach(match => {
-                        const fullMatch = match.match(/([^\s]+\.(mkv|mp4|avi|m4v|mov|webm))/i);
+                        const fullMatch = match.match(/(.+\.(mkv|mp4|avi|m4v|mov|webm))$/i);
                         if (fullMatch && !files.includes(fullMatch[1])) {
                             files.push(fullMatch[1]);
                         }
                     });
+                }
+                
+                if (files.length === 0) {
+                    const bracketEpisodeMatches = allText.match(/\[[^\]]+\].*?- \d{2,3}(?:v\d+)?.*?\.(mkv|mp4|avi|m4v|mov|webm)/gi);
+                    if (bracketEpisodeMatches) {
+                        bracketEpisodeMatches.forEach(match => {
+                            if (!files.includes(match)) {
+                                files.push(match);
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -681,10 +523,21 @@
             
             allElements.forEach(el => {
                 const text = el.textContent || '';
-                const match = text.match(/([Ss]\d+[Ee]\d+[^\s]*\.(mkv|mp4|avi|m4v|mov|webm))/i);
-                if (match && !seenFiles.has(match[1])) {
-                    seenFiles.add(match[1]);
-                    files.push(match[1]);
+                
+                const seMatches = text.matchAll(/([Ss]\d+[Ee]\d+.*?\.(mkv|mp4|avi|m4v|mov|webm))/gi);
+                for (const match of seMatches) {
+                    if (!seenFiles.has(match[1])) {
+                        seenFiles.add(match[1]);
+                        files.push(match[1]);
+                    }
+                }
+                
+                const absMatches = text.matchAll(/((?:\[[^\]]+\]\s*)?[A-Za-z][A-Za-z0-9&]*[.\s\-]\d{2,3}(?:v\d+)?[\s\-\[(.].*?\.(mkv|mp4|avi|m4v|mov|webm))/gi);
+                for (const match of absMatches) {
+                    if (!seenFiles.has(match[1])) {
+                        seenFiles.add(match[1]);
+                        files.push(match[1]);
+                    }
                 }
             });
         }
@@ -712,6 +565,31 @@
                 episode: parseInt(match[2] || match[4], 10)
             }];
         }
+        
+        const absoluteMatch = filename.match(/[.\s\-](\d{2,4})(?:v\d+)?[\s\-]*[\[(]?(?:\d+p|DVD|BD|WEB|BluRay|FLAC|AAC|Hi10P|Hi10|x264|x265|HEVC)/i);
+        if (absoluteMatch) {
+            const epNum = parseInt(absoluteMatch[1], 10);
+            if (epNum > 0 && epNum < 2000) {
+                return [{
+                    season: null,
+                    episode: epNum,
+                    isAbsolute: true
+                }];
+            }
+        }
+        
+        const simpleAbsoluteMatch = filename.match(/^[A-Za-z][A-Za-z0-9\s]*[.\s\-](\d{2,3})[.\s\-]/);
+        if (simpleAbsoluteMatch) {
+            const epNum = parseInt(simpleAbsoluteMatch[1], 10);
+            if (epNum > 0 && epNum < 1000) {
+                return [{
+                    season: null,
+                    episode: epNum,
+                    isAbsolute: true
+                }];
+            }
+        }
+        
         return null;
     }
 
@@ -760,11 +638,18 @@
             }).filter(part => {
                 if (!part || part.length < 3) return false;
                 if (/^\d{4}$/.test(part)) return false;
-                const startsWithQuality = /^(\d+p|\d+i|1080p|720p|2160p|480p|360p|4K|8K|WEB-DL|WEBRip|BLURAY|DVD|HDTV|REPACK|PROPER|INTERNAL|LIMITED|EXTENDED|UNRATED)/i;
+                const startsWithBracketedQuality = /^[\[(]\s*(2160p|1080p|720p|480p|4K|8K|BD|UHD|HDR|SDR|WEB-DL|WEB|NF|AMZN|ATVP|DSNP|HMAX|PCOK|STAN|H\.?265|H\.?264|HEVC|AVC|DDP|Atmos|DTS|AAC|FLAC|Opus)/i;
+                if (startsWithBracketedQuality.test(part)) return false;
+                const startsWithQuality = /^(\d+p|\d+i|1080p|720p|2160p|480p|360p|4K|8K|WEB-DL|WEBRip|BLURAY|DVD|HDTV|REPACK|PROPER|INTERNAL|LIMITED|EXTENDED|UNRATED|BD|NF|AMZN|ATVP|DSNP|HMAX|HDR|SDR|UHD|H\.?265|H\.?264|HEVC|AVC|DDP|Atmos|DTS|AAC|FLAC|Opus|Dual-Audio|German|Japanese|English|French|Spanish|Italian|Korean|Chinese)/i;
                 if (startsWithQuality.test(part)) return false;
+                const technicalWords = /(2160p|1080p|720p|480p|4K|8K|BD|UHD|HDR|SDR|WEB-DL|WEB|WEBRip|NF|AMZN|ATVP|DSNP|HMAX|PCOK|H265|H264|HEVC|AVC|x265|x264|DDP|Atmos|DTS|AAC|FLAC|Opus|Dual-Audio|German|Japanese|English|French|Spanish|Italian|Korean|Chinese|HONE|REMUX|BluRay)/gi;
+                const strippedPart = part.replace(technicalWords, '').replace(/[\[\]().\-\s]+/g, ' ').trim();
+                if (!strippedPart || strippedPart.length < 3) return false;
+                const isHashOnly = /^[\s\[\]()]*[A-F0-9]{6,}[\s\[\]()]*$/i;
+                if (isHashOnly.test(part)) return false;
                 const words = part.split(/\s+/).filter(w => w.length > 0);
                 if (words.length === 0) return false;
-                const singleQualityTerm = /^(\d+p|\d+i|1080p|720p|2160p|4K|8K|WEB-DL|WEBRip|DL|BluRay|REMUX|UHD|HDR)$/i;
+                const singleQualityTerm = /^(\d+p|\d+i|1080p|720p|2160p|4K|8K|WEB-DL|WEBRip|DL|BluRay|REMUX|UHD|HDR|BD|NF|AMZN|SDR|H265|H264|HEVC|AVC|DDP|Atmos|AAC|Opus)$/i;
                 if (words.length === 1 && singleQualityTerm.test(words[0])) return false;
                 return true;
             });
@@ -778,15 +663,62 @@
         if (!title || title.length < 3) return null;
         if (/^\d{4}$/.test(title)) return null;
         
-        const startsWithQuality = /^(\d+p|\d+i|1080p|720p|2160p|480p|360p|4K|8K|WEB-DL|WEBRip|BLURAY|DVD|HDTV|REPACK|PROPER|INTERNAL|LIMITED|EXTENDED|UNRATED)/i;
+        const startsWithBracketedQuality = /^[\[(]\s*(2160p|1080p|720p|480p|4K|8K|BD|UHD|HDR|SDR|WEB-DL|WEB|NF|AMZN|ATVP|DSNP|HMAX|PCOK|STAN|H\.?265|H\.?264|HEVC|AVC|DDP|Atmos|DTS|AAC|FLAC|Opus)/i;
+        if (startsWithBracketedQuality.test(title)) return null;
+        
+        const startsWithQuality = /^(\d+p|\d+i|1080p|720p|2160p|480p|360p|4K|8K|WEB-DL|WEBRip|BLURAY|DVD|HDTV|REPACK|PROPER|INTERNAL|LIMITED|EXTENDED|UNRATED|BD|NF|AMZN|ATVP|DSNP|HMAX|HDR|SDR|UHD|H\.?265|H\.?264|HEVC|AVC|DDP|Atmos|DTS|AAC|FLAC|Opus|Dual-Audio|German|Japanese|English|French|Spanish|Italian|Korean|Chinese)/i;
         if (startsWithQuality.test(title)) return null;
+        
+        const isOnlyTechnicalInfo = /^[\s\[\]()]*(\d+p|BD|NF|WEB-DL|WEB|H\.?265|H\.?264|HEVC|AVC|SDR|HDR|DDP|Atmos|AAC|Opus|Dual-Audio|German|Japanese|English|[A-F0-9]{6,8}|[A-Za-z0-9_-]+|[\s\[\]().\-])+[\s\[\]()]*$/i;
+        const containsTitleWord = /[a-zA-Z]{4,}/;
+        const technicalWords = /(2160p|1080p|720p|480p|4K|8K|BD|UHD|HDR|SDR|WEB-DL|WEB|WEBRip|NF|AMZN|ATVP|DSNP|HMAX|PCOK|H265|H264|HEVC|AVC|x265|x264|DDP|Atmos|DTS|AAC|FLAC|Opus|Dual-Audio|German|Japanese|English|French|Spanish|Italian|Korean|Chinese|HONE|REMUX|BluRay|MiB|GiB)/gi;
+        const strippedTitle = title.replace(technicalWords, '').replace(/[\[\]().\-\s]+/g, ' ').trim();
+        if (!strippedTitle || strippedTitle.length < 3) return null;
+        
+        const isHashOnly = /^[\s\[\]()]*[A-F0-9]{6,}[\s\[\]()]*$/i;
+        if (isHashOnly.test(title)) return null;
         
         const words = title.split(/\s+/).filter(w => w.length > 0);
         if (words.length === 0) return null;
-        const singleQualityTerm = /^(\d+p|\d+i|1080p|720p|2160p|4K|8K|WEB-DL|WEBRip|DL|BluRay|REMUX|UHD|HDR)$/i;
+        const singleQualityTerm = /^(\d+p|\d+i|1080p|720p|2160p|4K|8K|WEB-DL|WEBRip|DL|BluRay|REMUX|UHD|HDR|BD|NF|AMZN|SDR|H265|H264|HEVC|AVC|DDP|Atmos|AAC|Opus)$/i;
         if (words.length === 1 && singleQualityTerm.test(words[0])) return null;
         
         return title;
+    }
+
+    function getEnglishSeriesName(series) {
+        if (series.translations?.eng && typeof series.translations.eng === 'string') {
+            return series.translations.eng;
+        }
+        if (series.translations?.en && typeof series.translations.en === 'string') {
+            return series.translations.en;
+        }
+        
+        if (series.translations?.eng?.name) return series.translations.eng.name;
+        if (series.translations?.en?.name) return series.translations.en.name;
+        
+        if (series.nameTranslations?.eng) return series.nameTranslations.eng;
+        if (series.nameTranslations?.en) return series.nameTranslations.en;
+        
+        if (series.overviewTranslations?.eng) return series.overviewTranslations.eng;
+        
+        if (series.aliases && Array.isArray(series.aliases)) {
+            const englishAlias = series.aliases.find(a => 
+                (a.language === 'eng' || a.language === 'en') && a.name
+            );
+            if (englishAlias) return englishAlias.name;
+            
+            const latinAlias = series.aliases.find(a => 
+                a.name && /^[A-Za-z0-9\s\-':.,!?()]+$/.test(a.name)
+            );
+            if (latinAlias) return latinAlias.name;
+        }
+        
+        if (series.extended_title) return series.extended_title;
+        if (series.english_name) return series.english_name;
+        if (series.englishName) return series.englishName;
+        
+        return series.name || series.seriesName || series.title;
     }
 
     function normalizeTitle(title) {
@@ -901,7 +833,7 @@
             const option = document.createElement('div');
             option.className = 'tvdb-series-option';
             option.innerHTML = `
-                <strong>${series.name}</strong><br>
+                <strong>${getEnglishSeriesName(series)}</strong><br>
                 <small>${series.year || 'N/A'} | ID: ${series.tvdb_id}</small>
             `;
             option.onclick = () => {
@@ -921,12 +853,19 @@
         document.body.appendChild(modal);
     }
 
-    function compareEpisodes(tvdbEpisodes, fileEpisodes) {
+    function compareEpisodes(tvdbEpisodes, fileEpisodes, isAbsoluteMode = false) {
         const results = [];
         
         const tvdbMap = new Map();
         tvdbEpisodes.forEach(ep => {
-            const epNumber = ep.number || 
+            let epNumber;
+            if (isAbsoluteMode) {
+                epNumber = ep.absoluteNumber || 
+                           ep.airedEpisodeNumber ||
+                           ep.number || 
+                           ep.episodeNumber;
+            } else {
+                epNumber = ep.number || 
                            ep.episodeNumber || 
                            ep.episode || 
                            ep.airedEpisodeNumber || 
@@ -934,27 +873,38 @@
                            ep.episodeId ||
                            ep.episodeNumberInSeason ||
                            ep.episodeInSeason;
+            }
             
-            let epName = ep.name || 
+            let epName = ep.nameTranslations?.eng ||
+                        ep.nameTranslations?.en ||
+                        ep.nameTranslations?.['en-US'] ||
+                        ep.nameTranslations?.['en-GB'] ||
+                        ep.episodeNameTranslations?.eng ||
+                        ep.episodeNameTranslations?.en ||
+                        ep.translations?.eng?.name ||
+                        ep.translations?.en?.name ||
+                        ep.translations?.['en-US']?.name ||
+                        ep.translations?.['en-GB']?.name ||
+                        ep.name || 
                         ep.episodeName || 
                         ep.title || 
-                        ep.episodeTitle ||
-                        ep.episodeNameTranslations?.en ||
-                        ep.nameTranslations?.en;
+                        ep.episodeTitle;
             
             if (!epName) {
                 if (ep.nameTranslations && typeof ep.nameTranslations === 'object') {
-                    epName = ep.nameTranslations.en || 
+                    epName = ep.nameTranslations.eng || 
+                            ep.nameTranslations.en || 
                             ep.nameTranslations['en-US'] ||
                             ep.nameTranslations['en-GB'] ||
                             Object.values(ep.nameTranslations)[0];
                 }
                 if (!epName && ep.translations) {
                     if (Array.isArray(ep.translations)) {
-                        const enTranslation = ep.translations.find(t => t.language === 'en' || t.language === 'eng');
+                        const enTranslation = ep.translations.find(t => t.language === 'eng' || t.language === 'en');
                         epName = enTranslation?.name || ep.translations[0]?.name;
                     } else if (typeof ep.translations === 'object') {
-                        epName = ep.translations.en?.name || 
+                        epName = ep.translations.eng?.name ||
+                                ep.translations.en?.name || 
                                 ep.translations['en-US']?.name ||
                                 ep.translations['en-GB']?.name ||
                                 Object.values(ep.translations)[0]?.name;
@@ -1092,11 +1042,60 @@
         return results.sort((a, b) => a.episode - b.episode);
     }
 
-    function displayResults(results, container) {
-        const resultsDiv = document.createElement('div');
-        resultsDiv.className = 'tvdb-results';
-        
-        const summary = document.createElement('div');
+    function displayCountResults(fileCount, tvdbCount, seriesInfo) {
+        const existing = document.getElementById("tvdb-results-display");
+        if (existing) existing.remove();
+
+        const display = document.createElement("div");
+        display.id = "tvdb-results-display";
+
+        const isComplete = fileCount >= tvdbCount;
+        const summaryText = isComplete 
+            ? `${fileCount}/${tvdbCount} episodes found (complete)`
+            : `${fileCount}/${tvdbCount} episodes found`;
+
+        const bodyContent = `
+            <div class="data-item">
+                <strong>Series:</strong> ${seriesInfo.seriesName} | Season: ${seriesInfo.seasonNumber}
+            </div>
+            <div class="data-item">
+                <strong>Summary:</strong> ${summaryText}
+            </div>
+            <div class="data-item">
+                <small>Using count comparison</small>
+            </div>
+        `;
+
+        display.innerHTML = `
+            <div class="header">
+                <b>TVDB Episode Matcher</b>
+                <button id="tvdb-close-results">×</button>
+            </div>
+            <div class="body">
+                ${bodyContent}
+            </div>
+        `;
+
+        document.body.appendChild(display);
+
+        document.getElementById("tvdb-close-results").addEventListener("click", () => {
+            display.remove();
+        });
+
+        setTimeout(() => {
+            if (display.parentNode) {
+                display.remove();
+            }
+        }, 120000);
+    }
+
+    function displayResults(results, seriesInfo, isAbsoluteMode = false) {
+        const existing = document.getElementById("tvdb-results-display");
+        if (existing) existing.remove();
+
+        const display = document.createElement("div");
+        display.id = "tvdb-results-display";
+
         const matchCount = results.filter(r => r.status === 'match').length;
         const titleMismatchCount = results.filter(r => r.status === 'title_mismatch').length;
         const noTitleCount = results.filter(r => r.status === 'no_title').length;
@@ -1111,107 +1110,122 @@
         let inOrder = false;
         if (allMatched) {
             const matchedEpisodes = results.filter(r => r.status === 'match').map(r => r.episode).sort((a, b) => a - b);
-            inOrder = matchedEpisodes.length > 0 && matchedEpisodes.every((ep, index) => ep === index + 1);
+            const firstEp = matchedEpisodes[0];
+            inOrder = matchedEpisodes.length > 0 && matchedEpisodes.every((ep, index) => ep === firstEp + index);
         }
         
         let summaryText;
         if (allMatched && inOrder) {
-            summaryText = `<strong style="font-size: 11px;">Summary:</strong> <span style="font-size: 11px;">${matchCount}/${matchCount} episodes in the right order</span>`;
+            summaryText = `${matchCount}/${matchCount} episodes in the right order`;
         } else if (allNoTitles && totalFound > 0) {
-            summaryText = `<strong style="font-size: 11px;">Summary:</strong> <span style="font-size: 11px;">No titles found but ${totalFound}/${totalExpected} episodes found</span>`;
+            summaryText = `No titles found but ${totalFound}/${totalExpected} episodes found`;
         } else {
-            summaryText = `<strong style="font-size: 11px;">Summary:</strong> <span style="font-size: 11px;">${matchCount} matched`;
+            summaryText = `${matchCount} matched`;
             if (titleMismatchCount > 0) {
                 summaryText += `, ${titleMismatchCount} title mismatch`;
             }
             if (noTitleCount > 0) {
                 summaryText += `, ${noTitleCount} no title`;
             }
-            summaryText += `, ${missingCount} missing, ${extraCount} extra episodes</span>`;
-        }
-        
-        summary.innerHTML = summaryText;
-        summary.style.marginBottom = '6px';
-        summary.style.fontSize = '11px';
-        resultsDiv.appendChild(summary);
-
-        if (allMatched && inOrder) {
-            container.appendChild(resultsDiv);
-            return;
+            summaryText += `, ${missingCount} missing, ${extraCount} extra episodes`;
         }
 
-        if (allNoTitles && totalFound > 0) {
-            container.appendChild(resultsDiv);
-            return;
-        }
+        const orderingInfo = isAbsoluteMode ? 'Absolute' : `Season: ${seriesInfo.seasonNumber}`;
+        let bodyContent = `
+            <div class="data-item">
+                <strong>Series:</strong> ${seriesInfo.seriesName} | ${orderingInfo}
+            </div>
+            <div class="data-item">
+                <strong>Summary:</strong> ${summaryText}
+            </div>
+        `;
 
-        results.forEach(result => {
-            const epDiv = document.createElement('div');
-            epDiv.className = `tvdb-episode-${result.status}`;
-            
-            let content = `<strong style="font-size: 11px;">Episode ${result.episode}:</strong> <span style="font-size: 11px;">`;
-            if (result.tvdbName) {
-                content += `"${result.tvdbName}" `;
-            }
-            
-            if (result.status === 'match') {
-                const fileNames = result.files.map(f => {
-                    const filename = typeof f === 'string' ? f : f.filename || f;
-                    return filename.split('/').pop();
-                }).join(', ');
-                content += `✓ Found in files: ${fileNames}`;
-                
-                if (result.matchedTitle) {
-                    content += `<div class="tvdb-title-info">✓ Title matches: "${result.matchedTitle}"</div>`;
-                } else {
-                    const extractedTitle = result.files.length > 0 ? 
-                        extractEpisodeTitleFromFilename(result.files[0]) : null;
-                    if (extractedTitle) {
-                        const titleDisplay = Array.isArray(extractedTitle) ? extractedTitle.join(', ') : extractedTitle;
-                        content += `<div class="tvdb-title-info">✓ Title matches: "${titleDisplay}"</div>`;
-                    }
+        if (!(allMatched && inOrder) && !(allNoTitles && totalFound > 0)) {
+            bodyContent += '<div class="tvdb-results">';
+            results.forEach(result => {
+                let content = `<div class="tvdb-episode-${result.status}">`;
+                content += `<strong>Episode ${result.episode}:</strong> `;
+                if (result.tvdbName) {
+                    content += `"${result.tvdbName}" `;
                 }
-            } else if (result.status === 'no_title') {
-                const fileNames = result.files.map(f => {
-                    const filename = typeof f === 'string' ? f : f.filename || f;
-                    return filename.split('/').pop();
-                }).join(', ');
-                content += `✓ Found in files (no title): ${fileNames}`;
-            } else if (result.status === 'title_mismatch') {
-                const fileNames = result.files.map(f => {
-                    const filename = typeof f === 'string' ? f : f.filename || f;
-                    return filename.split('/').pop();
-                }).join(', ');
-                content += `⚠ Found in files but title mismatch: ${fileNames}`;
                 
-                if (result.titleMismatches && result.titleMismatches.length > 0) {
-                    result.titleMismatches.forEach(mismatch => {
-                        content += `<div class="tvdb-title-info">⚠ Filename title: "${mismatch.extractedTitle}" (expected: "${result.tvdbName}")</div>`;
-                    });
-                } else {
-                    const extractedTitle = result.files.length > 0 ? 
-                        extractEpisodeTitleFromFilename(result.files[0]) : null;
-                    if (extractedTitle) {
-                        content += `<div class="tvdb-title-info">⚠ Filename title: "${extractedTitle}" (expected: "${result.tvdbName}")</div>`;
+                if (result.status === 'match') {
+                    const fileNames = result.files.map(f => {
+                        const filename = typeof f === 'string' ? f : f.filename || f;
+                        return filename.split('/').pop();
+                    }).join(', ');
+                    content += `✓ Found in files: ${fileNames}`;
+                    
+                    if (result.matchedTitle) {
+                        content += `<div class="tvdb-title-info">✓ Title matches: "${result.matchedTitle}"</div>`;
+                    } else {
+                        const extractedTitle = result.files.length > 0 ? 
+                            extractEpisodeTitleFromFilename(result.files[0]) : null;
+                        if (extractedTitle) {
+                            const titleDisplay = Array.isArray(extractedTitle) ? extractedTitle.join(', ') : extractedTitle;
+                            content += `<div class="tvdb-title-info">✓ Title matches: "${titleDisplay}"</div>`;
+                        }
                     }
+                } else if (result.status === 'no_title') {
+                    const fileNames = result.files.map(f => {
+                        const filename = typeof f === 'string' ? f : f.filename || f;
+                        return filename.split('/').pop();
+                    }).join(', ');
+                    content += `✓ Found in files (no title): ${fileNames}`;
+                } else if (result.status === 'title_mismatch') {
+                    const fileNames = result.files.map(f => {
+                        const filename = typeof f === 'string' ? f : f.filename || f;
+                        return filename.split('/').pop();
+                    }).join(', ');
+                    content += `⚠ Found in files but title mismatch: ${fileNames}`;
+                    
+                    if (result.titleMismatches && result.titleMismatches.length > 0) {
+                        result.titleMismatches.forEach(mismatch => {
+                            content += `<div class="tvdb-title-info">⚠ Filename title: "${mismatch.extractedTitle}" (expected: "${result.tvdbName}")</div>`;
+                        });
+                    } else {
+                        const extractedTitle = result.files.length > 0 ? 
+                            extractEpisodeTitleFromFilename(result.files[0]) : null;
+                        if (extractedTitle) {
+                            content += `<div class="tvdb-title-info">⚠ Filename title: "${extractedTitle}" (expected: "${result.tvdbName}")</div>`;
+                        }
+                    }
+                } else if (result.status === 'missing') {
+                    content += `✗ Not found in files`;
+                } else if (result.status === 'extra') {
+                    const fileNames = result.files.map(f => {
+                        const filename = typeof f === 'string' ? f : f.filename || f;
+                        return filename.split('/').pop();
+                    }).join(', ');
+                    content += `⚠ Extra file(s): ${fileNames}`;
                 }
-            } else if (result.status === 'missing') {
-                content += `✗ Not found in files`;
-            } else if (result.status === 'extra') {
-                const fileNames = result.files.map(f => {
-                    const filename = typeof f === 'string' ? f : f.filename || f;
-                    return filename.split('/').pop();
-                }).join(', ');
-                content += `⚠ Extra file(s): ${fileNames}`;
-            }
-            content += `</span>`;
-            
-            epDiv.innerHTML = content;
-            epDiv.style.lineHeight = '1.4';
-            resultsDiv.appendChild(epDiv);
+                content += `</div>`;
+                bodyContent += content;
+            });
+            bodyContent += '</div>';
+        }
+
+        display.innerHTML = `
+            <div class="header">
+                <b>TVDB Episode Matcher</b>
+                <button id="tvdb-close-results">×</button>
+            </div>
+            <div class="body">
+                ${bodyContent}
+            </div>
+        `;
+
+        document.body.appendChild(display);
+
+        document.getElementById("tvdb-close-results").addEventListener("click", () => {
+            display.remove();
         });
 
-        container.appendChild(resultsDiv);
+        setTimeout(() => {
+            if (display.parentNode) {
+                display.remove();
+            }
+        }, 120000);
     }
 
     async function processEpisodes() {
@@ -1228,53 +1242,20 @@
             return;
         }
 
-        const container = document.createElement('div');
-        container.className = 'tvdb-matcher-container';
-        container.innerHTML = `
-            <div class="tvdb-matcher-title">TVDB Episode Matcher</div>
-            <div style="font-size: 11px; margin-bottom: 4px;">Series: <strong>${seriesInfo.seriesName}</strong> | Season: <strong>${seriesInfo.seasonNumber}</strong></div>
-            <div id="tvdb-status" style="font-size: 11px;">Processing...</div>
-        `;
-
-        const showFilesButton = Array.from(document.querySelectorAll('button')).find(btn => {
-            const text = (btn.textContent || btn.innerText || '').trim();
-            const icon = btn.querySelector('i.fa-file');
-            return text.includes('Show files') || text.includes('Files') || icon !== null;
-        });
-        
-        const torrentButtonsMenu = document.querySelector('menu.torrent__buttons, ul.torrent__buttons, .torrent__buttons');
-        
-        if (showFilesButton && showFilesButton.parentElement) {
-            showFilesButton.parentElement.insertBefore(container, showFilesButton);
-        } else if (torrentButtonsMenu && torrentButtonsMenu.parentElement) {
-            torrentButtonsMenu.parentElement.insertBefore(container, torrentButtonsMenu);
-        } else {
-            const torrentNameEl = document.querySelector('h1.torrent__name');
-            if (torrentNameEl && torrentNameEl.parentElement) {
-                torrentNameEl.parentElement.insertBefore(container, torrentNameEl.nextSibling);
-            } else {
-                document.body.insertBefore(container, document.body.firstChild);
-            }
-        }
-
-        const statusDiv = container.querySelector('#tvdb-status');
-
         try {
-            statusDiv.textContent = "Getting TVDB token...";
             const token = await getTVDBToken();
 
-            statusDiv.textContent = `Searching for "${seriesInfo.seriesName}"...`;
             let seriesList = await searchTVDBSeries(seriesInfo.seriesName, token);
 
             if (seriesList.length === 0) {
-                statusDiv.textContent = "No series found on TheTVDB";
+                alert("No series found on TheTVDB");
                 return;
             }
 
             let selectedSeries = null;
             
             const exactMatch = seriesList.find(s => 
-                normalizeTitle(s.name) === normalizeTitle(seriesInfo.seriesName)
+                normalizeTitle(getEnglishSeriesName(s)) === normalizeTitle(seriesInfo.seriesName)
             );
 
             if (exactMatch && seriesList.length === 1) {
@@ -1284,7 +1265,6 @@
             } else if (seriesList.length === 1) {
                 selectedSeries = seriesList[0];
             } else {
-                statusDiv.textContent = "Multiple series found. Please select one...";
                 await new Promise((resolve) => {
                     showSeriesSelectionModal(seriesList, (series) => {
                         selectedSeries = series;
@@ -1294,13 +1274,20 @@
             }
 
             if (!selectedSeries) {
-                statusDiv.textContent = "No series selected";
                 return;
             }
 
-            statusDiv.textContent = `Fetching episodes for Season ${seriesInfo.seasonNumber}...`;
-            const seasonData = await getTVDBSeasonEpisodes(selectedSeries.tvdb_id, seriesInfo.seasonNumber, token);
+            const fileEpisodes = extractEpisodeFiles();
             
+            if (fileEpisodes.length === 0) {
+                alert("No episode files found on page. Please open the Files dialog first.");
+                return;
+            }
+            
+            const firstParsed = parseEpisodeNumber(fileEpisodes[0]);
+            const isAbsoluteMode = firstParsed && firstParsed[0]?.isAbsolute;
+            
+            const seasonData = await getTVDBSeasonEpisodes(selectedSeries.tvdb_id, seriesInfo.seasonNumber, token);
             let tvdbEpisodes = seasonData.episodes || [];
             
             tvdbEpisodes = tvdbEpisodes.filter(ep => {
@@ -1309,107 +1296,98 @@
             });
             
             if (tvdbEpisodes.length === 0) {
-                statusDiv.textContent = `No episodes found for Season ${seriesInfo.seasonNumber}`;
+                alert(`No episodes found for Season ${seriesInfo.seasonNumber}`);
                 return;
             }
 
-            statusDiv.textContent = "Extracting files from page...";
-            const fileEpisodes = extractEpisodeFiles();
-            
-            if (fileEpisodes.length === 0) {
-                statusDiv.textContent = "No episode files found on page. Please open the Files dialog first.";
-                return;
+            if (isAbsoluteMode) {
+                const fileCount = fileEpisodes.length;
+                const tvdbCount = tvdbEpisodes.length;
+                displayCountResults(fileCount, tvdbCount, seriesInfo);
+            } else {
+                const comparisonResults = compareEpisodes(tvdbEpisodes, fileEpisodes);
+                displayResults(comparisonResults, seriesInfo);
             }
-
-            statusDiv.textContent = "Comparing episodes...";
-            const comparisonResults = compareEpisodes(tvdbEpisodes, fileEpisodes);
-            
-            statusDiv.textContent = "Complete!";
-            displayResults(comparisonResults, container);
 
         } catch (error) {
             let errorMessage = error.message;
             if (errorMessage.includes("API key is required") || errorMessage.includes("Failed to get token")) {
                 errorMessage += ". Please configure your API key in settings.";
-                const errorDiv = document.createElement('div');
-                errorDiv.innerHTML = `Error: ${errorMessage}`;
-                const settingsBtn = document.createElement('button');
-                settingsBtn.className = 'tvdb-matcher-button';
-                settingsBtn.textContent = 'Open Settings';
-                settingsBtn.style.marginLeft = '10px';
-                settingsBtn.onclick = showSettingsModal;
-                errorDiv.appendChild(settingsBtn);
-                statusDiv.innerHTML = '';
-                statusDiv.appendChild(errorDiv);
+                alert(errorMessage);
+                showSettingsModal();
             } else {
-                statusDiv.textContent = `Error: ${errorMessage}`;
+                alert(`Error: ${errorMessage}`);
             }
         }
     }
 
-    function addMatchButton() {
-        if (document.getElementById('tvdb-match-button')) {
-            return;
-        }
-
-        const showFilesButton = Array.from(document.querySelectorAll('button')).find(btn => {
-            const text = (btn.textContent || btn.innerText || '').trim();
-            const icon = btn.querySelector('i.fa-file');
-            return text.includes('Show files') || text.includes('Files') || icon !== null;
-        });
-
-        const torrentButtonsMenu = document.querySelector('menu.torrent__buttons, ul.torrent__buttons, .torrent__buttons');
+    function createStyledButton(id, text, title, clickHandler) {
+        var btn = document.createElement('button');
+        btn.id = id;
+        btn.className = 'form__button form__button--text';
+        btn.textContent = text;
+        if (title) btn.title = title;
+        btn.style.cssText = 'background:#2e3445;border:none;color:#fff;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:12px';
         
-        let insertTarget = null;
-        let insertParent = null;
+        btn.addEventListener('click', function(e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            clickHandler();
+        });
+        
+        btn.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#2d6cd3';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '#2e3445';
+        });
+        
+        return btn;
+    }
 
-        if (showFilesButton && showFilesButton.parentElement) {
-            insertParent = showFilesButton.parentElement;
-            insertTarget = showFilesButton;
-        } else if (torrentButtonsMenu) {
-            insertParent = torrentButtonsMenu.parentElement;
-            insertTarget = torrentButtonsMenu;
-        } else {
-            const torrentNameEl = document.querySelector('h1.torrent__name');
-            if (torrentNameEl && torrentNameEl.parentElement) {
-                insertParent = torrentNameEl.parentElement;
-                insertTarget = torrentNameEl.nextSibling;
+    function addMatchButton() {
+        if (document.getElementById('tvdb-match-button')) return;
+
+        var headings = document.querySelectorAll('h2.panel__heading');
+        var autoModHeading = null;
+        var moderationHeading = null;
+        
+        for (var i = 0; i < headings.length; i++) {
+            var text = headings[i].textContent;
+            if (text.indexOf('Auto Moderation') !== -1) {
+                autoModHeading = headings[i];
+            } else if (text.indexOf('Moderation') !== -1) {
+                moderationHeading = headings[i];
             }
         }
 
-        if (!insertParent) {
+        var targetHeading = autoModHeading || moderationHeading;
+        if (!targetHeading) {
             setTimeout(addMatchButton, 1000);
             return;
         }
 
-        const matchButton = document.createElement('button');
-        matchButton.id = 'tvdb-match-button';
-        matchButton.className = 'tvdb-matcher-button';
-        matchButton.textContent = 'Match Episodes with TVDB';
-        matchButton.onclick = processEpisodes;
-
-        const settingsButton = document.createElement('button');
-        settingsButton.id = 'tvdb-settings-button';
-        settingsButton.className = 'tvdb-settings-button';
-        settingsButton.textContent = '⚙ Settings';
-        settingsButton.title = 'Configure TheTVDB API key';
-        settingsButton.onclick = showSettingsModal;
-
-        const wrapper = document.createElement('div');
-        wrapper.id = 'tvdb-matcher-buttons';
-        wrapper.style.marginBottom = '8px';
-        wrapper.style.display = 'flex';
-        wrapper.style.alignItems = 'center';
-        wrapper.style.gap = '6px';
-        wrapper.style.flexWrap = 'wrap';
-        wrapper.appendChild(matchButton);
-        wrapper.appendChild(settingsButton);
-
-        if (insertTarget) {
-            insertParent.insertBefore(wrapper, insertTarget);
-        } else {
-            insertParent.appendChild(wrapper);
+        var panelContainer = targetHeading.closest('div.panelV2') || targetHeading.closest('section.panelV2');
+        if (!panelContainer) {
+            setTimeout(addMatchButton, 1000);
+            return;
         }
+
+        var buttonsContainer = document.createElement('div');
+        buttonsContainer.style.cssText = 'display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto';
+        buttonsContainer.addEventListener('click', function(e) {
+            e.stopImmediatePropagation();
+        });
+
+        var matchButton = createStyledButton('tvdb-match-button', 'Match Episodes with TVDB', null, processEpisodes);
+        var settingsButton = createStyledButton('tvdb-settings-button', '⚙', 'Configure TheTVDB API key', showSettingsModal);
+
+        buttonsContainer.appendChild(matchButton);
+        buttonsContainer.appendChild(settingsButton);
+
+        targetHeading.style.cssText = 'display:flex;align-items:center;justify-content:space-between;width:100%;cursor:pointer';
+        targetHeading.appendChild(buttonsContainer);
     }
 
     window.showTVDBSettings = showSettingsModal;
@@ -1430,5 +1408,465 @@
         childList: true,
         subtree: true
     });
+
+    GM_addStyle(`
+        .tvdb-matcher-container {
+            margin: 8px 0;
+            padding: 10px 14px;
+            background-color: #1e2332 !important;
+            color: #fff !important;
+            border-radius: 8px;
+            font-size: 13px;
+            z-index: 999999 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            min-width: 250px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+
+        .tvdb-matcher-container,
+        .tvdb-matcher-container div,
+        .tvdb-matcher-container span,
+        .tvdb-matcher-container p,
+        .tvdb-matcher-container a,
+        .tvdb-matcher-container label {
+            color: #fff !important;
+        }
+
+        .tvdb-matcher-container * {
+            box-sizing: border-box !important;
+        }
+
+        .tvdb-matcher-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #fff !important;
+        }
+
+        .tvdb-matcher-button {
+            display: block !important;
+            width: 100% !important;
+            margin-top: 6px !important;
+            padding: 6px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            background: #2e3445 !important;
+            background-color: #2e3445 !important;
+            color: white !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+
+        .tvdb-matcher-button:hover:not(:disabled) {
+            background: #2d6cd3 !important;
+            background-color: #2d6cd3 !important;
+        }
+
+        .tvdb-matcher-button:disabled {
+            background: #181C25 !important;
+            background-color: #181C25 !important;
+            cursor: not-allowed !important;
+        }
+
+        .tvdb-series-select {
+            margin: 6px 0;
+            padding: 6px;
+            width: 100%;
+            max-width: 500px;
+            background: #2e3445;
+            color: #fff;
+            border: 1px solid #3e4455;
+            border-radius: 4px;
+        }
+
+        .tvdb-results {
+            margin-top: 8px;
+            padding: 8px;
+            background: #0d1117;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        #tvdb-results-display {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #1e2332;
+            color: #fff;
+            padding: 0;
+            border-radius: 8px;
+            font-size: 13px;
+            z-index: 999998;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            min-width: 300px;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        #tvdb-results-display .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid #2e3445;
+            background: #2e3445;
+        }
+
+        #tvdb-results-display .header b {
+            font-size: 14px;
+        }
+
+        #tvdb-results-display .header button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            line-height: 24px;
+            border-radius: 4px;
+        }
+
+        #tvdb-results-display .header button:hover {
+            background: #3e4455;
+        }
+
+        #tvdb-results-display .body {
+            padding: 12px 14px;
+        }
+
+        #tvdb-results-display .data-item {
+            margin-bottom: 8px;
+        }
+
+        #tvdb-results-display .data-item:last-child {
+            margin-bottom: 0;
+        }
+
+        #tvdb-results-display .data-item strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #a0a0a0;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        #tvdb-results-display .tvdb-results {
+            margin-top: 0;
+            padding: 0;
+            background: transparent;
+        }
+
+        #tvdb-results-display code {
+            background: #0d1117;
+            color: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            word-break: break-all;
+            display: inline-block;
+            max-width: 100%;
+            line-height: 1.4;
+        }
+
+        #tvdb-results-display pre {
+            background: #0d1117;
+            color: #e0e0e0;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.5;
+            max-width: 100%;
+        }
+
+        .tvdb-episode-match {
+            color: #4caf50;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-episode-mismatch {
+            color: #f44336;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-episode-missing {
+            color: #ff9800;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-episode-title-match {
+            color: #4caf50;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-episode-title-mismatch {
+            color: #ff9800;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-episode-no_title {
+            color: #4caf50;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-episode-extra {
+            color: #ff9800;
+            margin: 3px 0;
+            font-size: 12px;
+        }
+
+        .tvdb-title-info {
+            font-size: 11px;
+            margin-left: 12px;
+            color: #a0a0a0;
+        }
+
+        .tvdb-api-key-input {
+            padding: 6px;
+            margin: 5px 0;
+            width: 100%;
+            background: #2e3445;
+            color: #fff;
+            border: 1px solid #3e4455;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .tvdb-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .tvdb-modal-content {
+            background-color: #1e2332;
+            color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #2e3445;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .tvdb-modal-content * {
+            color: #fff !important;
+        }
+
+        .tvdb-modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .tvdb-modal-close:hover,
+        .tvdb-modal-close:focus {
+            color: #fff;
+        }
+
+        .tvdb-series-option {
+            padding: 8px;
+            margin: 4px 0;
+            background: #2e3445;
+            border: 1px solid #3e4455;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .tvdb-series-option:hover {
+            background: #3e4455;
+        }
+
+        .tvdb-settings-button {
+            display: block !important;
+            width: 100% !important;
+            margin-top: 6px !important;
+            padding: 6px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            background: #2e3445 !important;
+            background-color: #2e3445 !important;
+            color: white !important;
+            font-size: 13px !important;
+            cursor: pointer !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+
+        .tvdb-settings-button:hover {
+            background: #2d6cd3 !important;
+            background-color: #2d6cd3 !important;
+        }
+
+        .tvdb-settings-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .tvdb-settings-modal-content {
+            background-color: #1e2332;
+            color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #2e3445;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .tvdb-settings-modal-content * {
+            color: #fff !important;
+        }
+
+        .tvdb-settings-form-group {
+            margin: 12px 0;
+        }
+
+        .tvdb-settings-label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: bold;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .tvdb-settings-input {
+            width: 100%;
+            padding: 6px;
+            background: #2e3445;
+            color: #fff;
+            border: 1px solid #3e4455;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .tvdb-settings-help {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-top: 4px;
+        }
+
+        .tvdb-settings-help a {
+            color: #2d6cd3 !important;
+        }
+
+        .tvdb-settings-buttons {
+            margin-top: 16px;
+            text-align: right;
+        }
+
+        .tvdb-settings-status {
+            margin-top: 8px;
+            padding: 6px;
+            border-radius: 4px;
+            display: none;
+            font-size: 12px;
+        }
+
+        .tvdb-settings-status.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid #4caf50;
+        }
+
+        .tvdb-settings-status.error {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+
+        #tvdb-match-button,
+        #tvdb-settings-button {
+            background: #2e3445 !important;
+            background-color: #2e3445 !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        #tvdb-match-button:hover,
+        #tvdb-settings-button:hover {
+            background: #2d6cd3 !important;
+            background-color: #2d6cd3 !important;
+        }
+
+        .tvdb-comparison-boxes {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .tvdb-comparison-box {
+            flex: 1;
+            padding: 4px 5px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid;
+            transition: all 0.3s;
+        }
+
+        .tvdb-comparison-box.match {
+            background: rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+
+        .tvdb-comparison-box.no-match {
+            background: rgba(244, 67, 54, 0.2);
+            border-color: #f44336;
+        }
+
+        .tvdb-comparison-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #a0a0a0;
+            margin-bottom: 2px;
+            font-weight: bold;
+        }
+
+        .tvdb-comparison-status {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .tvdb-comparison-box.match .tvdb-comparison-status {
+            color: #4caf50;
+        }
+
+        .tvdb-comparison-box.no-match .tvdb-comparison-status {
+            color: #f44336;
+        }
+    `);
 
 })();

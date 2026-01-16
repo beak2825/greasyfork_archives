@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CLIP STUDIO笔刷入库
 // @namespace    http://tampermonkey.net/
-// @version      4.2
-// @description  自动点击收藏和下载按钮，可选阻止弹窗，并在排行榜页面手动触发打开未入库素材
+// @version      4.6
+// @description  自动点击收藏和下载按钮，可选阻止弹窗和下载后自动关闭，并在排行榜/搜索页面手动触发打开未入库素材
 // @author       You
 // @match        https://assets.clip-studio.com/*
 // @grant        GM_openInTab
@@ -23,7 +23,11 @@
     // 配置选项
     // ========================================
     const CONFIG_KEY = 'blockPopup';
+    const AUTO_CLOSE_KEY = 'autoClose';
+    const SKIP_PAID_KEY = 'skipPaidMaterials';
     let blockPopupEnabled = GM_getValue(CONFIG_KEY, true); // 默认启用阻止弹窗
+    let autoCloseEnabled = GM_getValue(AUTO_CLOSE_KEY, false); // 默认不启用自动关闭
+    let skipPaidMaterials = GM_getValue(SKIP_PAID_KEY, false); // 默认不跳过付费素材
 
     // 注册菜单命令
     const updateMenuCommand = () => {
@@ -39,6 +43,36 @@
 
     updateMenuCommand();
     console.log('当前阻止弹窗状态:', blockPopupEnabled ? '启用' : '禁用');
+
+    // 注册自动关闭菜单命令
+    const updateAutoCloseCommand = () => {
+        const statusText = autoCloseEnabled ? '✓ 已启用' : '✗ 已禁用';
+        GM_registerMenuCommand(`${statusText} 下载后自动关闭`, () => {
+            autoCloseEnabled = !autoCloseEnabled;
+            GM_setValue(AUTO_CLOSE_KEY, autoCloseEnabled);
+            const newStatus = autoCloseEnabled ? '已启用' : '已禁用';
+            alert(`下载后自动关闭功能${newStatus}\n\n${autoCloseEnabled ? '✓ 笔刷下载完成后会自动关闭标签页（仅适用于脚本打开的页面）' : '✗ 笔刷下载后不会自动关闭标签页'}\n\n刷新页面后生效`);
+            console.log(`自动关闭功能已${newStatus}:`, autoCloseEnabled);
+        });
+    };
+
+    updateAutoCloseCommand();
+    console.log('当前自动关闭状态:', autoCloseEnabled ? '启用' : '禁用');
+
+    // 注册跳过付费素材菜单命令
+    const updateSkipPaidCommand = () => {
+        const statusText = skipPaidMaterials ? '✓ 已启用' : '✗ 已禁用';
+        GM_registerMenuCommand(`${statusText} 跳过付费素材`, () => {
+            skipPaidMaterials = !skipPaidMaterials;
+            GM_setValue(SKIP_PAID_KEY, skipPaidMaterials);
+            const newStatus = skipPaidMaterials ? '已启用' : '已禁用';
+            alert(`跳过付费素材功能${newStatus}\n\n${skipPaidMaterials ? '✓ 批量打开时将跳过需要金币(G)或点数(CP)购买的素材' : '✗ 批量打开时包含所有付费素材'}\n\n刷新页面后生效`);
+            console.log(`跳过付费素材功能已${newStatus}:`, skipPaidMaterials);
+        });
+    };
+
+    updateSkipPaidCommand();
+    console.log('当前跳过付费素材状态:', skipPaidMaterials ? '启用' : '禁用');
 
     // ========================================
     // 功能 1: 阻止下载弹窗（可选）
@@ -114,7 +148,9 @@
     // 功能 2: 自动点击收藏和下载按钮
     // ========================================
     let clickAttempts = 0;
-    const maxAttempts = 50; // 最多尝试 50 次（10 秒）
+    const maxAttempts = 50; // 最多尝试 50 次
+    const attemptsPerBatch = 10; // 每批尝试 10 次
+    const batchPauseMs = 2000; // 每批之间暂停 2 秒
 
     const autoClickButtons = () => {
         clickAttempts++;
@@ -163,6 +199,14 @@
                     console.log('========================================');
                     console.log('✓ 自动收藏和下载完成！');
                     console.log('========================================');
+
+                    // 如果启用了自动关闭，延迟后关闭标签页
+                    if (autoCloseEnabled) {
+                        setTimeout(() => {
+                            console.log('→ 自动关闭标签页...');
+                            window.close();
+                        }, 1500); // 下载后延迟 1.5 秒关闭
+                    }
                 } catch (error) {
                     console.error('✗ 点击下载按钮失败:', error);
                 }
@@ -171,7 +215,15 @@
         } else {
             // 如果按钮还没加载，继续等待
             if (clickAttempts < maxAttempts) {
-                setTimeout(autoClickButtons, 200);
+                // 检查是否需要暂停（每10次暂停一次）
+                const needPause = clickAttempts % attemptsPerBatch === 0;
+                const nextDelay = needPause ? batchPauseMs : 200;
+
+                if (needPause) {
+                    console.log(`⏸️  已尝试 ${clickAttempts} 次，暂停 ${batchPauseMs / 1000} 秒...`);
+                }
+
+                setTimeout(autoClickButtons, nextDelay);
             } else {
                 console.error('✗ 超过最大尝试次数，放弃自动点击');
                 console.log('请检查页面是否正常加载，或手动点击按钮');
@@ -211,12 +263,13 @@
     // 功能 3: 排行榜页面手动触发打开未入库素材
     // ========================================
     const initRankingPageButton = () => {
-        // 只在排行榜页面执行
-        if (!window.location.pathname.includes('/ranking')) {
+        // 只在排行榜或搜索页面执行
+        if (!window.location.pathname.includes('/ranking') && !window.location.pathname.includes('/search')) {
             return;
         }
 
-        console.log('✓ 检测到排行榜页面，添加手动触发按钮...');
+        const pageType = window.location.pathname.includes('/ranking') ? '排行榜' : '搜索';
+        console.log(`✓ 检测到${pageType}页面，添加手动触发按钮...`);
 
         // 创建按钮容器
         const buttonContainer = document.createElement('div');
@@ -288,14 +341,80 @@
             `;
             document.head.appendChild(style);
 
-            // 执行扫描
-            scanAndOpenUnownedMaterials(button);
+            // 根据页面类型决定是否自动滚动
+            const isSearchPage = window.location.pathname.includes('/search');
+            if (isSearchPage) {
+                // 搜索页面：执行自动加载和扫描
+                autoLoadAllContent(button);
+            } else {
+                // 排行榜页面：直接扫描当前可见素材，不滚动
+                console.log('排行榜页面：直接扫描当前可见素材（不自动滚动）');
+                scanAndOpenUnownedMaterials(button);
+            }
         });
 
         buttonContainer.appendChild(button);
-        document.body.appendChild(buttonContainer);
+        document.body.appendChild(buttonContainer); 
 
         console.log('✓ 手动触发按钮已添加到页面右上角');
+    };
+
+    // 自动加载所有内容的函数
+    const autoLoadAllContent = (button) => {
+        console.log('========================================');
+        console.log('📜 开始自动滚动加载页面...');
+        console.log('========================================');
+
+        let lastHeight = 0;
+        let noChangeCount = 0;
+        const maxNoChange = 3; // 连续3次高度无变化则认为加载完毕
+        const checkInterval = 2000; // 每次检测间隔2秒
+
+        const scrollAndCheck = () => {
+            const currentHeight = document.body.scrollHeight;
+            const currentCards = document.querySelectorAll('.materialCard').length;
+
+            button.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 6px; vertical-align: middle; animation: spin 1s linear infinite;">
+                    <path d="M8 0a8 8 0 0 0-8 8h2a6 6 0 1 1 6 6v2a8 8 0 0 0 0-16z"/>
+                </svg>
+                <span>加载中... (已发现 ${currentCards})</span>
+            `;
+
+            console.log(`当前页面高度: ${currentHeight}, 素材数量: ${currentCards}`);
+
+            if (currentHeight === lastHeight) {
+                noChangeCount++;
+                console.log(`页面高度无变化 (${noChangeCount}/${maxNoChange})`);
+            } else {
+                noChangeCount = 0;
+                lastHeight = currentHeight;
+                console.log('页面内容已更新，继续滚动...');
+            }
+
+            if (noChangeCount >= maxNoChange) {
+                console.log('✓ 页面加载似乎已完成');
+                button.innerHTML = `
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 6px; vertical-align: middle; animation: spin 1s linear infinite;">
+                        <path d="M8 0a8 8 0 0 0-8 8h2a6 6 0 1 1 6 6v2a8 8 0 0 0 0-16z"/>
+                    </svg>
+                    <span>正在分析素材...</span>
+                `;
+
+                // 给一点缓冲时间，然后开始扫描
+                setTimeout(() => {
+                    scanAndOpenUnownedMaterials(button);
+                }, 1000);
+            } else {
+                // 滚动到底部
+                window.scrollTo(0, document.body.scrollHeight);
+                // 继续检测
+                setTimeout(scrollAndCheck, checkInterval);
+            }
+        };
+
+        // 开始第一次滚动
+        scrollAndCheck();
     };
 
     // 扫描并打开未入库素材的函数
@@ -317,14 +436,47 @@
             console.log(`✓ 找到 ${allCards.length} 个素材卡片`);
 
             // 筛选出未入库的素材（没有绿色勾选标记）
-            const unownedCards = Array.from(allCards).filter(card => {
+            let unownedCards = Array.from(allCards).filter(card => {
                 return !card.querySelector('.materialCard__purchased');
             });
 
             console.log(`📦 未入库素材数量: ${unownedCards.length}`);
 
-            if (unownedCards.length === 0) {
-                console.log('✓ 所有素材都已入库！');
+            // 根据配置过滤付费素材
+            let filteredCards = unownedCards;
+            let skippedPaidCount = 0;
+
+            if (skipPaidMaterials) {
+                filteredCards = unownedCards.filter(card => {
+                    const priceElement = card.querySelector('.materialCard__price');
+                    if (!priceElement) {
+                        // 没有价格标签，认为是免费素材
+                        return true;
+                    }
+
+                    const priceText = priceElement.textContent.trim();
+
+                    // 检查是否包含 G 币或 CP
+                    const hasPaidPrice = /\d+\s*(G|CP)/i.test(priceText);
+
+                    // 如果是付费素材，则过滤掉
+                    if (hasPaidPrice) {
+                        skippedPaidCount++;
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                if (skippedPaidCount > 0) {
+                    console.log(`🚫 已过滤付费素材: ${skippedPaidCount} 个`);
+                    console.log(`✅ 剩余待打开素材: ${filteredCards.length} 个`);
+                }
+            }
+
+            if (filteredCards.length === 0) {
+                const message = unownedCards.length > 0 ? '所有未入库素材都已被过滤！' : '所有素材都已入库！';
+                console.log(`✓ ${message}`);
                 button.innerHTML = `
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="margin-right: 6px; vertical-align: middle;">
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
@@ -349,7 +501,7 @@
             }
 
             // 提取未入库素材的链接
-            const unownedLinks = unownedCards.map(card => {
+            const unownedLinks = filteredCards.map(card => {
                 const link = card.querySelector('a.materialCard__cardContentBlock');
                 return link ? link.href : null;
             }).filter(href => href !== null);

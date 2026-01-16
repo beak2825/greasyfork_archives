@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Transfermarkt Speedrun
 // @namespace    http://tampermonkey.net/
-// @version      13.0.2
-// @description  Speedrun
+// @version      14.0
+// @description  Speedrun per Transfermarkt
 // @author       Derus
 // @match        *://*.transfermarkt.com/*
 // @match        *://*.transfermarkt.it/*
@@ -28,39 +28,41 @@
 (function() {
     'use strict';
 
-    // CAMBIATO IL PREFISSO STORAGE PER EVITARE CONFLITTI
-    const STORAGE_PREFIX = 'derus_speedrun_v13_'; 
+    const STORAGE_PREFIX = 'derus_speedrun_v14_';
     const BASE_URL = window.location.origin;
     const DEFAULT_IMG = 'https://tmssl.akamaized.net/images/portrait/header/default.jpg';
-    
-    // CAMBIATO ID PER EVITARE CHE TRANSFERMARKT LO RIMUOVA
-    // Non usare mai "tm-" all'inizio
-    const CONTAINER_ID = 'derus-speedrun-overlay'; 
+
+    const CONTAINER_ID = 'derus-speedrun-overlay';
     const HEADER_ID = 'derus-speedrun-header';
 
     // --- FONTI ---
     const SOURCES = {
-        transfers: { 
-            label: 'Trasferimenti Recenti', 
-            type: 'paged_url', 
-            url: '/transfers/neuestetransfers/statistik', 
-            max_pages: 100 
+        transfers: {
+            label: 'Trasferimenti Recenti',
+            type: 'paged_url',
+            url: '/transfers/neuestetransfers/statistik',
+            max_pages: 100
         },
-        rumors: { 
-            label: 'Rumors / Forum Mercato', 
-            type: 'paged_url', 
+        rumors: {
+            label: 'Rumors / Forum Mercato',
+            type: 'paged_url',
             url: '/calciomercato/detail/forum/154',
             max_pages: 5
         },
-        legends: { 
-            label: 'Leggende / Pallone d\'Oro', 
+        legends: {
+            label: 'Leggende / Pallone d\'Oro',
             type: 'paged_url',
             url: '/erfolge/spielertitel/statistik/676',
             max_pages: 3
         },
-        random_id: { 
-            label: 'Giocatore a caso', 
-            type: 'id_generator' 
+        random_id: {
+            label: 'Giocatore a caso (Random)',
+            type: 'id_generator'
+        },
+        // NUOVA OPZIONE AGGIUNTA
+        search: {
+            label: '🔎 Cerca Giocatore (Sfida)',
+            type: 'search'
         }
     };
 
@@ -117,31 +119,31 @@
     function cleanPlayerName(rawName) {
         if (!rawName) return "Sconosciuto";
         return rawName
-            .replace(/#\d+\s*/, '') 
-            .replace(/\n/g, '')     
-            .replace(/\t/g, '')     
-            .trim();                
+            .replace(/#\d+\s*/, '')
+            .replace(/\n/g, '')
+            .replace(/\t/g, '')
+            .trim();
     }
 
     // --- GENERATORE ID ---
     async function findValidRandomPlayer(statusCallback) {
         const MIN_ID = 10000;
         const MAX_ID = 1350000;
-        
+
         for (let i = 1; i <= 30; i++) {
             const randomId = Math.floor(Math.random() * (MAX_ID - MIN_ID + 1)) + MIN_ID;
             const testUrl = `${BASE_URL}/check/profil/spieler/${randomId}`;
             statusCallback(`Provo ID: ${randomId}...`);
-            
+
             try {
                 const response = await gmFetch(testUrl);
-                const cleanFinal = response.finalUrl.replace(/\/$/, ""); 
+                const cleanFinal = response.finalUrl.replace(/\/$/, "");
                 const cleanBase = BASE_URL.replace(/\/$/, "");
 
                 if (cleanFinal !== cleanBase && response.finalUrl.includes('/profil/spieler/')) {
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(response.text, 'text/html');
-                    
+
                     let pageTitle = doc.querySelector('h1') ? doc.querySelector('h1').innerText : doc.title;
                     let finalName = cleanPlayerName(pageTitle);
 
@@ -156,12 +158,48 @@
         throw new Error("Nessun ID valido trovato.");
     }
 
+    // --- NUOVA FUNZIONE DI RICERCA ---
+    async function searchPlayerByName(query) {
+        // Usa la ricerca veloce di Transfermarkt
+        const searchUrl = `${BASE_URL}/schnellsuche/ergebnis/schnellsuche?query=${encodeURIComponent(query)}`;
+
+        const response = await gmFetch(searchUrl);
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(response.text, 'text/html');
+
+        // Cerca il primo link giocatore nella tabella dei risultati
+        // Solitamente è nella tabella con classe 'items' o nella lista risultati
+        const playerLink = doc.querySelector('a[href*="/profil/spieler/"]');
+
+        if (playerLink) {
+            const rawName = playerLink.getAttribute('title') || playerLink.innerText;
+            const finalName = cleanPlayerName(rawName);
+            const href = playerLink.getAttribute('href');
+
+            // Cerca immagine
+            let imgSrc = DEFAULT_IMG;
+            // Spesso nei risultati l'immagine è nella cella precedente
+            const row = playerLink.closest('tr');
+            if (row) {
+                const imgTag = row.querySelector('img');
+                if (imgTag) imgSrc = imgTag.getAttribute('src') || imgTag.getAttribute('data-src');
+            }
+
+            return {
+                name: finalName,
+                url: BASE_URL + href,
+                img: enhanceImageQuality(imgSrc)
+            };
+        }
+        return null;
+    }
+
     // --- SCRAPER LISTE ---
     async function scrapePlayerFromList(url) {
         const response = await gmFetch(url);
         const parser = new DOMParser();
         const doc = parser.parseFromString(response.text, 'text/html');
-        
+
         const allLinks = Array.from(doc.querySelectorAll('a[href*="/profil/spieler/"]'));
         const candidates = [];
         const seenUrls = new Set();
@@ -169,18 +207,18 @@
         allLinks.forEach(link => {
             const href = link.getAttribute('href');
             let rawName = link.getAttribute('title') || link.innerText;
-            
+
             if (href && rawName && rawName.trim().length > 2 && !seenUrls.has(href)) {
                 const finalName = cleanPlayerName(rawName);
-                
+
                 let imgSrc = DEFAULT_IMG;
                 let imgTag = link.querySelector('img');
-                
+
                 if (!imgTag) {
                     const parent = link.parentElement;
                     if (parent) imgTag = parent.querySelector('img');
                 }
-                
+
                 if (!imgTag) {
                     const container = link.closest('tr') || link.closest('article');
                     if (container) imgTag = container.querySelector('img');
@@ -210,6 +248,42 @@
         const sourceKey = document.getElementById(type === 'start' ? 'sel-start' : 'sel-target').value;
         const sourceConfig = SOURCES[sourceKey];
 
+        // Se è ricerca manuale
+        if (sourceConfig.type === 'search') {
+            const userQuery = prompt("Scrivi il nome del giocatore:");
+            if (!userQuery || userQuery.trim() === "") return; // Annullato
+
+            input.style.backgroundColor = "#fff3cd";
+            input.value = "Cerco " + userQuery + "...";
+            imgEl.style.opacity = "0.5";
+
+            try {
+                const player = await searchPlayerByName(userQuery);
+                if (player) {
+                    setState(type + 'Name', player.name);
+                    setState(type + 'Url', player.url);
+                    setState(type + 'Img', player.img);
+
+                    input.value = player.name;
+                    input.style.backgroundColor = "#d4edda";
+                    imgEl.src = player.img;
+                    imgEl.style.opacity = "1";
+                    renderUI();
+                } else {
+                    alert("Giocatore non trovato!");
+                    input.value = "Non trovato";
+                    input.style.backgroundColor = "#f8d7da";
+                    imgEl.style.opacity = "1";
+                }
+            } catch (e) {
+                alert("Errore ricerca: " + e.message);
+                input.value = "Errore";
+                imgEl.style.opacity = "1";
+            }
+            return;
+        }
+
+        // Se è modalità automatica
         input.style.backgroundColor = "#fff3cd";
         input.value = "Ricerca in corso...";
         imgEl.style.opacity = "0.5";
@@ -232,12 +306,12 @@
                 setState(type + 'Name', player.name);
                 setState(type + 'Url', player.url);
                 setState(type + 'Img', player.img);
-                
+
                 input.value = player.name;
                 input.style.backgroundColor = "#d4edda";
                 imgEl.src = player.img;
                 imgEl.style.opacity = "1";
-                
+
                 renderUI();
             } else {
                 throw new Error("Nessun giocatore trovato.");
@@ -252,26 +326,24 @@
     }
 
     // --- UI ---
-    // Usiamo un ID che non contiene "tm-" per evitare che AdBlock/Transfermarkt lo rimuovano
     const container = document.createElement('div');
-    container.id = CONTAINER_ID; 
-    
+    container.id = CONTAINER_ID;
+
     const savedState = getState();
-    const initialStyle = savedState.posX === '20px' 
-        ? `bottom: 20px; right: 20px;` 
+    const initialStyle = savedState.posX === '20px'
+        ? `bottom: 20px; right: 20px;`
         : `top: ${savedState.posY}; left: ${savedState.posX};`;
 
     container.style.cssText = `
-        position: fixed; ${initialStyle} width: 320px; 
-        background: #ffffff; border-radius: 12px; 
-        box-shadow: 0 8px 30px rgba(0,0,0,0.3); z-index: 9999999; 
+        position: fixed; ${initialStyle} width: 320px;
+        background: #ffffff; border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3); z-index: 9999999;
         font-family: 'Source Sans Pro', Arial, sans-serif;
         overflow: hidden; border: 1px solid #ddd;
     `;
 
     function makeDraggable(el) {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-        // Header ID aggiornato
         const header = document.getElementById(HEADER_ID);
         if (header) header.onmousedown = dragMouseDown;
 
@@ -314,15 +386,15 @@
     function renderUI() {
         const state = getState();
         const isTargetReached = checkWinCondition();
-        
+
         const headerStyle = `background: #1a3151; padding: 12px 15px; color: white; cursor: move; display: flex; justify-content: space-between; align-items: center; user-select: none;`;
 
         let contentHtml = '';
 
         if (state.isPlaying) {
-            let status = state.finished || isTargetReached ? 
+            let status = state.finished || isTargetReached ?
                 '<span style="color:#28a745; font-weight:800">VITTORIA!</span>' : 'Trova il collegamento...';
-            
+
             if ((!state.finished) && isTargetReached) setState('finished', 'true');
 
             contentHtml = `
@@ -332,14 +404,14 @@
                         <img src="${state.targetImg}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #1a3151; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                         <div style="font-size: 18px; font-weight: bold; color: #1a3151; margin-top: 10px; line-height: 1.2;">${state.targetName}</div>
                     </div>
-                    
+
                     <div style="display: flex; justify-content: center; align-items: baseline; gap: 5px; margin-bottom: 15px; background: #f8f9fa; padding: 10px; border-radius: 8px;">
                         <span style="font-size: 32px; font-weight: bold; color: #d9534f;">${state.clicks}</span>
                         <span style="font-size: 14px; color: #666; text-transform: uppercase; font-weight: bold;">Click</span>
                     </div>
-                    
+
                     <div style="font-size: 14px; font-weight: bold; margin-bottom: 15px;">${status}</div>
-                    
+
                     ${state.finished || isTargetReached ? `<button id="btn-restart" style="width: 100%; padding: 12px; background: #1a3151; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Nuova Partita</button>` : ''}
                 </div>
             `;
@@ -360,7 +432,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
 
                     <div style="margin-bottom: 20px;">
@@ -380,7 +452,6 @@
             `;
         }
 
-        // Header ID aggiornato qui
         container.innerHTML = `<div id="${HEADER_ID}" style="${headerStyle}"><span style="font-weight: bold;">⚡ TM Speedrun</span>${state.isPlaying ? '<button id="btn-mini-exit" style="background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; font-size: 10px; padding: 4px 8px; border-radius: 4px;">ESCI</button>' : ''}</div>${contentHtml}`;
 
         makeDraggable(container);

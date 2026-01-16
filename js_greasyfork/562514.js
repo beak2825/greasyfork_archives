@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Phantom Portal v2.2.0
+// @name         Phantom Portal v2.3.1
 // @namespace    http://tampermonkey.net/
-// @version      2.2.0
+// @version      2.3.1
 // @description  Torn to Discord sync system for my faction and friends.
 // @author       Daturax
 // @license      GPLv3
@@ -17,8 +17,8 @@
 // @connect      *.supabase.co
 // @connect      cdn.pixabay.com
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v220.user.js
-// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v220.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v231.user.js
+// @updateURL https://update.greasyfork.org/scripts/562514/Phantom%20Portal%20v231.meta.js
 // ==/UserScript==
 
 (function() {
@@ -26,8 +26,8 @@
 
     const TORN_API_KEY = '###PDA-APIKEY###';
 
-    if (window._phantomPortalV2_2_0) return;
-    window._phantomPortalV2_2_0 = true;
+    if (window._phantomPortalV2_3_1) return;
+    window._phantomPortalV2_3_1 = true;
 
     class PhantomPortal {
         constructor() {
@@ -58,7 +58,8 @@
                 settings: GM_getValue('pp_settings', {
                     showNotifications: true,
                     autoScroll: true,
-                    soundEnabled: false
+                    soundEnabled: false,
+                    confirmQuickActions: true
                 }),
                 isInAllowedFaction: GM_getValue('pp_is_in_allowed_faction', false),
                 messageStats: GM_getValue('pp_message_stats', {
@@ -78,7 +79,8 @@
                 chainWarningShown: false,
                 previousChainValue: GM_getValue('pp_previous_chain_value', 0),
                 isCelebrating: false,
-                celebrationActive: false
+                celebrationActive: false,
+                bountyTarget: GM_getValue('pp_bounty_target', null)
             };
 
             Object.keys(this.rooms).forEach(roomId => {
@@ -115,7 +117,7 @@
         }
 
         async init() {
-            console.log('[Phantom Portal] v2.2.0 initialized');
+            console.log('[Phantom Portal] v2.3.1 initialized');
 
             await this.checkUserOverrides();
             this.injectStyles();
@@ -622,6 +624,7 @@
                 bankerBtn.style.display = this.state.isInAllowedFaction ? '' : 'none';
             }
 
+            // BUG FIX: Proper room accessibility check
             if (!this.isRoomAccessible(this.state.selectedRoom)) {
                 const portalChatId = '1451524832767250543';
                 this.state.selectedRoom = portalChatId;
@@ -639,6 +642,10 @@
         }
 
         switchRoom(roomId) {
+            // BUG FIX: Clear pending messages and notifications when switching rooms
+            this.pendingMessages.clear();
+            this.pendingNotifications.clear();
+            
             this.state.selectedRoom = roomId;
             GM_setValue('pp_selected_room', roomId);
             
@@ -656,6 +663,10 @@
                 this.unreadMessages = 0;
                 this.updateFABPulse();
             }
+            
+            // BUG FIX: Clear unread count for current room
+            this.unreadMessages = 0;
+            this.updateFABPulse();
         }
 
         async makeTornRequest(endpoint) {
@@ -716,6 +727,34 @@
             if (typeof key !== 'string') return '';
             return key.replace(/[^a-zA-Z0-9]/g, '');
         }
+        
+        // NEW: Function to decode HTML entities
+        decodeHTMLEntities(str) {
+            if (typeof str !== 'string') return '';
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = str;
+            return textarea.value;
+        }
+        
+        // NEW: Function to extract clean URLs from text
+        extractCleanURLs(text) {
+            const urlRegex = /(https?:\/\/[^\s<]+)/g;
+            const matches = text.match(urlRegex);
+            if (!matches) return text;
+            
+            // Replace HTML encoded URLs with clean URLs
+            let cleanText = text;
+            matches.forEach(url => {
+                const cleanUrl = this.decodeHTMLEntities(url)
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'");
+                cleanText = cleanText.replace(url, cleanUrl);
+            });
+            return cleanText;
+        }
 
         updateProfileDisplay() {
             const display = document.querySelector('.pp-profile-display');
@@ -757,7 +796,13 @@
                 const btn = document.createElement('button');
                 btn.className = `pp-action-btn ${action.id}`;
                 btn.innerHTML = action.icon;
-                btn.title = action.label + (action.role ? ` - ${action.role}` : '');
+                
+                // Update bounty button title if target is set
+                if (action.id === 'bounty' && this.state.bountyTarget) {
+                    btn.title = `${action.label} - ${action.role} (Target: ${this.state.bountyTarget})`;
+                } else {
+                    btn.title = action.label + (action.role ? ` - ${action.role}` : '');
+                }
                 
                 const cooldown = this.state.buttonCooldowns[action.id];
                 if (cooldown && Date.now() - cooldown < 10000) {
@@ -792,6 +837,13 @@
                 return;
             }
 
+            // Check for confirmation if enabled
+            if (this.state.settings.confirmQuickActions) {
+                if (!confirm(`Are you sure you want to request ${action.label}?`)) {
+                    return;
+                }
+            }
+
             // Apply cooldown
             this.state.buttonCooldowns[action.id] = now;
             GM_setValue('pp_button_cooldowns', this.state.buttonCooldowns);
@@ -809,13 +861,18 @@
             let message = '';
             let roomId = '1451524832767250543'; // Default to portal chat
             
+            // BUG FIX: Always include user name in alerts
+            const userName = this.state.profile?.name || 'Unknown User';
+            
             switch(action.id) {
                 case 'revive':
                     if (this.state.profile?.id) {
                         const profileUrl = `https://www.torn.com/profiles.php?XID=${this.state.profile.id}`;
-                        message = `${action.role} - Revive needed! ${profileUrl}`;
+                        // BUG FIX: Include user name and clean URL
+                        const cleanUrl = profileUrl.replace(/&amp;/g, '&');
+                        message = `${action.role} - ${userName} needs revive! ${cleanUrl}`;
                     } else {
-                        message = `${action.role} - Revive needed!`;
+                        message = `${action.role} - ${userName} needs revive!`;
                     }
                     break;
                     
@@ -826,11 +883,11 @@
                         const urlParams = new URLSearchParams(window.location.search);
                         const targetId = urlParams.get('user2ID');
                         if (targetId) {
-                            // FIXED BUG: Changed &amp; to & in the attack URL
+                            // BUG FIX: Clean URL encoding
                             const attackUrl = `https://www.torn.com/loader.php?sid=attack&user2ID=${targetId}`;
-                            message = `${action.role} - Assist needed! Attack link: ${attackUrl}`;
+                            message = `${action.role} - ${userName} needs assist! Attack link: ${attackUrl}`;
                         } else {
-                            message = `${action.role} - Assist needed! (No target ID found)`;
+                            message = `${action.role} - ${userName} needs assist! (No target ID found)`;
                         }
                     } else {
                         this.showToast('Assist only works on attack pages with a target selected', 'warning');
@@ -841,29 +898,64 @@
                 case 'trader':
                     if (this.state.profile?.id) {
                         const tradeUrl = `https://www.torn.com/trade.php#step=start&userID=${this.state.profile.id}`;
-                        message = `${action.role} - Trader needed! Trade link: ${tradeUrl}`;
+                        // BUG FIX: Clean URL encoding
+                        const cleanUrl = tradeUrl.replace(/&amp;/g, '&');
+                        message = `${action.role} - ${userName} needs trader! Trade link: ${cleanUrl}`;
                     } else {
-                        message = `${action.role} - Trader needed!`;
+                        message = `${action.role} - ${userName} needs trader!`;
                     }
                     break;
                     
                 case 'bounty':
-                    const bountyUrl = 'https://www.torn.com/bounties.php#/p=add';
-                    message = `${action.role} - Bounty needed! Bounty link: ${bountyUrl}`;
+                    // Handle bounty target selection
+                    if (!this.state.bountyTarget) {
+                        const target = prompt('Enter Torn Profile ID (XID) for bounty target:');
+                        if (target && !isNaN(target) && target.trim() !== '') {
+                            this.state.bountyTarget = target.trim();
+                            GM_setValue('pp_bounty_target', this.state.bountyTarget);
+                            
+                            // Update bounty button title
+                            const bountyBtn = document.querySelector('.pp-action-btn.bounty');
+                            if (bountyBtn) {
+                                bountyBtn.title = `${action.label} - ${action.role} (Target: ${this.state.bountyTarget})`;
+                            }
+                            
+                            this.showToast(`Bounty target set to ${this.state.bountyTarget}. Click again to send.`, 'info');
+                        } else {
+                            this.showToast('Invalid Torn Profile ID', 'error');
+                        }
+                        return; // Don't send message, wait for next click
+                    }
+                    
+                    // Send bounty alert with stored target
+                    const bountyUrl = `https://www.torn.com/bounties.php?p=add&XID=${this.state.bountyTarget}`;
+                    // BUG FIX: Clean URL encoding
+                    const cleanBountyUrl = bountyUrl.replace(/&amp;/g, '&');
+                    message = `${action.role} - ${userName} requests bounty on ${this.state.bountyTarget}! ${cleanBountyUrl}`;
+                    
+                    // Clear bounty target after sending
+                    this.state.bountyTarget = null;
+                    GM_deleteValue('pp_bounty_target');
+                    
+                    // Update bounty button title
+                    const bountyBtn = document.querySelector('.pp-action-btn.bounty');
+                    if (bountyBtn) {
+                        bountyBtn.title = `${action.label} - ${action.role}`;
+                    }
                     break;
                     
                 case 'banker':
                     // Banker messages go only to banking room for faction members
                     roomId = '1080875329888997429';
-                    message = `${action.role} - Banker needed!`;
+                    message = `${action.role} - ${userName} needs banker!`;
                     break;
                     
                 case 'mercenary':
-                    message = `${action.role} - Mercenary needed!`;
+                    message = `${action.role} - ${userName} needs mercenary!`;
                     break;
                     
                 default:
-                    message = `${action.role} - ${action.label} needed!`;
+                    message = `${action.role} - ${userName} needs ${action.label.toLowerCase()}!`;
             }
 
             // Send message
@@ -886,7 +978,10 @@
             if (!this.state.profile?.name) return false;
 
             try {
-                const sanitizedMessage = this.sanitizeHTML(message);
+                // BUG FIX: Clean message before sending
+                let sanitizedMessage = this.sanitizeHTML(message);
+                sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
+                
                 const sanitizedName = this.sanitizeHTML(this.state.profile.name);
                 
                 const response = await this.supabaseRequest('POST', '/rest/v1/rpc/insert_message_from_torn', {
@@ -898,6 +993,7 @@
                 });
                 return !!response;
             } catch (error) {
+                console.error('Supabase send error:', error);
                 return false;
             }
         }
@@ -907,7 +1003,9 @@
             const message = input?.value.trim();
             if (!message) return;
 
-            const sanitizedMessage = this.sanitizeHTML(message);
+            let sanitizedMessage = this.sanitizeHTML(message);
+            sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
+            
             if (!sanitizedMessage) {
                 this.showToast('Invalid message', 'error');
                 return;
@@ -926,6 +1024,9 @@
                 input.value = '';
                 input.focus();
                 setTimeout(() => this.pendingMessages.delete(messageHash), 30000);
+                
+                // BUG FIX: Auto-scroll to latest message
+                this.scrollToLatestMessage();
             } else {
                 this.showToast('Send failed', 'error');
                 this.pendingMessages.delete(messageHash);
@@ -934,6 +1035,7 @@
         }
 
         async fetchMessages() {
+            // BUG FIX: Prevent cross-posting by checking room accessibility before polling
             if (this.isPolling || !this.isRoomAccessible(this.state.selectedRoom)) {
                 this.isPolling = false;
                 return;
@@ -942,7 +1044,10 @@
             this.isPolling = true;
             try {
                 const now = Date.now();
-                if (now - this.state.lastSync < 2000) return;
+                if (now - this.state.lastSync < 2000) {
+                    this.isPolling = false;
+                    return;
+                }
 
                 const fiveMinutesAgo = new Date(now - 5 * 60000).toISOString();
                 const response = await this.supabaseRequest('GET',
@@ -953,9 +1058,12 @@
 
                 if (response && Array.isArray(response) && response.length > 0) {
                     response.reverse().forEach(msg => {
+                        // BUG FIX: Double-check room accessibility for each message
                         if (!this.isRoomAccessible(msg.room_id)) return;
 
-                        const sanitizedMessage = this.sanitizeHTML(msg.message || '');
+                        let sanitizedMessage = this.sanitizeHTML(msg.message || '');
+                        sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
+                        
                         const sanitizedSender = this.sanitizeHTML(msg.torn_profile_name || msg.discord_name || 'Unknown');
                         const msgHash = this.generateMessageHash(
                             sanitizedMessage, 
@@ -1018,6 +1126,7 @@
                 this.state.lastSync = now;
             } catch (error) {
                 // Network errors are handled silently
+                console.error('Fetch messages error:', error);
             } finally {
                 this.isPolling = false;
             }
@@ -1134,17 +1243,77 @@
             messagesEl.innerHTML = '';
             const roomHistory = this.state.roomMessages[this.state.selectedRoom] || [];
             
-            roomHistory.forEach(msg => {
+            // BUG FIX: Lazy load - only show recent messages initially
+            const recentHistory = roomHistory.slice(-20); // Show last 20 messages
+            
+            recentHistory.forEach(msg => {
+                let sanitizedMessage = this.sanitizeHTML(msg.message || '');
+                sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
+                
                 this.addMessage(
-                    msg.message || '',
+                    sanitizedMessage,
                     msg.discord_name ? 'in' : 'out',
                     msg.alert ? 'alert' : 'normal',
                     msg.torn_profile_name || msg.discord_name || 'Unknown',
                     msg.created_at || new Date().toISOString(),
-                    msg.sync_id
+                    msg.sync_id,
+                    true // Mark as history
                 );
                 if (msg.sync_id) this.state.messageCache.set(msg.sync_id, true);
             });
+            
+            // BUG FIX: Add "Load more" button if there are older messages
+            if (roomHistory.length > 20) {
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.className = 'pp-load-more';
+                loadMoreBtn.textContent = `Load ${roomHistory.length - 20} older messages...`;
+                loadMoreBtn.addEventListener('click', () => this.loadMoreHistory(roomHistory));
+                messagesEl.insertBefore(loadMoreBtn, messagesEl.firstChild);
+            }
+            
+            // BUG FIX: Auto-scroll to latest message
+            setTimeout(() => this.scrollToLatestMessage(), 100);
+        }
+        
+        loadMoreHistory(fullHistory) {
+            const messagesEl = document.querySelector('.pp-messages');
+            if (!messagesEl) return;
+            
+            // Remove "Load more" button
+            const loadMoreBtn = messagesEl.querySelector('.pp-load-more');
+            if (loadMoreBtn) loadMoreBtn.remove();
+            
+            // Load all messages
+            messagesEl.innerHTML = '';
+            fullHistory.forEach(msg => {
+                let sanitizedMessage = this.sanitizeHTML(msg.message || '');
+                sanitizedMessage = this.extractCleanURLs(sanitizedMessage);
+                
+                this.addMessage(
+                    sanitizedMessage,
+                    msg.discord_name ? 'in' : 'out',
+                    msg.alert ? 'alert' : 'normal',
+                    msg.torn_profile_name || msg.discord_name || 'Unknown',
+                    msg.created_at || new Date().toISOString(),
+                    msg.sync_id,
+                    true
+                );
+            });
+            
+            // Scroll to bottom to show latest messages
+            this.scrollToLatestMessage();
+        }
+        
+        // NEW: Function to scroll to latest message
+        scrollToLatestMessage() {
+            if (this.state.settings.autoScroll) {
+                const messagesEl = document.querySelector('.pp-messages');
+                if (messagesEl) {
+                    setTimeout(() => {
+                        messagesEl.scrollTop = messagesEl.scrollHeight;
+                    }, 10);
+                }
+            }
         }
 
         cleanupMessageCache() {
@@ -1161,13 +1330,19 @@
             }
         }
 
-        addMessage(content, direction, type = 'normal', sender = null, timestamp = null, sync_id = null) {
+        addMessage(content, direction, type = 'normal', sender = null, timestamp = null, sync_id = null, isHistory = false) {
             const messagesEl = document.querySelector('.pp-messages');
             if (!messagesEl) return;
 
             const msgEl = document.createElement('div');
             msgEl.className = `pp-message message-${direction}`;
-            if (sync_id) msgEl.setAttribute('data-sync-id', sync_id);
+            if (sync_id) {
+                if (sync_id.startsWith('temp_')) {
+                    msgEl.setAttribute('data-temp-id', sync_id);
+                } else {
+                    msgEl.setAttribute('data-sync-id', sync_id);
+                }
+            }
 
             if (sender) {
                 const senderEl = document.createElement('div');
@@ -1176,7 +1351,8 @@
                 msgEl.appendChild(senderEl);
             }
 
-            if (type === 'alert') {
+            if (type === 'alert' || type === 'Revive' || type === 'Assist' || type === 'Merc' || 
+                type === 'Banker' || type === 'Trader' || type === 'Bounty') {
                 const badge = document.createElement('span');
                 badge.className = 'message-badge alert';
                 badge.textContent = 'ALERT';
@@ -1205,15 +1381,24 @@
                 GM_setValue('pp_message_stats', this.state.messageStats);
             }
 
-            if (this.state.settings.autoScroll) {
-                setTimeout(() => messagesEl.scrollTop = messagesEl.scrollHeight, 10);
+            // BUG FIX: Only auto-scroll for non-history messages or when opening chat
+            if (this.state.settings.autoScroll && !isHistory) {
+                this.scrollToLatestMessage();
             }
         }
 
         linkify(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            // BUG FIX: Proper URL detection with HTML entity decoding
+            const urlRegex = /(https?:\/\/[^\s<]+)/g;
             return text.replace(urlRegex, function(url) {
-                return '<a href="' + url + '" target="_blank" rel="noopener noreferrer" style="color: #00ff88; text-decoration: underline;">' + url + '</a>';
+                // Decode HTML entities in URLs
+                const cleanUrl = url
+                    .replace(/&amp;/g, '&')
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'");
+                return '<a href="' + cleanUrl + '" target="_blank" rel="noopener noreferrer" style="color: #00ff88; text-decoration: underline;">' + cleanUrl + '</a>';
             });
         }
 
@@ -1296,7 +1481,7 @@
             modal.innerHTML = `
                 <div class="pp-settings-content">
                     <div class="pp-settings-header">
-                        <h3>Phantom Portal Settings v2.2.0</h3>
+                        <h3>Phantom Portal Settings v2.3.1</h3>
                         <button class="pp-settings-close">&times;</button>
                     </div>
                     <div class="pp-settings-body">
@@ -1380,6 +1565,12 @@
                                 <label>
                                     <input type="checkbox" class="pp-setting-checkbox" data-setting="soundEnabled" ${this.state.settings.soundEnabled ? 'checked' : ''}>
                                     Enable Alert Sounds
+                                </label>
+                            </div>
+                            <div class="pp-setting-item">
+                                <label>
+                                    <input type="checkbox" class="pp-setting-checkbox" data-setting="confirmQuickActions" ${this.state.settings.confirmQuickActions ? 'checked' : ''}>
+                                    Confirm Quick Actions
                                 </label>
                             </div>
                         </div>
@@ -1569,7 +1760,7 @@
             this.toggleBtn = document.createElement('div');
             this.toggleBtn.className = 'pp-toggle';
             this.toggleBtn.innerHTML = '<img src="https://images2.imgbox.com/86/79/2ag63Ut3_o.png" class="pp-toggle-icon" alt="PP">';
-            this.toggleBtn.title = 'Phantom Portal v2.2.0 - Long press to move, tap to open';
+            this.toggleBtn.title = 'Phantom Portal v2.3.1 - Long press to move, tap to open';
             
             // Apply saved position
             this.toggleBtn.style.position = 'fixed';
@@ -1583,7 +1774,7 @@
                 <div class="pp-header">
                     <div class="pp-title">
                         <img src="https://images2.imgbox.com/86/79/2ag63Ut3_o.png" class="pp-header-icon" alt="">
-                        Phantom Portal v2.2.0
+                        Phantom Portal v2.3.1
                         <button class="pp-close-btn" title="Close window">✕</button>
                     </div>
                     <div class="pp-header-right">
@@ -1758,6 +1949,9 @@
                 this.toggleBtn.classList.remove('pulsing');
                 this.fabPulsing = false;
                 this.unreadMessages = 0;
+                
+                // BUG FIX: Auto-scroll to latest message when opening chat
+                setTimeout(() => this.scrollToLatestMessage(), 100);
             }
         }
 
@@ -2445,6 +2639,25 @@
                     border-color: #ff0000;
                 }
 
+                .pp-load-more {
+                    display: block;
+                    width: 100%;
+                    padding: 8px;
+                    margin: 10px 0;
+                    background: rgba(0, 40, 0, 0.6);
+                    border: 1px solid #006600;
+                    color: #aaffaa;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    font-size: 12px;
+                    text-align: center;
+                }
+
+                .pp-load-more:hover {
+                    background: rgba(0, 60, 0, 0.8);
+                    border-color: #00aa00;
+                }
+
                 @keyframes slideIn {
                     from { transform: translateX(100%); opacity: 0; }
                     to { transform: translateX(0); opacity: 1; }
@@ -2469,7 +2682,7 @@
                     background: rgba(0, 20, 0, 0.3);
                 }
 
-                ::webkit-scrollbar-thumb {
+                ::-webkit-scrollbar-thumb {
                     background: rgba(0, 255, 65, 0.3);
                     border-radius: 3px;
                 }

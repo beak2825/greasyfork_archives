@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pornhub Block User by Menu Click
 // @namespace    https://github.com/danmaclann
-// @version      1.1
+// @version      1.11
 // @license      MIT
 // @description  Adds "Block user" to video menu via event interception, hides persistently
 // @author       danmaclann
@@ -99,7 +99,7 @@
             if (!el.querySelector('.ph-block-user-link')) {
                 const menuDiv = el.querySelector('.moreActionMenu');
                 if (menuDiv) {
-                    // Reuse logic above if needed
+                    // 
                 }
             }
         });

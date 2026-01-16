@@ -1,178 +1,152 @@
 // ==UserScript==
-// @name         Full Page Video (Video.js UI + Reliable Auto Hide)
-// @version      2.4.0
-// @description  Chaturbate: Full-page overlay without fullscreen. Maximizes Video.js container preserving UI (volume, quality) and uses script-controlled auto-hide for the control bar. Toggle ☩ + dynamic page support.
-// @author       Thiago David
+// @name         Chaturbate Full Page Video (Video.js UI + Auto Hide)
+// @version      2.4.3
+// @description  Chaturbate: Full-page overlay (no browser fullscreen) for room pages. Preserves Video.js UI (volume/quality) and uses reliable auto-hide. Toggle ☩ + dynamic page support. Avoids black screens on listing pages.
+// @author       You
 // @match        https://*.chaturbate.com/*
 // @run-at       document-idle
 // @grant        none
 // @namespace https://greasyfork.org/users/867375
-// @downloadURL https://update.greasyfork.org/scripts/562606/Full%20Page%20Video%20%28Videojs%20UI%20%2B%20Reliable%20Auto%20Hide%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562606/Full%20Page%20Video%20%28Videojs%20UI%20%2B%20Reliable%20Auto%20Hide%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562606/Chaturbate%20Full%20Page%20Video%20%28Videojs%20UI%20%2B%20Auto%20Hide%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/562606/Chaturbate%20Full%20Page%20Video%20%28Videojs%20UI%20%2B%20Auto%20Hide%29.meta.js
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  const STATE = {
+  var STATE = {
     maximized: true,
     videoEl: null,
     playerRoot: null,
     coverEl: null,
     toggleEl: null,
     styleEl: null,
-    saved: new WeakMap(),
+    saved: (typeof WeakMap !== 'undefined') ? new WeakMap() : null,
     resizeTimer: null,
     mo: null,
-
-    hideDelayMs: 2500,    // tempo sem movimento para esconder
+    hideDelayMs: 2500,
     hideTimer: null,
-    lastShownAt: 0,
     bound: false,
+    lastUrl: location.href
   };
+
+  // Blocked routes (avoid false positives)
+  var BLOCKED = {
+    'followed-cams': true, 'tags': true, 'accounts': true, 'support': true, 'billing': true,
+    'apps': true, 'api': true, 'privacy': true, 'terms': true, 'studio': true, 'contest': true,
+    'search': true, 'affiliates': true, 'developers': true, 'login': true, 'logout': true,
+    'signup': true, 'register': true, 'forgot': true, 'tipping': true, 'gifts': true,
+    'events': true, 'campaigns': true
+  };
+
+  function isRoomPath(pathname) {
+    var p = (pathname || '/').replace(/\/+$/, '');
+    if (!p) p = '/';
+    if (p === '/') return false;
+
+    var parts = p.split('/');
+    var segs = [];
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i]) segs.push(parts[i]);
+    }
+    if (segs.length !== 1) return false;
+
+    var seg = (segs[0] || '').toLowerCase();
+    if (BLOCKED[seg]) return false;
+
+    return true;
+  }
 
   function ensureUI() {
     if (!STATE.coverEl) {
-      const cover = document.createElement('div');
+      var cover = document.createElement('div');
       cover.id = 'fpv_cover';
-      Object.assign(cover.style, {
-        position: 'fixed',
-        inset: '0',
-        background: 'black',
-        zIndex: '998',
-        display: 'none',
-        pointerEvents: 'none',
-      });
+      cover.style.position = 'fixed';
+      cover.style.top = '0';
+      cover.style.left = '0';
+      cover.style.right = '0';
+      cover.style.bottom = '0';
+      cover.style.background = 'black';
+      cover.style.zIndex = '998';
+      cover.style.display = 'none';
+      cover.style.pointerEvents = 'none';
       document.documentElement.appendChild(cover);
       STATE.coverEl = cover;
     }
 
     if (!STATE.toggleEl) {
-      const t = document.createElement('div');
+      var t = document.createElement('div');
       t.id = 'fpv_toggle';
-      Object.assign(t.style, {
-        color: 'black',
-        backgroundColor: 'white',
-        borderRadius: '100px',
-        border: '1px solid pink',
-        zIndex: '999999',
-        position: 'fixed',
-        top: '0',
-        right: '0',
-        cursor: 'pointer',
-        userSelect: 'none',
-        width: '30px',
-        height: '30px',
-        margin: '4px',
-        textAlign: 'center',
-        lineHeight: '30px',
-        fontSize: '30px',
-        opacity: '1',
-      });
+      t.style.color = 'black';
+      t.style.backgroundColor = 'white';
+      t.style.borderRadius = '100px';
+      t.style.border = '1px solid pink';
+      t.style.zIndex = '999999';
+      t.style.position = 'fixed';
+      t.style.top = '0';
+      t.style.right = '0';
+      t.style.cursor = 'pointer';
+      t.style.userSelect = 'none';
+      t.style.width = '30px';
+      t.style.height = '30px';
+      t.style.margin = '4px';
+      t.style.textAlign = 'center';
+      t.style.lineHeight = '30px';
+      t.style.fontSize = '30px';
+      t.style.opacity = '1';
+      t.style.display = 'none'; // only show on room pages
       t.textContent = '☩';
-      t.addEventListener('mouseover', () => (t.style.opacity = '0.9'));
-      t.addEventListener('mouseout', () => (t.style.opacity = '1'));
-      t.addEventListener('click', (e) => {
+
+      t.addEventListener('mouseover', function () { t.style.opacity = '0.9'; }, false);
+      t.addEventListener('mouseout', function () { t.style.opacity = '1'; }, false);
+      t.addEventListener('click', function (e) {
         if (e.button !== 0) return;
         STATE.maximized = !STATE.maximized;
         applyLayout();
-      });
+      }, false);
+
       document.documentElement.appendChild(t);
       STATE.toggleEl = t;
     }
 
     if (!STATE.styleEl) {
-      const s = document.createElement('style');
+      var s = document.createElement('style');
       s.id = 'fpv_style';
-      s.textContent = `
-        /* Base: quando maximizado, garantimos que controles existam e sejam empilhados corretamente */
-        .fpv-max.video-js .vjs-control-bar {
-          visibility: visible !important;
-          display: flex !important;
-          z-index: 1000002 !important;
-        }
-
-        .fpv-max.video-js .vjs-big-play-button {
-          z-index: 1000003 !important;
-        }
-
-        /* Quando mostramos controles */
-        .fpv-max.fpv-show-controls.video-js .vjs-control-bar {
-          opacity: 1 !important;
-          pointer-events: auto !important;
-        }
-
-        /* Quando escondemos controles */
-        .fpv-max.fpv-hide-controls.video-js .vjs-control-bar {
-          opacity: 0 !important;
-          pointer-events: none !important;
-        }
-
-        /* Menus e botões só são clicáveis quando está visível */
-        .fpv-max.fpv-show-controls.video-js .vjs-volume-panel,
-        .fpv-max.fpv-show-controls.video-js .vjs-menu,
-        .fpv-max.fpv-show-controls.video-js .vjs-menu-button,
-        .fpv-max.fpv-show-controls.video-js .vjs-control,
-        .fpv-max.fpv-show-controls.video-js .vjs-button {
-          pointer-events: auto !important;
-        }
-
-        .fpv-max.fpv-hide-controls.video-js .vjs-volume-panel,
-        .fpv-max.fpv-hide-controls.video-js .vjs-menu,
-        .fpv-max.fpv-hide-controls.video-js .vjs-menu-button,
-        .fpv-max.fpv-hide-controls.video-js .vjs-control,
-        .fpv-max.fpv-hide-controls.video-js .vjs-button {
-          pointer-events: none !important;
-        }
-      `;
+      s.textContent = [
+        '.fpv-max.video-js .vjs-control-bar {',
+        '  visibility: visible !important;',
+        '  display: flex !important;',
+        '  z-index: 1000002 !important;',
+        '}',
+        '.fpv-max.video-js .vjs-big-play-button {',
+        '  z-index: 1000003 !important;',
+        '}',
+        '.fpv-max.fpv-show-controls.video-js .vjs-control-bar {',
+        '  opacity: 1 !important;',
+        '  pointer-events: auto !important;',
+        '}',
+        '.fpv-max.fpv-hide-controls.video-js .vjs-control-bar {',
+        '  opacity: 0 !important;',
+        '  pointer-events: none !important;',
+        '}',
+        '.fpv-max.fpv-show-controls.video-js .vjs-volume-panel,',
+        '.fpv-max.fpv-show-controls.video-js .vjs-menu,',
+        '.fpv-max.fpv-show-controls.video-js .vjs-menu-button,',
+        '.fpv-max.fpv-show-controls.video-js .vjs-control,',
+        '.fpv-max.fpv-show-controls.video-js .vjs-button {',
+        '  pointer-events: auto !important;',
+        '}',
+        '.fpv-max.fpv-hide-controls.video-js .vjs-volume-panel,',
+        '.fpv-max.fpv-hide-controls.video-js .vjs-menu,',
+        '.fpv-max.fpv-hide-controls.video-js .vjs-menu-button,',
+        '.fpv-max.fpv-hide-controls.video-js .vjs-control,',
+        '.fpv-max.fpv-hide-controls.video-js .vjs-button {',
+        '  pointer-events: none !important;',
+        '}'
+      ].join('\n');
       document.documentElement.appendChild(s);
       STATE.styleEl = s;
     }
-  }
-
-  function pickMainVideo() {
-    const vids = Array.from(document.querySelectorAll('video'));
-    if (!vids.length) return null;
-
-    const visible = vids.filter(v => (v.clientWidth * v.clientHeight) > 0);
-    const list = visible.length ? visible : vids;
-
-    list.sort((a, b) => (b.clientWidth * b.clientHeight) - (a.clientWidth * a.clientHeight));
-    return list[0] || null;
-  }
-
-  function findPlayerRoot(video) {
-    return video.closest('.video-js') || video.closest('[data-vjs-player]') || video.parentElement || video;
-  }
-
-  function getVjsTech(video, root) {
-    if (video.classList && video.classList.contains('vjs-tech')) return video;
-    const tech = root ? root.querySelector('video.vjs-tech') : null;
-    return tech || video;
-  }
-
-  function saveOriginal(root, techVideo) {
-    if (STATE.saved.has(techVideo)) return;
-
-    STATE.saved.set(techVideo, {
-      rootStyle: root.getAttribute('style') || '',
-      videoStyle: techVideo.getAttribute('style') || '',
-      rootClass: root.getAttribute('class') || '',
-    });
-  }
-
-  function restoreOriginal(root, techVideo) {
-    const s = STATE.saved.get(techVideo);
-    if (!s) return;
-
-    root.setAttribute('style', s.rootStyle);
-    techVideo.setAttribute('style', s.videoStyle);
-    root.setAttribute('class', s.rootClass);
-
-    if (STATE.coverEl) STATE.coverEl.style.display = 'none';
-
-    clearHideTimer();
-    unbindActivity();
   }
 
   function clearHideTimer() {
@@ -183,21 +157,20 @@
   }
 
   function showControls() {
-    const root = STATE.playerRoot;
+    var root = STATE.playerRoot;
     if (!root) return;
 
     root.classList.add('fpv-show-controls');
     root.classList.remove('fpv-hide-controls');
 
-    STATE.lastShownAt = Date.now();
     clearHideTimer();
-    STATE.hideTimer = setTimeout(() => {
+    STATE.hideTimer = setTimeout(function () {
       hideControls();
     }, STATE.hideDelayMs);
   }
 
   function hideControls() {
-    const root = STATE.playerRoot;
+    var root = STATE.playerRoot;
     if (!root) return;
 
     root.classList.add('fpv-hide-controls');
@@ -206,6 +179,7 @@
 
   function onActivity() {
     if (!STATE.maximized) return;
+    if (!isRoomPath(location.pathname)) return;
     showControls();
   }
 
@@ -213,44 +187,107 @@
     if (STATE.bound) return;
     STATE.bound = true;
 
-    // pega mouse em qualquer lugar, porque às vezes o vídeo cobre tudo e o root não recebe evento como esperado
-    document.addEventListener('mousemove', onActivity, { passive: true, capture: true });
-    document.addEventListener('pointermove', onActivity, { passive: true, capture: true });
-    document.addEventListener('touchstart', onActivity, { passive: true, capture: true });
-    document.addEventListener('keydown', onActivity, { passive: true, capture: true });
+    // UseCapture boolean (compat)
+    document.addEventListener('mousemove', onActivity, true);
+    document.addEventListener('pointermove', onActivity, true);
+    document.addEventListener('touchstart', onActivity, true);
+    document.addEventListener('keydown', onActivity, true);
   }
 
   function unbindActivity() {
     if (!STATE.bound) return;
     STATE.bound = false;
 
-    document.removeEventListener('mousemove', onActivity, { capture: true });
-    document.removeEventListener('pointermove', onActivity, { capture: true });
-    document.removeEventListener('touchstart', onActivity, { capture: true });
-    document.removeEventListener('keydown', onActivity, { capture: true });
+    document.removeEventListener('mousemove', onActivity, true);
+    document.removeEventListener('pointermove', onActivity, true);
+    document.removeEventListener('touchstart', onActivity, true);
+    document.removeEventListener('keydown', onActivity, true);
+  }
+
+  function pickMainVideoJsRootRoomOnly() {
+    if (!isRoomPath(location.pathname)) return null;
+
+    var roots = document.querySelectorAll('.video-js');
+    if (!roots || !roots.length) return null;
+
+    var candidates = [];
+    for (var i = 0; i < roots.length; i++) {
+      var r = roots[i];
+      if (r.querySelector('.vjs-control-bar') && r.querySelector('video.vjs-tech')) {
+        candidates.push(r);
+      }
+    }
+    if (!candidates.length) return null;
+
+    candidates.sort(function (a, b) {
+      var ar = a.getBoundingClientRect();
+      var br = b.getBoundingClientRect();
+      return (br.width * br.height) - (ar.width * ar.height);
+    });
+
+    return candidates[0] || null;
+  }
+
+  function getTechVideo(root) {
+    if (!root) return null;
+    return root.querySelector('video.vjs-tech') || root.querySelector('video') || null;
+  }
+
+  function saveOriginal(root, techVideo) {
+    if (!root || !techVideo) return;
+    if (!STATE.saved) return;
+    if (STATE.saved.has(techVideo)) return;
+
+    STATE.saved.set(techVideo, {
+      rootStyle: root.getAttribute('style') || '',
+      videoStyle: techVideo.getAttribute('style') || '',
+      rootClass: root.getAttribute('class') || ''
+    });
+  }
+
+  function restoreIfSaved(root, techVideo) {
+    if (!STATE.saved) return;
+    var s = techVideo ? STATE.saved.get(techVideo) : null;
+    if (root && techVideo && s) {
+      root.setAttribute('style', s.rootStyle);
+      techVideo.setAttribute('style', s.videoStyle);
+      root.setAttribute('class', s.rootClass);
+    }
+  }
+
+  function hardCleanup() {
+    clearHideTimer();
+    unbindActivity();
+
+    if (STATE.coverEl) STATE.coverEl.style.display = 'none';
+    if (STATE.toggleEl) STATE.toggleEl.style.display = 'none';
+
+    if (STATE.playerRoot && STATE.videoEl && STATE.playerRoot.isConnected && STATE.videoEl.isConnected) {
+      restoreIfSaved(STATE.playerRoot, STATE.videoEl);
+    }
+
+    STATE.videoEl = null;
+    STATE.playerRoot = null;
   }
 
   function maximize(root, techVideo) {
     root.classList.add('fpv-max');
 
-    Object.assign(root.style, {
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      width: '100vw',
-      height: '100vh',
-      zIndex: '999',
-      background: 'black',
-    });
+    root.style.position = 'fixed';
+    root.style.top = '0';
+    root.style.left = '0';
+    root.style.width = '100vw';
+    root.style.height = '100vh';
+    root.style.zIndex = '999';
+    root.style.background = 'black';
 
-    Object.assign(techVideo.style, {
-      width: '100%',
-      height: '100%',
-      objectFit: 'contain',
-      background: 'black',
-    });
+    techVideo.style.width = '100%';
+    techVideo.style.height = '100%';
+    techVideo.style.objectFit = 'contain';
+    techVideo.style.background = 'black';
 
     if (STATE.coverEl) STATE.coverEl.style.display = 'block';
+    if (STATE.toggleEl) STATE.toggleEl.style.display = 'block';
 
     bindActivity();
     showControls();
@@ -259,63 +296,72 @@
   function applyLayout() {
     ensureUI();
 
-    const v = STATE.videoEl;
-    const root = STATE.playerRoot;
-    if (!v || !root) return;
-
-    const tech = getVjsTech(v, root);
-
-    if (!STATE.maximized) {
-      restoreOriginal(root, tech);
+    if (!isRoomPath(location.pathname)) {
+      hardCleanup();
       return;
     }
 
-    maximize(root, tech);
-  }
+    if (STATE.toggleEl) STATE.toggleEl.style.display = 'block';
 
-  function attach(video) {
-    if (!video || video === STATE.videoEl) return;
+    var rootNow = pickMainVideoJsRootRoomOnly();
+    if (!rootNow) {
+      if (STATE.coverEl) STATE.coverEl.style.display = 'none';
+      return;
+    }
 
-    const root = findPlayerRoot(video);
-    const tech = getVjsTech(video, root);
+    var techNow = getTechVideo(rootNow);
+    if (!techNow) {
+      if (STATE.coverEl) STATE.coverEl.style.display = 'none';
+      return;
+    }
 
-    STATE.videoEl = video;
-    STATE.playerRoot = root;
+    STATE.playerRoot = rootNow;
+    STATE.videoEl = techNow;
+    saveOriginal(rootNow, techNow);
 
-    saveOriginal(root, tech);
+    if (!STATE.maximized) {
+      restoreIfSaved(rootNow, techNow);
+      if (STATE.coverEl) STATE.coverEl.style.display = 'none';
+      clearHideTimer();
+      unbindActivity();
+      return;
+    }
 
-    tech.addEventListener('loadedmetadata', () => {
-      if (STATE.maximized) applyLayout();
-    }, { passive: true });
-
-    tech.addEventListener('emptied', () => {
-      if (STATE.maximized) applyLayout();
-    }, { passive: true });
-
-    applyLayout();
-    console.log('[FPV] attached');
+    maximize(rootNow, techNow);
   }
 
   function boot() {
     ensureUI();
-    attach(pickMainVideo());
+    applyLayout();
 
-    STATE.mo = new MutationObserver(() => {
-      const v = pickMainVideo();
-      if (v && v !== STATE.videoEl) attach(v);
+    function checkUrl() {
+      if (STATE.lastUrl !== location.href) {
+        STATE.lastUrl = location.href;
+        applyLayout();
+      }
+    }
+
+    STATE.mo = new MutationObserver(function () {
+      checkUrl();
+      applyLayout();
     });
     STATE.mo.observe(document.documentElement, { childList: true, subtree: true });
 
-    window.addEventListener('resize', () => {
+    window.addEventListener('resize', function () {
       clearTimeout(STATE.resizeTimer);
-      STATE.resizeTimer = setTimeout(() => applyLayout(), 120);
+      STATE.resizeTimer = setTimeout(function () { applyLayout(); }, 120);
     }, true);
+
+    window.addEventListener('popstate', applyLayout, true);
+    window.addEventListener('hashchange', applyLayout, true);
+
+    setInterval(checkUrl, 500);
 
     console.log('[FPV] boot ok');
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot, { once: true });
+    document.addEventListener('DOMContentLoaded', boot, false);
   } else {
     boot();
   }

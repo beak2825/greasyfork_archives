@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         kuplaVaatekaappiFix
 // @namespace    https://kuplahotelli.com/
-// @version      2.1.2
+// @version      2.1.3
 // @description  Custom avatar wardrobe - parent window UI, Nitro in-game renderer (no Habbo Imaging)
 // @author       res
 // @match        https://kuplahotelli.com/*
@@ -14,7 +14,7 @@
 
 /**
  * ╔═══════════════════════════════════════════════════════════════════════════╗
- * ║                        KUPLA WARDROBE PRO v2.2.0                          ║
+ * ║                        KUPLA WARDROBE PRO                                 ║
  * ╠═══════════════════════════════════════════════════════════════════════════╣
  * ║                                                                           ║
  * ║  ARCHITECTURE:                                                            ║
@@ -30,7 +30,7 @@
   'use strict';
 
   const SCRIPT_NAME = 'kupla-wardrobe';
-  const SCRIPT_VERSION = '2.2.2';
+  const SCRIPT_VERSION = '2.1.3';
   
   const log = {
     prefix: `[${SCRIPT_NAME}]`,
@@ -457,7 +457,13 @@
       height: 100%;
       object-fit: none;
       image-rendering: pixelated;
-      display: block;
+      display: none;
+    }
+    .kw-item img[src] { display: block; }
+    .kw-item img:not([src])::before { content: ''; }
+    
+    @keyframes kw-spin {
+      to { transform: rotate(360deg); }
     }
 
     .kw-item .kw-item-label {
@@ -477,6 +483,26 @@
       box-shadow: 0 0 8px rgba(74,158,255,0.5);
       color: #fff;
     }
+    /* Dim visible items while preview is re-rendering */
+    .kw-item.dim { opacity: 0.45; transition: opacity 0.12s ease; filter: grayscale(30%); pointer-events: none; }
+    .kw-item.kw-loader::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      margin: -8px 0 0 -8px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top-color: #4a9eff;
+      border-radius: 50%;
+      animation: kw-spin 0.8s linear infinite;
+      z-index: 10;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     .kw-item.clear { border-style: dashed; background: transparent; }
     .kw-item.clear::after { content: '✕'; font-size: 16px; color: #8ab; }
     
@@ -485,11 +511,17 @@
       padding: 10px;
       background: rgba(54,73,81,0.7);
       border-left: 1px solid #718792;
-      overflow-y: auto;
+      overflow-x: clip;
+      overflow-y: scroll;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
       display: flex;
       flex-direction: row;
       gap: 10px;
       flex-shrink: 0;
+    }
+    .kw-colors::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
     }
     
     .kw-color-col {
@@ -1015,19 +1047,43 @@
         }
 
         var parts = partSet.parts;
-        if (!parts || !parts.length) {
+        // Handle parts being a Map or other collection type
+        var partsArray = parts;
+        if (!Array.isArray(partsArray)) {
+          if (parts && typeof parts.values === 'function') {
+            partsArray = Array.from(parts.values());
+          } else if (parts && typeof parts.getValues === 'function') {
+            partsArray = parts.getValues();
+          } else if (parts && typeof parts.toArray === 'function') {
+            partsArray = parts.toArray();
+          }
+        }
+        
+        if (!partsArray || !partsArray.length) {
           reject(new Error('No parts in part set'));
           return;
         }
+        
+        // Helper to get part properties (handles both direct props and getters)
+        function getPartType(p) {
+          if (typeof p.getType === 'function') return p.getType();
+          return p.type ?? p._type;
+        }
+        function getPartIndex(p) {
+          if (typeof p.getIndex === 'function') return p.getIndex();
+          return p.index ?? p._index ?? 0;
+        }
 
         // Sort parts by draw order
-        var sortedParts = parts.slice().sort(function(a, b) {
-          var aIdx = DRAW_ORDER.indexOf(a.type);
-          var bIdx = DRAW_ORDER.indexOf(b.type);
+        var sortedParts = partsArray.slice().sort(function(a, b) {
+          var aType = getPartType(a);
+          var bType = getPartType(b);
+          var aIdx = DRAW_ORDER.indexOf(aType);
+          var bIdx = DRAW_ORDER.indexOf(bType);
           if (aIdx < 0) aIdx = 999;
           if (bIdx < 0) bIdx = 999;
           if (aIdx !== bIdx) return aIdx - bIdx;
-          return (a.index || 0) - (b.index || 0);
+          return getPartIndex(a) - getPartIndex(b);
         });
 
         // First attempt: try to render with already-loaded assets
@@ -1085,16 +1141,25 @@
         
         function collectSpriteInfos() {
           var infos = [];
+          
           for (var p = 0; p < sortedParts.length; p++) {
             var part = sortedParts[p];
             if (!part) continue;
+
+            // Handle both direct properties and getter methods for part.type and part.id
+            var partTypeVal = getPartType(part);
+            var partIdVal = part.id;
+            if (typeof part.getId === 'function') partIdVal = part.getId();
+            if (partIdVal === undefined) partIdVal = part._id;
+            
+            if (!partTypeVal || partIdVal === undefined) continue;
 
             var asset = null;
             var foundDir = -1;
 
             for (var d = 0; d < THUMB_DIRECTIONS.length; d++) {
               var tryDir = (direction !== undefined && direction !== null) ? direction : THUMB_DIRECTIONS[d];
-              var assetName = 'h_std_' + part.type + '_' + part.id + '_' + tryDir + '_0';
+              var assetName = 'h_std_' + partTypeVal + '_' + partIdVal + '_' + tryDir + '_0';
               
               if (typeof mgr.getAssetByName === 'function') {
                 asset = mgr.getAssetByName(assetName);
@@ -1111,8 +1176,31 @@
             if (!asset || !asset.texture) continue;
 
             var tintColor = null;
-            if (part.colorLayerIndex > 0 && colors && colors.length >= part.colorLayerIndex) {
-              var colorId = colors[part.colorLayerIndex - 1];
+            // Get colorLayerIndex - try multiple property names and getter methods
+            // In Nitro runtime: colorLayerIndex is 1-based (1=primary, 2=secondary), 0 means not colorable
+            var colorIdx = 0;
+            if (typeof part.getColorLayerIndex === 'function') {
+              colorIdx = part.getColorLayerIndex();
+            } else {
+              colorIdx = part.colorLayerIndex ?? part._colorLayerIndex ?? part.colorindex ?? part.colorIndex ?? 0;
+            }
+            
+            // Get isColorable - try multiple property names and getter methods
+            var isColorable = true; // default to true
+            if (typeof part.isColorable === 'function') {
+              isColorable = part.isColorable();
+            } else if (typeof part.getIsColorable === 'function') {
+              isColorable = part.getIsColorable();
+            } else if (part.colorable !== undefined) {
+              isColorable = part.colorable;
+            } else if (part._colorable !== undefined) {
+              isColorable = part._colorable;
+            } else if (part._isColorable !== undefined) {
+              isColorable = part._isColorable;
+            }
+            
+            if (isColorable !== false && colorIdx > 0 && colors && colors.length >= colorIdx) {
+              var colorId = colors[colorIdx - 1]; // Convert 1-based to 0-based array index
               if (colorId !== undefined && colorId !== null) {
                 tintColor = getColorRgb(colorId);
               }
@@ -1660,6 +1748,7 @@
 
       this._previewReqId = 0;
       this._itemsReqId = 0;
+      this._updateItemsDebounceId = null;
       
       this.injectStyles();
     }
@@ -1743,8 +1832,8 @@
           <div class="kw-editor">
             <div class="kw-categories"></div>
             <div class="kw-main-area">
-              <div class="kw-items"><div class="kw-loading">Ladataan...</div></div>
-              <div class="kw-colors"><div class="kw-loading">...</div></div>
+              <div class="kw-items"></div>
+              <div class="kw-colors"></div>
             </div>
           </div>
         </div>
@@ -1842,13 +1931,20 @@
     }
     
     async updateAll() {
-      // CRITICAL: Avatar preview must complete first before any thumbnail rendering
-      await this.updatePreview();
+      // Update UI elements immediately (sync, non-blocking)
       this.updateGender();
       this.updateCategories();
-      this.updateItems();
       this.updateColors();
       this.updateFigureInput();
+      
+      // Start preview render (sets _pauseThumbnails=true internally)
+      const previewPromise = this.updatePreview();
+      
+      // Start items grid immediately - thumbnails will wait via _pauseThumbnails
+      this.updateItems();
+      
+      // Await preview completion (thumbnails auto-resume when done)
+      await previewPromise;
     }
     
     async updatePreview() {
@@ -1856,10 +1952,19 @@
       if (!img) return;
       const reqId = ++this._previewReqId;
       
-      // Cancel any pending thumbnail renders to prioritize avatar preview
+      // Pause thumbnails to prioritize avatar preview
       this._pauseThumbnails = true;
       
       try {
+        // Check cache first for instant display
+        const cacheKey = `preview-${this.currentFigure}-${this.currentGender}-${this.currentDirection}`;
+        const cached = this.renderer._cacheGet?.(cacheKey);
+        if (cached) {
+          img.src = cached;
+          this._pauseThumbnails = false;
+          return;
+        }
+        
         const dataUrl = await this.renderer.renderAvatar({
           figure: this.currentFigure,
           gender: this.currentGender,
@@ -1909,79 +2014,187 @@
       const category = CATEGORIES.find(c => c.id === this.activeCategory);
       const isMandatory = category?.mandatory;
       const setType = this._getSetTypeForCategory(this.activeCategory);
-      
-      let html = '';
-      if (!isMandatory) {
-        html += `<div class="kw-item clear${currentId === -1 ? ' selected' : ''}" data-id="-1"></div>`;
+
+      // Build desired id list (preserve order)
+      const desiredIds = [];
+      if (!isMandatory) desiredIds.push('-1');
+      sets.forEach(set => desiredIds.push(String(set.id)));
+
+      // Map existing nodes to avoid recreating DOM (prevents flicker)
+      const existing = new Map();
+      container.querySelectorAll('.kw-item').forEach(node => existing.set(node.dataset.id, node));
+
+      // Keep track of nodes we need
+      const toKeep = new Set();
+
+      // Add or reuse nodes in desired order
+      for (const id of desiredIds) {
+        let node = existing.get(id);
+        const isSelected = id === String(currentId);
+
+        if (node) {
+          // Update selection state without touching image src
+          node.classList.toggle('selected', isSelected);
+          toKeep.add(id);
+          continue;
+        }
+
+        // Create new node (only when needed)
+        node = document.createElement('div');
+        node.className = 'kw-item' + (isSelected ? ' selected' : '');
+        node.dataset.id = id;
+
+        if (id === '-1') node.classList.add('clear');
+
+        const img = document.createElement('img');
+
+        node.appendChild(img);
+
+        node.onclick = () => this.selectItem(parseInt(node.dataset.id));
+
+        container.appendChild(node);
+        toKeep.add(id);
       }
-      
-      sets.forEach(set => {
-        const sel = currentId === parseInt(set.id) ? ' selected' : '';
-        html += `<div class="kw-item${sel}" data-id="${set.id}"><img alt="${set.id}"><div class="kw-item-label">${set.id}</div></div>`;
-      });
-      
-      container.innerHTML = html;
-      
-      container.querySelectorAll('.kw-item').forEach(item => {
-        item.onclick = () => this.selectItem(parseInt(item.dataset.id));
+
+      // Remove nodes that are no longer desired
+      existing.forEach((node, id) => {
+        if (!toKeep.has(id)) node.remove();
       });
 
-      // Render thumbnails (async)
+      // Ensure order matches desiredIds
+      desiredIds.forEach((id, idx) => {
+        const node = container.querySelector(`.kw-item[data-id="${id}"]`);
+        if (!node) return;
+        const childAt = container.children[idx];
+        if (childAt !== node) container.insertBefore(node, childAt || null);
+      });
+
+      // Attach click handlers to reused nodes if missing
+      container.querySelectorAll('.kw-item').forEach(item => {
+        if (!item.onclick) item.onclick = () => this.selectItem(parseInt(item.dataset.id));
+      });
+
+      // Ensure visibility observer tracks current items
+      this._setupVisibilityObserver(container);
+
+      // Render thumbnails (async, will skip already-cached images)
       this._renderThumbnailsForCurrentCategory({ container, sets, setType, reqId: myReqId }).catch((e) => {
         if (myReqId !== this._itemsReqId) return;
         log.warn('Thumbnail rendering failed:', e);
       });
-      
+
       // Scroll selected into view
       const selected = container.querySelector('.kw-item.selected');
       if (selected) selected.scrollIntoView({ block: 'nearest', behavior: 'instant' });
     }
 
+    _setupVisibilityObserver(container) {
+      // Cleanup old observer
+      if (this._visibilityObserver) {
+        this._visibilityObserver.disconnect();
+      }
+      
+      this._visibleItems = new Set();
+      
+      this._visibilityObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          const id = entry.target.dataset.id;
+          if (entry.isIntersecting) {
+            this._visibleItems.add(id);
+            // Trigger render for newly visible item
+            this._renderSingleThumbnail(entry.target);
+          } else {
+            this._visibleItems.delete(id);
+          }
+        }
+      }, { root: container, rootMargin: '50px' });
+      
+      // Observe all items
+      container.querySelectorAll('.kw-item[data-id]').forEach(item => {
+        this._visibilityObserver.observe(item);
+      });
+    }
+    
+    async _renderSingleThumbnail(itemEl) {
+      const id = parseInt(itemEl.dataset.id);
+      if (id === -1) return; // Clear button
+      
+      const currentPart = FigureParser.getPart(this.currentFigure, this.activeCategory);
+      const colors = currentPart?.colors || [0, 0];
+      const partType = this.activeCategory;
+      const cacheKey = `${partType}-${id}-${colors.join('.')}`;
+      
+      const img = itemEl.querySelector('img');
+      if (!img) return;
+      
+      // Check cache first
+      if (!this._itemRenderCache) this._itemRenderCache = {};
+      if (this._itemRenderCache[cacheKey]) {
+        if (img.src !== this._itemRenderCache[cacheKey]) {
+          img.src = this._itemRenderCache[cacheKey];
+        }
+        // No render required - ensure any loader/dim is cleared
+        itemEl.classList.remove('kw-loader', 'dim');
+        return;
+      }
+      
+      // Mark as pending to avoid duplicate renders
+      const pendingKey = `pending-${cacheKey}`;
+      if (this._itemRenderCache[pendingKey]) return;
+      this._itemRenderCache[pendingKey] = true;
+      
+      // Show loader and dim while rendering
+      itemEl.classList.add('kw-loader', 'dim');
+      
+      try {
+        const url = await this.renderer.renderAvatar({
+          figure: '',
+          gender: this.currentGender,
+          direction: 2,
+          setType: 'full',
+          itemOnly: true,
+          partType,
+          partId: id,
+          colors,
+        });
+        this._itemRenderCache[cacheKey] = url;
+        img.src = url;
+      } catch (_) {
+        // Keep empty
+      } finally {
+        delete this._itemRenderCache[pendingKey];
+        itemEl.classList.remove('kw-loader', 'dim');
+      }
+    }
+    
     async _renderThumbnailsForCurrentCategory({ container, sets, setType, reqId }) {
       const currentPart = FigureParser.getPart(this.currentFigure, this.activeCategory);
       const colors = currentPart?.colors || [0, 0];
       const partType = this.activeCategory;
 
-      // Check cache first
+      // Cache by partType-id-colors
       if (!this._itemRenderCache) this._itemRenderCache = {};
       const cacheKey = (id) => `${partType}-${id}-${colors.join('.')}`;
+
+      // Setup visibility observer for lazy loading
+      this._setupVisibilityObserver(container);
 
       // Find selected item to prioritize it
       const selectedPart = FigureParser.getPart(this.currentFigure, this.activeCategory);
       const selectedId = selectedPart ? selectedPart.id : -1;
 
-      // Build tasks with priority - selected item first, then nearby items
-      const tasks = [];
-      const selectedIdx = sets.findIndex(s => parseInt(s.id) === selectedId);
-      
-      // Add selected item first
-      if (selectedIdx >= 0) {
-        const set = sets[selectedIdx];
-        tasks.push({ 
-          id: parseInt(set.id), 
-          partType, partId: parseInt(set.id),
-          colors: colors.slice(), cacheKey: cacheKey(set.id),
-          priority: 0
-        });
-      }
-      
-      // Add remaining items
-      for (let i = 0; i < sets.length; i++) {
-        if (i === selectedIdx) continue;
-        const set = sets[i];
-        // Priority based on distance from selected
-        const dist = selectedIdx >= 0 ? Math.abs(i - selectedIdx) : i;
-        tasks.push({ 
-          id: parseInt(set.id), 
-          partType, partId: parseInt(set.id),
-          colors: colors.slice(), cacheKey: cacheKey(set.id),
-          priority: dist + 1
-        });
-      }
+      // Only render initially visible items + selected
+      const visibleItems = [];
+      container.querySelectorAll('.kw-item[data-id]').forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const isVisible = rect.top < containerRect.bottom + 50 && rect.bottom > containerRect.top - 50;
+        if (isVisible || parseInt(item.dataset.id) === selectedId) {
+          visibleItems.push(item);
+        }
+      });
 
-      // Sort by priority
-      tasks.sort((a, b) => a.priority - b.priority);
-
+      // Render visible items with concurrency
       const concurrency = 4;
       let index = 0;
 
@@ -1995,22 +2208,31 @@
       };
 
       const runOne = async () => {
-        while (index < tasks.length) {
+        while (index < visibleItems.length) {
           if (reqId !== this._itemsReqId) return;
           
           // Wait if avatar preview is rendering
           if (!(await waitIfPaused())) return;
           
-          const task = tasks[index++];
-          const el = container.querySelector(`.kw-item[data-id="${task.id}"] img`);
-          if (!el) continue;
+          const itemEl = visibleItems[index++];
+          const id = parseInt(itemEl.dataset.id);
+          if (id === -1) continue;
+          
+          const img = itemEl.querySelector('img');
+          if (!img) continue;
+          
+          const key = cacheKey(id);
           
           // Check cache - instant load
-          if (this._itemRenderCache[task.cacheKey]) {
-            el.src = this._itemRenderCache[task.cacheKey];
+          if (this._itemRenderCache[key]) {
+            img.src = this._itemRenderCache[key];
+            // Clear loader/dim if no render was necessary
+            itemEl.classList.remove('kw-loader', 'dim');
             continue;
           }
           
+          // Show loader and dim while rendering
+          itemEl.classList.add('kw-loader', 'dim');
           try {
             const url = await this.renderer.renderAvatar({
               figure: '',
@@ -2018,22 +2240,19 @@
               direction: 2,
               setType: 'full',
               itemOnly: true,
-              partType: task.partType,
-              partId: task.partId,
-              colors: task.colors,
+              partType,
+              partId: id,
+              colors,
             });
             if (reqId !== this._itemsReqId) return;
             
             // Cache the result
-            this._itemRenderCache[task.cacheKey] = url;
-            el.src = url;
+            this._itemRenderCache[key] = url;
+            img.src = url;
           } catch (_) {
             // Keep empty; user still can click
-          }
-          
-          // Small yield to keep UI responsive
-          if (index % 8 === 0) {
-            await new Promise(r => setTimeout(r, 0));
+          } finally {
+            itemEl.classList.remove('kw-loader', 'dim');
           }
         }
       };
@@ -2098,9 +2317,12 @@
       const colors = currentPart?.colors || [0, 0];
       this.currentFigure = FigureParser.updatePart(this.currentFigure, this.activeCategory, itemId, colors);
       
-      // Preload assets for the newly selected item before rendering
-      await this.renderer.preloadFigureAssets(this.currentFigure, this.currentGender);
+      // Start preloading assets in the background (don't await) so the UI/preview is not blocked
+      this.renderer.preloadFigureAssets(this.currentFigure, this.currentGender).catch(err => {
+        log.warn('Preload failed:', err);
+      });
       
+      // Update UI immediately (preview will be prioritized inside updateAll)
       await this.updateAll();
     }
     
@@ -2110,10 +2332,165 @@
       const colors = [...(currentPart.colors || [0, 0])];
       colors[colorIndex] = colorId;
       this.currentFigure = FigureParser.updateColors(this.currentFigure, this.activeCategory, colors);
-      // Avatar preview must complete before thumbnail re-rendering
-      await this.updatePreview();
+      
+      // Update UI immediately
       this.updateColors();
-      this.updateItems();
+      this.updateFigureInput();
+      
+      // Dim only affected visible items while preview is rendering
+      this._setDimOnVisible(true, colorIndex);
+      try {
+        // Avatar preview is highest priority - render immediately
+        await this.updatePreview();
+      } finally {
+        // After preview: keep dim on items that will be rerendered, undim the rest to avoid flicker
+        this._pruneDimForRerender(colorIndex);
+      }
+      
+      // Then update visible thumbnails in background (only items that need color update)
+      this._renderVisibleThumbnails(colorIndex);
+    }
+    
+    _renderVisibleThumbnails(colorIndex = null) {
+      const container = this.window?.querySelector('.kw-items');
+      if (!container) return;
+
+      // Build set lookup for this category
+      const sets = this.dataManager.getPartSets(this.activeCategory, this.currentGender) || [];
+      const setById = new Map(sets.map(s => [String(s.id), s]));
+
+      // Re-render only currently visible items that require a color-based update
+      container.querySelectorAll('.kw-item[data-id]').forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const isVisible = rect.top < containerRect.bottom + 20 && rect.bottom > containerRect.top - 20;
+        if (!isVisible) return;
+
+        const id = item.dataset.id;
+        if (id === '-1') return;
+
+        const set = setById.get(id);
+        
+        // Determine if this item needs update based on which color changed
+        let needsUpdate = true;
+        if (typeof colorIndex === 'number' && set) {
+          // Skip if explicitly marked as not colorable
+          if (set.colorable === false) {
+            needsUpdate = false;
+          }
+          // For secondary color changes (colorIndex=1), skip items that don't use secondary color
+          // Calculate max colorindex from parts array (colorindex: 1=primary, 2=secondary)
+          else if (colorIndex > 0 && Array.isArray(set.parts)) {
+            let maxColorIdx = 0;
+            for (const p of set.parts) {
+              const idx = p.colorindex ?? p.colorIndex ?? 0;
+              if (idx > maxColorIdx) maxColorIdx = idx;
+            }
+            // colorIndex is 0-based (0=primary, 1=secondary), colorindex is 1-based
+            // So colorIndex=1 means secondary, which needs maxColorIdx >= 2
+            if (maxColorIdx <= colorIndex) {
+              needsUpdate = false; // Item doesn't use this color slot
+            }
+          }
+        }
+
+        if (needsUpdate) this._renderSingleThumbnail(item);
+      });
+    }
+
+    // Dim/undim affected visible items only (used while preview is rendering)
+    _setDimOnVisible(dim, colorIndex = null) {
+      const container = this.window?.querySelector('.kw-items');
+      if (!container) return;
+
+      const sets = this.dataManager.getPartSets(this.activeCategory, this.currentGender) || [];
+      const setById = new Map(sets.map(s => [String(s.id), s]));
+
+      const applyDimToId = (id) => {
+        const el = container.querySelector(`.kw-item[data-id="${id}"]`);
+        if (!el) return;
+        const set = setById.get(String(id));
+        // Determine if this item should be dimmed based on which color changed
+        if (typeof colorIndex === 'number' && set) {
+          // Skip if explicitly marked as not colorable
+          if (set.colorable === false) return;
+          // For secondary color changes, skip items that don't use secondary color
+          if (colorIndex > 0 && Array.isArray(set.parts)) {
+            let maxColorIdx = 0;
+            for (const p of set.parts) {
+              const idx = p.colorindex ?? p.colorIndex ?? 0;
+              if (idx > maxColorIdx) maxColorIdx = idx;
+            }
+            if (maxColorIdx <= colorIndex) return;
+          }
+        }
+        el.classList.toggle('dim', !!dim);
+      };
+
+      // If we have an intersection observer populated set, use it for exact visible ids
+      if (this._visibleItems && this._visibleItems.size) {
+        for (const id of this._visibleItems) applyDimToId(id);
+        return;
+      }
+
+      // Fallback: apply to items within viewport
+      container.querySelectorAll('.kw-item[data-id]').forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const isVisible = rect.top < containerRect.bottom + 20 && rect.bottom > containerRect.top - 20;
+        if (isVisible) applyDimToId(item.dataset.id);
+      });
+    }
+
+    // After preview completes: undim visible items that won't be rerendered for this color change
+    _pruneDimForRerender(colorIndex = null) {
+      const container = this.window?.querySelector('.kw-items');
+      if (!container) return;
+
+      const sets = this.dataManager.getPartSets(this.activeCategory, this.currentGender) || [];
+      const setById = new Map(sets.map(s => [String(s.id), s]));
+
+      const shouldUpdateId = (id) => {
+        const set = setById.get(String(id));
+        // If no colorIndex given, nothing to change
+        if (typeof colorIndex !== 'number') return false;
+
+        if (set) {
+          // Skip if explicitly marked as not colorable
+          if (set.colorable === false) return false;
+          // For secondary color changes, skip items that don't use secondary color
+          if (colorIndex > 0 && Array.isArray(set.parts)) {
+            let maxColorIdx = 0;
+            for (const p of set.parts) {
+              const idx = p.colorindex ?? p.colorIndex ?? 0;
+              if (idx > maxColorIdx) maxColorIdx = idx;
+            }
+            if (maxColorIdx <= colorIndex) return false;
+          }
+          return true;
+        }
+        // Unknown metadata - be conservative and rerender
+        return true;
+      };
+
+      // If we have an intersection observer populated set, use it for exact visible ids
+      if (this._visibleItems && this._visibleItems.size) {
+        for (const id of this._visibleItems) {
+          const el = container.querySelector(`.kw-item[data-id="${id}"]`);
+          if (!el) continue;
+          if (!shouldUpdateId(id)) el.classList.remove('dim');
+        }
+        return;
+      }
+
+      // Fallback: apply to items within viewport
+      container.querySelectorAll('.kw-item[data-id]').forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        const isVisible = rect.top < containerRect.bottom + 20 && rect.bottom > containerRect.top - 20;
+        if (!isVisible) return;
+        if (!shouldUpdateId(item.dataset.id)) item.classList.remove('dim');
+      });
     }
     
     async randomize() {

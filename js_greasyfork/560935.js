@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HALO Armory Tracker Pro (Alien UI) - Torn Log ID Fix
 // @namespace    http://tampermonkey.net/
-// @version      HALO.6.1
+// @version      HALO.6.1.Q
 // @description  Faction armory tracker with Torn log ID deduplication
 // @author       Nova
 // @match        https://www.torn.com/*
@@ -23,7 +23,7 @@ const DEBUG_MODE = false;
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
 const REFRESH_MS = 45000;
-const V2_INTERVAL_MS = 6 * 60 * 60 * 1000;
+const V2_INTERVAL_MS = 3 * 60 * 60 * 1000; // CHANGED: 3 hours instead of 6
 const PRICE_CACHE_TTL = 30 * 60 * 1000;
 const PROCESSED_LOGS_PRUNE_DAYS = 7;
 const V2_MARKERS_PRUNE_DAYS = 3;
@@ -342,15 +342,15 @@ function cleanupPriceCache() {
 }
 
 /* ---------- WINDOWS ---------- */
-function processMedicalUse(user, value, ts){
+function processMedicalUse(user, value, ts, count = 1){
     const day = dayFromLog(ts);
     medWindows[user] ??= {};
     medWindows[user][day] ??= 0;
-    medWindows[user][day] += value;
+    medWindows[user][day] += value * count;  // FIXED: Multiply by count
     GM_setValue(STORAGE_KEYS.MED_WINDOWS, medWindows);
     
     const isOverLimit = medWindows[user][day] > DAILY_MEDICAL_LIMIT;
-    debugLog(`Medical window: ${user} on ${day} = $${medWindows[user][day]}, over limit: ${isOverLimit}`);
+    debugLog(`Medical window: ${user} on ${day} = $${medWindows[user][day]} (added ${count}×$${value}), over limit: ${isOverLimit}`);
     return isOverLimit;
 }
 
@@ -562,7 +562,8 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
     if(sinceTimestamp > 0){
         baseUrl += `&from=${sinceTimestamp}`;
     } else {
-        baseUrl += `&from=${Math.floor(Date.now() / 1000) - 86400}`;
+        // Always fetch 72 hours back
+        baseUrl += `&from=${Math.floor(Date.now() / 1000) - (72 * 3600)}`;
     }
     
     let nextUrl = baseUrl;
@@ -738,11 +739,12 @@ async function processParsedResult(result){
         
         if(isMedical(displayName)){
             debugLog(`Medical item detected: ${displayName}`);
-            const isOverMedicalLimit = processMedicalUse(user, marketPrice, timestamp);
+            // FIXED: Pass count parameter to processMedicalUse
+            const isOverMedicalLimit = processMedicalUse(user, marketPrice, timestamp, count);
             
             if(isOverMedicalLimit){
                 adjustedPrice = Math.round(marketPrice * MEDICAL_EXCESS_RATE);
-                debugLog(`Medical OVER limit: charging $${adjustedPrice}`);
+                debugLog(`Medical OVER limit: charging $${adjustedPrice} each (total: $${adjustedPrice * count})`);
             } else {
                 adjustedPrice = 0;
                 debugLog(`Medical UNDER limit: FREE (daily total: $${medWindows[user]?.[dayFromLog(timestamp)] || 0})`);
@@ -828,11 +830,28 @@ async function runV2CatchUp(){
         v2Schedule.lastCheck = now;
         GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
         
-        let sinceTime = v2Stats.lastRun ? Math.floor(v2Stats.lastRun / 1000) : 0;
+        // SMART LOGIC: Get most recent processed log timestamp
+        let sinceTime = 0;
+        let newestProcessedTimestamp = 0;
         
-        if(sinceTime === 0 || (now - v2Stats.lastRun) > 86400000) {
-            sinceTime = Math.floor(now / 1000) - 86400;
-            console.log(`HALO: First V2 run or large gap, fetching from ${new Date(sinceTime * 1000).toLocaleString()}`);
+        // Find the newest timestamp from all processed logs
+        Object.values(processedLogs).forEach(log => {
+            if(log.timestamp > newestProcessedTimestamp) {
+                newestProcessedTimestamp = log.timestamp;
+            }
+        });
+        
+        // STRATEGY:
+        // 1. If first V2 run ever → fetch 72h back
+        // 2. Otherwise → fetch from newest log we have (with buffer)
+        if(v2Stats.totalRuns === 0 || newestProcessedTimestamp === 0) {
+            // First run: fetch 72 hours back
+            sinceTime = Math.floor(now / 1000) - (72 * 3600);
+            console.log(`HALO: First V2 run - fetching 72h from ${new Date(sinceTime * 1000).toLocaleString()}`);
+        } else {
+            // Subsequent runs: fetch from newest log (5 minute buffer)
+            sinceTime = newestProcessedTimestamp - 300;
+            console.log(`HALO: Normal V2 run - fetching from newest log (${new Date(sinceTime * 1000).toLocaleString()})`);
         }
         
         const result = await fetchAllV2Logs(sinceTime);
@@ -1960,8 +1979,8 @@ setInterval(() => {
 
 setTimeout(() => {
     const now = Date.now();
-    if(v2Stats.lastRun && (now - v2Stats.lastRun) > (7 * 60 * 60 * 1000)) {
-        console.warn("HALO: Emergency - V2 hasn't run in over 7 hours!");
+    if(v2Stats.lastRun && (now - v2Stats.lastRun) > (4 * 60 * 60 * 1000)) {
+        console.warn("HALO: Emergency - V2 hasn't run in over 4 hours!");
         setTimeout(runV2CatchUp, 3000);
     }
 }, 5000);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站Wiki文件列表编码修复
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  修复B站Wiki中特殊:文件列表页面的编码问题，避免双重编码
 // @match        https://wiki.biligame.com/*
 // @grant        none
@@ -61,8 +61,13 @@
         if (search.includes('title=')) {
             // 处理带有title参数的情况
             const params = new URLSearchParams(search);
-            params.set('title', targetTitle);
-            newUrl = urlObj.origin + '/index.php?' + params.toString();
+
+            // 应该使用未编码的字符串，让 URLSearchParams 自己编码
+            // 而不是传入已经编码的字符串
+            const decodedTargetTitle = decodeURIComponent('特殊%3A文件列表'); // 这会得到 "特殊:文件列表"
+            params.set('title', decodedTargetTitle); // URLSearchParams 会正确编码为 "特殊%3A文件列表"
+
+            newUrl = urlObj.origin + urlObj.pathname + '?' + params.toString();
         } else {
             // 处理路径形式的情况
             // 提取wiki路径的基础部分

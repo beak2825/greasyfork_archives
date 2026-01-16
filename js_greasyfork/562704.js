@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         抖音视频下载器
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @license      MIT
+// @version      1.3
 // @description  抖音视频下载工具，支持视频流捕获和一键下载
 // @author       hys
+// @license      MIT
 // @match        *://www.douyin.com/*
 // @run-at       document-start
 // @grant        GM_addStyle
@@ -81,7 +81,7 @@
     // === 2. 队列管理 (核心去重升级) ===
     const videoQueue = [];
     let currentIndex = -1;
-    const seenFids = new Set(); // 存储已见过的视频ID
+    const seenVids = new Set(); // 存储已见过的视频ID
 
     // 辅助：获取不带参数的基础 URL
     // 例如: https://a.com/v.mp4?range=100 -> https://a.com/v.mp4
@@ -94,11 +94,11 @@
         }
     }
 
-    // 辅助：从URL中提取fid参数
-    function getFid(url) {
+    // 辅助：从URL中提取__vid参数
+    function getVid(url) {
         try {
             const urlObj = new URL(url);
-            return urlObj.searchParams.get('fid');
+            return urlObj.searchParams.get('__vid');
         } catch (e) {
             return null;
         }
@@ -107,12 +107,12 @@
     window.addEventListener('dy_video_captured', function(e) {
         const newUrl = e.detail;
 
-        // === 基于 fid 的去重 ===
-        const fid = getFid(newUrl);
-        if (fid && seenFids.has(fid)) {
+        // === 基于 __vid 的去重 ===
+        const vid = getVid(newUrl);
+        if (vid && seenVids.has(vid)) {
             return; // 已存在相同视频，忽略
         }
-        if (fid) seenFids.add(fid);
+        if (vid) seenVids.add(vid);
         // ==================
 
         // === 核心修复逻辑 ===

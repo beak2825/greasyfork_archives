@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         自定义高亮助手
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.1.0
 // @description  自定义多个高亮词和样式，自动高亮当前网页所有匹配内容
 // @author       You
 // @match        *://*/*
-// @grant        none
 // @license MIT
+// @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/561353/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%AB%98%E4%BA%AE%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/561353/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%AB%98%E4%BA%AE%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
@@ -16,6 +16,7 @@
 
   const STORAGE_KEY = "__custom_highlighter_rules__";
   const POSITION_STORAGE_KEY = "__custom_highlighter_position__";
+  const VISIBILITY_STORAGE_KEY = "__custom_highlighter_visibility__";
 
   // 默认样式
   const defaultStyle = {
@@ -86,8 +87,83 @@
     }
   }
 
+  // 保存面板可见性
+  function saveVisibilityState(isHidden) {
+    try {
+      localStorage.setItem(VISIBILITY_STORAGE_KEY, JSON.stringify({ hidden: isHidden }));
+    } catch (e) {
+      console.error("高亮助手：保存可见性失败", e);
+    }
+  }
+
+  // 读取面板可见性
+  function loadVisibilityState() {
+    try {
+      const raw = localStorage.getItem(VISIBILITY_STORAGE_KEY);
+      if (!raw) return false; // 默认不隐藏
+      const parsed = JSON.parse(raw);
+      return !!parsed.hidden;
+    } catch (e) {
+      console.error("高亮助手：读取可见性失败", e);
+      return false;
+    }
+  }
+
+  // 注入全局样式（包含暗黑模式支持）
+  function addGlobalStyle() {
+    if (document.getElementById("custom-highlighter-css")) return;
+    const css = `
+      #custom-highlighter-panel {
+        --ch-bg: #ffffff;
+        --ch-text: #262626;
+        --ch-border: #d9d9d9;
+        --ch-shadow: rgba(0,0,0,0.15);
+        --ch-header-bg: #fafafa;
+        --ch-header-btn-hover: rgba(0,0,0,0.05);
+        --ch-divider: #f0f0f0;
+        --ch-label: #8c8c8c;
+        --ch-input-bg: #ffffff;
+        --ch-input-text: #262626;
+        --ch-input-border: #d9d9d9;
+        --ch-btn-default-bg: #f5f5f5;
+        --ch-btn-default-text: #595959;
+        --ch-btn-primary-bg: #1677ff;
+        --ch-btn-primary-text: #fff;
+        --ch-desc: #bfbfbf;
+      }
+      @media (prefers-color-scheme: dark) {
+        #custom-highlighter-panel {
+          --ch-bg: #1f1f1f;
+          --ch-text: #e0e0e0;
+          --ch-border: #424242;
+          --ch-shadow: rgba(0,0,0,0.4);
+          --ch-header-bg: #2a2a2a;
+          --ch-header-btn-hover: rgba(255,255,255,0.1);
+          --ch-divider: #333333;
+          --ch-label: #a0a0a0;
+          --ch-input-bg: #2a2a2a;
+          --ch-input-text: #e0e0e0;
+          --ch-input-border: #424242;
+          --ch-btn-default-bg: #333333;
+          --ch-btn-default-text: #cccccc;
+          --ch-btn-primary-bg: #177ddc;
+          --ch-btn-primary-text: #fff;
+          --ch-desc: #666666;
+        }
+        #custom-highlighter-panel input[type="checkbox"] {
+          accent-color: var(--ch-btn-primary-bg);
+        }
+      }
+    `;
+    const style = document.createElement("style");
+    style.id = "custom-highlighter-css";
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+
   // 创建控制面板
   function createPanel(cfg, applyHighlight) {
+    addGlobalStyle();
     const panel = document.createElement("div");
     panel.id = "custom-highlighter-panel";
     panel.style.cssText = [
@@ -95,20 +171,21 @@
       "top:10px",
       "right:10px",
       "z-index:999999",
-      "background:#ffffff",
-      "border:1px solid #d9d9d9",
-      "box-shadow:0 2px 8px rgba(0,0,0,0.15)",
+      "background:var(--ch-bg)",
+      "border:1px solid var(--ch-border)",
+      "box-shadow:0 2px 8px var(--ch-shadow)",
       "border-radius:4px",
       "font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif",
       "font-size:12px",
-      "color:#262626",
+      "color:var(--ch-text)",
       "max-width:320px",
       "max-height:80vh",
       "overflow:hidden",
+      "transition: background 0.3s, color 0.3s, border-color 0.3s",
     ].join(";");
 
     panel.innerHTML = `
-      <div id="ch-header" style="display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:#fafafa;cursor:pointer;">
+      <div id="ch-header" style="display:flex;align-items:center;justify-content:space-between;padding:3px 6px;background:var(--ch-header-bg);cursor:pointer;transition: background 0.3s;">
         <div style="display:flex;align-items:center;gap:4px;">
           <span id="ch-title" style="font-weight:600;font-size:11px;white-space:nowrap;">高亮</span>
           <label style="display:inline-flex;align-items:center;cursor:pointer;" onclick="event.stopPropagation();" title="启用/禁用">
@@ -116,39 +193,44 @@
           </label>
         </div>
         <div style="display:flex;align-items:center;gap:2px;">
-          <button id="ch-hide-btn" style="border:none;background:transparent;cursor:pointer;font-size:12px;line-height:1;padding:0 2px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;opacity:0.6;" title="隐藏面板 (Ctrl+Shift+F)">👁</button>
-          <button id="ch-toggle-btn" style="border:none;background:transparent;cursor:pointer;font-size:10px;line-height:1;padding:0 2px;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">▼</button>
+          <button id="ch-hide-btn" style="border:none;background:transparent;color:var(--ch-text);cursor:pointer;font-size:12px;line-height:1;padding:0 2px;width:18px;height:18px;display:flex;align-items:center;justify-content:center;opacity:0.6;" title="隐藏面板 (Ctrl+Shift+F)">👁</button>
+          <button id="ch-toggle-btn" style="border:none;background:transparent;color:var(--ch-text);cursor:pointer;font-size:10px;line-height:1;padding:0 2px;width:16px;height:16px;display:flex;align-items:center;justify-content:center;">▼</button>
         </div>
       </div>
-      <div id="ch-body" style="display:none;padding:8px 10px;flex-direction:column;gap:8px;border-top:1px solid #f0f0f0;">
+      <div id="ch-body" style="display:none;padding:8px 10px;flex-direction:column;gap:8px;border-top:1px solid var(--ch-divider);">
         <div>
-          <div style="margin-bottom:4px;font-size:11px;color:#8c8c8c;">高亮词（用逗号或空格分隔）：</div>
-          <textarea id="ch-words" rows="2" style="width:100%;box-sizing:border-box;font-size:12px;padding:4px 6px;border-radius:4px;border:1px solid #d9d9d9;resize:vertical;"></textarea>
+          <div style="margin-bottom:4px;font-size:11px;color:var(--ch-label);">高亮词（用逗号或空格分隔）：</div>
+          <textarea id="ch-words" rows="2" style="width:100%;box-sizing:border-box;font-size:12px;padding:4px 6px;border-radius:4px;border:1px solid var(--ch-input-border);background:var(--ch-input-bg);color:var(--ch-input-text);resize:vertical;"></textarea>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">
-          <label style="font-size:11px;color:#8c8c8c;">背景色</label>
-          <input type="color" id="ch-bg" style="width:32px;height:18px;padding:0;border:none;"/>
-          <label style="font-size:11px;color:#8c8c8c;">文字色</label>
-          <input type="color" id="ch-fg" style="width:32px;height:18px;padding:0;border:none;"/>
-          <label style="font-size:11px;color:#8c8c8c;">加粗</label>
+          <label style="font-size:11px;color:var(--ch-label);">背景色</label>
+          <input type="color" id="ch-bg" style="width:32px;height:18px;padding:0;border:none;background:none;"/>
+          <label style="font-size:11px;color:var(--ch-label);">文字色</label>
+          <input type="color" id="ch-fg" style="width:32px;height:18px;padding:0;border:none;background:none;"/>
+          <label style="font-size:11px;color:var(--ch-label);">加粗</label>
           <input type="checkbox" id="ch-bold"/>
-          <label style="font-size:11px;color:#8c8c8c;">下划线</label>
+          <label style="font-size:11px;color:var(--ch-label);">下划线</label>
           <input type="checkbox" id="ch-underline"/>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
-          <button id="ch-apply-btn" style="flex:1;border:none;background:#1677ff;color:#fff;border-radius:4px;padding:4px 0;font-size:12px;cursor:pointer;">应用高亮</button>
-          <button id="ch-clear-btn" style="border:none;background:#f5f5f5;color:#595959;border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;">清空高亮</button>
+          <button id="ch-apply-btn" style="flex:1;border:none;background:var(--ch-btn-primary-bg);color:var(--ch-btn-primary-text);border-radius:4px;padding:4px 0;font-size:12px;cursor:pointer;">应用高亮</button>
+          <button id="ch-clear-btn" style="border:none;background:var(--ch-btn-default-bg);color:var(--ch-btn-default-text);border-radius:4px;padding:4px 8px;font-size:12px;cursor:pointer;">清空高亮</button>
         </div>
-        <div id="ch-navigation" style="display:none;flex-direction:column;gap:6px;padding-top:6px;border-top:1px solid #f0f0f0;">
+        <div id="ch-navigation" style="display:none;flex-direction:column;gap:6px;padding-top:6px;border-top:1px solid var(--ch-divider);">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
-            <button id="ch-prev-btn" style="flex:1;border:none;background:#f5f5f5;color:#595959;border-radius:4px;padding:4px 0;font-size:12px;cursor:pointer;disabled:true;">上一个</button>
-            <span id="ch-counter" style="font-size:11px;color:#8c8c8c;min-width:50px;text-align:center;">0/0</span>
-            <button id="ch-next-btn" style="flex:1;border:none;background:#1677ff;color:#fff;border-radius:4px;padding:4px 0;font-size:12px;cursor:pointer;disabled:true;">下一个</button>
+            <button id="ch-prev-btn" style="flex:1;border:none;background:var(--ch-btn-default-bg);color:var(--ch-btn-default-text);border-radius:4px;padding:4px 0;font-size:12px;cursor:pointer;disabled:true;">上一个</button>
+            <span id="ch-counter" style="font-size:11px;color:var(--ch-label);min-width:50px;text-align:center;">0/0</span>
+            <button id="ch-next-btn" style="flex:1;border:none;background:var(--ch-btn-primary-bg);color:var(--ch-btn-primary-text);border-radius:4px;padding:4px 0;font-size:12px;cursor:pointer;disabled:true;">下一个</button>
           </div>
         </div>
-        <div style="font-size:11px;color:#bfbfbf;">说明：配置会保存在本地，对所有网站生效。</div>
+        <div style="font-size:11px;color:var(--ch-desc);">说明：配置会保存在本地，对所有网站生效。</div>
       </div>
     `;
+
+    // 初始化可见性
+    if (loadVisibilityState()) {
+      panel.style.display = "none";
+    }
 
     document.body.appendChild(panel);
 
@@ -159,18 +241,18 @@
       panel.style.left = savedPosition.left + "px";
       panel.style.top = savedPosition.top + "px";
       panel.style.right = "auto";
-      
+
       // 延迟进行边界检查，确保面板已完全渲染
       setTimeout(() => {
         const panelRect = panel.getBoundingClientRect();
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-        
+
         // 边界检查：确保面板在屏幕可见范围内
         let left = parseInt(panel.style.left) || savedPosition.left;
         let top = parseInt(panel.style.top) || savedPosition.top;
         let needUpdate = false;
-        
+
         // 如果面板超出右边界，调整到右边界
         if (left + panelRect.width > windowWidth) {
           left = windowWidth - panelRect.width - 10;
@@ -191,7 +273,7 @@
           top = 10;
           needUpdate = true;
         }
-        
+
         if (needUpdate) {
           panel.style.left = left + "px";
           panel.style.top = top + "px";
@@ -266,7 +348,7 @@
       bodyEl.style.display = isExpanded ? "flex" : "none";
       toggleBtn.textContent = isExpanded ? "▲" : "▼";
       if (isExpanded) {
-        headerEl.style.borderBottom = "1px solid #f0f0f0";
+        headerEl.style.borderBottom = "1px solid var(--ch-divider)";
         headerEl.style.padding = "6px 10px";
         titleEl.textContent = "高亮助手";
         titleEl.style.fontSize = "12px";
@@ -295,10 +377,12 @@
     // 隐藏面板功能
     function hidePanel() {
       panel.style.display = "none";
+      saveVisibilityState(true);
     }
 
     function showPanel() {
       panel.style.display = "block";
+      saveVisibilityState(false);
     }
 
     function togglePanelVisibility() {
@@ -315,7 +399,7 @@
         e.stopPropagation();
         hidePanel();
       });
-      
+
       // 鼠标悬停效果
       hideBtn.addEventListener("mouseenter", () => {
         hideBtn.style.opacity = "1";
@@ -519,7 +603,7 @@
     // 重置当前索引并更新导航UI
     currentHighlightIndex = highlightElements.length > 0 ? 0 : -1;
     updateNavigationUI();
-    
+
     // 如果有高亮元素，自动滚动到第一个并高亮显示
     if (highlightElements.length > 0) {
       setTimeout(() => {
@@ -549,7 +633,7 @@
       counterEl.textContent = `${current}/${total}`;
       prevBtn.disabled = currentHighlightIndex <= 0;
       nextBtn.disabled = currentHighlightIndex >= total - 1;
-      
+
       // 更新按钮样式
       prevBtn.style.opacity = prevBtn.disabled ? "0.5" : "1";
       prevBtn.style.cursor = prevBtn.disabled ? "not-allowed" : "pointer";
@@ -619,7 +703,36 @@
           activeElement.tagName === "TEXTAREA" ||
           activeElement.isContentEditable
         );
-        
+
+        if (!isInput) {
+          e.preventDefault();
+          if (panel && panel.togglePanelVisibility) {
+            panel.togglePanelVisibility();
+            // 如果面板显示，自动展开
+            if (panel.style.display !== "none") {
+              const bodyEl = panel.querySelector("#ch-body");
+              const toggleBtn = panel.querySelector("#ch-toggle-btn");
+              const headerEl = panel.querySelector("#ch-header");
+              if (bodyEl && bodyEl.style.display === "none") {
+                bodyEl.style.display = "flex";
+                toggleBtn.textContent = "▲";
+                headerEl.style.borderBottom = "1px solid var(--ch-divider)";
+              }
+            }
+          }
+        }
+      }
+
+      // Alt+H 快捷键（保留原有功能）
+      if (e.altKey && (e.key === "h" || e.key === "H")) {
+        // 检查是否在输入框中，如果是则不触发
+        const activeElement = document.activeElement;
+        const isInput = activeElement && (
+          activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          activeElement.isContentEditable
+        );
+
         if (!isInput) {
           e.preventDefault();
           if (panel && panel.togglePanelVisibility) {
@@ -638,44 +751,13 @@
           }
         }
       }
-      
-      // Alt+H 快捷键（保留原有功能）
-      if (e.altKey && (e.key === "h" || e.key === "H")) {
-        // 检查是否在输入框中，如果是则不触发
-        const activeElement = document.activeElement;
-        const isInput = activeElement && (
-          activeElement.tagName === "INPUT" ||
-          activeElement.tagName === "TEXTAREA" ||
-          activeElement.isContentEditable
-        );
-        
-        if (!isInput) {
-          e.preventDefault();
-          if (!panel || panel.style.display === "none") {
-            if (panel) {
-              panel.style.display = "block";
-              // 如果面板显示，自动展开
-              const bodyEl = panel.querySelector("#ch-body");
-              const toggleBtn = panel.querySelector("#ch-toggle-btn");
-              const headerEl = panel.querySelector("#ch-header");
-              if (bodyEl && bodyEl.style.display === "none") {
-                bodyEl.style.display = "flex";
-                toggleBtn.textContent = "▲";
-                headerEl.style.borderBottom = "1px solid #f0f0f0";
-              }
-            }
-          } else {
-            panel.style.display = "none";
-          }
-        }
-      }
     });
   }
 
   function init() {
     // 检测是否在iframe中，如果是则只应用高亮，不创建面板
     const isInIframe = window.self !== window.top;
-    
+
     const cfg = loadConfig();
 
     // 只在主窗口中创建面板，避免多个iframe重复创建

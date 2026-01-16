@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck custom underko
 // @namespace    custom.Para_Thenics.torn.com
-// @version      0.0.5
+// @version      0.0.6
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -201,7 +201,7 @@
     {name: "Fire Burn and Cauldron Bubble", payout: 170000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "Fire in the Belly", payout: 17000, ignition: "flamethrower", materials: {gasoline: 1}},
     {name: "Fire Kills 99.9% of Bacteria", payout: 305000, ignition: "lighter", materials: {hydrogenTank: 1}},
-    {name: "Fire Sale", payout: 110000, ignition: "lighter", materials: {methaneTank: 1}},
+    {name: "Fire Sale", payout: 10000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "Flame and Fortune", payout: 680000, ignition: "flamethrower", materials: {kerosene: 3}},
     {name: "Follow the Leader", payout: 69000, ignition: "flamethrower", materials: {hydrogenTank: 1}},
     {name: "For Closure", payout: 16000, ignition: "flamethrower", materials: {gasoline: 1}},
@@ -251,7 +251,7 @@
     {name: "Hot Trend", payout: 54000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "House Edge", payout: 130000, ignition: "flamethrower", materials: {gasoline: 3}},
     {name: "House of Cards", payout: 610000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-    {name: "Igniting Curiosity", payout: 100000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {sumoDoll: 1}},
+    {name: "Igniting Curiosity", payout: 260000, ignition: "flamethrower", materials: {gasoline: 4}, evidence: {sumoDoll: 1}},
     {name: "Igniting Curiosity", payout: 100000, ignition: "lighter", materials: {gasoline: 3}, evidence: {sumoDoll: 1}},
     {name: "In Your Debt", payout: 33000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "Insert Coin to Continue", payout: 120000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
@@ -398,7 +398,7 @@
     {name: "Unspilled Beans", payout: 41000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "Visions of the Savory", payout: 110000, ignition: "flamethrower", materials: {gasoline: 3}, evidence: {familyPhoto: 1}},
     {name: "Visions of the Savory", payout: 70000, ignition: "lighter", materials: {gasoline: 3}, evidence: {familyPhoto: 1}},
-    {name: "Waist Not, Want Not", payout: 54000, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "Waist Not, Want Not", payout: 210000, ignition: "flamethrower", materials: {gasoline: 4}},
     {name: "Wedded to the Lie", payout: 69000, ignition: "flamethrower", materials: {gasoline: 3}},
     {name: "Wedded to the Lie", payout: 81000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Where There's a Will", payout: 23000, ignition: "lighter", materials: {gasoline: 2}},

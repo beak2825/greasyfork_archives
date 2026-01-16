@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         微博关键词屏蔽脚本
+// @name         微博移除非关注条目
 // @namespace    http://tampermonkey.net/
-// @version      0.2.260113
+// @version      0.2.260116
 // @description  屏蔽带有"推荐"、"荐读"、"公益"、"关注了"、"赞过"、"的人也关注"的微博条目
 // @author       You
 // @match        https://weibo.com/*
@@ -9,8 +9,8 @@
 // @grant        none
 // @run-at       document-end
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562505/%E5%BE%AE%E5%8D%9A%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%E8%84%9A%E6%9C%AC.user.js
-// @updateURL https://update.greasyfork.org/scripts/562505/%E5%BE%AE%E5%8D%9A%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%E8%84%9A%E6%9C%AC.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562505/%E5%BE%AE%E5%8D%9A%E7%A7%BB%E9%99%A4%E9%9D%9E%E5%85%B3%E6%B3%A8%E6%9D%A1%E7%9B%AE.user.js
+// @updateURL https://update.greasyfork.org/scripts/562505/%E5%BE%AE%E5%8D%9A%E7%A7%BB%E9%99%A4%E9%9D%9E%E5%85%B3%E6%B3%A8%E6%9D%A1%E7%9B%AE.meta.js
 // ==/UserScript==
 
 (function() {

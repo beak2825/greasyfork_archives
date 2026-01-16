@@ -1,148 +1,249 @@
 // ==UserScript==
-// @name         西北大学教务系统自动评价助手
+// @name         西北大学自动评教
 // @namespace    http://tampermonkey.net/
-// @version      5.2
+// @version      9.3
 // @description  专为西北大学（NWU）正方教务系统设计的自动评教工具。功能包括：一键自动填充 100 分、自动填写好评评语、绕过“脚本注入”检测、并且在填写完成后自动保存（不提交）。
 // @author       Taffy
-// @match        *://jwgl.nwu.edu.cn/jwglxt/xspjgl/xspj_cxXspjIndex.html*
+// @match        *://jwgl.nwu.edu.cn/jwglxt/*
 // @grant        none
-// @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/562622/%E8%A5%BF%E5%8C%97%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7%E5%8A%A9%E6%89%8B.user.js
-// @updateURL https://update.greasyfork.org/scripts/562622/%E8%A5%BF%E5%8C%97%E5%A4%A7%E5%AD%A6%E6%95%99%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%8A%A8%E8%AF%84%E4%BB%B7%E5%8A%A9%E6%89%8B.meta.js
+// @run-at       document-end
+// @allFrames    true
+// @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/562622/%E8%A5%BF%E5%8C%97%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.user.js
+// @updateURL https://update.greasyfork.org/scripts/562622/%E8%A5%BF%E5%8C%97%E5%A4%A7%E5%AD%A6%E8%87%AA%E5%8A%A8%E8%AF%84%E6%95%99.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // 获取页面的原生 jQuery 对象
-    const $ = unsafeWindow.jQuery || window.jQuery;
+    const CONFIG = {
+        interval: 3500, // 3.5秒间隔
+        comments: [
+            "老师教学认真，重点突出，课堂氛围好。",
+            "课程内容充实，老师讲解细致，收获很大。",
+            "教学方式灵活，能够调动学生积极性。",
+            "老师治学严谨，对学生负责。"
+        ]
+    };
 
+    const getJQ = () => window.jQuery || (window.parent && window.parent.jQuery);
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const getRandomComment = () => CONFIG.comments[Math.floor(Math.random() * CONFIG.comments.length)];
 
-    // 添加按钮
-    function addControlPanel() {
-        if (document.getElementById('auto-eval-v5')) return;
-        const btn = document.createElement('button');
-        btn.id = 'auto-eval-v5';
-        btn.innerHTML = '自动评价，启动';
-        btn.style.cssText = 'position: fixed; top: 10px; right: 200px; z-index: 10000; padding: 10px 20px; background: #d63384; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2);';
-        btn.onclick = startKernelEvaluation;
-        document.body.appendChild(btn);
+    // --- 核心技术 1: 使用 execCommand 模拟原生输入 (绕过注入检测) ---
+    async function nativeInsert(element, value) {
+        if (!element) return;
+        element.focus();
+        element.click();
+        await sleep(50);
+        
+        // 选中内容
+        if (element.select) {
+            element.select();
+        } else {
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+        await sleep(50);
+
+        // 核心：调用浏览器原生指令
+        const success = document.execCommand('insertText', false, value);
+
+        // 失败回退逻辑
+        if (!success) {
+            const valueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+            const prototype = Object.getPrototypeOf(element);
+            const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, "value").set;
+            if (valueSetter && valueSetter !== prototypeValueSetter) {
+                prototypeValueSetter.call(element, value);
+            } else {
+                valueSetter.call(element, value);
+            }
+            element.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        await sleep(20);
+        element.dispatchEvent(new Event('change', { bubbles: true }));
+        element.dispatchEvent(new Event('blur', { bubbles: true }));
     }
 
-    // 强制写入值的核心函数
-    function forceFillInput(jqElement, value) {
-        if (!jqElement || jqElement.length === 0) return;
+    // --- 核心技术 2: 模拟带坐标的真实鼠标点击 ---
+    function simulateMouseClick(element) {
+        if (!element) return;
+        const rect = element.getBoundingClientRect();
+        const x = rect.left + (rect.width / 2);
+        const y = rect.top + (rect.height / 2);
 
-        // 1. 聚焦
-        jqElement.focus();
+        const eventOpts = {
+            bubbles: true, cancelable: true, view: window,
+            clientX: x, clientY: y
+        };
 
-        // 2. 写入值 (jQuery方式 + 原生方式双管齐下)
-        jqElement.val(value);
-        jqElement[0].value = value;
-
-        // 3. 关键：疯狂触发事件
-        // 正方系统通常在 'blur' (失焦) 时计算总分，如果总分不更新，保存就无效
-        jqElement.trigger('input')
-                 .trigger('change')
-                 .trigger('keydown')
-                 .trigger('keyup')
-                 .trigger('blur'); // 最重要的一步
-
-        // 4. 再次失焦确保生效
-        jqElement[0].blur();
+        element.dispatchEvent(new MouseEvent('mouseover', eventOpts));
+        element.dispatchEvent(new MouseEvent('mousedown', eventOpts));
+        element.dispatchEvent(new MouseEvent('mouseup', eventOpts));
+        element.dispatchEvent(new MouseEvent('click', eventOpts));
     }
 
-    async function startKernelEvaluation() {
-        if (!$) {
-            alert("错误：未检测到页面jQuery，请确保页面已完全加载！");
-            return;
-        }
+    // --- 界面注入 (修改为全局悬浮) ---
+    function injectUI() {
+        // 防止重复添加
+        if (document.getElementById('nwu-auto-btn-v93')) return;
 
-        if (!confirm('准备开始。\n\n本脚本将自动填入所有评分框为100，填入评语\n并自动保存而不提交。\n\n脚本执行过程中，请勿操作鼠标！')) {
-            return;
-        }
+        const btnContainer = document.createElement('div');
+        btnContainer.id = 'nwu-auto-btn-v93';
+        
+        // 修改：固定定位在屏幕右侧，层级最高
+        btnContainer.style.cssText = `
+            position: fixed; 
+            top: 120px; 
+            right: 20px; 
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        `;
+        
+        btnContainer.innerHTML = `
+            <button id="btn-start-v93" style="
+                background: linear-gradient(135deg, #0984e3, #74b9ff); 
+                color: white; border: none; 
+                padding: 10px 20px; border-radius: 30px; font-weight: bold; 
+                cursor: pointer; font-size: 14px; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                transition: transform 0.2s;
+            " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                🚀 自动评价
+            </button>
+            <span id="auto-status" style="
+                margin-top: 5px; 
+                color: #0984e3; 
+                font-weight: bold; 
+                font-size: 12px; 
+                background: rgba(255,255,255,0.9);
+                padding: 2px 8px;
+                border-radius: 4px;
+                display: none;
+            "></span>
+        `;
+        
+        // 挂载到 body，确保任何页面都能显示
+        document.body.appendChild(btnContainer);
+        document.getElementById('btn-start-v93').onclick = startAutomation;
+    }
 
-        // 查找左侧列表（使用页面原生jQuery选择器）
-        let rows = $("#tempGrid").find("tr.jqgrow");
-
-        if (rows.length === 0) {
-            alert("未找到课程列表，请刷新页面重试。");
-            return;
-        }
-
-        for (let i = 0; i < rows.length; i++) {
-            let row = $(rows[i]);
-            let status = row.find("td[aria-describedby='tempGrid_tjztmc']").text();
-
-            // 只处理未评
-            if (status.indexOf("未评") !== -1) {
-                console.log(`>>> 正在处理第 ${i + 1} 门课程...`);
-
-                // 点击课程行
-                row.trigger("click");
-
-                // 等待右侧加载
-                await sleep(2000);
-
-                // --- 1. 填分 ---
-                let inputs = $("input.input-pjf");
-                console.log(`找到 ${inputs.length} 个评分框`);
-
-                if (inputs.length > 0) {
-                    inputs.each(function() {
-                        forceFillInput($(this), "100");
-                    });
-                    // 填完后等待一下，让系统计算总分
-                    await sleep(1000);
-                }
-
-                // --- 2. 评语 ---
-                let textArea = $("textarea[name='py']");
-                if (textArea.length > 0) {
-                    textArea.val("老师教学认真，重点突出，课堂氛围好。");
-                    textArea.trigger('change').trigger('blur');
-                }
-
-                // --- 3. 保存 ---
+    // --- 处理单门课程 ---
+    async function processCourse(row, index, total) {
+        if (!row) return false;
+        const $ = getJQ();
+        const statusSpan = document.getElementById('auto-status');
+        statusSpan.style.display = 'block';
+        
+        // A. 点击课程
+        statusSpan.innerText = `处理中: ${index+1}/${total}`;
+        simulateMouseClick(row); 
+        
+        // B. 等待加载
+        let retry = 0;
+        while(document.querySelectorAll("input.input-pjf").length === 0) {
+            await sleep(500);
+            retry++;
+            if(retry > 20) {
+                simulateMouseClick(row); // 重试点击
                 await sleep(1000);
+                if(document.querySelectorAll("input.input-pjf").length === 0) return false;
+            }
+        }
+        await sleep(800); 
 
-                // 尝试点击保存按钮 (使用 jQuery click，通常比原生更有效因为绑定在 JQ 上)
-                let topBtn = $("#btn_bc");
-                let bottomBtn = $("#btn_xspj_bc");
+        // C. 填分
+        const inputs = document.querySelectorAll("input.input-pjf");
+        for (const input of inputs) {
+            await nativeInsert(input, "100");
+            await sleep(50); 
+        }
 
-                if (topBtn.length > 0) {
-                    console.log("正在点击顶部保存...");
-                    topBtn.trigger("click");
-                }
+        // D. 评语
+        const txt = document.querySelector("textarea[name='py']");
+        if(txt) await nativeInsert(txt, getRandomComment());
 
-                if (bottomBtn.length > 0) {
-                    console.log("正在点击底部保存...");
-                    bottomBtn.trigger("click");
-                }
+        await sleep(1000); 
 
-                console.log("保存动作执行完毕，等待系统响应...");
-
-                // --- 4. 处理弹窗 ---
-                await sleep(3000);
-
-                // 自动点掉 "保存成功" 或 "确认" 弹窗
-                let okBtn = $(".bootbox .btn-primary");
-                if (okBtn.length > 0) {
-                    console.log("检测到弹窗，点击确定");
-                    okBtn.trigger("click");
+        // E. 保存
+        const saveBtn = document.getElementById("btn_xspj_bc");
+        if(saveBtn) {
+            statusSpan.innerText = `保存中...`;
+            simulateMouseClick(saveBtn); 
+            
+            // F. 弹窗处理
+            for(let i=0; i<15; i++) {
+                await sleep(800);
+                let okBtn = document.querySelector(".bootbox .btn-primary") || 
+                            document.querySelector("button[data-bb-handler='ok']");
+                if(okBtn) {
+                    simulateMouseClick(okBtn);
                     await sleep(1000);
+                    break;
                 }
+            }
+        }
+        return true;
+    }
 
-                // 重新获取列表，准备下一个
-                rows = $("#tempGrid").find("tr.jqgrow");
+    // --- 主循环 ---
+    async function startAutomation() {
+        const $ = getJQ();
+        if(!$) { alert("错误：页面未完全加载，请稍后点击。"); return; }
+        
+        // 修改：增加环境检测，防止在错误的页面运行
+        const listGrid = $("#tempGrid");
+        if (listGrid.length === 0) {
+            alert("⚠️ 未检测到课程列表！\n\n脚本已就绪，但请您先进入【教学评价】->【学生评价】页面，\n然后再点击此按钮开始运行。");
+            return;
+        }
+
+        const msg = "准备开始全自动评教？\n\n" +
+                    "⚠️ 注意事项：\n" +
+                    "1. 请勿触碰鼠标。\n" +
+                    "2. 脚本将自动填充100分并填写好评。\n" +
+                    "3. 脚本只执行【保存】，请最后手动【提交】。\n\n" +
+                    "点击【确定】开始运行。";
+
+        if(!confirm(msg)) return;
+
+        const btn = document.getElementById('btn-start-v93');
+        btn.disabled = true;
+        btn.style.background = "#b2bec3";
+        btn.innerText = "运行中...";
+
+        // 1. 获取总行数
+        const totalRows = listGrid.find("tr.jqgrow").length;
+        
+        // 2. 动态循环
+        for (let i = 0; i < totalRows; i++) {
+            const $freshRows = $("#tempGrid").find("tr.jqgrow");
+            const $targetRow = $freshRows.eq(i);
+            const targetRowDom = $targetRow[0];
+            
+            const status = $targetRow.find("td[aria-describedby='tempGrid_tjztmc']").text();
+            
+            if (status.indexOf("已评完") === -1 && status.indexOf("提交") === -1) {
+                await processCourse(targetRowDom, i, totalRows);
+                await sleep(CONFIG.interval);
             }
         }
 
-        alert("全部处理完成！\n请检查列表状态是否已变为【已评完】，这代表 保存且必填项已评完。");
+        document.getElementById('auto-status').innerText = "✅ 完成";
+        alert("🎉 全部处理完毕！\n请检查列表并手动提交。");
+        btn.disabled = false;
+        btn.style.background = "linear-gradient(135deg, #0984e3, #74b9ff)";
+        btn.innerText = "🚀 自动评价";
     }
 
-    window.addEventListener('load', function() {
-        setTimeout(addControlPanel, 1000);
-    });
+    // 启动检测 (1秒后尝试注入，每秒检查一次)
+    setInterval(injectUI, 1000);
+
 })();

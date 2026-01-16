@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         三叉戟-发版管理-表格增强
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.3.8
 // @description  发版管理页面，相关功能的增强实现
-// @author       CloudS3n
+// @author       shrek_maxi
 // @match        https://poseidon.cisdigital.cn/app/devops*
 // @icon         https://poseidon.cisdigital.cn/favicon.ico
 // @grant        GM_xmlhttpRequest
@@ -19,7 +19,7 @@
     "use strict";
 
     // 脚本版本信息
-    const SCRIPT_VERSION = "1.3.0";
+    const SCRIPT_VERSION = "1.3.8";
     const SCRIPT_NAME = "三叉戟-发版管理-表格增强";
 
     const releaseUrlPrefix =
@@ -745,7 +745,7 @@
             results.summary[nonAppTaskCheck.status]++;
 
             // 检查9: 公共配置是否规范 (2.4)
-            const publicConfigCheck = checkPublicConfigSync(releaseDetail);
+            const publicConfigCheck = checkPublicConfigSync(releaseDetail, taskList);
             results.checks.push(publicConfigCheck);
             results.summary[publicConfigCheck.status]++;
 
@@ -778,51 +778,87 @@
     }
 
     function checkReleaseStatus(releaseDetail) {
+        // stage 是部署阶段状态，status 是审批状态
+        const stage = releaseDetail.stage;
         const status = releaseDetail.status;
+        
+        console.log('[三叉戟] 版本状态原始值:', {
+            stage: stage,      // 部署阶段
+            status: status     // 审批状态
+        });
+
+        // stage 阶段映射 (部署状态)
+        const stageMap = {
+            0: '待部署',
+            1: '部署中',
+            2: '部署中',
+            3: '部署中',
+            4: '已完成',
+            5: '已回滚'
+        };
+
+        // status 状态映射 (审批状态)
         const statusMap = {
             0: '草稿',
             1: '待发布',
             2: '发布中',
-            3: '已发布',
-            4: '已回滚'
+            3: '已发布'
         };
 
-        if (status === 3) {
+        const stageText = stageMap[stage] || `阶段${stage}`;
+        const statusText = statusMap[status] || `状态${status}`;
+
+        // 优先使用 stage 判断部署状态
+        if (stage === 4) {
             return {
                 name: '版本状态',
                 status: 'passed',
-                message: `状态正常: ${statusMap[status] || status}`
+                message: `已完成 (stage=${stage})`
             };
-        } else if (status === 2) {
+        } else if (stage === 5) {
+            return {
+                name: '版本状态',
+                status: 'failed',
+                message: `已回滚 (stage=${stage})`
+            };
+        } else if (stage >= 1 && stage <= 3) {
             return {
                 name: '版本状态',
                 status: 'warning',
-                message: `发布进行中: ${statusMap[status] || status}`
+                message: `部署中 (stage=${stage})`
+            };
+        } else if (stage === 0) {
+            return {
+                name: '版本状态',
+                status: 'warning',
+                message: `待部署 (stage=${stage}, 审批状态: ${statusText})`
             };
         } else {
             return {
                 name: '版本状态',
                 status: 'warning',
-                message: `当前状态: ${statusMap[status] || status}`
+                message: `${stageText} (stage=${stage})`
             };
         }
     }
 
     function checkEnvironment(releaseDetail) {
         const env = releaseDetail.env;
-        const validEnvs = ['dev', 'test', 'staging', 'prod', 'production'];
+        // 合法环境: DEV, QA, PRE, PROD (不区分大小写)
+        const validEnvs = ['dev', 'qa', 'pre', 'prod'];
+        const envLower = (env || '').toLowerCase();
 
-        if (validEnvs.includes(env)) {
+        if (validEnvs.includes(envLower)) {
             return {
                 name: '环境配置',
                 status: 'passed',
-                message: `环境: ${env}`
+                message: `环境: ${env.toUpperCase()}`
             };
         } else {
             return {
                 name: '环境配置',
-                status: 'warning',
-                message: `未知环境: ${env || '未设置'}`
+                status: 'failed',
+                message: `非法环境: ${env || '未设置'} (合法环境: DEV, QA, PRE, PROD)`
             };
         }
     }
@@ -1080,49 +1116,97 @@
     }
 
     // 检查2.4: 公共配置是否仅包含 bootstrap-external.yaml 和 bootstrap.yml
-    function checkPublicConfigSync(releaseDetail) {
-        // 尝试从多个可能的位置获取公共配置
-        const publicConfigs = releaseDetail.public_configs || 
-                             releaseDetail.configs?.public || 
-                             releaseDetail.config_files?.public || 
-                             [];
+    // 修改：从 taskList 中找到公共配置任务并获取配置文件
+    function checkPublicConfigSync(releaseDetail, taskList) {
+        // task_type === 3 是公共配置任务
+        const publicConfigTask = taskList?.find(t => t.task_type === 3);
+        
+        // 尝试从多个位置获取配置文件列表
+        let configNames = [];
+        
+        if (publicConfigTask) {
+            console.log('[三叉戟] 找到公共配置任务:', publicConfigTask);
+            console.log('[三叉戟] publicConfigTask.task 类型:', Array.isArray(publicConfigTask.task) ? 'Array' : typeof publicConfigTask.task);
+            console.log('[三叉戟] publicConfigTask.task 内容:', JSON.stringify(publicConfigTask.task, null, 2));
+            
+            // 情况1: task 本身就是配置文件数组
+            if (Array.isArray(publicConfigTask.task)) {
+                configNames = publicConfigTask.task.map(c => {
+                    if (typeof c === 'string') return c;
+                    // 配置文件对象可能有 name, filename, file_name, data_id 等字段
+                    return c.name || c.filename || c.file_name || c.data_id || c.dataId || String(c);
+                });
+                console.log('[三叉戟] 从task数组提取的配置文件:', configNames);
+            } else {
+                // 情况2: task 是对象，需要从其属性中获取配置列表
+                const configs = publicConfigTask.task?.configs || 
+                               publicConfigTask.task?.config_files ||
+                               publicConfigTask.configs ||
+                               publicConfigTask.config_files ||
+                               [];
+                configNames = configs.map(c => 
+                    typeof c === 'string' ? c : (c.name || c.filename || c.file_name || c.data_id || c.dataId || c)
+                );
+            }
+        }
+        
+        // 如果 taskList 方式没找到，尝试从 releaseDetail 获取
+        if (configNames.length === 0) {
+            const publicConfigs = releaseDetail.public_configs || 
+                                 releaseDetail.configs?.public || 
+                                 releaseDetail.config_files?.public || 
+                                 [];
+            if (Array.isArray(publicConfigs)) {
+                configNames = publicConfigs.map(c => 
+                    typeof c === 'string' ? c : (c.name || c.filename || c.file_name || c.data_id || c.dataId || c)
+                );
+            }
+        }
 
-        if (!Array.isArray(publicConfigs)) {
+        console.log('[三叉戟] 公共配置文件列表:', configNames);
+
+        if (configNames.length === 0) {
             return {
                 name: '公共配置检查',
                 status: 'warning',
-                message: '无法获取公共配置信息'
+                message: '无法获取公共配置信息（请检查控制台日志）'
             };
         }
 
+        // 标准的公共配置文件列表（仅允许这两个）
         const validConfigs = ['bootstrap-external.yaml', 'bootstrap.yml'];
-        const configNames = publicConfigs.map(c => 
-            typeof c === 'string' ? c : (c.name || c.filename || c)
-        );
 
-        const invalidConfigs = configNames.filter(name => !validConfigs.includes(name));
-        const missingConfigs = validConfigs.filter(name => !configNames.includes(name));
+        // 分类配置文件
+        const standardConfigs = configNames.filter(name => validConfigs.includes(name));
+        const nonStandardConfigs = configNames.filter(name => !validConfigs.includes(name));
 
-        if (invalidConfigs.length > 0) {
+        // 情况1: 仅包含标准配置 → 绿色 (passed)
+        if (nonStandardConfigs.length === 0 && standardConfigs.length > 0) {
             return {
                 name: '公共配置检查',
-                status: 'failed',
-                message: `204-波塞冬发布任务-公共配置不规范: 包含无效配置 ${invalidConfigs.join(', ')}`
+                status: 'passed',
+                message: `公共配置规范: ${standardConfigs.join(', ')}`
             };
         }
 
-        if (missingConfigs.length > 0) {
+        // 情况2: 同时包含标准和非标准配置 → 黄色 (warning)，非标准配置用红色标记
+        if (standardConfigs.length > 0 && nonStandardConfigs.length > 0) {
+            const redMarkedExtras = nonStandardConfigs.map(name => `<span style="color: #dc3545; font-weight: bold;">${name}</span>`).join(', ');
             return {
                 name: '公共配置检查',
-                status: 'failed',
-                message: `204-波塞冬发布任务-公共配置不规范: 缺少配置 ${missingConfigs.join(', ')}`
+                status: 'warning',
+                message: `标准配置: ${standardConfigs.join(', ')}; 非标准配置: ${redMarkedExtras}`,
+                isHtml: true
             };
         }
 
+        // 情况3: 完全没有标准配置 → 红色 (failed)
+        const redMarkedAll = nonStandardConfigs.map(name => `<span style="color: #dc3545; font-weight: bold;">${name}</span>`).join(', ');
         return {
             name: '公共配置检查',
-            status: 'passed',
-            message: '公共配置规范: bootstrap-external.yaml, bootstrap.yml'
+            status: 'failed',
+            message: `无标准配置文件! 仅包含非标准配置: ${redMarkedAll}`,
+            isHtml: true
         };
     }
 
@@ -1130,7 +1214,7 @@
     function checkBackendAppConfigSync(taskList, releaseDetail) {
         const serviceTasks = taskList.filter(t => t.task_type === 1);
         const backendApps = serviceTasks
-            .filter(t => t.task.app.name.startsWith('app-'))
+            .filter(t => t.task?.app?.name?.startsWith('app-'))
             .filter(t => {
                 const appName = t.task.app.name;
                 return appName !== 'app-datakits-ai' && 
@@ -1149,26 +1233,47 @@
         const issues = [];
         backendApps.forEach(task => {
             const appName = task.task.app.name;
-            // 尝试从任务或发布详情中获取配置关联信息
+            
+            // 尝试从多个位置获取应用的公共配置关联
             const appConfigs = task.task.configs || 
-                              task.task.public_configs || 
-                              task.configs || 
+                              task.task.public_configs ||
+                              task.task.config_files ||
+                              task.configs ||
+                              task.public_configs ||
                               [];
             
+            console.log(`[三叉戟] ${appName} 配置关联:`, appConfigs, '完整任务:', task);
+            
             const configNames = Array.isArray(appConfigs) 
-                ? appConfigs.map(c => typeof c === 'string' ? c : (c.name || c.filename || c))
+                ? appConfigs.map(c => typeof c === 'string' ? c : (c.name || c.filename || c.file_name || c))
                 : [];
 
             const bootstrapExternalCount = configNames.filter(name => 
                 name === 'bootstrap-external.yaml' || name.includes('bootstrap-external')
             ).length;
 
-            if (bootstrapExternalCount === 0) {
+            // 只有当配置列表不为空但没有 bootstrap-external.yaml 时才报错
+            // 如果配置列表为空，可能是API没有返回这个信息
+            if (configNames.length > 0 && bootstrapExternalCount === 0) {
                 issues.push(`${appName}: 未关联 bootstrap-external.yaml`);
             } else if (bootstrapExternalCount > 1) {
                 issues.push(`${appName}: 关联了${bootstrapExternalCount}个 bootstrap-external.yaml (应为1个)`);
             }
         });
+
+        // 如果没有任何应用有配置信息，说明API可能没有返回这个字段
+        const appsWithConfigs = backendApps.filter(task => {
+            const appConfigs = task.task.configs || task.task.public_configs || task.configs || [];
+            return Array.isArray(appConfigs) && appConfigs.length > 0;
+        });
+
+        if (appsWithConfigs.length === 0) {
+            return {
+                name: '后端应用公共配置关联',
+                status: 'passed',
+                message: `✓ ${backendApps.length}个后端应用（无法获取配置关联详情，请在页面确认）`
+            };
+        }
 
         if (issues.length === 0) {
             return {
@@ -1191,10 +1296,11 @@
         const aiApp = serviceTasks.find(t => t.task.app.name === 'app-datakits-ai');
 
         if (!aiApp) {
+            // 本次发布不包含该应用，标绿跳过检查
             return {
                 name: 'app-datakits-ai配置检查',
-                status: 'warning',
-                message: '本次发布不包含 app-datakits-ai 应用'
+                status: 'passed',
+                message: '✓ 本次发布不包含 app-datakits-ai 应用（跳过检查）'
             };
         }
 
@@ -1239,10 +1345,11 @@
         const governanceApp = serviceTasks.find(t => t.task.app.name === 'app-datagovernance-management');
 
         if (!governanceApp) {
+            // 本次发布不包含该应用，标绿跳过检查
             return {
                 name: 'app-datagovernance-management配置检查',
-                status: 'warning',
-                message: '本次发布不包含 app-datagovernance-management 应用'
+                status: 'passed',
+                message: '✓ 本次发布不包含 app-datagovernance-management 应用（跳过检查）'
             };
         }
 
@@ -1349,6 +1456,7 @@
 
     function fetchReleaseDetailData(releaseId) {
         return new Promise((resolve, reject) => {
+            console.log(`[三叉戟] 请求版本详情: releaseId=${releaseId}, project=${projectName}, product=${productName}`);
             GM_xmlhttpRequest({
                 method: "GET",
                 url: `https://poseidon.cisdigital.cn/devops/api/releases/${releaseId}/`,
@@ -1363,18 +1471,32 @@
                 },
                 onload: function (response) {
                     try {
-                    const result = JSON.parse(response.responseText);
-                    if (result.code === 0 && result.data) {
-                            console.log(`[三叉戟] 获取版本详情数据成功`);
-                        resolve(result.data);
-                    } else {
-                            reject(new Error("[三叉戟] API返回结构异常"));
+                        console.log(`[三叉戟] API响应状态: ${response.status}`);
+                        console.log(`[三叉戟] API响应内容: ${response.responseText.substring(0, 500)}`);
+                        const result = JSON.parse(response.responseText);
+                        // 兼容多种返回结构
+                        if (result.code === 0 && result.data) {
+                            console.log(`[三叉戟] 获取版本详情数据成功 (code=0)`);
+                            resolve(result.data);
+                        } else if (result.data) {
+                            // 有些API直接返回 {data: {...}} 没有code字段
+                            console.log(`[三叉戟] 获取版本详情数据成功 (无code字段)`);
+                            resolve(result.data);
+                        } else if (result.id) {
+                            // 有些API直接返回对象本身
+                            console.log(`[三叉戟] 获取版本详情数据成功 (直接返回对象)`);
+                            resolve(result);
+                        } else {
+                            console.error(`[三叉戟] API返回结构异常:`, result);
+                            reject(new Error(`[三叉戟] API返回结构异常: code=${result.code}, msg=${result.msg || result.message || '未知'}`));
                         }
                     } catch (e) {
+                        console.error(`[三叉戟] 解析响应失败:`, e, response.responseText);
                         reject(new Error(`[三叉戟] 解析响应失败: ${e.message}`));
                     }
                 },
                 onerror: function (error) {
+                    console.error(`[三叉戟] API请求失败:`, error);
                     reject(new Error(`API call failed: ${error}`));
                 },
             });
@@ -1851,13 +1973,17 @@
             pending: '...'
         };
 
-        const checksHtml = checkResults.checks.map(check => `
+        const checksHtml = checkResults.checks.map(check => {
+            // 如果 check.isHtml 为 true，直接渲染 HTML；否则转义 HTML
+            const messageContent = check.isHtml ? check.message : check.message.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `
             <div class="check-item">
                 <div class="check-icon ${check.status}">${iconMap[check.status]}</div>
                 <span class="check-name">${check.name}</span>
-                <span class="check-message">${check.message}</span>
+                <span class="check-message">${messageContent}</span>
             </div>
-        `).join('');
+        `;
+        }).join('');
 
         return `
             <div class="auto-check-panel">

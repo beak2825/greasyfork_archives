@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [Pokechill] CN-SEARCH
 // @namespace    https://play-pokechill.github.io/
-// @version      2.4.0
+// @version      2.4.2
 // @description  Pokechill 中文模糊匹配 + 提示条 + Enter / ↑↓ / 数字键 / 鼠标 选择 + 输入框左键点击清空
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -1091,14 +1091,33 @@
         //蕾冠王
         "Calyrex Ice": "白马蕾冠王",
         "Calyrex Shadow": "黑马蕾冠王",
-        //灵兽形态
-        "Tornadus Therian": "龙卷云 灵兽形态",
-        "Thundurus Therian": "雷电云 灵兽形态",
-        "Landorus Therian": "土地云 灵兽形态",
-        "Enamorus Therian": "眷恋云 灵兽形态",
+        //彩粉蝶
+        "Vivillon Archipelago": "彩粉蝶 群岛花纹",
+        "Vivillon Continental": "彩粉蝶 大陆花纹",
+        "Vivillon Elegant": "彩粉蝶 高雅花纹",
+        "Vivillon Fancy": "彩粉蝶 幻彩花纹",
+        "Vivillon Garden": "彩粉蝶 庭园花纹",
+        "Vivillon High Plains": "彩粉蝶 荒野花纹",
+        "Vivillon Icy Snow": "彩粉蝶 冰雪花纹",
+        "Vivillon Jungle": "彩粉蝶 热带雨林花纹",
+        "Vivillon Marine": "彩粉蝶 大海花纹",
+        "Vivillon Meadow": "彩粉蝶 花园花纹",
+        "Vivillon Modern": "彩粉蝶 摩登花纹",
+        "Vivillon Monsoon": "彩粉蝶 骤雨花纹",
+        "Vivillon Ocean": "彩粉蝶 大洋花纹",
+        "Vivillon Poke Ball": "彩粉蝶 球球花纹",
+        "Vivillon Polar": "彩粉蝶 雪国花纹",
+        "Vivillon River": "彩粉蝶 大河花纹",
+        "Vivillon Sandstorm": "彩粉蝶 沙尘花纹",
+        "Vivillon Savanna": "彩粉蝶 热带草原花纹",
+        "Vivillon Sun": "彩粉蝶 太阳花纹",
+        "Vivillon Tundra": "彩粉蝶 雪原花纹",
+        //花叶蒂
+        "Floette Eternal": "花叶蒂 永恒之花",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
+        "Hydration": "湿润之躯",
         "Grab Guard": "格斗守护",
         "Water Guard": "水之守护",
         "Flame Guard": "火焰守护",
@@ -1338,6 +1357,7 @@
         "Sweet Veil": "甜幕",
         "Stance Change": "战斗切换",
         "Gale Wings": "疾风之翼",
+        "M. Launcher": "超级发射器",//原文Mega Launcher
         "Mega Launcher": "超级发射器",
         "Grass Pelt": "草之毛皮",
         "Symbiosis": "共生",
@@ -2406,9 +2426,8 @@
         "Nihil Light": "归无之光",
 
         //未有官方译名
-        "Fog":"起雾",
-
-    };
+        "Fog":"浓雾",
+};
 
     const CN_LIST = Object.entries(EN_TO_CN)
     .map(([en, cn]) => ({ cn, en }));

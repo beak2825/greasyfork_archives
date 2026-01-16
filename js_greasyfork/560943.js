@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autodarts – MatchInsights
 // @namespace    http://tampermonkey.net/
-// @version      0.14.127
+// @version      0.14.149
 // @author       ThunderB
 // @license      All Rights Reserved
 // @description  Holt aus deiner Historie neue Innsights für dein Spiel!
@@ -9,10 +9,14 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @grant        GM_openInTab
+// @grant        unsafeWindow
 // @connect      api.autodarts.io
 // @downloadURL https://update.greasyfork.org/scripts/560943/Autodarts%20%E2%80%93%20MatchInsights.user.js
 // @updateURL https://update.greasyfork.org/scripts/560943/Autodarts%20%E2%80%93%20MatchInsights.meta.js
 // ==/UserScript==
+
+// Debug toggle (manual): set to true for targeted ATC field pipeline logs
+const DEBUG_ATC_FIELDS = false;
 
 (function () {
     "use strict";
@@ -245,7 +249,7 @@
     const SCRIPT_VERSION =
           (typeof GM_info !== "undefined" && GM_info && GM_info.script && GM_info.script.version) ? GM_info.script.version :
     (typeof GM !== "undefined" && GM && GM.info && GM.info.script && GM.info.script.version) ? GM.info.script.version :
-    "0.14.127";
+    "0.14.149";
     // =========================
     // Settings
     // =========================
@@ -1045,6 +1049,9 @@
         const matches = [];
 
         for (const r of rows) {
+            // Some API/cache shapes keep timestamps on the wrapper (e.g. r.stats.createdAt) instead of payload.
+            // We keep the extracted payload for gameplay data, but also retain a reference to the wrapper for timestamp fallbacks.
+            const root = r?.stats ?? r?.payload ?? r?.data ?? r;
             const payload = getRowPayload(r);
             if (!payload) continue;
             if (!isX01Payload(payload)) continue;
@@ -1083,9 +1090,9 @@
                 if (p?.playerId) playerIdToIndex.set(p.playerId, p.index);
             }
 
-            const matchId = payload.id || r?.matchId || payload.matchId || null;
-            const createdAt = payload.createdAt || payload.startedAt || null;
-            const finishedAt = payload.finishedAt || payload.endedAt || null;
+            const matchId = payload.id || payload.matchId || root?.id || root?.matchId || r?.matchId || null;
+            const createdAt = payload.createdAt || payload.startedAt || root?.createdAt || root?.startedAt || null;
+            const finishedAt = payload.finishedAt || payload.endedAt || root?.finishedAt || root?.endedAt || null;
             const dayKey = parseIsoDateToDayKey(createdAt) || parseIsoDateToDayKey(finishedAt);
 
             const { legsWon, totalLegs } = computeX01Legs(payload, n);
@@ -1463,7 +1470,38 @@
                 }
             }
             let hits = 0, darts = 0;
+            let atcMode = "FULL";
+            let fieldsAgg = {};
             if (key === "ATC") {
+                const normAtcMode = (raw) => {
+                    const s0 = String(raw || "").trim();
+                    if (!s0) return "FULL";
+                    const s = s0.toUpperCase()
+                        .replace(/[\s\-]+/g, "_")
+                        .replace(/_+/g, "_")
+                        .replace(/^_+|_+$/g, "");
+                    if (s === "FULL" || s === "ALL" || s === "DEFAULT") return "FULL";
+                    if (s === "OUTER_SINGLE" || s === "OUTERSINGLE") return "OUTER_SINGLE";
+                    if (s.includes("OUTER") && s.includes("SINGLE")) return "OUTER_SINGLE";
+                    if (s === "SINGLE" || s.endsWith("_SINGLE")) return "SINGLE";
+                    if (s === "DOUBLE" || s.includes("DOUBLE")) return "DOUBLE";
+                    if (s === "TRIPLE" || s.includes("TRIPLE")) return "TRIPLE";
+                    return "FULL";
+                };
+                const rawMode =
+                    payload?.mode ??
+                    payload?.settings?.mode ??
+                    payload?.settings?.variant ??
+                    payload?.settings?.gameMode ??
+                    payload?.settings?.type ??
+                    payload?.settings?.name ??
+                    payload?.variant ??
+                    payload?.gameMode ??
+                    payload?.type ??
+                    payload?.name ??
+                    null;
+                atcMode = normAtcMode(rawMode);
+
                 const getNumAny = (obj, keys) => {
                     if (!obj) return 0;
                     for (const k of keys) {
@@ -1534,6 +1572,181 @@
                 hits = (Number.isFinite(hits) ? Math.max(0, hits) : 0);
                 darts = (Number.isFinite(darts) ? Math.max(0, darts) : 0);
 
+                // Fields aggregation (best effort)
+                const extractFieldsAgg = () => {
+                    const out = {};
+
+                    const add = (field, dAdd, hAdd) => {
+                        const k = String(field || "").trim();
+                        if (!k) return;
+                        if (!out[k]) out[k] = { darts: 0, hits: 0 };
+                        out[k].darts += Math.max(0, Number(dAdd) || 0);
+                        out[k].hits += Math.max(0, Number(hAdd) || 0);
+                    };
+
+                    const normField = (raw) => {
+                        if (raw == null) return null;
+                        if (typeof raw === "number") {
+                            if (raw === 25 || raw === 50) return "BULL";
+                            if (raw >= 1 && raw <= 20) return String(raw);
+                            return null;
+                        }
+                        const s0 = String(raw || "").trim();
+                        if (!s0) return null;
+                        const s = s0.toUpperCase();
+                        if (s.includes("BULL") || s === "25" || s === "50" || s === "SB" || s === "DB") return "BULL";
+
+                        const m = s.match(/(\d{1,2})/);
+                        if (m) {
+                            const n = parseInt(m[1], 10);
+                            if (Number.isFinite(n) && n >= 1 && n <= 20) return String(n);
+                        }
+                        return null;
+                    };
+
+                    const getNumMaybe = (obj, keys) => {
+                        if (!obj || typeof obj !== "object") return null;
+                        for (const k of keys) {
+                            const v = obj?.[k];
+                            if (Array.isArray(v)) return v.length;
+                            const n = Number(v);
+                            if (Number.isFinite(n)) return n;
+                        }
+                        return null;
+                    };
+
+                    const tryAddFromRecord = (rec, fallbackField = null) => {
+                        if (rec == null) return false;
+
+                        let fieldRaw = null;
+                        if (typeof rec === "string" || typeof rec === "number") fieldRaw = rec;
+                        else if (typeof rec === "object") {
+                            fieldRaw = rec.field ?? rec.target ?? rec.number ?? rec.value ?? rec.segment ?? rec.label ?? rec.name ?? null;
+                            if (fieldRaw && typeof fieldRaw === "object") {
+                                fieldRaw = fieldRaw.value ?? fieldRaw.number ?? fieldRaw.label ?? fieldRaw.name ?? fieldRaw.segment ?? fieldRaw.field ?? fieldRaw.target ?? null;
+                            }
+                        }
+                        const field = normField(fieldRaw ?? fallbackField);
+                        if (!field) return false;
+
+                        let d = null, h = null;
+                        if (rec && typeof rec === "object") {
+                            d = getNumMaybe(rec, ["darts", "dartsThrown", "darts_thrown", "throws", "throwsThrown", "attempts", "totalDarts", "totalThrows", "count", "tries"]);
+                            h = getNumMaybe(rec, ["hits", "hitCount", "hit_count", "totalHits", "successHits", "successfulHits"]);
+                        }
+
+                        const boolHit = (rec && typeof rec === "object") ? (rec.hit ?? rec.success ?? rec.isHit ?? rec.isSuccess ?? rec.ok) : null;
+                        const hasBool = (boolHit === true || boolHit === false || boolHit === 1 || boolHit === 0);
+                        if (d == null && hasBool) d = 1;
+                        if (h == null && hasBool) h = (boolHit === true || boolHit === 1) ? 1 : 0;
+
+                        if (typeof rec === "string" || typeof rec === "number") {
+                            d = 1;
+                            if (h == null) h = 0;
+                        }
+
+                        const dOk = Number.isFinite(Number(d)) && Number(d) > 0;
+                        const hOk = Number.isFinite(Number(h)) && Number(h) >= 0;
+                        if (!dOk && !hOk) return false;
+
+                        add(field, dOk ? Number(d) : 0, hOk ? Number(h) : 0);
+                        return true;
+                    };
+
+                    const scan = (node, depth = 0) => {
+                        if (!node || depth > 4) return;
+
+                        if (Array.isArray(node)) {
+                            for (const it of node) scan(it, depth + 1);
+                            return;
+                        }
+
+                        if (typeof node !== "object") {
+                            tryAddFromRecord(node, null);
+                            return;
+                        }
+
+                        const hasFieldish =
+                            ("field" in node) || ("target" in node) || ("number" in node) || ("segment" in node) ||
+                            ("label" in node) || ("name" in node) || ("value" in node);
+
+                        if (!hasFieldish) {
+                            try {
+                                for (const [k, v] of Object.entries(node)) {
+                                    const fk = normField(k);
+                                    if (!fk) continue;
+                                    if (v && typeof v === "object") {
+                                        tryAddFromRecord(v, fk);
+                                    }
+                                }
+                            } catch {}
+                        }
+
+                        tryAddFromRecord(node, null);
+
+                        const nestedKeys = ["stats", "legStats", "games", "throws", "darts", "attempts"];
+                        for (const k of nestedKeys) {
+                            const v = node?.[k];
+                            if (!v) continue;
+                            if (Array.isArray(v) || typeof v === "object") scan(v, depth + 1);
+                        }
+                    };
+
+                    try { scan(payload?.legStats); } catch {}
+                    if (!Object.keys(out).length) { try { scan(payload?.stats); } catch {} }
+                    if (!Object.keys(out).length) { try { scan(payload?.games); } catch {} }
+                    if (!Object.keys(out).length) {
+                        try {
+                            const arr =
+                                  (Array.isArray(payload?.throws) && payload.throws) ||
+                                  (Array.isArray(payload?.darts) && payload.darts) ||
+                                  (Array.isArray(payload?.dartsThrown) && payload.dartsThrown) ||
+                                  (Array.isArray(payload?.attempts) && payload.attempts) ||
+                                  null;
+                            scan(arr);
+                        } catch {}
+                    }
+
+                    // normalize numeric values
+                    for (const k of Object.keys(out)) {
+                        const v = out[k] || {};
+                        const dd = Number(v?.darts);
+                        const hh = Number(v?.hits);
+                        out[k] = {
+                            darts: Number.isFinite(dd) ? Math.max(0, dd) : 0,
+                            hits: Number.isFinite(hh) ? Math.max(0, hh) : 0,
+                        };
+                    }
+
+                    return out;
+                };
+
+                try { fieldsAgg = extractFieldsAgg(); } catch { fieldsAgg = {}; }
+                if (!fieldsAgg || typeof fieldsAgg !== "object") fieldsAgg = {};
+
+                if (DEBUG_ATC_COUNT) {
+                    try {
+                        const keys = Object.keys(fieldsAgg || {});
+                        let sumD = 0, sumH = 0;
+                        for (const k of keys) {
+                            const v = fieldsAgg?.[k];
+                            sumD += Math.max(0, Number(v?.darts) || 0);
+                            sumH += Math.max(0, Number(v?.hits) || 0);
+                        }
+                        console.debug("[AD Ext][ATC fieldsAgg]", {
+                            matchId,
+                            mode: atcMode,
+                            fieldsAggKeys: keys,
+                            fieldsAggDarts: sumD,
+                            fieldsAggHits: sumH,
+                        });
+                        if ((Number(darts) || 0) > 0 && (!keys || !keys.length)) {
+                            console.debug("[AD Ext][ATC] field extraction failed", { matchId, mode: atcMode, darts, hits });
+                        }
+                    } catch {}
+                }
+
+
                 if (DEBUG_ATC_COUNT) {
                     try {
                         console.debug("[AD Ext][ATC hit%]", {
@@ -1567,6 +1780,8 @@
             if (key === "ATC") {
                 obj.hits = hits;
                 obj.darts = darts;
+                obj.mode = atcMode;
+                obj.fieldsAgg = fieldsAgg;
             }
             out.push(obj);
         }
@@ -2296,6 +2511,8 @@
 
       #ad-ext-view-segment #ad-ext-st-table-day tr[data-day-key],
       #ad-ext-view-segment #ad-ext-st-table-target tr[data-target] { cursor: pointer; }
+      #ad-ext-train-atcfokus #ad-ext-atc-table-day tr[data-day-key],
+      #ad-ext-train-atcfokus #ad-ext-atc-table-target tr[data-field] { cursor: pointer; }
 
 
       .ad-ext-table-value-right { text-align: right !important; font-weight: 900; font-variant-numeric: tabular-nums; }
@@ -3404,6 +3621,7 @@
 
       .ad-train-insights { display:none; }
       .ad-train-segfokus { display:none; }
+      .ad-train-atcfokus { display:none; overflow-anchor: none; }
       .ad-train-chromo { display:none; }
 
 
@@ -3418,6 +3636,13 @@
       .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-insights { display:none !important; }
       .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-segfokus { display:block; }
       .ad-train-layout[data-train-view="SEGFOCUS"] { grid-template-columns: 1fr !important; }
+      .ad-train-layout[data-train-view="ATCFOCUS"] .ad-train-atcfokus { display:block; }
+      .ad-train-layout[data-train-view="ATCFOCUS"] .ad-train-main,
+      .ad-train-layout[data-train-view="ATCFOCUS"] .ad-train-side,
+      .ad-train-layout[data-train-view="ATCFOCUS"] .ad-train-insights,
+      .ad-train-layout[data-train-view="ATCFOCUS"] .ad-train-segfokus,
+      .ad-train-layout[data-train-view="ATCFOCUS"] .ad-train-chromo { display:none !important; }
+      .ad-train-layout[data-train-view="ATCFOCUS"] { grid-template-columns: 1fr !important; }
 
       .ad-train-layout[data-train-view="CHROMO"] .ad-train-chromo { display:block; }
       .ad-train-layout[data-train-view="CHROMO"] .ad-train-main,
@@ -4370,6 +4595,7 @@
                   <button type="button" class="ad-ext-segbtn" data-view="PLAN">Trainingsplan</button>
                   <button type="button" class="ad-ext-segbtn" data-view="INSIGHTS">Erkenntnisse</button>
                   <button type="button" class="ad-ext-segbtn" data-view="SEGFOCUS">Segment-Fokus</button>
+                  <button type="button" class="ad-ext-segbtn" data-view="ATCFOCUS">ATC-Fokus</button>
             <button type="button" class="ad-ext-segbtn" data-view="CHROMO">Chrono-Tracker</button>
                 </div>
               </div>
@@ -4531,6 +4757,7 @@
             </div>
 
             <div class="ad-train-segfokus" id="ad-ext-train-segfokus"></div>
+          <div class="ad-train-atcfokus" id="ad-ext-train-atcfokus"></div>
           <div class="ad-train-chromo" id="ad-ext-train-chromo"></div>
 
             <aside class="ad-train-side" data-open="0">
@@ -7286,6 +7513,34 @@
         });
     }
 
+
+    function applySelectedRowHighlightAtc(panel) {
+        const canonField = (v) => {
+            const s = String(v || "").trim().toUpperCase();
+            if (!s) return null;
+            if (s.includes("BULL") || s === "25" || s === "50") return "BULL";
+            const m = s.match(/(\d{1,2})/);
+            if (m) {
+                const n = parseInt(m[1], 10);
+                if (Number.isFinite(n) && n >= 1 && n <= 20) return String(n);
+            }
+            return s;
+        };
+
+        const selField = canonField(cache?.filtersATC?.selectedField || null);
+        const selDay = String(cache?.filtersATC?.selectedDayKey || "");
+
+        panel.querySelectorAll("#ad-ext-atc-table-target tr[data-field]").forEach((tr) => {
+            const f = canonField(tr.getAttribute("data-field"));
+            tr.classList.toggle("ad-ext-row--selected", !!selField && f === selField);
+        });
+
+        panel.querySelectorAll("#ad-ext-atc-table-day tr[data-day-key]").forEach((tr) => {
+            const dk = String(tr.getAttribute("data-day-key") || "");
+            tr.classList.toggle("ad-ext-row--selected", !!selDay && dk === selDay);
+        });
+    }
+
     function renderTableDay(panel, dayAgg, limit = 10, selectedDayKey = null) {
         const body = panel.querySelector("#ad-ext-st-table-day");
         if (!body) return;
@@ -7316,6 +7571,587 @@
       </tr>
     `).join("");
     }
+
+    function renderAtcTableDay(panel, dayAgg, limit = 10, selectedDayKey = null) {
+        const body = panel.querySelector("#ad-ext-atc-table-day");
+        if (!body) return;
+
+        const all = Array.isArray(dayAgg) ? dayAgg.slice() : [];
+        let rows = all.slice(0, limit);
+
+        // keep selected day visible (like Segment-Fokus)
+        if (selectedDayKey && !rows.some(r => r?.dayKey === selectedDayKey)) {
+            const selRow = all.find(r => r?.dayKey === selectedDayKey);
+            if (selRow) rows = [selRow, ...rows.slice(0, Math.max(0, limit - 1))];
+        }
+
+        if (!rows.length) {
+            body.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Keine Daten</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = rows.map((d) => `
+      <tr data-day-key="${escapeHtml(String(d.dayKey || ""))}">
+        <td>${escapeHtml(dayKeyToGerman(d.dayKey))}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(d.sessions)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(d.darts)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(d.hits)}</td>
+        <td class="ad-ext-table-value-right">${fmtPct(d.hits, d.darts)}</td>
+      </tr>
+    `).join("");
+    }
+
+
+
+
+
+
+    // =========================
+    // ATC Fokus: sortierbare Felder-Tabelle ("Felder (Aggregiert)")
+    // =========================
+    function aggregateAtcByField(list) {
+        // NOTE: Ab 0.14.137 wird "Felder (Aggregiert)" aus /stats targetStats gebaut (AtcDetail.targetStats).
+        // Output: { field: "<bed>:<number>", sessions, darts, hits }
+        const m = new Map();
+        const arr = Array.isArray(list) ? list : [];
+
+        const bedFrom = (t) => {
+            const b0 = (t && t.bed != null) ? String(t.bed) : "";
+            const b = b0.trim();
+            return b || "Full";
+        };
+
+        const numLabelFrom = (t) => {
+            const raw =
+                  (t?.targetNumber != null) ? t.targetNumber :
+                  (t?.number != null) ? t.number :
+                  (t?.target != null) ? t.target :
+                  (t?.value != null) ? t.value :
+                  null;
+
+            const rawStr = String(raw ?? "").trim();
+            const rawUp = rawStr.toUpperCase();
+            const bedUp = String(t?.bed ?? "").trim().toUpperCase();
+
+            const n = Number(raw);
+
+            // Bull-ish: keep numeric if present, else default to 25
+            if (rawUp.includes("BULL") || bedUp.includes("BULL") || n === 25 || n === 50) {
+                if (Number.isFinite(n) && (n === 25 || n === 50)) return String(Math.round(n));
+                const ni = parseInt(rawUp.replace(/[^\d]/g, ""), 10);
+                if (Number.isFinite(ni) && (ni === 25 || ni === 50)) return String(ni);
+                return "25";
+            }
+
+            if (Number.isFinite(n)) return String(Math.round(n));
+
+            const ni = parseInt(rawStr, 10);
+            if (Number.isFinite(ni)) return String(ni);
+
+            return null;
+        };
+
+        for (const d of arr) {
+            const ts = Array.isArray(d?.targetStats) ? d.targetStats : null;
+
+            if (ts && ts.length) {
+                const seenFieldsThisMatch = new Set(); // max +1 sessions per matchId per field
+
+                for (const t of ts) {
+                    const bed = bedFrom(t);
+                    const numLabel = numLabelFrom(t);
+                    if (!numLabel) continue;
+
+                    const field = `${bed}:${numLabel}`;
+
+                    const darts = Math.max(0, Number(t?.darts ?? t?.count) || 0);
+                    const hits = Math.max(0, Number(t?.hits) || 0);
+
+                    // if there is literally no info for this target, skip (avoid counting all 1..20 as "sessions")
+                    if (!(darts > 0 || hits > 0)) continue;
+
+                    let row = m.get(field);
+                    if (!row) {
+                        row = { field, sessions: 0, darts: 0, hits: 0 };
+                        m.set(field, row);
+                    }
+
+                    row.darts += darts;
+                    row.hits += hits;
+
+                    if (!seenFieldsThisMatch.has(field)) {
+                        row.sessions += 1;
+                        seenFieldsThisMatch.add(field);
+                    }
+                }
+
+                continue;
+            }
+
+            // Backwards-compat: accept old session objects (fieldsAgg)
+            const fa = d?.fieldsAgg;
+            if (!fa || typeof fa !== "object") continue;
+
+            const keys = Object.keys(fa);
+            if (!keys.length) continue;
+
+            const seenFieldsThisMatch = new Set();
+            for (const k0 of keys) {
+                const k = String(k0 || "").trim();
+                if (!k) continue;
+
+                const field = `Full:${k.toUpperCase() === "BULL" ? "25" : k}`;
+
+                const rec = fa?.[k0] || {};
+                const darts = Math.max(0, Number(rec?.darts) || 0);
+                const hits = Math.max(0, Number(rec?.hits) || 0);
+
+                if (!(darts > 0 || hits > 0)) continue;
+
+                let row = m.get(field);
+                if (!row) {
+                    row = { field, sessions: 0, darts: 0, hits: 0 };
+                    m.set(field, row);
+                }
+
+                row.darts += darts;
+                row.hits += hits;
+
+                if (!seenFieldsThisMatch.has(field)) {
+                    row.sessions += 1;
+                    seenFieldsThisMatch.add(field);
+                }
+            }
+        }
+
+        const out = Array.from(m.values());
+        for (const r of out) {
+            r.sessions = Math.max(0, Math.round(Number(r.sessions) || 0));
+            r.darts = Math.max(0, Math.round(Number(r.darts) || 0));
+            r.hits = Math.max(0, Math.round(Number(r.hits) || 0));
+        }
+        return out;
+    }
+
+    function atcFieldKeyParts(label) {
+        const s0 = String(label || "").trim();
+
+        // New format (>=0.14.137): "<bed>:<number>", keep old labels working too.
+        const parts = s0.split(":");
+        let bedPart = "";
+        let numPart = s0;
+
+        if (parts.length >= 2) {
+            bedPart = String(parts[0] || "").trim();
+            numPart = String(parts.slice(1).join(":") || "").trim();
+        }
+
+        const bedCanon = bedPart.toUpperCase().replace(/[\s-]+/g, "_");
+        const bedGrp =
+              (bedCanon === "FULL") ? 0 :
+              (bedCanon === "OUTER_SINGLE") ? 1 :
+              (bedCanon === "SINGLE") ? 2 :
+              (bedCanon === "DOUBLE") ? 3 :
+              (bedCanon === "TRIPLE") ? 4 :
+              (bedPart ? 8 : 0);
+
+        const base = bedGrp * 10;
+
+        const numUp = String(numPart || "").trim().toUpperCase();
+        const n = parseInt(numUp, 10);
+        const isBull = numUp.includes("BULL") || n === 25 || n === 50 || bedCanon.includes("BULL");
+
+        if (isBull) return { grp: base + 9, num: 999, txt: `${String(bedPart || "").toLowerCase()}:bull`, isBull: true };
+
+        if (Number.isFinite(n)) return { grp: base + 0, num: n, txt: `${String(bedPart || "").toLowerCase()}:${n}`, isBull: false };
+
+        // legacy: bare "BULL"
+        if (String(s0 || "").trim().toUpperCase() === "BULL") return { grp: base + 9, num: 999, txt: "bull", isBull: true };
+
+        return { grp: base + 5, num: 999, txt: s0.toLowerCase(), isBull: false };
+    }
+
+    function atcFieldSortValue(row, sortKey) {
+        const k = String(sortKey || "hitPct");
+        if (k === "field") return atcFieldKeyParts(row?.field);
+        if (k === "sessions") return Number(row?.sessions) || 0;
+        if (k === "darts") return Number(row?.darts) || 0;
+        if (k === "hits") return Number(row?.hits) || 0;
+        if (k === "hitPct") {
+            const d = Number(row?.darts) || 0;
+            const h = Number(row?.hits) || 0;
+            return d > 0 ? (h / d) : NaN;
+        }
+        return Number(row?.hits) || 0;
+    }
+
+    function sortATCFieldRows(fieldAgg, sortKey, sortDir) {
+        const key = String(sortKey || "hitPct");
+        const dir = (String(sortDir || "desc").toLowerCase() === "asc") ? 1 : -1;
+
+        const arr = (Array.isArray(fieldAgg) ? fieldAgg : []).slice();
+
+        arr.sort((a, b) => {
+            if (key === "field") {
+                const pa = atcFieldSortValue(a, "field");
+                const pb = atcFieldSortValue(b, "field");
+
+                // Bull always last (stable, independent of dir)
+                if (!!pa.isBull !== !!pb.isBull) return pa.isBull ? 1 : -1;
+
+                if (pa.grp !== pb.grp) return dir * (pa.grp - pb.grp);
+                if (pa.num !== pb.num) return dir * (pa.num - pb.num);
+
+                const cmp = String(pa.txt).localeCompare(String(pb.txt), "de");
+                if (cmp !== 0) return dir * cmp;
+            } else {
+                const va = Number(atcFieldSortValue(a, key));
+                const vb = Number(atcFieldSortValue(b, key));
+                const fa = Number.isFinite(va);
+                const fb = Number.isFinite(vb);
+
+                // NaN / unknown always at bottom
+                if (fa && !fb) return -1;
+                if (!fa && fb) return 1;
+
+                if (fa && fb && va !== vb) return dir * (va - vb);
+            }
+
+            // fallback (stable-ish): Hit% desc, Sessions desc, Field asc
+            const ar = (Number(a?.darts) || 0) > 0 ? (Number(a?.hits) || 0) / (Number(a?.darts) || 1) : -Infinity;
+            const br = (Number(b?.darts) || 0) > 0 ? (Number(b?.hits) || 0) / (Number(b?.darts) || 1) : -Infinity;
+            if (br !== ar) return br - ar;
+            if ((Number(b?.sessions) || 0) !== (Number(a?.sessions) || 0)) return (Number(b?.sessions) || 0) - (Number(a?.sessions) || 0);
+
+            const fa2 = atcFieldKeyParts(a?.field);
+            const fb2 = atcFieldKeyParts(b?.field);
+            if (!!fa2.isBull !== !!fb2.isBull) return fa2.isBull ? 1 : -1;
+            if (fa2.grp !== fb2.grp) return fa2.grp - fb2.grp;
+            if (fa2.num !== fb2.num) return fa2.num - fb2.num;
+            return String(fa2.txt).localeCompare(String(fb2.txt), "de");
+        });
+
+        return arr;
+    }
+
+    function updateATCFieldSortIndicators(panel) {
+        const body = panel?.querySelector?.("#ad-ext-atc-table-target");
+        const table = body?.closest?.("table");
+        if (!table) return;
+
+        const key = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+        const dir = (String(cache?.filtersATC?.fieldSortDir || "desc").toLowerCase() === "asc") ? "asc" : "desc";
+
+        const ths = table.querySelectorAll("th[data-sort-key]");
+        for (const th of ths) {
+            const k = th.getAttribute("data-sort-key");
+            if (k === key) th.setAttribute("data-sort-dir", dir);
+            else th.removeAttribute("data-sort-dir");
+        }
+    }
+
+    // =========================
+    // ATC-Fokus: Feld-Aggregation direkt aus IndexedDB match_stats (ohne ensureAtcDetail)
+    // =========================
+    function normalizeAtcBedKey(v) {
+        return String(v || "").toLowerCase().replace(/[^a-z0-9]+/g, "");
+    }
+
+    function extractStatsPayloadFromIdbRecord(rec) {
+        if (!rec) return null;
+        const p = rec?.stats ?? rec?.data ?? rec?.payload ?? rec;
+        return (p && typeof p === "object") ? p : null;
+    }
+
+    function getAtcStatsTimeIso(stats, rec) {
+        const s = stats || {};
+        return s.finishedAt || s.createdAt
+            || s.match?.finishedAt || s.match?.createdAt
+            || s.meta?.finishedAt || s.meta?.createdAt
+            || rec?.finishedAt || rec?.createdAt
+            || null;
+    }
+
+    function extractTargetStatsFromStatsPayload(stats) {
+        const ms = asArray(stats?.matchStats);
+        for (const p of ms) {
+            const ts = p?.targetStats;
+            if (Array.isArray(ts) && ts.length) return ts;
+        }
+        const legs = asArray(stats?.legStats);
+        for (const leg of legs) {
+            const stArr = asArray(leg?.stats);
+            for (const st of stArr) {
+                const ts = st?.targetStats;
+                if (Array.isArray(ts) && ts.length) return ts;
+            }
+        }
+        return [];
+    }
+
+    function isAtcStatsPayload(stats) {
+        if (!stats || typeof stats !== "object") return false;
+
+        const cand = [
+            stats.variant, stats.variantName, stats.trainingVariant,
+            stats.mode, stats.gameMode, stats.activityKey, stats.trainingMode, stats.type, stats.kind
+        ].filter((x) => typeof x === "string" && x.trim());
+        const hay = cand.join(" ").toLowerCase();
+        if (hay.includes("atc")) return true;
+
+        const ts = extractTargetStatsFromStatsPayload(stats);
+
+        // Strong hint: settings + targetStats
+        if (stats.settings && typeof stats.settings === "object" && !Array.isArray(stats.settings) && ts.length) return true;
+
+        // Best-effort fallback: targetStats look like ATC (1..20 + optional Bull)
+        if (ts.length >= 10) {
+            try {
+                const nums = new Set(ts.map((t) => Number(t?.targetNumber ?? t?.number)).filter((n) => Number.isFinite(n)));
+                if (nums.has(1) && nums.has(20)) return true;
+            } catch {}
+        }
+
+        return false;
+    }
+
+    async function loadAtcFieldAggFromIdb(dateRange, modeKey, opts) {
+        try {
+            opts = (opts && typeof opts === "object") ? opts : {};
+            const allowedMatchIds = (opts.allowedMatchIds instanceof Set) ? opts.allowedMatchIds : null;
+            const overrideDayKey = (typeof opts.dayKey === "string" && opts.dayKey.trim()) ? opts.dayKey.trim() : null;
+            const wantFieldKey = (typeof opts.wantFieldKey === "string" && opts.wantFieldKey.trim()) ? opts.wantFieldKey.trim().toUpperCase() : null;
+            const outFieldSet = (opts.outFieldSet instanceof Set) ? opts.outFieldSet : null;
+            const onlyCollectFieldSet = !!opts.onlyCollectFieldSet;
+            try { if (outFieldSet) outFieldSet.clear(); } catch {}
+
+
+            const range = String(dateRange || "ALL").toUpperCase();
+            const wantedBed = normalizeAtcBedKey(modeKey || "FULL");
+
+            let wantDayKey = null;
+            let fromTs = null;
+
+            if (range === "TODAY" || range === "YESTERDAY" || range === "DAY_BEFORE") {
+                const daysAgo = (range === "TODAY") ? 0 : (range === "YESTERDAY") ? 1 : 2;
+                wantDayKey = relativeDayKey(daysAgo);
+            } else if (range !== "ALL") {
+                const now = new Date();
+                const daysBack = (n) => { const d = new Date(now); d.setDate(d.getDate() - n); return d; };
+                const monthsBack = (n) => { const d = new Date(now); d.setMonth(d.getMonth() - n); return d; };
+                let from = null;
+
+                if (range === "D7") from = daysBack(7);
+                else if (range === "D14") from = daysBack(14);
+                else if (range === "D30") from = daysBack(30);
+                else if (range === "M3") from = monthsBack(3);
+                else if (range === "M6") from = monthsBack(6);
+                else if (range === "Y1") from = daysBack(365);
+
+                if (from) fromTs = from.getTime();
+            }
+
+
+            if (overrideDayKey) {
+                wantDayKey = overrideDayKey;
+                fromTs = null; // explicit day overrides time-window
+            }
+            const loc = await resolveAutodartsIdbLocation();
+            const db = await openExistingIdb(loc.dbName);
+
+            const meta = { scanned: 0, atcFound: 0, afterTime: 0, afterMode: 0, loc };
+
+            if (allowedMatchIds) meta.allowedMatchIds = allowedMatchIds.size;
+
+            return await new Promise((resolve, reject) => {
+                let done = false;
+                const finish = (fn, arg) => {
+                    if (done) return;
+                    done = true;
+                    try { db.close(); } catch {}
+                    fn(arg);
+                };
+
+                let tx;
+                try { tx = db.transaction(loc.storeName, "readonly"); } catch (e) { finish(reject, e); return; }
+                tx.onerror = () => finish(reject, tx.error || new Error("IDB tx error"));
+
+                const store = tx.objectStore(loc.storeName);
+                const fieldMap = onlyCollectFieldSet ? null : new Map();
+
+                const ensure = (field) => {
+                    if (!fieldMap) return null;
+                    const k = String(field);
+                    let r = fieldMap.get(k);
+                    if (!r) {
+                        r = { field: k, darts: 0, hits: 0, sessionsSet: new Set() };
+                        fieldMap.set(k, r);
+                    }
+                    return r;
+                };
+
+                const req = store.openCursor();
+                req.onerror = () => finish(reject, req.error || new Error("IDB cursor error"));
+                req.onsuccess = () => {
+                    const cursor = req.result;
+                    if (!cursor) {
+                        if (onlyCollectFieldSet) {
+                            finish(resolve, []);
+                            return;
+                        }
+                        // export matchId set for a single selected field (optional)
+                        try {
+                            if (outFieldSet && wantFieldKey && fieldMap instanceof Map) {
+                                outFieldSet.clear();
+                                const rr = fieldMap.get(wantFieldKey);
+                                if (rr && rr.sessionsSet && typeof rr.sessionsSet.forEach === "function") {
+                                    rr.sessionsSet.forEach((id) => outFieldSet.add(id));
+                                }
+                            }
+                        } catch {}
+
+                        const rows = Array.from(fieldMap.values()).map((r) => ({
+                            field: r.field,
+                            sessions: r.sessionsSet.size,
+                            darts: Math.max(0, Math.round(Number(r.darts) || 0)),
+                            hits: Math.max(0, Math.round(Number(r.hits) || 0)),
+                        }));
+
+                        try {
+                            const root = (typeof unsafeWindow !== "undefined" && unsafeWindow)
+                                ? unsafeWindow
+                                : ((typeof window !== "undefined" && window) ? window : globalThis);
+                            root.__adExtAtcDebug = root.__adExtAtcDebug || {};
+                            root.__adExtAtcDebug.lastFieldRows = rows;
+                            root.__adExtAtcDebug.meta = { ...meta, rows: rows.length, range, modeKey };
+                        } catch {}
+
+                        if (DEBUG_ATC_FIELDS) {
+                            try {
+                                console.debug("[AD Ext][ATC] loadAtcFieldAggFromIdb meta", meta);
+                                console.table(rows.slice(0, 10));
+                            } catch {}
+                        }
+
+                        finish(resolve, rows);
+                        return;
+                    }
+
+                    meta.scanned++;
+
+                    const rec = cursor.value;
+                    const stats = extractStatsPayloadFromIdbRecord(rec);
+                    if (!stats) { cursor.continue(); return; }
+
+                    if (!isAtcStatsPayload(stats)) { cursor.continue(); return; }
+                    meta.atcFound++;
+
+                    const iso = getAtcStatsTimeIso(stats, rec);
+                    if (wantDayKey) {
+                        const dk = parseIsoDateToDayKey(iso);
+                        if (String(dk || "") !== String(wantDayKey || "")) { cursor.continue(); return; }
+                    } else if (fromTs && fromTs > 0) {
+                        const ts = iso ? new Date(iso).getTime() : NaN;
+                        if (!Number.isFinite(ts) || ts < fromTs) { cursor.continue(); return; }
+                    }
+                    meta.afterTime++;
+
+                    const matchId = String(rec?.matchId || rec?.id || stats?.id || stats?.matchId || "");
+                    if (allowedMatchIds) {
+                        if (!matchId || !allowedMatchIds.has(matchId)) { cursor.continue(); return; }
+                    }
+
+                    const tstats = extractTargetStatsFromStatsPayload(stats);
+                    if (!tstats.length) { cursor.continue(); return; }
+
+                    const seenFieldsThisMatch = new Set();
+                    let anyModeHit = false;
+
+                    for (const t of tstats) {
+                        if (!t || typeof t !== "object") continue;
+
+                        const bedRaw = t?.bed ?? null;
+                        const bedCanon = normalizeAtcBedKey(bedRaw);
+
+                        // Mode filter by bed (best-effort): allow missing bed only for FULL
+                        if (wantedBed && bedCanon) {
+                            if (bedCanon !== wantedBed) continue;
+                        } else if (wantedBed && !bedCanon) {
+                            if (wantedBed !== "full") continue;
+                        }
+
+                        const numRaw = t?.targetNumber ?? t?.number ?? t?.value ?? null;
+                        const n = Number(numRaw);
+                        const isBull = (n === 25 || n === 50) || String(bedRaw || "").toLowerCase().includes("bull") || String(t?.name || "").toLowerCase().includes("bull");
+                        const fieldLabel = isBull ? "BULL" : (Number.isFinite(n) ? String(Math.round(n)) : null);
+                        if (!fieldLabel) continue;
+
+                        const darts = Number(t?.count ?? t?.darts ?? 0) || 0;
+                        const hits = Number(t?.hits ?? 0) || 0;
+
+                        if (darts <= 0 && hits <= 0) continue;
+
+                        if (onlyCollectFieldSet) {
+                            if (outFieldSet && wantFieldKey && String(fieldLabel).toUpperCase() === wantFieldKey) {
+                                outFieldSet.add(matchId);
+                            }
+                            continue;
+                        }
+
+                        const row = ensure(fieldLabel);
+                        row.darts += Math.max(0, darts);
+                        row.hits += Math.max(0, hits);
+
+                        if (matchId) {
+                            if (!seenFieldsThisMatch.has(fieldLabel)) {
+                                seenFieldsThisMatch.add(fieldLabel);
+                                row.sessionsSet.add(matchId);
+                            }
+                        }
+
+                        anyModeHit = true;
+                    }
+
+                    if (anyModeHit) meta.afterMode++;
+
+                    cursor.continue();
+                };
+            });
+        } catch (e) {
+            console.error("[AD Ext][ATC] loadAtcFieldAggFromIdb failed", e);
+            return [];
+        }
+    }
+
+    function renderAtcTableFields(panel, fieldAgg) {
+        const body = panel.querySelector("#ad-ext-atc-table-target");
+        if (!body) return;
+
+        const allUnsorted = (Array.isArray(fieldAgg) ? fieldAgg : []).slice();
+
+        const sortKey = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+        const sortDir = String(cache?.filtersATC?.fieldSortDir || "desc");
+
+        const all = sortATCFieldRows(allUnsorted, sortKey, sortDir);
+
+        updateATCFieldSortIndicators(panel);
+
+        if (!all.length) {
+            body.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Keine Daten</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = all.map((t) => `
+      <tr data-field="${escapeHtml(String(t.field || ""))}">
+        <td>${escapeHtml(t.field)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(t.sessions)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(t.darts)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(t.hits)}</td>
+        <td class="ad-ext-table-value-right">${fmtPct(t.hits, t.darts)}</td>
+      </tr>
+    `).join("");
+    }
+
 
 
     // =========================
@@ -7516,8 +8352,47 @@
 
             topBySessions = topBySessions.slice(0, 12);
 
+            // Order radar axes like a real dartboard (clockwise, 20 at top)
+            const prevHoverLabel = (() => {
+                const i = cache?._st_radar_hoverIndex;
+                const old = cache?._st_layouts?.radar;
+                if (i === null || i === undefined) return null;
+                if (!old || old.type !== "radar") return null;
+                return old.labels?.[i] || null;
+            })();
+
+            const DARTBOARD_ORDER = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
+            const DARTBOARD_POS = (() => {
+                const m = new Map();
+                DARTBOARD_ORDER.forEach((n, i) => m.set(n, i));
+                return m;
+            })();
+            const dartKey = (label) => {
+                const s = String(label || "").trim();
+                const m = s.match(/^([DST])\s*(\d{1,2})$/i);
+                if (!m) return { pos: 999, bed: 9, txt: s.toLowerCase() };
+                const bedCh = String(m[1] || "").toUpperCase();
+                const num = parseInt(m[2], 10);
+                const pos = (Number.isFinite(num) && DARTBOARD_POS.has(num)) ? (DARTBOARD_POS.get(num)) : 999;
+                const bed = (bedCh === "D") ? 0 : (bedCh === "S") ? 1 : (bedCh === "T") ? 2 : 9;
+                return { pos: Number.isFinite(pos) ? pos : 999, bed, txt: s.toLowerCase() };
+            };
+
+            topBySessions.sort((a, b) => {
+                const ka = dartKey(a?.target);
+                const kb = dartKey(b?.target);
+                if (ka.pos !== kb.pos) return ka.pos - kb.pos;
+                if (ka.bed !== kb.bed) return ka.bed - kb.bed;
+                return String(a?.target || "").localeCompare(String(b?.target || ""), "de");
+            });
+
             const labels = topBySessions.map((x) => x.target);
             const values = topBySessions.map((x) => x.darts > 0 ? (x.hits * 100) / x.darts : 0);
+
+            if (prevHoverLabel) {
+                const nh = labels.findIndex(l => l === prevHoverLabel);
+                cache._st_radar_hoverIndex = (nh >= 0 ? nh : null);
+            }
 
             if (cache._st_radar_hoverIndex !== null && (cache._st_radar_hoverIndex < 0 || cache._st_radar_hoverIndex >= labels.length)) {
                 cache._st_radar_hoverIndex = null;
@@ -9306,10 +10181,20 @@
         const range = String(cache.filtersX01.dateRange || "Y1").toUpperCase();
         let filteredMatches = subset.slice();
 
+        // UX parity with the history list: for relative-day views (Today/Yesterday/Day before),
+        // include also single-leg matches. Those are often played as quick practice games and
+        // would otherwise be hidden by MIN_TOTAL_LEGS_X01 filtering applied to baseMatches.
+        const subsetAllLegs = (() => {
+            let s = Array.isArray(cache.x01Matches) ? cache.x01Matches.slice() : [];
+            if (effectivePlayerKey) s = s.filter(m => m.players.some(p => p.key === effectivePlayerKey));
+            if (selectedComboKey) s = s.filter(m => comboKeyFromMatch(m) === selectedComboKey);
+            return s;
+        })();
+
         if (range === "TODAY" || range === "YESTERDAY" || range === "DAY_BEFORE") {
             const daysAgo = (range === "TODAY") ? 0 : (range === "YESTERDAY") ? 1 : 2;
             const dk = relativeDayKey(daysAgo);
-            filteredMatches = filterToDayKey(subset, (m) => m.finishedAt || m.createdAt, dk);
+            filteredMatches = filterToDayKey(subsetAllLegs, (m) => m.finishedAt || m.createdAt, dk);
         } else {
             filteredMatches = filterByDateRange(subset, cache.filtersX01.dateRange, (m) => m.finishedAt || m.createdAt);
         }
@@ -10400,6 +11285,40 @@ function renderMasterHallOfFame(panel) {
                 try { mountTimeIntoTrainChromo(panel); } catch {}
                 try { if (cache?.loaded) renderTimeTab(panel); } catch {}
             }
+
+            // ATCFOCUS: Wenn beim Laden bereits „ATC-Fokus“ aktiv ist, jetzt mit echten Daten füllen
+
+
+            if (tv === "ATCFOCUS") {
+
+
+                try {
+
+
+                    if (typeof cache._adExt_setTrainView === "function") {
+
+
+                        cache._adExt_setTrainView("ATCFOCUS");
+
+
+                    } else {
+
+
+                        const btn = panel.querySelector('#ad-ext-train-view .ad-ext-segbtn[data-view="ATCFOCUS"]');
+
+
+                        if (btn) btn.click();
+
+
+                    }
+
+
+                } catch {}
+
+
+            }
+
+
 
             // SEGFOCUS: Segment-Training Panel in Training-Subview anzeigen
             if (tv === "SEGFOCUS") {
@@ -12943,6 +13862,15 @@ function renderMasterHallOfFame(panel) {
             targetSortKey: localStorage.getItem("ad_ext_st_targetSortKey") || "hitPct",
             targetSortDir: localStorage.getItem("ad_ext_st_targetSortDir") || "desc",
         },
+        filtersATC: {
+            mode: "FULL",
+            dateRange: "Y1",
+            fieldSortKey: localStorage.getItem("ad_ext_atc_fieldSortKey") || "hitPct",
+            fieldSortDir: localStorage.getItem("ad_ext_atc_fieldSortDir") || "desc",
+        },
+        // ATC Detail Cache (RAM only)
+        atcDetailsByMatchId: new Map(),
+        _atcDetailPromisesByMatchId: new Map(),
         filtersX01: {
             playerKey: localStorage.getItem("ad_ext_x01_playerKey") || "AUTO",
             dateRange: normalizeLegacyDateRange(localStorage.getItem("ad_ext_x01_dateRange"), "Y1"),
@@ -13689,11 +14617,12 @@ function renderMasterHallOfFame(panel) {
                 }
             }
         } catch {}
-        // Persisted view: DATA | PLAN | INSIGHTS | SEGFOCUS | CHROMO
+        // Persisted view: DATA | PLAN | INSIGHTS | SEGFOCUS | ATCFOCUS | CHROMO
         try {
             const raw = String(localStorage.getItem(AD_EXT_TRAIN_VIEW_LS_KEY) || trainView || "DATA").toUpperCase();
             trainView = (raw === "PLAN") ? "PLAN" : (raw === "INSIGHTS") ? "INSIGHTS"
             : (raw === "SEGFOCUS" || raw === "SEGFOKUS" || raw === "SEGMENT_FOCUS") ? "SEGFOCUS"
+            : (raw === "ATCFOCUS" || raw === "ATCFOKUS" || raw === "ATC_FOCUS") ? "ATCFOCUS"
             : (raw === "CHROMO" || raw === "CHROMOTRACKER" || raw === "CHROMO_TRACKER") ? "CHROMO"
             : "DATA";
         } catch {
@@ -13732,7 +14661,615 @@ function renderMasterHallOfFame(panel) {
             } catch {}
         };
 
-        // Re-render helper: Trainingsdaten-Panel neu zeichnen (Plan frisch aus Storage lesen)
+        function renderTrainAtcFocus(panel) {
+          const wrap = panel.querySelector("#ad-ext-train-atcfokus");
+          if (!wrap) return;
+
+          cache.filtersATC = cache.filtersATC || {};
+          if (!cache.filtersATC.mode) cache.filtersATC.mode = "FULL";
+          if (!cache.filtersATC.dateRange) cache.filtersATC.dateRange = "Y1";
+          if (!cache.filtersATC.fieldSortKey) cache.filtersATC.fieldSortKey = localStorage.getItem("ad_ext_atc_fieldSortKey") || "hitPct";
+          if (!cache.filtersATC.fieldSortDir) cache.filtersATC.fieldSortDir = localStorage.getItem("ad_ext_atc_fieldSortDir") || "desc";
+          if (!Object.prototype.hasOwnProperty.call(cache.filtersATC, "selectedDayKey")) cache.filtersATC.selectedDayKey = null;
+          if (!Object.prototype.hasOwnProperty.call(cache.filtersATC, "selectedField")) cache.filtersATC.selectedField = null;
+
+          const f = cache.filtersATC;
+
+          if (wrap.dataset.filled !== "1") {
+            wrap.dataset.filled = "1";
+
+                        wrap.innerHTML = `
+              <div class="ad-ext-section-title">ATC-Fokus</div>
+
+              <div class="ad-ext-filters">
+                <div class="ad-ext-filter-block">
+                  <div class="ad-ext-filter-label">Modus</div>
+                  <div class="ad-ext-filter-row">
+                    <div class="ad-ext-filter-name">Modus</div>
+                    <div class="ad-ext-select-wrap">
+                      <select id="ad-ext-atc-filter-mode" class="ad-ext-select">
+                        <option value="FULL">Full</option>
+                        <option value="OUTER_SINGLE">Outer Single</option>
+                        <option value="SINGLE">Single</option>
+                        <option value="DOUBLE">Double</option>
+                        <option value="TRIPLE">Triple</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ad-ext-filter-block">
+                  <div class="ad-ext-filter-label">Datumsfilter</div>
+                  <div class="ad-ext-filter-row">
+                    <div class="ad-ext-filter-name">Zeit</div>
+                    <div class="ad-ext-select-wrap">
+                      <select id="ad-ext-atc-filter-daterange" class="ad-ext-select">
+                        <option value="TODAY">Heute (—)</option>
+                        <option value="YESTERDAY">Gestern (—)</option>
+                        <option value="DAY_BEFORE">Vorgestern (—)</option>
+                        <option value="D7">Letzten 7 Tage</option>
+                        <option value="D14">Letzten 14 Tage</option>
+                        <option value="D30">Letzten 30 Tage</option>
+                        <option value="M3">Letzten 3 Monate</option>
+                        <option value="M6">Letzten 6 Monate</option>
+                        <option value="Y1" selected>Letztes Jahr</option>
+                        <option value="ALL">Gesamt</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ad-ext-kpi-grid">
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Sessions</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-atc-kpi-sessions">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">GESPIELTE ZEIT</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-atc-kpi-time">—</div>
+                  <div class="ad-ext-kpi-sub" id="ad-ext-atc-kpi-time-sub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Ø Darts / Session</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-atc-kpi-points">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Ø Hit %</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-atc-kpi-hitrate">—</div>
+                </div>
+              </div>
+
+              <div class="ad-ext-grid-seg">
+                <div class="ad-ext-card ad-ext-card-seg-hits">
+                  <div class="ad-ext-chart-title">Performance (Hit %)</div>
+                  <canvas id="ad-ext-atc-chart-radar" class="ad-ext-chart-canvas" width="900" height="420"></canvas>
+                </div>
+
+                <div class="ad-ext-card ad-ext-card-seg-donut">
+                  <div class="ad-ext-chart-title">Treffer % pro Feld</div>
+                  <svg id="ad-ext-atc-chart-donut" class="ad-ext-chart-svg" viewBox="0 0 520 220" width="520" height="220" role="img" aria-label="Treffer % pro Feld"></svg>
+                </div>
+
+                <div class="ad-ext-card ad-ext-card-seg-radar">
+                  <div class="ad-ext-chart-title">Treffer je Target (Hits)</div>
+                  <canvas id="ad-ext-atc-chart-bar" class="ad-ext-chart-canvas" width="520" height="220"></canvas>
+                </div>
+              </div>
+
+              <div class="ad-ext-grid-2">
+                <div>
+                  <div class="ad-ext-section-title">SESSIONS (TAGESBASIS)</div>
+                  <div class="ad-ext-card" style="padding:0;">
+                    <table class="ad-ext-table">
+                      <thead>
+                        <tr>
+                          <th>Datum</th>
+                          <th class="ad-ext-table-value-right">Sessions</th>
+                          <th class="ad-ext-table-value-right">Darts</th>
+                          <th class="ad-ext-table-value-right">Hits</th>
+                          <th class="ad-ext-table-value-right">Hit %</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ad-ext-atc-table-day">
+                        <tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="ad-ext-section-title">FELDER (AGGREGIERT)</div>
+                  <div class="ad-ext-card" style="padding:0;">
+                    <table class="ad-ext-table">
+                      <thead>
+                        <tr>
+                          <th class="ad-ext-th-sortable" data-sort-key="field" title="Feld (1..20, BULL)">Feld</th>
+                          <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="sessions" title="Anzahl Sessions">Sessions</th>
+                          <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="darts" title="Geworfene Darts">Darts</th>
+                          <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="hits" title="Treffer (Hits)">Hits</th>
+                          <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="hitPct" title="Trefferquote (Hits/Darts)">Hit %</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ad-ext-atc-table-target">
+                        <tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            `;
+            try {
+              const cBar = wrap.querySelector("#ad-ext-atc-chart-bar");
+              const cRadar = wrap.querySelector("#ad-ext-atc-chart-radar");
+              const svg = wrap.querySelector("#ad-ext-atc-chart-donut");
+              if (cBar) drawEmpty(cBar, "—");
+              if (cRadar) drawEmpty(cRadar, "—");
+              if (svg) drawEmptySvg(svg, "—");
+            } catch {}
+          }
+
+          const selMode = wrap.querySelector("#ad-ext-atc-filter-mode");
+          const selRange = wrap.querySelector("#ad-ext-atc-filter-daterange");
+          let atcUpdateSeq = 0;
+
+          async function updateAtcFocus() {
+            const seq = ++atcUpdateSeq;
+            try {
+              const f2 = cache.filtersATC || {};
+              const all = Array.isArray(cache.otherTrainingSessions) ? cache.otherTrainingSessions : [];
+              let atc = all.filter((s) => String(s?.activityKey || "").toUpperCase() === "ATC");
+
+              // normalize to avoid NaN in aggregateByDay (points may be missing)
+              atc = atc.map((s) => {
+                const darts = Number(s?.darts) || 0;
+                const hits = Number(s?.hits) || 0;
+                let points = Number(s?.points);
+                if (!Number.isFinite(points)) points = darts || 0;
+                const dayKey = s?.dayKey || parseIsoDateToDayKey(s?.createdAt) || "unknown";
+                const mode = s?.mode || "FULL";
+                return { ...s, darts, hits, points, dayKey, mode };
+              });
+
+              // base filter (dropdowns)
+              let baseFiltered = atc;
+              const range = String(f2.dateRange || "ALL").toUpperCase();
+              if (range === "TODAY" || range === "YESTERDAY" || range === "DAY_BEFORE") {
+                const daysAgo = (range === "TODAY") ? 0 : (range === "YESTERDAY") ? 1 : 2;
+                const dk = relativeDayKey(daysAgo);
+                baseFiltered = baseFiltered.filter((s) => String(s?.dayKey || "") === String(dk || ""));
+              } else {
+                baseFiltered = filterByDateRange(baseFiltered, f2.dateRange, (s) => s.createdAt);
+              }
+
+              const canonMode = (v) => String(v || "").trim().toUpperCase().replace(/[\s-]+/g, "_");
+              const wantedMode = canonMode(f2.mode || "FULL");
+              baseFiltered = baseFiltered.filter((s) => canonMode(s?.mode || "FULL") === wantedMode);
+
+              // Selection state (like Segment-Fokus)
+              const normFieldKey = (v) => {
+                const s = String(v || "").trim().toUpperCase();
+                if (!s) return null;
+                if (s.includes("BULL") || s === "25" || s === "50") return "BULL";
+                const m = s.match(/(\d{1,2})/);
+                if (m) {
+                  const n = parseInt(m[1], 10);
+                  if (Number.isFinite(n) && n >= 1 && n <= 20) return String(n);
+                }
+                return s;
+              };
+
+              let selectedDayKey = f2.selectedDayKey ? String(f2.selectedDayKey) : null;
+              let selectedField = normFieldKey(f2.selectedField);
+
+              // 2) sanitize selection (if selected day not present anymore -> clear)
+              const dayAggAll = aggregateByDay(baseFiltered);
+              if (selectedDayKey && !dayAggAll.some((d) => String(d?.dayKey || "") === String(selectedDayKey))) {
+                selectedDayKey = null;
+                f2.selectedDayKey = null;
+              }
+
+              // Build matchId sets from sessions (for IDB restriction)
+              const baseMatchIds = new Set(
+                baseFiltered.map((s) => String(s?.matchId || "")).filter((id) => id)
+              );
+
+              // 4) cross-filtering like Segment-Fokus:
+              //    - Fields chart/table can be narrowed by selected day
+              //    - Day table can be narrowed by selected field
+              const sessionsForFields = selectedDayKey
+                ? baseFiltered.filter((s) => String(s?.dayKey || "") === String(selectedDayKey))
+                : baseFiltered;
+
+              const allowedMatchIdsFields = new Set(
+                sessionsForFields.map((s) => String(s?.matchId || "")).filter((id) => id)
+              );
+
+              // Field aggregation for "FELDER (AGGREGIERT)" (facet by day)
+              const outFieldSetFacet = new Set();
+              const idbOptsFields = {};
+              if (allowedMatchIdsFields.size) idbOptsFields.allowedMatchIds = allowedMatchIdsFields;
+              if (selectedDayKey) idbOptsFields.dayKey = selectedDayKey;
+              if (selectedField) {
+                idbOptsFields.wantFieldKey = selectedField;
+                idbOptsFields.outFieldSet = outFieldSetFacet;
+              }
+
+              const fieldAggFacet = await loadAtcFieldAggFromIdb(f2.dateRange, f2.mode, idbOptsFields);
+              if (seq !== atcUpdateSeq) return;
+
+              // MatchIds for selectedField across ALL base sessions (needed to filter day-table like Segment-Fokus)
+              let matchIdsForSelectedFieldAll = null;
+              let matchIdsForSelectedFieldInDay = null;
+
+              if (selectedField) {
+                matchIdsForSelectedFieldInDay = outFieldSetFacet;
+
+                if (selectedDayKey) {
+                  const outAll = new Set();
+                  const idbOptsFieldAll = {};
+                  if (baseMatchIds.size) idbOptsFieldAll.allowedMatchIds = baseMatchIds;
+                  idbOptsFieldAll.wantFieldKey = selectedField;
+                  idbOptsFieldAll.outFieldSet = outAll;
+                  idbOptsFieldAll.onlyCollectFieldSet = true;
+                  await loadAtcFieldAggFromIdb(f2.dateRange, f2.mode, idbOptsFieldAll);
+                  if (seq !== atcUpdateSeq) return;
+                  matchIdsForSelectedFieldAll = outAll;
+                } else {
+                  matchIdsForSelectedFieldAll = matchIdsForSelectedFieldInDay;
+                }
+
+                // sanitize selectedField against baseFiltered (like Segment-Fokus sanitize against targetAggAll)
+                if (!matchIdsForSelectedFieldAll || matchIdsForSelectedFieldAll.size === 0) {
+                  selectedField = null;
+                  f2.selectedField = null;
+                  matchIdsForSelectedFieldAll = null;
+                  matchIdsForSelectedFieldInDay = null;
+                }
+              }
+
+              // Day facet table sessions (narrowed by selectedField; NOT narrowed by selectedDayKey)
+              let sessionsForDays = baseFiltered;
+              if (selectedField && matchIdsForSelectedFieldAll && matchIdsForSelectedFieldAll.size) {
+                sessionsForDays = sessionsForDays.filter((s) => matchIdsForSelectedFieldAll.has(String(s?.matchId || "")));
+              }
+              const dayAggFacet = aggregateByDay(sessionsForDays);
+
+              // KPI sessions (narrowed by BOTH selections)
+              let focusSessions = baseFiltered;
+              if (selectedDayKey) {
+                focusSessions = focusSessions.filter((s) => String(s?.dayKey || "") === String(selectedDayKey));
+              }
+              if (selectedField) {
+                const setToUse = selectedDayKey ? matchIdsForSelectedFieldInDay : matchIdsForSelectedFieldAll;
+                if (setToUse && setToUse.size) {
+                  focusSessions = focusSessions.filter((s) => setToUse.has(String(s?.matchId || "")));
+                } else {
+                  focusSessions = [];
+                }
+              }
+
+              // KPIs (analog Segment-Fokus)
+              try {
+                const totalSessions = focusSessions.length;
+                const totalDarts = focusSessions.reduce((a, s) => a + (s.darts || 0), 0);
+                const totalHits = focusSessions.reduce((a, s) => a + (s.hits || 0), 0);
+
+                const totalDurationSec = focusSessions.reduce((a, s) => a + (Number(s.durationSec) || 0), 0);
+                const dayKeysSet = new Set(
+                  focusSessions
+                    .map((s) => (s.dayKey || parseIsoDateToDayKey(s.createdAt) || "unknown"))
+                    .filter((k) => k && k !== "unknown")
+                );
+                const daysCount = dayKeysSet.size;
+
+                setText(panel, "#ad-ext-atc-kpi-sessions", fmtInt(totalSessions));
+                setText(panel, "#ad-ext-atc-kpi-time", totalDurationSec > 0 ? fmtHours(totalDurationSec) : "—");
+                if (totalDurationSec > 0 && daysCount > 0) {
+                  setText(panel, "#ad-ext-atc-kpi-time-sub", `Ø ${fmtMinPerLeg(totalDurationSec / daysCount)} pro Tag`);
+                } else {
+                  setText(panel, "#ad-ext-atc-kpi-time-sub", "—");
+                }
+
+                const avgDartsPerSession = totalSessions > 0 ? (totalDarts / totalSessions) : NaN;
+                setText(panel, "#ad-ext-atc-kpi-points", Number.isFinite(avgDartsPerSession) ? fmtDec(avgDartsPerSession, 1).replace(/\.0$/, "") : "—");
+                setText(panel, "#ad-ext-atc-kpi-hitrate", fmtPct(totalHits, totalDarts));
+              } catch {}
+
+              if (DEBUG_ATC_FIELDS && seq === atcUpdateSeq) {
+                try {
+                  console.debug("[AD Ext][ATC] base sessions =", baseFiltered.length);
+                  console.debug("[AD Ext][ATC] focus sessions =", focusSessions.length, { selectedDayKey, selectedField });
+                } catch {}
+              }
+
+              // Render tables (single pass after async work -> prevents scroll-jank like Segment-Fokus)
+              renderAtcTableDay(panel, dayAggFacet, 10, selectedDayKey);
+
+              // Charts should reflect focusSessions (not just day facet).
+              // If no field selection is active, focusSessions == sessionsForFields (day-filter only) => reuse facet aggregation.
+              let fieldAggForCharts = fieldAggFacet;
+              if (selectedField) {
+                const allowedMatchIdsFocus = new Set(
+                  focusSessions.map((s) => String(s?.matchId || "")).filter((id) => id)
+                );
+                const idbOptsFocus = {};
+                if (allowedMatchIdsFocus.size) idbOptsFocus.allowedMatchIds = allowedMatchIdsFocus;
+                if (selectedDayKey) idbOptsFocus.dayKey = selectedDayKey;
+
+                fieldAggForCharts = await loadAtcFieldAggFromIdb(f2.dateRange, f2.mode, idbOptsFocus);
+                if (seq !== atcUpdateSeq) return;
+              }
+
+              // Charts (Radar)
+              try {
+                const radarCanvas = wrap.querySelector("#ad-ext-atc-chart-radar");
+                if (radarCanvas) {
+                  const rows = Array.isArray(fieldAggForCharts) ? fieldAggForCharts : [];
+                  const rowMap = new Map();
+                  for (const r of rows) {
+                    if (!r || typeof r !== "object") continue;
+                    const k0 = String(r.field || "").trim();
+                    if (!k0) continue;
+                    const k = (String(k0).toUpperCase() === "BULL") ? "BULL" : k0;
+                    rowMap.set(k, r);
+                  }
+
+                  // Order radar axes like a real dartboard (clockwise, 20 at top)
+                  const DARTBOARD_ORDER = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5];
+
+                  const labels = [];
+                  const values = [];
+                  const dataList = [];
+
+                  for (const n of DARTBOARD_ORDER) {
+                    const key = String(n);
+                    const r = rowMap.get(key) || null;
+                    const hits = Number(r?.hits || 0);
+                    const darts = Number(r?.darts || 0);
+                    const hitPct = darts > 0 ? (hits * 100) / darts : 0;
+                    labels.push(key);
+                    values.push(hitPct);
+                    dataList.push(r || { field: key, sessions: 0, darts: 0, hits: 0 });
+                  }
+
+                  // optional: BULL at end if present
+                  if (rowMap.has("BULL")) {
+                    const r = rowMap.get("BULL");
+                    const hits = Number(r?.hits || 0);
+                    const darts = Number(r?.darts || 0);
+                    const hitPct = darts > 0 ? (hits * 100) / darts : 0;
+                    labels.push("BULL");
+                    values.push(hitPct);
+                    dataList.push(r || { field: "BULL", sessions: 0, darts: 0, hits: 0 });
+                  }
+
+                  // highlight selection (if selectedField matches)
+                  let hi = null;
+                  if (selectedField) {
+                    const sf = selectedField;
+                    hi = labels.findIndex((l) => normFieldKey(l) === normFieldKey(sf));
+                    if (hi < 0) hi = null;
+                  }
+
+                  const layout = drawRadar(radarCanvas, labels, values, { highlightIndex: hi, autoScale: true, valueIsPercent: true, maxValue: 100 });
+                  layout.dataList = dataList;
+
+                  cache._atc_layouts = cache._atc_layouts || {};
+                  cache._atc_layouts.radar = layout;
+                }
+              } catch {}
+
+              // Fields table (facet by day)
+              renderAtcTableFields(panel, fieldAggFacet);
+              applySelectedRowHighlightAtc(panel);
+            } catch (e) {
+              console.error("[AD Ext][ATC] updateAtcFocus failed", e);
+              try { renderAtcTableDay(panel, [], 10, null); } catch {}
+              try { renderAtcTableFields(panel, []); } catch {}
+              try { applySelectedRowHighlightAtc(panel); } catch {}
+            }
+          }
+
+          // UI sync
+          const curMode = String(f.mode || "FULL").toUpperCase();
+          if (selMode && selMode.value !== curMode) selMode.value = curMode;
+
+          if (selRange && selRange.value !== String(f.dateRange || "Y1")) selRange.value = String(f.dateRange || "Y1");
+          try { updateRelativeDayOptions(selRange); } catch {}
+
+          try { updateAtcFocus(); } catch {}
+
+          if (wrap.dataset.wired === "1") return;
+          wrap.dataset.wired = "1";
+          if (selMode) {
+            selMode.addEventListener("change", () => {
+              try {
+                const next = String(selMode.value || "FULL").toUpperCase();
+                cache.filtersATC.mode = next || "FULL";
+                if (selMode.value !== String(cache.filtersATC.mode || "FULL")) selMode.value = String(cache.filtersATC.mode || "FULL");
+                try { updateAtcFocus(); } catch {}
+              } catch {}
+            });
+          }
+
+          if (selRange) {
+            selRange.addEventListener("change", () => {
+              try {
+                cache.filtersATC.dateRange = String(selRange.value || "Y1");
+                updateRelativeDayOptions(selRange);
+                try { updateAtcFocus(); } catch {}
+              } catch {}
+            });
+          }
+
+          // Sorting: Felder (Aggregiert)
+          try {
+            const bodyFields = wrap.querySelector("#ad-ext-atc-table-target");
+            const tblFields = bodyFields?.closest?.("table");
+            const headFields = tblFields?.querySelector?.("thead");
+            if (headFields) {
+              headFields.addEventListener("click", (ev) => {
+                const th = ev?.target?.closest ? ev.target.closest("th[data-sort-key]") : null;
+                if (!th || !headFields.contains(th)) return;
+
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                const key = String(th.getAttribute("data-sort-key") || "hitPct");
+                const curKey = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+                const curDir = (String(cache?.filtersATC?.fieldSortDir || "desc").toLowerCase() === "asc") ? "asc" : "desc";
+
+                let nextDir = curDir;
+                if (key === curKey) nextDir = (curDir === "asc") ? "desc" : "asc";
+                else nextDir = (key === "field") ? "asc" : "desc";
+
+                cache.filtersATC.fieldSortKey = key;
+                cache.filtersATC.fieldSortDir = nextDir;
+
+                try { localStorage.setItem("ad_ext_atc_fieldSortKey", key); } catch {}
+                try { localStorage.setItem("ad_ext_atc_fieldSortDir", nextDir); } catch {}
+
+                try { updateAtcFocus(); } catch {}
+              });
+            }
+
+
+          // --- ATC Crossfilter: Day / Field selection (wie Segment-Fokus) ---
+          try {
+            const tbodyDay = wrap.querySelector("#ad-ext-atc-table-day");
+            if (tbodyDay && tbodyDay.dataset.adExtAtcDayWired !== "1") {
+              tbodyDay.dataset.adExtAtcDayWired = "1";
+              tbodyDay.addEventListener("click", (ev) => {
+                const tr = ev?.target?.closest ? ev.target.closest("tr[data-day-key]") : null;
+                if (!tr || !tbodyDay.contains(tr)) return;
+
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                const dk = tr.getAttribute("data-day-key");
+                const cur = cache?.filtersATC?.selectedDayKey || null;
+                cache.filtersATC.selectedDayKey = (cur && dk && String(cur) === String(dk)) ? null : (dk || null);
+
+                try { updateAtcFocus(); } catch {}
+              });
+            }
+
+            const tbodyField = wrap.querySelector("#ad-ext-atc-table-target");
+            if (tbodyField && tbodyField.dataset.adExtAtcFieldWired !== "1") {
+              tbodyField.dataset.adExtAtcFieldWired = "1";
+              tbodyField.addEventListener("click", (ev) => {
+                const tr = ev?.target?.closest ? ev.target.closest("tr[data-field]") : null;
+                if (!tr || !tbodyField.contains(tr)) return;
+
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                const f = tr.getAttribute("data-field");
+                const cur = cache?.filtersATC?.selectedField || null;
+                cache.filtersATC.selectedField = (cur && f && String(cur) === String(f)) ? null : (f || null);
+
+                try { updateAtcFocus(); } catch {}
+              });
+            }
+          } catch {}
+
+          // --- ATC Radar Hover (Performance Hit %) ---
+          try {
+            const cRadar = wrap.querySelector("#ad-ext-atc-chart-radar");
+            if (cRadar && cRadar.dataset.adExtAtcRadarWired !== "1") {
+              cRadar.dataset.adExtAtcRadarWired = "1";
+
+              const redrawRadar = (highlightIndex) => {
+                try {
+                  const base = cache._atc_layouts?.radar;
+                  if (!base || base.type !== "radar") return;
+                  const next = drawRadar(cRadar, base.labels, base.values, { highlightIndex, autoScale: true });
+                  next.dataList = base.dataList || [];
+                  cache._atc_layouts = cache._atc_layouts || {};
+                  cache._atc_layouts.radar = next;
+                } catch {}
+              };
+
+              cRadar.addEventListener("mousemove", (ev) => {
+                const layout = cache._atc_layouts?.radar;
+                if (!layout || layout.type !== "radar") { tooltipHide(); return; }
+
+                const pt = canvasPoint(ev, cRadar);
+                const idx = hitTestRadar(layout, pt);
+
+                if (idx === null || idx === undefined) {
+                  if (cache._atc_radar_hoverIndex !== null) {
+                    cache._atc_radar_hoverIndex = null;
+                    redrawRadar(null);
+                  }
+                  tooltipHide();
+                  return;
+                }
+
+                if (cache._atc_radar_hoverIndex !== idx) {
+                  cache._atc_radar_hoverIndex = idx;
+                  redrawRadar(idx);
+                }
+
+                const row = layout.dataList?.[idx] || {};
+                const label = row?.field || layout.labels?.[idx] || "";
+                const hits = Number(row?.hits ?? 0);
+                const darts = Number(row?.darts ?? 0);
+                const sessions = Number(row?.sessions ?? 0);
+                const hitPct = darts > 0 ? (hits * 100) / darts : Number(layout.values?.[idx] ?? 0);
+
+                const line = `<div class="ad-ext-tooltip-title">${escapeHtml(label)}</div>
+<div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Sessions</div><div style="font-weight:900;">${fmtInt(sessions)}</div></div>
+<div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Hits / Darts</div><div style="font-weight:900;">${fmtInt(hits)} / ${fmtInt(darts)}</div></div>
+<div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Hit %</div><div style="font-weight:900;">${(Number.isFinite(hitPct) ? hitPct : 0).toFixed(2)}%</div></div>`;
+                tooltipShow(ev, line);
+              });
+
+              cRadar.addEventListener("click", (ev) => {
+                const layout = cache._atc_layouts?.radar;
+                if (!layout || layout.type !== "radar") return;
+
+                const pt = canvasPoint(ev, cRadar);
+                const idx = hitTestRadar(layout, pt);
+                if (idx === null || idx === undefined) return;
+
+                const lbl = String(layout.labels?.[idx] || "").trim();
+                if (!lbl) return;
+
+                const canonField = (v) => {
+                  const s = String(v || "").trim().toUpperCase();
+                  if (!s) return null;
+                  if (s === "25" || s === "50" || s.includes("BULL")) return "BULL";
+                  const m = s.match(/(\d{1,2})/);
+                  if (m) {
+                    const n = parseInt(m[1], 10);
+                    if (Number.isFinite(n) && n >= 1 && n <= 20) return String(n);
+                  }
+                  return s;
+                };
+
+                const cur = cache?.filtersATC?.selectedField || null;
+                const same = cur && canonField(cur) && canonField(cur) === canonField(lbl);
+
+                cache.filtersATC.selectedField = same ? null : lbl;
+
+                try { updateAtcFocus(); } catch {}
+              });
+
+              cRadar.addEventListener("mouseleave", () => {
+                tooltipHide();
+                if (cache._atc_radar_hoverIndex !== null) {
+                  cache._atc_radar_hoverIndex = null;
+                  redrawRadar(null);
+                }
+              });
+            }
+          } catch {}
+          } catch {}
+        }
+
+// Re-render helper: Trainingsdaten-Panel neu zeichnen (Plan frisch aus Storage lesen)
         const rerenderTrainingMain = () => {
             try {
                 if (!cache?.loaded) return;
@@ -13764,6 +15301,7 @@ function renderMasterHallOfFame(panel) {
             const v = String(view || "").toUpperCase();
             trainView = (v === "PLAN") ? "PLAN" : (v === "INSIGHTS") ? "INSIGHTS"
             : (v === "SEGFOCUS" || v === "SEGFOKUS" || v === "SEGMENT_FOCUS") ? "SEGFOCUS"
+            : (v === "ATCFOCUS" || v === "ATCFOKUS" || v === "ATC_FOCUS") ? "ATCFOCUS"
             : (v === "CHROMO" || v === "CHROMOTRACKER" || v === "CHROMO_TRACKER") ? "CHROMO"
             : "DATA";
             try { localStorage.setItem(AD_EXT_TRAIN_VIEW_LS_KEY, trainView); } catch {}
@@ -13790,6 +15328,8 @@ function renderMasterHallOfFame(panel) {
                 rerenderTrainingMain();
             } else if (trainView === "INSIGHTS") {
                 try { renderInsights(panel); } catch {}
+            } else if (trainView === "ATCFOCUS") {
+                try { renderTrainAtcFocus(panel); } catch {}
             } else if (trainView === "CHROMO") {
                 // Zeit-Tracker im Training-Subview „Chromo-Tracker“
                 try { mountTimeIntoTrainChromo(panel); } catch {}
@@ -13800,12 +15340,28 @@ function renderMasterHallOfFame(panel) {
             }
         }
 
+        try { cache._adExt_setTrainView = setTrainView; } catch {}
+
+
+
         // Event delegation
+
+
         tabs.onclick = (ev) => {
             const btn = ev?.target?.closest ? ev.target.closest(".ad-ext-segbtn") : null;
             if (!btn || !tabs.contains(btn)) return;
             ev.preventDefault();
             ev.stopPropagation();
+
+            // No-op: Klick auf bereits aktiven Tab soll nichts neu rendern (wie Segment-Fokus)
+            const nextView = String(btn?.dataset?.view || "").toUpperCase();
+            const curView = String(layout?.dataset?.trainView || "").toUpperCase();
+            if (nextView && curView && nextView === curView) {
+                // Mouse-click: kein dauerhafter Focus-Ring
+                if (ev.detail && ev.detail > 0) { try { btn.blur(); } catch {} }
+                return;
+            }
+
             setTrainView(btn.dataset.view);
             // Mouse-click: kein dauerhafter Focus-Ring
             if (ev.detail && ev.detail > 0) { try { btn.blur(); } catch {} }
@@ -17607,7 +19163,340 @@ function renderMasterHallOfFame(panel) {
         return { data: st, source: "api", fetchedAt: Date.now(), ageMs: 0 };
     }
 
-    // -------------------- UI --------------------
+    
+    // =========================
+    // ATC detail builder + RAM cache
+    // =========================
+    function isAtcStatsPayload(statsPayload) {
+        const v = normalizeVariantName(statsPayload?.variant || statsPayload?.gameMode || statsPayload?.mode);
+        if (v && (v === "atc" || v.includes("atc"))) return true;
+        const s = statsPayload?.settings;
+        // ATC /training payloads tend to have settings.order + targetStats
+        if (s && (s.order || s.mode) && (asArray(statsPayload?.matchStats).length || asArray(statsPayload?.legStats).length)) return true;
+        return false;
+    }
+
+    function buildAtcDetailFromStats(statsPayload, preferredPlayerId) {
+        try {
+            const matchId = String(statsPayload?.id || statsPayload?.matchId || "");
+            if (!matchId) return null;
+
+            const createdAt = statsPayload?.createdAt || null;
+            const finishedAt = statsPayload?.finishedAt || statsPayload?.endedAt || null;
+
+            let durationSec = 0;
+            const t0 = createdAt ? new Date(createdAt).getTime() : NaN;
+            const t1 = finishedAt ? new Date(finishedAt).getTime() : NaN;
+            if (Number.isFinite(t0) && Number.isFinite(t1) && t1 >= t0) {
+                const diff = (t1 - t0) / 1000;
+                if (diff >= 0 && diff <= 6 * 3600) durationSec = diff;
+            }
+
+            const settingsRaw = statsPayload?.settings || null;
+            const settings = {
+                mode: (settingsRaw?.mode != null) ? String(settingsRaw.mode) : null,
+                order: (settingsRaw?.order != null) ? String(settingsRaw.order) : null,
+                hitsRequired: (settingsRaw?.hits != null && Number.isFinite(Number(settingsRaw.hits))) ? Number(settingsRaw.hits) : null,
+            };
+
+            // ---- summary ----
+            const matchStatsArr = asArray(statsPayload?.matchStats);
+            let summarySrc = null;
+
+            if (preferredPlayerId != null) {
+                const pid = String(preferredPlayerId);
+                summarySrc = matchStatsArr.find(p => String(p?.playerId || "") === pid) || null;
+            }
+            if (!summarySrc) summarySrc = matchStatsArr[0] || null;
+
+            if (!summarySrc) {
+                // fallback: legStats[0].stats[0] (or first found)
+                const legStatsArr = asArray(statsPayload?.legStats);
+                for (const leg of legStatsArr) {
+                    const statsArr = asArray(leg?.stats);
+                    if (!statsArr.length) continue;
+                    if (preferredPlayerId != null) {
+                        const pid = String(preferredPlayerId);
+                        summarySrc = statsArr.find(p => String(p?.playerId || "") === pid) || null;
+                    }
+                    if (!summarySrc) summarySrc = statsArr[0] || null;
+                    if (summarySrc) break;
+                }
+            }
+
+            const dartsThrown = Number(summarySrc?.dartsThrown ?? summarySrc?.darts ?? 0);
+            const hits = Number(summarySrc?.hits ?? 0);
+            const hitRate = Number(summarySrc?.hitRate ?? (dartsThrown > 0 ? (hits / dartsThrown) : 0));
+            const playerId = (summarySrc?.playerId != null) ? String(summarySrc.playerId) : null;
+
+            const summary = {
+                playerId,
+                dartsThrown: Number.isFinite(dartsThrown) ? dartsThrown : 0,
+                hits: Number.isFinite(hits) ? hits : 0,
+                hitRate: Number.isFinite(hitRate) ? hitRate : (Number.isFinite(dartsThrown) && dartsThrown > 0 ? (Number(hits) / dartsThrown) : 0),
+            };
+
+            // ---- targetStats ----
+            let targetStatsRaw = asArray(summarySrc?.targetStats);
+
+            if (!targetStatsRaw.length) {
+                // fallback: first legStats.stats.targetStats found
+                const legStatsArr = asArray(statsPayload?.legStats);
+                for (const leg of legStatsArr) {
+                    const statsArr = asArray(leg?.stats);
+                    for (const st of statsArr) {
+                        const ts = asArray(st?.targetStats);
+                        if (ts.length) { targetStatsRaw = ts; break; }
+                    }
+                    if (targetStatsRaw.length) break;
+                }
+            }
+
+            const targetStats = [];
+            for (const t of targetStatsRaw) {
+                const n = Number(t?.number ?? t?.targetNumber ?? t?.value ?? t?.target);
+                if (!Number.isFinite(n)) continue;
+
+                const darts = Number(t?.count ?? t?.darts ?? t?.throws ?? 0);
+                const thits = Number(t?.hits ?? 0);
+                const thr = Number(t?.hitRate ?? (darts > 0 ? (thits / darts) : NaN));
+
+                targetStats.push({
+                    targetNumber: n,
+                    bed: (t?.bed != null) ? String(t.bed) : "",
+                    darts: Number.isFinite(darts) ? darts : 0,
+                    hits: Number.isFinite(thits) ? thits : 0,
+                    hitRate: Number.isFinite(thr) ? thr : (Number.isFinite(darts) && darts > 0 ? (Number(thits) / darts) : NaN),
+                });
+            }
+
+            // ---- throws ----
+            const throwsOut = [];
+
+            const turnsTop = asArray(statsPayload?.turns);
+            const games = asArray(statsPayload?.games);
+
+            let turns = turnsTop;
+            if (!turns.length && games.length) {
+                // flatten game turns (most /stats payloads)
+                const tmp = [];
+                for (const g of games) {
+                    for (const t of asArray(g?.turns)) tmp.push(t);
+                }
+                turns = tmp;
+            }
+
+            for (let turnIndex = 0; turnIndex < turns.length; turnIndex++) {
+                const turn = turns[turnIndex];
+                const round = Number.isFinite(Number(turn?.round)) ? Number(turn.round) : null;
+                const turnScoreAfter = Number.isFinite(Number(turn?.score)) ? Number(turn.score) : null;
+                const turnPoints = Number.isFinite(Number(turn?.points)) ? Number(turn.points) : null;
+
+                const ths = asArray(turn?.throws);
+                for (const thr0 of ths) {
+                    const dartIndex = Number.isFinite(Number(thr0?.throw)) ? Number(thr0.throw) : (Number.isFinite(Number(thr0?.dart)) ? Number(thr0.dart) : null);
+                    const ts = thr0?.createdAt || null;
+
+                    const seg0 = thr0?.segment;
+                    const seg = (seg0 && typeof seg0 === "object") ? {
+                        name: (seg0?.name != null) ? String(seg0.name) : "",
+                        number: Number.isFinite(Number(seg0?.number)) ? Number(seg0.number) : 0,
+                        bed: (seg0?.bed != null) ? String(seg0.bed) : "",
+                        multiplier: Number.isFinite(Number(seg0?.multiplier)) ? Number(seg0.multiplier) : 0,
+                    } : null;
+
+                    const c0 = thr0?.coords;
+                    const cx = Number(c0?.x);
+                    const cy = Number(c0?.y);
+                    const coords = (Number.isFinite(cx) && Number.isFinite(cy)) ? { x: cx, y: cy } : null;
+
+                    throwsOut.push({
+                        ts,
+                        round,
+                        turnIndex,
+                        dartIndex,
+                        segment: seg,
+                        coords,
+                        turnScoreAfter,
+                        turnPoints,
+                    });
+                }
+            }
+
+            const detail = {
+                matchId,
+                createdAt,
+                finishedAt,
+                durationSec: Number.isFinite(durationSec) ? durationSec : 0,
+                settings,
+                summary,
+                targetStats,
+                throws: throwsOut,
+            };
+
+            // ---- consistency logging ----
+            try {
+                console.debug("[ATC detail]", {
+                    matchId: detail.matchId,
+                    mode: detail.settings?.mode ?? null,
+                    order: detail.settings?.order ?? null,
+                    dartsThrown: detail.summary?.dartsThrown ?? 0,
+                    hits: detail.summary?.hits ?? 0,
+                    targetStatsLen: Array.isArray(detail.targetStats) ? detail.targetStats.length : 0,
+                    throwsLen: Array.isArray(detail.throws) ? detail.throws.length : 0,
+                });
+
+                const sumDarts = detail.targetStats.reduce((a, x) => a + (Number(x?.darts) || 0), 0);
+                const sumHits = detail.targetStats.reduce((a, x) => a + (Number(x?.hits) || 0), 0);
+
+                const d0 = Number(detail.summary?.dartsThrown || 0);
+                const h0 = Number(detail.summary?.hits || 0);
+
+                const dartsMismatch = (Number.isFinite(sumDarts) && Number.isFinite(d0)) ? (sumDarts !== d0) : false;
+                const hitsMismatch = (Number.isFinite(sumHits) && Number.isFinite(h0)) ? (sumHits !== h0) : false;
+
+                if ((d0 > 0 && dartsMismatch) || (h0 > 0 && hitsMismatch)) {
+                    console.warn("[ATC detail mismatch]", {
+                        matchId: detail.matchId,
+                        mode: detail.settings?.mode ?? null,
+                        order: detail.settings?.order ?? null,
+                        summaryDarts: d0,
+                        sumTargetDarts: sumDarts,
+                        summaryHits: h0,
+                        sumTargetHits: sumHits,
+                    });
+                }
+            } catch { /* ignore */ }
+
+            return detail;
+        } catch {
+            return null;
+        }
+    }
+
+    
+    let _adExtAtcEnsureNullTraceCount = 0;
+
+    function _adExtAtcTraceEnsureNull(reason, extra) {
+        if (!DEBUG_ATC_FIELDS) return;
+        if (_adExtAtcEnsureNullTraceCount >= 3) return;
+        _adExtAtcEnsureNullTraceCount += 1;
+        try {
+            console.debug("[AD Ext][ATC] ensureAtcDetail -> null:", reason, extra || {});
+        } catch {}
+    }
+
+    // Local RAM cache for ATC detail loader (Smart-API IIFE scope)
+    const cache = { atcDetailsByMatchId: new Map(), _atcDetailPromisesByMatchId: new Map() };
+async function ensureAtcDetail(matchId, preferredPlayerId) {
+        const mid = String(matchId || "");
+        if (!mid) return null;
+
+
+        if (DEBUG_ATC_FIELDS) {
+            try { console.debug("[AD Ext][ATC] ensureAtcDetail called", mid); } catch {}
+        }
+        if (cache.atcDetailsByMatchId?.has?.(mid)) {
+            if (DEBUG_ATC_FIELDS) {
+                try { console.debug("[AD Ext][ATC] ensureAtcDetail cacheHit", mid); } catch {}
+            }
+            return cache.atcDetailsByMatchId.get(mid);
+        }
+
+        if (cache._atcDetailPromisesByMatchId?.has?.(mid)) return await cache._atcDetailPromisesByMatchId.get(mid);
+
+        const p = (async () => {
+            let statsPayload = null;
+
+            let cachedRec = null;
+            try {
+                const db = await openDb();
+                cachedRec = await idbGet(db, "match_stats", mid);
+
+                // accept multiple cache shapes:
+                // { matchId, fetchedAt, stats }, { matchId, fetchedAt, data }, { matchId, fetchedAt, payload }, or payload directly
+                const candidate = cachedRec?.stats ?? cachedRec?.data ?? cachedRec?.payload ?? cachedRec ?? null;
+                statsPayload = (candidate && typeof candidate === "object") ? candidate : null;
+            } catch { statsPayload = null; }
+
+            // best-effort fallback (if record missing)
+            if (!statsPayload) {
+                try {
+                    const got = await getStatsCached(mid, { force: false });
+                    statsPayload = got?.data ?? null;
+                } catch { statsPayload = null; }
+            }
+
+            if (!statsPayload) {
+                _adExtAtcTraceEnsureNull("no cached.stats", {
+                    matchId: mid,
+                    cachedKeys: (cachedRec && typeof cachedRec === "object") ? Object.keys(cachedRec).slice(0, 12) : null,
+                });
+                return null;
+            }
+
+            if (!isAtcStatsPayload(statsPayload)) {
+                _adExtAtcTraceEnsureNull("not ATC payload", {
+                    matchId: mid,
+                    variant: (statsPayload && typeof statsPayload === "object") ? (statsPayload?.variant ?? statsPayload?.settings?.mode ?? statsPayload?.settings?.order ?? null) : null,
+                    hasOrder: !!(statsPayload?.settings && statsPayload.settings.order),
+                    keys: (typeof statsPayload === "object") ? Object.keys(statsPayload).slice(0, 12) : null,
+                });
+                return null;
+            }
+
+            const detail = buildAtcDetailFromStats(statsPayload, preferredPlayerId);
+            if (!detail) {
+                _adExtAtcTraceEnsureNull("build failed", { matchId: mid });
+                return null;
+            }
+
+            const ts0 = Array.isArray(detail.targetStats) ? detail.targetStats : [];
+            if (!ts0.length) {
+                _adExtAtcTraceEnsureNull("no targetStats", {
+                    matchId: mid,
+                    mode: detail.settings?.mode ?? null,
+                    order: detail.settings?.order ?? null,
+                });
+                return null;
+            }
+
+            try { cache.atcDetailsByMatchId.set(mid, detail); } catch {}
+            return detail;
+        })();
+
+        try { cache._atcDetailPromisesByMatchId.set(mid, p); } catch {}
+        try { return await p; }
+        finally {
+            try { cache._atcDetailPromisesByMatchId.delete(mid); } catch {}
+        }
+    }
+
+
+
+    // Expose to Training/UI module (other IIFE)
+    try {
+        const root = (typeof globalThis !== "undefined") ? globalThis : window;
+        root.__adExtAtcApi = root.__adExtAtcApi || {};
+        root.__adExtAtcApi.ensureAtcDetail = ensureAtcDetail;
+
+        // Mirror to page context (DevTools access) – userscript sandbox != page window
+        try {
+            if (typeof unsafeWindow !== "undefined" && unsafeWindow) {
+                unsafeWindow.__adExtAtcApi = root.__adExtAtcApi;
+            } else if (typeof window !== "undefined" && window) {
+                // best-effort fallback
+                window.__adExtAtcApi = root.__adExtAtcApi;
+            }
+        } catch {}
+
+        if (DEBUG_ATC_FIELDS) {
+            console.debug("[AD Ext][ATC] expose ensureAtcDetail =", typeof root.__adExtAtcApi?.ensureAtcDetail);
+        }
+    } catch (e) {
+        console.warn("[AD Ext][ATC] expose failed", e);
+    }
+// -------------------- UI --------------------
     GM_addStyle(`
     /* NOTE: UI ist ausschließlich im Settings-Panel eingebettet (kein Floating-Terminal). */
     #adApiPanel,

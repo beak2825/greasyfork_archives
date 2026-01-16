@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         豆瓣影视添加影巢对应链接
-// @namespace    https://github.com/anonymous/
-// @version      0.9.1
+// @namespace    https://douban-to-hdhive.github.com
+// @version      0.9.2
 // @description  豆瓣影视添加影巢对应链接，在IMDb ID下方
-// @author       Grok + 你
+// @author       DemoJameson
 // @match        https://movie.douban.com/subject/*
 // @match        https://www.douban.com/location/*/movie/subject/*
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_xmlhttpRequest
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/562653/%E8%B1%86%E7%93%A3%E5%BD%B1%E8%A7%86%E6%B7%BB%E5%8A%A0%E5%BD%B1%E5%B7%A2%E5%AF%B9%E5%BA%94%E9%93%BE%E6%8E%A5.user.js
 // @updateURL https://update.greasyfork.org/scripts/562653/%E8%B1%86%E7%93%A3%E5%BD%B1%E8%A7%86%E6%B7%BB%E5%8A%A0%E5%BD%B1%E5%B7%A2%E5%AF%B9%E5%BA%94%E9%93%BE%E6%8E%A5.meta.js
@@ -17,14 +18,15 @@
     'use strict';
 
     const TMDB_API_KEY = 'ebb2c093078553178d5d75c6d86d7bde';
+    const DOUBAN_API_KEY = '0ac44ae016490db2204ce0a042db2916';
     const CACHE_PREFIX = 'tmdb_id_cache_';
-    const CACHE_EXPIRE_DAYS = 30; // 缓存有效期 30 天
+    const CACHE_EXPIRE_DAYS = 30;
 
     let observer = null;
     let fallbackTimer = null;
     let processed = false;
 
-    // 缓存相关函数
+    // 缓存相关函数（不变）
     function getCacheKey(doubanId) {
         return CACHE_PREFIX + doubanId;
     }
@@ -33,10 +35,9 @@
         const key = getCacheKey(doubanId);
         const cached = GM_getValue(key, null);
         if (!cached) return null;
-
         const now = Date.now();
         if (now - cached.timestamp > CACHE_EXPIRE_DAYS * 24 * 60 * 60 * 1000) {
-            GM_deleteValue(key); // 过期删除
+            GM_deleteValue(key);
             return null;
         }
         return {
@@ -62,7 +63,6 @@
         const pl = document.createElement('span');
         pl.className = 'pl';
         pl.textContent = '影巢: ';
-
         const link = document.createElement('a');
         link.href = url;
         link.target = '_blank';
@@ -89,6 +89,7 @@
 
     async function fetchTMDBId(imdbId, title, year, mediaType) {
         try {
+            // 優先用 imdbId 找（最準）
             if (imdbId) {
                 const findUrl = `https://api.themoviedb.org/3/find/${imdbId}?api_key=${TMDB_API_KEY}&external_source=imdb_id`;
                 const res = await fetch(findUrl);
@@ -102,29 +103,113 @@
                 }
             }
 
-            // fallback: 标题 + 年份搜索
             if (!title || !year) return null;
 
-            const types = [mediaType, mediaType === 'movie' ? 'tv' : 'movie'];
-            for (const type of types) {
-                const url = `https://api.themoviedb.org/3/search/${type}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(title)}&year=${year}&language=zh-CN`;
-                const res = await fetch(url);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.results?.length > 0) {
-                        return { tmdbId: data.results[0].id, type };
-                    }
-                }
+            // 第一次搜尋：原始標題 + 年份
+            let searchTitle = title.trim();
+            let tmdbResult = await searchTMDB(searchTitle, year, mediaType);
+            if (tmdbResult) return tmdbResult;
+
+            // 第二次嘗試：如果標題結尾是數字 → 去掉數字再試一次
+            const endsWithNumberPattern = /\d+$/i;
+
+            if (endsWithNumberPattern.test(searchTitle)) {
+                // 去掉結尾的年份/季數/數字部分
+                let cleanedTitle = searchTitle
+                    .replace(/\d+$/, '')
+                    .trim();
+
+                tmdbResult = await searchTMDB(cleanedTitle, year, mediaType);
+                if (tmdbResult) return tmdbResult;
             }
+
             return null;
+
         } catch (e) {
             console.error('TMDB 查询出错:', e);
             return null;
         }
     }
 
+    // 抽取成獨立搜尋函數，方便重用
+    async function searchTMDB(queryTitle, year, mediaType) {
+        const url = `https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(queryTitle)}&year=${year}&language=zh-CN`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+
+        const data = await res.json();
+        if (data.results?.length > 0) {
+            return { tmdbId: data.results[0].id, type: mediaType };
+        }
+        return null;
+    }
+
+    async function fetchDoubanTitleAndYear(doubanId) {
+        return new Promise((resolve) => {
+            const url = `https://frodo.douban.com/api/v2/movie/${doubanId}?apikey=${DOUBAN_API_KEY}&locale=zh-CN`;
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                headers: {
+                    "User-Agent": "MicroMessenger/8.0.0",
+                    "Referer": "https://servicewechat.com/wx2f9b06c1de1ccfca",
+                    "Host": "frodo.douban.com",
+                    "Accept": "application/json",
+                    "Accept-Language": "zh-CN,zh;q=0.9"
+                },
+                anonymous: true,
+                onload: function (response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        try {
+                            const data = JSON.parse(response.responseText);
+
+                            // 标题清洗（保持不变）
+                            let rawTitle = data.title || data.name || '';
+                            rawTitle = rawTitle
+                                .replace(/第[一二三四五六七八九十]+(季|期)/i, '')
+                                .replace(/Season \d+/i, '')
+                                .replace(/시즌\d+/i, '')
+                                .trim();
+
+                            const year = data.year || (data.pubdate?.[0] ? data.pubdate[0].slice(0,4) : '');
+
+                            // ─────────────── 新增：判断 mediaType ───────────────
+                            let mediaType = 'movie';  // 默认电影
+
+                            // 方式1：最推荐，看 subtype（通常最准确）
+                            if (data.subtype === 'tv' || data.subtype === 'series') {
+                                mediaType = 'tv';
+                            }
+                            // 方式2：备选，看是否有集数/季数相关字段
+                            else if (
+                                data.episode_count > 1 ||
+                                data.season_count > 1 ||
+                                data.card?.type === 'series' ||
+                                /季|season/i.test(data.title) ||
+                                data.title?.includes('第') && data.title?.match(/季|期/)
+                            ) {
+                                mediaType = 'tv';
+                            }
+
+                            console.log('Frodo API 成功:', rawTitle, year, 'mediaType:', mediaType);
+                            resolve({ title: rawTitle, year, mediaType });
+                        } catch (e) {
+                            console.error('JSON 解析失败:', e);
+                            resolve({ title: '', year: '', mediaType: 'movie' });
+                        }
+                    } else {
+                        console.warn('Frodo API 失败 status:', response.status);
+                        resolve({ title: '', year: '', mediaType: 'movie' });
+                    }
+                },
+                onerror: function () {
+                    resolve({ title: '', year: '', mediaType: 'movie' });
+                }
+            });
+        });
+    }
+
     async function tryGetAndAddLink(doubanId, imdbId, title, year, mediaType, infoElm) {
-        // 1. 先查缓存
         let cached = getCachedTMDB(doubanId);
         if (cached) {
             console.log('使用缓存 TMDB ID:', cached.tmdbId);
@@ -132,11 +217,9 @@
             return;
         }
 
-        // 2. 无缓存 → 网络请求
         const result = await fetchTMDBId(imdbId, title, year, mediaType);
         if (result) {
             console.log('获取到 TMDB ID:', result.tmdbId);
-            // 存入缓存
             setCache(doubanId, result.tmdbId, result.type);
             addNestLink(result.tmdbId, result.type, infoElm);
         } else {
@@ -150,9 +233,7 @@
     }
 
     async function main() {
-        console.log('脚本启动');
         processed = false;
-
         let infoElm = document.querySelector('#info');
         if (!infoElm) {
             infoElm = await new Promise(resolve => {
@@ -173,15 +254,10 @@
             return;
         }
 
-        // 提取标题、年份、类型
-        const titleElm = document.querySelector('#content h1 span[property="v:itemreviewed"]');
-        const title = titleElm ? titleElm.textContent.trim().replace(/第[一二三四五六七八九十]+季/i, '').replace(/ Season \d+/i, '').trim() : '';
+        // 从豆瓣接口获取 title 和 year（取代页面元素读取）
+        const { title, year, mediaType } = await fetchDoubanTitleAndYear(doubanId);
 
-        const year = document.querySelector('#content h1 .year')?.textContent.replace(/[()]/g, '').trim() || '';
-
-        const mediaType = /季数:|集数:|单集片长:/i.test(infoElm.innerHTML) ? 'tv' : 'movie';
-
-        // 尝试从页面提取 IMDb ID
+        // 尝试从页面提取 IMDb ID（逻辑不变）
         let imdbId = null;
         const plSpans = infoElm.querySelectorAll('span.pl');
         for (let span of plSpans) {
@@ -193,10 +269,9 @@
             }
         }
 
-        // 开始查找（优先缓存）
         await tryGetAndAddLink(doubanId, imdbId, title, year, mediaType, infoElm);
 
-        // 如果页面动态加载了 IMDb 行，再次尝试
+        // 如果 IMDb 后续动态加载，仍然尝试
         if (!processed && !imdbId) {
             observer = new MutationObserver(() => {
                 if (processed) return;
@@ -217,7 +292,6 @@
             });
             observer.observe(infoElm, { childList: true, subtree: true, characterData: true });
 
-            // 超时 fallback（无 IMDb 也尝试一次）
             fallbackTimer = setTimeout(() => {
                 if (!processed) {
                     tryGetAndAddLink(doubanId, null, title, year, mediaType, infoElm);
@@ -226,7 +300,7 @@
         }
     }
 
-    // 页面跳转时重新执行
+    // 页面跳转时重新执行（不变）
     let lastUrl = location.href;
     new MutationObserver(() => {
         if (location.href !== lastUrl) {
@@ -237,6 +311,5 @@
         }
     }).observe(document, { subtree: true, childList: true });
 
-    // 初次执行
     main();
 })();

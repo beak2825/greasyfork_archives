@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Torn Quick Deposit
 // @namespace    http://tampermonkey.net/
-// @version      1.2.5
+// @version      1.2.6
 // @description  Quick Deposit cash to Ghost Trade / Company Vault / Faction Vault
 // @author       e7cf09 [3441977]
 // @icon         https://editor.torn.com/cd385b6f-7625-47bf-88d4-911ee9661b52-3441977.png
-
 // @match        https://www.torn.com/*
 // @run-at       document-start
 // @grant        none
@@ -23,17 +22,17 @@
     const CONFIG = {
         PANIC_THRESHOLD: 20000000, // Panic Threshold: Only triggers if balance exceeds this
         STRICT_GHOST_MODE: true, // Relaxed matching for Ghost trades (if false, any trade found is used)
-        KEYS: { 
-            FACTION: ["Space"], 
-            GHOST: ["KeyG"], 
-            COMPANY: ["KeyC"], 
-            RESET: ["KeyR"], 
+        KEYS: {
+            FACTION: [],
+            GHOST: [],
+            COMPANY: [],
+            RESET: [],
             PANIC: ["KeyP"],
-            EXECUTE: ["KeyE"] // Auto-deposit / Panic Execute
+            EXECUTE: [] // Auto-deposit / Panic Execute
         },
         DEAD_SIGNALS: ["no trade was found", "trade has been accepted", "declined", "cancelled", "locked"]
     };
-    
+
     const STATE = {
         balance: 0,
         panic: localStorage.getItem('torn_tactical_panic_enabled') !== 'false',
@@ -47,7 +46,7 @@
     const qsa = (s, p=document) => p.querySelectorAll(s);
     const fmt = (n) => "$" + parseInt(n).toLocaleString('en-US');
     const setStyle = (el, css) => Object.assign(el.style, css);
-    
+
     // NETWORK INTERCEPT
     const intercept = (proto, method, handler) => {
         const orig = proto[method];
@@ -60,7 +59,7 @@
     intercept(XMLHttpRequest.prototype, 'open', (xhr, args) => xhr._url = args[1]);
     intercept(XMLHttpRequest.prototype, 'send', (xhr) => {
         xhr.addEventListener('load', () => {
-            if (xhr._url?.includes('trade.php')) checkDeadTrade(xhr.responseText);
+            if (xhr._url?.includes('trade.php')) checkDeadTrade(xhr.responseText, xhr._url);
         });
     });
 
@@ -89,10 +88,19 @@
     window.WebSocket.prototype = OrigWS.prototype;
 
     // LOGIC
-    function checkDeadTrade(text) {
+    function checkDeadTrade(text, url) {
         if (!text || text.length < 20) return;
         if (CONFIG.DEAD_SIGNALS.some(s => text.toLowerCase().includes(s))) {
-            if (STATE.ghostID) {
+            let id = null;
+            if (url && url.includes('ID=')) {
+                const match = url.match(/ID=(\d+)/);
+                if (match) id = match[1];
+            } else {
+                const params = new URLSearchParams(window.location.hash.substring(1) || window.location.search);
+                id = params.get('ID');
+            }
+
+            if (STATE.ghostID && id === STATE.ghostID) {
                 localStorage.removeItem('torn_tactical_ghost_id');
                 STATE.ghostID = null;
                 injectBtn();
@@ -109,12 +117,17 @@
 
         icons.forEach(li => {
             if (li.className.match(/icon1[56]/)) isHosp = true;
-            if (li.querySelector('a')?.getAttribute('aria-label')?.includes('Traveling')) isTravel = true;
+            if (li.className.includes('icon71')) isTravel = true;
             if (li.className.includes('icon73')) s.company = true;
         });
 
         if (isHosp) { s.faction = s.company = false; s.reason = "HOSP/JAIL"; }
         else if (isTravel) { s.faction = s.ghost = s.company = false; s.reason = "TRAVEL"; }
+
+        // Special check for Faction: Ensure we are in a faction
+        const sidebarFaction = qs('a[href^="/factions.php"]');
+        if (!sidebarFaction) s.faction = false;
+
         return s;
     }
 
@@ -122,7 +135,7 @@
         if (!val) return;
         const num = parseInt(typeof val === 'object' ? val.value : val);
         if (isNaN(num)) return;
-        
+
         STATE.balance = num;
         if (STATE.balance <= 0) {
             STATE.locks.sending = false;
@@ -139,14 +152,16 @@
     function triggerPanic() {
         if (!STATE.panic || STATE.balance < CONFIG.PANIC_THRESHOLD) return;
         const s = getStatus();
+        if (s.reason === 'LOADING') return; // Wait for icons to load
         if (!(STATE.ghostID && s.ghost) && !s.company && !s.faction) return;
-        
+
         STATE.locks.panic = true;
         updateOverlay();
     }
 
     function dismissPanic() {
         STATE.locks.panic = false;
+        STATE.locks.sending = false;
         if (STATE.els.overlay) STATE.els.overlay.style.display = 'none';
     }
 
@@ -161,7 +176,7 @@
                 return;
             }
         }
-        
+
         // Reset sending lock if confirmation box is gone (User clicked No/Cancel)
         if (!box && STATE.locks.sending) {
             // Check if we are stuck in sending state without a box
@@ -171,7 +186,7 @@
 
         if (STATE.locks.sending) return;
         const status = getStatus();
-        
+
         // Determine Target Mode
         let target = mode;
         if (mode === 'auto') {
@@ -182,9 +197,13 @@
         }
 
         // Validate Target with strict mode checks
-        if (target === 'ghost' && (!STATE.ghostID || !status.ghost)) {
-            if (mode !== 'auto') return; // Strict fail for manual mode
-            target = status.company ? 'company' : (status.faction ? 'faction' : null);
+        if (target === 'ghost') {
+            // Strict check: Must have Ghost ID AND allow ghost status
+            if (!STATE.ghostID || !status.ghost) {
+                 if (mode === 'ghost') return; // Explicit request fails
+                 // Fallback for auto: Try Company -> Faction
+                 target = status.company ? 'company' : (status.faction ? 'faction' : null);
+            }
         }
         if (target === 'company' && !status.company) {
             if (mode !== 'auto') return; // Strict fail for manual mode
@@ -208,20 +227,25 @@
 
         if (target === 'ghost') {
             const url = window.location.href;
-            const onPage = url.includes('trade.php') && url.includes('step=addmoney') && url.includes(STATE.ghostID);
-            
-            if (!onPage) return jump(`https://www.torn.com/trade.php#step=addmoney&ID=${STATE.ghostID}`, "JUMPING<br>TO GHOST");
+            // Relaxed check: Just need to be on trade.php and have the correct ID
+            // We'll let the element check determine if we are on the "add money" view
+            const onPageWithID = url.includes('trade.php') && url.includes(STATE.ghostID);
 
-            const input = qs('input[name="amount"]');
-            if (!input) return;
-            
+            // Check if the specific "Add Money" input exists
+            const input = qs('.input-money[type="text"]');
+
+            if (!onPageWithID || !input) {
+                return jump(`https://www.torn.com/trade.php#step=addmoney&ID=${STATE.ghostID}`, "JUMPING<br>TO GHOST");
+            }
+
             STATE.locks.sending = true;
             if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO GHOST";
             setVal(input, input.getAttribute('data-money') || STATE.balance);
-            
-            const btn = input.form?.querySelector('input[type="submit"], button') || qs('input[value="Change"]');
+
+            const btn = input.form?.querySelector('input[type="submit"], button[type="submit"]') || qs('input[type="submit"][value="Change"], button[type="submit"][value="Change"]');
             if (btn) {
                 btn.disabled = false;
+                btn.classList.remove('disabled');
                 btn.click();
                 STATE.locks.jumping = false;
             } else STATE.locks.sending = false;
@@ -229,7 +253,7 @@
         } else if (target === 'company') {
             const url = window.location.href;
             const onPage = url.includes('companies.php') && url.includes('option=funds');
-            
+
             // Precise selector for Deposit Input (vs Withdraw)
             const input = qs('input[aria-labelledby="deposit-label"][type="text"]');
 
@@ -237,14 +261,14 @@
                 if (!onPage) return jump(`https://www.torn.com/companies.php?step=your&type=1#/option=funds`, "JUMPING<br>TO COMPANY");
                 return;
             }
-            
+
             STATE.locks.sending = true;
             if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO COMPANY";
             setVal(input, input.getAttribute('data-money') || STATE.balance);
-            
+
             const container = input.closest('.funds-cont');
             const btn = container ? container.querySelector('.deposit.btn-wrap button') : null;
-            
+
             if (btn) {
                 btn.disabled = false;
                 btn.click();
@@ -265,14 +289,14 @@
 
             STATE.locks.sending = true;
             if (STATE.els.overlay) STATE.els.overlay.innerHTML = "DEPOSITING<br>TO FACTION";
-            
+
             let amt = input.getAttribute('data-money');
             if (!amt) {
                 const txt = form.querySelector('.i-have')?.innerText.replace(/[$,]/g, '');
                 if (txt && !isNaN(txt)) amt = txt;
             }
             setVal(input, amt || STATE.balance);
-            
+
             const btn = form.querySelector('button.torn-btn');
             if (btn) {
                 btn.disabled = false;
@@ -298,7 +322,7 @@
 
     function updateOverlay() {
         if (!STATE.locks.panic || STATE.balance <= 0) return dismissPanic();
-        
+
         if (!STATE.els.overlay) {
             const d = document.createElement('div');
             d.id = 'torn-panic-overlay';
@@ -321,7 +345,7 @@
             document.body.appendChild(d);
             STATE.els.overlay = d;
         }
-        
+
         STATE.els.overlay.style.display = 'block';
         if (STATE.locks.sending || STATE.locks.jumping) return;
 
@@ -331,37 +355,65 @@
             txt = "CONFIRM<br>DEPOSIT";
         } else {
             const s = getStatus();
-            
+
             if (STATE.ghostID && s.ghost) {
-                const on = window.location.href.includes(STATE.ghostID);
-                txt = on ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>GHOST</span>` : "JUMP TO<br>GHOST";
+                // Ghost Logic
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                const searchParams = new URLSearchParams(window.location.search);
+                const currentStep = hashParams.get('step') || searchParams.get('step');
+                const currentID = hashParams.get('ID') || searchParams.get('ID');
+
+                const onGhostPage = window.location.href.includes('trade.php') &&
+                                    currentStep === 'addmoney' &&
+                                    currentID === STATE.ghostID;
+
+                txt = onGhostPage ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>GHOST</span>` : "JUMP TO<br>GHOST";
+
             } else if (s.company) {
-                const on = window.location.href.includes('companies.php') && window.location.href.includes('funds');
-                txt = on ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>COMPANY</span>` : "JUMP TO<br>COMPANY";
+                // Company Logic
+                const onCompanyPage = window.location.href.includes('companies.php') && window.location.href.includes('option=funds');
+                const container = qs('.funds-cont');
+                // We are "on page" if URL matches AND the funds container is present (meaning loaded)
+                // OR if URL matches and we are just waiting for load (to prevent flickering JUMP TO)
+                const ready = onCompanyPage && (container || document.readyState === 'loading');
+
+                txt = ready ? `DEPOSIT<br>${fmt(STATE.balance)}<br><span style='font-size:10px'>COMPANY</span>` : "JUMP TO<br>COMPANY";
+
             } else {
+                // Faction Logic
+                const current = window.location.href;
+                const onFactionPage = current.includes('factions.php') && current.includes('step=your') && current.includes('type=1') && current.includes('tab=armoury');
                 const form = qs('.give-money-form');
-                if (form) txt = `DEPOSIT<br>${fmt(STATE.balance)}`;
+
+                // Show DEPOSIT if form exists OR if we are on the correct URL (even if form hasn't loaded yet)
+                const ready = form || onFactionPage;
+
+                txt = ready ? `DEPOSIT<br>${fmt(STATE.balance)}` : "JUMP TO<br>FACTION";
             }
         }
-        
+
         if (STATE.els.overlay.innerHTML !== txt) STATE.els.overlay.innerHTML = txt;
     }
 
     function injectBtn() {
         const moneyEl = document.getElementById('user-money');
         if (!moneyEl) return;
-        
+
         if (!STATE.els.btn) {
             const b = document.createElement('a');
             b.id = 'torn-tactical-deposit';
             b.href = '#';
             b.style.marginLeft = '10px';
             b.style.cursor = 'pointer';
-            
-            const ref = qs('a[aria-label*="Use"], a[href*="sid=points"]');
-            if (ref) b.className = ref.className;
-            else setStyle(b, { color: '#999', fontSize: '11px', textDecoration: 'none' });
-            
+
+            // Hardcoded style to match [use] button in sidebar
+            // Based on user feedback: class="use___wM1PI"
+            b.className = 'use___wM1PI';
+
+            // Fallback inline styles only if class fails to apply styles
+            // We set marginLeft because original element might have margin defined in CSS
+            b.style.marginLeft = '10px';
+
             b.addEventListener('click', (e) => { e.preventDefault(); executeDeposit('auto'); });
             STATE.els.btn = b;
         }
@@ -379,7 +431,7 @@
             txt = '[deposit]';
             title = s.company ? "Company Vault" : "Faction Vault";
         }
-        
+
         if (STATE.els.btn.innerText !== txt) STATE.els.btn.innerText = txt;
         if (STATE.els.btn.title !== title) STATE.els.btn.title = title;
     }
@@ -388,13 +440,13 @@
     window.addEventListener('keydown', e => {
         if (!e.isTrusted || e.target.matches('input, textarea') || e.target.isContentEditable) return;
         const k = e.code;
-        
+
         // Helper to check if key matches any in the list
         const isKey = (type) => CONFIG.KEYS[type] && CONFIG.KEYS[type].includes(k);
-        
+
         // Prevent default if it's any of our keys
         if (Object.values(CONFIG.KEYS).flat().includes(k)) e.preventDefault();
-        
+
         if (isKey('FACTION')) executeDeposit('faction');
         if (isKey('GHOST') && STATE.ghostID) executeDeposit('ghost');
         if (isKey('COMPANY')) executeDeposit('company');
@@ -422,26 +474,61 @@
     // INIT
     const scanTrades = () => {
         if (!window.location.href.includes('trade.php')) return;
+
+        // Handle both Hash (Vue/React router) and Search (Legacy) params
+        const params = new URLSearchParams(window.location.hash.substring(1) || window.location.search);
+        const currentID = params.get('ID');
+
+        // Check for dead signals on page load
         if (qs('.info-msg, .error-msg')?.innerText.match(new RegExp(CONFIG.DEAD_SIGNALS.join('|'), 'i'))) {
-            STATE.ghostID = null; localStorage.removeItem('torn_tactical_ghost_id'); injectBtn(); return;
-        }
-        
-        const id = new URLSearchParams(window.location.search).get('ID');
-        if (id) { STATE.ghostID = id; localStorage.setItem('torn_tactical_ghost_id', id); injectBtn(); }
-        
-        qsa('ul.trade-list-container > li').forEach(li => {
-            if (!CONFIG.STRICT_GHOST_MODE || li.innerText.toLowerCase().includes('ghost')) {
-                const mid = li.querySelector('a.btn-wrap')?.href.match(/ID=(\d+)/);
-                if (mid) { STATE.ghostID = mid[1]; localStorage.setItem('torn_tactical_ghost_id', mid[1]); injectBtn(); }
+            if (STATE.ghostID && currentID === STATE.ghostID) {
+                STATE.ghostID = null; localStorage.removeItem('torn_tactical_ghost_id'); injectBtn(); return;
             }
-        });
+        }
+
+        // Capture from Log (Priority: Check chat logs on Trade View page)
+        if (currentID) {
+            const logs = qsa('ul.log .msg');
+            let isGhost = false;
+            
+            if (!CONFIG.STRICT_GHOST_MODE) {
+                // If not strict, ANY trade we visit is considered valid
+                isGhost = true;
+            } else {
+                isGhost = Array.from(logs).some(msg => {
+                    const clone = msg.cloneNode(true);
+                    clone.querySelector('a')?.remove(); // Remove username
+                    return clone.innerText.toLowerCase().includes('ghost');
+                });
+            }
+
+            if (isGhost && !STATE.ghostID) {
+                STATE.ghostID = currentID;
+                localStorage.setItem('torn_tactical_ghost_id', currentID);
+                injectBtn();
+            }
+        }
+
+        // Capture from List (Only if not locked, and only if we are not on a specific trade page)
+        if (!currentID && !STATE.ghostID) {
+            qsa('ul.trade-list-container > li').forEach(li => {
+                // Check content excluding username
+                const clone = li.cloneNode(true);
+                clone.querySelector('.user.name')?.remove();
+
+                if (!CONFIG.STRICT_GHOST_MODE || clone.innerText.toLowerCase().includes('ghost')) {
+                    const mid = li.querySelector('a.btn-wrap')?.href.match(/ID=(\d+)/);
+                    if (mid) { STATE.ghostID = mid[1]; localStorage.setItem('torn_tactical_ghost_id', mid[1]); injectBtn(); }
+                }
+            });
+        }
     };
 
     let init = false;
     const start = () => {
         if (init) return;
         init = true;
-        
+
         // Initial Balance Check from DOM
         const moneyEl = document.getElementById('user-money');
         if (moneyEl) {
@@ -453,8 +540,8 @@
         new MutationObserver((mutations) => {
             let ignore = true;
             for (const m of mutations) {
-                if (!m.target.id?.includes('torn-') && 
-                    !m.target.closest?.('#torn-tactical-deposit') && 
+                if (!m.target.id?.includes('torn-') &&
+                    !m.target.closest?.('#torn-tactical-deposit') &&
                     !m.target.closest?.('#torn-panic-overlay')) {
                     ignore = false;
                     break;
@@ -466,7 +553,7 @@
             scanTrades();
             // Removed updateBalance(STATE.balance) to prevent loop
         }).observe(document, { childList: true, subtree: true });
-        
+
         // Early Init
         if (moneyEl) injectBtn();
     };

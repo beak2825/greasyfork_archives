@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Group Attack Link
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Opens player profile in a right-side iframe popup
 // @match        https://www.torn.com/loader.php*
 // @grant        none
@@ -10,46 +10,9 @@
 // ==/UserScript==
 
 (function () {
-	"use strict";
-
-	function openProfilePopup(id) {
-		// Prevent duplicate overlay
-		if (document.getElementById("tm-profile-overlay")) return;
-
-		const overlay = document.createElement("div");
-		overlay.id = "tm-profile-overlay";
-		overlay.style.cssText = `
-			position: fixed;
-			top: 0;
-			right: 0;
-			width: 450px;
-			height: 800px;
-			background: rgba(0,0,0,0.5);
-			z-index: 99999;
-		`;
-
-		const iframe = document.createElement("iframe");
-		iframe.src = `https://www.torn.com/profiles.php?NID=${id}`;
-		iframe.style.cssText = `
-			width: 100%;
-			height: 100%;
-			border: none;
-			border-radius: 0;
-			background: #000;
-		`;
-
-		overlay.appendChild(iframe);
-		document.body.appendChild(overlay);
-
-		// Close popup if you click outside iframe (on overlay)
-		overlay.addEventListener("click", (e) => {
-			if (e.target === overlay) overlay.remove();
-		});
-	}
-
 	setInterval(() => {
 		const el = document.querySelector(".playername___oeaye");
-		if (!el || el.dataset.popupApplied) return;
+		if (!el || el.dataset.bound) return;
 
 		const id = el.textContent.trim();
 		if (!id) return;
@@ -57,11 +20,14 @@
 		el.style.cursor = "pointer";
 		el.style.textDecoration = "underline";
 
-		el.addEventListener("click", (e) => {
+		el.onclick = (e) => {
 			e.stopPropagation();
-			openProfilePopup(id);
-		});
+			window.open(
+				`https://www.torn.com/profiles.php?NID=${id}`,
+				"_blank"
+			);
+		};
 
-		el.dataset.popupApplied = "true";
+		el.dataset.bound = 1;
 	}, 1000);
 })();

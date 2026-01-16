@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      2.5
+// @version      3.0
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,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
@@ -26,6 +26,15 @@
 
     const defaultTheme = { primary: '#6750a4', opacity: 0.7, blur: 18, themeStyle: 'MIUIX' };
     const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1 };
+    const defaultEngines = [
+        { name: '必应', host: 'bing.com', url: 'https://www.bing.com/search?q=%s' },
+        { name: 'Yandex', host: 'yandex', url: 'https://yandex.com/search/touch/?text=%s' },
+        { name: 'Google', host: 'google', url: 'https://www.google.com/search?q=%s' },
+        { name: '百度', host: 'baidu.com', url: 'https://www.baidu.com/s?word=%s' },
+        { name: 'ScriptCat', host: 'scriptcat.org', url: 'https://scriptcat.org/zh-CN/search?keyword=%s' },
+        { name: '4Khd', host: '/(4khd|xxtt|ssuu|uuss)\\.(com|ink|uk)/', url: 'https://www.4khd.com/search/%s' },
+        { name: '纳米AI', host: 'n.cn', url: 'https://www.n.cn/search/?q=%s&src=ec_vivo_1001' }
+    ];
 
     const storage = {
         save: (engines, deletedIds) => {
@@ -36,7 +45,8 @@
                 ),
                 order: engines.map(e => e.id),
                 hidden: engines.filter(e => !e.visible).map(e => e.id),
-                deleted: deletedIds || []
+                deleted: deletedIds || [],
+                cache: engines.map(e => ({ name: e.name, host: e.host, url: e.url, id: e.id, visible: e.visible }))
             };
             if (typeof GM_setValue !== 'undefined') GM_setValue(STORAGE_KEY, data);
             else localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -45,7 +55,7 @@
             let data;
             if (typeof GM_getValue !== 'undefined') data = GM_getValue(STORAGE_KEY);
             else { try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch(e) {} }
-            return data || { custom: [], order: [], hidden: [], deleted: [] };
+            return data || { custom: [], order: [], hidden: [], deleted: [], cache: null };
         },
         themeSave: (val) => {
             if (typeof GM_setValue !== 'undefined') GM_setValue(THEME_KEY, val);
@@ -138,20 +148,9 @@
         if (!el.parentNode) document.head.appendChild(el);
     }
 
-    applyTheme();
-
     function normalizeUrl(url) {
         return url ? url.replace(/%keywords%/g, '%s').trim() : '';
     }
-
-    const defaultEngines = [
-        { name: '必应', host: 'bing.com', url: 'https://www.bing.com/search?q=%s' },
-        { name: 'Yandex', host: 'yandex', url: 'https://yandex.com/search/touch/?text=%s' },
-        { name: 'Google', host: 'google', url: 'https://www.google.com/search?q=%s' },
-        { name: '百度', host: 'baidu.com', url: 'https://www.baidu.com/s?word=%s' },
-        { name: 'ScriptCat', host: 'scriptcat.org', url: 'https://scriptcat.org/zh-CN/search?keyword=%s' },
-        { name: '纳米AI', host: 'n.cn', url: 'https://www.n.cn/search/?q=%s&src=ec_vivo_1001' }
-    ];
 
     let xEngines = [];
     if (typeof GM_EX_getSearchEngines === 'function') {
@@ -166,28 +165,50 @@
     let saved = storage.load();
 
     function initEngines() {
+        if (saved.cache && saved.cache.length > 0) {
+            return saved.cache;
+        }
+        
         let pool = [...(saved.custom || []), ...defaultEngines, ...xEngines];
         let map = new Map();
-        const seenIds = new Set();
-        const seenUrls = new Set();
+        const seenUrls = new Set(), seenRegs = new Set();
+
         pool.forEach(e => {
-            const id = storage.getStableId(e.name, e.host);
             const urlKey = (e.url || '').toLowerCase();
-            if (!seenIds.has(id) && !seenUrls.has(urlKey)) {
-                seenIds.add(id);
-                if (urlKey) seenUrls.add(urlKey);
-                map.set(id, { ...e, id, visible: !(saved.hidden || []).includes(id) });
+            const host = (e.host || '').trim();
+            const isRegExp = host.startsWith('/') && host.endsWith('/');
+            
+            let shouldAdd = false;
+            if (isRegExp) {
+                if (!seenRegs.has(host)) {
+                    seenRegs.add(host);
+                    shouldAdd = true;
+                }
+            } else if (urlKey && !seenUrls.has(urlKey)) {
+                seenUrls.add(urlKey);
+                shouldAdd = true;
+            }
+
+            if (shouldAdd) {
+                let id = e.id || storage.getStableId(e.name, e.host);
+                let finalId = id, suffix = 1;
+                while (map.has(finalId)) {
+                    finalId = id + '_' + (suffix++);
+                }
+                map.set(finalId, { ...e, id: finalId, visible: !(saved.hidden || []).includes(finalId) });
             }
         });
+
         let list = Array.from(map.values()).filter(e => !(saved.deleted || []).includes(e.id));
         if (saved.order && saved.order.length > 0) {
             const orderMap = new Map(saved.order.map((id, i) => [id, i]));
             list.sort((a, b) => (orderMap.get(a.id) ?? 999) - (orderMap.get(b.id) ?? 999));
         }
+        storage.save(list, saved.deleted);
         return list;
     }
 
-    let allEngines = initEngines();
+    let allEngines = initEngines().map(e => { const h = (e.host || '').trim(); if (h.startsWith('/') && h.endsWith('/')) { try { const p = h.slice(1, -1); e._matchFn = s => new RegExp(p, 'i').test(s); } catch(err) { e._matchFn = s => s.toLowerCase().includes(h.toLowerCase()); } } else { e._matchFn = s => s.toLowerCase().includes(h.toLowerCase()); } return e; });
 
     function showManager() {
         if (document.getElementById('qs-manager-overlay')) return;
@@ -324,32 +345,22 @@
                 container.querySelector('.up').onclick = () => { if (i > 0) { [allEngines[i], allEngines[i - 1]] = [allEngines[i - 1], allEngines[i]]; storage.save(allEngines, saved.deleted); render(); } };
                 container.querySelector('.down').onclick = () => { if (i < allEngines.length - 1) { [allEngines[i], allEngines[i + 1]] = [allEngines[i + 1], allEngines[i]]; storage.save(allEngines, saved.deleted); render(); } };
                 container.querySelector('.del').onclick = () => { saved.deleted.push(e.id); allEngines.splice(i, 1); storage.save(allEngines, saved.deleted); render(); };
-                container.querySelector('.ed-save').onclick = () => {
-                    const n = container.querySelector('.ed-name').value, h = container.querySelector('.ed-host').value, u = normalizeUrl(container.querySelector('.ed-url').value);
-                    if (n && h && u.includes('%s')) { Object.assign(e, {name: n, host: h, url: u, id: storage.getStableId(n, h)}); storage.save(allEngines, saved.deleted); render(); }
-                };
+                container.querySelector('.ed-save').onclick = () => { const n = container.querySelector('.ed-name').value.trim(); const h = container.querySelector('.ed-host').value.trim(); const u = normalizeUrl(container.querySelector('.ed-url').value.trim()); if (n && h && u.includes('%s')) { const newId = (n === e.name && h === e.host) ? e.id : storage.getStableId(n, h); Object.assign(e, { name: n, host: h, url: u, id: newId }); storage.save(allEngines, saved.deleted); render(); } else { alert('请检查输入'); }};
                 list.appendChild(container);
             });
         };
 
         const addForm = card.querySelector('#m-add-form'), inName = card.querySelector('#in-name'), inHost = card.querySelector('#in-host'), inUrl = card.querySelector('#in-url');
-        inUrl.oninput = () => { try { const u = inUrl.value.trim(); if (!u) return; const d = new URL(u.startsWith('http') ? u : 'https://' + u).hostname.replace('www.', ''); if (!inHost.value) inHost.value = d; if (!inName.value) { const r = d.split('.')[0]; inName.value = r.charAt(0).toUpperCase() + r.slice(1); } } catch(e){} };
+        inUrl.oninput = () => { try { const u = inUrl.value.trim(); if (!u) return; const d = new URL(u.startsWith('http') ? u : 'https://' + u).hostname.replace('www.', ''); const p = d.split('.'); if (!inHost.value) inHost.value = p.slice(-2).join('.'); if (!inName.value) { const r = p[0]; inName.value = r.charAt(0).toUpperCase() + r.slice(1); } } catch(e){} };
         card.querySelector('#m-add-btn').onclick = () => { addForm.style.display = 'block'; inName.value = inHost.value = inUrl.value = ''; };
         card.querySelector('#in-cancel').onclick = () => addForm.style.display = 'none';
-        card.querySelector('#in-confirm').onclick = () => {
-            const u = normalizeUrl(inUrl.value); let n = inName.value.trim(), h = inHost.value.trim();
-            if (!u.includes('%s')) return alert('URL必须包含%s');
-            if (allEngines.some(e => e.host === h && e.name === n)) return alert('已存在');
-            allEngines.push({ name: n, host: h, url: u, id: storage.getStableId(n, h), visible: true });
-            storage.save(allEngines, saved.deleted); addForm.style.display = 'none'; render();
-        };
-        card.querySelector('#m-reset-btn').onclick = () => { if (confirm('确定还原？')) { saved = { custom: [], order: [], hidden: [], deleted: [] }; allEngines = initEngines(); storage.save(allEngines, []); render(); } };
-        render();
-        card.querySelector('#m-close').onclick = () => { storage.save(allEngines, saved.deleted); location.reload(); };
+        card.querySelector('#in-confirm').onclick=()=>{const u=normalizeUrl(inUrl.value);let n=inName.value.trim(),h=inHost.value.trim();if(!u.includes('%s'))return alert('URL必须包含%s');if(allEngines.some(e=>e.host===h&&e.name===n))return alert('已存在');const ne={name:n,host:h,url:u,id:storage.getStableId(n,h),visible:true};if(h.startsWith('/')&&h.endsWith('/')){try{const p=h.slice(1,-1);ne._matchFn=s=>new RegExp(p,'i').test(s)}catch(e){ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}}else{ne._matchFn=s=>s.toLowerCase().includes(h.toLowerCase())}allEngines.push(ne);saved.cache=null;storage.save(allEngines,saved.deleted);addForm.style.display='none';render()};
+        card.querySelector('#m-reset-btn').onclick=()=>{if(confirm('确定还原？')){saved={custom:[],order:[],hidden:[],deleted:[]};allEngines=initEngines();storage.save(allEngines,[]);render()}};render();
+        card.querySelector('#m-close').onclick=()=>{location.reload()};
         overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
     }
 
-    const currentEngine = allEngines.filter(e => e.visible).find(e => e.host && location.host.toLowerCase().includes(e.host.toLowerCase()));
+    const currentEngine = allEngines.filter(e => e.visible).find(e => e.host && e._matchFn(location.host.toLowerCase()));
     const isMatchedHost = !!currentEngine;
 
     const query = (() => {
@@ -404,79 +415,113 @@
     })();
 
     if (query && isMatchedHost) {
-        const bar = document.createElement('div');
-        bar.className = 'qs-bar';
-        bar.style[layout.pos === 'top' ? 'top' : 'bottom'] = `${layout.offset}px`;
-        const curStyle = layout.inputStyle || 1;
+        applyTheme();
+        requestAnimationFrame(() => {
+            const bar = document.createElement('div');
+            bar.className = 'qs-bar';
+            bar.style[layout.pos === 'top' ? 'top' : 'bottom'] = `${layout.offset}px`;
+            const matchedEngines = allEngines.filter(e => e.visible && e.host && e._matchFn(location.host.toLowerCase()));
+            const bestMatched = matchedEngines
+                .sort((a, b) => {
+                    const isRegA = a.host.startsWith('/') ? 1 : 0;
+                    const isRegB = b.host.startsWith('/') ? 1 : 0;
+                    if (isRegA !== isRegB) return isRegA - isRegB;
+                    return b.host.length - a.host.length;
+                })[0];
+            const syncInputs = (val) => {
+                bar.querySelectorAll('.qs-main-input').forEach(el => { if (el.value !== val) el.value = val; });
+            };
 
-        if (curStyle === 3 && layout.showInput) {
-            const input = document.createElement('input');
-            input.className = 'qs-main-input';
-            input.value = query;
-            input.style.cssText = `width:80px;padding:8px 14px;border-radius:100px;background:rgba(var(--qs-pri-rgb),0.08);color:#1d1b20;flex-shrink:0;`;
-            input.onfocus = () => { input.style.width = '130px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.15)'; };
-            input.onblur = () => { input.style.width = '80px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.08)'; };
-            input.onkeydown = (e) => { if (e.key === 'Enter') location.href = (allEngines.find(x => location.host.includes(x.host)) || allEngines[0]).url.replace(/%s/g, encodeURIComponent(input.value)); };
-            bar.appendChild(input);
-        }
+            const doSearch = (targetEngine, keyword) => { let targetUrl = targetEngine.url; const isCur = targetEngine.host && targetEngine._matchFn(location.host.toLowerCase()); if (isCur) { try { const uObj = new URL(targetEngine.url); targetUrl = location.origin + uObj.pathname + uObj.search; } catch {} } location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword)); };
+            const curStyle = layout.inputStyle || 1
 
-        allEngines.filter(e => e.visible).forEach(e => {
-            const active = location.host.includes(e.host);
-            if (active && layout.showInput) {
-                if (curStyle === 1) {
-                    const wrapper = document.createElement('div');
-                    wrapper.style.cssText = `display:flex;align-items:center;background:var(--qs-pri);border-radius:100px;padding:3px;gap:4px;flex-shrink:0;`;
-                    wrapper.setAttribute('data-active', 'true');
-                    const input = document.createElement('input');
-                    input.className = 'qs-main-input';
-                    input.value = query;
-                    input.style.cssText = `width:90px;padding:7px 12px;border-radius:100px;background:rgba(255,255,255,0.2);color:var(--qs-on-pri);`;
-                    input.onfocus = () => input.style.width = '140px';
-                    input.onblur = () => input.style.width = '90px';
-                    input.onkeydown = (ev) => { if (ev.key === 'Enter') location.href = e.url.replace(/%s/g, encodeURIComponent(input.value)); };
-                    const label = document.createElement('span');
-                    label.textContent = e.name;
-                    label.style.cssText = `padding:0 14px 0 8px;color:var(--qs-on-pri);font-size:14px;font-weight:600;white-space:nowrap;`;
-                    wrapper.append(input, label);
-                    bar.appendChild(wrapper);
-                    return;
-                } else if (curStyle === 2) {
-                    const input = document.createElement('input');
-                    input.className = 'qs-main-input';
-                    input.value = query;
-                    input.style.cssText = `width:80px;padding:8px 14px;border-radius:100px;border:1.5px solid var(--qs-pri);background:rgba(var(--qs-pri-rgb),0.1);color:#1d1b20;flex-shrink:0;margin-right:2px;`;
-                    input.onfocus = () => input.style.width = '130px';
-                    input.onblur = () => input.style.width = '80px';
-                    input.onkeydown = (ev) => { if (ev.key === 'Enter') location.href = e.url.replace(/%s/g, encodeURIComponent(input.value)); };
-                    bar.appendChild(input);
-                }
+            if (curStyle === 3 && layout.showInput) {
+                const input = document.createElement('input');
+                input.className = 'qs-main-input';
+                input.value = query;
+                input.placeholder = "搜索...";
+                input.style.cssText = `width:80px;padding:8px 14px;border-radius:100px;background:rgba(var(--qs-pri-rgb),0.08);color:#1d1b20;flex-shrink:0;`;
+                input.onfocus = () => { input.style.width = '130px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.15)'; };
+                input.onblur = () => { input.style.width = '80px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.08)'; };
+                input.oninput = (ev) => syncInputs(ev.target.value);
+                input.onkeydown = (e) => { if (e.key === 'Enter') doSearch(bestMatched || allEngines[0], input.value); };
+                bar.appendChild(input);
             }
-            const btn = document.createElement('a');
-            btn.className = `qs-btn ${active ? 'qs-btn-active' : 'qs-btn-flat'}`;
-            btn.textContent = e.name;
-            btn.href = 'javascript:void(0);';
-            btn.onclick = (ev) => { ev.preventDefault(); const inputEl = bar.querySelector('.qs-main-input'); const finalKeyword = inputEl ? inputEl.value : query; location.href = e.url .replace(/%s/g, encodeURIComponent(finalKeyword)) .replace(/%keywords%/g, encodeURIComponent(finalKeyword));};
-            if (active) btn.setAttribute('data-active', 'true');
-            bar.appendChild(btn);
+
+            allEngines.filter(e => e.visible).forEach(e => {
+                const isBest = bestMatched && e.id === bestMatched.id;
+                if (isBest && layout.showInput) {
+                    if (curStyle === 1) {
+                        const wrapper = document.createElement('div');
+                        wrapper.style.cssText = `display:flex;align-items:center;background:var(--qs-pri);border-radius:100px;padding:3px;gap:4px;flex-shrink:0;`;
+                        wrapper.setAttribute('data-active', 'true');
+                        const input = document.createElement('input');
+                        input.className = 'qs-main-input';
+                        input.value = query;
+                        input.style.cssText = `width:90px;padding:7px 12px;border-radius:100px;background:rgba(255,255,255,0.2);color:var(--qs-on-pri);`;
+                        input.oninput = (ev) => syncInputs(ev.target.value);
+                        input.onfocus = () => input.style.width = '140px';
+                        input.onblur = () => input.style.width = '90px';
+                        input.onkeydown = (ev) => { if (ev.key === 'Enter') doSearch(e, input.value); };
+                        const label = document.createElement('span');
+                        label.textContent = e.name;
+                        label.style.cssText = `padding:0 14px 0 8px;color:var(--qs-on-pri);font-size:14px;font-weight:600;white-space:nowrap;`;
+                        wrapper.append(input, label);
+                        bar.appendChild(wrapper);
+                        return;
+                    } else if (curStyle === 2) {
+                        const input = document.createElement('input');
+                        input.className = 'qs-main-input';
+                        input.value = query;
+                        input.style.cssText = `width:80px;padding:8px 14px;border-radius:100px;border:1.5px solid var(--qs-pri);background:rgba(var(--qs-pri-rgb),0.1);color:#1d1b20;flex-shrink:0;margin-right:2px;`;
+                        input.oninput = (ev) => syncInputs(ev.target.value);
+                        input.onfocus = () => input.style.width = '130px';
+                        input.onblur = () => input.style.width = '80px';
+                        input.onkeydown = (ev) => { if (ev.key === 'Enter') doSearch(e, input.value); };
+                        bar.appendChild(input);
+                    }
+                }
+
+                const btn = document.createElement('a');
+                btn.className = `qs-btn ${isBest ? 'qs-btn-active' : 'qs-btn-flat'}`;
+                btn.textContent = e.name;
+                btn.href = 'javascript:void(0);';
+                if (isBest) btn.setAttribute('data-active', 'true');
+                btn.onclick = (ev) => {
+                    ev.preventDefault();
+                    const currentVal = bar.querySelector('.qs-main-input')?.value || query;
+                    doSearch(e, currentVal);
+                };
+                bar.appendChild(btn);
+            });
+
+            const setBtn = document.createElement('div');
+            setBtn.innerHTML = '⚙️';
+            setBtn.style.cssText = 'width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,0.04);border-radius:50%;flex-shrink:0;margin-left:4px;';
+            setBtn.onclick = showManager;
+            bar.append(setBtn);
+            document.body.appendChild(bar);
+ 
+            setTimeout(() => {
+                const activeEl = bar.querySelector('[data-active="true"]');
+                if (activeEl) bar.scrollLeft = activeEl.offsetLeft - (bar.offsetWidth / 2) + (activeEl.offsetWidth / 2);
+            }, 100);
+
+            if (layout.autoHide) {
+                let lastY = window.scrollY;
+                window.addEventListener('scroll', () => {
+                    const curY = window.scrollY;
+                    if (Math.abs(curY - lastY) < 10) return;
+                    if (curY > lastY && curY > 60) {
+                        bar.style.transform = `translateX(-50%) translateY(${layout.pos === 'bottom' ? '180%' : '-180%'})`;
+                        bar.style.opacity = '0';
+                    } else {
+                        bar.style.transform = 'translateX(-50%) translateY(0)';
+                        bar.style.opacity = '1';
+                    }
+                    lastY = curY;
+                }, { passive: true });
+            }
         });
-
-        const setBtn = document.createElement('div');
-        setBtn.innerHTML = '⚙️';
-        setBtn.style.cssText = 'width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(0,0,0,0.04);border-radius:50%;flex-shrink:0;margin-left:4px;';
-        setBtn.onclick = showManager;
-        bar.append(setBtn);
-        document.body.appendChild(bar);
-
-        setTimeout(() => { const activeBtn = bar.querySelector('[data-active="true"]'); if (activeBtn) bar.scrollLeft = activeBtn.offsetLeft - (bar.offsetWidth / 2) + (activeBtn.offsetWidth / 2); }, 100);
-
-        if (layout.autoHide) {
-            let lastY = window.scrollY;
-            window.addEventListener('scroll', () => {
-                const curY = window.scrollY;
-                if (curY - lastY > 10 && curY > 60) { bar.style.transform = `translateX(-50%) translateY(${layout.pos === 'bottom' ? '180%' : '-180%'})`; bar.style.opacity = '0'; }
-                else if (curY - lastY < -10) { bar.style.transform = 'translateX(-50%) translateY(0)'; bar.style.opacity = '1'; }
-                lastY = curY;
-            }, { passive: true });
-        }
     }
 })();

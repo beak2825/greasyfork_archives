@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      2.5
+// @version      2.6
 // @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -94,9 +94,8 @@
             transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: var(--mb-text);
         }
         #mb-debug-panel * { text-align: left; }
-
-        #mb-main-stage { display: flex; flex-wrap: nowrap; width: 400%; height: calc(100% - 40px); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .mb-page { width: 25%; flex: 0 0 25%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+        #mb-main-stage { display: flex; flex-wrap: nowrap; width: auto; height: calc(100% - 40px); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .mb-page { width: 100%; flex: 0 0 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
 
         #mb-debug-header { display: flex; align-items: center; background: var(--mb-header-bg); height: 40px; border-bottom: 1px solid var(--mb-border); flex-shrink: 0; padding: 0; }
         .mb-header-left, .mb-header-right { flex-shrink: 0; display: flex; align-items: center; padding: 0 12px; }
@@ -132,6 +131,14 @@
         #mb-debug-trigger { position: fixed; right: 16px; width: 32px; height: 32px; background: var(--mb-glass-bg); backdrop-filter: blur(15px) saturate(160%); -webkit-backdrop-filter: blur(15px) saturate(160%); border-radius: 14px; border: 1.5px solid var(--mb-glass-border); box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 2px rgba(255,255,255,0.8); cursor: pointer; z-index: 2147483646; display: none; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); user-select: none; -webkit-tap-highlight-color: transparent; }
         #mb-debug-trigger:active { transform: scale(0.92); }
         #mb-debug-trigger svg { width: 22px; height: 22px; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.15)); }
+
+        #mb-js-content { flex: 1; display: flex; flex-direction: column; padding: 10px; background: var(--mb-bg) !important; }
+        #mb-js-input { width: 100%; height: 120px; font-family: monospace; font-size: 14px; padding: 10px; border: 1px solid var(--mb-border); background: var(--mb-item-bg); color: var(--mb-text); resize: none; border-radius: 6px; outline: none; }
+        #mb-js-log { flex: 1; margin-top: 10px; overflow-y: auto; font-family: monospace; font-size: 12px; border-top: 1px solid var(--mb-border); padding-top: 10px; }
+        .log-item { margin-bottom: 4px; border-bottom: 1px solid var(--mb-border); padding-bottom: 2px; word-break: break-all; }
+        .log-error { color: #ff4757; }
+        .log-result { color: #009432; }
+      
         body.mb-picking-mode { cursor: crosshair !important; }
     `);
 
@@ -148,22 +155,47 @@
                 <span class="mb-tool-btn" id="mb-btn-back" style="display:none;">⬅ 返回</span>
                 <span class="mb-tool-btn" id="mb-btn-parent">父</span>
                 <span class="mb-tool-btn" id="mb-btn-restore">恢复</span>
-                <span class="mb-tool-btn" id="mb-btn-to-ad" style="color:#d11; font-weight:bold;">AD 规则</span>
+                <span class="mb-tool-btn" id="mb-btn-to-ad" style="color:#d11; font-weight:bold;">AD规则</span>
+                <span class="mb-tool-btn" id="mb-btn-to-js" style="color:#f1c40f; font-weight:bold;">JS代码</span>
                 <span class="mb-tool-btn" id="mb-btn-to-data" style="color:#009432; font-weight:bold;">🛡️数据</span>
                 <span class="mb-tool-btn" id="mb-btn-to-icon" style="color:#007aff; font-weight:bold;">🧩图标</span>
-                <span class="mb-tool-btn" id="mb-btn-copy-html">H (复制)</span>
+                <span class="mb-tool-btn" id="mb-btn-copy-html">H(复制)</span>
             </div>
             <div class="mb-header-right">
                 <span class="mb-tool-btn" id="mb-btn-close">✕</span>
             </div>
         </div>
+
         <div id="mb-main-stage">
-            <div class="mb-page" id="page-dom"><div id="mb-debug-content"></div></div>
-            <div class="mb-page" id="page-ad"><div id="mb-ad-content"></div></div>
-            <div class="mb-page" id="page-data"><div id="mb-data-content"></div></div>
-            <div class="mb-page" id="page-icon"><div id="mb-icon-content"></div></div>
+            <div class="mb-page" id="page-dom">
+                <div id="mb-debug-content"></div>
+            </div>
+
+            <div class="mb-page" id="page-js">
+                <div id="mb-js-content">
+                    <textarea id="mb-js-input" placeholder="输入 JS 代码..."></textarea>
+                    <div class="ad-action-bar" style="margin-top:8px;">
+                        <button class="ad-mini-btn" id="btn-js-run" style="background:#f1c40f; color:#000; border:none; font-weight:bold;">执行</button>
+                        <button class="ad-mini-btn" id="btn-js-clear">清空日志</button>
+                    </div>
+                    <div id="mb-js-log"></div>
+                </div>
+            </div>
+
+            <div class="mb-page" id="page-ad">
+                <div id="mb-ad-content"></div>
+            </div>
+
+            <div class="mb-page" id="page-data">
+                <div id="mb-data-content"></div>
+            </div>
+
+            <div class="mb-page" id="page-icon">
+                <div id="mb-icon-content"></div>
+            </div>
         </div>
     `;
+
     document.body.appendChild(panel);
 
     const domContent = document.getElementById('mb-debug-content');
@@ -172,6 +204,21 @@
     const stage = document.getElementById('mb-main-stage');
     const btnPick = document.getElementById('mb-btn-pick');
     const btnFold = document.getElementById('mb-btn-fold');
+    const jsLog = document.getElementById('mb-js-log');
+    const jsInput = document.getElementById('mb-js-input');
+
+    function addLog(msg, type = '') {
+        const div = document.createElement('div');
+        div.className = `log-item ${type}`;
+        div.innerText = `> ${msg}`;
+        jsLog.prepend(div);
+    }
+
+    function switchToPage(index) {
+        stage.style.transform = `translateX(-${index * 100}%)`;
+        const btnBack = document.getElementById('mb-btn-back');
+        if (btnBack) btnBack.style.display = index === 0 ? 'none' : 'inline';
+    }
 
     function updateFoldState() {
         if (isCollapsed) {
@@ -204,7 +251,7 @@
             updateFoldState();
             startPicking();
         } else {
-            document.body.style.paddingBottom = '';
+            document.body.style.removeProperty('padding-bottom');
             stopPicking();
             if (currentTarget) currentTarget.classList.remove('mb-inspect-hl');
         }
@@ -272,8 +319,8 @@
         rules = [...new Set(rules)];
         rules.sort((a, b) => {
             const getWeight = (s) => {
-                if (/ad/i.test(s)) return 1;
-                if (s.includes('[src') || s.includes('[href') || s.includes('[data-src')) return 2;
+                if (/[Aa][Dd][Ss]|[Bb]anner/i.test(s)) return 1;
+                if (s.includes('[src') || s.includes('[href') || s.includes('[data-src') || s.includes('[srcid')) return 2;
                 if (s.includes('[width') || s.includes('[height')) return 3;
                 if (s.includes('###') || (s.includes('##.') && !s.includes('['))) return 4;
                 return 5;
@@ -603,14 +650,17 @@
 
     btnPick.onclick = (e) => { e.stopPropagation(); isPicking ? stopPicking() : startPicking(); };
     btnFold.onclick = (e) => { e.stopPropagation(); isCollapsed = !isCollapsed; updateFoldState(); };
-    document.getElementById('mb-btn-to-ad').onclick = () => { if (!currentTarget) return; stage.style.transform = 'translateX(-25%)'; document.getElementById('mb-btn-back').style.display = 'inline'; renderAdPage(); };
-    document.getElementById('mb-btn-to-data').onclick = () => { stage.style.transform = 'translateX(-50%)'; document.getElementById('mb-btn-back').style.display = 'inline'; renderDataPage(); };
-    document.getElementById('mb-btn-to-icon').onclick = () => { stage.style.transform = 'translateX(-75%)'; document.getElementById('mb-btn-back').style.display = 'inline'; renderIconPage(); };
-    document.getElementById('mb-btn-back').onclick = () => { stage.style.transform = 'translateX(0)'; document.getElementById('mb-btn-back').style.display = 'none'; };
+    document.getElementById('mb-btn-to-js').onclick = () => switchToPage(1);
+    document.getElementById('mb-btn-to-ad').onclick = () => { if (!currentTarget) return; renderAdPage(); switchToPage(2); };
+    document.getElementById('mb-btn-to-data').onclick = () => { renderDataPage(); switchToPage(3); };
+    document.getElementById('mb-btn-to-icon').onclick = () => { renderIconPage(); switchToPage(4); };
+    document.getElementById('mb-btn-back').onclick = () => switchToPage(0);
     document.getElementById('mb-btn-close').onclick = () => togglePanel(false);
     document.getElementById('mb-btn-copy-html').onclick = () => { if (currentTarget) api.setClipboard(currentTarget.outerHTML); };
     document.getElementById('mb-btn-parent').onclick = () => { if (currentTarget && currentTarget.parentElement) { highlight(currentTarget.parentElement); renderDOM(); } };
     document.getElementById('mb-btn-restore').onclick = () => { if (activePreviewStyle) { activePreviewStyle.remove(); activePreviewStyle = null; } };
+    document.getElementById('btn-js-clear').onclick = () => { jsLog.innerHTML = ''; };
+    document.getElementById('btn-js-run').onclick = () => { const code = jsInput.value.trim(); if (!code) return; try { const result = eval(code); addLog(result === undefined ? '执行成功' : result, 'log-result'); } catch (e) { addLog(e.message, 'log-error'); } };
 
     api.registerMenu("开启/关闭审查面板", () => togglePanel(!isDebugMode));
     api.registerMenu("显示/隐藏悬浮图标", () => toggleIconVisible());
@@ -625,4 +675,3 @@
     };
     ['click', 'mousedown', 'mouseup', 'pointerdown'].forEach(type => window.addEventListener(type, handler, true));
 })();
-

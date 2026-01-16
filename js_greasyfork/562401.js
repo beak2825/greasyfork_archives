@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         XJTU成绩查询
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.8
 // @description  XJTU成绩查询，可以查看未评教课程的卷面和平时分
 // @match        https://ehall.xjtu.edu.cn/*
 // @license MIT
@@ -27,10 +27,10 @@
   '学时',
   '总成绩',
   '绩点',
-  '过程分（期中）',
-  '期末卷面',
-  '平时分2',
-  '平时分3'
+  '平时分1',
+  '平时分2（只有2项则为期末卷面）',
+  '平时分3',
+  '平时分4（如果有4项，此项为期末）'
 ];
 
 

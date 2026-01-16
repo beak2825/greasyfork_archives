@@ -1,19 +1,18 @@
 // ==UserScript==
-// @name         Trump Buttons
+// @name         Aither Trump Buttons
 // @namespace    http://tampermonkey.net/
-// @version      3.0
-// @description  Adds programmable buttons to trump reports
-// @author       Dooky
+// @version      3.1
+// @description  Adds programmable buttons to Torrent Delete Message and Resolve Report panels
+// @author       Auto
 // @match        https://aither.cc/dashboard/trumps/*
-// @match        https://aither.cc/dashboard/reports/*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
 // @run-at       document-idle
 
 // @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/562520/Trump%20Buttons.user.js
-// @updateURL https://update.greasyfork.org/scripts/562520/Trump%20Buttons.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562520/Aither%20Trump%20Buttons.user.js
+// @updateURL https://update.greasyfork.org/scripts/562520/Aither%20Trump%20Buttons.meta.js
 // ==/UserScript==
 
 (function() {
@@ -62,9 +61,9 @@
 
     const PANEL_CONFIG = {
         deleteMessage: {
-            heading: 'Torrent Delete Message',
+            heading: 'Torrent Removal',
             textareaId: 'bbcode-trumping_delete_message',
-            displayName: 'Torrent Delete Message'
+            displayName: 'Torrent Removal'
         },
         resolveReport: {
             heading: 'Resolve Report',
