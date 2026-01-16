@@ -936,7 +936,7 @@ if (matchDomain('aachener-zeitung.de')) {
   let noscroll = document.querySelectorAll('html[class], body[class]');
   for (let elem of noscroll)
     elem.removeAttribute('class');
-  let ads = 'section[data-theme-sponsored-content]';
+  let ads = 'section[data-theme-sponsored-content], div[id^="ad_"]';
   hideDOMStyle(ads);
 }
 

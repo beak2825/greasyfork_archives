@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nurbo Mod
 // @namespace    http://youtube.com
-// @version      1.5.8.0
+// @version      1.5.8.2
 // @description  Macro: Shift=Insta, R=Reverse Insta, Space=Boost+Spike, B/C=4 Traps/Spikes.Bot Farmer: L=spawn alt, ,=delete alts, Z=repel bots, auto-mills and upgrades.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
@@ -68,7 +68,7 @@
     let spikeInstaEnabled = false; // Spike Insta при получении урона
     let autoAccessoryEnabled = false; // Авто смена аксессуара 11 -> 19
     let currentAccessory = 11; // Текущий аксессуар
-    let spikeInstaCooldown = 1000; // Кулдаун для Spike Insta
+    let spikeInstaCooldown = 100; // Кулдаун для Spike Insta
     let lastSpikeInstaTime = 0;
     let lastDamageSource = null; // Источник последнего урона
 
@@ -263,7 +263,7 @@
             const dy = myPlayer.y - nearestEnemy[2];
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance > 250 && autoaim) {
+            if (distance >= 1000 && autoaim) {
                 attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
             } else {
                 attackAngle = Math.atan2(nearestEnemy[2] - myPlayer.y, nearestEnemy[1] - myPlayer.x);
@@ -326,7 +326,7 @@
 
                             if (useSecondary && secondary === 15) {
                                 doNewSend(["z", [secondary, true]]);
-                                setTimeout(() => doNewSend(["z", [primary, true]]), 1900);
+                                setTimeout(() => doNewSend(["z", [primary, true]]), 1500);
                             } else if (useSecondary && secondary === 12) {
                                 doNewSend(["z", [secondary, true]]);
                                 setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
@@ -371,10 +371,7 @@
         const dy = myPlayer.y - nearestEnemy[2];
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance > 300) {
-            doNewSend(["6", ["Враг слишком далеко для реверс-инсты (требуется ≤250px)"]]);
-            return;
-        }
+       
 
         storeEquip(0, 1);
         setTimeout(() => {
@@ -578,7 +575,7 @@
             { name: 'Auto Spike', value: autoSpikeSurroundEnabled, toggle: toggleAutoSpikeSurround, key: 'U' },
             { name: 'Spike Insta', value: spikeInstaEnabled, toggle: toggleSpikeInsta, key: 'I' },
             { name: 'Auto Aim', value: autoaim, toggle: toggleAimMode, key: 'O' },
-            { name: 'Shadow Wings', value: autoAccessoryEnabled, toggle: toggleAutoAccessory, key: 'K' }
+          
         ];
 
         toggleSettings.forEach(setting => {
@@ -784,7 +781,7 @@
         if (k === 'k') toggleAutoAccessory(); // Новая клавиша для Shadow Wings
 
         if (k === 'h') {
-            doNewSend(["6", ["kukareku"]]);
+            doNewSend(["6", ["n-gger"]]);
         }
 
         if (k === 'y') {
@@ -992,7 +989,7 @@
             const dy = myPlayer.y - nearestEnemy[2];
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance <= 300) {
+            if (distance <= 1000) {
                 doNewSend(["D", [nearestEnemyAngle]]);
             }
         }
@@ -1498,10 +1495,10 @@
 
 			if (hp < 0.3) {
 				ctx.fillStyle = "#ffffff";
-				ctx.font = "bold 10px Arial";
+				ctx.font = "bold 18x Arial";
 				ctx.textAlign = "center";
 				ctx.textBaseline = "middle";
-				ctx.fillText(Math.round(hp * 100) + "%", 0, 0);
+				
 			}
 
 			ctx.restore();
@@ -2294,3 +2291,263 @@ let waitForGameName = setInterval(() => {
         return init();
     };
 }, 100);
+// Основные классы для размещения объектов
+class AutoMill {
+    constructor() {
+        this.toggle = true;
+        this.placeCount = 0;
+    }
+
+    placeWindmill(angle) {
+        // Упрощенная логика размещения мельницы
+        const id = 5; // windmill type
+        // Отправка команды на размещение
+        sendPacket('place', [id, angle]);
+    }
+
+    canAutomill() {
+        return this.toggle && isSandbox();
+    }
+
+    postTick() {
+        if (!this.canAutomill()) return;
+
+        const angle = getCurrentAngle();
+        const distance = 100; // базовое расстояние
+        const angleBetween = Math.asin(2 * 20 / (2 * distance)); // 20 - радиус мельницы
+
+        this.placeWindmill(angle - angleBetween);
+        this.placeWindmill(angle + angleBetween);
+    }
+}
+
+// Обработчик боевых действий
+class CombatHandler {
+    constructor() {
+        this.autoattack = false;
+        this.attacking = false;
+        this.currentWeapon = 0;
+    }
+
+    attack(angle) {
+        sendPacket('attack', [angle]);
+    }
+
+    updateAttack() {
+        if (this.autoattack && !this.attacking) {
+            const targetAngle = this.getTargetAngle();
+            this.attack(targetAngle);
+        }
+    }
+
+    getTargetAngle() {
+        // Простая логика определения цели
+        const nearestEnemy = getNearestEnemy();
+        if (nearestEnemy) {
+            return Math.atan2(
+                nearestEnemy.y - playerY,
+                nearestEnemy.x - playerX
+            );
+        }
+        return getMouseAngle();
+    }
+}
+
+// Визуальные улучшения
+class VisualEnhancer {
+    constructor() {
+        this.showHealthBars = true;
+        this.showHitboxes = false;
+    }
+
+    renderHealthBars(ctx, objects) {
+        if (!this.showHealthBars) return;
+
+        objects.forEach(obj => {
+            if (obj.health && obj.maxHealth) {
+                const perc = obj.health / obj.maxHealth;
+                this.drawCircularBar(ctx, obj, perc);
+            }
+        });
+    }
+
+    drawCircularBar(ctx, obj, percentage) {
+        const radius = 20;
+        const centerX = obj.x;
+        const centerY = obj.y;
+
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+        ctx.strokeStyle = '#2b0000';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        if (percentage < 1) {
+            const endAngle = percentage * Math.PI * 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, endAngle);
+            ctx.strokeStyle = this.getHealthColor(percentage);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    }
+
+    getHealthColor(perc) {
+        if (perc > 0.6) return '#00aa00';
+        if (perc > 0.3) return '#ffaa00';
+        return '#ff0000';
+    }
+}
+
+// Управление горячими клавишами
+class HotkeyManager {
+    constructor() {
+        this.hotkeys = new Map();
+        this.initDefaultKeys();
+    }
+
+    initDefaultKeys() {
+        // Основные клавиши
+        this.setHotkey('autoAttack', 'F');
+        this.setHotkey('placeSpike', 'V');
+        this.setHotkey('placeMill', 'N');
+        this.setHotkey('placeTrap', 'G');
+    }
+
+    setHotkey(action, key) {
+        this.hotkeys.set(key.toUpperCase(), action);
+    }
+
+    handleKeydown(event) {
+        if (document.activeElement.tagName === 'INPUT') return;
+
+        const key = event.code || event.key.toUpperCase();
+        const action = this.hotkeys.get(key);
+
+        if (action) {
+            this.executeAction(action);
+            event.preventDefault();
+        }
+    }
+
+    executeAction(action) {
+        switch(action) {
+            case 'autoAttack':
+                combatHandler.autoattack = !combatHandler.autoattack;
+                console.log('Auto-attack:', combatHandler.autoattack ? 'ON' : 'OFF');
+                break;
+            case 'placeSpike':
+                sendPacket('place', [4, getMouseAngle()]); // Spike type 4
+                break;
+            case 'placeMill':
+                sendPacket('place', [5, getMouseAngle()]); // Mill type 5
+                break;
+        }
+    }
+}
+
+// Главный обработчик
+class GameMod {
+    constructor() {
+        this.modules = {
+            autoMill: new AutoMill(),
+            combat: new CombatHandler(),
+            visuals: new VisualEnhancer(),
+            hotkeys: new HotkeyManager()
+        };
+
+        this.init();
+    }
+
+    init() {
+        // Подключение событий
+        document.addEventListener('keydown', (e) =>
+            this.modules.hotkeys.handleKeydown(e));
+
+        // Запуск игрового цикла
+        this.gameLoop();
+    }
+
+    gameLoop() {
+        // Основной цикл обновления
+        setInterval(() => {
+            this.modules.autoMill.postTick();
+            this.modules.combat.updateAttack();
+        }, 100); // 10 раз в секунду
+
+        // Цикл отрисовки
+        requestAnimationFrame(() => this.render());
+    }
+
+    render() {
+        // Получаем canvas context
+        const canvas = document.getElementById('gameCanvas');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+
+        // Рендерим визуальные улучшения
+        const gameObjects = getVisibleObjects(); // Нужно получить объекты из игры
+        this.modules.visuals.renderHealthBars(ctx, gameObjects);
+
+        requestAnimationFrame(() => this.render());
+    }
+}
+
+// Вспомогательные функции
+function sendPacket(type, data) {
+    // Упрощенная отправка пакетов
+    if (window.ws && window.ws.readyState === WebSocket.OPEN) {
+        const packet = [type, data];
+        if (window.msgpack) {
+            ws.send(msgpack.encode(packet));
+        } else {
+            ws.send(JSON.stringify(packet));
+        }
+    }
+}
+
+function getMouseAngle() {
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return 0;
+
+    const rect = canvas.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    // Нужно отслеживать положение мыши
+    return Math.atan2(
+        window.mouseY - centerY,
+        window.mouseX - centerX
+    );
+}
+
+// Глобальные переменные
+let playerX = 0, playerY = 0;
+let mouseX = 0, mouseY = 0;
+
+// Отслеживание мыши
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// Инициализация мода
+let gameMod = null;
+
+// Запуск после загрузки игры
+function initMod() {
+    if (document.getElementById('gameCanvas')) {
+        gameMod = new GameMod();
+        console.log('Mod initialized');
+    } else {
+        setTimeout(initMod, 100);
+    }
+}
+
+// Запускаем при загрузке страницы
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMod);
+} else {
+    initMod();
+}

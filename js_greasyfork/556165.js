@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.006
+// @version      1.00.008
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -1295,10 +1295,10 @@ async function getPricesFromAPI() {
     "Stoke: ",
     ],
 "Fire Sale": [
-    "Payout: 110K",
+    "Payout: 10K",
     "Profit/Nerve: ",
-    "Flamethrower: ",
-    "Place: 1 Methane Tank",
+    "Ignite: Lighter ",
+    "Place: 1 Kerosene",
     "Stoke: ",
     "Dampen: "
 ],
@@ -1758,11 +1758,11 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
            [
-        "Payout: 100K",
+        "Payout: 260K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Evidence: 1 Sumo Doll ",
-    "Place: 2 Gasoline",
+    "Place: 4 Gasoline",
     "Stoke: ",
     "Dampen: "
                ]
@@ -3071,10 +3071,10 @@ async function getPricesFromAPI() {
            ]
 ],
 "Waist Not, Want Not": [
-    "Payout: 54K",
+    "Payout: 210K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
-    "Place: 1 Gasoline",
+    "Place: 4 Gasoline",
     "Stoke: ",
     "Dampen: "
 ],
@@ -3383,17 +3383,29 @@ function isDarkModeEnabled() {
 }
 
 // Apply theme-aware colors
+
 function applyThemeColors() {
     const isDarkMode = isDarkModeEnabled();
+    const isColorblind = localStorage.getItem('colorblindMode') === 'true';
 
-    const darkColors = {
+    const darkColors = isColorblind ? {
+        negative: 'rgba(40, 40, 40, 0.7)',
+        low:      'rgba(100, 100, 100, 0.3)',
+        high:     'rgba(255, 215, 0, 0.45)',
+        jackpot:  'rgba(70, 130, 180, 0.3)'
+    } : {
         negative: 'rgba(81, 55, 55, 1.0)',
         low: 'rgba(200, 185, 30, 0.15)',
         high: 'rgba(40, 144, 69, 0.15)',
         jackpot: 'rgba(20, 255, 20, 0.20)'
     };
 
-    const lightColors = {
+    const lightColors = isColorblind ? {
+        negative: 'rgba(100, 100, 100, 0.4)',
+        low:      'rgba(140, 140, 140, 0.3)',
+        high:     'rgba(235, 205, 0, 0.45)',
+        jackpot:  'rgba(70, 130, 180, 0.35)'
+    } : {
         negative: 'rgba(255, 200, 200, 1.0)',
         low: 'rgba(255, 255, 150, 0.4)',
         high: 'rgba(150, 255, 150, 0.4)',
@@ -3403,6 +3415,7 @@ function applyThemeColors() {
     const colors = isDarkMode ? darkColors : lightColors;
 
     style.textContent = `
+        /* Tooltip styling */
         .custom-tooltip {
             position: absolute;
             background: ${isDarkMode ? '#333' : '#fff'};
@@ -3419,14 +3432,74 @@ function applyThemeColors() {
             opacity: 0;
             pointer-events: none;
         }
+
+        /* Highlight colors */
         .highlight-negative { background-color: ${colors.negative} !important; }
         .highlight-low { background-color: ${colors.low} !important; }
         .highlight-high { background-color: ${colors.high} !important; }
         .highlight-jackpot { background-color: ${colors.jackpot} !important; }
-        #settingsPanel input { width: 80px; margin-bottom: 5px; }
-        #settingsPanel h4 { margin: 10px 0; }
+
+        /* Settings button */
+        #itemValuesButton {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        /* Settings panel */
+        #settingsPanel {
+            position: absolute;
+            top: 100%;
+            right: 10px;
+            background: #222;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            z-index: 9998;
+            display: none;
+            width: 260px; /* Compact width */
+        }
+
+        #settingsPanel h4 {
+            margin: 6px 0;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* Rows for label + input */
+        #settingsPanel .item-row {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        #settingsPanel label {
+            width: 120px; /* Fixed width for alignment */
+            text-align: left;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        #settingsPanel input {
+            width: 60px; /* Smaller box */
+            text-align: right;
+            padding: 2px;
+            font-size: 12px;
+            margin-left: auto; /* Push input to far right */
+        }
     `;
 }
+
+
 
 // Initial apply
 applyThemeColors();
@@ -3441,6 +3514,7 @@ console.log('Dark Mode detected:', isDarkModeEnabled());
 
 
     //  Settings UI
+
 
 function createSettingsUI() {
     const header = document.querySelector('#react-root > div > div.appHeader___gUnYC.crimes-app-header');
@@ -3457,18 +3531,9 @@ function createSettingsUI() {
             const newButton = document.createElement('button');
             newButton.id = 'itemValuesButton';
             newButton.textContent = 'Settings';
-            Object.assign(newButton.style, {
-                position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)',
-                background: '#28a745', color: '#fff', border: 'none', padding: '6px 10px',
-                borderRadius: '4px', cursor: 'pointer', zIndex: '9999'
-            });
 
             const newPanel = document.createElement('div');
             newPanel.id = 'settingsPanel';
-            Object.assign(newPanel.style, {
-                position: 'absolute', top: '100%', right: '10px', background: '#222', color: '#fff',
-                padding: '10px', borderRadius: '6px', zIndex: '9999', display: 'none', width: '280px'
-            });
 
             // Tabs
             const tabContainer = document.createElement('div');
@@ -3535,7 +3600,74 @@ function createSettingsUI() {
             const contentDiv = document.createElement('div');
             newPanel.appendChild(contentDiv);
 
-            // Dynamic button logic
+            // Colorblind toggle
+            const colorblindContainer = document.createElement('div');
+            colorblindContainer.className = 'item-row';
+            const colorblindLabel = document.createElement('label');
+            colorblindLabel.textContent = 'Colorblind Mode';
+            const colorblindCheckbox = document.createElement('input');
+            colorblindCheckbox.type = 'checkbox';
+            colorblindCheckbox.checked = localStorage.getItem('colorblindMode') === 'true';
+            colorblindCheckbox.onchange = () => {
+                localStorage.setItem('colorblindMode', colorblindCheckbox.checked);
+                applyThemeColors();
+            };
+            colorblindContainer.appendChild(colorblindLabel);
+            colorblindContainer.appendChild(colorblindCheckbox);
+            newPanel.appendChild(colorblindContainer);
+
+            // Render functions
+            function renderFuelItems() {
+                contentDiv.innerHTML = '<h4>Fuel Items</h4>';
+                for (const item in defaultItemValues) {
+                    const row = document.createElement('div');
+                    row.className = 'item-row';
+                    const label = document.createElement('label');
+                    label.textContent = item;
+                    const input = document.createElement('input');
+                    input.value = itemValues[item];
+                    input.onchange = () => { itemValues[item] = input.value; saveItemValues(); };
+                    row.appendChild(label);
+                    row.appendChild(input);
+                    contentDiv.appendChild(row);
+                }
+                updateActionButton();
+            }
+
+            function renderEvidenceItems() {
+                contentDiv.innerHTML = '<h4>Evidence Items</h4>';
+                for (const item in evidenceItemValues) {
+                    const row = document.createElement('div');
+                    row.className = 'item-row';
+                    const label = document.createElement('label');
+                    label.textContent = item;
+                    const input = document.createElement('input');
+                    input.value = itemValues[item];
+                    input.onchange = () => { itemValues[item] = input.value; saveItemValues(); };
+                    row.appendChild(label);
+                    row.appendChild(input);
+                    contentDiv.appendChild(row);
+                }
+                updateActionButton();
+            }
+
+            function renderHighlightValues() {
+                contentDiv.innerHTML = '<h4>Highlight Values</h4>';
+                ['LowProfit', 'HighProfit'].forEach(key => {
+                    const row = document.createElement('div');
+                    row.className = 'item-row';
+                    const label = document.createElement('label');
+                    label.textContent = key;
+                    const input = document.createElement('input');
+                    input.value = highlightValues[key];
+                    input.onchange = () => { highlightValues[key] = parseInt(input.value, 10); saveHighlightValues(); };
+                    row.appendChild(label);
+                    row.appendChild(input);
+                    contentDiv.appendChild(row);
+                });
+                updateActionButton();
+            }
+
             function updateActionButton() {
                 const existingActionBtn = document.querySelector('#settingsPanel button.action-btn');
                 if (existingActionBtn) existingActionBtn.remove();
@@ -3549,12 +3681,12 @@ function createSettingsUI() {
                     borderRadius: '4px',
                     cursor: 'pointer',
                     marginTop: '10px',
-                    width: '100%'
+                    width: '100%',
+                    background: '#dc3545'
                 });
 
                 if (contentDiv.innerHTML.includes('Fuel Items') || contentDiv.innerHTML.includes('Evidence Items')) {
                     actionButton.textContent = 'Item Market Values';
-                    actionButton.style.background = '#dc3545';
                     actionButton.onclick = async () => {
                         if (confirm('Update item values from Torn API? This will overwrite your current settings.')) {
                             alert('Fetching latest item prices from Torn API...');
@@ -3575,7 +3707,6 @@ function createSettingsUI() {
                     };
                 } else {
                     actionButton.textContent = 'Reset to Defaults';
-                    actionButton.style.background = '#dc3545';
                     actionButton.onclick = () => {
                         if (confirm('Reset highlight values to defaults?')) {
                             highlightValues = { ...defaultHighlightValues };
@@ -3587,49 +3718,6 @@ function createSettingsUI() {
                 }
 
                 newPanel.appendChild(actionButton);
-            }
-
-            // Tab render functions
-            function renderFuelItems() {
-                contentDiv.innerHTML = '<h4>Fuel Items</h4>';
-                for (const item in defaultItemValues) {
-                    const label = document.createTextNode(item + ': ');
-                    const input = document.createElement('input');
-                    input.value = itemValues[item];
-                    input.onchange = () => { itemValues[item] = input.value; saveItemValues(); };
-                    contentDiv.appendChild(label);
-                    contentDiv.appendChild(input);
-                    contentDiv.appendChild(document.createElement('br'));
-                }
-                updateActionButton();
-            }
-
-            function renderEvidenceItems() {
-                contentDiv.innerHTML = '<h4>Evidence Items</h4>';
-                for (const item in evidenceItemValues) {
-                    const label = document.createTextNode(item + ': ');
-                    const input = document.createElement('input');
-                    input.value = itemValues[item];
-                    input.onchange = () => { itemValues[item] = input.value; saveItemValues(); };
-                    contentDiv.appendChild(label);
-                    contentDiv.appendChild(input);
-                    contentDiv.appendChild(document.createElement('br'));
-                }
-                updateActionButton();
-            }
-
-            function renderHighlightValues() {
-                contentDiv.innerHTML = '<h4>Highlight Values</h4>';
-                ['LowProfit', 'HighProfit'].forEach(key => {
-                    const label = document.createTextNode(key + ': ');
-                    const input = document.createElement('input');
-                    input.value = highlightValues[key];
-                    input.onchange = () => { highlightValues[key] = parseInt(input.value, 10); saveHighlightValues(); };
-                    contentDiv.appendChild(label);
-                    contentDiv.appendChild(input);
-                    contentDiv.appendChild(document.createElement('br'));
-                });
-                updateActionButton();
             }
 
             fuelTab.onclick = renderFuelItems;
@@ -3652,11 +3740,11 @@ function createSettingsUI() {
             });
         }
     } else {
-        // ✅ Remove button and panel when leaving Arson page
         if (existingButton) existingButton.remove();
         if (existingPanel) existingPanel.remove();
     }
 }
+
 
 
     // Helper CreateTooltip

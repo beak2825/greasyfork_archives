@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - nl/be
-// @version         4.2.8.0
+// @version         4.2.8.1
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1162,7 +1162,7 @@ else if (matchDomain(['lc.nl', 'dvhn.nl']) || document.querySelector('head > lin
           refreshCurrentTab();
         else if (json.includes(',body:')) {
           let nuxt_vars = json.split(/^\(function\(/)[1].split('){')[0].split(',');
-          let nuxt_values = json.split('}}(')[1].split('));')[0].replace(/,(true|false|\d+|{}),/g, ',"$1",').replace(/,(null),/g, ',"$1",').replace(/,(void\s\d),/g, ',"$1",').split(/\\?",\\?"/);
+          let nuxt_values = json.split('}}(')[1].split('));')[0].replace(/(^|,)(true|false|\.?\d+|{}),/g, ',"$1$2",').replace(/,(null),/g, ',"$1",').replace(/,(void\s\d),/g, ',"$1",').split(/\\?",\\?"/);
           function findNuxtText(str, attributes = false) {
             if (nuxt_vars.length && nuxt_values.length && !(attributes && str.length === 1 && str === str.toUpperCase())) {
               let index = nuxt_vars.indexOf(str);
@@ -1239,6 +1239,7 @@ else if (matchDomain(['lc.nl', 'dvhn.nl']) || document.querySelector('head > lin
                     child.relation.link = findNuxtText(child.relation.link).replace(/\\u002F/g, '/');
                   if (child.relation.title.length <= 2)
                     child.relation.title = findNuxtText(child.relation.title);
+                  if (matchDomain('frieschdagblad.nl'))
                   addLink(elem, child.relation.title, child.relation.link);
                 } else if (child.children) {
                   if (child.children.length) {
@@ -1249,6 +1250,8 @@ else if (matchDomain(['lc.nl', 'dvhn.nl']) || document.querySelector('head > lin
                             addLink(elem, item.text, child.href || child.relation.follow.url, add_br);
                         } else
                           addParText(elem, item.text, false, child.attributes && child.attributes.length);
+                      } else if (findNuxtText(item.type) === 'br') {
+                        elem.appendChild(document.createElement('br'));
                       } else
                         addChildren(elem, item.children, false, item.attributes && item.attributes.length);
                     }

@@ -8,7 +8,7 @@
 // @name:es            Comic Looms
 // @name:ka            Comic Looms
 // @namespace          https://github.com/MapoMagpie/comic-looms
-// @version            4.14.6
+// @version            4.14.7
 // @author             MapoMagpie
 // @description        Manga Viewer + Downloader, Focus on experience and low load on the site. Support you in finding the site you are searching for.
 // @description:en     Manga Viewer + Downloader, Focus on experience and low load on the site. Support you in finding the site you are searching for.
@@ -5919,7 +5919,7 @@ async *fetchPagesSource() {
   ADAPTER.addSetup({
     name: "MangaPark",
     workURLs: [
-      /mangapark.(net|com)\/title\/[^/]+$/
+      /(mangapark|comicpark|readpark|mpark).(net|com|org|me|io|to)\/title\/[^/]+$/
     ],
     match: ["https://mangapark.com/*"],
     constructor: () => new MangaParkMatcher()
@@ -5963,10 +5963,13 @@ async *fetchPagesSource() {
       return this.meta;
     }
     async *fetchChapters() {
-      let elements = Array.from(document.querySelectorAll("div[name=chapter-list] .scrollable-panel .flex-col-reverse astro-slot > div"));
-      elements = elements.reverse();
+      const listElem = document.querySelector("div[data-name=chapter-list] .scrollable-bar .group");
+      let elements = Array.from(listElem?.querySelectorAll(":scope > div") ?? []);
+      if (listElem?.classList.contains("flex-col-reverse")) {
+        elements = elements.reverse();
+      }
       if (elements.length === 0) {
-        elements = Array.from(document.querySelectorAll("div[name=chapter-list] .scrollable-panel .flex-col astro-slot > div"));
+        throw new Error("cannot find chapters, the page has been updated");
       }
       return elements.map((elem, i) => {
         const a = elem.querySelector("div:first-child > a");
@@ -5982,23 +5985,23 @@ async *fetchPagesSource() {
     async parseImgNodes(href) {
       const doc = await window.fetch(href).then((resp) => resp.text()).then((text) => new DOMParser().parseFromString(text, "text/html")).catch(Error);
       if (doc instanceof Error) throw doc;
-      const raw = doc.querySelector("astro-island[component-url^='/_astro/ImageList'][props]")?.getAttribute("props");
-      if (!raw) throw new Error("cannot find ImageList props");
-      const json1 = JSON.parse(raw);
-      if (!json1.imageFiles?.[1]) throw new Error("cannot find imageFiles from ImageList props");
-      const images = JSON.parse(json1.imageFiles[1]);
-      if (!images.length || images.length === 0) throw new Error("cannot find images");
-      const digits = images.length.toString().length;
-      return images.map(([_, url], i) => {
+      const elements = Array.from(doc.querySelectorAll("div[data-name=image-show]"));
+      if (elements.length === 0) throw new Error("cannot find images");
+      const nodes = [];
+      const digits = elements.length.toString().length;
+      for (let i = 0; i < elements.length; i++) {
+        const elem = elements[i];
         const title = (i + 1).toString().padStart(digits, "0");
+        const url = elem.querySelector("img")?.src;
+        if (!url) throw new Error("cannot get image src");
         const ext = url.split(".").pop() ?? "webp";
         let wh = void 0;
-        const matches = url.match(/\/\d+_(\d+)_(\d+)_\d+\.\w+$/);
-        if (matches && matches.length === 3) {
-          wh = { w: parseInt(matches[1]), h: parseInt(matches[2]) };
+        if (elem.style.height && elem.style.width) {
+          wh = { w: parseInt(elem.style.width), h: parseInt(elem.style.height) };
         }
-        return new ImageNode("", href, `${title}.${ext}`, void 0, url, wh);
-      });
+        nodes.push(new ImageNode("", href, `${title}.${ext}`, void 0, url, wh));
+      }
+      return nodes;
     }
     async fetchOriginMeta(node) {
       return { url: node.originSrc };
@@ -6048,7 +6051,7 @@ async *fetchPagesSource() {
   ADAPTER.addSetup({
     name: "BATO.TO v3x",
     workURLs: [
-      /(mangatoto.com|bato.to)\/title\/\d+[^\/]*$/
+      /(mangatoto.com|bato.(to|si|ing))\/title\/\d+[^\/]*$/
     ],
     match: ["https://mangatoto.com/*", "https://bato.to/*"],
     constructor: () => new BatotoMatcher()
@@ -7866,12 +7869,12 @@ duration ${m.delay / 1e3}`).join("\n");
       let url = "";
       if (chapter.id === 0) {
         const variables = `{"userId":"${this.userID}","count":20,${cursor ? '"cursor":"' + cursor + '",' : ""}"includePromotedContent":true,"withQuickPromoteEligibilityTweetFields":true,"withVoice":true}`;
-        const features = "&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Afalse%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Atrue%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticlePlainText%22%3Afalse%7D";
-        url = `${window.location.origin}/i/api/graphql/q6xj5bs0hapm9309hexA_g/UserTweets?variables=${encodeURIComponent(variables)}${features}`;
+        const features = "&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22responsive_web_profile_redirect_enabled%22%3Afalse%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22responsive_web_grok_annotations_enabled%22%3Afalse%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Atrue%2C%22post_ctas_fetch_enabled%22%3Atrue%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticlePlainText%22%3Afalse%7D";
+        url = `${window.location.origin}/i/api/graphql/ehYmFq6d3xwc49yqt52MIg/UserTweets?variables=${encodeURIComponent(variables)}${features}`;
       } else {
         const variables = `{"userId":"${this.userID}","count":20,${cursor ? '"cursor":"' + cursor + '",' : ""}"includePromotedContent":false,"withClientEventToken":false,"withBirdwatchNotes":false,"withVoice":true,"withV2Timeline":true}`;
-        const features = "&features=%7B%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22articles_preview_enabled%22%3Atrue%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_media_interstitial_enabled%22%3Atrue%2C%22rweb_video_timestamps_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticlePlainText%22%3Afalse%7D";
-        url = `${window.location.origin}/i/api/graphql/aQQLnkexAl5z9ec_UgbEIA/UserMedia?variables=${encodeURIComponent(variables)}${features}`;
+        const features = "&features=%7B%22rweb_video_screen_enabled%22%3Afalse%2C%22profile_label_improvements_pcf_label_in_post_enabled%22%3Atrue%2C%22responsive_web_profile_redirect_enabled%22%3Afalse%2C%22rweb_tipjar_consumption_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22premium_content_api_read_enabled%22%3Afalse%2C%22communities_web_enable_tweet_community_results_fetch%22%3Atrue%2C%22c9s_tweet_anatomy_moderator_badge_enabled%22%3Atrue%2C%22responsive_web_grok_analyze_button_fetch_trends_enabled%22%3Afalse%2C%22responsive_web_grok_analyze_post_followups_enabled%22%3Atrue%2C%22responsive_web_jetfuel_frame%22%3Atrue%2C%22responsive_web_grok_share_attachment_enabled%22%3Atrue%2C%22responsive_web_grok_annotations_enabled%22%3Afalse%2C%22articles_preview_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Atrue%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22responsive_web_grok_show_grok_translated_post%22%3Afalse%2C%22responsive_web_grok_analysis_button_from_backend%22%3Atrue%2C%22post_ctas_fetch_enabled%22%3Atrue%2C%22creator_subscriptions_quote_tweet_preview_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_grok_image_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_imagine_annotation_enabled%22%3Atrue%2C%22responsive_web_grok_community_note_auto_translation_is_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D&fieldToggles=%7B%22withArticlePlainText%22%3Afalse%7D";
+        url = `${window.location.origin}/i/api/graphql/MjGtmDI0wpveHq8k2zIlUQ/UserMedia?variables=${encodeURIComponent(variables)}${features}`;
       }
       try {
         const res = await window.fetch(url, { headers: createHeader(this.uuid), signal: AbortSignal.timeout(1e4) });
@@ -7886,7 +7889,7 @@ duration ${m.delay / 1e3}`).join("\n");
           const { items, cursor: cursor2 } = homeForYouEntriesToItems(entries);
           return [items, cursor2];
         } else {
-          const instructions = json.data.user.result.timeline_v2.timeline.instructions;
+          const instructions = json.data.user.result.timeline.timeline.instructions;
           const items = [];
           const addToModule = instructions.find((ins) => ins.type === "TimelineAddToModule");
           const entries = instructions.find((ins) => ins.type === "TimelineAddEntries");
@@ -7955,7 +7958,8 @@ duration ${m.delay / 1e3}`).join("\n");
     }
     async next(chapter) {
       const cursor = this.chapterCursors[chapter.id];
-      const seenTweetIds = this.seenTweetIds[chapter.id].map((e) => '"' + e + '"').join(",");
+      const seenTweetIds_ = this.seenTweetIds[chapter.id];
+      const seenTweetIds = seenTweetIds_.slice(-30).map((e) => '"' + e + '"').join(",");
       const headers = createHeader(this.uuid);
       const [url, body] = (() => {
         if (chapter.id === 1) {
@@ -7964,9 +7968,10 @@ duration ${m.delay / 1e3}`).join("\n");
           const body2 = `{"variables":{"count":20,${cursorStr}"includePromotedContent":true,"latestControlAvailable":true,"requestContext":"launch","withCommunity":true,"seenTweetIds":[${seenTweetIds}]},"features":{"rweb_video_screen_enabled":false,"profile_label_improvements_pcf_label_in_post_enabled":true,"rweb_tipjar_consumption_enabled":true,"responsive_web_graphql_exclude_directive_enabled":true,"verified_phone_label_enabled":false,"creator_subscriptions_tweet_preview_api_enabled":true,"responsive_web_graphql_timeline_navigation_enabled":true,"responsive_web_graphql_skip_user_profile_image_extensions_enabled":false,"premium_content_api_read_enabled":false,"communities_web_enable_tweet_community_results_fetch":true,"c9s_tweet_anatomy_moderator_badge_enabled":true,"responsive_web_grok_analyze_button_fetch_trends_enabled":false,"responsive_web_grok_analyze_post_followups_enabled":true,"responsive_web_jetfuel_frame":false,"responsive_web_grok_share_attachment_enabled":true,"articles_preview_enabled":true,"responsive_web_edit_tweet_api_enabled":true,"graphql_is_translatable_rweb_tweet_is_translatable_enabled":true,"view_counts_everywhere_api_enabled":true,"longform_notetweets_consumption_enabled":true,"responsive_web_twitter_article_tweet_consumption_enabled":true,"tweet_awards_web_tipping_enabled":false,"responsive_web_grok_show_grok_translated_post":false,"responsive_web_grok_analysis_button_from_backend":true,"creator_subscriptions_quote_tweet_preview_enabled":false,"freedom_of_speech_not_reach_fetch_enabled":true,"standardized_nudges_misinfo":true,"tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled":true,"longform_notetweets_rich_text_read_enabled":true,"longform_notetweets_inline_media_enabled":true,"responsive_web_grok_image_annotation_enabled":true,"responsive_web_enhance_cards_enabled":false},"queryId":"ci_OQZ2k0rG0Ax_lXRiWVA"}`;
           return [url2, body2];
         } else if (chapter.id === 2) {
-          const url2 = `${window.location.origin}/i/api/graphql/nMyTQqsJiUGBKLGNSQamAA/HomeLatestTimeline`;
+          const url2 = `${window.location.origin}/i/api/graphql/HN6oP_7h7HayqyYimz97Iw/HomeLatestTimeline`;
           const cursorStr = cursor ? `"cursor":"${cursor}",` : "";
-          const body2 = `{"variables":{"count":20,${cursorStr}"includePromotedContent":true,"latestControlAvailable":true,"seenTweetIds":[${seenTweetIds}]},"features":{"rweb_video_screen_enabled":false,"profile_label_improvements_pcf_label_in_post_enabled":true,"rweb_tipjar_consumption_enabled":true,"responsive_web_graphql_exclude_directive_enabled":true,"verified_phone_label_enabled":false,"creator_subscriptions_tweet_preview_api_enabled":true,"responsive_web_graphql_timeline_navigation_enabled":true,"responsive_web_graphql_skip_user_profile_image_extensions_enabled":false,"premium_content_api_read_enabled":false,"communities_web_enable_tweet_community_results_fetch":true,"c9s_tweet_anatomy_moderator_badge_enabled":true,"responsive_web_grok_analyze_button_fetch_trends_enabled":false,"responsive_web_grok_analyze_post_followups_enabled":true,"responsive_web_jetfuel_frame":false,"responsive_web_grok_share_attachment_enabled":true,"articles_preview_enabled":true,"responsive_web_edit_tweet_api_enabled":true,"graphql_is_translatable_rweb_tweet_is_translatable_enabled":true,"view_counts_everywhere_api_enabled":true,"longform_notetweets_consumption_enabled":true,"responsive_web_twitter_article_tweet_consumption_enabled":true,"tweet_awards_web_tipping_enabled":false,"responsive_web_grok_show_grok_translated_post":false,"responsive_web_grok_analysis_button_from_backend":true,"creator_subscriptions_quote_tweet_preview_enabled":false,"freedom_of_speech_not_reach_fetch_enabled":true,"standardized_nudges_misinfo":true,"tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled":true,"longform_notetweets_rich_text_read_enabled":true,"longform_notetweets_inline_media_enabled":true,"responsive_web_grok_image_annotation_enabled":true,"responsive_web_enhance_cards_enabled":false},"queryId":"nMyTQqsJiUGBKLGNSQamAA"}`;
+          const features = `{"rweb_video_screen_enabled":false,"profile_label_improvements_pcf_label_in_post_enabled":true,"responsive_web_profile_redirect_enabled":false,"rweb_tipjar_consumption_enabled":true,"verified_phone_label_enabled":false,"creator_subscriptions_tweet_preview_api_enabled":true,"responsive_web_graphql_timeline_navigation_enabled":true,"responsive_web_graphql_skip_user_profile_image_extensions_enabled":false,"premium_content_api_read_enabled":false,"communities_web_enable_tweet_community_results_fetch":true,"c9s_tweet_anatomy_moderator_badge_enabled":true,"responsive_web_grok_analyze_button_fetch_trends_enabled":false,"responsive_web_grok_analyze_post_followups_enabled":true,"responsive_web_jetfuel_frame":true,"responsive_web_grok_share_attachment_enabled":true,"responsive_web_grok_annotations_enabled":false,"articles_preview_enabled":true,"responsive_web_edit_tweet_api_enabled":true,"graphql_is_translatable_rweb_tweet_is_translatable_enabled":true,"view_counts_everywhere_api_enabled":true,"longform_notetweets_consumption_enabled":true,"responsive_web_twitter_article_tweet_consumption_enabled":true,"tweet_awards_web_tipping_enabled":false,"responsive_web_grok_show_grok_translated_post":false,"responsive_web_grok_analysis_button_from_backend":true,"post_ctas_fetch_enabled":true,"creator_subscriptions_quote_tweet_preview_enabled":false,"freedom_of_speech_not_reach_fetch_enabled":true,"standardized_nudges_misinfo":true,"tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled":true,"longform_notetweets_rich_text_read_enabled":true,"longform_notetweets_inline_media_enabled":true,"responsive_web_grok_image_annotation_enabled":true,"responsive_web_grok_imagine_annotation_enabled":true,"responsive_web_grok_community_note_auto_translation_is_enabled":false,"responsive_web_enhance_cards_enabled":false}`;
+          const body2 = `{"variables":{"count":20,${cursorStr}"includePromotedContent":true,"enableRanking":false,"seenTweetIds":[${seenTweetIds}]},"features":${features},"queryId":"HN6oP_7h7HayqyYimz97Iw"}`;
           return [url2, body2];
         } else {
           if (!this.myID) this.myID = getMyID();
@@ -8063,31 +8068,33 @@ duration ${m.delay / 1e3}`).join("\n");
       if (!items) throw new Error("warn: cannot find items");
       const list = [];
       for (const item of items) {
-        const legacy = item?.itemContent?.tweet_results?.result?.legacy || item?.itemContent?.tweet_results?.result?.tweet?.legacy || item?.itemContent?.tweet_results?.result?.legacy?.retweeted_status_result?.result?.legacy;
-        const mediaList = legacy?.entities.media;
-        if (mediaList === void 0) {
-          const user = item.itemContent?.tweet_results?.result?.core?.user_results?.result?.legacy?.name;
+        const [mediaList, tweetID] = checkoutMedias(item);
+        if (mediaList.length === 0) {
+          const user = item.itemContent?.tweet_results?.result?.core?.user_results?.result?.legacy?.screen_name ?? item.itemContent?.tweet_results?.result?.core?.user_results?.result?.core?.screen_name;
           const rest_id = item.itemContent.tweet_results.result.rest_id;
           evLog("error", `cannot found mediaList: ${window.location.origin}/${user}/status/${rest_id}`, item);
           continue;
         }
-        const tweetID = legacy?.id_str;
-        const actionLike = new NodeAction("♥", "like this tweet", async () => {
-          await fetch("https://x.com/i/api/graphql/lI07N6Otwv1PhnEgXILM7A/FavoriteTweet", {
-            "headers": createHeader(this.uuid),
-            "body": '{"variables":{"tweet_id":"' + tweetID + '"},"queryId":"lI07N6Otwv1PhnEgXILM7A"}',
-            "method": "POST",
-            "mode": "cors"
+        let actionLike;
+        let actionBookmark;
+        if (tweetID) {
+          actionLike = new NodeAction("♥", "like this tweet", async () => {
+            await fetch("https://x.com/i/api/graphql/lI07N6Otwv1PhnEgXILM7A/FavoriteTweet", {
+              "headers": createHeader(this.uuid),
+              "body": '{"variables":{"tweet_id":"' + tweetID + '"},"queryId":"lI07N6Otwv1PhnEgXILM7A"}',
+              "method": "POST",
+              "mode": "cors"
+            });
           });
-        });
-        const actionBookmark = new NodeAction("🔖", "bookmark this tweet", async () => {
-          await fetch("https://x.com/i/api/graphql/aoDbu3RHznuiSkQ9aNM67Q/CreateBookmark", {
-            "headers": createHeader(this.uuid),
-            "body": '{"variables":{"tweet_id":"' + tweetID + '"},"queryId":"aoDbu3RHznuiSkQ9aNM67Q"}',
-            "method": "POST",
-            "mode": "cors"
+          actionBookmark = new NodeAction("🔖", "bookmark this tweet", async () => {
+            await fetch("https://x.com/i/api/graphql/aoDbu3RHznuiSkQ9aNM67Q/CreateBookmark", {
+              "headers": createHeader(this.uuid),
+              "body": '{"variables":{"tweet_id":"' + tweetID + '"},"queryId":"aoDbu3RHznuiSkQ9aNM67Q"}',
+              "method": "POST",
+              "mode": "cors"
+            });
           });
-        });
+        }
         this.postCount++;
         if (ADAPTER.conf.reverseMultipleImagesPost) {
           mediaList.reverse();
@@ -8110,8 +8117,8 @@ duration ${m.delay / 1e3}`).join("\n");
           const title = `${media.id_str}-${baseSrc.split("/").pop()}.${ext}`;
           const wh = { w: media.sizes.small.w, h: media.sizes.small.h };
           const node = new ImageNode(src, href, title, void 0, largeSrc, wh);
-          node.actions.push(actionLike);
-          node.actions.push(actionBookmark);
+          if (actionLike) node.actions.push(actionLike);
+          if (actionBookmark) node.actions.push(actionBookmark);
           if (media.video_info) {
             let bitrate = 0;
             for (const variant of media.video_info.variants) {
@@ -8199,6 +8206,31 @@ duration ${m.delay / 1e3}`).join("\n");
       }
     }
     return { items, ids, cursor };
+  }
+  function checkoutMedias(item) {
+    let media1 = item.itemContent?.tweet_results?.result?.legacy?.entities?.media;
+    let media2 = item.itemContent?.tweet_results?.result?.legacy?.retweeted_status_result?.result?.tweet?.legacy?.entities?.media;
+    let media3 = item.itemContent?.tweet_results?.result?.legacy?.retweeted_status_result?.result?.legacy?.entities?.media;
+    let media4 = item.itemContent?.tweet_results?.result?.tweet?.legacy?.entities?.media;
+    let media5 = item.itemContent?.tweet_results?.result?.tweet?.legacy?.retweeted_status_result?.result?.tweet?.legacy?.entities?.media;
+    let media6 = item.itemContent?.tweet_results?.result?.tweet?.legacy?.retweeted_status_result?.result?.legacy?.entities?.media;
+    const mediaIdSet = new Set();
+    let medias = [media1 ?? [], media2 ?? [], media3 ?? [], media4 ?? [], media5 ?? [], media6 ?? []].flat();
+    let ret = [];
+    for (const me of medias) {
+      if (!mediaIdSet.has(me.id_str)) {
+        ret.push(me);
+        mediaIdSet.add(me.id_str);
+      }
+    }
+    let tweetId1 = item.itemContent?.tweet_results?.result?.legacy?.id_str;
+    let tweetId2 = item.itemContent?.tweet_results?.result?.legacy?.retweeted_status_result?.result?.tweet?.legacy?.id_str;
+    let tweetId3 = item.itemContent?.tweet_results?.result?.legacy?.retweeted_status_result?.result?.legacy?.id_str;
+    let tweetId4 = item.itemContent?.tweet_results?.result?.tweet?.legacy?.id_str;
+    let tweetId5 = item.itemContent?.tweet_results?.result?.tweet?.legacy?.retweeted_status_result?.result?.tweet?.legacy?.id_str;
+    let tweetId6 = item.itemContent?.tweet_results?.result?.tweet?.legacy?.retweeted_status_result?.result?.legacy?.id_str;
+    let tweewId = tweetId6 ?? tweetId5 ?? tweetId4 ?? tweetId3 ?? tweetId2 ?? tweetId1;
+    return [ret, tweewId];
   }
   ADAPTER.addSetup({
     name: "Twitter | X",
@@ -14410,9 +14442,6 @@ intersectingIndexLock = false;
         event
       ));
       this.root.addEventListener("scroll", (event) => this.onScroll(event), { passive: false });
-      this.root.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-      });
       this.root.addEventListener("mousedown", (mdevt) => {
         if (mdevt.button !== 0) return;
         if (mdevt.target.classList.contains("img-land")) return;
@@ -15200,6 +15229,7 @@ setElements() {
     root;
     menu;
     items;
+    scrolled = false;
     getTarget;
     isBigMode;
     pointerDownListener;
@@ -15208,7 +15238,13 @@ setElements() {
       html.root.addEventListener("contextmenu", (event) => {
         if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) return;
         event.preventDefault();
-        this.open(event);
+        if (!this.scrolled) {
+          this.open(event);
+        }
+        this.scrolled = false;
+      });
+      html.root.addEventListener("wheel", (event) => {
+        if (event.buttons === 2) this.scrolled = true;
       });
       this.pointerDownListener = (event) => {
         if (!this.menu) return;

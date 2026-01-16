@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Reddit hide videos
-// @version      1.0
+// @version      1.1
 // @description  Hides videos on Reddit feed.
 // @author       yojc
 // @match        https://www.reddit.com/*
@@ -38,7 +38,7 @@
         for (const redditPost of document.querySelectorAll("shreddit-post:not([data-hide-videos-processed])")) {
             redditPost.dataset.hideVideosProcessed = true;
 
-            if (redditPost.querySelector("shreddit-player-2, shreddit-player-static-hlsjs, shreddit-player, shreddit-embed[providername=YouTube], shreddit-embed[providername=Streamable]")) {
+            if (redditPost.querySelector("shreddit-player-2, shreddit-player-static-hlsjs, shreddit-player, shreddit-embed[providername=YouTube], shreddit-embed[providername=Streamable]") && redditPost.parentNode.tagName.toLowerCase() !== "main") {
                 redditPost.parentNode.classList.add("post-hidden");
                 continue;
             }

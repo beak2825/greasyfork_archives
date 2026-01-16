@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio | Clear Chat Button
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      1.8
+// @version      1.9
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Automates clicking chat turn options and delete buttons in Gemini.
@@ -273,10 +273,11 @@
 
         button.appendChild(iconSpan);
 
-        const moreButton = toolbarRight.querySelector('button[iconname="more_vert"]');
-        if (moreButton) {
-            toolbarRight.insertBefore(button, moreButton);
-            console.log('[Gemini Chat Cleaner] Button inserted before more_vert button.');
+        // The more_vert button is now wrapped in .overflow-menu-wrapper, so insert before that wrapper
+        const overflowWrapper = toolbarRight.querySelector('.overflow-menu-wrapper');
+        if (overflowWrapper) {
+            toolbarRight.insertBefore(button, overflowWrapper);
+            console.log('[Gemini Chat Cleaner] Button inserted before overflow-menu-wrapper.');
         } else {
             toolbarRight.appendChild(button);
             console.log('[Gemini Chat Cleaner] Button appended to toolbar.');

@@ -2,12 +2,14 @@
 // @license MIT
 // @name         Youtube Save/Resume Progress
 // @namespace    http://tampermonkey.net/
-// @version      1.5.7
+// @version      1.6.0
 // @description  Have you ever closed a YouTube video by accident, or have you gone to another one and when you come back the video starts from 0? With this extension it won't happen anymore
 // @author       Costin Alexandru Sandu
 // @match        https://www.youtube.com/watch*
 // @icon         https://raw.githubusercontent.com/SaurusLex/YoutubeSaveResumeProgress/refs/heads/master/youtube_save_resume_progress_icon.jpg
 // @grant        none
+// @require      https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.0/dist/floating-ui.core.umd.min.js
+// @require      https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.3/dist/floating-ui.dom.umd.min.js
 // @downloadURL https://update.greasyfork.org/scripts/487305/Youtube%20SaveResume%20Progress.user.js
 // @updateURL https://update.greasyfork.org/scripts/487305/Youtube%20SaveResume%20Progress.meta.js
 // ==/UserScript==
@@ -21,19 +23,42 @@
     currentVideoId: null,
     lastSaveTime: 0,
     dependenciesURLs: {
-      floatingUiCore: "https://cdn.jsdelivr.net/npm/@floating-ui/core@1.6.0",
-      floatingUiDom: "https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.6.3",
       fontAwesomeIcons:
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css",
-    }
+    },
+    userSettings: {
+      minDuration: 0,
+      enableMinDuration: false,
+    },
   };
+
+  const CONFIG_KEY = "Youtube_SaveResume_Progress_Config";
+
+  function getUserConfig() {
+    try {
+      const saved = JSON.parse(window.localStorage.getItem(CONFIG_KEY));
+      return saved || {};
+    } catch {
+      return {};
+    }
+  }
+
+  function setUserConfig(newConfig) {
+    const current = getUserConfig();
+    const merged = { ...current, ...newConfig };
+    window.localStorage.setItem(CONFIG_KEY, JSON.stringify(merged));
+    Object.assign(configData.userSettings, merged);
+  }
+
+  // Load initial settings
+  Object.assign(configData.userSettings, getUserConfig());
 
   var state = {
     floatingUi: {
       cleanUpFn: null,
       settingsContainer: null,
-    }
-  }
+    },
+  };
 
   var FontAwesomeIcons = {
     trash: ["fa-solid", "fa-trash-can"],
@@ -81,6 +106,11 @@
     return currentTime;
   }
 
+  function getVideoDuration() {
+    const player = document.querySelector("#movie_player");
+    return player ? player.getDuration() : 0;
+  }
+
   function getVideoName() {
     const player = document.querySelector("#movie_player");
     const videoName = player.getVideoData().title;
@@ -111,23 +141,38 @@
     player.seekTo(progress);
   }
 
-  function updateLastSaved(videoProgress) {
+  function updateInfoText(text) {
     const lastSaveEl = document.querySelector(".last-save-info-text");
-    const lastSaveText = `Last save: ${fancyTimeFormat(videoProgress)}`;
+
     // This is for browsers that support Trusted Types
-    const lastSaveInnerHtml = configData.sanitizer
-      ? configData.sanitizer.createHTML(lastSaveText)
-      : lastSaveText;
+    const innerHtml = configData.sanitizer
+      ? configData.sanitizer.createHTML(text)
+      : text;
 
     if (lastSaveEl) {
-      lastSaveEl.innerHTML = lastSaveInnerHtml;
+      lastSaveEl.innerHTML = innerHtml;
     }
   }
 
   function saveVideoProgress() {
     const videoProgress = getVideoCurrentTime();
-    updateLastSaved(videoProgress);
     const videoId = getVideoId();
+
+    // Check configuration constraints
+    if (
+      configData.userSettings.enableMinDuration &&
+      configData.userSettings.minDuration > 0
+    ) {
+      const duration = getVideoDuration();
+      const minDurationSec = configData.userSettings.minDuration * 60;
+
+      if (duration < minDurationSec) {
+        updateInfoText("Not saving (Too short)");
+        return;
+      }
+    }
+
+    updateInfoText(`Last save: ${fancyTimeFormat(videoProgress)}`);
 
     configData.currentVideoId = videoId;
     configData.lastSaveTime = Date.now();
@@ -236,145 +281,298 @@
 
   function setFloatingSettingsUi() {
     const settingsButton = document.querySelector(".ysrp-settings-button");
-    const settingsContainer = state.floatingUi.settingsContainer
+    const settingsContainer = state.floatingUi.settingsContainer;
     const { autoUpdate } = window.FloatingUIDOM;
 
     settingsButton.addEventListener("click", () => {
-      const exists = document.body.contains(settingsContainer)
+      const exists = document.body.contains(settingsContainer);
       if (exists) {
-        closeFloatingSettingsUi()
+        closeFloatingSettingsUi();
       } else {
-          document.body.appendChild(settingsContainer);
-          updateFloatingSettingsUi();
-          state.floatingUi.cleanUpFn = autoUpdate(settingsButton, settingsContainer, updateFloatingSettingsUi);
-          document.addEventListener('click', closeFloatingSettingsUiOnClickOutside)
+        document.body.appendChild(settingsContainer);
+        updateFloatingSettingsUi();
+        state.floatingUi.cleanUpFn = autoUpdate(
+          settingsButton,
+          settingsContainer,
+          updateFloatingSettingsUi
+        );
+        document.addEventListener(
+          "click",
+          closeFloatingSettingsUiOnClickOutside
+        );
       }
-
     });
   }
 
   function closeFloatingSettingsUiOnClickOutside(event) {
-      const settingsButton = document.querySelector(".ysrp-settings-button");
-      const settingsContainer = state.floatingUi.settingsContainer
-      if (settingsContainer && !settingsContainer.contains(event.target) && !settingsButton.contains(event.target)) {
-          closeFloatingSettingsUi();
-          document.removeEventListener('click', closeFloatingSettingsUiOnClickOutside);
-      }
+    const settingsButton = document.querySelector(".ysrp-settings-button");
+    const settingsContainer = state.floatingUi.settingsContainer;
+    if (
+      settingsContainer &&
+      !settingsContainer.contains(event.target) &&
+      !settingsButton.contains(event.target)
+    ) {
+      closeFloatingSettingsUi();
+      document.removeEventListener(
+        "click",
+        closeFloatingSettingsUiOnClickOutside
+      );
+    }
   }
 
   function closeFloatingSettingsUi() {
-      const settingsContainer = state.floatingUi.settingsContainer
-      settingsContainer.remove()
-      state.floatingUi.cleanUpFn()
-      state.floatingUi.cleanUpFn = null
+    const settingsContainer = state.floatingUi.settingsContainer;
+    settingsContainer.remove();
+    state.floatingUi.cleanUpFn();
+    state.floatingUi.cleanUpFn = null;
   }
 
   function createSettingsUI() {
-    const videos = getSavedVideoList();
-    const videosCount = videos.length;
     const infoElContainer = document.querySelector(".last-save-info-container");
     const infoElContainerPosition = infoElContainer.getBoundingClientRect();
     const settingsContainer = document.createElement("div");
-    settingsContainer.addEventListener('click', (event) => {event.stopPropagation()})
-    state.floatingUi.settingsContainer = settingsContainer
+    settingsContainer.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+    state.floatingUi.settingsContainer = settingsContainer;
     settingsContainer.classList.add("settings-container");
-
-    const settingsContainerHeader = document.createElement("div");
-    const settingsContainerHeaderTitle = document.createElement("h3");
-    settingsContainerHeaderTitle.textContent =
-      "Saved Videos - (" + videosCount + ")";
-    settingsContainerHeader.style.display = "flex";
-    settingsContainerHeader.style.justifyContent = "space-between";
-
-    const settingsContainerBody = document.createElement("div");
-    settingsContainerBody.classList.add("settings-container-body");
-    const settingsContainerBodyStyle = {
-      display: "flex",
-      flex: "1",
-      minHeight: "0",
-      overflow: "auto",
-    };
-    Object.assign(settingsContainerBody.style, settingsContainerBodyStyle);
-
-    const videosList = document.createElement("ul");
-    videosList.style.display = "flex";
-    videosList.style.flexDirection = "column";
-    videosList.style.rowGap = "1rem";
-    videosList.style.listStyle = "none";
-    videosList.style.marginTop = "1rem";
-    videosList.style.flex = "1";
-
-    videos.forEach((video) => {
-      const [key, value] = video;
-      const { videoName } = JSON.parse(value);
-      const videoEl = document.createElement("li");
-      const videoElText = document.createElement("span");
-      videoEl.style.display = "flex";
-      videoEl.style.alignItems = "center";
-
-      videoElText.textContent = videoName;
-      videoElText.style.flex = "1";
-
-      const deleteButton = document.createElement("button");
-      const trashIcon = createIcon("trash", "#e74c3c");
-      deleteButton.style.background = "white";
-      deleteButton.style.border = "rgba(0, 0, 0, 0.3) 1px solid";
-      deleteButton.style.borderRadius = ".5rem";
-      deleteButton.style.marginLeft = "1rem";
-      deleteButton.style.cursor = "pointer";
-
-      deleteButton.addEventListener("click", () => {
-        window.localStorage.removeItem(key);
-        videosList.removeChild(videoEl);
-        settingsContainerHeaderTitle.textContent =
-          "Saved Videos - (" + videosList.children.length + ")";
-      });
-
-      deleteButton.appendChild(trashIcon);
-      videoEl.appendChild(videoElText);
-      videoEl.appendChild(deleteButton);
-      videosList.appendChild(videoEl);
-    });
-
-    const settingsContainerCloseButton = document.createElement("button");
-    settingsContainerCloseButton.style.background = "transparent";
-    settingsContainerCloseButton.style.border = "none";
-    settingsContainerCloseButton.style.cursor = "pointer";
-
-    const xmarkIcon = createIcon("xmark", "#e74c3c");
-    settingsContainerCloseButton.appendChild(xmarkIcon);
-    settingsContainerCloseButton.addEventListener("click", () => {
-        closeFloatingSettingsUi()
-    });
 
     const settingsContainerStyles = {
       all: "initial",
       position: "absolute",
       fontFamily: "inherit",
-      flexDirection: "column",
-      top: "0",
-      display: "flex",
       boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
       border: "1px solid #d5d5d5",
       top: infoElContainerPosition.bottom + "px",
       left: infoElContainerPosition.left + "px",
-      padding: "1rem",
       width: "50rem",
       height: "25rem",
       borderRadius: ".5rem",
       background: "white",
       zIndex: "3000",
+      display: "flex",
+      flexDirection: "row",
+      overflow: "hidden",
     };
 
     Object.assign(settingsContainer.style, settingsContainerStyles);
-    settingsContainerBody.appendChild(videosList);
-    settingsContainerHeader.appendChild(settingsContainerHeaderTitle);
-    settingsContainerHeader.appendChild(settingsContainerCloseButton);
-    settingsContainer.appendChild(settingsContainerHeader);
-    settingsContainer.appendChild(settingsContainerBody);
 
-    const savedVideos = getSavedVideoList();
-    const savedVideosList = document.createElement("ul");
+    // Sidebar
+    const sidebar = document.createElement("div");
+    Object.assign(sidebar.style, {
+      width: "120px",
+      backgroundColor: "#f9f9f9",
+      borderRight: "1px solid #ddd",
+      display: "flex",
+      flexDirection: "column",
+      padding: "1rem 0",
+    });
+
+    // Main Content
+    const mainContent = document.createElement("div");
+    Object.assign(mainContent.style, {
+      flex: "1",
+      display: "flex",
+      flexDirection: "column",
+      padding: "1rem",
+      minWidth: "0",
+    });
+
+    settingsContainer.appendChild(sidebar);
+    settingsContainer.appendChild(mainContent);
+
+    function renderContent(viewId) {
+      mainContent.innerHTML = "";
+
+      const header = document.createElement("div");
+      header.style.display = "flex";
+      header.style.justifyContent = "space-between";
+      header.style.marginBottom = "1rem";
+      header.style.alignItems = "center";
+      header.style.borderBottom = "1px solid #eee";
+      header.style.paddingBottom = "0.5rem";
+
+      const title = document.createElement("h3");
+      title.style.margin = "0";
+      header.appendChild(title);
+
+      const closeButton = document.createElement("button");
+      closeButton.style.background = "transparent";
+      closeButton.style.border = "none";
+      closeButton.style.cursor = "pointer";
+      const xmarkIcon = createIcon("xmark", "#e74c3c");
+      closeButton.appendChild(xmarkIcon);
+      closeButton.addEventListener("click", () => {
+        closeFloatingSettingsUi();
+      });
+      header.appendChild(closeButton);
+
+      mainContent.appendChild(header);
+
+      const body = document.createElement("div");
+      Object.assign(body.style, {
+        flex: "1",
+        overflow: "auto",
+      });
+      mainContent.appendChild(body);
+
+      if (viewId === "savedVideos") {
+        const videos = getSavedVideoList();
+        title.textContent = "Saved Videos - (" + videos.length + ")";
+
+        const videosList = document.createElement("ul");
+        videosList.style.display = "flex";
+        videosList.style.flexDirection = "column";
+        videosList.style.rowGap = "1rem";
+        videosList.style.listStyle = "none";
+        videosList.style.padding = "0";
+        videosList.style.margin = "0";
+
+        videos.forEach((video) => {
+          const [key, value] = video;
+          const { videoName } = JSON.parse(value);
+          const videoEl = document.createElement("li");
+
+          videoEl.style.display = "flex";
+          videoEl.style.alignItems = "center";
+          videoEl.style.background = "#fff";
+          videoEl.style.padding = "0.5rem";
+          videoEl.style.borderBottom = "1px solid #f0f0f0";
+
+          const videoElText = document.createElement("span");
+          videoElText.textContent = videoName;
+          videoElText.style.flex = "1";
+          videoElText.style.whiteSpace = "nowrap";
+          videoElText.style.overflow = "hidden";
+          videoElText.style.textOverflow = "ellipsis";
+          videoElText.style.marginRight = "1rem";
+
+          const deleteButton = document.createElement("button");
+          const trashIcon = createIcon("trash", "#e74c3c");
+          deleteButton.style.background = "white";
+          deleteButton.style.border = "1px solid #ddd";
+          deleteButton.style.borderRadius = "4px";
+          deleteButton.style.cursor = "pointer";
+          deleteButton.style.padding = "4px 8px";
+
+          deleteButton.addEventListener("click", () => {
+            window.localStorage.removeItem(key);
+            videosList.removeChild(videoEl);
+            title.textContent =
+              "Saved Videos - (" + videosList.children.length + ")";
+          });
+
+          deleteButton.appendChild(trashIcon);
+          videoEl.appendChild(videoElText);
+          videoEl.appendChild(deleteButton);
+          videosList.appendChild(videoEl);
+        });
+        body.appendChild(videosList);
+      } else if (viewId === "configuration") {
+        title.textContent = "Configuration";
+        body.innerHTML = ""; // Clear previous content
+        body.style.padding = "1rem";
+
+        const configContainer = document.createElement("div");
+        configContainer.style.display = "flex";
+        configContainer.style.flexDirection = "column";
+        configContainer.style.gap = "1rem";
+
+        // Min Duration Setting Wrapper
+        const minDurationRow = document.createElement("div");
+        minDurationRow.style.display = "flex";
+        minDurationRow.style.alignItems = "center";
+        minDurationRow.style.gap = "0.5rem";
+
+        // Checkbox
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = "enable-min-duration";
+        checkbox.checked = configData.userSettings.enableMinDuration;
+
+        // Label
+        const label = document.createElement("label");
+        label.textContent = "Save only when videos are longer than";
+        label.htmlFor = "enable-min-duration";
+
+        // Input
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = "0";
+        input.value = configData.userSettings.minDuration;
+        input.style.width = "60px";
+        input.disabled = !checkbox.checked;
+
+        // "minutes" text
+        const suffix = document.createElement("span");
+        suffix.textContent = "minutes";
+
+        // Events
+        checkbox.addEventListener("change", (e) => {
+          input.disabled = !e.target.checked;
+          setUserConfig({ enableMinDuration: e.target.checked });
+        });
+
+        input.addEventListener("change", (e) => {
+          const val = parseInt(e.target.value, 10);
+          if (!isNaN(val)) {
+            setUserConfig({ minDuration: val });
+          }
+        });
+
+        minDurationRow.appendChild(checkbox);
+        minDurationRow.appendChild(label);
+        minDurationRow.appendChild(input);
+        minDurationRow.appendChild(suffix);
+
+        configContainer.appendChild(minDurationRow);
+        body.appendChild(configContainer);
+      }
+    }
+
+    const menuItems = [
+      { id: "savedVideos", label: "Saved Videos" },
+      { id: "configuration", label: "Configuration" },
+    ];
+
+    let activeItem = null;
+
+    menuItems.forEach((item) => {
+      const itemEl = document.createElement("div");
+      itemEl.textContent = item.label;
+      itemEl.style.padding = "10px 15px";
+      itemEl.style.cursor = "pointer";
+      itemEl.style.color = "#333";
+      itemEl.style.fontSize = "14px";
+
+      itemEl.addEventListener("mouseenter", () => {
+        if (activeItem !== itemEl) itemEl.style.background = "#eaeaea";
+      });
+      itemEl.addEventListener("mouseleave", () => {
+        if (activeItem !== itemEl) itemEl.style.background = "transparent";
+      });
+
+      itemEl.addEventListener("click", () => {
+        if (activeItem) {
+          activeItem.style.background = "transparent";
+          activeItem.style.fontWeight = "normal";
+        }
+        activeItem = itemEl;
+        activeItem.style.background = "#e0e0e0";
+        activeItem.style.fontWeight = "bold";
+        renderContent(item.id);
+      });
+
+      sidebar.appendChild(itemEl);
+
+      if (item.id === "savedVideos") {
+        activeItem = itemEl;
+        itemEl.style.background = "#e0e0e0";
+        itemEl.style.fontWeight = "bold";
+      }
+    });
+
+    renderContent("savedVideos");
   }
 
   function createInfoUI() {
@@ -394,7 +592,7 @@
     infoElText.textContent = "Last save: Loading...";
     infoElText.classList.add("last-save-info-text");
     infoEl.appendChild(infoElText);
-    infoEl.appendChild(settingsButton)
+    infoEl.appendChild(settingsButton);
 
     infoElContainer.style.all = "initial";
     infoElContainer.style.fontFamily = "inherit";
@@ -432,51 +630,22 @@
     iconsUi.addEventListener("load", () => {
       const icon = document.createElement("span");
 
-      const settingsButton = document.querySelector('.ysrp-settings-button')
-      settingsButton.appendChild(icon)
-      icon.classList.add('fa-solid')
-      icon.classList.add('fa-gear')
+      const settingsButton = document.querySelector(".ysrp-settings-button");
+      settingsButton.appendChild(icon);
+      icon.classList.add("fa-solid");
+      icon.classList.add("fa-gear");
     });
   }
 
-  function sanitizeScriptUrl(url) {
-    return configData.sanitizer ? configData.sanitizer.createScriptURL(url) : url;
-  }
-
-  function addFloatingUIDependency() {
-    const floatingUiCore = document.createElement("script");
-    const floatingUiDom = document.createElement("script");
-    floatingUiCore.src = sanitizeScriptUrl(configData.dependenciesURLs.floatingUiCore);
-    floatingUiDom.src = sanitizeScriptUrl(configData.dependenciesURLs.floatingUiDom);
-    document.body.appendChild(floatingUiCore);
-    document.body.appendChild(floatingUiDom);
-    let floatingUiCoreLoaded = false;
-    let floatingUiDomLoaded = false;
-
-
-    floatingUiCore.addEventListener("load", () => {
-      floatingUiCoreLoaded = true;
-      if (floatingUiCoreLoaded && floatingUiDomLoaded) {
-        setFloatingSettingsUi();
-      }
-    });
-    floatingUiDom.addEventListener("load", () => {
-      floatingUiDomLoaded = true;
-      if (floatingUiCoreLoaded && floatingUiDomLoaded) {
-        setFloatingSettingsUi();
-      }
-    });
-  }
   function initializeDependencies() {
     addFontawesomeIcons();
-    // FIXME: floating ui is not working for now
-    addFloatingUIDependency()
+    setFloatingSettingsUi();
   }
 
   function initializeUI() {
     const infoEl = createInfoUI();
     insertInfoElement(infoEl);
-    createSettingsUI()
+    createSettingsUI();
 
     initializeDependencies();
 

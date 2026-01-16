@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio | Conversation/Chat Markdown-Export/Download (XHR/DOM)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      2.6
+// @version      2.7
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Exports the full conversation to Markdown with collapsible thinking blocks. Supports dual extraction modes: XHR (instant, recommended) and DOM (scroll-based fallback).
@@ -1693,9 +1693,10 @@
         downloadButton.appendChild(downloadIcon);
         buttonContainer.appendChild(downloadButton);
 
-        const moreButton = toolbarRight.querySelector('button[iconname="more_vert"]');
-        if (moreButton) {
-            toolbarRight.insertBefore(buttonContainer, moreButton);
+        // The more_vert button is now wrapped in .overflow-menu-wrapper, so insert before that wrapper
+        const overflowWrapper = toolbarRight.querySelector('.overflow-menu-wrapper');
+        if (overflowWrapper) {
+            toolbarRight.insertBefore(buttonContainer, overflowWrapper);
         } else {
             toolbarRight.appendChild(buttonContainer);
         }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn War Stuff Enhanced
 // @namespace    namespace
-// @version      1.9
+// @version      1.9.1
 // @description  Show travel status and hospital time and sort by hospital time on war page. Fork of https://greasyfork.org/en/scripts/448681-torn-war-stuff
 // @author       xentac
 // @license      MIT
@@ -197,51 +197,6 @@
     return n;
   }
 
-  const document_observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (!node.querySelector) {
-          return;
-        }
-        const factwarlist = node.querySelector("#faction_war_list_id");
-        if (factwarlist) {
-          if (factwarlist.querySelector(".faction-war")) {
-            found_war = true;
-            extract_all_member_lis();
-            update_statuses();
-          }
-          console.log(
-            "[TornWarStuffEnhanced] Found #faction_war_list_id, adding descriptions observer",
-          );
-          descriptions_observer.observe(factwarlist, { childList: true });
-          document_observer.disconnect();
-          const descriptions = factwarlist.querySelector(".descriptions");
-          if (descriptions) {
-            console.log(
-              "[TornWarStuffEnhanced] .descriptions already exists, adding .faction-war observer",
-            );
-            faction_war_observer.observe(descriptions, {
-              childList: true,
-              subtree: true,
-            });
-          }
-          if (factwarlist.querySelector(".faction-war")) {
-            console.log("[TornWarStuffEnhanced] .faction-war already exists");
-            found_war = true;
-            extract_all_member_lis();
-            update_statuses();
-            faction_war_observer.disconnect();
-          }
-        }
-      }
-    }
-  });
-
-  document_observer.observe(document.body, {
-    subtree: true,
-    childList: true,
-  });
-
   const descriptions_observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       for (const node of mutation.addedNodes) {
@@ -277,6 +232,66 @@
       }
     }
   });
+
+  const found_faction_war_list = (factwarlist) => {
+    console.log("[TornWarStuffEnhanced] Found #faction_war_list_id");
+    if (factwarlist.querySelector(".faction-war")) {
+      found_war = true;
+      extract_all_member_lis();
+      update_statuses();
+    }
+    console.log("[TornWarStuffEnhanced] Found adding descriptions observer");
+    descriptions_observer.observe(factwarlist, { childList: true });
+    const descriptions = factwarlist.querySelector(".descriptions");
+    if (descriptions) {
+      console.log(
+        "[TornWarStuffEnhanced] .descriptions already exists, adding .faction-war observer",
+      );
+      faction_war_observer.observe(descriptions, {
+        childList: true,
+        subtree: true,
+      });
+    }
+    if (factwarlist.querySelector(".faction-war")) {
+      console.log("[TornWarStuffEnhanced] .faction-war already exists");
+      found_war = true;
+      extract_all_member_lis();
+      update_statuses();
+      faction_war_observer.disconnect();
+    }
+  };
+
+  const document_observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (!node.querySelector) {
+          return;
+        }
+        const factwarlist = node.querySelector("#faction_war_list_id");
+        if (factwarlist) {
+          found_faction_war_list(factwarlist);
+          document_observer.disconnect();
+        }
+      }
+    }
+  });
+
+  document_observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+  });
+  console.log(
+    "[TornWarStuffEnhanced] #faction_war_list_id observer installed.",
+  );
+
+  const factwarlist = document.querySelector("#faction_war_list_id");
+  if (factwarlist) {
+    console.log(
+      "[TornWarStuffEnhanced] Found #faction_war_list_id in document already.",
+    );
+    found_faction_war_list(factwarlist);
+    document_observer.disconnect();
+  }
 
   const member_status = new Map();
   const member_lis = new Map();

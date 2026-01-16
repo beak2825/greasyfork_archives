@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name BBVA - Dark mode
 // @namespace https://greasyfork.org/en/users/4813
-// @version 2023.07.17
+// @version 2026.01.15
 // @description By default these pages have too much white.
 // @author Swyter
 // @license CC-BY-SA 4.0
@@ -24,18 +24,17 @@ let css = `
     div[data-addon=bbva-announcement],
     div[data-autoload=experiencias],
     #app_footer_fyc_normal,
-    div#footer,
-    header[role=banner],
+    div#footer, header[role=banner],
     nav#header,
     div[class*=megamenu__fixed],
-    .m-marquee__media,
-    nav-menu
+    .m-marquee__media
     {
         filter: invert(1) hue-rotate(180deg);
     }
     
     img.o-media__img,
     img.o-heading__img,
+    .submarqueedescription__img,
     img[class*=cover]:not([class*=complexmarquee__img]),
     img[class*=card],
     video,

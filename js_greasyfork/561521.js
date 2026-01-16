@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name            Abdullah Abbas WME Suite
 // @namespace       https://greasyfork.org/users/AbdullahAbbas
-// @version         2026.01.13.04
-// @description     حزمة أدوات عبد الله عباس الشاملة (أزرار الطرق + النسخ الذكي + تلوين التعديلات + الملاحظات) في واجهة واحدة.
+// @version         2026.01.15.17
+// @description     حزمة أدوات عبد الله عباس الشاملة (أزرار الطرق + النسخ الذكي + تلوين التعديلات + الملاحظات + مدينة بديلة)
 // @author          Abdullah Abbas
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @license         GNU GPLv3
@@ -26,7 +26,7 @@
 
     const SCRIPT_NAME = 'Abdullah Abbas WME Suite';
     const SCRIPT_VERSION = GM_info.script.version;
-    const SETTINGS_STORE_NAME = 'AbdullahAbbas_WME_Suite_Settings_V8';
+    const SETTINGS_STORE_NAME = 'AbdullahAbbas_WME_Suite_Settings_V25';
 
     // --- NOTES CONSTANTS ---
     const NOTES_STORE_KEY = "WME_ABDULLAH_NOTES_DATA";
@@ -43,55 +43,18 @@
     let selectedColor = 'red'; // Default start color
     let selectedShape = 'note';
 
-    // --- UI STRINGS (MERGED & UPDATED) ---
+    // Clipboard for Copy/Paste feature
+    let savedAttributes = null;
+
+    // --- UI STRINGS ---
     const UI_STRINGS = {
-        'ar': {
-            dir: 'rtl', langName: 'العربية (العراق)',
-            headerRoads: 'إعدادات أزرار الطرق والقفل', headerSmartCopy: 'إعدادات النسخ الذكي', headerColoring: 'إعدادات تلوين التعديلات',
-            headerNotes: 'ملاحظات الخريطة',
-            roadTypeButtons: 'تفعيل أزرار الطرق', lockLevelButtons: 'تفعيل أزرار القفل (L1-L6)',
-            smartCopyTitle: 'النسخ التلقائي للمعلومات', enableSmartCopy: 'تفعيل النسخ التلقائي (للجديد)',
-            copyCountry: 'البلد / المحافظة', copyCity: 'المدينة', copyStreet: 'اسم الشارع',
-            copyRoadType: 'نوع الطريق', copySpeed: 'السرعة', copyLock: 'القفل (Lock)',
-            copyAltNames: 'الأسماء البديلة', copyOther: 'أخرى (المستوى، رسوم...)',
-            coloringTitle: 'تلوين تاريخ التعديل (شامل)', coloringApply: 'تطبيق التلوين', coloringClear: 'مسح الألوان',
-            daysLabel: 'يوم', older: 'أقدم',
-            roadTypes: { Fw: 'طريق حرة', MH: 'سريع رئيسي', mH: 'سريع ثانوي', PS: 'شارع رئيسي', St: 'شارع', Rmp: 'منحدر', PR: 'طريق خاص', Pw: 'شارع ضيق', PLR: 'موقف', OR: 'غير معبد', RR: 'سكة حديد', RT: 'مدرج مطار' },
-            locks: { L1: 'L 1', L2: 'L 2', L3: 'L 3', L4: 'L 4', L5: 'L 5', L6: 'L 6' },
-            // Notes Specific
-            add_note: "إضافة الملاحظة", delete: "حذف", jump: "اذهب", edit: "تعديل", export: "تصدير", import: "استيراد", clear: "مسح الكل", placeholder: "نص الملاحظة...",
-            confirm_delete: "حذف؟", confirm_clear: "حذف الجميع؟", lock_btn_to_unlock: "🔒 تحريك", lock_btn_to_lock: "🔓 تثبيت", save_edit: "حفظ التعديل", cancel: "إلغاء",
-            popup_title: "تفاصيل الملاحظة", popup_save: "💾 حفظ",
-            s_note: "ملاحظة", s_pin: "دبوس", s_star: "نجمة", s_alert: "تنبيه", s_check: "صح", s_cross: "خطأ", s_question: "سؤال",
-            // The 7 Colors Translated
-            c_red: "أحمر", c_orange: "برتقالي", c_yellow: "أصفر", c_green: "أخضر", c_blue: "أزرق", c_indigo: "نيلي", c_violet: "بنفسجي"
-        },
-        'ckb': {
-            dir: 'rtl', langName: 'کوردی (سۆرانی)',
-            headerRoads: 'ڕێکخستنی دوگمەکانی ڕێگا', headerSmartCopy: 'ڕێکخستنی کۆپی زیرەک', headerColoring: 'ڕێکخستنی ڕەنگکردن',
-            headerNotes: 'تێبینیەکانی نەخشە',
-            roadTypeButtons: 'چالاککردنی دوگمەکانی ڕێگا', lockLevelButtons: 'چالاککردنی دوگمەکانی قوفڵ (L1-L6)',
-            smartCopyTitle: 'کۆپیکردنی زانیاری زیرەک', enableSmartCopy: 'چالاککردنی کۆپی (بۆ نوێ)',
-            copyCountry: 'وڵات / پارێزگا', copyCity: 'شار', copyStreet: 'ناوی شەقام',
-            copyRoadType: 'جۆری ڕێگا', copySpeed: 'خێرایی', copyLock: 'قوفڵ (Lock)',
-            copyAltNames: 'ناوی جێگرەوە', copyOther: 'زانیارییەکانی تر',
-            coloringTitle: 'ڕەنگکردنی مێژووی دەستکاری', coloringApply: 'جێبەجێکردن', coloringClear: 'پاککردنەوە',
-            daysLabel: 'ڕۆژ', older: 'کۆنتر',
-            roadTypes: { Fw: 'ڕێگای خێرا', MH: 'خێرای سەرەکی', mH: 'خێرای لاوەکی', PS: 'شەقامی سەرەکی', St: 'شەقام', Rmp: 'رامپ', PR: 'تایبەت', Pw: 'کۆڵان', PLR: 'پارکینگ', OR: 'ڕێگای خۆڵ', RR: 'هێڵی ئاسن', RT: 'فڕگە' },
-            locks: { L1: 'L ١', L2: 'L ٢', L3: 'L ٣', L4: 'L ٤', L5: 'L ٥', L6: 'L ٦' },
-            // Notes Specific
-            add_note: "زیادکردن", delete: "سڕینەوە", jump: "بڕۆ", edit: "دەستکاری", export: "هەناردە", import: "هاوردە", clear: "سڕینەوەی گشت", placeholder: "دەق...",
-            confirm_delete: "سڕینەوە؟", confirm_clear: "سڕینەوەی هەموو؟", lock_btn_to_unlock: "🔒 جوڵاندن", lock_btn_to_lock: "🔓 جێگیر", save_edit: "تۆمارکردن", cancel: "پاشگەزبوون",
-            popup_title: "وردەکاری", popup_save: "💾 تۆمارکردن",
-            s_note: "تێبینی", s_pin: "پین", s_star: "ئەستێرە", s_alert: "ئاگادارکردنەوە", s_check: "ڕاست", s_cross: "هەڵە", s_question: "پرسیار",
-            // The 7 Colors Translated
-            c_red: "سوور", c_orange: "پرتەقاڵی", c_yellow: "زەرد", c_green: "سەوز", c_blue: "شین", c_indigo: "نیلی", c_violet: "مۆر"
-        },
         'en': {
             dir: 'ltr', langName: 'English (US)',
-            headerRoads: 'Road & Lock Buttons Settings', headerSmartCopy: 'Smart Copy Settings', headerColoring: 'Map Date Coloring Settings',
+            headerRoads: 'Button Settings',
+            headerSmartCopy: 'Smart Copy Settings', headerColoring: 'Map Date Coloring Settings',
             headerNotes: 'Map Notes',
-            roadTypeButtons: 'Road Type Buttons', lockLevelButtons: 'Quick Lock Buttons (L1-L6)',
+            roadTypeButtons: 'Road Type Buttons', lockLevelButtons: 'Quick Lock Buttons',
+            utilButtons: 'Utility Buttons (Copy/Paste/AltCity)',
             smartCopyTitle: 'Smart Info Copy', enableSmartCopy: 'Enable Auto-Copy (New Segs)',
             copyCountry: 'Country/State', copyCity: 'City', copyStreet: 'Street Name',
             copyRoadType: 'Road Type', copySpeed: 'Speed Limit', copyLock: 'Lock Level',
@@ -100,17 +63,178 @@
             daysLabel: 'Days', older: 'Older',
             roadTypes: { Fw: 'Fw', MH: 'MH', mH: 'mH', PS: 'PS', St: 'St', Rmp: 'Rmp', PR: 'PR', Pw: 'Pw', PLR: 'PLR', OR: 'OR', RR: 'RR', RT: 'RT' },
             locks: { L1: 'L1', L2: 'L2', L3: 'L3', L4: 'L4', L5: 'L5', L6: 'L6' },
-            // Notes Specific
             add_note: "Add Note", delete: "Delete", jump: "Go", edit: "Edit", export: "Export", import: "Import", clear: "Clear All", placeholder: "Note text...",
             confirm_delete: "Delete?", confirm_clear: "Delete ALL?", lock_btn_to_unlock: "🔒 Unlock", lock_btn_to_lock: "🔓 Lock", save_edit: "Save", cancel: "Cancel",
             popup_title: "Note Details", popup_save: "💾 Save",
             s_note: "Note", s_pin: "Pin", s_star: "Star", s_alert: "Alert", s_check: "Check", s_cross: "Cross", s_question: "Question",
-            // The 7 Colors Translated
-            c_red: "Red", c_orange: "Orange", c_yellow: "Yellow", c_green: "Green", c_blue: "Blue", c_indigo: "Indigo", c_violet: "Violet"
+            c_red: "Red", c_orange: "Orange", c_yellow: "Yellow", c_green: "Green", c_blue: "Blue", c_indigo: "Indigo", c_violet: "Violet",
+            btn_copy: "Copy", btn_paste: "Paste", btn_alt_city: "Alt City",
+            feedback_done: "✔ Done"
+        },
+        'ar': {
+            dir: 'rtl', langName: 'العربية (العراق)',
+            headerRoads: 'إعدادات الأزرار',
+            headerSmartCopy: 'إعدادات النسخ الذكي', headerColoring: 'إعدادات تلوين التعديلات',
+            headerNotes: 'ملاحظات الخريطة',
+            roadTypeButtons: 'أزرار أنواع الطرق', lockLevelButtons: 'أزرار القفل السريع',
+            utilButtons: 'أزرار الأدوات (نسخ/لصق/مدينة بديلة)',
+            smartCopyTitle: 'النسخ التلقائي للمعلومات', enableSmartCopy: 'تفعيل النسخ التلقائي (للجديد)',
+            copyCountry: 'البلد / المحافظة', copyCity: 'المدينة', copyStreet: 'اسم الشارع',
+            copyRoadType: 'نوع الطريق', copySpeed: 'السرعة', copyLock: 'القفل (Lock)',
+            copyAltNames: 'الأسماء البديلة', copyOther: 'أخرى (المستوى، رسوم...)',
+            coloringTitle: 'تلوين تاريخ التعديل (شامل)', coloringApply: 'تطبيق التلوين', coloringClear: 'مسح الألوان',
+            daysLabel: 'يوم', older: 'أقدم',
+            roadTypes: { Fw: 'طريق حرة', MH: 'سريع رئيسي', mH: 'سريع ثانوي', PS: 'شارع رئيسي', St: 'شارع', Rmp: 'منحدر', PR: 'طريق خاص', Pw: 'شارع ضيق', PLR: 'موقف', OR: 'غير معبد', RR: 'سكة حديد', RT: 'مدرج مطار' },
+            locks: { L1: 'L 1', L2: 'L 2', L3: 'L 3', L4: 'L 4', L5: 'L 5', L6: 'L 6' },
+            add_note: "إضافة الملاحظة", delete: "حذف", jump: "اذهب", edit: "تعديل", export: "تصدير", import: "استيراد", clear: "مسح الكل", placeholder: "نص الملاحظة...",
+            confirm_delete: "حذف؟", confirm_clear: "حذف الجميع؟", lock_btn_to_unlock: "🔒 تحريك", lock_btn_to_lock: "🔓 تثبيت", save_edit: "حفظ التعديل", cancel: "إلغاء",
+            popup_title: "تفاصيل الملاحظة", popup_save: "💾 حفظ",
+            s_note: "ملاحظة", s_pin: "دبوس", s_star: "نجمة", s_alert: "تنبيه", s_check: "صح", s_cross: "خطأ", s_question: "سؤال",
+            c_red: "أحمر", c_orange: "برتقالي", c_yellow: "أصفر", c_green: "أخضر", c_blue: "أزرق", c_indigo: "نيلي", c_violet: "بنفسجي",
+            btn_copy: "نسخ خصائص", btn_paste: "لصق خصائص", btn_alt_city: "مدينة بديلة",
+            feedback_done: "✔ تم"
+        },
+        'ckb': {
+            dir: 'rtl', langName: 'کوردی (سۆرانی)',
+            headerRoads: 'ڕێکخستنی دوگمەکان',
+            headerSmartCopy: 'ڕێکخستنی کۆپی زیرەک', headerColoring: 'ڕێکخستنی ڕەنگکردن',
+            headerNotes: 'تێبینیەکانی نەخشە',
+            roadTypeButtons: 'دوگمەکانی ڕێگا', lockLevelButtons: 'دوگمەکانی قوفڵ',
+            utilButtons: 'دوگمەکانی ئامراز (کۆپی/لکاندن/شاری جێگرەوە)',
+            smartCopyTitle: 'کۆپیکردنی زانیاری زیرەک', enableSmartCopy: 'چالاککردنی کۆپی (بۆ نوێ)',
+            copyCountry: 'وڵات / پارێزگا', copyCity: 'شار', copyStreet: 'ناوی شەقام',
+            copyRoadType: 'جۆری ڕێگا', copySpeed: 'خێرایی', copyLock: 'قوفڵ (Lock)',
+            copyAltNames: 'ناوی جێگرەوە', copyOther: 'زانیارییەکانی تر',
+            coloringTitle: 'ڕەنگکردنی مێژووی دەستکاری', coloringApply: 'جێبەجێکردن', coloringClear: 'پاککردنەوە',
+            daysLabel: 'ڕۆژ', older: 'کۆنتر',
+            roadTypes: { Fw: 'ڕێگای خێرا', MH: 'خێرای سەرەکی', mH: 'خێرای لاوەکی', PS: 'شەقامی سەرەکی', St: 'شەقام', Rmp: 'رامپ', PR: 'تایبەت', Pw: 'کۆڵان', PLR: 'پارکینگ', OR: 'ڕێگای خۆڵ', RR: 'هێڵی ئاسن', RT: 'فڕگە' },
+            locks: { L1: 'L ١', L2: 'L ٢', L3: 'L ٣', L4: 'L ٤', L5: 'L ٥', L6: 'L ٦' },
+            add_note: "زیادکردن", delete: "سڕینەوە", jump: "بڕۆ", edit: "دەستکاری", export: "هەناردە", import: "هاوردە", clear: "سڕینەوەی گشت", placeholder: "دەق...",
+            confirm_delete: "سڕینەوە؟", confirm_clear: "سڕینەوەی هەموو؟", lock_btn_to_unlock: "🔒 جوڵاندن", lock_btn_to_lock: "🔓 جێگیر", save_edit: "تۆمارکردن", cancel: "پاشگەزبوون",
+            popup_title: "وردەکاری", popup_save: "💾 تۆمارکردن",
+            s_note: "تێبینی", s_pin: "پین", s_star: "ئەستێرە", s_alert: "ئاگادارکردنەوە", s_check: "ڕاست", s_cross: "هەڵە", s_question: "پرسیار",
+            c_red: "سوور", c_orange: "پرتەقاڵی", c_yellow: "زەرد", c_green: "سەوز", c_blue: "شین", c_indigo: "نیلی", c_violet: "مۆر",
+            btn_copy: "کۆپی تایبەتمەندی", btn_paste: "لکاندنی تایبەتمەندی", btn_alt_city: "شاری جێگرەوە",
+            feedback_done: "✔"
+        },
+        'kmr': {
+            dir: 'ltr', langName: 'Kurdî (Kurmancî)',
+            headerRoads: 'Mîhengên Bişkokan',
+            headerSmartCopy: 'Mîhengên Kopîkirina Baqil', headerColoring: 'Mîhengên Rengkirinê',
+            headerNotes: 'Têbiniyên Nexşeyê',
+            roadTypeButtons: 'Bişkokên Rêyan', lockLevelButtons: 'Bişkokên Kilîtan',
+            utilButtons: 'Bişkokên Amûran',
+            smartCopyTitle: 'Kopîkirina Agahiyên Baqil', enableSmartCopy: 'Kopîkirina Otomatîk (Nû)',
+            copyCountry: 'Welat / Herêm', copyCity: 'Bajar', copyStreet: 'Navê Kolanê',
+            copyRoadType: 'Cûreyê Rê', copySpeed: 'Lez', copyLock: 'Astê Kilîtê',
+            copyAltNames: 'Navên Alternatîf', copyOther: 'Yên Din (Ast, Baca Rê...)',
+            coloringTitle: 'Rengkirina Dîroka Guherandinê', coloringApply: 'Bicîanîn', coloringClear: 'Paqij Bike',
+            daysLabel: 'Roj', older: 'Kevintir',
+            roadTypes: { Fw: 'Rêya Hêrs', MH: 'Rêya Sereke', mH: 'Rêya Navîn', PS: 'Kolana Sereke', St: 'Kolan', Rmp: 'Ramp', PR: 'Taybet', Pw: 'Kolan', PLR: 'Park', OR: 'Rêya Axê', RR: 'Rêhesin', RT: 'Balafirgeh' },
+            locks: { L1: 'L1', L2: 'L2', L3: 'L3', L4: 'L4', L5: 'L5', L6: 'L6' },
+            add_note: "Zêde Bike", delete: "Jêbirin", jump: "Biçe", edit: "Biguherîne", export: "Derxistin", import: "Anîn", clear: "Hemûyan Paqij Bike", placeholder: "Nivîs...",
+            confirm_delete: "Jêbirin?", confirm_clear: "Hemûyan Jêbibe?", lock_btn_to_unlock: "🔒 Veke", lock_btn_to_lock: "🔓 Kilît Bike", save_edit: "Tomar Bike", cancel: "Betal Bike",
+            popup_title: "Agahî", popup_save: "💾 Tomar Bike",
+            s_note: "Têbinî", s_pin: "Pîn", s_star: "Stêrk", s_alert: "Hişyarî", s_check: "Rast", s_cross: "Xet", s_question: "Pirs",
+            c_red: "Sor", c_orange: "Porteqalî", c_yellow: "Zer", c_green: "Kesk", c_blue: "Şîn", c_indigo: "Şîna Tarî", c_violet: "Binevşî",
+            btn_copy: "Kopîkirin", btn_paste: "Pêvekirin", btn_alt_city: "Bajarê Alternatîf",
+            feedback_done: "✔"
+        },
+        'es': {
+            dir: 'ltr', langName: 'Español',
+            headerRoads: 'Configuración de Botones',
+            headerSmartCopy: 'Copia Inteligente', headerColoring: 'Coloreado por Fecha',
+            headerNotes: 'Notas del Mapa',
+            roadTypeButtons: 'Botones de Carretera', lockLevelButtons: 'Botones de Bloqueo',
+            utilButtons: 'Botones de Utilidad',
+            smartCopyTitle: 'Copia de Información Inteligente', enableSmartCopy: 'Auto-Copia (Nuevos Segmentos)',
+            copyCountry: 'País/Estado', copyCity: 'Ciudad', copyStreet: 'Calle',
+            copyRoadType: 'Tipo de Vía', copySpeed: 'Límite de Velocidad', copyLock: 'Nivel de Bloqueo',
+            copyAltNames: 'Nombres Alternativos', copyOther: 'Otros (Nivel, Peaje...)',
+            coloringTitle: 'Coloreado del Mapa (Todo)', coloringApply: 'Aplicar', coloringClear: 'Limpiar',
+            daysLabel: 'Días', older: 'Antiguo',
+            roadTypes: { Fw: 'Autopista', MH: 'C. Principal', mH: 'C. Secundaria', PS: 'Calle P.', St: 'Calle', Rmp: 'Rampa', PR: 'Privada', Pw: 'Estrecha', PLR: 'Parking', OR: 'Sin Pav.', RR: 'Vía Férrea', RT: 'Pista' },
+            locks: { L1: 'L1', L2: 'L2', L3: 'L3', L4: 'L4', L5: 'L5', L6: 'L6' },
+            add_note: "Añadir Nota", delete: "Borrar", jump: "Ir", edit: "Editar", export: "Exportar", import: "Importar", clear: "Borrar Todo", placeholder: "Texto...",
+            confirm_delete: "¿Borrar?", confirm_clear: "¿Borrar TODO?", lock_btn_to_unlock: "🔒 Mover", lock_btn_to_lock: "🔓 Fijar", save_edit: "Guardar", cancel: "Cancelar",
+            popup_title: "Detalles", popup_save: "💾 Guardar",
+            s_note: "Nota", s_pin: "Pin", s_star: "Estrella", s_alert: "Alerta", s_check: "Check", s_cross: "Cruz", s_question: "Pregunta",
+            c_red: "Rojo", c_orange: "Naranja", c_yellow: "Amarillo", c_green: "Verde", c_blue: "Azul", c_indigo: "Índigo", c_violet: "Violeta",
+            btn_copy: "Copiar Atr", btn_paste: "Pegar Atr", btn_alt_city: "Ciudad Alt",
+            feedback_done: "✔"
+        },
+        'fr': {
+            dir: 'ltr', langName: 'Français',
+            headerRoads: 'Paramètres des Boutons',
+            headerSmartCopy: 'Copie Intelligente', headerColoring: 'Coloration par Date',
+            headerNotes: 'Notes de Carte',
+            roadTypeButtons: 'Boutons Route', lockLevelButtons: 'Boutons Verrouillage',
+            utilButtons: 'Boutons Utilitaires',
+            smartCopyTitle: 'Copie Info', enableSmartCopy: 'Auto-Copie (Nouveaux)',
+            copyCountry: 'Pays/État', copyCity: 'Ville', copyStreet: 'Rue',
+            copyRoadType: 'Type de Route', copySpeed: 'Vitesse', copyLock: 'Verrouillage',
+            copyAltNames: 'Noms Alternatifs', copyOther: 'Autres (Niveau, Péage...)',
+            coloringTitle: 'Coloration Carte', coloringApply: 'Appliquer', coloringClear: 'Effacer',
+            daysLabel: 'Jours', older: 'Vieux',
+            roadTypes: { Fw: 'Autoroute', MH: 'Route Maj.', mH: 'Route Min.', PS: 'Rue Princ.', St: 'Rue', Rmp: 'Bretelle', PR: 'Privée', Pw: 'Allée', PLR: 'Parking', OR: 'Non-revêtue', RR: 'Ferrée', RT: 'Piste' },
+            locks: { L1: 'L1', L2: 'L2', L3: 'L3', L4: 'L4', L5: 'L5', L6: 'L6' },
+            add_note: "Ajouter", delete: "Supprimer", jump: "Aller", edit: "Éditer", export: "Exporter", import: "Importer", clear: "Tout Effacer", placeholder: "Texte...",
+            confirm_delete: "Supprimer?", confirm_clear: "Tout supprimer?", lock_btn_to_unlock: "🔒 Déverrouiller", lock_btn_to_lock: "🔓 Verrouiller", save_edit: "Sauver", cancel: "Annuler",
+            popup_title: "Détails", popup_save: "💾 Sauver",
+            s_note: "Note", s_pin: "Épingle", s_star: "Étoile", s_alert: "Alerte", s_check: "Vrai", s_cross: "Faux", s_question: "Question",
+            c_red: "Rouge", c_orange: "Orange", c_yellow: "Jaune", c_green: "Vert", c_blue: "Bleu", c_indigo: "Indigo", c_violet: "Violet",
+            btn_copy: "Copier Attr", btn_paste: "Coller Attr", btn_alt_city: "Ville Alt",
+            feedback_done: "✔"
+        },
+        'ru': {
+            dir: 'ltr', langName: 'Русский',
+            headerRoads: 'Настройки Кнопок',
+            headerSmartCopy: 'Умное Копирование', headerColoring: 'Раскраска по Дате',
+            headerNotes: 'Заметки Карты',
+            roadTypeButtons: 'Кнопки Дорог', lockLevelButtons: 'Кнопки Блокировки',
+            utilButtons: 'Утилиты',
+            smartCopyTitle: 'Копирование Инфо', enableSmartCopy: 'Авто-Копия (Новые)',
+            copyCountry: 'Страна', copyCity: 'Город', copyStreet: 'Улица',
+            copyRoadType: 'Тип Дороги', copySpeed: 'Скорость', copyLock: 'Блокировка',
+            copyAltNames: 'Альт. Имена', copyOther: 'Другое (Уровень...)',
+            coloringTitle: 'Раскраска Карты', coloringApply: 'Применить', coloringClear: 'Очистить',
+            daysLabel: 'Дней', older: 'Старые',
+            roadTypes: { Fw: 'Магистраль', MH: 'Осн. шоссе', mH: 'Втор. шоссе', PS: 'Осн. улица', St: 'Улица', Rmp: 'Съезд', PR: 'Частная', Pw: 'Проезд', PLR: 'Парковка', OR: 'Грунтовка', RR: 'Ж/Д', RT: 'Взлетная' },
+            locks: { L1: 'L1', L2: 'L2', L3: 'L3', L4: 'L4', L5: 'L5', L6: 'L6' },
+            add_note: "Добавить", delete: "Удалить", jump: "Перейти", edit: "Изменить", export: "Экспорт", import: "Импорт", clear: "Очистить", placeholder: "Текст...",
+            confirm_delete: "Удалить?", confirm_clear: "Удалить ВСЕ?", lock_btn_to_unlock: "🔒 Разблок.", lock_btn_to_lock: "🔓 Блок.", save_edit: "Сохранить", cancel: "Отмена",
+            popup_title: "Детали", popup_save: "💾 Сохр.",
+            s_note: "Заметка", s_pin: "Пин", s_star: "Звезда", s_alert: "Тревога", s_check: "Галочка", s_cross: "Крест", s_question: "Вопрос",
+            c_red: "Красный", c_orange: "Оранжевый", c_yellow: "Желтый", c_green: "Зеленый", c_blue: "Синий", c_indigo: "Индиго", c_violet: "Фиолетовый",
+            btn_copy: "Копировать", btn_paste: "Вставить", btn_alt_city: "Альт. Город",
+            feedback_done: "✔"
+        },
+        'he': {
+            dir: 'rtl', langName: 'עברית',
+            headerRoads: 'הגדרות כפתורים',
+            headerSmartCopy: 'העתקה חכמה', headerColoring: 'צביעה לפי תאריך',
+            headerNotes: 'הערות מפה',
+            roadTypeButtons: 'כפתורי סוג כביש', lockLevelButtons: 'כפתורי נעילה',
+            utilButtons: 'כפתורי שירות',
+            smartCopyTitle: 'העתקת מידע חכמה', enableSmartCopy: 'העתקה אוטומטית (חדשים)',
+            copyCountry: 'מדינה/מחוז', copyCity: 'עיר', copyStreet: 'שם רחוב',
+            copyRoadType: 'סוג כביש', copySpeed: 'מהירות', copyLock: 'רמת נעילה',
+            copyAltNames: 'שמות חלופיים', copyOther: 'אחר (מפלס, אגרה...)',
+            coloringTitle: 'צביעת היסטוריה (הכל)', coloringApply: 'החל צבעים', coloringClear: 'נקה',
+            daysLabel: 'ימים', older: 'ישן',
+            roadTypes: { Fw: 'מהיר', MH: 'בין-עירוני', mH: 'אזורי', PS: 'ראשי', St: 'רחוב', Rmp: 'יציאה', PR: 'פרטי', Pw: 'צר', PLR: 'חניון', OR: 'עפר', RR: 'רכבת', RT: 'מסלול' },
+            locks: { L1: 'L1', L2: 'L2', L3: 'L3', L4: 'L4', L5: 'L5', L6: 'L6' },
+            add_note: "הוסף הערה", delete: "מחק", jump: "עבור", edit: "ערוך", export: "ייצוא", import: "ייבוא", clear: "נקה הכל", placeholder: "טקסט ההערה...",
+            confirm_delete: "למחוק?", confirm_clear: "למחוק הכל?", lock_btn_to_unlock: "🔒 הזז", lock_btn_to_lock: "🔓 נעל", save_edit: "שמור", cancel: "ביטול",
+            popup_title: "פרטים", popup_save: "💾 שמור",
+            s_note: "הערה", s_pin: "נעץ", s_star: "כוכב", s_alert: "התראה", s_check: "וי", s_cross: "איקס", s_question: "שאלה",
+            c_red: "אדום", c_orange: "כתום", c_yellow: "צהוב", c_green: "ירוק", c_blue: "כחול", c_indigo: "אינדיגו", c_violet: "סגול",
+            btn_copy: "העתק", btn_paste: "הדבק", btn_alt_city: "עיר חלופית",
+            feedback_done: "✔"
         }
     };
 
-    // --- SHAPES & COLORS (Restricted to 7 Spectrum Colors) ---
+    // --- SHAPES & COLORS ---
     const SHAPES = {
         note: { path: "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" },
         pin: { path: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" },
@@ -121,20 +245,13 @@
         question: { path: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" }
     };
 
-    // The 7 Main Spectrum Colors Only
     const COLORS = {
-        red:    { hex: "#FF0000" }, // Red
-        orange: { hex: "#FFA500" }, // Orange
-        yellow: { hex: "#FFFF00" }, // Yellow
-        green:  { hex: "#008000" }, // Green
-        blue:   { hex: "#0000FF" }, // Blue
-        indigo: { hex: "#4B0082" }, // Indigo
-        violet: { hex: "#EE82EE" }  // Violet
+        red:    { hex: "#FF0000" }, orange: { hex: "#FFA500" }, yellow: { hex: "#FFFF00" },
+        green:  { hex: "#008000" }, blue:   { hex: "#0000FF" }, indigo: { hex: "#4B0082" }, violet: { hex: "#EE82EE" }
     };
 
     // --- MAIN SUITE LOGIC ---
     async function runSuiteModules() {
-        // ... Variables for Road Buttons
         const roadTypeDropdownSelector = 'div[class="road-type-select"]';
         const RENDER_ORDER = ['St', 'PS', 'mH', 'MH', 'Fw', 'Rmp', 'PLR', 'Pw', 'PR', 'OR', 'RT', 'RR'];
         const wmeRoadType = { ALLEY: 22, FERRY: 15, FREEWAY: 3, MAJOR_HIGHWAY: 6, MINOR_HIGHWAY: 7, OFF_ROAD: 8, PARKING_LOT_ROAD: 20, PEDESTRIAN_BOARDWALK: 10, PRIMARY_STREET: 2, PRIVATE_ROAD: 17, RAILROAD: 18, RAMP: 4, RUNWAY_TAXIWAY: 19, STAIRWAY: 16, STREET: 1, WALKING_TRAIL: 5, WALKWAY: 9 };
@@ -157,16 +274,17 @@
         ];
 
         let _settings = {};
-        let trans = UI_STRINGS['ar'];
+        let trans = UI_STRINGS['en'];
         const processedSegments = new Set();
 
         function loadSettingsFromStorage() {
             let loadedSettings = {};
             try { loadedSettings = $.parseJSON(localStorage.getItem(SETTINGS_STORE_NAME)) || {}; } catch(e) { console.error('Error loading settings', e); }
             const defaultSettings = {
-                lastVersion: SCRIPT_VERSION, preferredLocale: 'ar',
-                ui_road_collapsed: true, ui_smartcopy_collapsed: true, ui_coloring_collapsed: true, ui_notes_collapsed: true, // Added notes state
+                lastVersion: SCRIPT_VERSION, preferredLocale: 'en',
+                ui_road_collapsed: true, ui_smartcopy_collapsed: true, ui_coloring_collapsed: true, ui_notes_collapsed: true,
                 roadButtons: true, roadTypeButtons: [...RENDER_ORDER], lockButtons: true,
+                utilButtons: true,
                 enableSmartCopy: true, inheritCountry: true, inheritCity: true, inheritStreet: true, inheritRoadType: true, inheritSpeed: true, inheritLock: true, inheritAltNames: true, inheritOther: true,
                 coloringEnabled: {}, coloringColors: {}, coloringDays: {}, shortcuts: {}
             };
@@ -180,11 +298,10 @@
             _settings.coloringColors = { ...defaultSettings.coloringColors, ...(_settings.coloringColors || {}) };
             _settings.coloringDays = { ...defaultSettings.coloringDays, ...(_settings.coloringDays || {}) };
 
-            // Sync with Notes Settings
             const savedLockState = localStorage.getItem(NOTES_LOCK_STATE_KEY);
             if (savedLockState !== null) isMarkersLocked = (savedLockState === 'true');
 
-            const langCode = _settings.preferredLocale || 'ar';
+            const langCode = _settings.preferredLocale || 'en';
             trans = { ...UI_STRINGS['en'], ...UI_STRINGS[langCode] };
             if (!trans.dir) trans.dir = (langCode === 'en' ? 'ltr' : 'rtl');
         }
@@ -194,12 +311,214 @@
                 lastVersion: SCRIPT_VERSION, preferredLocale: _settings.preferredLocale,
                 ui_road_collapsed: _settings.ui_road_collapsed, ui_smartcopy_collapsed: _settings.ui_smartcopy_collapsed, ui_coloring_collapsed: _settings.ui_coloring_collapsed, ui_notes_collapsed: _settings.ui_notes_collapsed,
                 roadButtons: _settings.roadButtons, roadTypeButtons: _settings.roadTypeButtons, lockButtons: _settings.lockButtons,
+                utilButtons: _settings.utilButtons,
                 enableSmartCopy: _settings.enableSmartCopy, inheritCountry: _settings.inheritCountry, inheritCity: _settings.inheritCity, inheritStreet: _settings.inheritStreet,
                 inheritRoadType: _settings.inheritRoadType, inheritSpeed: _settings.inheritSpeed, inheritLock: _settings.inheritLock, inheritAltNames: _settings.inheritAltNames, inheritOther: _settings.inheritOther,
                 coloringEnabled: _settings.coloringEnabled, coloringColors: _settings.coloringColors, coloringDays: _settings.coloringDays, shortcuts: {}
             };
             if(sdk && sdk.Shortcuts) sdk.Shortcuts.getAllShortcuts().forEach(shortcut => { settings.shortcuts[shortcut.shortcutId] = shortcut.shortcutKeys; });
             localStorage.setItem(SETTINGS_STORE_NAME, JSON.stringify(settings));
+        }
+
+        // --- HELPER FUNCTIONS FOR SHADOW DOM (Copied from WME ClickSaver) ---
+        function waitForElem(selector) {
+            return new Promise((resolve, reject) => {
+                function checkIt(tries = 0) {
+                    if (tries < 150) {
+                        const elem = document.querySelector(selector);
+                        setTimeout(() => {
+                            if (!elem) {
+                                checkIt(++tries);
+                            } else {
+                                resolve(elem);
+                            }
+                        }, 20);
+                    } else {
+                        reject(new Error(`Element was not found: ${selector}`));
+                    }
+                }
+                checkIt();
+            });
+        }
+
+        async function waitForShadowElem(parentElemSelector, shadowElemSelectors) {
+            const parentElem = await waitForElem(parentElemSelector);
+            return new Promise((resolve, reject) => {
+                shadowElemSelectors.forEach((shadowElemSelector, idx) => {
+                    function checkIt(parent, tries = 0) {
+                        if (tries < 150) {
+                            const shadowElem = parent.shadowRoot.querySelector(shadowElemSelector);
+                            setTimeout(() => {
+                                if (!shadowElem) {
+                                    checkIt(parent, ++tries);
+                                } else if (idx === shadowElemSelectors.length - 1) {
+                                    resolve({ shadowElem, parentElem });
+                                } else {
+                                    checkIt(shadowElem, 0);
+                                }
+                            }, 20);
+                        } else {
+                            reject(new Error(`Shadow element was not found: ${shadowElemSelector}`));
+                        }
+                    }
+                    checkIt(parentElem);
+                });
+            });
+        }
+
+        // --- GLOBAL EVENT DELEGATION FOR STABLE CLICKS ---
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.id) {
+                if (e.target.id === 'aan-btn-copy') {
+                    copySegmentAttributes(e);
+                } else if (e.target.id === 'aan-btn-paste') {
+                    pasteSegmentAttributes(e);
+                } else if (e.target.id === 'aan-btn-alt-city') {
+                    onAddAltCityButtonClick(e);
+                }
+            }
+        });
+
+        function getOrCreateStreet(streetName, cityId) {
+            return sdk.DataModel.Streets.getStreet({ streetName, cityId }) || sdk.DataModel.Streets.addStreet({ streetName, cityId });
+        }
+
+        function flashButton(btnElement, originalText) {
+            if(!btnElement) return;
+            const $btn = $(btnElement);
+            $btn.text(trans.feedback_done || "✔");
+            $btn.css('background-color', '#4CAF50');
+            $btn.css('color', '#fff');
+            setTimeout(() => {
+                $btn.text(originalText);
+                $btn.css('background-color', '');
+                $btn.css('color', '');
+            }, 1000);
+        }
+
+        // 1. Copy Handler
+        function copySegmentAttributes(e) {
+            try {
+                const sel = sdk.Editing.getSelection();
+                if (!sel || sel.objectType !== 'segment' || !sel.ids.length) return;
+
+                const seg = sdk.DataModel.Segments.getById({ segmentId: sel.ids[0] });
+                const addr = sdk.DataModel.Segments.getAddress({ segmentId: sel.ids[0] });
+
+                if (!seg) return;
+
+                savedAttributes = {
+                    roadType: seg.roadType,
+                    lockRank: seg.lockRank || 0,
+                    fwdSpeedLimit: seg.fwdSpeedLimit,
+                    revSpeedLimit: seg.revSpeedLimit,
+                    level: seg.level,
+                    isToll: seg.isToll,
+                    isUnpaved: seg.isUnpaved,
+                    tunnel: seg.tunnel,
+                    address: {
+                        countryID: addr?.country?.id,
+                        stateID: addr?.state?.id,
+                        cityName: addr?.city?.name,
+                        streetName: addr?.street?.name
+                    }
+                };
+
+                if(e && e.target) flashButton(e.target, trans.btn_copy);
+            } catch(err) { console.error("AA Suite: Copy Failed", err); }
+        }
+
+        // 2. Paste Handler
+        function pasteSegmentAttributes(e) {
+            try {
+                if (!savedAttributes) return;
+                const sel = sdk.Editing.getSelection();
+                if (!sel || sel.objectType !== 'segment' || !sel.ids.length) return;
+
+                sel.ids.forEach(id => {
+                    const update = {
+                        segmentId: id,
+                        roadType: savedAttributes.roadType,
+                        lockRank: savedAttributes.lockRank,
+                        level: savedAttributes.level,
+                        isToll: savedAttributes.isToll,
+                        isUnpaved: savedAttributes.isUnpaved,
+                        tunnel: savedAttributes.tunnel
+                    };
+
+                    if (savedAttributes.fwdSpeedLimit !== undefined) update.fwdSpeedLimit = savedAttributes.fwdSpeedLimit;
+                    if (savedAttributes.revSpeedLimit !== undefined) update.revSpeedLimit = savedAttributes.revSpeedLimit;
+
+                    sdk.DataModel.Segments.updateSegment(update);
+
+                    if (savedAttributes.address) {
+                        const cp = savedAttributes.address;
+                        if (cp.countryID) {
+                             const cityProps = { cityName: cp.cityName || '', stateId: cp.stateID, countryId: cp.countryID };
+                             const existingCity = sdk.DataModel.Cities.getCity(cityProps);
+                             let cityId = existingCity ? existingCity.id : sdk.DataModel.Cities.addCity(cityProps).id;
+
+                             const primaryStreetId = getOrCreateStreet(cp.streetName || '', cityId).id;
+                             sdk.DataModel.Segments.updateAddress({ segmentId: id, primaryStreetId });
+                        }
+                    }
+                });
+                if(e && e.target) flashButton(e.target, trans.btn_paste);
+            } catch(err) { console.error("AA Suite: Paste Failed", err); }
+        }
+
+        // 3. ALT CITY HANDLER (SMART CLICK)
+        async function onAddAltCityButtonClick(e) {
+            try {
+                const sel = sdk.Editing.getSelection();
+                if (!sel || sel.objectType !== 'segment' || !sel.ids.length) return;
+
+                const segmentId = sel.ids[0];
+                const addr = sdk.DataModel.Segments.getAddress({ segmentId });
+
+                // 1. Try to find the button directly
+                let nativeBtn = document.querySelector('wz-button.add-alt-street-btn');
+
+                // 2. If not found, try to open the address editor first
+                if (!nativeBtn) {
+                    const addressBox = document.querySelector('#segment-edit-general .address-edit');
+                    if (addressBox) {
+                        addressBox.click();
+                        // Wait for the button to render
+                        try {
+                            nativeBtn = await waitForElem('wz-button.add-alt-street-btn');
+                        } catch (timeout) {
+                            console.warn("AA Suite: Timed out waiting for add-alt-street-btn");
+                        }
+                    }
+                }
+
+                if (nativeBtn) {
+                    nativeBtn.click();
+
+                    // Wait for inputs
+                    await waitForElem('wz-autocomplete.alt-street-name');
+
+                    // Set street (Trigger input events for framework detection)
+                    let result = await waitForShadowElem('wz-autocomplete.alt-street-name', ['wz-text-input']);
+                    result.shadowElem.focus();
+                    result.shadowElem.value = addr?.street?.name ?? '';
+                    result.shadowElem.dispatchEvent(new Event('input', { bubbles: true }));
+
+                    // Clear city
+                    result = await waitForShadowElem('wz-autocomplete.alt-city-name', ['wz-text-input']);
+                    result.shadowElem.focus();
+                    result.shadowElem.value = '';
+                    result.shadowElem.dispatchEvent(new Event('input', { bubbles: true }));
+
+                    if(e && e.target) flashButton(e.target, trans.btn_alt_city);
+                } else {
+                    console.log("AA Suite: Could not access 'Add Alt Street' button.");
+                }
+
+            } catch (err) {
+                console.error("AA Suite: Alt City Failed", err);
+            }
         }
 
         // --- SMART COPY FUNCTIONS ---
@@ -233,9 +552,6 @@
                 ns.forEach(n => { if (!seen.has(n)) { seen.add(n); q.push(n); } });
             }
             return null;
-        }
-        function getOrCreateStreet(streetName, cityId) {
-            return sdk.DataModel.Streets.getStreet({ streetName, cityId }) || sdk.DataModel.Streets.addStreet({ streetName, cityId });
         }
         function executeSmartCopy(id) {
             const donorId = firstNeighborWithData(id);
@@ -494,14 +810,16 @@
             const selection = sdk.Editing.getSelection();
             selection?.ids.forEach(segmentId => { const seg = sdk.DataModel.Segments.getById({ segmentId }); if (seg.lockRank !== rank) { sdk.DataModel.Segments.updateSegment({ segmentId, lockRank: rank }); } });
         }
+
         function addButtonsToPanel() {
-            $('#csRoadTypeButtonsContainer').remove(); $('#csLockButtonsContainer').remove();
+            $('#csRoadTypeButtonsContainer').remove(); $('#csLockButtonsContainer').remove(); $('#csUtilButtonsContainer').remove();
             const selection = sdk.Editing.getSelection();
             if (selection?.objectType !== 'segment') return;
             const $dropDown = $(roadTypeDropdownSelector);
             if (!$dropDown.length) return;
             const $parentContainer = $dropDown.parent();
 
+            // 1. Road Types
             if (_settings.roadButtons) {
                 const $container = $('<div>', { id: 'csRoadTypeButtonsContainer', class: 'cs-rt-buttons-container' });
                 const $group = $('<div>', { class: 'cs-rt-buttons-group' });
@@ -513,13 +831,40 @@
                 });
                 $container.append($group); $parentContainer.prepend($container);
             }
+
+            const $lockContainer = $('<div>', { id: 'csLockButtonsContainer', class: 'cs-lock-buttons-container' });
+
+            // 2. Lock Buttons
             if (_settings.lockButtons) {
-                const $lockContainer = $('<div>', { id: 'csLockButtonsContainer', class: 'cs-lock-buttons-container' });
                 const $lockGroup = $('<div>', { class: 'cs-lock-buttons-group' });
                 lockSettings.forEach(lock => {
                     $lockGroup.append($('<div>', { class: 'btn cs-lock-button btn-positive', style: `background-color:${lock.color} !important; color:${lock.textColor} !important; border-color:${lock.borderColor} !important;`, title: `Lock Level ${lock.rank + 1}` }).text(trans.locks[`L${lock.rank + 1}`] || (lock.rank + 1)).data('rank', lock.rank).click(function() { onLockButtonClick($(this).data('rank')); }));
                 });
                 $lockContainer.append($lockGroup);
+            }
+
+            // 3. Utility Buttons (Controlled by setting)
+            if (_settings.utilButtons) {
+                const $utilGroup = $('<div>', { id: 'csUtilButtonsContainer', class: 'cs-util-buttons-group', style: 'margin-top: 5px; display:flex; gap:5px;' });
+
+                // Alt City Button (NEW - Left in RTL)
+                const $altCityBtn = $('<button>', { id: 'aan-btn-alt-city', class: 'btn btn-default', style: 'flex:1; font-size:11px; font-weight:bold; padding:2px;' }).text(trans.btn_alt_city).click(onAddAltCityButtonClick);
+
+                // Copy Button (Right in RTL)
+                const $copyBtn = $('<button>', { id: 'aan-btn-copy', class: 'btn btn-default', style: 'flex:1; font-size:11px; font-weight:bold; padding:2px;' }).text(trans.btn_copy).click(copySegmentAttributes);
+
+                // Paste Button (Center)
+                const $pasteBtn = $('<button>', { id: 'aan-btn-paste', class: 'btn btn-primary', style: 'flex:1; font-size:11px; font-weight:bold; padding:2px;' }).text(trans.btn_paste).click(pasteSegmentAttributes);
+
+                // RTL ORDER: Copy (Right) -> Paste (Center) -> Alt City (Left)
+                // In DOM, first appended is Right in RTL.
+                $utilGroup.append($copyBtn, $pasteBtn, $altCityBtn);
+
+                $lockContainer.append($utilGroup);
+            }
+
+            // Append container if it has content
+            if (_settings.lockButtons || _settings.utilButtons) {
                 if ($('#csRoadTypeButtonsContainer').length) { $('#csRoadTypeButtonsContainer').after($lockContainer); } else { $parentContainer.prepend($lockContainer); }
             }
         }
@@ -602,9 +947,22 @@
             const $panel = $('<div>', { id: 'sidepanel-clicksaver' });
             const $langDiv = $('<div>', { class: 'side-panel-section', style: 'margin-bottom: 15px; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;' });
             const $langSelect = $('<select>', { id: 'aaSuiteLanguageSelector', style: 'width: 100%; padding: 5px; border-radius: 5px; border: 1px solid #ccc;' });
-            $langSelect.append($('<option>', { value: 'ar', text: 'العربية - العراق' }), $('<option>', { value: 'ckb', text: 'کوردی - سۆرانی' }), $('<option>', { value: 'en', text: 'English - USA' }));
-            $langSelect.val(_settings.preferredLocale || 'ar');
-            $langSelect.change(function() { _settings.preferredLocale = $(this).val(); saveSettingsToStorage(); if(confirm('تغيير اللغة يتطلب تحديث الصفحة. هل تريد التحديث الآن؟')) location.reload(); });
+            $langSelect.append(
+                $('<option>', { value: 'ar', text: 'العربية - العراق' }),
+                $('<option>', { value: 'ckb', text: 'کوردی - سۆرانی' }),
+                $('<option>', { value: 'kmr', text: 'Kurdî - Kurmancî' }),
+                $('<option>', { value: 'en', text: 'English - USA' }),
+                $('<option>', { value: 'es', text: 'Español' }),
+                $('<option>', { value: 'fr', text: 'Français' }),
+                $('<option>', { value: 'ru', text: 'Русский' }),
+                $('<option>', { value: 'he', text: 'עברית' })
+            );
+            $langSelect.val(_settings.preferredLocale || 'en');
+            $langSelect.change(function() {
+                _settings.preferredLocale = $(this).val();
+                saveSettingsToStorage();
+                if(confirm('Language Change Requires Refresh. Reload now?')) location.reload();
+            });
             $langDiv.append($langSelect); $panel.append($langDiv);
 
             // 1. Roads
@@ -612,7 +970,11 @@
             const $roadTypesDiv = $('<div>', { class: 'csRoadTypeButtonsCheckBoxContainer' });
             if(!_settings.roadButtons) $roadTypesDiv.hide();
             RENDER_ORDER.forEach(rt => { $roadTypesDiv.append(createSettingsCheckbox(`cs${rt}CheckBox`, 'roadType', trans.roadTypes[rt] || rt, null, null, null, { 'data-road-type': rt })); });
-            $roadContent.append($('<div>').append(createSettingsCheckbox('csRoadTypeButtonsCheckBox', 'roadButtons', trans.roadTypeButtons)).append($roadTypesDiv), createSettingsCheckbox('csLockButtonsCheckBox', 'lockButtons', trans.lockLevelButtons, null, {marginTop:'10px'}));
+
+            $roadContent.append($('<div>').append(createSettingsCheckbox('csRoadTypeButtonsCheckBox', 'roadButtons', trans.roadTypeButtons)).append($roadTypesDiv));
+            $roadContent.append(createSettingsCheckbox('csLockButtonsCheckBox', 'lockButtons', trans.lockLevelButtons, null, {marginTop:'10px'}));
+            $roadContent.append(createSettingsCheckbox('csUtilButtonsCheckBox', 'utilButtons', trans.utilButtons, null, {marginTop:'10px'}));
+
             const $roadAccordion = createAccordion(trans.headerRoads, $roadContent, _settings.ui_road_collapsed, (newState) => { _settings.ui_road_collapsed = newState; saveSettingsToStorage(); });
             $panel.append($roadAccordion);
 
@@ -642,26 +1004,27 @@
             const $coloringAccordion = createAccordion(trans.headerColoring, $coloringContent, _settings.ui_coloring_collapsed, (newState) => { _settings.ui_coloring_collapsed = newState; saveSettingsToStorage(); });
             $panel.append($coloringAccordion);
 
-            // 4. NOTES (MERGED HERE)
-            initNotesMapLayer(); // Ensure map layer is ready
-            initPopupSystem();   // Ensure popup is ready
+            // 4. NOTES
+            initNotesMapLayer();
+            initPopupSystem();
             const $notesUI = createNotesUI();
             const $notesAccordion = createAccordion(trans.headerNotes, $notesUI, _settings.ui_notes_collapsed, (newState) => { _settings.ui_notes_collapsed = newState; saveSettingsToStorage(); });
             $panel.append($notesAccordion);
 
             $panel.append($('<div>', { style: 'margin-top:20px;font-size:10px;color:#999999;' }).append($('<div>').text(`v. ${SCRIPT_VERSION}`)));
             const { tabLabel, tabPane } = await sdk.Sidebar.registerScriptTab();
-            $(tabLabel).text('Abdullah Abbas WME Suite'); // <--- NAME UPDATED HERE
+            $(tabLabel).text('Abdullah Abbas WME Suite');
             $(tabPane).append($panel);
             $(tabPane).parent().css({ 'padding-top': '0px', 'padding-left': '8px' });
 
             $('#csRoadTypeButtonsCheckBox').change(function() { $('.csRoadTypeButtonsCheckBoxContainer').toggle(this.checked); _settings.roadButtons = this.checked; addButtonsToPanel(); saveSettingsToStorage(); });
             $('#csLockButtonsCheckBox').change(function() { _settings.lockButtons = this.checked; addButtonsToPanel(); saveSettingsToStorage(); });
+            $('#csUtilButtonsCheckBox').change(function() { _settings.utilButtons = this.checked; addButtonsToPanel(); saveSettingsToStorage(); });
             $('#scfEnableCheckBox').change(function() { $('.scf-details').toggle(this.checked); _settings.enableSmartCopy = this.checked; saveSettingsToStorage(); });
             $('.csSettingsControl').change(function() {
                 const { checked } = this; const $this = $(this); const settingName = $this.data('setting-name');
                 if (settingName === 'roadType') { const roadType = $this.data('road-type'); const array = _settings.roadTypeButtons; const index = array.indexOf(roadType); if (checked && index === -1) array.push(roadType); else if (!checked && index !== -1) array.splice(index, 1); }
-                else if (settingName && !['roadButtons', 'enableSmartCopy', 'lockButtons'].includes(settingName)) { _settings[settingName] = checked; }
+                else if (settingName && !['roadButtons', 'enableSmartCopy', 'lockButtons', 'utilButtons'].includes(settingName)) { _settings[settingName] = checked; }
                 saveSettingsToStorage(); if(settingName === 'roadType') addButtonsToPanel();
             });
 

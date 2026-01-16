@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yt-dlp Python-Downloader
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      9.2
+// @version      9.6
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Unified yt-dlp downloader - generates cross-platform Python scripts for video, audio, subtitles
@@ -9,6 +9,21 @@
 // ═══════════════════════════════════════════════════════════════
 // CHANGELOG
 // ═══════════════════════════════════════════════════════════════
+// v9.6
+// - Fixed: Codec selection now works (removed shell quotes that broke Python string literals)
+//
+// v9.5
+// - Fixed: Separate mode now correctly names video/audio files (was using invalid template syntax)
+// - Fixed: No-merge case now uses temp files + identification like merge case
+//
+// v9.4
+// - Fixed: Skip subtitle prompt when video has no subtitles available
+// - Fixed: Video/audio quality now falls back to best available if requested quality unavailable
+// - Fixed: Audio-only merge uses native audio extension instead of .mkv
+//
+// v9.3
+// - Fixed: Submenus now close when hovering over a different component row
+//
 // v9.2
 // - Fixed: Submenu no longer closes when moving mouse from row to submenu (bridged hover gap)
 // - Fixed: Selected buttons (Merge/Sep) no longer turn gray on hover
@@ -219,25 +234,25 @@
     // ═══════════════════════════════════════════════════════════════
     const VIDEO_QUALITIES = [
         { id: 'best', label: 'Best', format: 'bestvideo' },
-        { id: '1080p', label: '1080p', format: 'bestvideo[height<=1080]' },
-        { id: '720p', label: '720p', format: 'bestvideo[height<=720]' },
-        { id: '480p', label: '480p', format: 'bestvideo[height<=480]' },
-        { id: '360p', label: '360p', format: 'bestvideo[height<=360]' },
+        { id: '1080p', label: '1080p', format: 'bestvideo[height<=1080]/bestvideo' },
+        { id: '720p', label: '720p', format: 'bestvideo[height<=720]/bestvideo' },
+        { id: '480p', label: '480p', format: 'bestvideo[height<=480]/bestvideo' },
+        { id: '360p', label: '360p', format: 'bestvideo[height<=360]/bestvideo' },
     ];
 
     const VIDEO_CODECS = [
         { id: 'default', label: 'Auto', sortArg: '', desc: 'Let yt-dlp choose best available' },
-        { id: 'av1', label: 'AV1', sortArg: '-S "vcodec:av01"', desc: 'Most efficient, needs modern hardware' },
-        { id: 'vp9', label: 'VP9', sortArg: '-S "vcodec:vp9"', desc: 'Good efficiency, wide support' },
-        { id: 'h264', label: 'H.264', sortArg: '-S "+vcodec:avc"', desc: 'Maximum compatibility' },
+        { id: 'av1', label: 'AV1', sortArg: '-S vcodec:av01', desc: 'Most efficient, needs modern hardware' },
+        { id: 'vp9', label: 'VP9', sortArg: '-S vcodec:vp9', desc: 'Good efficiency, wide support' },
+        { id: 'h264', label: 'H.264', sortArg: '-S +vcodec:avc', desc: 'Maximum compatibility' },
     ];
 
     // ═══════════════════════════════════════════════════════════════
     // AUDIO OPTIONS
     // ═══════════════════════════════════════════════════════════════
     const AUDIO_QUALITIES = [
-        { id: 'best', label: 'Best', format: 'bestaudio' },
-        { id: 'worst', label: 'Smallest', format: 'worstaudio' },
+        { id: 'best', label: 'Best', format: 'bestaudio/best' },
+        { id: 'worst', label: 'Smallest', format: 'worstaudio/bestaudio' },
     ];
 
     // ═══════════════════════════════════════════════════════════════
@@ -870,6 +885,10 @@
 
                 // Hover to open submenu (always available)
                 row.addEventListener('mouseenter', () => {
+                    // Close all other submenus first
+                    this.element.querySelectorAll('.ytdlp-component-row.submenu-open').forEach(r => {
+                        if (r !== row) r.classList.remove('submenu-open');
+                    });
                     row.classList.add('submenu-open');
                     requestAnimationFrame(() => {
                         try {
@@ -1216,6 +1235,51 @@ def identify_file(filepath, has_ffprobe=False):
 
     return "unknown"
 
+def check_subtitles_available(url, cookies_arg):
+    """
+    Check if subtitles are available for the video.
+    Returns (sub_lang, do_subs, sub_args) tuple.
+    - sub_lang: the language code entered by user (or None)
+    - do_subs: True if subtitles should be downloaded
+    - sub_args: list of yt-dlp arguments for subtitles
+    """
+    print()
+    print("[INFO] Checking for available subtitles...")
+
+    result = subprocess.run(
+        ["yt-dlp", "--list-subs"] + cookies_arg + [url],
+        capture_output=True, text=True
+    )
+
+    combined_output = (result.stdout + result.stderr).lower()
+
+    # Check if no subtitles available
+    if "has no subtitles" in combined_output:
+        print("[INFO] No subtitles available for this video")
+        return None, False, []
+
+    # Subtitles are available - show them and prompt
+    print()
+    print_header("Available Subtitles")
+    print(result.stdout)
+
+    print()
+    print("=" * 60)
+    print("Enter language code (e.g., en, de, ja)")
+    print("Or type 'all' for all languages")
+    print("Or press Enter to skip subtitles")
+    print("=" * 60)
+    print()
+
+    sub_lang = input("Language code: ").strip()
+
+    if not sub_lang:
+        print()
+        print("Skipping subtitles...")
+        return None, False, []
+
+    return sub_lang, True, ["--write-subs", "--write-auto-subs", "--sub-langs", sub_lang]
+
 `;
     }
 
@@ -1443,25 +1507,13 @@ def main():
 
     print()
     print(f"URL: {URL}")
-    print()
 
-    # List available subtitles
-    print_header("Available Subtitles")
-    subprocess.run(["yt-dlp", "--list-subs"] + cookies_arg + [URL])
+    # Check for subtitles and prompt if available
+    sub_lang, do_subs, sub_args = check_subtitles_available(URL, cookies_arg)
 
-    print()
-    print("=" * 60)
-    print("Enter language code (e.g., en, de, ja)")
-    print("Or type 'all' for all languages")
-    print("Or press Enter to skip subtitles")
-    print("=" * 60)
-    print()
-
-    sub_lang = input("Language code: ").strip()
-
-    if not sub_lang:
+    if not do_subs:
         print()
-        print("No subtitles requested. Nothing to download.")
+        print("No subtitles to download.")
         wait_for_exit()
         return
 
@@ -1475,11 +1527,9 @@ def main():
     cmd.extend(cookies_arg)
     cmd.extend([
         URL,
-        "--skip-download",
-        "--write-subs",
-        "--write-auto-subs",
-        "--sub-langs", sub_lang
+        "--skip-download"
     ])
+    cmd.extend(sub_args)
 
     # Add subtitle conversion if specified
     if SUBS_CONVERT_ARG:
@@ -1554,28 +1604,9 @@ def main():
     do_subs = False
 
     if HAS_SUBS:
-        print()
-        print_header("Available Subtitles")
-        subprocess.run(["yt-dlp", "--list-subs"] + cookies_arg + [URL])
-
-        print()
-        print("=" * 60)
-        print("Enter language code (e.g., en, de, ja)")
-        print("Or type 'all' for all languages")
-        print("Or press Enter to skip subtitles")
-        print("=" * 60)
-        print()
-
-        sub_lang = input("Language code: ").strip()
-
-        if sub_lang:
-            do_subs = True
-            sub_args = ["--write-subs", "--write-auto-subs", "--sub-langs", sub_lang]
-            if SUBS_CONVERT_ARG:
-                sub_args.extend(SUBS_CONVERT_ARG.split())
-        else:
-            print()
-            print("Skipping subtitles...")
+        sub_lang, do_subs, sub_args = check_subtitles_available(URL, cookies_arg)
+        if do_subs and SUBS_CONVERT_ARG:
+            sub_args.extend(SUBS_CONVERT_ARG.split())
 
     print()
     print_header("Starting Download...")
@@ -1651,6 +1682,9 @@ def main():
 
     print_status("OK", "yt-dlp found")
 
+    # Check for ffprobe (for file identification)
+    has_ffprobe = check_command("ffprobe")
+
     # Check for cookies
     cookies_arg = []
     if Path(COOKIE_FILE).exists():
@@ -1664,28 +1698,9 @@ def main():
     do_subs = False
 
     if HAS_SUBS:
-        print()
-        print_header("Available Subtitles")
-        subprocess.run(["yt-dlp", "--list-subs"] + cookies_arg + [URL])
-
-        print()
-        print("=" * 60)
-        print("Enter language code (e.g., en, de, ja)")
-        print("Or type 'all' for all languages")
-        print("Or press Enter to skip subtitles")
-        print("=" * 60)
-        print()
-
-        sub_lang = input("Language code: ").strip()
-
-        if sub_lang:
-            do_subs = True
-            sub_args = ["--write-subs", "--write-auto-subs", "--sub-langs", sub_lang]
-            if SUBS_CONVERT_ARG:
-                sub_args.extend(SUBS_CONVERT_ARG.split())
-        else:
-            print()
-            print("Skipping subtitles...")
+        sub_lang, do_subs, sub_args = check_subtitles_available(URL, cookies_arg)
+        if do_subs and SUBS_CONVERT_ARG:
+            sub_args.extend(SUBS_CONVERT_ARG.split())
 
     print()
     print_header("Starting Download...")
@@ -1700,7 +1715,11 @@ def main():
 
     print(f"Downloading {' + '.join(components)}...")
 
-    # Build command
+    ${hasVideo && hasAudio ? `
+    # Both video AND audio - need to download to temp, identify, then rename
+    temp_base = f"_ytdlp_tmp_{random.randint(10000, 99999)}"
+
+    # Build command with temp output names
     cmd = ["yt-dlp"]
     if OVERWRITE_FLAG:
         cmd.append(OVERWRITE_FLAG)
@@ -1711,14 +1730,109 @@ def main():
     if CODEC_ARG:
         cmd.extend(CODEC_ARG.split())
 
-    # Output templates based on what we're downloading
-    ${hasVideo && hasAudio ? `
-    # Both video and audio - use descriptive suffixes
-    cmd.extend(["-o", f"{FILENAME}.video.%(ext)s", "-o", f"audio:{FILENAME}.audio.%(ext)s"])
+    # Use format_id to differentiate files
+    if do_subs:
+        cmd.extend(sub_args)
+        cmd.extend(["-o", f"{temp_base}.%(format_id)s.%(ext)s", "-o", f"subtitle:{temp_base}_sub.%(ext)s"])
+    else:
+        cmd.extend(["-o", f"{temp_base}.%(format_id)s.%(ext)s"])
+
+    # Run download
+    result = subprocess.run(cmd)
+
+    if result.returncode != 0:
+        print()
+        print_status("ERROR", "Download failed")
+        # Cleanup any temp files
+        for f in glob(f"{temp_base}*.*"):
+            try:
+                os.remove(f)
+            except:
+                pass
+        wait_for_exit(error=True)
+        sys.exit(1)
+
+    # Identify downloaded files
+    print()
+    print("Identifying downloaded files...")
+
+    video_file = None
+    audio_file = None
+    subtitle_files = []
+
+    for filepath in glob(f"{temp_base}*.*"):
+        file_type = identify_file(filepath, has_ffprobe)
+        basename = os.path.basename(filepath)
+
+        if file_type == "subtitle":
+            subtitle_files.append(filepath)
+            print(f"  [SUB] {basename}")
+        elif file_type == "video":
+            video_file = filepath
+            print(f"  [VIDEO] {basename}")
+        elif file_type == "audio":
+            audio_file = filepath
+            print(f"  [AUDIO] {basename}")
+        else:
+            if video_file is None:
+                video_file = filepath
+                print(f"  [VIDEO] {basename} (assumed)")
+            else:
+                audio_file = filepath
+                print(f"  [AUDIO] {basename} (assumed)")
+
+    # Copy to final names
+    print()
+    print("Creating output files...")
+
+    if video_file:
+        ext = Path(video_file).suffix
+        dest = f"{FILENAME}.video{ext}"
+        shutil.copy(video_file, dest)
+        print_status("OK", f"Created: {dest}")
+
+    if audio_file:
+        ext = Path(audio_file).suffix
+        dest = f"{FILENAME}.audio{ext}"
+        shutil.copy(audio_file, dest)
+        print_status("OK", f"Created: {dest}")
+
+    for sub_file in subtitle_files:
+        basename = os.path.basename(sub_file)
+        if "_sub." in basename:
+            lang_ext = basename.split("_sub.", 1)[1]
+            dest = f"{FILENAME}.{lang_ext}"
+            shutil.copy(sub_file, dest)
+            print_status("OK", f"Created: {dest}")
+
+    # Cleanup temp files
+    cleaned = 0
+    for f in glob(f"{temp_base}*.*"):
+        try:
+            os.remove(f)
+            cleaned += 1
+        except:
+            pass
+    print(f"  Cleaned up {cleaned} temp file(s)")
+
+    print()
+    print_status("OK", "Download complete")
+    print()
+    print(f"Saved to: {Path.cwd()}")
+    wait_for_exit()
     ` : `
-    # Single component
+    # Single component - simple direct download
+    cmd = ["yt-dlp"]
+    if OVERWRITE_FLAG:
+        cmd.append(OVERWRITE_FLAG)
+    cmd.extend(cookies_arg)
+    cmd.extend([URL, "-f", "${formatStr}"])
+
+    # Add codec sorting if specified
+    if CODEC_ARG:
+        cmd.extend(CODEC_ARG.split())
+
     cmd.extend(["-o", f"{FILENAME}.%(ext)s"])
-    `}
 
     # Add subtitle args if enabled
     if do_subs:
@@ -1738,6 +1852,7 @@ def main():
         print()
         print(f"Saved to: {Path.cwd()}")
         wait_for_exit()
+    `}
 `;
         }
 
@@ -1796,28 +1911,9 @@ def main():
     do_subs = False
 
     if HAS_SUBS:
-        print()
-        print_header("Available Subtitles")
-        subprocess.run(["yt-dlp", "--list-subs"] + cookies_arg + [URL])
-
-        print()
-        print("=" * 60)
-        print("Enter language code (e.g., en, de, ja)")
-        print("Or type 'all' for all languages")
-        print("Or press Enter to skip subtitles")
-        print("=" * 60)
-        print()
-
-        sub_lang = input("Language code: ").strip()
-
-        if sub_lang:
-            do_subs = True
-            sub_args = ["--write-subs", "--write-auto-subs", "--sub-langs", sub_lang]
-            if SUBS_CONVERT_ARG:
-                sub_args.extend(SUBS_CONVERT_ARG.split())
-        else:
-            print()
-            print("Skipping subtitles...")
+        sub_lang, do_subs, sub_args = check_subtitles_available(URL, cookies_arg)
+        if do_subs and SUBS_CONVERT_ARG:
+            sub_args.extend(SUBS_CONVERT_ARG.split())
 
     print()
     print_header("Starting Download...")
@@ -1938,19 +2034,28 @@ def main():
             print()
             print("  Running mkvmerge...")
 
-            merge_cmd = ["mkvmerge", "-o", f"{FILENAME}.{MERGED_EXT}"] + mkv_inputs
+            # Determine actual extension based on what we have
+            actual_ext = MERGED_EXT
+            if not video_file and audio_file:
+                # Audio only - use audio's native extension
+                actual_ext = Path(audio_file).suffix.lstrip('.') or 'mka'
+
+            merge_cmd = ["mkvmerge", "-o", f"{FILENAME}.{actual_ext}"] + mkv_inputs
             merge_result = subprocess.run(merge_cmd)
 
             if merge_result.returncode != 0:
                 print_status("ERROR", "mkvmerge failed")
                 dl_error = True
             else:
-                print_status("OK", f"Created: {FILENAME}.{MERGED_EXT}")
+                print_status("OK", f"Created: {FILENAME}.{actual_ext}")
 
         elif len(mkv_inputs) == 1:
-            print_status("WARNING", "Only 1 component for merge - copying instead")
-            shutil.copy(mkv_inputs[0], f"{FILENAME}.{MERGED_EXT}")
-            print_status("OK", f"Created: {FILENAME}.{MERGED_EXT}")
+            # Single component - just copy with appropriate extension
+            src_ext = Path(mkv_inputs[0]).suffix
+            dest_file = f"{FILENAME}{src_ext}"
+            print_status("INFO", "Only 1 component available - saving directly")
+            shutil.copy(mkv_inputs[0], dest_file)
+            print_status("OK", f"Created: {dest_file}")
 
         else:
             print_status("WARNING", "No components to merge")

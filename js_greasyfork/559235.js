@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook PWA -> Messenger only
 // @namespace    local
-// @version      1.0
+// @version      1.1
 // @description  Forces Facebook PWA windows to stay in Messenger by redirecting any non-Messenger navigation back to the Messages view, without affecting regular browser tabs.
 // @author       Dobolus
 // @license      MIT
@@ -16,7 +16,7 @@
   'use strict';
 
   const MESSAGES_URL = 'https://www.facebook.com/messages/';
-  const ALLOWED_PATH_PREFIXES = ['/messages', '/messenger_media'];
+  const ALLOWED_PATH_PREFIXES = ['/messages', '/messenger_media', '/groupcall'];
   const MQ_STANDALONE = '(display-mode: standalone)';
   const MQ_MINIMAL_UI = '(display-mode: minimal-ui)';
 

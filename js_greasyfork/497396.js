@@ -1,31 +1,9 @@
 // ==UserScript==
 // @name         Streamtape Direct Downloader
 // @namespace    StreamtapeDownloader
-// @version      1.0
+// @version      1.1
 // @author       sharmanhall
 // @description  Streamtape Video Downloader with direct URL resolution
-// @match        *://streamtape.com/*
-// @match        *://streamtape.xyz/*
-// @match        *://streamtape.to/*
-// @match        *://streamtape.net/*
-// @match        *://streamtape.site/*
-// @match        *://streamtape.cc/*
-// @match        *://tapecontent.net/*
-// @match        *://streamadblockplus.com/*
-// @match        *://streamta.pe/*
-// @match        *://strtape.cloud/*
-// @match        *://strtape.site/*
-// @match        *://strtapeadblock.club/*
-// @match        *://strcloud.link/*
-// @match        *://strcloud.club/*
-// @match        *://strcloud.in/*
-// @match        *://tapeadsenjoyer.com/*
-// @match        *://gettapeads.com/*
-// @match        *://streamtape.com/*
-// @match        *://tapelovesads.org/*
-// @match        https://streamtape.com/*
-// @match        https://streamadblocker.xyz/*
-// @match        https://*.tapecontent.net/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=streamtape.com
 // @grant        none
 // @license      MIT
@@ -34,6 +12,119 @@
 // @compatible   firefox
 // @compatible   opera
 // @compatible   safari
+// @match        *://*.adblockeronstape.com/*
+// @match        *://*.adblockeronstape.xyz/*
+// @match        *://*.adblockeronstape.site/*
+// @match        *://*.adblockeronstape.net/*
+// @match        *://*.adblockplustape.com/*
+// @match        *://*.adblockplustape.xyz/*
+// @match        *://*.adblockplustape.site/*
+// @match        *://*.adblockplustape.net/*
+// @match        *://*.adblockstreamtape.com/*
+// @match        *://*.adblockstreamtape.xyz/*
+// @match        *://*.adblockstreamtape.site/*
+// @match        *://*.adblockstreamtape.net/*
+// @match        *://*.adblockstrtape.com/*
+// @match        *://*.adblockstrtape.xyz/*
+// @match        *://*.adblockstrtape.site/*
+// @match        *://*.adblockstrtape.net/*
+// @match        *://*.adblockstrtech.com/*
+// @match        *://*.adblockstrtech.xyz/*
+// @match        *://*.adblockstrtech.site/*
+// @match        *://*.adblockstrtech.net/*
+// @match        *://*.advertape.net/*
+// @match        *://*.advertisertape.com/*
+// @match        *://*.antiadtape.com/*
+// @match        *://*.antiadtape.xyz/*
+// @match        *://*.antiadtape.site/*
+// @match        *://*.antiadtape.net/*
+// @match        *://*.gettapeads.com/*
+// @match        *://*.noblocktape.com/*
+// @match        *://*.noblocktape.xyz/*
+// @match        *://*.noblocktape.site/*
+// @match        *://*.noblocktape.net/*
+// @match        *://*.shavetape.com/*
+// @match        *://*.shavetape.xyz/*
+// @match        *://*.shavetape.site/*
+// @match        *://*.shavetape.net/*
+// @match        *://*.shavetape.cash/*
+// @match        *://*.stapadblockuser.com/*
+// @match        *://*.stapadblockuser.xyz/*
+// @match        *://*.stapadblockuser.site/*
+// @match        *://*.stapadblockuser.net/*
+// @match        *://*.stape.com/*
+// @match        *://*.stape.xyz/*
+// @match        *://*.stape.site/*
+// @match        *://*.stape.net/*
+// @match        *://*.stape.fun/*
+// @match        *://*.strcloud.com/*
+// @match        *://*.strcloud.xyz/*
+// @match        *://*.strcloud.site/*
+// @match        *://*.strcloud.net/*
+// @match        *://*.strcloud.link/*
+// @match        *://*.strcloud.club/*
+// @match        *://*.strcloud.in/*
+// @match        *://*.streamadblocker.com/*
+// @match        *://*.streamadblocker.xyz/*
+// @match        *://*.streamadblocker.site/*
+// @match        *://*.streamadblocker.net/*
+// @match        *://*.streamadblockplus.com/*
+// @match        *://*.streamadblockplus.xyz/*
+// @match        *://*.streamadblockplus.site/*
+// @match        *://*.streamadblockplus.net/*
+// @match        *://*.streamnoads.com/*
+// @match        *://*.streamta.com/*
+// @match        *://*.streamta.xyz/*
+// @match        *://*.streamta.site/*
+// @match        *://*.streamta.net/*
+// @match        *://*.streamta.pe/*
+// @match        *://*.streamtape.com/*
+// @match        *://*.streamtape.xyz/*
+// @match        *://*.streamtape.to/*
+// @match        *://*.streamtape.net/*
+// @match        *://*.streamtape.site/*
+// @match        *://*.streamtape.cc/*
+// @match        *://*.streamtapeadblock.com/*
+// @match        *://*.streamtapeadblock.xyz/*
+// @match        *://*.streamtapeadblock.site/*
+// @match        *://*.streamtapeadblock.net/*
+// @match        *://*.streamtapeadblockuser.com/*
+// @match        *://*.streamtapeadblockuser.xyz/*
+// @match        *://*.streamtapeadblockuser.site/*
+// @match        *://*.streamtapeadblockuser.net/*
+// @match        *://*.strtape.com/*
+// @match        *://*.strtape.xyz/*
+// @match        *://*.strtape.site/*
+// @match        *://*.strtape.net/*
+// @match        *://*.strtape.cloud/*
+// @match        *://*.strtapeadblock.com/*
+// @match        *://*.strtapeadblock.xyz/*
+// @match        *://*.strtapeadblock.site/*
+// @match        *://*.strtapeadblock.net/*
+// @match        *://*.strtapeadblock.club/*
+// @match        *://*.strtapeadblocker.com/*
+// @match        *://*.strtapeadblocker.xyz/*
+// @match        *://*.strtapeadblocker.site/*
+// @match        *://*.strtapeadblocker.net/*
+// @match        *://*.strtapewithadblock.com/*
+// @match        *://*.strtapewithadblock.xyz/*
+// @match        *://*.strtapewithadblock.site/*
+// @match        *://*.strtapewithadblock.net/*
+// @match        *://*.strtpe.com/*
+// @match        *://*.strtpe.xyz/*
+// @match        *://*.strtpe.site/*
+// @match        *://*.strtpe.net/*
+// @match        *://*.strtpe.link/*
+// @match        *://*.tapeadsenjoyer.com/*
+// @match        *://*.tapeadvertisement.com/*
+// @match        *://*.tapeantiads.com/*
+// @match        *://*.tapeblocker.com/*
+// @match        *://*.tapecontent.net/*
+// @match        *://*.tapelovesads.org/*
+// @match        *://*.tapenoads.com/*
+// @match        *://*.tapepops.com/*
+// @match        *://*.tapewithadblock.org/*
+// @match        *://*.watchadsontape.com/*
 // @downloadURL https://update.greasyfork.org/scripts/497396/Streamtape%20Direct%20Downloader.user.js
 // @updateURL https://update.greasyfork.org/scripts/497396/Streamtape%20Direct%20Downloader.meta.js
 // ==/UserScript==
@@ -42,9 +133,9 @@ console.log("StreamtapeDownloader");
 
 function checkVideoSrc() {
     const mainVideo = document.querySelector('#mainvideo');
-    const subheadingParent = document.querySelector('.subheading').parentNode;
+    const subheadingParent = document.querySelector('.subheading')?.parentNode;
 
-    if (mainVideo) {
+    if (mainVideo && subheadingParent) {
         const videoSrc = mainVideo.src;
 
         if (videoSrc) {
@@ -52,10 +143,7 @@ function checkVideoSrc() {
 
             if (!document.getElementById('downloadsDiv')) {
                 const downloadsDiv = document.createElement('div');
-                //downloadsDiv.id = 'downloadsDiv';
-                //downloadsDiv.style.border = '2px solid blue';
-                //downloadsDiv.style.borderRadius = '7.5px';
-                //downloadsDiv.style.marginTop = '10px';
+                downloadsDiv.id = 'downloadsDiv';
 
                 const openInTabDiv = document.createElement('div');
                 openInTabDiv.style.border = '2px solid blue';
@@ -91,6 +179,7 @@ function checkVideoSrc() {
                 resolveButton.innerText = 'Click here to generate direct URL';
                 resolveButton.style.display = 'block';
                 resolveButton.style.marginTop = '5px';
+                resolveButton.style.cursor = 'pointer';
 
                 // Function to resolve the final download URL
                 resolveButton.addEventListener('click', async function(event) {

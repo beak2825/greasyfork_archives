@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Travelling tooltip info adder
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-15
+// @version      2026-01-15a
 // @description  title
 // @license      MIT
 // @author       ski3r3n [3722717]
@@ -75,30 +75,30 @@
                 console.log('cachedata')
                 resp = GM_getValue("cache")
             }
-            var tooltipOriginal = null
-            setInterval(function (){
-                var tooltips = document.getElementsByClassName("tooltip___aWICR")
-                if (tooltips[0] != null){
-                    var tooltip = tooltips[0];
-                    if (tooltip.innerHTML.slice(0, 16) == "<b>Traveling</b>"){
-                        if (tooltipOriginal == null) tooltipOriginal = tooltip.innerHTML;
-                        tooltip.innerHTML = `${tooltipOriginal}<p>${timeHMSFromNow(resp.travel.timestamp * 1000)}</p>`;
-                        var tooltipArrow = document.getElementsByClassName("arrow___yUDKb")[0]
-                        var icon = document.getElementsByClassName("icon71___oZ9rV")[0]
-                        const rect = icon.getBoundingClientRect();
-                        tooltipArrow.style.position = "fixed";
-                        var box = document.getElementsByClassName("tooltip___aWICR")[0];
-                        tooltipArrow.style.top = ((rect.top + window.scrollY) - 14) + 'px';
-                        tooltipArrow.style.transform = "rotate(180deg)"
-                        if (box.getBoundingClientRect().y > rect.y){
-                            tooltipArrow.style.transform = "rotate(0deg)"
-                            tooltipArrow.style.top = ((rect.top + window.scrollY) + 14 + 17) + 'px';
-                        }
-                        tooltipArrow.style.left = ((rect.left + window.scrollX) + 8) + 'px';
-                    }
-                }
-            }, 1)
         }
         found = true
     },100)
+    // var tooltipOriginal = null
+    setInterval(function (){
+        var tooltips = document.getElementsByClassName("tooltip___aWICR")
+        if (tooltips[0] != null){
+            var tooltip = tooltips[0];
+            if (tooltip.innerHTML.slice(0, 16) == "<b>Traveling</b>"){
+                // if (tooltipOriginal == null) tooltipOriginal = tooltip.innerHTML;
+                tooltip.innerHTML = `<b>Traveling</b><div class="arrow___yUDKb bottom___mz2Ax" style="left: 424.6px; position: fixed; top: 174px; transform: rotate(0deg);"><div class="arrowIcon___KHyjw"></div></div><p>${timeHMSFromNow(resp.travel.timestamp * 1000)}</p>`;
+                var tooltipArrow = document.getElementsByClassName("arrow___yUDKb")[0]
+                var icon = document.getElementsByClassName("icon71___oZ9rV")[0]
+                const rect = icon.getBoundingClientRect();
+                tooltipArrow.style.position = "fixed";
+                var box = document.getElementsByClassName("tooltip___aWICR")[0];
+                tooltipArrow.style.top = ((rect.top + window.scrollY) - 14) + 'px';
+                tooltipArrow.style.transform = "rotate(180deg)"
+                if (box.getBoundingClientRect().y > rect.y){
+                    tooltipArrow.style.transform = "rotate(0deg)"
+                    tooltipArrow.style.top = ((rect.top + window.scrollY) + 14 + 17) + 'px';
+                }
+                tooltipArrow.style.left = ((rect.left + window.scrollX) + 8) + 'px';
+            }
+        }
+    }, 1)
 })();

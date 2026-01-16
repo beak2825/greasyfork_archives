@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Tools Extension
 // @namespace    https://github.com/aoi-umi
-// @version      0.0.2
+// @version      0.0.3
 // @description  tools插件
 // @author       aoi-umi
 // @match        http://*/*
@@ -31,6 +31,7 @@
 		Object.defineProperty(utils, "__esModule", { value: true });
 		utils.throttle = throttle;
 		utils.isElementAtPoint = isElementAtPoint;
+		utils.formatTime = formatTime;
 		function throttle(func, wait, options) {
 		    let context, args, result;
 		    let timeout = null;
@@ -72,6 +73,16 @@
 		function isElementAtPoint(el, x, y) {
 		    var rect = el.getBoundingClientRect();
 		    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+		}
+		function formatTime(seconds) {
+		    const h = Math.floor(seconds / 3600);
+		    const m = Math.floor((seconds % 3600) / 60);
+		    const s = Math.floor(seconds % 60);
+		    let hourStr = "";
+		    if (h > 0) {
+		        hourStr = `${String(h).padStart(2, "0")}:`;
+		    }
+		    return `${hourStr}${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 		}
 		
 		return utils;
@@ -123,6 +134,7 @@
 		hasRequiredMenu = 1;
 		Object.defineProperty(menu, "__esModule", { value: true });
 		menu.Menu = void 0;
+		const utils = requireUtils();
 		const icons_1 = requireIcons();
 		class Menu {
 		    get floatMenuName() {
@@ -150,9 +162,7 @@
 		        opt = { ...opt };
 		        this.prefix = opt.prefix || "";
 		        this.initStyle();
-		        setTimeout(() => {
-		            this.initEvents();
-		        }, 1000);
+		        this.initEvents();
 		    }
 		    initStyle() {
 		        let { floatMenuName, defaultMenuName, contextMenuName, moreName, iconName, } = this;
@@ -175,6 +185,7 @@
       padding: 5px 0;
       font-size: 12px;
       color: black;
+      text-shadow: none;
     }
     .${contextMenuName} > * {
       padding: 5px 10px;
@@ -267,6 +278,24 @@
 		                    };
 		                }),
 		            });
+		            let currentTimeStr = utils.formatTime(Math.round(video.currentTime));
+		            list.push({
+		                text: `复制当前时间 (${currentTimeStr})`,
+		                key: "copyCurrentTime",
+		                fn: () => {
+		                    navigator.clipboard.writeText(currentTimeStr);
+		                },
+		            });
+		        }
+		        else if (opt.type === "danmaku") {
+		            let video = opt.el || event.target;
+		            list.push({
+		                text: `空降到 ${opt.data.timeStr}`,
+		                key: "setCurrentTime",
+		                fn: () => {
+		                    video.currentTime = opt.data.time;
+		                },
+		            });
 		        }
 		        list.push({
 		            text: "原菜单",
@@ -292,7 +321,8 @@
 		        let menu = jQuery(`.${this.contextMenuName}[data-level=${level}]`);
 		        if (!menu.length) {
 		            menu = jQuery(`<div class="${this.contextMenuName} ${this.floatMenuName} ${this.defaultMenuName}" data-level=${level}></div>`);
-		            jQuery("body").append(menu);
+		            let target = document.fullscreenElement || document.body;
+		            jQuery(target).append(menu);
 		        }
 		        return menu;
 		    }
@@ -366,21 +396,71 @@
 		        this.init();
 		    }
 		    init() {
-		        // 等待video加载完成
+		        // 等待原网站css js加载
 		        setTimeout(() => {
-		            this.video = jQuery("video")[0];
 		            this.menu = new menu_1.Menu({ prefix: this.prefix });
+		            this.bindEvents();
+		            console.log("ToolsExtension initialized");
 		        }, 1000);
-		        this.bindEvents();
-		        console.log("ToolsExtension initialized");
+		    }
+		    getVideoAtPoint(pos) {
+		        return jQuery("video")
+		            .toArray()
+		            .find((video) => {
+		            return utils.isElementAtPoint(video, pos.x, pos.y);
+		        });
+		    }
+		    getDanmakuAtPoint(pos) {
+		        let danmaku;
+		        // 获取弹幕容器
+		        ["danmaku", "danmuku"].find((key) => {
+		            let dom = jQuery(`[class*="${key}"]:eq(0)`)[0];
+		            if (dom) {
+		                danmaku = {
+		                    key,
+		                    dom,
+		                };
+		                return true;
+		            }
+		        });
+		        if (!danmaku)
+		            return;
+		        // 同级或子级查找弹幕
+		        return [
+		            ...jQuery(danmaku.dom).siblings(":visible").toArray(),
+		            ...jQuery(danmaku.dom).children(":visible").toArray(),
+		        ].find((el) => {
+		            let dom = jQuery(el);
+		            return (parseFloat(dom.css("opacity")) > 0 &&
+		                el.clientHeight < 50 &&
+		                utils.isElementAtPoint(el, pos.x, pos.y));
+		        });
 		    }
 		    bindEvents() {
 		        document.addEventListener("contextmenu", (event) => {
 		            let isVideo = jQuery(event.target).is("video");
-		            if (isVideo || this.video && utils.isElementAtPoint(this.video, event.x, event.y)) {
-		                let video = isVideo ? event.target : this.video;
-		                this.menu.conetextMenuHandler({ event, type: "video", el: video });
+		            let _video = this.getVideoAtPoint(event);
+		            let video = isVideo ? event.target : _video;
+		            if (!video)
+		                return;
+		            let opt = { event, type: "video", el: video, data: null };
+		            let danmaku = this.getDanmakuAtPoint(event);
+		            if (danmaku) {
+		                let matchRs = /((?<hour>[\d]+):)?(?<minute>[\d]+):(?<second>[\d]+)/.exec(danmaku.innerText);
+		                if (matchRs && matchRs.groups) {
+		                    let hour = parseInt(matchRs.groups.hour || "0");
+		                    let minute = parseInt(matchRs.groups.minute);
+		                    let second = parseInt(matchRs.groups.second);
+		                    // 不用管格式，直接加总秒数
+		                    let time = hour * 3600 + minute * 60 + second;
+		                    opt.type = "danmaku";
+		                    opt.data = {
+		                        timeStr: `${matchRs[0]}`,
+		                        time,
+		                    };
+		                }
 		            }
+		            this.menu.conetextMenuHandler(opt);
 		        }, true // 使用捕获阶段
 		        );
 		    }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Codeforces Inline Submit
 // @namespace    https://codeforces.com
-// @version      1.0
+// @version      1.1
 // @description  Adds a submission form directly on Codeforces problem pages for quick code submission without leaving the page.
 // @author       awad
 // @license      GPL3
@@ -681,7 +681,6 @@
                             <a href="#" id="cf-submission-link" target="_blank" style="margin-left: auto; font-size: 12px; color: #1a5cc8;">View Details →</a>
                         </div>
                         <div class="verdict-status waiting" id="cf-verdict-status">
-                            <span class="spinner"></span>
                             <span id="cf-verdict-text">In queue...</span>
                         </div>
                         <div class="progress-bar" id="cf-progress-bar">
@@ -1145,6 +1144,9 @@
 
                         // Check if final verdict
                         if (isFinalVerdict(verdict)) {
+                            const statusMessage = document.getElementById('cf-status-message');
+                            statusMessage.style.display = 'block';
+
                             if (getVerdictClass(verdict) === 'accepted') {
                                 showStatus('success', '🎉 Accepted! Your solution passed all tests.');
                             } else {
@@ -1313,10 +1315,15 @@
                 }
 
                 if (submissionId) {
-                    showStatus('loading', `📤 Submitted! Tracking submission #${submissionId}...`);
+                    // Hide status message and show verdict container with loading state
+                    const statusMessage = document.getElementById('cf-status-message');
+                    statusMessage.style.display = 'none';
 
-                    // Start real-time status polling
+                    // Show verdict container and start tracking
                     updateVerdictUI(submissionId, 'In queue...', null, null, null, null, null);
+                    const verdictContainer = document.getElementById('cf-verdict-container');
+                    verdictContainer.classList.add('visible');
+
                     pollSubmissionStatus(problemInfo, submissionId);
                 } else if (isOnMyPage) {
                     // We're on the submissions page but couldn't extract ID - still a success
@@ -1336,8 +1343,15 @@
                             if (firstSubmission) {
                                 const idText = firstSubmission.textContent.trim();
                                 if (/^\d+$/.test(idText)) {
-                                    showStatus('loading', `📤 Tracking submission #${idText}...`);
+                                    // Hide status message and show verdict container with loading state
+                                    const statusMessage = document.getElementById('cf-status-message');
+                                    statusMessage.style.display = 'none';
+
+                                    // Show verdict container and start tracking
                                     updateVerdictUI(idText, 'In queue...', null, null, null, null, null);
+                                    const verdictContainer = document.getElementById('cf-verdict-container');
+                                    verdictContainer.classList.add('visible');
+
                                     pollSubmissionStatus(problemInfo, idText);
                                 }
                             }

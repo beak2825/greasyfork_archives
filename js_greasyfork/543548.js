@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         x-RedDragon Client
 // @namespace    https://www.youtube.com/@x-RedDragonOficial
-// @version      1.5.5.1
-// @description  R=InstaNormal | T=ReverseInsta | Y=BoostInsta | G=BoostSpike | B=4Traps/Boost | Z=4Spikes | ,=AntiTrap | M=AutoMills | F=Trap/BoostPad | V=Spike | N=Mill | H=Teleport/Turret | AutoBiomeHat | Esc=MenuGoldbot/Music | ClickRight=FastBreak | ClickLeft=ClickBull | AutoHeal | AutoGG | AntiInstas | Visual Mods.
+// @version      1.5.6.0
+// @description  R=InstaNormal | T=ReverseInsta | Y=BoostInsta | G=BoostSpike | B=4Traps/Boost | C=4Spikes | ,=AntiTrap | M=AutoMills | F=Trap/BoostPad | V=Spike | N=Mill | H=Teleport/Turret | AutoBiomeHat | Esc=MenuGoldbot/Music | ClickRight=FastBreak | AutoHeal | AutoGG | AntiInstas | Visual Mods.
 // @icon         https://i.imgur.com/AFJt4iq.png
 // @author       x-RedDragonYT
 // @match        *://moomoo.io/*
@@ -43,14 +43,14 @@
     let autoaim = false;
     let nearestEnemy = null, nearestEnemyAngle = 0, enemiesNear = [];
 
-
     let gameTick = 0, lastDamageTick = 0, damageTimes = 0, shame = 0, shameTime = 0, HP = 100;
     let anti = true;
-    let hitBack = true;
     let primary = null;
 
-    function storeEquip(id, index) {
-        doNewSend(["c", [0, id, index]]);
+    function storeEquip(hatId = null, accessoryId = null) {
+        const hat = hatId !== null ? hatId : myPlayer.hat || 0;
+        const acc = accessoryId !== null ? accessoryId : myPlayer.accessory || 0;
+        doNewSend(["c", [0, hat, acc]]);
     }
 
     const cvs = document.getElementById("gameCanvas");
@@ -109,7 +109,7 @@
         delete placementIntervals[key];
     }
 
-function performGSequence() {
+    function performGSequence() {
     if (!nearestEnemy) return;
 
 
@@ -132,17 +132,17 @@ function performGSequence() {
 
 
     place(boostType, nearestEnemyAngle);
-}
+    }
 
-function performBPlacement() {
+    function performBPlacement() {
     const base = myPlayer.dir;
     place(boostType, base);
     place(boostType, base + Math.PI / 2);
     place(boostType, base - Math.PI / 2);
     place(boostType, base + Math.PI);
-}
+    }
 
-function placeFourSpikesUp() {
+    function placeFourSpikesUp() {
     const firstAngle = -Math.PI / 2;
     place(spikeType, firstAngle);
     place(spikeType, firstAngle + toRad(90));
@@ -150,7 +150,7 @@ function placeFourSpikesUp() {
     place(spikeType, firstAngle + toRad(270));
 }
 
-document.addEventListener("keydown", e => {
+    document.addEventListener("keydown", e => {
     if (document.activeElement.id.toLowerCase() === 'chatbox') return;
     const k = e.key.toLowerCase();
     if (keysPressed[k]) return;
@@ -315,7 +315,7 @@ if (e.keyCode == 89 && document.activeElement.id.toLowerCase() !== "chatbox") {
     }
 
     if (k === 'b') performBPlacement();
-    if (k === 'z') placeFourSpikesUp();
+    if (k === 'c') placeFourSpikesUp();
 });
 
 document.addEventListener("keyup", e => {
@@ -338,188 +338,175 @@ document.addEventListener("keyup", e => {
     }
 });
 
-    if (!WebSocket.prototype.__originalSend) {
-        WebSocket.prototype.__originalSend = WebSocket.prototype.send;
-        WebSocket.prototype.send = function (data) {
-            if (!ws) {
-                ws = this;
-                document.ws = this;
-                ws.addEventListener("message", handleMessage);
+if (!WebSocket.prototype.__originalSend) {
+    WebSocket.prototype.__originalSend = WebSocket.prototype.send;
+    WebSocket.prototype.send = function (data) {
+        if (!ws) {
+            ws = this;
+            document.ws = this;
+            ws.addEventListener("message", handleMessage);
+        }
+        return this.__originalSend(data);
+    };
+}
+
+function handleMessage(m) {
+    let temp = msgpack5.decode(new Uint8Array(m.data));
+    let data = (temp.length > 1) ? [temp[0], ...temp[1]] : temp;
+    if (!data) return;
+
+    let item = data[0];
+
+    // === Identificación del jugador ===
+    if (data[0] === "C" && myPlayer.id == null) myPlayer.id = data[1];
+
+    // === Actualización de enemigos y AutoMills ===
+    if (data[0] === "a") {
+        primary = myPlayer.weapon;
+        gameTick++;
+
+        for (let i = 0; i < data[1].length / 13; i++) {
+            let obj = data[1].slice(13 * i, 13 * i + 13);
+            if (obj[0] === myPlayer.id) {
+                [myPlayer.x, myPlayer.y, myPlayer.dir, myPlayer.object, myPlayer.weapon,
+                    , myPlayer.clan, myPlayer.isLeader, myPlayer.hat, myPlayer.accessory,
+                    myPlayer.isSkull] = [obj[1], obj[2], obj[3], obj[4],
+                    obj[5], obj[7], obj[8], obj[9], obj[10], obj[11]];
+            } else enemiesNear.push(obj);
+        }
+
+        if (enemiesNear.length > 0) {
+            nearestEnemy = enemiesNear.sort(
+                (a, b) => Math.hypot(a[1] - myPlayer.x, a[2] - myPlayer.y) - Math.hypot(b[1] - myPlayer.x, b[2] - myPlayer.y)
+            )[0];
+            nearestEnemyAngle = Math.atan2(nearestEnemy[2] - myPlayer.y, nearestEnemy[1] - myPlayer.x);
+        } else nearestEnemy = null;
+
+        enemiesNear = [];
+
+        if (automillx === false) automillx = myPlayer.x;
+        if (automilly === false) automilly = myPlayer.y;
+
+        if (myPlayeroldy !== myPlayer.y || myPlayeroldx !== myPlayer.x) {
+            if (walkmillhaha) {
+                if (Math.sqrt(Math.pow(myPlayer.y - automilly, 2) + Math.pow(myPlayer.x - automillx, 2)) > 100) {
+                    let angle = Math.atan2(myPlayeroldy - myPlayer.y, myPlayeroldx - myPlayer.x);
+                    place(windmillType, angle + toRad(78));
+                    place(windmillType, angle - toRad(78));
+                    place(windmillType, angle);
+                    doNewSend(["D", [Math.atan2(mouseY - height / 2, mouseX - width / 2)]]);
+                    automillx = myPlayer.x;
+                    automilly = myPlayer.y;
+                }
             }
-            return this.__originalSend(data);
-        };
+            myPlayeroldx = myPlayer.x;
+            myPlayeroldy = myPlayer.y;
+        }
     }
 
-    function handleMessage(m) {
-        let temp = msgpack5.decode(new Uint8Array(m.data));
-        let data = (temp.length > 1) ? [temp[0], ...temp[1]] : temp;
-        if (!data) return;
-
-        if (data[0] === "C" && myPlayer.id == null) myPlayer.id = data[1];
-
-        if (data[0] === "a") {
-            for (let i = 0; i < data[1].length / 13; i++) {
-                let obj = data[1].slice(13 * i, 13 * i + 13);
-                if (obj[0] === myPlayer.id) {
-                    [myPlayer.x, myPlayer.y, myPlayer.dir, myPlayer.object, myPlayer.weapon,
-                        , myPlayer.clan, myPlayer.isLeader, myPlayer.hat, myPlayer.accessory,
-                        myPlayer.isSkull] = [obj[1], obj[2], obj[3], obj[4],
-                        obj[5], obj[7], obj[8], obj[9], obj[10], obj[11]];
-                } else enemiesNear.push(obj);
-            }
-
-            if (enemiesNear.length > 0) {
-                nearestEnemy = enemiesNear.sort(
-                    (a, b) => Math.hypot(a[1] - myPlayer.x, a[2] - myPlayer.y) - Math.hypot(b[1] - myPlayer.x, b[2] - myPlayer.y)
-                )[0];
-                nearestEnemyAngle = Math.atan2(nearestEnemy[2] - myPlayer.y, nearestEnemy[1] - myPlayer.x);
-            } else nearestEnemy = null;
-
-            enemiesNear = [];
-
-            if (automillx === false) automillx = myPlayer.x;
-            if (automilly === false) automilly = myPlayer.y;
-
-            if (myPlayeroldy !== myPlayer.y || myPlayeroldx !== myPlayer.x) {
-                if (walkmillhaha) {
-                    if (Math.sqrt(Math.pow(myPlayer.y - automilly, 2) + Math.pow(myPlayer.x - automillx, 2)) > 100) {
-                        let angle = Math.atan2(myPlayeroldy - myPlayer.y, myPlayeroldx - myPlayer.x);
-                        place(windmillType, angle + toRad(78));
-                        place(windmillType, angle - toRad(78));
-                        place(windmillType, angle);
-                        doNewSend(["D", [Math.atan2(mouseY - height / 2, mouseX - width / 2)]]);
-                        automillx = myPlayer.x;
-                        automilly = myPlayer.y;
+        if (item == "X") {
+            if (data[5] == 3.6) {
+                let dir_1 = (dir) => Math.atan2(Math.sin(dir), Math.cos(dir));
+                let a1 = dir_1((Math.atan2(data[2] - myPlayer.y, data[1] - myPlayer.x) + Math.PI + Math.PI) % (Math.PI * 2));
+                let a2 = dir_1((dir_1(data[3]) + Math.PI) % (Math.PI * 2));
+                let a3 = a1 - a2;
+                if (0.36 > a3 && -0.36 < a3) {
+                    //doNewSend(["6", ["Sync Detect Test"]]);
+                    doNewSend(["D", [Math.atan2(data[2] - myPlayer.y, data[1] - myPlayer.x)]]);
+                    if (data[2] < 80 && data[2] > 0) {
+                        doNewSend(["c", [0, 6, 0]]);
+                        place(foodType);
+                        place(foodType);
                     }
                 }
-                myPlayeroldx = myPlayer.x;
-                myPlayeroldy = myPlayer.y;
             }
         }
 
+        if (myPlayer.hat == 45 && shame) shameTime = 30000;
+        if (myPlayer.hat == 45 && shame) shame = 30000;
 
-        if (data[0] === "O" && data[1] === myPlayer.id) {
+        if (item == "O" && data[1] == myPlayer.id) {
             gameTick = 0;
             lastDamageTick = 0;
             shame = 0;
             HP = 100;
             shameTime = 0;
 
-            if (data[0] === "O" && data[1] === myPlayer.id) {
-                let damage = HP - data[2];
-                HP = data[2];
-                if (damage <= -1) {
-                    damageTimes++;
-                    if (!lastDamageTick) return;
-                    let healTime = gameTick - lastDamageTick;
-                    lastDamageTick = 0;
-                    if (healTime <= 1) {
-                        shame = shame++;
-                    } else {
-                        shame = Math.max(0, shame - 2);
-                    }
-                } else {
-                    lastDamageTick = gameTick;
-                }
-            }
+            let damage = HP - data[2];
+            HP = data[2];
 
-            // Normal Heal
+            if (damage <= -1) {
+                damageTimes++;
+                if (!lastDamageTick) return;
+                let healTime = gameTick - lastDamageTick;
+                lastDamageTick = 0;
+                if (healTime <= 1) shame = shame++;
+                else shame = Math.max(0, shame - 2);
+            } else lastDamageTick = gameTick;
+
             if (data[2] < 100 && data[2] > 0 && healToggle == true) {
-                console.log("normal healing");
                 setTimeout(() => {
                     place(foodType);
                     place(foodType);
                     doNewSend(["c", [0, 6, 0]]);
+                    //doNewSend(["6", ["Heal"]]);
                 }, 115);
             }
 
-            // Anti Insta
-            if (data[2] < 48 && data[2] > 0 && anti == true && (nearestEnemy[5] == 5 || nearestEnemy[5] == 3)) {
+            if (data[2] < 48 && data[2] > 0 && anti == true && nearestEnemy && (nearestEnemy[5] == 5 || nearestEnemy[5] == 3)) {
                 healToggle = false;
-                console.log("no soldier anti - polearm");
                 doNewSend(["c", [0, 22, 0]]);
+                //doNewSend(["6", ["Anti"]]);
                 place(foodType);
                 setTimeout(() => {
                     place(foodType);
                     doNewSend(["c", [0, 6, 0]]);
                     healToggle = true;
                 }, 200);
-                setTimeout(() => {
-                    doNewSend(["c", [0, 7, 0]]);
-                }, 700);
-                setTimeout(() => {
-                    doNewSend(["c", [0, 6, 0]]);
-                }, 1900);
+                setTimeout(() => doNewSend(["c", [0, 7, 0]]), 700);
+                setTimeout(() => doNewSend(["c", [0, 6, 0]]), 1900);
             }
 
-            // Anti Insta
-            if (data[2] < 62 && data[2] > 41 && anti == true && (nearestEnemy[5] == 5 || nearestEnemy[5] == 3)) {
+            if (data[2] < 62 && data[2] > 41 && anti == true && nearestEnemy && (nearestEnemy[5] == 5 || nearestEnemy[5] == 3)) {
                 healToggle = false;
-                console.log("anti insta - polearm");
                 doNewSend(["c", [0, 22, 0]]);
+                //doNewSend(["6", ["Anti"]]);
                 place(foodType);
                 setTimeout(() => {
                     place(foodType);
                     doNewSend(["c", [0, 6, 0]]);
                     healToggle = true;
                 }, 200);
-                setTimeout(() => {
-                    doNewSend(["c", [0, 7, 0]]);
-                }, 700);
-                setTimeout(() => {
-                    doNewSend(["c", [0, 6, 0]]);
-                }, 1900);
+                setTimeout(() => doNewSend(["c", [0, 7, 0]]), 700);
+                setTimeout(() => doNewSend(["c", [0, 6, 0]]), 1900);
             }
 
-            // Anti Bullspam
             if (data[2] < 56 && data[2] > 50) {
                 healToggle = false;
-                console.log("anti bullspam");
                 setTimeout(() => {
                     place(foodType);
                     place(foodType);
                     doNewSend(["c", [0, 6, 0]]);
+                    //doNewSend(["6", ["BHeal1"]]);
                     healToggle = true;
                 }, 140);
             }
-
-            // Hitback
-            if (data[2] < 41 && data[2] > 0 && hitBack == true && nearestEnemy[5] == 4) {
-                console.log("hitbacking");
-                healToggle = false;
-                autoaim = true;
-                setTimeout(() => {
-                    place(foodType);
-                    place(foodType);
-                }, 133);
-                place(spikeType, nearestEnemyAngle);
-                doNewSend(["n", [1]]);
-                doNewSend(["c", [0, 7, 0]]);
-                doNewSend(["z", [primary, true]]);
-                setTimeout(() => {
-                    doNewSend(["c", [0, 53, 0]]);
-                    doNewSend(["n", [0]]);
-                    healToggle = true;
-                }, 150);
-                setTimeout(() => {
-                    doNewSend(["c", [0, 11, 0]]);
-                    autoaim = false;
-                }, 300);
-            }
         }
-
     }
-
-    setInterval(() => {
-        if (autoaim && nearestEnemy) doNewSend(["D", [nearestEnemyAngle]]);
-    }, 10);
-
     // 🧠 Anti-Rotación
     Object.defineProperty(Object.prototype, "turnSpeed", {
         get() { return 0; },
         set(_) {},
         configurable: true
     });
+
+setInterval(() => {
+
+    // AutoAim
+    if (autoaim && nearestEnemy) {
+        doNewSend(["D", [nearestEnemyAngle]]);
+    }
+}, 15);
 
 // === AUTO GG ===
 let prevKillCount = 0;
@@ -546,18 +533,17 @@ function initAutoGG() {
 }
 
 initAutoGG();
-// === FastBreack + ClickBull ===
+
+// === FastBreack ===
 const WEAPON_SPEEDS = {
   0: 260, 1: 360, 2: 360, 3: 260, 4: 260,
-  5: 660, 6: 660, 7: 60, 8: 360,
+  5: 500, 6: 660, 7: 60, 8: 360,
   9: 560, 10: 360, 12: 660, 13: 170,
   14: 660, 15: 1460
 };
 
 let rightClickHeld = false;
-let leftClickHeld = false;
 let rightLoopRunning = false;
-let leftLoopRunning = false;
 let lastAttackTime = 0;
 
 function getWeaponReloadTime(id) {
@@ -584,18 +570,27 @@ function swing() {
 
 function isInUI(e) {
   const target = e.target;
-  return target.closest('#nameInput, .menuButton, .menuCard, #bottomText, #storeHolder, #youtuberBtn, #adCard, .setNameContainer, .newsHolder, #gameUI, .resourceDisplay, #killCounter, .uiElement, .actionBarItem, #itemInfoHolder');
+  return target.closest(
+    '#nameInput, .menuButton, .menuCard, #bottomText, #storeHolder,' +
+    '#youtuberBtn, #adCard, .setNameContainer, .newsHolder, #gameUI,' +
+    '.resourceDisplay, #killCounter, .uiElement, .actionBarItem, #itemInfoHolder'
+  );
 }
 
 function rightAttackStep() {
   if (!rightClickHeld) return;
+
   const secondary = getSecondaryWeaponIndex();
   const primary = myPlayer.weapon;
   const weaponToUse = secondary === 10 ? secondary : primary;
+
   equipWeapon(weaponToUse);
   equipHat(40);
+
   if (!weaponReady(weaponToUse)) return;
+
   swing();
+
   const reload = getWeaponReloadTime(weaponToUse);
   setTimeout(() => {
     if (rightClickHeld) equipHat(6);
@@ -607,55 +602,25 @@ function rightAttackLoop() {
     rightLoopRunning = false;
     return;
   }
+
   rightAttackStep();
+
   const secondary = getSecondaryWeaponIndex();
   const currentWeapon = secondary === 10 ? secondary : myPlayer.weapon;
   const delay = getWeaponReloadTime(currentWeapon) * 2;
+
   setTimeout(rightAttackLoop, delay);
-}
-
-function leftAttackStep() {
-  if (!leftClickHeld) return;
-  const primary = myPlayer.weapon;
-  equipWeapon(primary);
-  equipHat(7);
-  if (!weaponReady(primary)) return;
-  swing();
-  const reload = getWeaponReloadTime(primary);
-  setTimeout(() => {
-    if (leftClickHeld) equipHat(6);
-  }, reload - 20);
-}
-
-function leftAttackLoop() {
-  if (!leftClickHeld) {
-    leftLoopRunning = false;
-    return;
-  }
-  leftAttackStep();
-  const delay = getWeaponReloadTime(myPlayer.weapon) * 2;
-  setTimeout(leftAttackLoop, delay);
 }
 
 document.addEventListener("mousedown", e => {
   if (isInUI(e)) return;
+
   if (e.button === 2 && !rightClickHeld) {
     rightClickHeld = true;
     if (!rightLoopRunning) {
       rightLoopRunning = true;
       rightAttackLoop();
     }
-  }
-  if (e.button === 0 && !leftClickHeld) {
-    leftClickHeld = true;
-    storeEquip(0, 1);
-    setTimeout(() => {
-      if (!leftClickHeld) return;
-      if (!leftLoopRunning) {
-        leftLoopRunning = true;
-        leftAttackLoop();
-      }
-    }, 120);
   }
 });
 
@@ -665,23 +630,16 @@ document.addEventListener("mouseup", e => {
     rightLoopRunning = false;
     setTimeout(() => equipHat(6), 100);
   }
-  if (e.button === 0) {
-    leftClickHeld = false;
-    leftLoopRunning = false;
-    setTimeout(() => equipHat(6), 100);
-  }
 });
 
-function quickClick(button = 0) {
-  if (document.activeElement && (document.activeElement.tagName === "INPUT" || document.activeElement.isContentEditable)) return;
-  if (button === 0) {
-    leftClickHeld = true;
-    storeEquip(0, 1);
-    setTimeout(() => {
-      leftClickHeld = false;
-      setTimeout(() => equipHat(6), 100);
-    }, 100);
-  } else if (button === 2) {
+function quickClick(button = 2) {
+  if (
+    document.activeElement &&
+    (document.activeElement.tagName === "INPUT" ||
+     document.activeElement.isContentEditable)
+  ) return;
+
+  if (button === 2) {
     rightClickHeld = true;
     setTimeout(() => {
       rightClickHeld = false;
@@ -690,7 +648,7 @@ function quickClick(button = 0) {
   }
 }
 
-// 🎩 AutoBiomeHatController
+// 🎩 AutoBiomeHatController optimizado
 function autoBiomeHatController() {
     let normalHat = 12;
     let currentHat = null;
@@ -780,106 +738,154 @@ function autoBiomeHatController() {
         if (!overridePause) updateHatLogic();
     }, 250);
 
-    console.log("AutoBiomeHatController activated (accessories secured).");
+    console.log("AutoBiomeHatController activated.");
 }
 
 autoBiomeHatController();
-// === ANTI TRAP ===
+
+// === AntiTrap ===
 let antiTrap = false;
 let intrap = false;
 let trapAngle = null;
 let trapId = null;
+let trapOwnerId = null;
+let antiTrapRunning = false;
+let enteredTrap = false;
+
+const FAST_ATTACK_TIMES_ALT = {
+    0: 260, 1: 360, 2: 360, 3: 260, 4: 260,
+    5: 500, 6: 660, 7: 60, 8: 360,
+    9: 560, 10: 360, 12: 660, 13: 170,
+    14: 660, 15: 1460
+};
 
 document.addEventListener("keydown", e => {
-    if (document.activeElement.id.toLowerCase() === 'chatbox') return;
+    if (document.activeElement?.id?.toLowerCase() === "chatbox") return;
     if (e.key === ",") {
         antiTrap = !antiTrap;
-        doNewSend(["6", ["AntiTrap : " + (antiTrap ? "true" : "false")]]);
+        doNewSend(["6", ["AntiTrap : " + antiTrap]]);
     }
 });
 
 function handleTrapData(node) {
     for (let i = 0; i < node[1].length / 8; i++) {
-        let obj = node[1].slice(8 * i, 8 * i + 8);
-        if (obj[6] === 15 && obj[7] !== myPlayer.id && obj[7] !== myPlayer.clan) { // trap enemiga
-            let dx = obj[1] - myPlayer.x;
-            let dy = obj[2] - myPlayer.y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 90) {
-                intrap = true;
-                trapAngle = Math.atan2(dy, dx);
-                trapId = obj[0];
+        const obj = node[1].slice(i * 8, i * 8 + 8);
+        if (obj[6] !== 15) continue;
+        if (obj[7] === myPlayer.id || obj[7] === myPlayer.clan) continue;
 
-                doNewSend(["6", ["Trap Detected"]]);
+        const dx = obj[1] - myPlayer.x;
+        const dy = obj[2] - myPlayer.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < 90 && !intrap) {
+            intrap = true;
+            trapAngle = Math.atan2(dy, dx);
+            trapId = obj[0];
+            trapOwnerId = obj[7];
+            enteredTrap = false;
+            doNewSend(["6", ["Trap Detected"]]);
+
+            if (!antiTrapRunning) {
+                antiTrapRunning = true;
+                antiTrapLoop();
             }
         }
     }
 }
 
-const oldHandleMessage = handleMessage;
+const oldHandleMessageTrap = handleMessage;
 handleMessage = function (m) {
-    let temp = msgpack5.decode(new Uint8Array(m.data));
-    let data = (temp.length > 1) ? [temp[0], ...temp[1]] : temp;
+    const temp = msgpack5.decode(new Uint8Array(m.data));
+    const data = temp?.length > 1 ? [temp[0], ...temp[1]] : temp;
     if (!data) return;
 
     if (data[0] === "H") handleTrapData(data);
 
+    if (data[0] === "E" && trapOwnerId === data[1] && intrap) {
+        intrap = false;
+        trapId = null;
+        trapOwnerId = null;
+        antiTrapRunning = false;
+        setTimeout(() => doNewSend(["c", [0, 6, 0]]), 100);
+        doNewSend(["6", ["Trap Owner Disconnected"]]);
+    }
+
     if (data[0] === "Q" && intrap && trapId === data[1]) {
         intrap = false;
         trapId = null;
+        trapOwnerId = null;
+        antiTrapRunning = false;
         setTimeout(() => doNewSend(["c", [0, 6, 0]]), 100);
         doNewSend(["6", ["Trap Cleared"]]);
     }
 
-    oldHandleMessage(m);
+    oldHandleMessageTrap(m);
 };
 
-function ensureCorrectWeapon() {
+function getCorrectWeapon() {
     const primary = myPlayer.weapon;
     const secondary = getSecondaryWeaponIndex();
-    let correctWeapon = (secondary === 10) ? secondary : primary;
-
-    if (myPlayer.weapon !== correctWeapon) {
-        doNewSend(["z", [correctWeapon, true]]);
-    }
+    return secondary === 10 ? secondary : primary;
 }
 
-function hookEquipFunctions() {
-    if (typeof window.storeEquip === "function" && typeof window.equipWeapon === "function") {
-        const oldStoreEquip = window.storeEquip;
-        window.storeEquip = function (id, slot) {
-            const result = oldStoreEquip.apply(this, arguments);
-            if (antiTrap && intrap) ensureCorrectWeapon();
-            return result;
-        };
-
-        const oldEquipWeapon = window.equipWeapon;
-        window.equipWeapon = function (id) {
-            const result = oldEquipWeapon.apply(this, arguments);
-            if (antiTrap && intrap) ensureCorrectWeapon();
-            return result;
-        };
-    } else {
-        setTimeout(hookEquipFunctions, 100);
-    }
+function equipCorrectWeapon() {
+    const weapon = getCorrectWeapon();
+    doNewSend(["z", [weapon, true]]);
 }
-hookEquipFunctions();
 
-setInterval(() => {
+function antiTrapEnterSequence() {
+    const a1 = trapAngle + (135 * Math.PI / 180);
+    const a2 = a1 + (45 * Math.PI / 180);
+    const a3 = a2 + (45 * Math.PI / 180);
+
+    place(spikeType, a1);
+    place(spikeType, a2);
+    place(spikeType, a3);
+
+    enteredTrap = true;
+}
+
+function antiTrapAttackStep() {
     if (!antiTrap || !intrap) return;
-    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    if (myPlayer?.health !== undefined && myPlayer.health <= 0) {
+        intrap = false;
+        antiTrapRunning = false;
+        setTimeout(() => doNewSend(["c", [0, 6, 0]]), 100);
+        return;
+    }
 
-    let oppositeAngle = trapAngle + Math.PI;
+    const weapon = getCorrectWeapon();
+    const attackDelay = FAST_ATTACK_TIMES_ALT[weapon] || 300;
 
-    place(spikeType, oppositeAngle);
-    ensureCorrectWeapon();
-
-    doNewSend(["D", [trapAngle]]);
+    equipCorrectWeapon();
     doNewSend(["c", [0, 40, 0]]);
+    doNewSend(["D", [trapAngle]]);
     doNewSend(["F", [1, trapAngle]]);
     setTimeout(() => doNewSend(["F", [0, trapAngle]]), 15);
 
-}, 300);
+    setTimeout(() => {
+        if (antiTrap && intrap) {
+            doNewSend(["c", [0, 6, 0]]);
+        }
+    }, 20);
+
+    return attackDelay;
+}
+
+function antiTrapLoop() {
+    if (!antiTrap || !intrap) {
+        antiTrapRunning = false;
+        return;
+    }
+
+    if (!enteredTrap) antiTrapEnterSequence();
+
+    const delay = antiTrapAttackStep();
+
+    setTimeout(() => {
+        if (antiTrap && intrap) antiTrapLoop();
+    }, delay);
+}
 })();
 
 //AntiGrid
@@ -1755,60 +1761,275 @@ window.addEventListener('load', () => {
 
 })();
 
-// === ESP Radar ===
+//Radar
+(function () {
+    "use strict";
 
-/* The radar has been temporarily
-disabled to address several critical
-issues detected during script execution.
-We’re actively working on a fix and
-plan to restore it soon. Thank you
-for your patience, and we apologize
-for any inconvenience caused.
-*/
+    const playersMap = new Map();
+    let playerId = null;
+    let radarLayer = null;
+    let wsHooked = false;
 
-//Goldbot/Music Menu
+    function getRadarLayer() {
+        if (radarLayer) return radarLayer;
+
+        radarLayer = document.createElement("div");
+        radarLayer.id = "xrd-radar-layer";
+
+        Object.assign(radarLayer.style, {
+            position: "fixed",
+            inset: "0",
+            pointerEvents: "none",
+            contain: "strict",
+            willChange: "transform",
+            zIndex: "40"
+        });
+
+        const ui = document.getElementById("mainMenu");
+        if (ui) {
+            const z = parseInt(getComputedStyle(ui).zIndex);
+            if (!isNaN(z)) radarLayer.style.zIndex = z - 1;
+        }
+
+        document.documentElement.appendChild(radarLayer);
+        return radarLayer;
+    }
+
+    function hookWebSocketSafely() {
+        if (wsHooked) return;
+        wsHooked = true;
+
+        const originalAddEvent = WebSocket.prototype.addEventListener;
+
+        WebSocket.prototype.addEventListener = function (type, listener, options) {
+            if (type === "message") {
+                const wrapped = (e) => {
+                    try {
+                        if (e.data instanceof ArrayBuffer) {
+                            const data = msgpack.decode(e.data);
+
+                            if (data[0] === "C") {
+                                playerId = data[1][0];
+                            }
+
+                            if (data[0] === "a") {
+                                playersMap.clear();
+                                const info = data[1][0];
+                                for (let i = 0; i < info.length; i += 13) {
+                                    playersMap.set(info[i], {
+                                        x: info[i + 1],
+                                        y: info[i + 2],
+                                        team: info[i + 7]
+                                    });
+                                }
+                            }
+                        }
+                    } catch (_) {}
+
+                    listener.call(this, e);
+                };
+
+                return originalAddEvent.call(this, type, wrapped, options);
+            }
+
+            return originalAddEvent.call(this, type, listener, options);
+        };
+    }
+
+    function createArrow(id) {
+        let arrow = document.getElementById("xrd-r-" + id);
+        if (arrow) return arrow;
+
+        arrow = document.createElement("div");
+        arrow.id = "xrd-r-" + id;
+
+        Object.assign(arrow.style, {
+            position: "fixed",
+            width: "0",
+            height: "0",
+            borderStyle: "solid",
+            borderWidth: "10px 0 10px 20px",
+            pointerEvents: "none",
+            zIndex: "1"
+        });
+
+        getRadarLayer().appendChild(arrow);
+        return arrow;
+    }
+
+    function updateRadar() {
+        requestAnimationFrame(updateRadar);
+
+        if (!playerId || !playersMap.has(playerId)) return;
+
+        const me = playersMap.get(playerId);
+        const cx = innerWidth / 2;
+        const cy = innerHeight / 2;
+
+        for (const [id, p] of playersMap) {
+            if (id === playerId) continue;
+
+            const arrow = createArrow(id);
+
+            const dx = p.x - me.x;
+            const dy = me.y - p.y;
+
+            const angle = Math.atan2(dy, dx);
+            const rotation = -angle * 180 / Math.PI;
+
+            const dist = Math.min(Math.hypot(dx, dy) / 600, 1);
+
+            Object.assign(arrow.style, {
+                display: "block",
+                opacity: dist,
+                transform: `rotate(${rotation}deg)`,
+                left: `${cx + Math.cos(angle) * cy * dist}px`,
+                top: `${cy - Math.sin(angle) * cy * dist}px`,
+                borderColor:
+                    p.team && p.team === me.team
+                        ? "transparent transparent transparent #00ff00"
+                        : "transparent transparent transparent #ff0000"
+            });
+        }
+
+        document.querySelectorAll('[id^="xrd-r-"]').forEach(el => {
+            const id = +el.id.replace("xrd-r-", "");
+            if (!playersMap.has(id)) el.remove();
+        });
+    }
+
+    hookWebSocketSafely();
+    updateRadar();
+
+})();
+
+//Menu
 (function () {
     'use strict';
 
-   const style = document.createElement('style');
+    const style = document.createElement('style');
     style.textContent = `
-        #moddedMenu {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.5);
-            width: 360px; background: rgba(0,0,0,0.8); border: 4px solid #ff0000; border-radius: 15px;
-            z-index: 9999; color: white; font-family: monospace; display: flex; flex-direction: column;
-            align-items: center; padding: 15px; box-sizing: border-box; opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease; pointer-events: none;
-        }
-        #moddedMenu.open { opacity:1; transform: translate(-50%, -50%) scale(1); pointer-events:auto; }
-        #menuTabs { display:flex; justify-content:center; gap:6px; width:100%; margin-bottom:15px; }
-        .tabButton { padding:5px 10px; border:1px solid #ff0000; border-radius:8px; background:#111;
-            color:#ff0000; cursor:pointer; font-weight:bold; font-size:0.9em; transition: background 0.3s ease, transform 0.2s ease; }
-        .tabButton.active { background:#cc0000; color:white; transform:scale(1.05); }
-        .tabContent { display:none; width:100%; text-align:center; }
-        .tabContent.active { display:block; }
-        #menuTitle { font-size:1.4em; color:#ff0000; margin-bottom:12px; }
-        .rd-select, .rd-button { font-family:monospace; width:85%; font-size:1em; padding:8px; margin:6px auto;
-            border:1px solid #ff0000; border-radius:6px; background:#111; color:#ff0000; outline:none; display:block; text-align:center; }
-        .rd-button { cursor:pointer; font-weight:bold; transition: background-color 0.3s ease, transform 0.2s ease; }
-        .rd-button:hover { background-color:#cc0000; color:white; transform:scale(1.05); }
-        #buttons { display:flex; justify-content:center; gap:12px; margin:8px 0; }
-        .indicator { margin-top:6px; font-size:0.9em; color:#ff0000; }
-        .indicator.active { color:#00ff00; }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+    #moddedMenu, #moddedMenu * { box-sizing: border-box; font-family: 'Poppins', system-ui, sans-serif; }
+
+    :root {
+        --bg-main: #0a0a0a;
+        --bg-panel: #1a1a1a;
+        --accent: #c40000;
+        --accent-dark: #550000;
+        --text-main: #ffffff;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --radius-sm: 8px;
+    }
+
+    #moddedMenu { position: fixed; inset: 0; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 999999; }
+    #moddedMenu.open { display:flex; }
+
+    .rd-wrapper { width: 900px; height: 560px; background: var(--bg-main); border-radius: var(--radius-lg); padding: 14px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 0 40px rgba(196,0,0,0.7); }
+
+    .rd-header { height: 56px; background: var(--bg-panel); border-radius: var(--radius-md); padding: 0 18px; display: flex; align-items: center; gap: 12px; position: relative; }
+    .rd-header h1 { font-size: 18px; font-weight: 600; color: var(--text-main); margin:0; display:flex; align-items:center; gap:8px; }
+    .rd-close { position: absolute; right: 12px; top: 12px; width: 32px; height: 32px; border-radius: var(--radius-sm); border:none; background: var(--accent); color:#fff; cursor:pointer; }
+
+    .rd-main { flex:1; display:flex; gap:12px; }
+
+    .rd-navbar { width:200px; background: var(--bg-panel); border-radius: var(--radius-md); padding:8px; display:flex; flex-direction: column; gap:8px; }
+    .rd-nav-btn { height:46px; border-radius: var(--radius-sm); border:none; background: var(--bg-main); color:#fff; cursor:pointer; font-size:14px; transition:.25s; }
+    .rd-nav-btn:hover { background: var(--accent); }
+    .rd-nav-btn.active { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+
+    .rd-content { flex:1; background: var(--bg-panel); border-radius: var(--radius-md); padding:16px; position:relative; overflow:hidden; }
+    .rd-page { position:absolute; inset:16px; opacity:0; transform: translateY(20px); pointer-events:none; transition:.3s; overflow:hidden; }
+    .rd-page.active { opacity:1; transform: translateY(0); pointer-events:auto; }
+    .rd-page h2 { margin-bottom:12px; font-size:17px; color:#fff; }
+
+    .rd-select, .rd-button { width:80%; padding:8px; margin:6px auto; display:block; border-radius:8px; border:1px solid var(--accent); background:#111; color:#fff; text-align:center; font-family: monospace; font-size:1em; }
+    .rd-button { cursor:pointer; transition:.2s; font-weight:bold; }
+    .rd-button:hover { background: var(--accent); }
+
+    #buttons { display:flex; justify-content:center; gap:12px; margin:8px 0; }
+    .indicator { text-align:center; color: var(--accent); font-size:0.9em; }
+    .indicator.active { color:#00ff66; }
+
+    #keybingPage { overflow-y:auto; padding-right:4px; }
+    #keybingPage::-webkit-scrollbar { width:8px; }
+    #keybingPage::-webkit-scrollbar-track { background: #111; border-radius: 8px; }
+    #keybingPage::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 8px; }
+    #keybingPage::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
     `;
     document.head.appendChild(style);
 
     const menu = document.createElement('div'); menu.id='moddedMenu';
+    menu.innerHTML = `
+    <div class="rd-wrapper">
+        <div class="rd-header">
+            <h1><img src="https://files.catbox.moe/5bucev.png" style="width:40px;height:40px;border-radius:50%;"> 𝕩-ℝ𝕖𝕕𝔻𝕣𝕒𝕘𝕠𝕟 ℂ𝕝𝕚𝕖𝕟𝕥</h1>
+            <button class="rd-close">𝗫</button>
+        </div>
+        <div class="rd-main">
+            <div class="rd-navbar">
+                <button class="rd-nav-btn active" data-id="keybing">Keybing</button>
+                <button class="rd-nav-btn" data-id="music">Music</button>
+                <button class="rd-nav-btn" data-id="bot">Bot</button>
+                <button class="rd-nav-btn" data-id="credits">Credits</button>
+            </div>
+            <div class="rd-content">
+                <div class="rd-page active" data-page="keybing" id="keybingPage"><h2>Key Bindings</h2></div>
+                <div class="rd-page" data-page="music" id="musicPage"></div>
+                <div class="rd-page" data-page="bot" id="botPage"></div>
+                <div class="rd-page" data-page="credits" id="creditsPage">
+                    <h2>Credits</h2>
+                    <button class="rd-button" id="ytBtn">Visit YouTube Channel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    document.body.appendChild(menu);
 
-    const tabBar = document.createElement('div'); tabBar.id='menuTabs';
-    const tabMusic = document.createElement('button'); tabMusic.textContent="🎵 Music"; tabMusic.className="tabButton active";
-    const tabBot = document.createElement('button'); tabBot.textContent="🤖 Bot"; tabBot.className="tabButton";
-    tabBar.appendChild(tabMusic); tabBar.appendChild(tabBot);
+    const keybingPage = document.getElementById('keybingPage');
+    const mods = [
+        {name:"InstaNormal", key:"R"},
+        {name:"ReverseInsta", key:"T"},
+        {name:"BoostInsta", key:"Y"},
+        {name:"BoostSpike", key:"G"},
+        {name:"4Traps/Boost", key:"B"},
+        {name:"4Spikes", key:"C"},
+        {name:"AntiTrap", key:","},
+        {name:"AutoMills", key:"M"},
+        {name:"Trap/BoostPad", key:"F"},
+        {name:"Spike", key:"V"},
+        {name:"Mill", key:"N"},
+        {name:"Teleport/Turret", key:"H"},
+        {name:"FastBreak", key:"ClickRight"}
+    ];
+    mods.forEach(mod=>{
+        if(!mod.key) return;
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.justifyContent = 'space-between';
+        row.style.marginBottom = '6px';
+        row.style.padding = '6px 12px';
+        row.style.background = '#111';
+        row.style.border = '1px solid #c40000';
+        row.style.borderRadius = '8px';
+        row.style.color = '#fff';
+        row.style.fontFamily = 'monospace';
+        const name = document.createElement('span'); name.textContent = mod.name;
+        const keyBox = document.createElement('span'); keyBox.textContent = mod.key;
+        keyBox.style.background = '#c40000';
+        keyBox.style.color = '#fff';
+        keyBox.style.padding = '2px 6px';
+        keyBox.style.borderRadius = '4px';
+        keyBox.style.fontWeight = 'bold';
+        row.appendChild(name); row.appendChild(keyBox);
+        keybingPage.appendChild(row);
+    });
 
-    const musicContent = document.createElement('div'); musicContent.className="tabContent active";
-    const musicTitle = document.createElement('div'); musicTitle.id='menuTitle'; musicTitle.textContent='Music Player';
-    musicContent.appendChild(musicTitle);
-
-const musicTracks = [
+    const musicPage = document.getElementById('musicPage');
+    const musicTracks = [
     {name:"Alan Walker - Faded",url:"https://files.catbox.moe/p9om0y.mp3"},
     {name:"Alan Walker - Alone",url:"https://files.catbox.moe/xptxat.mp3"},
     {name:"TheFatRat - Unity",url:"https://files.catbox.moe/cx5uyo.mp3"},
@@ -1849,69 +2070,54 @@ const musicTracks = [
     {name:"CRVN x Zack Merci - Nobody", url:"https://files.catbox.moe/lgjj6h.mp3"},
     {name:"Cheriimoya, Sierra Kidd - Living Life", url:"https://files.catbox.moe/hg93qr.mp3"},
     {name:"Adrenaline - ACE", url:"https://files.catbox.moe/1vr1px.mp3"}
-];
+    ];
 
     const musicSelect = document.createElement('select'); musicSelect.className='rd-select';
     musicTracks.forEach(track=>{ const o=document.createElement('option'); o.value=track.url; o.textContent=track.name; musicSelect.appendChild(o); });
-    musicContent.appendChild(musicSelect);
-
+    musicPage.appendChild(musicSelect);
     const buttonsDiv = document.createElement('div'); buttonsDiv.id='buttons';
-    const playBtn = document.createElement('button'); playBtn.className='rd-button'; playBtn.textContent='▶ Play';
-    const stopBtn = document.createElement('button'); stopBtn.className='rd-button'; stopBtn.textContent='■ Stop';
+    const playBtn = document.createElement('button'); playBtn.className='rd-button'; playBtn.textContent='Play';
+    const stopBtn = document.createElement('button'); stopBtn.className='rd-button'; stopBtn.textContent='Stop';
     buttonsDiv.appendChild(playBtn); buttonsDiv.appendChild(stopBtn);
-    musicContent.appendChild(buttonsDiv);
-
+    musicPage.appendChild(buttonsDiv);
     const modeSelect = document.createElement('select'); modeSelect.className='rd-select';
-    modeSelect.innerHTML=`<option value="repeat">🔁 Repeat</option><option value="next">⏭️ Next</option>`;
-    musicContent.appendChild(modeSelect);
-
-    const audio = document.createElement('audio'); audio.id='audioPlayer'; musicContent.appendChild(audio);
-
+    modeSelect.innerHTML=`<option value="repeat">Repeat</option><option value="next">Next</option>`;
+    musicPage.appendChild(modeSelect);
+    const audio = document.createElement('audio'); audio.id='audioPlayer'; musicPage.appendChild(audio);
     function playMusic(){ audio.src=musicSelect.value; audio.play(); }
     playBtn.addEventListener('click',()=>{ if(audio.src!==musicSelect.value) audio.src=musicSelect.value; audio.play(); });
     stopBtn.addEventListener('click',()=>{ audio.pause(); audio.currentTime=0; });
     musicSelect.addEventListener('change',()=>{ if(!audio.paused) playMusic(); });
-    audio.addEventListener('ended',()=>{ if(modeSelect.value==='repeat'){audio.currentTime=0; audio.play();} else { const idx=(musicSelect.selectedIndex+1)%musicSelect.options.length; musicSelect.selectedIndex=idx; playMusic(); }});
+    audio.addEventListener('ended',()=>{
+        if(modeSelect.value==='repeat'){audio.currentTime=0; audio.play();}
+        else { const idx=(musicSelect.selectedIndex+1)%musicSelect.options.length; musicSelect.selectedIndex=idx; playMusic(); }
+    });
 
-
-    const botContent = document.createElement('div'); botContent.className='tabContent';
-    const botTitle = document.createElement('div'); botTitle.id='menuTitle'; botTitle.textContent='🤖 Bot Config';
-    botContent.appendChild(botTitle);
-
+    const botPage = document.getElementById('botPage');
     const respawnBtn = document.createElement('button'); respawnBtn.className='rd-button'; respawnBtn.textContent='Disable Respawn';
-    botContent.appendChild(respawnBtn);
-
     const chatToggleBtn = document.createElement('button'); chatToggleBtn.className='rd-button'; chatToggleBtn.textContent='Chat Spam: ON';
-    botContent.appendChild(chatToggleBtn);
-
     const moveToggleBtn = document.createElement('button'); moveToggleBtn.className='rd-button'; moveToggleBtn.textContent='Bot Movement: ON';
-    botContent.appendChild(moveToggleBtn);
-
     const respawnIndicator = document.createElement('div'); respawnIndicator.className='indicator active'; respawnIndicator.textContent='Respawn Enabled';
-    botContent.appendChild(respawnIndicator);
+    botPage.appendChild(respawnBtn); botPage.appendChild(chatToggleBtn); botPage.appendChild(moveToggleBtn); botPage.appendChild(respawnIndicator);
 
+    let chatEnabled=true, movementEnabled=true, respawnEnabled=true;
+    respawnBtn.addEventListener('click',()=>{ respawnEnabled=false; respawnIndicator.textContent='Respawn Disabled'; respawnIndicator.classList.remove('active'); });
+    chatToggleBtn.addEventListener('click',()=>{ chatEnabled=!chatEnabled; chatToggleBtn.textContent=`Chat Spam: ${chatEnabled?'ON':'OFF'}`; bots.forEach(b=>b.chatIndex=0); });
+    moveToggleBtn.addEventListener('click',()=>{ movementEnabled=!movementEnabled; moveToggleBtn.textContent=`Bot Movement: ${movementEnabled?'ON':'OFF'}`; bots.forEach(b=>b.autm.boolean=movementEnabled); });
 
-    let chatEnabled = true;
-    let movementEnabled = true;
-    let respawnEnabled = true;
+    document.getElementById('ytBtn').addEventListener('click',()=>{ window.open('https://youtube.com/@x-RedDragonOficial','_blank'); });
 
-    respawnBtn.addEventListener('click', ()=>{ respawnEnabled=false; respawnIndicator.textContent='Respawn Disabled'; respawnIndicator.classList.remove('active'); });
-    chatToggleBtn.addEventListener('click', ()=>{ chatEnabled=!chatEnabled; chatToggleBtn.textContent=`Chat Spam: ${chatEnabled?'ON':'OFF'}`; bots.forEach(b=>b.chatIndex=0); });
-    moveToggleBtn.addEventListener('click', ()=>{ movementEnabled=!movementEnabled; moveToggleBtn.textContent=`Bot Movement: ${movementEnabled?'ON':'OFF'}`; bots.forEach(b=>b.autm.boolean=movementEnabled); });
-
-
-    menu.appendChild(tabBar); menu.appendChild(musicContent); menu.appendChild(botContent); document.body.appendChild(menu);
-
-    function switchTab(activeButton, activeContent){
-        document.querySelectorAll(".tabButton").forEach(btn=>btn.classList.remove("active"));
-        document.querySelectorAll(".tabContent").forEach(c=>c.classList.remove("active"));
-        activeButton.classList.add("active"); activeContent.classList.add("active");
-    }
-    tabMusic.addEventListener("click",()=>switchTab(tabMusic,musicContent));
-    tabBot.addEventListener("click",()=>switchTab(tabBot,botContent));
-
+    menu.querySelector('.rd-close').onclick = ()=>menu.classList.remove('open');
     document.addEventListener('keydown',e=>{ if(e.key==='Escape') menu.classList.toggle('open'); });
-
+    menu.querySelectorAll('.rd-nav-btn').forEach(btn=>{
+        btn.onclick=()=>{
+            const id = btn.dataset.id;
+            menu.querySelectorAll('.rd-nav-btn').forEach(b=>b.classList.remove('active'));
+            menu.querySelectorAll('.rd-page').forEach(p=>p.classList.remove('active'));
+            btn.classList.add('active');
+            menu.querySelector(`[data-page="${id}"]`).classList.add('active');
+        };
+    });
 
     const msgpackLite = window.msgpack;
     const NativeWebSocket = window.WebSocket;
@@ -2238,8 +2444,7 @@ const musicTracks = [
     "Stay together",
     "Im respawning",
     "They rush again"
-];
-
+    ];
     let randomHats=[28,29,30,36,37,38,42,43,44,49];
 
     async function safeDecode(event){
@@ -2293,15 +2498,11 @@ const musicTracks = [
                     if(hooked[0]==="D" && hooked[1][1]===this.sid){ this.foodCount=100; this.health=100; }
                     if(hooked[0]==="a"){
                         for(let i=0;i<hooked[1].length/13;i++){ let p=hooked[1].slice(13*i,13*i+13); if(p[0]===this.sid) [this.x,this.y,this.dir,this.weaponIndex]=[p[1],p[2],p[3],p[5]]; }
-
                         this.equipIndex(0, randomHats[Math.floor(Math.random()*randomHats.length)],0);
-
                         if(this.autm.boolean){
-
                             let dx = this.autm.x - this.x;
                             let dy = this.autm.y - this.y;
                             let dist = Math.hypot(dx, dy);
-
                             if(dist > 5){
                                 let ang = Math.atan2(dy, dx);
                                 this.sendMessage("9", ang);

@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name           MangaPlaza Ripper
 // @namespace      https://greasyfork.org/en/users/1553223-ozler365
-// @version        11.0.0
+// @version        11.1.0
 // @description    Targets pages by ID (content-p1, p2...) to guarantee perfect order. Merges split parts automatically.
 // @author         ozler365
 // @license        MIT
 // @match          https://reader.mangaplaza.com/*
+// @icon           https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxPhS0MYkfiZ0LGfDQaF7jedEY76T9dZybag&s
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
 // @grant          none

@@ -4,10 +4,10 @@
 // @match       https://www.dndbeyond.com/campaigns/*
 // @grant       none
 // @grant       GM_addStyle
-// @version     1.2
+// @version     1.3.1
 // @author      lumbearjack
 // @description Enhanced player character info for DMs.
-// @license     GNU GPLv3 
+// @license     GNU GPLv3
 // @downloadURL https://update.greasyfork.org/scripts/470855/Beyonder%20for%20dndbeyondcom.user.js
 // @updateURL https://update.greasyfork.org/scripts/470855/Beyonder%20for%20dndbeyondcom.meta.js
 // ==/UserScript==
@@ -16,11 +16,11 @@
 const lightColor = 'rgba(255,255,255,1)';
 const darkColor = '#111';
 var css = `
-  
+
   .beyonder.ddb-campaigns-character-card { height: 100%; }
   .ddb-campaigns-character-card { display: flex; flex-direction: column; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.05)); border: 1px solid #dedede; border-radius: 9px; }
   .ddb-campaigns-character-card::after { display: none; }
-  
+
   .ddb-campaigns-character-card-header { display: flex; order: -1; padding: 10px 10px; position: static; filter: none !important; }
   .ddb-campaigns-character-card-header-cover-image { border-radius: 9px 9px 0 0; overflow: hidden; bottom: 30px; }
   .ddb-campaigns-character-card-header-cover-image::after { backdrop-filter: none; }
@@ -66,7 +66,7 @@ var css = `
   .beyonder_tabs > .beyonder_tab:not(.active):hover { background: rgba(255,255,255,0.3); color: #eee }
   .beyonder_tabs > .beyonder_tab.active { background: rgba(255,255,255,0.6); color: #333 }
   .page:not(.active) { display: none; }
-  
+
   .beyonder_passives .beyonder_block { background: none; color: white; }
   .beyonder_skills_block { flex-direction: row; flex-wrap: wrap; grid-gap: 3px; }
   .beyonder_skills_block > .beyonder_block { width: auto; flex: 1 1 32%; }
@@ -74,9 +74,14 @@ var css = `
   .beyonder_skills_block .beyonder_header { font-size: 8px; text-align: center; }
 
   .beyonder_simple_list { flex-wrap: wrap; grid-gap: 3px; }
-  .beyonder_simple_list .beyonder_block { flex: 1 1; }
+  .beyonder_simple_list .beyonder_block { flex: 1 1 32%; }
   .beyonder_simple_list .beyonder_block--full { flex: 1 0 100%; }
   .beyonder_simple_list .beyonder_body_text--large { text-transform: none; font-size: 12px; font-weight: 400; text-align: center; }
+  .beyonder_info { position: absolute; top: 1rem; right: 0; min-width: 100px; border: solid 1px black; border-radius: 9px; padding: 8px 12px; margin-right: 10px; }
+  .beyonder_info .beyonder_header { margin-bottom: 2px; justify-content: start; font-size: 12px; }
+  .beyonder_info .beyonder_body { margin-bottom: 2px; }
+  .beyonder_info .beyonder_status { position: absolute; top: 8px; right: 12px; }
+  .beyonder_currency { flex: 1 1 50% !important; }
   `,
   head = document.head || document.getElementsByTagName('head')[0],
   style = document.createElement('style');
@@ -84,22 +89,65 @@ var css = `
   head.appendChild(style);
   style.type = 'text/css';
   style.appendChild(document.createTextNode(css));
- 
+
 
 // Get data
-const ddb_character_api_url = 'https://character-service.dndbeyond.com/character/v5/character/';
+const ddb_character_api_url_main = 'https://character-service.dndbeyond.com/character/v';
+let ddb_character_api_url_version = 5;
+const ddb_character_api_url_endpoint = '/character/';
+// let ddb_character_api_url = `${ddb_character_api_url_main}${ddb_character_api_url_version}${ddb_character_api_url_endpoint}`;
 const ddb_character_list = 'rpgcharacter-listing'
 const ddb_character_list_item = 'ddb-campaigns-character-card';
 let characters_ready = false;
+let beyonderBoxLoaded = false;
 
 waitForKeyElements(`div.${ddb_character_list_item},div.${ddb_character_list}`, Main);
 
 function Main() {
+  if (!beyonderBoxLoaded) {
+    // beyonderInfoBox()
+  }
+
   if (IsCharacterCards()) {
     GetCharacterData();
     return
   }
   console.error("Failed to retrieve character data");
+}
+
+function beyonderInfoBox() {
+  const infoBoxParent = document.getElementsByClassName('ddb-campaigns-detail-body-listing-active')[0]
+  const infoBox = document.createElement('div');
+  const infoBoxHeader = document.createElement('p');
+  const infoBoxHeaderText = document.createTextNode('Beyonder');
+  const infoBoxBody = document.createElement('p');
+  const infoBoxBodyText = document.createTextNode('Description');
+  const infoBoxStatus = document.createElement('div');
+  // const infoBoxStatusText = document.createTextNode('...');
+
+  infoBox.classList.add("beyonder_info");
+  infoBoxHeader.classList.add("beyonder_header");
+  infoBoxBody.classList.add("beyonder_body");
+  infoBoxStatus.classList.add("beyonder_status");
+
+  infoBoxParent.style = "position: relative;"
+
+  infoBoxParent.appendChild(infoBox)
+
+  infoBox.appendChild(infoBoxHeader)
+  infoBoxHeader.appendChild(infoBoxHeaderText)
+
+  infoBox.appendChild(infoBoxBody)
+  infoBoxBody.appendChild(infoBoxBodyText)
+
+  infoBox.appendChild(infoBoxStatus)
+  // infoBoxStatus.appendChild(infoBoxStatusText)
+
+  infoBox.appendChild(infoBoxStatus)
+
+  // console.log('EL FOUND????', document.getElementsByClassName('beyonder-info'))
+  beyonderBoxLoaded = true
+
 }
 
 function IsCharacterCards() {
@@ -109,12 +157,14 @@ function IsCharacterCards() {
 function GetCharacterData() {
   if (!characters_ready) {
     const characterCards = document.getElementsByClassName(ddb_character_list_item);
+    let validAPIVersion = false
+    let charactersChecked = 0
 
     Array.from(characterCards).forEach(card => {
-      
+
       const characterID = card.getElementsByClassName('ddb-campaigns-character-card-footer-links-item-view')[0].href.split("/")[6];
       const unloadedCharacterViewUrl = card.getElementsByClassName('ddb-campaigns-character-card-header-upper-details-link')[0];
-      unloadedCharacterViewUrl.target="_blank" 
+      unloadedCharacterViewUrl.target="_blank"
       unloadedCharacterViewUrl.rel="noopener noreferrer"
       if (!characterID) {
         return
@@ -124,11 +174,14 @@ function GetCharacterData() {
 
       async function getCharacterData() {
         let json;
-        const res = await fetch(`${ddb_character_api_url}${characterID}`)
+        const apiURL = `${ddb_character_api_url_main}${ddb_character_api_url_version}${ddb_character_api_url_endpoint}`
+        const res = await fetch(`${apiURL}${characterID}`)
         json = await res.json();
         characterData = json.data
+        charactersChecked++
 
         if (json.success) {
+          validAPIVersion = true
           card.classList.add("beyonder")
           const character_name_el = card.getElementsByClassName('ddb-campaigns-character-card-header-upper-character-info-primary')[0];
           const character_image_el = card.getElementsByClassName('ddb-campaigns-character-card-header-upper-portrait')[0];
@@ -138,13 +191,13 @@ function GetCharacterData() {
           original_link_el.style = "display: none;";
           character_name_el.style = "position: relative; display: inline-flex;"
           new_character_link1.href = character_link;
-          new_character_link1.target="_blank" 
+          new_character_link1.target="_blank"
           new_character_link1.rel="noopener noreferrer"
           new_character_link1.style = "position: absolute; top: 0; left: 0; bottom: 0; right: 0;"
           character_name_el.appendChild(new_character_link1)
           const new_character_link2 = document.createElement('a')
           new_character_link2.href = character_link;
-          new_character_link2.target="_blank" 
+          new_character_link2.target="_blank"
           new_character_link2.rel="noopener noreferrer"
           new_character_link2.style = "position: absolute; top: 0; left: 0; bottom: 0; right: 0;"
           character_image_el.appendChild(new_character_link2)
@@ -181,6 +234,7 @@ function GetCharacterData() {
             classSave: 0,
             initiative: 0,
             level: charLevel,
+            currencies: characterData.currencies,
             languages: [],
             size: null,
             proficiency: deriveProficiency(charLevel),
@@ -202,7 +256,7 @@ function GetCharacterData() {
             skillAdvantages: [],
             speeds: {
               walk: characterData.race.weightSpeeds.normal.walk,
-              swim: 0, 
+              swim: 0,
               fly: 0,
               burrow: 0,
               climb: 0,
@@ -369,39 +423,7 @@ function GetCharacterData() {
             }
           }
 
-          const deriveModifier = (stat) => {
-            return stat === 1 ? -5 :
-              stat === 2 ? -4 :
-                stat === 3 ? -4 :
-                  stat === 4 ? -3 :
-                    stat === 5 ? -3 :
-                      stat === 6 ? -2 :
-                        stat === 7 ? -2 :
-                          stat === 8 ? -1 :
-                            stat === 9 ? -1 :
-                              stat === 10 ? 0 :
-                                stat === 11 ? 0 :
-                                  stat === 12 ? 1 :
-                                    stat === 13 ? 1 :
-                                      stat === 14 ? 2 :
-                                        stat === 15 ? 2 :
-                                          stat === 16 ? 3 :
-                                            stat === 17 ? 3 :
-                                              stat === 18 ? 4 :
-                                                stat === 19 ? 4 :
-                                                  stat === 20 ? 5 :
-                                                    stat === 21 ? 5 :
-                                                      stat === 22 ? 6 :
-                                                        stat === 23 ? 6 :
-                                                          stat === 24 ? 7 :
-                                                            stat === 25 ? 7 :
-                                                              stat === 26 ? 8 :
-                                                                stat === 27 ? 8 :
-                                                                  stat === 28 ? 9 :
-                                                                    stat === 29 ? 9 :
-                                                                      stat === 30 ? 10 :
-                                                                        -5
-          }
+          const deriveModifier = stat => Math.floor((stat - 10) / 2);
 
           let delayedModifiers = [];
 
@@ -412,7 +434,7 @@ function GetCharacterData() {
               let abilitySubType = abilities_list.filter((skill) => mod.subType.split('-')[0]=== skill)[0] || null
 
               if (mod.duration) {
-                character.unhandled[type].push({ type: mod.type, subType: mod.subType, fixedValue: mod.fixedValue, restriction: mod.restriction , mod: mod}) 
+                character.unhandled[type].push({ type: mod.type, subType: mod.subType, fixedValue: mod.fixedValue, restriction: mod.restriction , mod: mod})
                 return
               }
 
@@ -426,7 +448,7 @@ function GetCharacterData() {
                 } else if (skillSubType) {
                   character.skillAdvantages.push(mod.subType)
                 } else {
-                  character.unhandled[type].push({ type: mod.type, subType: mod.subType, fixedValue: mod.fixedValue, restriction: mod.restriction , mod: mod}) 
+                  character.unhandled[type].push({ type: mod.type, subType: mod.subType, fixedValue: mod.fixedValue, restriction: mod.restriction , mod: mod})
                   return
                 }
               } else if (mod.type === 'bonus') {
@@ -513,21 +535,21 @@ function GetCharacterData() {
               character.handled[type].push({type: mod.type, subType: mod.subType, fixedValue: mod.fixedValue, restriction: mod.restriction, mod: mod })
             });
           }
-          
+
           // Build Elements
           const topBlock = document.createElement("div");
           topBlock.classList.add("beyonder_group");
-          
+
           const midBlock = document.createElement("div");
           const statBlock = document.createElement("div");
           midBlock.classList.add("beyonder_group")
           statBlock.classList.add("beyonder_group--grid_sixths")
           midBlock.append(statBlock);
-          
+
           const passiveBlock = document.createElement("div");
           passiveBlock.classList.add("beyonder_group", "beyonder_group--column")
 
-          const addElement = (element, data, header, parent, rider = null, parentModifierClass, selfModifierClass) => {
+          const addElement = (element, data, header, parent, rider = null, parentModifierClass = null, selfModifierClass = null) => {
             const block = document.createElement(element);
             const titleBlock = document.createElement("div");
             const textBlock = document.createElement("div");
@@ -561,7 +583,12 @@ function GetCharacterData() {
               textBlock.appendChild(text);
               block.append(textBlock)
               block.classList.add("beyonder_block");
-              if (selfModifierClass) {
+              if (selfModifierClass && selfModifierClass.isArray){
+                block.classList.add(selfModifierClass.split(',').join(' '))
+                // selfModifierClass.forEach((modClass) => {
+                //   block.classList.add(` beyonder_${modClass}`)
+                // })
+              } else if (selfModifierClass) {
                 block.classList.add(`beyonder_${selfModifierClass}`)
               }
               if (rider) {
@@ -613,7 +640,7 @@ function GetCharacterData() {
             mod = deriveModifier(score)
             save = mod
             character.stats[stat].mod = mod
-            
+
             // Calculate saving throws
             character.stats[stat].savingThrowBonuses.forEach((bonus) => save += bonus.value )
             character.proficiencies.savingThrows.forEach(saveAbility => {
@@ -654,7 +681,7 @@ function GetCharacterData() {
                 character.skills[skill].passive += mod
               });
             }
-            
+
             addElement("div", abilityData, key, statBlock, null)
           }
 
@@ -682,7 +709,7 @@ function GetCharacterData() {
             character.armorClass = equippedArmor.definition.armorClass + armorBonusAC
           }
 
-          // Adjust skill proficiencies 
+          // Adjust skill proficiencies
           character.proficiencies.skills.forEach((skill) => {
             character.skills[skill].bonus += character.proficiency
             character.skills[skill].passive += character.proficiency
@@ -691,7 +718,7 @@ function GetCharacterData() {
             character.skills[skill].bonus += character.proficiency
             character.skills[skill].passive += character.proficiency
           });
-          
+
           // Final Stat / Skills value Adjustments
           character.languages.sort();
           character.resistances.sort();
@@ -707,7 +734,7 @@ function GetCharacterData() {
               if (sizeDescription.includes('our size is ')) {
                 character.size = sizeDescription.split('our size is ')[1].split('.')[0]
               } else if (sizeDescription.includes('ou are ')) {
-                character.size = sizeDescription.split('ou are ')[1].split('.')[0]             
+                character.size = sizeDescription.split('ou are ')[1].split('.')[0]
               }
               return
             }
@@ -723,7 +750,7 @@ function GetCharacterData() {
           // Classic Passives
           const passiveGroup = document.createElement("div");
           passiveGroup.classList.add("beyonder_group")
-          const passiveScoresShort = [ 
+          const passiveScoresShort = [
             {score: 'Perception', value: character.skills.perception.passive },
             {score: 'Investigation', value: character.skills.investigation.passive },
             {score: 'Insight', value: character.skills.insight.passive },
@@ -735,7 +762,7 @@ function GetCharacterData() {
           // Vision
           const visionBlock = document.createElement("div");
           visionBlock.classList.add("beyonder_group")
-          const visionBlocks = [ 
+          const visionBlocks = [
             {score: 'Darkvision', value: character.vision.dark > 0 ? `${character.vision.dark} ft.` : '-' },
            ]
            visionBlocks.forEach((vision) => {
@@ -750,13 +777,17 @@ function GetCharacterData() {
              addElement("div", `${value.passive} (${value.bonus >= 0 ? `+${value.bonus}` : `${value.bonus}`})`, key.split('_').join(' '), fullSkillsBlock, { context:"fullSkills",data:key },  "skills_block")
            };
 
-           // Misc (Languages, Tools)
+           // Misc (Languages, Currencies)
            const miscBlock = document.createElement("div");
+           const currencyString = `${character.currencies.pp > 0 ? `${character.currencies.pp}p` : ''} ${character.currencies.gp > 0 ? ` ${character.currencies.gp}g` : ''} ${character.currencies.ep > 0 ? ` ${character.currencies.ep}e` : ''} ${character.currencies.sp > 0 ? ` ${character.currencies.sp}s` : ''} ${character.currencies.cp > 0 ? `${character.currencies.cp}c` : ''} `;
+           
            miscBlock.classList.add("beyonder_group")
            addElement("div", character.languages.join(', '), "Languages", miscBlock, null, "simple_list")
+           
            character.resistances.length && addElement("div", character.resistances.join(', '), "Resistances", miscBlock, null, "simple_list")
            character.proficiencies.tools.length && addElement("div", character.proficiencies.tools.join(', '), "Tools", miscBlock, null, "simple_list")
            character.savingThrowAdvantages.length && addElement("div", character.savingThrowAdvantages.join(', '), "Advantage on Saving Throws...", miscBlock, null, null, "block--full")
+           addElement("div", currencyString, "Currencies", miscBlock, null, null, "currency")
           //  character.savingThrows.length && addElement("div", character.savingThrows.join(', '), "Saving Throws", miscBlock, null, "simple_list")
 
           // Build main info items
@@ -791,7 +822,7 @@ function GetCharacterData() {
           cardBodyC.setAttribute("page", "page-3");
           card.append(cardBodyC)
           cardBodyC.append(miscBlock);
-          
+
           // Tabs
           const cardTabs = card.getElementsByClassName('ddb-campaigns-character-card-header-upper')[0];
           const toggleTab = (event) => {
@@ -814,7 +845,7 @@ function GetCharacterData() {
 
           const tabsEl = document.createElement("div");
           tabsEl.classList.add("beyonder_tabs")
-          
+
           const tabs = ["Main", "Skills", "Misc"]
           tabs.forEach((tab, i) => {
             const tabEl = document.createElement("div");
@@ -829,12 +860,29 @@ function GetCharacterData() {
 
           // Header & Footer
           card.style = "display: flex; flex-direction: column;";
+
+        }
+        else {
+          // console.error(res)
+          if (!validAPIVersion && charactersChecked === characterCards.length) {
+            console.log('Checked:', charactersChecked,'/',characterCards.length,'. API Version', ddb_character_api_url_version, 'no longer supported.')
+            ddb_character_api_url_version++
+            characters_ready = false;
+            ReattemptGetCharacterData()
+          }
         }
       }
+
       getCharacterData();
+
     });
+    characters_ready = true;
   }
-  characters_ready = true;
+
+}
+
+function ReattemptGetCharacterData() {
+  GetCharacterData()
 }
 
 //https://github.com/CoeJoder/waitForKeyElements.js

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TorrentBD Shoutbox Manager
 // @namespace    TBD-Shoutbox-Manager
-// @version      1.2
+// @version      1.2.1
 // @description  Complete shoutbox overhaul
 // @author       CornHub
 // @license      MIT
@@ -53,16 +53,16 @@
         notifier_processed_messages: GM_getValue('tbdm_notifier_processed_messages', []),
 
         // Image Upload Module
-        image_upload_enabled: GM_getValue('tbdm_image_upload_enabled', false),
+        image_upload_enabled: GM_getValue('tbdm_image_upload_enabled', true),
 
         // Easy Mention Module
         easy_mention_enabled: GM_getValue('tbdm_easy_mention_enabled', true),
 
         // URL Sender Module
-        url_sender_enabled: GM_getValue('tbdm_url_sender_enabled', true),
+        url_sender_enabled: GM_getValue('tbdm_url_sender_enabled', false),
 
         // GIF Picker Module
-        gif_picker_enabled: GM_getValue('tbdm_gif_picker_enabled', false),
+        gif_picker_enabled: GM_getValue('tbdm_gif_picker_enabled', true),
         gif_picker_tenor_key: GM_getValue('tbdm_gif_picker_tenor_key', 'AIzaSyCGj4Qj1j0MBns1v2rWhlvJWRBkCNgIFyo'),
         gif_picker_giphy_key: GM_getValue('tbdm_gif_picker_giphy_key', ''),
 
@@ -70,7 +70,7 @@
         unicode_emoji_enabled: GM_getValue('tbdm_unicode_emoji_enabled', false),
 
         // Image Viewer Module
-        image_viewer_enabled: GM_getValue('tbdm_image_viewer_enabled', false),
+        image_viewer_enabled: GM_getValue('tbdm_image_viewer_enabled', true),
 
         // Autocomplete Module
         autocomplete_username_enabled: GM_getValue('tbdm_autocomplete_username_enabled', false),
@@ -82,23 +82,35 @@
             'nahi': ':sticker-mb-no',
             'sad': ':sticker-pepe-face',
             'lmao': ':lmao',
-            'justsaid': ':justsaid',
             'wow': ':sticker-omg-wow',
             'lol': ':sticker-jjj-laugh',
             'why': ':sticker-cat-why',
             'ty': ':thankyou',
-            'slap': ':slap',
             'wont': ':sticker-sr-no',
             'bruh': ':sticker-facepalm',
             'yay': ':yepdance',
-            'aww': ':sticker-pepe-aw'
+            'aww': ':sticker-pepe-aw',
+            'laugh': ':sticker-pepe-laugh',
+            'salute': ':sticker-pepe-salute',
+            'ohh': ':sticker-cp-ohh',
+            'doge': ':sticker-doge',
+            'dance': ':sticker-dancing-doge',
+            'pepeog': ':sticker-pepe-og',
+            'ekb': ':sticker-ekb',
+            'police': ':sticker-pepe-police',
+            'yes': ':sticker-yes',
+            'wut': ':sticker-pepe-wut',
+            'exp': ':sticker-pepe-exp',
+            'knock': ':sticker-death-knock',
+            'rules': 'https://www.torrentbd.net/rules.php',
+            'faq': 'https://www.torrentbd.net/faq.php'
         }),
 
         // Focus Lock Module
-        focus_lock_enabled: GM_getValue('tbdm_focus_lock_enabled', false),
+        focus_lock_enabled: GM_getValue('tbdm_focus_lock_enabled', true),
 
         // Idle Prevention Module
-        idle_prevention_enabled: GM_getValue('tbdm_idle_prevention_enabled', false)
+        idle_prevention_enabled: GM_getValue('tbdm_idle_prevention_enabled', true)
     };
 
     // ============================================================================
@@ -1165,8 +1177,11 @@
             this.gifButton.className = 'inline-submit-btn';
             this.gifButton.title = 'Insert GIF';
             this.gifButton.innerHTML = this.CUSTOM_GIF_SVG;
-            this.gifButton.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#ccc;position:relative;top:6px;height:24px;width:28px;margin-left:4px;margin-right:2px;';
+            const isSpotlight = document.body.classList.contains('spotlight-mode') ||
+                    window.location.search.includes('spotlight');
 
+            const topValue = isSpotlight ? '17px' : '6px';
+            this.gifButton.style.cssText = `display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#ccc;position:relative;top:${topValue};height:24px;width:28px;margin-left:4px;margin-right:2px;`;
             this.gifButton.addEventListener('click', (ev) => {
                 ev.stopPropagation();
                 ev.preventDefault();
@@ -2151,9 +2166,6 @@ const UIImprovementsModule = {
 #shout-expander {
     display: none;
 }
-:root {
-    --shoutbox-chat-direction: column;
-}
 .shoutbox-container .content-title {
     position: relative;
 }
@@ -2174,7 +2186,7 @@ const UIImprovementsModule = {
     gap: 12px;
     margin-top: 1.475px;
 }
-#spotlight, #greasylight, #forumlight, #chatdirection {
+#spotlight, #greasylight, #forumlight {
     cursor: pointer;
     padding-top: 4px;
     color: ${(() => {
@@ -2198,36 +2210,6 @@ const UIImprovementsModule = {
 }
 #spotlight {
     order: 3;
-}
-#chatdirection {
-    order: 1;
-    transform: scale(1) rotate(-90deg);
-}
-#chatdirection:hover,
-#chatdirection:focus {
-    color: var(--link-color);
-    transform: scale(1) rotate(-90deg);
-}
-#chatdirection:active {
-    transform: scale(0.8) rotate(-90deg);
-}
-#chatdirection.bottom {
-    transform: scale(1) rotate(-90deg);
-}
-#chatdirection.bottom:hover,
-#chatdirection.bottom:focus {
-    color: var(--link-color);
-    transform: scale(1) rotate(-90deg);
-}
-#chatdirection.bottom:active {
-    transform: scale(0.8) rotate(-90deg);
-}
-#chatdirection > i {
-    transform: rotateY(0deg);
-    transition: transform 0.2s;
-}
-#chatdirection.bottom > i {
-    transform: rotateY(180deg);
 }
 #shout-ibb-container {
     display: flex;
@@ -2378,9 +2360,6 @@ main {
     padding-left: 14px;
     padding-right: 14px;
 }
-#chatdirection {
-    right: 96px;
-}
 #spotlight-smileys, #spotlight-emojis {
     display: none;
 }
@@ -2484,40 +2463,6 @@ main {
     right: 0;
 }
     `,
-
-    // Chat direction CSS
-    shoutpathCSS: `
-#shouts-container {
-    flex-direction: column-reverse;
-}
-    `,
-
-    // Resident JS
-    residentJS: `
-// Update shoutpath visibility based on localstorage value
-function shoutPathUpdate() {
-    let shoutpathCSS = document.getElementById("shoutpath");
-    if (!localStorage.shoutpath || localStorage.shoutpath !== "bottom") {
-        shoutpathCSS.setAttribute("type", "null");
-    } else {
-        shoutpathCSS.setAttribute("type", "text/css");
-    }
-}
-// Switch Chat Direction
-function chatSwitch() {
-    try {
-        let bottomChat = document.querySelector("#chatdirection.bottom");
-        bottomChat.classList.remove("bottom");
-        localStorage.shoutpath = "top";
-    } catch (e) {
-        let topChat = document.querySelector("#chatdirection");
-        topChat.classList.add("bottom");
-        localStorage.shoutpath = "bottom";
-    }
-    shoutPathUpdate();
-}
-    `,
-
     // Spotlight mode JS for emojis
     spotlightJS_emojis: `
 // Toggle Smileys
@@ -2572,15 +2517,14 @@ function toggleQuickES(main, sub) {
     sOutline.classList.remove(sub);
 
     // If outline is hidden, show it
-    if (!sOutline.style.display || sOutline.style.display === "none") {
-        $('#smilies-outline').slideToggle(200);
+    if (sOutline.style.display === "none" || !sOutline.style.display) {
+        $('#smilies-outline').slideDown(150);
     } else {
-        // If outline is visible, hide it
-        $('#smilies-outline').slideToggle(200);
-        setTimeout(function() {
+        // If outline is visible, hide it with easeOutQuad for smoother closing
+        $('#smilies-outline').slideUp(150, 'linear', function() {
             sOutline.classList.remove(main);
             sOutline.classList.remove(sub);
-        }, 200);
+        });
     }
 }
 
@@ -2598,8 +2542,8 @@ function toggleSmilemoji(one, alt) {
         setTimeout(function() {
             sOutline.classList.add(one);
             sOutline.classList.remove(alt);
-            if (!sOutline.style.display || sOutline.style.display === "none") {
-                $('#smilies-outline').slideToggle(200);
+            if (sOutline.style.display === "none" || !sOutline.style.display) {
+                $('#smilies-outline').slideDown(150);
             }
         }, 150);
         return;
@@ -2607,10 +2551,12 @@ function toggleSmilemoji(one, alt) {
 
     // Normal toggle logic when unicode picker is not open
     if (altRE.test(sOutline.className)) {
-        toggleQuickES(alt, one);
-        setTimeout(function() {
-            toggleQuickES(one, alt);
-        }, 300);
+        // If switching from emoji to smiley or vice versa, close then open
+        $('#smilies-outline').slideUp(150, 'linear', function() {
+            sOutline.classList.remove(alt);
+            sOutline.classList.add(one);
+            $('#smilies-outline').slideDown(150);
+        });
     } else {
         toggleQuickES(one, alt);
     }
@@ -2683,13 +2629,6 @@ function toggleSmilemoji(one, alt) {
         anchor.innerHTML = `<i class="material-icons">${icon}</i>`;
         newCon.appendChild(anchor);
 
-        let span = document.createElement("span");
-        span.id = "chatdirection";
-        if (localStorage.shoutpath === "bottom") {span.classList.add("bottom");}
-        span.title = "Switch Chat Direction";
-        span.setAttribute("onclick","chatSwitch()");
-        span.innerHTML = `<i class="material-icons">switch_left</i>`;
-        newCon.appendChild(span);
     },
 
     whiteNull() {
@@ -2716,17 +2655,6 @@ function toggleSmilemoji(one, alt) {
         }
     },
 
-    shoutPathUpdate() {
-        let shoutpathCSS = document.getElementById("shoutpath");
-        if (!shoutpathCSS) return;
-
-        if (!localStorage.shoutpath || localStorage.shoutpath !== "bottom") {
-            shoutpathCSS.setAttribute("type","null");
-        } else {
-            shoutpathCSS.setAttribute("type","text/css");
-        }
-    },
-
     initSpotlightMode() {
         // Update material icons
         try {
@@ -2744,12 +2672,9 @@ function toggleSmilemoji(one, alt) {
 
         // Push the styles in head
         this.addStyle(this.shoutboxCSS + this.spotlightCSS, "spotlight");
-        this.addStyle(this.shoutpathCSS, "shoutpath");
-        this.shoutPathUpdate();
 
         // Change stuff when page loads
         const initSpotlight = () => {
-            this.addScript(this.residentJS);
             this.addScript(this.spotlightJS_emojis);
             this.spotlightJS("Exit", location.origin, "fullscreen_exit");
             this.whiteNull();
@@ -2816,12 +2741,10 @@ function toggleSmilemoji(one, alt) {
 
         // Push the styles in head
         this.addStyle(this.shoutboxCSS + this.shouthomeCSS, "shouthome");
-        this.addStyle(this.shoutpathCSS, "shoutpath");
-        this.shoutPathUpdate();
+
 
         // Change stuff when page loads
         const initHome = () => {
-            this.addScript(this.residentJS);
             this.addScript(this.homepageJS_emojis);
             this.spotlightJS("Enter", "?spotlight", "fullscreen");
             this.whiteNull();
@@ -4318,6 +4241,7 @@ function toggleSmilemoji(one, alt) {
             padding: 0;
         }
         #gif-tool-close:hover { color:#fff; }
+
 #tbdm-gif-tool-btn {
     display: inline-flex !important;
     align-items: center;
@@ -4334,10 +4258,7 @@ function toggleSmilemoji(one, alt) {
     position: relative;
     top: 1px;
 }
-body.spotlight-mode #tbdm-gif-tool-btn {
-    align-self: flex-end;
-    margin-bottom: 27px;
-}
+
         #tbdm-gif-tool-btn svg { display: block; }
         #tbdm-gif-tool-btn:hover { color: #fff; transform: translateY(-1px); }
 

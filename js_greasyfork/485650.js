@@ -2,13 +2,13 @@
 // @name         YouTube Mini Player
 // @name:zh-CN   Youtube 小屏播放
 // @namespace    http://tampermonkey.net/
-// @version      2.4.1
+// @version      2.4.2
 // @license      MIT
 // @description  Youtube Mini Player. When you scroll down the mini player will appear.
 // @description:zh-CN   Youtube 小屏播放。当你向下滚动时，小屏播放器将会出现。
 // @author       https://github.com/AkiyaKiko
 // @homepage     https://github.com/AkiyaKiko/YouTubeMiniPlayer
-// @match        https://www.youtube.com/*
+// @match        https://www.youtube.com/watch*
 // @icon         https://www.youtube.com/favicon.ico
 // @run-at       document-end
 // @grant        GM_addStyle
@@ -19,6 +19,10 @@
 
 (function() {
     'use strict';
+
+    if (window.top !== window.self) {
+        return;
+    }
 
     GM_log('🛠️ 脚本 "YouTube Mini Player (No Placeholder)" 开始执行');
 

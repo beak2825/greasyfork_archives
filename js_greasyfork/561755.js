@@ -3,7 +3,7 @@
 // @name:ja      Amazonレビュー信頼度判定 & 無限スクロール (サクラ識別/品質チェック)
 // @name:en      Amazon Reviewer Trust Badge & Infinite Scroll (Quality Check)
 // @namespace    https://github.com/koyasi777/amazon-review-trust-badge
-// @version      1.6.8
+// @version      1.6.9
 // @description  Amazonのレビュアー投稿履歴を分析し、信頼度をS〜Dランクで視覚化（サクラ/やらせ/バイアス検出＆詳細レポート）。信頼度フィルタリング機能や、レビュー一覧の無限スクロール化も提供します。
 // @description:ja  Amazonのレビュアー投稿履歴を分析し、信頼度をS〜Dランクで視覚化（サクラ/やらせ/バイアス検出＆詳細レポート）。信頼度フィルタリング機能や、レビュー一覧の無限スクロール化も提供します。
 // @description:en Visualizes the reliability of Amazon reviewers (detects suspicious behavior/bias) and enables infinite scrolling for review pages.
@@ -38,11 +38,11 @@
     // =============================================================================
     const CONFIG = {
         APP_NAME: 'TrustBadge',
-        VERSION: '1.6.8',
+        VERSION: '1.6.9',
         CACHE: { PREFIX: 'tr4:', TTL_SUCCESS: 604800000, TTL_FAIL: 86400000 },
         NETWORK: {
-            MIN_INTERVAL: 1500,
-            JITTER: 1000,
+            MIN_INTERVAL: 2400,
+            JITTER: 1500,
             TIMEOUT: 15000,
             LOCK_DURATION: 15 * 60 * 1000,
             MAX_CONCURRENT: 2
@@ -679,9 +679,9 @@
                 .tb-grade-lg { font-size: 32px; font-weight: bold; line-height: 1; }
                 .tb-val-lg { font-size: 20px; color: #555; }
                 .tb-tag { display: inline-block; background: #eee; padding: 2px 8px; border-radius: 12px; margin: 0 4px 4px 0; font-size: 11px; color: #555; position: relative; cursor: help; }
-                .tb-tag::before { content: attr(data-tooltip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-5px); padding: 8px 12px; background: #2d3748; color: #fff; font-size: 11px; line-height: 1.4; border-radius: 4px; white-space: normal; width: max-content; max-width: 240px; text-align: left; opacity: 0; visibility: hidden; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 10000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-weight: normal; }
-                .tb-tag::after { content: ''; position: absolute; bottom: 100%; left: 50%; margin-bottom: -5px; transform: translateX(-50%) translateY(-5px); border-width: 5px; border-style: solid; border-color: #2d3748 transparent transparent transparent; opacity: 0; visibility: hidden; transition: opacity 0.2s, transform 0.2s; z-index: 10000; }
-                .tb-tag:hover::before, .tb-tag:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-10px); }
+                .tb-tag::before { content: attr(data-tooltip); position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(5px); padding: 8px 12px; background: #2d3748; color: #fff; font-size: 11px; line-height: 1.4; border-radius: 4px; white-space: normal; width: max-content; max-width: 240px; text-align: left; opacity: 0; visibility: hidden; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 10000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); font-weight: normal; }
+                .tb-tag::after { content: ''; position: absolute; top: 100%; left: 50%; margin-top: -5px; transform: translateX(-50%) translateY(5px); border-width: 5px; border-style: solid; border-color: transparent transparent #2d3748 transparent; opacity: 0; visibility: hidden; transition: opacity 0.2s, transform 0.2s; z-index: 10000; }
+                .tb-tag:hover::before, .tb-tag:hover::after { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(10px); }
                 .tb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
                 .tb-item { display: flex; justify-content: space-between; }
                 .tb-label { color: #666; } .tb-data { font-weight: bold; }

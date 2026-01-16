@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio | Conversation/Chat MarkDown-Export/Download (DOM-based)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      2.8
+// @version      2.9
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Export AI Studio conversations to Markdown with intelligent mode detection, toolbar integration, and abortable processing. Features dual-mode extraction and configurable filters.
@@ -1519,10 +1519,10 @@
             }
         });
 
-        // Inject into toolbar
-        const moreButton = toolbarRight.querySelector('button[iconname="more_vert"]');
-        if (moreButton) {
-            toolbarRight.insertBefore(buttonContainer, moreButton);
+        // Inject into toolbar (before the overflow-menu-wrapper which contains more_vert)
+        const overflowWrapper = toolbarRight.querySelector('.overflow-menu-wrapper');
+        if (overflowWrapper) {
+            toolbarRight.insertBefore(buttonContainer, overflowWrapper);
         } else {
             toolbarRight.appendChild(buttonContainer);
         }

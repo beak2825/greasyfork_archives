@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PteroSort Category
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1
+// @version      1.2.2
 // @description  Pterodactyl server sorter with categories
 // @homepage     https://github.com/Ricman-MC/PteroSort
 // @author       Ricman
@@ -18,10 +18,10 @@
 // Go to Tampermonkey dashboard → click the script name → Settings tab → look for Includes/Excludes → User matches → click Add...
 // Then add the full HTTPS URL of your panel there (e.g., https://panel.your-server.eu/)
 // You can add multiple panel URLs if needed.
-// Script supports vanilla pterodactyl panel v.1.11.10 (its possible it will work on diferent versions not tested)
+// This version supports vanilla pterodactyl panel v1.12.0
 // IMPORTANT
 
-// this script has some hardcoded parts it could break when update of pterodactyl panel comes
+// this script has some hardcoded parts it could break when update of pterodactyl panel comes (and it indeed did break when update of ui came :D)
 
 
 
@@ -127,7 +127,7 @@
     function createCategoryElement(categoryData) {
         const categoryElement = document.createElement('a');
 
-        categoryElement.className = `GreyRowBox-sc-1xo9c6v-0 ServerRow__StatusIndicatorBox-sc-1ibsw91-2 dyLna-D fRwFrz DashboardContainer___StyledServerRow-sc-1topkxf-2 jbVWLN ${categoryRowClass}`;
+        categoryElement.className = `GreyRowBox-sc-1xo9c6v-0 ServerRow__StatusIndicatorBox-sc-1ibsw91-2 ctzaNX eBEJmu DashboardContainer___StyledServerRow-sc-1topkxf-2 cbzuKl ${categoryRowClass}`;
 
         categoryElement.draggable = !dragLockEnabled;
         categoryElement.dataset.categoryId = categoryData.id;
@@ -136,18 +136,18 @@
 
         categoryElement.innerHTML = `
             <div class="${categoryColorStripeClass}" style="background-color: ${categoryData.color};"></div>
-            <div class="ServerRow___StyledDiv-sc-1ibsw91-3 ecJXa-d" style="margin-left: 20px; display:flex; align-items:center; justify-content: flex-start; flex-grow: 1;">
-                <p class="ServerRow___StyledP-sc-1ibsw91-4 LWXmF" style="font-weight: bold;">${categoryData.name}</p>
+            <div class="ServerRow___StyledDiv-sc-1ibsw91-3 gsHZSB" style="margin-left: 20px; display:flex; align-items:center; justify-content: flex-start; flex-grow: 1;">
+                <p class="ServerRow___StyledP-sc-1ibsw91-4 MbXRy" style="font-weight: bold;">${categoryData.name}</p>
             </div>
-            <div class="ServerRow___StyledDiv4-sc-1ibsw91-10 gQExFz category-controls" style="justify-content: flex-end; margin-right: 10px; display:flex; align-items:center; flex-shrink: 0;">
-                <div class="ServerRow___StyledDiv9-sc-1ibsw91-18 fZEUwy" style="align-items: center; display:flex;">
+            <div class="ServerRow___StyledDiv4-sc-1ibsw91-10 ghEivn category-controls" style="justify-content: flex-end; margin-right: 10px; display:flex; align-items:center; flex-shrink: 0;">
+                <div class="ServerRow___StyledDiv9-sc-1ibsw91-18 jTyVsO" style="align-items: center; display:flex;">
                      <div class="category-collapse-wrapper" style="padding: 5px; cursor: pointer; margin-left: 5px;">
                         <svg class="category-collapse-icon" viewBox="0 0 24 24" style="width: 1.5em; height: 1.5em; display: block; transition: transform 0.2s ease-in-out;">
                             <path fill="currentColor" d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/>
                         </svg>
                     </div>
                     <div class="ServerRow___StyledDiv10-sc-1ibsw91-19 juhRZD category-description-wrapper" style="align-items: center; display:flex;">
-                        <p class="ServerRow__IconDescription-sc-1ibsw91-1 kVwOgb category-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; text-align: right; color: #a7b4c0; font-size: 0.9em;">${categoryData.description || ''}</p>
+                        <p class="ServerRow__IconDescription-sc-1ibsw91-1 buFsKz category-description" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; text-align: right; color: #a7b4c0; font-size: 0.9em;">${categoryData.description || ''}</p>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.930
+// @version      0.4.934
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -1657,6 +1657,15 @@
                     category: 'Enhancement',
                     description: 'Tracks enhancement attempts, costs, and statistics',
                     settingKey: 'enhancementTracker'
+                },
+
+                // Notification Features
+                notifiEmptyAction: {
+                    enabled: false,
+                    name: 'Empty Queue Notification',
+                    category: 'Notifications',
+                    description: 'Browser notification when action queue becomes empty',
+                    settingKey: 'notifiEmptyAction'
                 }
             };
 
@@ -1679,6 +1688,13 @@
         async loadSettings() {
             // Load settings from settings-storage (which uses settings-config.js as source of truth)
             this.settingsMap = await settingsStorage.loadSettings();
+        }
+
+        /**
+         * Clear settings cache (for character switching)
+         */
+        clearSettingsCache() {
+            this.settingsMap = {};
         }
 
         /**
@@ -2456,6 +2472,11 @@
             this.characterHouseRooms = new Map();  // House room HRID -> {houseRoomHrid, level}
             this.actionTypeDrinkSlotsMap = new Map();  // Action type HRID -> array of drink items
 
+            // Character tracking for switch detection
+            this.currentCharacterId = null;
+            this.currentCharacterName = null;
+            this.isCharacterSwitching = false;
+
             // Event listeners
             this.eventListeners = new Map();
 
@@ -2576,6 +2597,57 @@
         setupMessageHandlers() {
             // Handle init_character_data (player data on login/refresh)
             this.webSocketHook.on('init_character_data', (data) => {
+                // Detect character switch
+                const newCharacterId = data.character?.id;
+                const newCharacterName = data.character?.name;
+
+                // Check if this is a character switch (not first load)
+                if (this.currentCharacterId && this.currentCharacterId !== newCharacterId) {
+                    console.log('[Toolasha] Character switch detected:',
+                        `${this.currentCharacterName} (${this.currentCharacterId})`,
+                        '→',
+                        `${newCharacterName} (${newCharacterId})`);
+
+                    // Set switching flag to block feature initialization
+                    this.isCharacterSwitching = true;
+
+                    // Emit character_switching event (cleanup phase)
+                    this.emit('character_switching', {
+                        oldId: this.currentCharacterId,
+                        newId: newCharacterId,
+                        oldName: this.currentCharacterName,
+                        newName: newCharacterName
+                    });
+
+                    // Update character tracking
+                    this.currentCharacterId = newCharacterId;
+                    this.currentCharacterName = newCharacterName;
+
+                    // Clear old character data
+                    this.characterData = null;
+                    this.characterSkills = null;
+                    this.characterItems = null;
+                    this.characterActions = [];
+                    this.characterEquipment.clear();
+                    this.characterHouseRooms.clear();
+                    this.actionTypeDrinkSlotsMap.clear();
+
+                    // Reset switching flag (cleanup complete, ready for re-init)
+                    this.isCharacterSwitching = false;
+
+                    // Emit character_switched event (ready for re-init)
+                    this.emit('character_switched', {
+                        newId: newCharacterId,
+                        newName: newCharacterName
+                    });
+                } else if (!this.currentCharacterId) {
+                    // First load - set character tracking
+                    this.currentCharacterId = newCharacterId;
+                    this.currentCharacterName = newCharacterName;
+                    console.log('[Toolasha] Character initialized:', newCharacterName, `(${newCharacterId})`);
+                }
+
+                // Process new character data normally
                 this.characterData = data;
                 this.characterSkills = data.characterSkills;
                 this.characterItems = data.characterItems;
@@ -2590,6 +2662,10 @@
                 // Build drink slots map (tea buffs)
                 this.updateDrinkSlotsMap(data.actionTypeDrinkSlotsMap);
 
+                // Clear switching flag
+                this.isCharacterSwitching = false;
+
+                // Emit character_initialized event (trigger feature initialization)
                 this.emit('character_initialized', data);
             });
 
@@ -2857,6 +2933,30 @@
          */
         getActionDrinkSlots(actionTypeHrid) {
             return this.actionTypeDrinkSlotsMap.get(actionTypeHrid) || [];
+        }
+
+        /**
+         * Get current character ID
+         * @returns {string|null} Character ID or null
+         */
+        getCurrentCharacterId() {
+            return this.currentCharacterId;
+        }
+
+        /**
+         * Get current character name
+         * @returns {string|null} Character name or null
+         */
+        getCurrentCharacterName() {
+            return this.currentCharacterName;
+        }
+
+        /**
+         * Check if character is currently switching
+         * @returns {boolean} True if switching
+         */
+        getIsCharacterSwitching() {
+            return this.isCharacterSwitching;
         }
 
         /**
@@ -14652,7 +14752,7 @@
     class QuickInputButtons {
         constructor() {
             this.isInitialized = false;
-            this.observer = null;
+            this.unregisterObserver = null;
             this.presetHours = [0.5, 1, 2, 3, 4, 5, 6, 10, 12, 24];
             this.presetValues = [10, 100, 1000];
         }
@@ -14671,46 +14771,23 @@
         }
 
         /**
-         * Start MutationObserver to detect action panels
+         * Start observing for action panels using centralized observer
          */
         startObserving() {
-            // Wait for document.body to exist (critical for @run-at document-start)
-            const startObserver = () => {
-                if (!document.body) {
-                    setTimeout(startObserver, 10);
-                    return;
-                }
-
-                this.observer = new MutationObserver((mutations) => {
-                    for (const mutation of mutations) {
-                        for (const node of mutation.addedNodes) {
-                            if (node.nodeType !== Node.ELEMENT_NODE) continue;
-
-                            // Look for main action detail panel (not sub-elements)
-                            const actionPanel = node.querySelector?.('[class*="SkillActionDetail_skillActionDetail"]');
-                            if (actionPanel) {
-                                this.injectButtons(actionPanel);
-                            } else if (node.className && typeof node.className === 'string' &&
-                                       node.className.includes('SkillActionDetail_skillActionDetail')) {
-                                this.injectButtons(node);
-                            }
-                        }
-                    }
-                });
-
-                this.observer.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-
-                // Check for existing action panels that may already be open
-                const existingPanels = document.querySelectorAll('[class*="SkillActionDetail_skillActionDetail"]');
-                existingPanels.forEach(panel => {
+            // Register with centralized DOM observer
+            this.unregisterObserver = domObserver.onClass(
+                'QuickInputButtons',
+                'SkillActionDetail_skillActionDetail',
+                (panel) => {
                     this.injectButtons(panel);
-                });
-            };
+                }
+            );
 
-            startObserver();
+            // Check for existing action panels that may already be open
+            const existingPanels = document.querySelectorAll('[class*="SkillActionDetail_skillActionDetail"]');
+            existingPanels.forEach(panel => {
+                this.injectButtons(panel);
+            });
         }
 
         /**
@@ -15740,6 +15817,86 @@
     const quickInputButtons = new QuickInputButtons();
 
     /**
+     * Action Panel Display Helper
+     * Utilities for working with action detail panels (gathering, production, enhancement)
+     */
+
+    /**
+     * Find the action count input field within a panel
+     * @param {HTMLElement} panel - The action detail panel
+     * @returns {HTMLInputElement|null} The input element or null if not found
+     */
+    function findActionInput(panel) {
+        const inputContainer = panel.querySelector('[class*="maxActionCountInput"]');
+        if (!inputContainer) {
+            return null;
+        }
+
+        const inputField = inputContainer.querySelector('input');
+        return inputField || null;
+    }
+
+    /**
+     * Attach input listeners to an action panel for tracking value changes
+     * Sets up three listeners:
+     * - keyup: For manual typing
+     * - input: For quick input button clicks (React dispatches input events)
+     * - panel click: For any panel interactions with 50ms delay
+     *
+     * @param {HTMLElement} panel - The action detail panel
+     * @param {HTMLInputElement} input - The input element
+     * @param {Function} updateCallback - Callback function(value) called on input changes
+     * @param {Object} options - Optional configuration
+     * @param {number} options.clickDelay - Delay in ms for panel click handler (default: 50)
+     * @returns {Function} Cleanup function to remove all listeners
+     */
+    function attachInputListeners(panel, input, updateCallback, options = {}) {
+        const { clickDelay = 50 } = options;
+
+        // Handler for keyup and input events
+        const updateHandler = () => {
+            updateCallback(input.value);
+        };
+
+        // Handler for panel clicks (with delay to allow React updates)
+        const panelClickHandler = (event) => {
+            // Skip if click is on the input box itself
+            if (event.target === input) {
+                return;
+            }
+            setTimeout(() => {
+                updateCallback(input.value);
+            }, clickDelay);
+        };
+
+        // Attach all listeners
+        input.addEventListener('keyup', updateHandler);
+        input.addEventListener('input', updateHandler);
+        panel.addEventListener('click', panelClickHandler);
+
+        // Return cleanup function
+        return () => {
+            input.removeEventListener('keyup', updateHandler);
+            input.removeEventListener('input', updateHandler);
+            panel.removeEventListener('click', panelClickHandler);
+        };
+    }
+
+    /**
+     * Perform initial update if input already has a valid value
+     * @param {HTMLInputElement} input - The input element
+     * @param {Function} updateCallback - Callback function(value) called if valid
+     * @returns {boolean} True if initial update was performed
+     */
+    function performInitialUpdate(input, updateCallback) {
+        if (input.value && parseInt(input.value) > 0) {
+            updateCallback(input.value);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Output Totals Display Module
      *
      * Shows total expected outputs below per-action outputs when user enters
@@ -15789,13 +15946,8 @@
          * @param {HTMLElement} detailPanel - The action detail panel element
          */
         attachToActionPanel(detailPanel) {
-            // Find the input box - same approach as MWIT-E
-            const inputContainer = detailPanel.querySelector('[class*="maxActionCountInput"]');
-            if (!inputContainer) {
-                return;
-            }
-
-            const inputBox = inputContainer.querySelector('input');
+            // Find the input box using utility
+            const inputBox = findActionInput(detailPanel);
             if (!inputBox) {
                 return;
             }
@@ -15805,36 +15957,18 @@
                 return;
             }
 
-            // Add keyup listener (same as MWIT-E)
-            const updateHandler = () => {
+            // Attach input listeners using utility
+            const cleanup = attachInputListeners(detailPanel, inputBox, (value) => {
                 this.updateOutputTotals(detailPanel, inputBox);
-            };
-
-            inputBox.addEventListener('keyup', updateHandler);
-
-            // Also listen to clicks on the panel (for button clicks)
-            // But NOT for clicks on the input box itself
-            const panelClickHandler = (event) => {
-                // Only process if click is NOT on the input box
-                if (event.target === inputBox) {
-                    return;
-                }
-                setTimeout(() => {
-                    this.updateOutputTotals(detailPanel, inputBox);
-                }, 50);
-            };
-            detailPanel.addEventListener('click', panelClickHandler);
-
-            // Store cleanup function
-            this.observedInputs.set(inputBox, () => {
-                inputBox.removeEventListener('keyup', updateHandler);
-                detailPanel.removeEventListener('click', panelClickHandler);
             });
 
+            // Store cleanup function
+            this.observedInputs.set(inputBox, cleanup);
+
             // Initial update if there's already a value
-            if (inputBox.value && inputBox.value > 0) {
+            performInitialUpdate(inputBox, () => {
                 this.updateOutputTotals(detailPanel, inputBox);
-            }
+            });
         }
 
         /**
@@ -16754,136 +16888,6 @@
     const gatheringStats = new GatheringStats();
 
     /**
-     * DOM Selector Constants
-     * Centralized selector strings for querying game elements
-     * If game class names change, update here only
-     */
-
-    /**
-     * Game UI Selectors (class names from game code)
-     */
-    const GAME = {
-        // Header
-        TOTAL_LEVEL: '[class*="Header_totalLevel"]',
-
-        // Settings Panel
-        SETTINGS_PANEL_TITLE: '[class*="SettingsPanel_title"]',
-        SETTINGS_TABS_CONTAINER: 'div[class*="SettingsPanel_tabsComponentContainer"]',
-        TABS_FLEX_CONTAINER: '[class*="MuiTabs-flexContainer"]',
-        TAB_PANELS_CONTAINER: '[class*="TabsComponent_tabPanelsContainer"]',
-        TAB_PANEL: '[class*="TabPanel_tabPanel"]',
-
-        // Game Panel
-        GAME_PANEL: 'div[class*="GamePage_gamePanel"]',
-
-        // Skill Action Detail
-        SKILL_ACTION_DETAIL: '[class*="SkillActionDetail_skillActionDetail"]',
-        SKILL_ACTION_NAME: '[class*="SkillActionDetail_name"]',
-        ENHANCING_COMPONENT: 'div.SkillActionDetail_enhancingComponent__17bOx',
-
-        // Action Queue
-        QUEUED_ACTIONS: '[class*="QueuedActions_action"]',
-        MAX_ACTION_COUNT_INPUT: '[class*="maxActionCountInput"]',
-
-        // Tasks
-        TASK_PANEL: '[class*="TasksPanel_taskSlotCount"]',
-        TASK_LIST: '[class*="TasksPanel_taskList"]',
-        TASK_CARD: '[class*="RandomTask_randomTask"]',
-        TASK_NAME: '[class*="RandomTask_name"]',
-        TASK_INFO: '.RandomTask_taskInfo__1uasf',
-        TASK_ACTION: '.RandomTask_action__3eC6o',
-        TASK_REWARDS: '.RandomTask_rewards__YZk7D',
-        TASK_CONTENT: '[class*="RandomTask_content"]',
-        TASK_NAME_DIV: 'div[class*="RandomTask_name"]',
-
-        // House Panel
-        HOUSE_HEADER: '[class*="HousePanel_header"]',
-        HOUSE_COSTS: '[class*="HousePanel_costs"]',
-        HOUSE_ITEM_REQUIREMENTS: '[class*="HousePanel_itemRequirements"]',
-
-        // Inventory
-        INVENTORY_ITEMS: '[class*="Inventory_items"]',
-        INVENTORY_CATEGORY_BUTTON: '.Inventory_categoryButton__35s1x',
-        INVENTORY_LABEL: '.Inventory_label__XEOAx',
-
-        // Items
-        ITEM_CONTAINER: '.Item_itemContainer__x7kH1',
-        ITEM_ITEM: '.Item_item__2De2O',
-        ITEM_COUNT: '.Item_count__1HVvv',
-        ITEM_TOOLTIP_TEXT: '.ItemTooltipText_itemTooltipText__zFq3A',
-
-        // Navigation/Experience Bars
-        NAV_LEVEL: '[class*="NavigationBar_level"]',
-        NAV_CURRENT_EXPERIENCE: '[class*="NavigationBar_currentExperience"]',
-
-        // Enhancement
-        PROTECTION_ITEM_INPUT: '[class*="protectionItemInputContainer"]',
-
-        // Tooltips
-        MUI_TOOLTIP: '.MuiTooltip-tooltip'
-    };
-
-    /**
-     * Toolasha-specific selectors (our injected elements)
-     */
-    const TOOLASHA = {
-        // Settings
-        SETTINGS_TAB: '#toolasha-settings-tab',
-        SETTING_WITH_DEPS: '.toolasha-setting[data-dependencies]',
-
-        // Task features
-        TASK_PROFIT: '.mwi-task-profit',
-        REROLL_COST_DISPLAY: '.mwi-reroll-cost-display',
-
-        // Action features
-        QUEUE_TOTAL_TIME: '#mwi-queue-total-time',
-        FORAGING_PROFIT: '#mwi-foraging-profit',
-        PRODUCTION_PROFIT: '#mwi-production-profit',
-
-        // House features
-        HOUSE_PRICING: '.mwi-house-pricing',
-        HOUSE_PRICING_EMPTY: '.mwi-house-pricing-empty',
-        HOUSE_TOTAL: '.mwi-house-total',
-        HOUSE_TO_LEVEL: '.mwi-house-to-level',
-
-        // Profile/Combat Score
-        SCORE_CLOSE_BTN: '#mwi-score-close-btn',
-        SCORE_TOGGLE: '#mwi-score-toggle',
-        SCORE_DETAILS: '#mwi-score-details',
-        HOUSE_TOGGLE: '#mwi-house-toggle',
-        HOUSE_BREAKDOWN: '#mwi-house-breakdown',
-        ABILITY_TOGGLE: '#mwi-ability-toggle',
-        ABILITY_BREAKDOWN: '#mwi-ability-breakdown',
-        EQUIPMENT_TOGGLE: '#mwi-equipment-toggle',
-        EQUIPMENT_BREAKDOWN: '#mwi-equipment-breakdown',
-
-        // Market features
-        MARKET_PRICE_INJECTED: '.market-price-injected',
-        MARKET_PROFIT_INJECTED: '.market-profit-injected',
-        MARKET_EV_INJECTED: '.market-ev-injected',
-        MARKET_ENHANCEMENT_INJECTED: '.market-enhancement-injected',
-
-        // UI features
-        ALCHEMY_DIMMED: '.mwi-alchemy-dimmed',
-        EXP_PERCENTAGE: '.mwi-exp-percentage',
-        STACK_PRICE: '.mwi-stack-price',
-        NETWORTH_HEADER: '.mwi-networth-header',
-
-        // Enhancement
-        ENHANCEMENT_STATS: '#mwi-enhancement-stats',
-
-        // Generic
-        COLLAPSIBLE_SECTION: '.mwi-collapsible-section',
-        EXPANDABLE_HEADER: '.mwi-expandable-header',
-        SECTION_HEADER_NEXT: '.mwi-section-header + div',
-
-        // Legacy/cleanup markers
-        INSERTED_SPAN: '.insertedSpan',
-        SCRIPT_INJECTED: '.script-injected',
-        CONSUMABLE_STATS_INJECTED: '.consumable-stats-injected'
-    };
-
-    /**
      * Required Materials Display
      * Shows total required materials and missing amounts for production actions
      */
@@ -16922,16 +16926,8 @@
                     return;
                 }
 
-                // Find the number input field (same logic as quick-input-buttons)
-                let inputField = panel.querySelector('input[type="number"]');
-                if (!inputField) {
-                    // Try finding input within maxActionCountInput container
-                    const inputContainer = panel.querySelector('[class*="maxActionCountInput"]');
-                    if (inputContainer) {
-                        inputField = inputContainer.querySelector('input');
-                    }
-                }
-
+                // Find the input box using utility
+                const inputField = findActionInput(panel);
                 if (!inputField) {
                     return;
                 }
@@ -16939,24 +16935,14 @@
                 // Mark as processed
                 this.processedPanels.add(panel);
 
-                // Attach input listener
-                inputField.addEventListener('input', () => {
-                    this.updateRequiredMaterials(panel, inputField.value);
+                // Attach input listeners using utility
+                attachInputListeners(panel, inputField, (value) => {
+                    this.updateRequiredMaterials(panel, value);
                 });
 
-                // Check if input already has a value and display materials
-                if (inputField.value && parseInt(inputField.value) > 0) {
-                    this.updateRequiredMaterials(panel, inputField.value);
-                }
-
-                // Also listen for button clicks that change the input
-                // This catches quick input buttons and Max button
-                panel.addEventListener('click', (e) => {
-                    if (e.target.matches('button')) {
-                        setTimeout(() => {
-                            this.updateRequiredMaterials(panel, inputField.value);
-                        }, 50);
-                    }
+                // Initial update if there's already a value
+                performInitialUpdate(inputField, (value) => {
+                    this.updateRequiredMaterials(panel, value);
                 });
             });
         }
@@ -16971,24 +16957,29 @@
                 return;
             }
 
-            // Find requirements container
+            // Get artisan bonus for material reduction calculation
+            const artisanBonus = this.getArtisanBonus(panel);
+
+            // Get base material requirements from action details (separated into upgrade and regular)
+            const { upgradeItemCount, regularMaterials } = this.getBaseMaterialRequirements(panel);
+
+            // Process upgrade item first (if exists)
+            if (upgradeItemCount !== null) {
+                this.processUpgradeItem(panel, numActions, upgradeItemCount);
+            }
+
+            // Find requirements container for regular materials
             const requiresDiv = panel.querySelector('[class*="SkillActionDetail_itemRequirements"]');
             if (!requiresDiv) {
                 return;
             }
-
-            // Get artisan bonus for material reduction calculation
-            const artisanBonus = this.getArtisanBonus(panel);
-
-            // Get base material requirements from action details
-            const baseMaterialRequirements = this.getBaseMaterialRequirements(panel);
 
             // Get inventory spans and input spans
             const inventorySpans = panel.querySelectorAll('[class*="SkillActionDetail_inventoryCount"]');
             const inputSpans = Array.from(panel.querySelectorAll('[class*="SkillActionDetail_inputCount"]'))
                 .filter(span => !span.textContent.includes('Required'));
 
-            // Process each material using MWIT-E's approach
+            // Process each regular material using MWIT-E's approach
             // Iterate through requiresDiv children to find inputCount spans and their target containers
             const children = Array.from(requiresDiv.children);
             let materialIndex = 0;
@@ -17003,24 +16994,21 @@
                     if (materialIndex >= inventorySpans.length || materialIndex >= inputSpans.length) return;
 
                     const invText = inventorySpans[materialIndex].textContent.trim();
-                    inputSpans[materialIndex].textContent.trim();
 
                     // Parse inventory amount (handle K/M suffixes)
                     const invValue = this.parseAmount(invText);
 
-                    // Get base requirement from action details (not from UI - UI rounds the value)
-                    const materialReq = baseMaterialRequirements[materialIndex];
+                    // Get base requirement from action details (now correctly indexed)
+                    const materialReq = regularMaterials[materialIndex];
                     if (!materialReq || materialReq.count <= 0) {
                         materialIndex++;
                         return;
                     }
 
-                    // Apply artisan reduction ONLY to regular materials (not upgrade items)
+                    // Apply artisan reduction to regular materials
                     // Materials are consumed PER ACTION
                     // Efficiency gives bonus actions for FREE (no material cost)
-                    const materialsPerAction = materialReq.isUpgradeItem
-                        ? materialReq.count
-                        : materialReq.count * (1 - artisanBonus);
+                    const materialsPerAction = materialReq.count * (1 - artisanBonus);
 
                     // Calculate total materials needed for queued actions
                     const totalRequired = Math.ceil(materialsPerAction * numActions);
@@ -17058,16 +17046,102 @@
         }
 
         /**
+         * Process upgrade item display in "Upgrades From" section
+         * @param {HTMLElement} panel - Action panel element
+         * @param {number} numActions - Number of actions to perform
+         * @param {number} upgradeItemCount - Base count of upgrade item (always 1)
+         */
+        processUpgradeItem(panel, numActions, upgradeItemCount) {
+            try {
+                // Find upgrade item selector container
+                const upgradeContainer = panel.querySelector('[class*="SkillActionDetail_upgradeItemSelectorInput"]');
+                if (!upgradeContainer) {
+                    return;
+                }
+
+                // Find the inventory count from game UI
+                let inventoryElement = upgradeContainer.querySelector('[class*="Item_count"]');
+                let invValue = 0;
+
+                if (inventoryElement) {
+                    // Found the game's native inventory count display
+                    invValue = this.parseAmount(inventoryElement.textContent.trim());
+                } else {
+                    // Fallback: Get inventory from game data using item name
+                    const svg = upgradeContainer.querySelector('svg[role="img"]');
+                    if (svg) {
+                        const itemName = svg.getAttribute('aria-label');
+
+                        if (itemName) {
+                            // Look up inventory from game data
+                            const gameData = dataManager.getInitClientData();
+                            const inventory = dataManager.getInventory();
+
+                            if (gameData && inventory) {
+                                // Find item HRID by name
+                                let itemHrid = null;
+                                for (const [hrid, details] of Object.entries(gameData.itemDetailMap || {})) {
+                                    if (details.name === itemName) {
+                                        itemHrid = hrid;
+                                        break;
+                                    }
+                                }
+
+                                if (itemHrid) {
+                                    // Get inventory count (default to 0 if not found)
+                                    invValue = inventory[itemHrid] || 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Calculate requirements (upgrade items always need exactly 1 per action, no artisan)
+                const totalRequired = upgradeItemCount * numActions;
+                const missing = Math.max(0, totalRequired - invValue);
+
+                // Create display element (matching style of regular materials)
+                const displaySpan = document.createElement('span');
+                displaySpan.className = 'mwi-required-materials';
+                displaySpan.style.cssText = `
+                display: block;
+                font-size: 0.85em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-top: 2px;
+            `;
+
+                // Build text
+                let text = `Required: ${numberFormatter(totalRequired)}`;
+                if (missing > 0) {
+                    text += ` || Missing: ${numberFormatter(missing)}`;
+                    displaySpan.style.color = config.COLOR_LOSS; // Missing materials
+                } else {
+                    displaySpan.style.color = config.COLOR_PROFIT; // Sufficient materials
+                }
+
+                displaySpan.textContent = text;
+
+                // Insert after entire upgrade container (not inside it)
+                upgradeContainer.after(displaySpan);
+
+            } catch (error) {
+                console.error('[Required Materials] Error processing upgrade item:', error);
+            }
+        }
+
+        /**
          * Get base material requirements from action details
          * @param {HTMLElement} panel - Action panel element
-         * @returns {Array<number>} Array of base material counts
+         * @returns {Object} Object with upgradeItemCount (number|null) and regularMaterials (Array)
          */
         getBaseMaterialRequirements(panel) {
             try {
                 // Get action name from panel
                 const actionNameElement = panel.querySelector('[class*="SkillActionDetail_name"]');
                 if (!actionNameElement) {
-                    return [];
+                    return { upgradeItemCount: null, regularMaterials: [] };
                 }
 
                 const actionName = actionNameElement.textContent.trim();
@@ -17075,7 +17149,7 @@
                 // Look up action details
                 const gameData = dataManager.getInitClientData();
                 if (!gameData || !gameData.actionDetailMap) {
-                    return [];
+                    return { upgradeItemCount: null, regularMaterials: [] };
                 }
 
                 let actionDetails = null;
@@ -17087,36 +17161,28 @@
                 }
 
                 if (!actionDetails) {
-                    return [];
+                    return { upgradeItemCount: null, regularMaterials: [] };
                 }
 
-                const requirements = [];
-
-                // Add upgrade item first if it exists (shown first in UI)
-                // Upgrade items are NOT affected by Artisan Tea
-                if (actionDetails.upgradeItemHrid) {
-                    requirements.push({
-                        count: 1,
-                        isUpgradeItem: true  // Flag to skip artisan reduction
-                    });
-                }
+                // Separate upgrade item from regular materials
+                const upgradeItemCount = actionDetails.upgradeItemHrid ? 1 : null;
+                const regularMaterials = [];
 
                 // Add regular input items (affected by Artisan Tea)
                 if (actionDetails.inputItems && actionDetails.inputItems.length > 0) {
                     actionDetails.inputItems.forEach(item => {
-                        requirements.push({
-                            count: item.count || 0,
-                            isUpgradeItem: false
+                        regularMaterials.push({
+                            count: item.count || 0
                         });
                     });
                 }
 
-                // Return array of requirement objects in order
-                return requirements;
+                // Return separated data
+                return { upgradeItemCount, regularMaterials };
 
             } catch (error) {
                 console.error('[Required Materials] Error getting base requirements:', error);
-                return [];
+                return { upgradeItemCount: null, regularMaterials: [] };
             }
         }
 
@@ -20464,6 +20530,136 @@
     }
 
     /**
+     * DOM Selector Constants
+     * Centralized selector strings for querying game elements
+     * If game class names change, update here only
+     */
+
+    /**
+     * Game UI Selectors (class names from game code)
+     */
+    const GAME = {
+        // Header
+        TOTAL_LEVEL: '[class*="Header_totalLevel"]',
+
+        // Settings Panel
+        SETTINGS_PANEL_TITLE: '[class*="SettingsPanel_title"]',
+        SETTINGS_TABS_CONTAINER: 'div[class*="SettingsPanel_tabsComponentContainer"]',
+        TABS_FLEX_CONTAINER: '[class*="MuiTabs-flexContainer"]',
+        TAB_PANELS_CONTAINER: '[class*="TabsComponent_tabPanelsContainer"]',
+        TAB_PANEL: '[class*="TabPanel_tabPanel"]',
+
+        // Game Panel
+        GAME_PANEL: 'div[class*="GamePage_gamePanel"]',
+
+        // Skill Action Detail
+        SKILL_ACTION_DETAIL: '[class*="SkillActionDetail_skillActionDetail"]',
+        SKILL_ACTION_NAME: '[class*="SkillActionDetail_name"]',
+        ENHANCING_COMPONENT: 'div.SkillActionDetail_enhancingComponent__17bOx',
+
+        // Action Queue
+        QUEUED_ACTIONS: '[class*="QueuedActions_action"]',
+        MAX_ACTION_COUNT_INPUT: '[class*="maxActionCountInput"]',
+
+        // Tasks
+        TASK_PANEL: '[class*="TasksPanel_taskSlotCount"]',
+        TASK_LIST: '[class*="TasksPanel_taskList"]',
+        TASK_CARD: '[class*="RandomTask_randomTask"]',
+        TASK_NAME: '[class*="RandomTask_name"]',
+        TASK_INFO: '.RandomTask_taskInfo__1uasf',
+        TASK_ACTION: '.RandomTask_action__3eC6o',
+        TASK_REWARDS: '.RandomTask_rewards__YZk7D',
+        TASK_CONTENT: '[class*="RandomTask_content"]',
+        TASK_NAME_DIV: 'div[class*="RandomTask_name"]',
+
+        // House Panel
+        HOUSE_HEADER: '[class*="HousePanel_header"]',
+        HOUSE_COSTS: '[class*="HousePanel_costs"]',
+        HOUSE_ITEM_REQUIREMENTS: '[class*="HousePanel_itemRequirements"]',
+
+        // Inventory
+        INVENTORY_ITEMS: '[class*="Inventory_items"]',
+        INVENTORY_CATEGORY_BUTTON: '.Inventory_categoryButton__35s1x',
+        INVENTORY_LABEL: '.Inventory_label__XEOAx',
+
+        // Items
+        ITEM_CONTAINER: '.Item_itemContainer__x7kH1',
+        ITEM_ITEM: '.Item_item__2De2O',
+        ITEM_COUNT: '.Item_count__1HVvv',
+        ITEM_TOOLTIP_TEXT: '.ItemTooltipText_itemTooltipText__zFq3A',
+
+        // Navigation/Experience Bars
+        NAV_LEVEL: '[class*="NavigationBar_level"]',
+        NAV_CURRENT_EXPERIENCE: '[class*="NavigationBar_currentExperience"]',
+
+        // Enhancement
+        PROTECTION_ITEM_INPUT: '[class*="protectionItemInputContainer"]',
+
+        // Tooltips
+        MUI_TOOLTIP: '.MuiTooltip-tooltip'
+    };
+
+    /**
+     * Toolasha-specific selectors (our injected elements)
+     */
+    const TOOLASHA = {
+        // Settings
+        SETTINGS_TAB: '#toolasha-settings-tab',
+        SETTING_WITH_DEPS: '.toolasha-setting[data-dependencies]',
+
+        // Task features
+        TASK_PROFIT: '.mwi-task-profit',
+        REROLL_COST_DISPLAY: '.mwi-reroll-cost-display',
+
+        // Action features
+        QUEUE_TOTAL_TIME: '#mwi-queue-total-time',
+        FORAGING_PROFIT: '#mwi-foraging-profit',
+        PRODUCTION_PROFIT: '#mwi-production-profit',
+
+        // House features
+        HOUSE_PRICING: '.mwi-house-pricing',
+        HOUSE_PRICING_EMPTY: '.mwi-house-pricing-empty',
+        HOUSE_TOTAL: '.mwi-house-total',
+        HOUSE_TO_LEVEL: '.mwi-house-to-level',
+
+        // Profile/Combat Score
+        SCORE_CLOSE_BTN: '#mwi-score-close-btn',
+        SCORE_TOGGLE: '#mwi-score-toggle',
+        SCORE_DETAILS: '#mwi-score-details',
+        HOUSE_TOGGLE: '#mwi-house-toggle',
+        HOUSE_BREAKDOWN: '#mwi-house-breakdown',
+        ABILITY_TOGGLE: '#mwi-ability-toggle',
+        ABILITY_BREAKDOWN: '#mwi-ability-breakdown',
+        EQUIPMENT_TOGGLE: '#mwi-equipment-toggle',
+        EQUIPMENT_BREAKDOWN: '#mwi-equipment-breakdown',
+
+        // Market features
+        MARKET_PRICE_INJECTED: '.market-price-injected',
+        MARKET_PROFIT_INJECTED: '.market-profit-injected',
+        MARKET_EV_INJECTED: '.market-ev-injected',
+        MARKET_ENHANCEMENT_INJECTED: '.market-enhancement-injected',
+
+        // UI features
+        ALCHEMY_DIMMED: '.mwi-alchemy-dimmed',
+        EXP_PERCENTAGE: '.mwi-exp-percentage',
+        STACK_PRICE: '.mwi-stack-price',
+        NETWORTH_HEADER: '.mwi-networth-header',
+
+        // Enhancement
+        ENHANCEMENT_STATS: '#mwi-enhancement-stats',
+
+        // Generic
+        COLLAPSIBLE_SECTION: '.mwi-collapsible-section',
+        EXPANDABLE_HEADER: '.mwi-expandable-header',
+        SECTION_HEADER_NEXT: '.mwi-section-header + div',
+
+        // Legacy/cleanup markers
+        INSERTED_SPAN: '.insertedSpan',
+        SCRIPT_INJECTED: '.script-injected',
+        CONSUMABLE_STATS_INJECTED: '.consumable-stats-injected'
+    };
+
+    /**
      * Task Profit Display
      * Shows profit calculation on task cards
      * Expandable breakdown on click
@@ -21659,7 +21855,6 @@
             this.itemsByHrid = null;
             this.actionsByHrid = null;
             this.monstersByHrid = null;
-            this.locationsByHrid = null;
         }
 
         /**
@@ -21673,6 +21868,11 @@
 
             // Watch for task cards being added/updated
             this.watchTaskCards();
+
+            // Listen for character switching to clean up
+            dataManager.on('character_switching', () => {
+                this.cleanup();
+            });
 
             this.initialized = true;
         }
@@ -21710,13 +21910,6 @@
             if (gameData.combatMonsterDetailMap) {
                 Object.entries(gameData.combatMonsterDetailMap).forEach(([hrid, monster]) => {
                     this.monstersByHrid.set(hrid, monster);
-                });
-            }
-
-            // Index locations (for dungeon info)
-            if (gameData.locationDetailMap) {
-                Object.entries(gameData.locationDetailMap).forEach(([hrid, location]) => {
-                    this.locationsByHrid.set(hrid, location);
                 });
             }
         }
@@ -21963,59 +22156,166 @@
                 return;
             }
 
-            const iconName = monsterHrid.split('/').pop();
-            this.addIconOverlay(taskCard, this.SPRITES.MONSTERS, iconName, 'monster', '50%');
-
-            // Also add dungeon icons if enabled and monster appears in dungeons
+            // Count dungeons if dungeon icons are enabled
+            let dungeonCount = 0;
             if (config.isFeatureEnabled('taskIconsDungeons')) {
-                this.addDungeonIcons(taskCard, monsterHrid);
+                dungeonCount = this.countDungeonsForMonster(monsterHrid);
+            }
+
+            // Calculate icon width based on total count (1 monster + N dungeons)
+            const totalIcons = 1 + dungeonCount;
+            let iconWidth;
+            if (totalIcons <= 2) {
+                iconWidth = 30;
+            } else if (totalIcons <= 4) {
+                iconWidth = 25;
+            } else {
+                iconWidth = 20;
+            }
+
+            // Position monster on the right (ends at 100%)
+            const monsterPosition = 100 - iconWidth;
+            const iconName = monsterHrid.split('/').pop();
+            this.addIconOverlay(taskCard, this.SPRITES.MONSTERS, iconName, 'monster', `${monsterPosition}%`, `${iconWidth}%`);
+
+            // Add dungeon icons if enabled
+            if (config.isFeatureEnabled('taskIconsDungeons') && dungeonCount > 0) {
+                this.addDungeonIcons(taskCard, monsterHrid, iconWidth);
             }
         }
 
         /**
-         * Add dungeon icons for a monster
+         * Count how many dungeons a monster appears in
          */
-        addDungeonIcons(taskCard, monsterHrid) {
-            const monster = this.monstersByHrid.get(monsterHrid);
-            if (!monster || !monster.combatDropTable) return;
+        countDungeonsForMonster(monsterHrid) {
+            let count = 0;
 
-            // Find which dungeon zones this monster appears in
-            const dungeonHrids = [];
+            for (const [actionHrid, action] of this.actionsByHrid) {
+                if (!action.combatZoneInfo?.isDungeon) continue;
 
-            for (const [locationHrid, location] of this.locationsByHrid) {
-                // Skip non-dungeon locations
-                if (!location.isDungeon) continue;
+                const dungeonInfo = action.combatZoneInfo.dungeonInfo;
+                if (!dungeonInfo) continue;
 
-                // Check if this location's monster drop table includes our monster
-                if (location.combatEncounterTable) {
-                    for (const encounter of location.combatEncounterTable) {
-                        if (encounter.monsterHrid === monsterHrid) {
-                            dungeonHrids.push(locationHrid);
-                            break;
+                let monsterFound = false;
+
+                // Check random spawns
+                if (dungeonInfo.randomSpawnInfoMap) {
+                    for (const waveSpawns of Object.values(dungeonInfo.randomSpawnInfoMap)) {
+                        if (waveSpawns.spawns) {
+                            for (const spawn of waveSpawns.spawns) {
+                                if (spawn.combatMonsterHrid === monsterHrid) {
+                                    monsterFound = true;
+                                    break;
+                                }
+                            }
                         }
+                        if (monsterFound) break;
                     }
+                }
+
+                // Check fixed spawns
+                if (!monsterFound && dungeonInfo.fixedSpawnsMap) {
+                    for (const waveSpawns of Object.values(dungeonInfo.fixedSpawnsMap)) {
+                        for (const spawn of waveSpawns) {
+                            if (spawn.combatMonsterHrid === monsterHrid) {
+                                monsterFound = true;
+                                break;
+                            }
+                        }
+                        if (monsterFound) break;
+                    }
+                }
+
+                if (monsterFound) {
+                    count++;
                 }
             }
 
-            // Add icon for each dungeon
-            let offset = 35; // Start after monster icon (which is at 5%)
+            return count;
+        }
+
+        /**
+         * Add dungeon icons for a monster
+         * @param {HTMLElement} taskCard - Task card element
+         * @param {string} monsterHrid - Monster HRID
+         * @param {number} iconWidth - Width percentage for each icon
+         */
+        addDungeonIcons(taskCard, monsterHrid, iconWidth) {
+            const monster = this.monstersByHrid.get(monsterHrid);
+            if (!monster) return;
+
+            // Find which dungeons this monster appears in
+            const dungeonHrids = [];
+
+            for (const [actionHrid, action] of this.actionsByHrid) {
+                // Skip non-dungeon actions
+                if (!action.combatZoneInfo?.isDungeon) continue;
+
+                const dungeonInfo = action.combatZoneInfo.dungeonInfo;
+                if (!dungeonInfo) continue;
+
+                let monsterFound = false;
+
+                // Check random spawns (regular waves)
+                if (dungeonInfo.randomSpawnInfoMap) {
+                    for (const waveSpawns of Object.values(dungeonInfo.randomSpawnInfoMap)) {
+                        if (waveSpawns.spawns) {
+                            for (const spawn of waveSpawns.spawns) {
+                                if (spawn.combatMonsterHrid === monsterHrid) {
+                                    monsterFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (monsterFound) break;
+                    }
+                }
+
+                // Check fixed spawns (boss waves)
+                if (!monsterFound && dungeonInfo.fixedSpawnsMap) {
+                    for (const waveSpawns of Object.values(dungeonInfo.fixedSpawnsMap)) {
+                        for (const spawn of waveSpawns) {
+                            if (spawn.combatMonsterHrid === monsterHrid) {
+                                monsterFound = true;
+                                break;
+                            }
+                        }
+                        if (monsterFound) break;
+                    }
+                }
+
+                if (monsterFound) {
+                    dungeonHrids.push(actionHrid);
+                }
+            }
+
+            // Position dungeons right-to-left, starting from left of monster
+            const monsterPosition = 100 - iconWidth;
+            let position = monsterPosition - iconWidth; // Start one icon to the left of monster
+
             dungeonHrids.forEach(dungeonHrid => {
                 const iconName = dungeonHrid.split('/').pop();
-                this.addIconOverlay(taskCard, this.SPRITES.ACTIONS, iconName, 'dungeon', `${offset}%`);
-                offset += 30; // Each dungeon icon takes 30% width
+                this.addIconOverlay(taskCard, this.SPRITES.ACTIONS, iconName, 'dungeon', `${position}%`, `${iconWidth}%`);
+                position -= iconWidth; // Move left for next dungeon
             });
         }
 
         /**
          * Add icon overlay to task card
+         * @param {HTMLElement} taskCard - Task card element
+         * @param {string} spritePath - Path to sprite SVG
+         * @param {string} iconName - Icon name in sprite
+         * @param {string} type - Icon type (action/monster/dungeon)
+         * @param {string} leftPosition - Left position percentage
+         * @param {string} widthPercent - Width percentage (default: '30%')
          */
-        addIconOverlay(taskCard, spritePath, iconName, type, leftPosition = '50%') {
+        addIconOverlay(taskCard, spritePath, iconName, type, leftPosition = '50%', widthPercent = '30%') {
             // Create container for icon
             const iconDiv = document.createElement('div');
             iconDiv.className = `mwi-task-icon mwi-task-icon-${type}`;
             iconDiv.style.position = 'absolute';
             iconDiv.style.left = leftPosition;
-            iconDiv.style.width = '30%';
+            iconDiv.style.width = widthPercent;
             iconDiv.style.height = '100%';
             iconDiv.style.opacity = '0.3';
             iconDiv.style.pointerEvents = 'none';
@@ -22059,6 +22359,8 @@
          * Cleanup
          */
         cleanup() {
+            console.log('[Toolasha Task Icons] Cleaning up for character switch');
+
             // Unregister all observers
             this.observers.forEach(unregister => unregister());
             this.observers = [];
@@ -22068,6 +22370,11 @@
             document.querySelectorAll('[data-mwi-task-processed]').forEach(card => {
                 card.removeAttribute('data-mwi-task-processed');
             });
+
+            // Clear caches
+            this.itemsByHrid = null;
+            this.actionsByHrid = null;
+            this.monstersByHrid = null;
 
             this.initialized = false;
         }
@@ -26929,7 +27236,7 @@
             this.currentViewingIndex = 0; // Index in sessions array
             this.updateDebounce = null;
             this.isDragging = false;
-            this.screenObserver = null;
+            this.unregisterScreenObserver = null;
             this.isOnEnhancingScreen = false;
             this.isCollapsed = false; // Track collapsed state
         }
@@ -26954,7 +27261,7 @@
         }
 
         /**
-         * Set up screen observer to detect Enhancing screen
+         * Set up screen observer to detect Enhancing screen using centralized observer
          */
         setupScreenObserver() {
             // Check if setting is enabled
@@ -26969,25 +27276,15 @@
             this.checkEnhancingScreen();
             this.updateVisibility(); // Always set initial visibility
 
-            // Wait for document.body before observing
-            const startObserver = () => {
-                if (!document.body) {
-                    setTimeout(startObserver, 10);
-                    return;
-                }
-
-                // Set up MutationObserver to detect screen changes
-                this.screenObserver = new MutationObserver(() => {
+            // Register with centralized DOM observer for enhancing panel detection
+            this.unregisterScreenObserver = domObserver.onClass(
+                'EnhancementUI-ScreenDetection',
+                'SkillActionDetail_enhancingComponent',
+                () => {
                     this.checkEnhancingScreen();
-                });
-
-                this.screenObserver.observe(document.body, {
-                    childList: true,
-                    subtree: true
-                });
-            };
-
-            startObserver();
+                },
+                { debounce: true, debounceDelay: 100 }
+            );
         }
 
         /**
@@ -28244,6 +28541,11 @@
 
             // Listen for action updates
             this.registerWebSocketListeners();
+
+            // Listen for character switching to clean up
+            dataManager.on('character_switching', () => {
+                this.disable();
+            });
         }
 
         /**
@@ -28355,6 +28657,8 @@
          * Cleanup
          */
         disable() {
+            console.log('[Toolasha Empty Queue Notification] Cleaning up for character switch');
+
             this.unregisterHandlers.forEach(unregister => unregister());
             this.unregisterHandlers = [];
             this.wasEmpty = false;
@@ -28818,6 +29122,14 @@
 
             // Hibernation detection (for UI time label switching)
             this.hibernationDetected = false;
+
+            // Store handler references for cleanup
+            this.handlers = {
+                newBattle: null,
+                actionCompleted: null,
+                actionsUpdated: null,
+                chatMessage: null
+            };
         }
 
         /**
@@ -28971,23 +29283,34 @@
             // Get character ID from URL for data isolation
             this.characterId = this.getCharacterIdFromURL();
 
+            // Create and store handler references for cleanup
+            this.handlers.newBattle = (data) => this.onNewBattle(data);
+            this.handlers.actionCompleted = (data) => this.onActionCompleted(data);
+            this.handlers.actionsUpdated = (data) => this.onActionsUpdated(data);
+            this.handlers.chatMessage = (data) => this.onChatMessage(data);
+
             // Listen for new_battle messages (wave start)
-            webSocketHook.on('new_battle', (data) => this.onNewBattle(data));
+            webSocketHook.on('new_battle', this.handlers.newBattle);
 
             // Listen for action_completed messages (wave complete)
-            webSocketHook.on('action_completed', (data) => this.onActionCompleted(data));
+            webSocketHook.on('action_completed', this.handlers.actionCompleted);
 
             // Listen for actions_updated to detect flee/cancel
-            webSocketHook.on('actions_updated', (data) => this.onActionsUpdated(data));
+            webSocketHook.on('actions_updated', this.handlers.actionsUpdated);
 
             // Listen for party chat messages (for server-validated duration and battle started)
-            webSocketHook.on('chat_message_received', (data) => this.onChatMessage(data));
+            webSocketHook.on('chat_message_received', this.handlers.chatMessage);
 
             // Setup hibernation detection using Visibility API
             this.setupHibernationDetection();
 
             // Check for active dungeon on page load and try to restore state
             setTimeout(() => this.checkForActiveDungeon(), 1000);
+
+            // Listen for character switching to clean up
+            dataManager.on('character_switching', () => {
+                this.cleanup();
+            });
         }
 
         /**
@@ -29932,6 +30255,58 @@
         }
 
         /**
+         * Cleanup for character switching
+         */
+        async cleanup() {
+            console.log('[Toolasha Dungeon Tracker] Cleaning up for character switch');
+
+            // Unregister all WebSocket handlers
+            if (this.handlers.newBattle) {
+                webSocketHook.off('new_battle', this.handlers.newBattle);
+                this.handlers.newBattle = null;
+            }
+            if (this.handlers.actionCompleted) {
+                webSocketHook.off('action_completed', this.handlers.actionCompleted);
+                this.handlers.actionCompleted = null;
+            }
+            if (this.handlers.actionsUpdated) {
+                webSocketHook.off('actions_updated', this.handlers.actionsUpdated);
+                this.handlers.actionsUpdated = null;
+            }
+            if (this.handlers.chatMessage) {
+                webSocketHook.off('chat_message_received', this.handlers.chatMessage);
+                this.handlers.chatMessage = null;
+            }
+
+            // Reset all tracking state
+            this.isTracking = false;
+            this.currentRun = null;
+            this.waveStartTime = null;
+            this.waveTimes = [];
+            this.pendingDungeonInfo = null;
+            this.currentBattleId = null;
+
+            // Clear party message tracking
+            this.firstKeyCountTimestamp = null;
+            this.lastKeyCountTimestamp = null;
+            this.keyCountMessages = [];
+            this.battleStartedTimestamp = null;
+            this.recentChatMessages = [];
+
+            // Reset hibernation detection
+            this.hibernationDetected = false;
+
+            // Clear character ID
+            this.characterId = null;
+
+            // Clear all callbacks
+            this.updateCallbacks = [];
+
+            // Clear saved in-progress run
+            await this.clearInProgressRun();
+        }
+
+        /**
          * Backfill team runs from party chat history
          * Scans all "Key counts:" messages and calculates run durations
          * @returns {Promise<{runsAdded: number, teams: Array<string>}>} Backfill results
@@ -30088,6 +30463,11 @@
         initialize() {
             // Wait for chat to be available
             this.waitForChat();
+
+            // Listen for character switching to clean up
+            dataManager.on('character_switching', () => {
+                this.cleanup();
+            });
         }
 
         /**
@@ -30166,8 +30546,11 @@
 
             const events = this.extractChatEvents();
 
-            // Phase 5: Save runs from chat messages (authoritative source)
-            await this.saveRunsFromEvents(events);
+            // NOTE: Run saving is done manually via the Backfill button
+            // Chat annotations only add visual time labels to messages
+
+            // Calculate in-memory stats from visible chat messages (for averages when no backfill exists)
+            const inMemoryStats = this.calculateStatsFromEvents(events);
 
             // Continue with visual annotations
             const runDurations = [];
@@ -30194,10 +30577,12 @@
                     label = this.formatTime(diff);
 
                     // Determine color based on performance using dungeonName
+                    // Check storage first, fall back to in-memory stats
                     if (dungeonName && dungeonName !== 'Unknown') {
-                        const stats = await dungeonTrackerStorage.getStatsByName(dungeonName);
+                        const storageStats = await dungeonTrackerStorage.getStatsByName(dungeonName);
+                        const stats = storageStats.totalRuns > 0 ? storageStats : inMemoryStats[dungeonName];
 
-                        if (stats.fastestTime > 0 && stats.slowestTime > 0) {
+                        if (stats && stats.fastestTime > 0 && stats.slowestTime > 0) {
                             const fastestThreshold = stats.fastestTime * 1.10;
                             const slowestThreshold = stats.slowestTime * 0.90;
 
@@ -30237,10 +30622,11 @@
 
                     // Add average if this is a successful run
                     if (diff && dungeonName && dungeonName !== 'Unknown') {
-                        // Get stats for average using dungeonName
-                        const stats = await dungeonTrackerStorage.getStatsByName(dungeonName);
+                        // Check storage first, fall back to in-memory stats
+                        const storageStats = await dungeonTrackerStorage.getStatsByName(dungeonName);
+                        const stats = storageStats.totalRuns > 0 ? storageStats : inMemoryStats[dungeonName];
 
-                        if (stats.totalRuns > 1 && stats.avgTime > 0) {
+                        if (stats && stats.totalRuns > 1 && stats.avgTime > 0) {
                             const avgLabel = `Average: ${this.formatTime(stats.avgTime)}`;
                             this.insertAnnotation(avgLabel, '#deb887', e.msg, true); // Tan color
                         }
@@ -30282,6 +30668,60 @@
                 // Save team run (includes dungeon name from Phase 2)
                 await dungeonTrackerStorage.saveTeamRun(teamKey, run);
             }
+        }
+
+        /**
+         * Calculate stats from visible chat events (in-memory, no storage)
+         * Used to show averages before backfill is done
+         * @param {Array} events - Chat events array
+         * @returns {Object} Stats by dungeon name { dungeonName: { totalRuns, avgTime, fastestTime, slowestTime } }
+         */
+        calculateStatsFromEvents(events) {
+            const statsByDungeon = {};
+
+            // Loop through events and collect all completed runs
+            for (let i = 0; i < events.length; i++) {
+                const event = events[i];
+                if (event.type !== 'key') continue;
+
+                const next = events[i + 1];
+                if (!next || next.type !== 'key') continue; // Only key→key pairs (successful runs)
+
+                // Calculate duration
+                let duration = next.timestamp - event.timestamp;
+                if (duration < 0) duration += 24 * 60 * 60 * 1000; // Midnight rollover
+
+                // Get dungeon name
+                const dungeonName = this.getDungeonNameWithFallback(events, i);
+                if (!dungeonName || dungeonName === 'Unknown') continue;
+
+                // Initialize dungeon stats if needed
+                if (!statsByDungeon[dungeonName]) {
+                    statsByDungeon[dungeonName] = {
+                        durations: []
+                    };
+                }
+
+                // Add this run duration
+                statsByDungeon[dungeonName].durations.push(duration);
+            }
+
+            // Calculate stats for each dungeon
+            const result = {};
+            for (const [dungeonName, data] of Object.entries(statsByDungeon)) {
+                const durations = data.durations;
+                if (durations.length === 0) continue;
+
+                const total = durations.reduce((sum, d) => sum + d, 0);
+                result[dungeonName] = {
+                    totalRuns: durations.length,
+                    avgTime: Math.floor(total / durations.length),
+                    fastestTime: Math.min(...durations),
+                    slowestTime: Math.max(...durations)
+                };
+            }
+
+            return result;
         }
 
         /**
@@ -30487,6 +30927,35 @@
         }
 
         /**
+         * Cleanup for character switching
+         */
+        cleanup() {
+            console.log('[Toolasha Dungeon Tracker Chat Annotations] Cleaning up for character switch');
+
+            // Disconnect MutationObserver
+            if (this.observer) {
+                this.observer.disconnect();
+                this.observer = null;
+            }
+
+            // Clear cached state
+            this.lastSeenDungeonName = null;
+            this.enabled = true; // Reset to default enabled state
+
+            // Remove all annotations from DOM
+            const annotations = document.querySelectorAll('.dungeon-timer-annotation, .dungeon-timer-average');
+            annotations.forEach(annotation => annotation.remove());
+
+            // Clear processed markers from chat messages
+            const processedMessages = document.querySelectorAll('[class^="ChatMessage_chatMessage"][data-processed="1"]');
+            processedMessages.forEach(msg => {
+                delete msg.dataset.processed;
+                delete msg.dataset.timerAppended;
+                delete msg.dataset.avgAppended;
+            });
+        }
+
+        /**
          * Check if chat annotations are enabled
          * @returns {boolean} Enabled status
          */
@@ -30563,7 +31032,6 @@
          */
         updatePosition(container) {
             const baseStyle = `
-            display: none;
             position: fixed;
             z-index: 9999;
             background: rgba(0, 0, 0, 0.85);
@@ -31559,8 +32027,9 @@
                         await storage.setJSON('allRuns', [], 'unifiedRuns', true);
                         alert('All run history cleared.');
 
-                        // Refresh display
+                        // Refresh both history and chart display
                         if (this.callbacks.onUpdateHistory) await this.callbacks.onUpdateHistory();
+                        if (this.callbacks.onUpdateChart) await this.callbacks.onUpdateChart();
                     } catch (error) {
                         console.error('[Dungeon Tracker UI Interactions] Clear all history error:', error);
                         alert('Failed to clear run history. Check console for details.');
@@ -31620,8 +32089,9 @@
                         alert('No new runs found to backfill.');
                     }
 
-                    // Refresh run history display
+                    // Refresh both history and chart display
                     if (this.callbacks.onUpdateHistory) await this.callbacks.onUpdateHistory();
+                    if (this.callbacks.onUpdateChart) await this.callbacks.onUpdateChart();
                 } catch (error) {
                     console.error('[Dungeon Tracker UI Interactions] Backfill error:', error);
                     alert('Backfill failed. Check console for details.');
@@ -31780,9 +32250,9 @@
 
             if (chartContainer) {
                 chartContainer.style.display = 'block';
-                // Render chart after becoming visible
+                // Render chart after becoming visible (longer delay for initial page load)
                 if (this.callbacks.onUpdateChart) {
-                    setTimeout(() => this.callbacks.onUpdateChart(), 100);
+                    setTimeout(() => this.callbacks.onUpdateChart(), 300);
                 }
             }
             if (toggle) toggle.textContent = '▼';
@@ -31927,6 +32397,9 @@
             // Create UI elements
             this.createUI();
 
+            // Hide UI initially - only show when dungeon is active
+            this.hide();
+
             // Register for dungeon tracker updates
             dungeonTracker.onUpdate((currentRun, completedRun) => {
                 // Check if UI is enabled
@@ -31951,6 +32424,11 @@
 
             // Start update loop (updates current wave time every second)
             this.startUpdateLoop();
+
+            // Listen for character switching to clean up
+            dataManager.on('character_switching', () => {
+                this.cleanup();
+            });
         }
 
         /**
@@ -32520,6 +32998,36 @@
                     this.update(currentRun);
                 }
             }, 1000);
+        }
+
+        /**
+         * Cleanup for character switching
+         */
+        cleanup() {
+            console.log('[Toolasha Dungeon Tracker UI] Cleaning up for character switch');
+
+            // Clear update interval
+            if (this.updateInterval) {
+                clearInterval(this.updateInterval);
+                this.updateInterval = null;
+            }
+
+            // Remove UI container from DOM
+            if (this.container) {
+                this.container.remove();
+                this.container = null;
+            }
+
+            // Clean up module references
+            if (this.chart) {
+                this.chart = null;
+            }
+            if (this.history) {
+                this.history = null;
+            }
+            if (this.interactions) {
+                this.interactions = null;
+            }
         }
 
         /**
@@ -33134,6 +33642,12 @@
      * @returns {Promise<void>}
      */
     async function initializeFeatures() {
+        // Block feature initialization during character switch
+        if (dataManager.getIsCharacterSwitching()) {
+            console.log('[Toolasha] Feature initialization blocked: character switch in progress');
+            return;
+        }
+
         const errors = [];
 
         for (const feature of featureRegistry) {
@@ -33237,6 +33751,28 @@
     }
 
     /**
+     * Setup character switch handler
+     * Re-initializes all features when character switches
+     */
+    function setupCharacterSwitchHandler() {
+        dataManager.on('character_switched', async (data) => {
+            console.log('[Toolasha] Character switched, re-initializing features...');
+            console.log('[Toolasha] New character:', data.newName, `(${data.newId})`);
+
+            // Wait a moment for character data to fully load
+            setTimeout(async () => {
+                // Reload config settings first (settings were cleared during cleanup)
+                await config.loadSettings();
+                config.applyColorSettings();
+
+                // Now re-initialize all features with fresh settings
+                await initializeFeatures();
+                console.log('[Toolasha] Feature re-initialization complete');
+            }, 100);
+        });
+    }
+
+    /**
      * Retry initialization for specific features
      * @param {Array<Object>} failedFeatures - Array of failed feature objects
      * @returns {Promise<void>}
@@ -33278,6 +33814,7 @@
 
     var featureRegistry$1 = {
         initializeFeatures,
+        setupCharacterSwitchHandler,
         checkFeatureHealth,
         retryFailedFeatures,
         getFeature,
@@ -33575,14 +34112,21 @@
          * Initialize the settings UI
          */
         async initialize() {
-            // Inject CSS styles
-            this.injectStyles();
+            // Inject CSS styles (check if already injected)
+            if (!document.getElementById('toolasha-settings-styles')) {
+                this.injectStyles();
+            }
 
             // Load current settings
             this.currentSettings = await settingsStorage.loadSettings();
 
             // Wait for game's settings panel to load
             this.observeSettingsPanel();
+
+            // Listen for character switching to clean up
+            dataManager.on('character_switching', () => {
+                this.cleanup();
+            });
         }
 
         /**
@@ -33600,8 +34144,6 @@
          * Uses MutationObserver to detect when settings panel appears
          */
         observeSettingsPanel() {
-            // Watch for settings panel to be added to DOM
-
             // Wait for DOM to be ready before observing
             const startObserver = () => {
                 if (!document.body) {
@@ -33705,6 +34247,8 @@
 
                 // Store reference
                 this.settingsPanel = tabPanel;
+            } catch (error) {
+                console.error('[Toolasha Settings] Error during tab injection:', error);
             } finally {
                 // Always reset the guard flag
                 this.isInjecting = false;
@@ -34392,6 +34936,39 @@
 
             input.click();
         }
+
+        /**
+         * Cleanup for character switching
+         */
+        cleanup() {
+            console.log('[Toolasha Settings] Cleaning up for character switch');
+
+            // Stop observer
+            if (this.settingsObserver) {
+                this.settingsObserver.disconnect();
+                this.settingsObserver = null;
+            }
+
+            // Remove settings tab
+            const tab = document.querySelector('#toolasha-settings-tab');
+            if (tab) {
+                tab.remove();
+            }
+
+            // Remove settings panel
+            const panel = document.querySelector('#toolasha-settings');
+            if (panel) {
+                panel.remove();
+            }
+
+            // Clear state
+            this.settingsPanel = null;
+            this.currentSettings = {};
+            this.isInjecting = false;
+
+            // Clear config cache
+            this.config.clearSettingsCache();
+        }
     }
 
     // Create and export singleton instance
@@ -34471,20 +35048,14 @@
                     await featureRegistry$1.initializeFeatures();
                     console.log('[Toolasha] Feature initialization complete');
 
+                    // Setup character switch handler (re-initializes features on character switch)
+                    featureRegistry$1.setupCharacterSwitchHandler();
+
                     // Health check after initialization
                     setTimeout(async () => {
                         const failedFeatures = featureRegistry$1.checkFeatureHealth();
 
-                        // Also check settings tab health
-                        const settingsTabExists = document.querySelector('#toolasha-settings-tab');
-                        if (!settingsTabExists) {
-                            console.warn('[Toolasha] Settings tab not found, retrying settings UI initialization...');
-                            try {
-                                await settingsUI.initialize();
-                            } catch (error) {
-                                console.error('[Toolasha] Settings UI retry failed:', error);
-                            }
-                        }
+                        // Note: Settings tab health check removed - tab only appears when user opens settings panel
 
                         if (failedFeatures.length > 0) {
                             console.warn('[Toolasha] Health check found failed features:', failedFeatures.map(f => f.name));
@@ -34517,7 +35088,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.930',
+            version: '0.4.934',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

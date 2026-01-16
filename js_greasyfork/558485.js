@@ -4,7 +4,7 @@
 // @namespace            https://github.com/utags
 // @homepageURL          https://github.com/utags/userscripts#readme
 // @supportURL           https://github.com/utags/userscripts/issues
-// @version              0.7.1
+// @version              0.8.0
 // @description          Floating or sidebar quick navigation with per-site groups, icons, JS script execution, and editable items.
 // @description:zh-CN    悬浮或侧边栏快速导航，支持按站点分组、图标、执行JS脚本与可编辑导航项。
 // @icon                 data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%3E%3Crect%20x%3D%228%22%20y%3D%228%22%20width%3D%2248%22%20height%3D%2248%22%20rx%3D%2212%22%20stroke%3D%22%231f2937%22%20stroke-width%3D%224%22/%3E%3Cpath%20d%3D%22M22%2032h20M22%2042h16M22%2022h12%22%20stroke%3D%22%231f2937%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E
@@ -743,7 +743,7 @@
       this.el = document.createElement('div')
       this.el.style.cssText =
         '\n      position: fixed;\n      top: 0;\n      left: 0;\n      width: 0%;\n      height: 3px;\n      background: #0969da;\n      z-index: 2147483647;\n      transition: width 0.2s, opacity 0.2s;\n      opacity: 0;\n      pointer-events: none;\n    '
-      document.body.append(this.el)
+      document.documentElement.append(this.el)
     }
     start() {
       this.el.style.transition = 'width 0.2s, opacity 0.2s'
@@ -5693,16 +5693,78 @@
     'stackoverflow.com',
     'superuser.com',
     't.me',
+    'external-content.duckduckgo.com',
+    'proxy.duckduckgo.com',
+    'wsrv.nl',
   ])
   var BLACKLIST_URL_PATTERNS = /* @__PURE__ */ new Set([
     /^https:\/\/www\.google\.com\/search\?.*[&?]udm=50/,
     /^https:\/\/www\.google\.com\/search\?((?![?&]udm=).)*$/,
     /^https:\/\/(.+\.)?stackexchange\.com\//,
-    /^https:\/\/(login|auth)[^.]*\./,
-    /(login|auth|signin|signup)/i,
-    /.+\.user\.js([?#].*)?$/,
+    /\b(login|auth|signin|signup|raw)/i,
+    /(login|auth|signin|signup|raw)\b/i,
+    /\.(md|png|jpe?g|gif|webp|svg|user\.js)([?#].*)?$/,
   ])
   var progressBar2
+  var activeIframe
+  var isChildReady = false
+  var failTimer
+  var isMessageListenerAttached = false
+  var messageHandler = (e) => {
+    if (
+      !e.source ||
+      !e.data ||
+      e.source !== (activeIframe == null ? void 0 : activeIframe.contentWindow)
+    )
+      return
+    const data = e.data
+    if (!data || !data.type) return
+    switch (data.type) {
+      case 'USHORTCUTS_IFRAME_READY': {
+        isChildReady = true
+        setTimeout(() => {
+          localStorage.removeItem(CHECK_IFRAME_KEY)
+        }, 1e4)
+        if (failTimer) clearTimeout(failTimer)
+        break
+      }
+      case 'USHORTCUTS_IFRAME_FAILED': {
+        console.warn('[utags-shortcuts] Iframe mode failed:', data.reason)
+        localStorage.setItem(DISABLE_IFRAME_KEY, '1')
+        localStorage.setItem(CHECK_IFRAME_KEY, '4')
+        location.reload()
+        break
+      }
+      case 'USHORTCUTS_URL_CHANGE': {
+        syncState(data.url, data.title)
+        progressBar2 == null ? void 0 : progressBar2.finish()
+        break
+      }
+      case 'USHORTCUTS_LOADING_START': {
+        progressBar2 == null ? void 0 : progressBar2.start()
+        break
+      }
+      case 'USHORTCUTS_FORWARD_KEYDOWN': {
+        const evt = data.event
+        const event = new KeyboardEvent('keydown', {
+          code: evt.code,
+          key: evt.key || evt.code,
+          ctrlKey: evt.ctrlKey,
+          metaKey: evt.metaKey,
+          altKey: evt.altKey,
+          shiftKey: evt.shiftKey,
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        })
+        document.dispatchEvent(event)
+        break
+      }
+      default: {
+        break
+      }
+    }
+  }
   function isIframeModeDisabledUrl(url) {
     return Array.from(BLACKLIST_URL_PATTERNS).some((p) => p.test(url))
   }
@@ -5740,7 +5802,10 @@
     document.documentElement.append(newHead)
     const newBody = document.createElement('body')
     document.documentElement.append(newBody)
+    const iframeContainer = document.createElement('div')
+    document.documentElement.append(iframeContainer)
     const observer = new MutationObserver((mutations) => {
+      let shouldRestore = false
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
           if (
@@ -5751,13 +5816,30 @@
             node.remove()
           }
         }
+        for (const node of mutation.removedNodes) {
+          if (node === iframeContainer || node === iframe) {
+            shouldRestore = true
+          }
+        }
+      }
+      if (shouldRestore) {
+        console.info(
+          '[utags-shortcuts] Iframe mode container or iframe deleted. Restoring...'
+        )
+        observer.disconnect()
+        enableIframeMode(side)
       }
     })
-    observer.observe(document.documentElement, { childList: true })
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+    })
     document.documentElement.style.cssText =
       'height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden;'
     newBody.style.cssText =
       'height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden;'
+    iframeContainer.style.cssText =
+      'height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden; position: absolute; top: 0; left: 0;'
     progressBar2 = new ProgressBar()
     const iframe = document.createElement('iframe')
     iframe.src = currentUrl
@@ -5767,9 +5849,11 @@
         '\n  '
       )
     iframe.name = 'utags-shortcuts-iframe'
-    newBody.append(iframe)
-    let isChildReady = false
-    let failTimer
+    iframeContainer.append(iframe)
+    activeIframe = iframe
+    if (failTimer) clearTimeout(failTimer)
+    isChildReady = false
+    failTimer = void 0
     iframe.addEventListener('load', () => {
       iframe.focus()
       progressBar2 == null ? void 0 : progressBar2.finish()
@@ -5778,7 +5862,7 @@
           failTimer = setTimeout(() => {
             if (!isChildReady) {
               console.warn(
-                '[utags] Iframe mode script failed to start. Disabling for this site.'
+                '[utags-shortcuts] Iframe mode script failed to start. Disabling for this site.'
               )
               localStorage.setItem(DISABLE_IFRAME_KEY, '1')
               localStorage.setItem(CHECK_IFRAME_KEY, '3')
@@ -5799,56 +5883,10 @@
         }
       }
     })
-    globalThis.addEventListener('message', (e) => {
-      if (e.source !== iframe.contentWindow) return
-      const data = e.data
-      if (!data || !data.type) return
-      switch (data.type) {
-        case 'USHORTCUTS_IFRAME_READY': {
-          isChildReady = true
-          setTimeout(() => {
-            localStorage.removeItem(CHECK_IFRAME_KEY)
-          }, 1e4)
-          if (failTimer) clearTimeout(failTimer)
-          break
-        }
-        case 'USHORTCUTS_IFRAME_FAILED': {
-          console.warn('[utags] Iframe mode failed:', data.reason)
-          localStorage.setItem(DISABLE_IFRAME_KEY, '1')
-          localStorage.setItem(CHECK_IFRAME_KEY, '4')
-          location.reload()
-          break
-        }
-        case 'USHORTCUTS_URL_CHANGE': {
-          syncState(data.url, data.title)
-          progressBar2 == null ? void 0 : progressBar2.finish()
-          break
-        }
-        case 'USHORTCUTS_LOADING_START': {
-          progressBar2 == null ? void 0 : progressBar2.start()
-          break
-        }
-        case 'USHORTCUTS_FORWARD_KEYDOWN': {
-          const evt = data.event
-          const event = new KeyboardEvent('keydown', {
-            code: evt.code,
-            key: evt.key || evt.code,
-            ctrlKey: evt.ctrlKey,
-            metaKey: evt.metaKey,
-            altKey: evt.altKey,
-            shiftKey: evt.shiftKey,
-            bubbles: true,
-            cancelable: true,
-            composed: true,
-          })
-          document.dispatchEvent(event)
-          break
-        }
-        default: {
-          break
-        }
-      }
-    })
+    if (!isMessageListenerAttached) {
+      globalThis.addEventListener('message', messageHandler)
+      isMessageListenerAttached = true
+    }
   }
   function updateIframeLayout(sidebarVisible) {
     const iframe = document.querySelector(
@@ -6260,24 +6298,25 @@
     })
     return { host, root }
   }
+  function getNormalizedPos() {
+    const pos = settings.position
+    if (settings.layoutMode !== 'sidebar') return pos
+    const sidebarSide = settings.sidebarSide || SIDEBAR_SIDE_DEFAULT
+    const posParts = pos.split('-')
+    if (posParts.length !== 2) return ''
+    let [p1, p2] = posParts
+    if (p1 === 'top' || p1 === 'bottom') {
+      p2 = p1
+      p1 = sidebarSide
+    } else {
+      p1 = sidebarSide
+    }
+    return p1 + '-' + p2
+  }
   function place(el, cfg) {
     el.style.position = 'fixed'
     el.style.inset = 'auto'
-    if (settings.layoutMode === 'sidebar') {
-      el.style.top = '0'
-      el.style.bottom = '0'
-      el.style.left = 'auto'
-      el.style.right = 'auto'
-      el.style.transform = ''
-      if ((settings.sidebarSide || SIDEBAR_SIDE_DEFAULT) === 'left') {
-        el.style.left = '0'
-      } else {
-        el.style.right = '0'
-      }
-      return
-    }
-    const p = settings.position
-    switch (p) {
+    switch (getNormalizedPos()) {
       case 'left-top': {
         el.style.top = '0'
         el.style.left = '0'
@@ -6879,8 +6918,8 @@
     })
     const actions = document.createElement('div')
     actions.className = 'header-actions'
-    const editMenuRightSide =
-      isRightSide(settings.position) || settings.position.endsWith('-right')
+    const pos = getNormalizedPos()
+    const editMenuRightSide = isRightSide(pos) || pos.endsWith('-right')
     const groupMenuRightSide = editMenuRightSide
     if (isEditing) {
       const exitBtn = document.createElement('button')
@@ -7329,7 +7368,7 @@
         panel.classList.add('sidebar', side)
       } catch (e) {}
     }
-    const pos = settings.position
+    const pos = getNormalizedPos()
     const isRight = isRightSide(pos)
     const isHoriz = isHorizontalPos(pos)
     const isTop = isTopSide(pos)
@@ -7368,8 +7407,8 @@
   function openQuickAddMenu(root, cfg, anchor) {
     suppressCollapse = true
     tempOpen = true
-    const rightSide =
-      isRightSide(settings.position) || settings.position.endsWith('-right')
+    const pos = getNormalizedPos()
+    const rightSide = isRightSide(pos) || pos.endsWith('-right')
     showDropdownMenu(
       root,
       anchor,
@@ -7454,10 +7493,7 @@
       if ((settings.layoutMode || LAYOUT_DEFAULT) === 'sidebar')
         isCollapsed = !tempOpen && Boolean(tempClosed)
       if (isCollapsed) {
-        const effectiveEdgeHidden =
-          (settings.layoutMode || LAYOUT_DEFAULT) === 'sidebar'
-            ? true
-            : Boolean(settings.edgeHidden)
+        const effectiveEdgeHidden = Boolean(settings.edgeHidden)
         if (!effectiveEdgeHidden) {
           const tab = document.createElement('div')
           tab.className = 'collapsed-tab'
@@ -7469,7 +7505,7 @@
               (_b = settings.edgeHeight) != null ? _b : EDGE_DEFAULT_HEIGHT
             const go =
               (_c = settings.edgeOpacity) != null ? _c : EDGE_DEFAULT_OPACITY
-            const horiz = isHorizontalPos(settings.position)
+            const horiz = isHorizontalPos(getNormalizedPos())
             const thickness = Math.max(1, Math.min(24, gw))
             const length = Math.max(24, Math.min(320, gh))
             tab.style.width = horiz
@@ -7598,7 +7634,7 @@
   }
   function collapseWithAnim(root, cfg) {
     try {
-      const p = settings.position
+      const p = getNormalizedPos()
       const sel = root.querySelector('.ushortcuts .panel')
       if (sel) {
         if (isHorizontalPos(p)) {

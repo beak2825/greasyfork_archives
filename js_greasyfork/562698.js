@@ -1,72 +1,113 @@
 // ==UserScript==
-// @name            Youtube: Auto-sort search results by upload date (sort videos by upload date)
-// @description     Rewrites the URL of a YouTube search results page to automatically sort by video upload date, if the sort order is not already present
-// @author          JMcclain
-// @license         GPL-3.0-only
-// @namespace       https://github.com/Archangel1C
-// @version         0.23
-// @match           *://*.youtube.com/results*
-// @run-at          document-start
-// @grant           none
-// @compatible      chrome
-// @contributionURL https://flattr.com/@Archangel1C
-// @downloadURL https://update.greasyfork.org/scripts/562698/Youtube%3A%20Auto-sort%20search%20results%20by%20upload%20date%20%28sort%20videos%20by%20upload%20date%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/562698/Youtube%3A%20Auto-sort%20search%20results%20by%20upload%20date%20%28sort%20videos%20by%20upload%20date%29.meta.js
+// @name         Youtube 2026: Auto-sort search results by upload date (sort videos by upload date)
+// @author       JMcclain
+// @license      GPL-3.0-only
+// @namespace    YT_Sort_Archangel1C
+// @version      0.28
+// @match        https://www.youtube.com/*
+// @match        https://youtube.com/*
+// @grant        none
+// @run-at       document-start
+// @description  Rewrites the URL of a YouTube search results page to automatically sort by video upload date, if the sort order is not already present
+// @downloadURL https://update.greasyfork.org/scripts/562698/Youtube%202026%3A%20Auto-sort%20search%20results%20by%20upload%20date%20%28sort%20videos%20by%20upload%20date%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/562698/Youtube%202026%3A%20Auto-sort%20search%20results%20by%20upload%20date%20%28sort%20videos%20by%20upload%20date%29.meta.js
 // ==/UserScript==
-//
-// Sources/Influences:
-// - https://stackoverflow.com/a/28956498/4423698
-// Fixes Archangel1C's version in 2026
-// https://greasyfork.org/en/scripts/376985-youtube-auto-sort-search-results-by-upload-date
+// console.log(">> YouTube Sort by Date Initialized <<");
 
 (function() {
     'use strict';
+    const SP = "CAI%3D";
 
-    function addUploadDateQuery() {
-        if (!window.location.pathname.startsWith('/results')) return;
+    console.log(">> YouTube Sort by Date Initialized <<");
 
-        let url = new URL(window.location.href);
-        let query = url.searchParams;
-        
-        // The "Secret Sauce": YouTube and URLSearchParams handle encoding differently.
-        // We check for both the raw and encoded versions to stop the loop.
-        const currentSp = query.get("sp");
-        const targetSp = "CAI=";
-
-        // 1. If we already have the correct parameter, STOP EVERYTHING.
-        if (currentSp === targetSp || currentSp === "CAI%3D") {
-            console.log("Sort parameter already present. Exiting.");
-            return;
-        }
-
-        // 2. Prevent redirect loops using a session-based "Gatekeeper"
-        // This clears whenever you perform a brand new search.
-        const searchFingerprint = query.get("search_query");
-        if (sessionStorage.getItem('yt_redirect_done') === searchFingerprint) {
-            return;
-        }
-
-        // 3. Apply the parameter and redirect
-        query.set("sp", targetSp);
-        const newUrl = url.pathname + '?' + query.toString();
-        
-        // Set the gatekeeper flag before redirecting
-        sessionStorage.setItem('yt_redirect_done', searchFingerprint);
-        
-        console.log("Applying sort filter...");
-        window.location.replace(newUrl);
-
-        // 4. Fail-safe: If the page is blank after 3 seconds, force a reload and clear flag
-        setTimeout(() => {
-            if (!document.querySelector('ytd-video-renderer, ytd-rich-item-renderer')) {
-                console.warn("Page stuck. Forcing reload.");
-                sessionStorage.removeItem('yt_redirect_done');
-                window.location.reload();
-            }
-        }, 3000);
+    function isLocked() {
+        const lastAction = sessionStorage.getItem('yt_sort_lock');
+        return lastAction && (Date.now() - lastAction < 3000);
     }
 
-    // Initialize
-    addUploadDateQuery();
-    window.addEventListener('yt-navigate-finish', addUploadDateQuery);
+    function setLock() {
+        sessionStorage.setItem('yt_sort_lock', Date.now());
+    }
+
+    // GLOBAL RECOVERY: This runs regardless of the URL path
+    function globalWatchdog() {
+        let attempts = 0;
+        const recoveryInterval = setInterval(() => {
+            attempts++;
+            const appExist = document.querySelector('ytd-app');
+            const hasContent = appExist && appExist.children.length > 0;
+
+            // If the app is loaded and has content, stop checking
+            if (hasContent) {
+                clearInterval(recoveryInterval);
+                return;
+            }
+
+            // If we've waited ~5 seconds and the page is still that raw HTML shell
+            if (attempts >= 5) {
+                clearInterval(recoveryInterval);
+                if (!isLocked()) {
+                    console.warn(">>> YT-SORT: Emergency Recovery Triggered (App Missing)");
+                    setLock();
+                    window.location.reload();
+                }
+            }
+        }, 1000);
+    }
+
+    // 1. THE SEARCH-STUFFER (For Home Page Searches)
+    // We catch the 'Enter' key and manually add the parameter to the query
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const searchInput = e.target.closest('input#search') || document.querySelector('input#search');
+            if (searchInput && searchInput.value && !searchInput.value.includes('sp=')) {
+                if (isLocked()) return;
+
+                // We add the sort code as a text suffix. YouTube's parser
+                // often accepts this as a valid way to trigger the filter.
+                // If it fails, we fall back to a hard location change.
+                const query = searchInput.value;
+                const target = `/results?search_query=${encodeURIComponent(query)}&sp=${SP}`;
+
+                e.stopImmediatePropagation();
+                // Removed preventDefault to allow the event to flow,
+                // but we redirect manually to ensure the SP param is there.
+                setLock();
+                window.location.assign(target);
+            }
+        }
+    }, true);
+
+    // 2. THE DIRECT-NAV GUARD (For pasting links)
+    // Only triggers on result pages that are MISSING the code
+    function checkAndFix() {
+        if (isLocked()) return;
+
+        const url = new URL(window.location.href);
+        const params = url.searchParams;
+        if (window.location.pathname === '/results' && params.has('search_query') && !params.has('sp')) {
+            params.set('sp', SP);
+            setLock();
+            window.location.replace(window.location.pathname + '?' + params.toString());
+        }
+    }
+
+    // 3. THE VPN NAG-KILLER (Safe Mode)
+    setInterval(() => {
+        if (document.body && (document.body.innerText.includes('Connect to the internet') || document.body.innerText.includes('Something went wrong'))) {
+            const retry = document.querySelector('#retry-button button, yt-button-renderer#retry-button button');
+            if (retry) {
+                console.log(">>> YT-SORT: VPN/Network nag detected. Clicking retry...");
+                retry.click();
+            }
+        }
+    }, 1000);
+
+    // Run recovery immediately
+    globalWatchdog();
+    checkAndFix();
+
+    // Listen for YouTube's internal page transitions (SPA navigation)
+    window.addEventListener('yt-navigate-finish', checkAndFix);
+
 })();

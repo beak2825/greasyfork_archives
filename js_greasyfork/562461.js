@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Torn OC 2.0 Completed Payout Status
 // @namespace    torn.oc2.payout.floating
-// @version      1.0.5
-// @description  Floating box showing completed OCs waiting for payout (Loot Ranger style)
+// @version      1.1
+// @description  Floating box showing completed OCs waiting for payout 
 // @match        https://www.torn.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue

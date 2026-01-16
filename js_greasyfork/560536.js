@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         💙💛Ukrainian Flag & Sunflower (Ctrl+Shift+U)
 // @namespace    tampermonkey.net
-// @version      12.9
-// @description  写实花头，不规则分布向日葵与物理对齐修复 + 自适应窗口宽度≥800px + 禁止在iframe中显示。
+// @version      14.0
+// @description  写实花头 + 不规则分布向日葵与物理对齐修复 + 自适应窗口宽度≥800px + 禁止在iframe中显示 + 鼠标拖动。
 // @author       邢智轩 (from China)
 // @match        *://*/*
 // @grant        none
@@ -39,12 +39,37 @@
             bottom: 60px !important;
             left: 60px !important;
             z-index: 2147483647 !important;
-            pointer-events: none !important;
+            pointer-events: auto !important;
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
             opacity: 0;
             transform: translateX(-20px) scale(0.9);
+            cursor: move;
         `;
         document.documentElement.appendChild(host);
+
+        // 拖动逻辑
+        let isDragging = false;
+        let offsetX, offsetY;
+        host.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            isDragging = true;
+            offsetX = e.clientX - host.getBoundingClientRect().left;
+            offsetY = e.clientY - host.getBoundingClientRect().top;
+            host.style.transition = 'none';
+            e.preventDefault();
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const x = e.clientX - offsetX;
+            const y = e.clientY - offsetY;
+            host.style.left = `${x}px`;
+            host.style.top = `${y}px`;
+        });
+        document.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            host.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+        });
 
         const shadow = host.attachShadow({mode: 'closed'});
 

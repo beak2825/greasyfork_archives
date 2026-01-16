@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        AO3: Reading Time & Quality Score
-// @version     4.0.2
+// @version     4.0.3
 // @author       BlackBatCat
 // @description  Add reading time, chapter reading time, and quality scores to AO3 works with color coding, score normalization and sorting.
 // @match       *://archiveofourown.org/tags/*
@@ -21,7 +21,7 @@
 (function () {
   "use strict";
 
-  const SCRIPT_VERSION = "4.0.1";
+  const SCRIPT_VERSION = "4.0.3";
 
   const DEFAULTS = {
     enableReadingTime: true,
@@ -1022,6 +1022,45 @@
     });
   };
 
+  // Replicate AO3's exact word counting method from word_counter.rb
+  const countWords = (text) => {
+    if (!text || text.trim().length === 0) return 0;
+
+    // Step 1: Replace -- with em-dash (so "one--two" counts as 2 words)
+    let processed = text.replace(/--/g, "—");
+
+    // Step 2: Strip hyphens and apostrophes (so "well-deserving" and "one's" become single words)
+    // Match Ruby's /['''-]/ pattern using Unicode escapes to preserve the actual characters
+    // U+0027 = straight apostrophe, U+2018 = left single quote, U+2019 = right single quote, U+002D = hyphen
+    processed = processed.replace(/[\u0027\u2018\u2019\-]/g, "");
+
+    // Step 3: Count words using AO3's pattern
+    // CJK characters (each counts as 1 word) OR sequences of word characters
+    // Ruby's [[:word:]] = letters, numbers, underscore
+    // JavaScript equivalent: \w (which is [a-zA-Z0-9_])
+
+    // CJK Unicode ranges (Chinese, Japanese, Korean)
+    const cjkRanges = [
+      "\u4E00-\u9FFF", // CJK Unified Ideographs
+      "\u3400-\u4DBF", // CJK Extension A
+      "\u3040-\u309F", // Hiragana
+      "\u30A0-\u30FF", // Katakana
+      "\uAC00-\uD7AF", // Hangul
+      "\u1100-\u11FF", // Hangul Jamo
+      "\u3130-\u318F", // Hangul Compatibility Jamo
+      "\uFF00-\uFFEF", // Halfwidth and Fullwidth Forms
+    ].join("");
+
+    const cjkPattern = `[${cjkRanges}]`;
+
+    // Match: (CJK character) OR (non-CJK word sequences)
+    // This replicates: /#{character_count_scripts}|((?!#{character_count_scripts})[[:word:]])+/
+    const wordPattern = new RegExp(`${cjkPattern}|[a-zA-Z0-9_]+`, "g");
+
+    const matches = processed.match(wordPattern);
+    return matches ? matches.length : 0;
+  };
+
   const calculateChapterStats = (chaptersContainer = null) => {
     if (!CONFIG.enableChapterStats) return;
     const WORKS_PAGE_REGEX =
@@ -1032,7 +1071,10 @@
     if (!container) return;
 
     const chapters = container.querySelectorAll(".chapter");
-    const singleChapter = container.querySelector("div.userstuff");
+    const singleChapter = $1(
+      "#chapters > div.userstuff:not(.preface div.userstuff):not(.notes div.userstuff)"
+    );
+
     let chaptersToProcess = [];
 
     if (chapters.length > 0) {
@@ -1041,8 +1083,6 @@
       chaptersToProcess = [{ userstuff: singleChapter, isSingle: true }];
     }
     if (chaptersToProcess.length === 0) return;
-
-    const wordRegex = /\b[a-zA-Z][a-zA-Z0-9'-]*\b/g;
 
     chaptersToProcess.forEach((chapter) => {
       let userstuff;
@@ -1063,15 +1103,23 @@
         if ($1(".notice.ao3-chapter-stats", chapter)) {
           return;
         }
-        userstuff = $1("div.userstuff", chapter);
+        // In multi-chapter works, only get div.userstuff within the chapter
+        userstuff = $1(
+          "div.userstuff:not(.preface div.userstuff):not(.notes div.userstuff)",
+          chapter
+        );
         existingStats = prefaceContainer;
       }
+
       if (!userstuff) return;
 
-      const text = userstuff.textContent || "";
+      if (userstuff.tagName === "BLOCKQUOTE") {
+        console.warn("Skipping blockquote.userstuff element");
+        return;
+      }
 
-      const words = text.match(wordRegex);
-      const wordCount = words ? words.length : 0;
+      const text = userstuff.textContent || "";
+      const wordCount = countWords(text);
 
       if (wordCount === 0) return;
       const minutes = wordCount / CONFIG.wpm;
@@ -1958,9 +2006,6 @@
         text: "Reading Time & Quality Score",
         onClick: showSettingsPopup,
       });
-
-      if (CONFIG.enableReadingTime || CONFIG.enableQualityScore) {
-      }
 
       if (CONFIG.enableReadingTime && !CONFIG.alwaysCountReadingTime) {
         window.AO3MenuHelpers.addToSharedMenu({

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ds自用油猴脚本
 // @namespace    http://tampermonkey.net/
-// @version      0.82
+// @version      20260116
 // @description  try to take over the world!
 // @author       ds
 // @match        mmbiz.qpic.cn/*
@@ -46,6 +46,7 @@
 // @match         *.playgwent.com/*
 // @match         item.m.jd.com/product/*
 // @match         www.xiaohongshu.com/*
+// @match         https://www.coolapk.com/*
 // @grant        none
 
 // @downloadURL https://update.greasyfork.org/scripts/392550/ds%E8%87%AA%E7%94%A8%E6%B2%B9%E7%8C%B4%E8%84%9A%E6%9C%AC.user.js
@@ -201,6 +202,12 @@ else if ((m = url.match(/^(https?:\/\/www\.bilibili\.com\/)(([av|BV]).*)(\?.*)$/
 //https://www.xiaohongshu.com/explore/6785d84f000000000100af86?xsec_token=CB3SZSM9U1hJA4cllF5qpyh2G-sY2CpMrAxBugknSk3og=
 else if ((m = url.match(/^(https?:\/\/www\.xiaohongshu\.com\/)(explore\/.+\?)(.*&)(xsec_token=.+?)(&.*)$/i))) {
     document.location = m[1] + m[2] + m[4];
+}
+//酷安链接净化-20260116
+//https://www.coolapk.com/feed/44043319?shareKey=OGU5ZWUwZjNkMzVkNjQwYWZjYTk~&shareUid=790904&shareFrom=com.coolapk.market_12.0.2
+//https://www.coolapk.com/feed/44043319?shareKey=OGU5ZWUwZjNkMzVkNjQwYWZjYTk
+else if ((m = url.match(/^(https?:\/\/www\.coolapk\.com\/)(feed\/.+\?shareKey=.+?)(~&.+)$/i))) {
+    document.location = m[1] + m[2];
 }
 //---------类别三：网站内容显示优化---------
 //看准网内容显示优化

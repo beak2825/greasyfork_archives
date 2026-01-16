@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name           Twitter: always Following tab
 // @namespace      https://andrybak.dev
-// @version        2
-// @description    Select the "Following" tab on Twitter automatically
+// @version        3
+// @description    Select the "Following" tab on Twitter automatically, with chronological sorting.
 // @author         Andrei Rybak
 // @license        MIT
 // @match          https://x.com/*
@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 /*
- * Copyright (c) 2025 Andrei Rybak
+ * Copyright (c) 2025-2026 Andrei Rybak
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,19 +55,63 @@
 		}
 	}
 
-	let intervalId = null;
+	let tryCount = 0;
+	let myDelay = 100;
+	const myTimeouts = [];
+
+	function cancelMyTimeouts() {
+		for (const id of myTimeouts) {
+			clearTimeout(id);
+		}
+		myTimeouts.length = 0;
+	}
+
+	function mySetTimeout(fn, delay) {
+		const id = setTimeout(fn, delay);
+		myTimeouts.push(id);
+	}
+
+	function tryAgainLater(msg) {
+		info(msg, `Sleeping for ${myDelay} millis...`);
+		mySetTimeout(selectFollowing, myDelay);
+		myDelay = Math.min(myDelay * 2, 5000);
+	}
 
 	function selectFollowing() {
 		info('Selecting "Following"...');
-		Array.from(document.querySelectorAll('nav[aria-live="polite"] [role="tab"]'))
-			.filter(tab => tab.innerText === 'Following')
-			.forEach(tab => {
-				tab.click();
-				if (intervalId !== null) {
-					clearInterval(intervalId);
-					intervalId = null;
+		tryCount++;
+		if (tryCount > 20) {
+			warn('Aborting.');
+			return;
+		}
+		const followingTabs = Array.from(document.querySelectorAll('nav[aria-live="polite"] [role="tab"]')).filter(tab => tab.innerText.includes('Following'));
+		if (followingTabs.length === 0) {
+			tryAgainLater('Cannot find the tab "Following".');
+			return;
+		}
+		const tab = followingTabs[0];
+		if (tab.ariaSelected == 'true') {
+			info('Tab "Following" is already selected.');
+		} else {
+			tab.click();
+			info('Clicked on the tab.');
+		}
+		mySetTimeout(() => {
+			const svgIcon = tab.querySelector('svg');
+			svgIcon.dispatchEvent(new MouseEvent('click', { bubbles:true }));
+			info('Clicked on the dropdown icon.');
+			mySetTimeout(() => {
+				const dropdownOptions = document.querySelectorAll('[data-testid="Dropdown"] > div');
+				const recentOptions = Array.from(dropdownOptions).filter(ddo => ddo.innerText.includes('Recent'));
+				if (recentOptions.length === 0) {
+					tryAgainLater('Cannot find option "Recent".');
+					return;
 				}
-			});
+				const recentOption = recentOptions[0];
+				info('Selecting sort by "Recent"...');
+				recentOption.click();
+			}, 2000);
+		}, 1000);
 	}
 
 	function observeTitle(callback) {
@@ -85,8 +129,10 @@
 	}
 
 	function startSelectingFollowing() {
-		if (document.location.pathname === '/home' && intervalId === null) {
-			intervalId = setInterval(selectFollowing, 250);
+		info('Starting...');
+		cancelMyTimeouts();
+		if (document.location.pathname === '/home') {
+			selectFollowing();
 		}
 	}
 

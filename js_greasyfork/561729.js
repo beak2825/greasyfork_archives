@@ -1247,57 +1247,92 @@ class KnockbackDisabler extends Module {
 class TeleportModule extends Module {
     constructor() {
         super("Teleport", "Misc");
- 
-        // Atalho fixo: tecla T (não ativa/desativa o módulo)
         this.key = "KeyT";
- 
-        document.addEventListener("keydown", (e) => {
-            if (e.code === this.key && !e.repeat) {
-                this.tpToSelectedBlock();
-            }
-        });
+
+        this._onKeyDown = (e) => {
+            if (e.code !== this.key || e.repeat) return;
+            if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+            this.tpToSelectedBlock();
+        };
+        document.addEventListener("keydown", this._onKeyDown);
     }
- 
-    /** Função de teleporte */
-    tp(x = 0, y = 0, z = 0, relative = true) {
-        try {
-            const player = hooks.A?.gameWorld?.player;
-            if (!player) return;
- 
-            const position = player.position;
-            if (relative) {
-                position.x += x;
-                position.y += y;
-                position.z += z;
-            } else {
-                Object.assign(position, { x, y, z });
-            }
-            player.physicsPosComp.copyPos(position);
-        } catch (err) {
-            console.warn("Teleport falhou:", err);
+
+    onDisable() {
+        document.removeEventListener("keydown", this._onKeyDown);
+    }
+
+    /* ===== FAST + SMOOTH WALK ===== */
+
+    tpFast(tx, ty, tz) {
+        const player = hooks.A?.gameWorld?.player;
+        if (!player) return;
+
+        const pos = player.position;
+
+        // set Y 1 lần duy nhất (tránh rung)
+        pos.y = ty;
+        player.physicsPosComp.copyPos(pos);
+
+        let dx = tx - pos.x;
+        let dz = tz - pos.z;
+        const dist = Math.hypot(dx, dz);
+        if (dist < 0.05) return;
+
+        const dirX = dx / dist;
+        const dirZ = dz / dist;
+
+        if (player.motion) {
+            player.motion.x = 0;
+            player.motion.y = 0;
+            player.motion.z = 0;
         }
+        if ("onGround" in player) player.onGround = true;
+
+        /* ==== TỐC ĐỘ TỐI ƯU ==== */
+        const stepSize = 0.18;   // nhanh nhưng chưa flag
+        const tick = 35;         // ms
+        const steps = Math.ceil(dist / stepSize);
+
+        let i = 0;
+        const step = () => {
+            if (i >= steps) return;
+
+            pos.x += dirX * stepSize;
+            pos.z += dirZ * stepSize;
+
+            player.physicsPosComp.copyPos(pos);
+
+            if (player.prevPos) {
+                player.prevPos.x = pos.x;
+                player.prevPos.y = pos.y;
+                player.prevPos.z = pos.z;
+            }
+
+            i++;
+            setTimeout(step, tick);
+        };
+
+        step();
     }
- 
-    /** Teleporta até o bloco selecionado (crosshair) */
+
+    /* ===== TP BLOCK ===== */
+
     tpToSelectedBlock() {
-        try {
-            const gameWorld = hooks.A?.gameWorld;
-            if (!gameWorld) return;
- 
-            const outlineSystem = gameWorld.systemsManager.activeSystems.find(s => s.currBlockPos);
-            if (!outlineSystem) return;
- 
-            outlineSystem.intersectAndShow(true, 500);
-            if (!outlineSystem.currBlockPos) return;
- 
-            const { x, y, z } = outlineSystem.currBlockPos;
-            this.tp(x, y + 1, z, false);
-        } catch (err) {
-            console.warn("Erro ao teleportar:", err);
-        }
+        const gw = hooks.A?.gameWorld;
+        if (!gw) return;
+
+        const outline = gw.systemsManager.activeSystems
+            .find(s => s.currBlockPos);
+        if (!outline) return;
+
+        outline.intersectAndShow(true, 150);
+        if (!outline.currBlockPos) return;
+
+        const { x, y, z } = outline.currBlockPos;
+        this.tpFast(x + 0.5, y + 1.001, z + 0.5);
     }
 }
- 
+
  
  
      class HitModule extends Module {

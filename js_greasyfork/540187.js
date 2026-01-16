@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoBot FBMP Enhanced
 // @namespace    http://tampermonkey.net/
-// @version      5.0.6
+// @version      5.1.0
 // @description  Perbaikan: stop tidak reload, jika kedua proses 0 berhenti, skip cooldown jika relist=0, dan safeguard pada redirect/countdown
 // @author       Behesty
 // @match        https://www.facebook.com/marketplace/you/dashboard*
@@ -54,7 +54,7 @@
     borderRadius: '8px',
     whiteSpace: 'pre-line'
   });
-  logBox.innerText = '📢 FB Marketplace Auto Bot (v5.0)\n';
+  logBox.innerText = '📢 FB Marketplace Auto Bot (v5.1)\n';
   document.body.appendChild(logBox);
 
   function log(msg) {
@@ -338,7 +338,7 @@
       if (relistClicked && running) {
         // tunggu sedikit sebelum mencari tombol tindakan
         await delay(2000);
-        const buttons = await waitForVisibleElements('div[role="button"][aria-label="Hapus & tawarkan ulang"]');
+        const buttons = await waitForVisibleElements('div[aria-label="hapus & tawarkan ulang" i]');
         if (buttons.length > 0 && running) {
           for (const [i, btn] of buttons.entries()) {
             if (!running) break;

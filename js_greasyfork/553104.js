@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili cleaner ultimate
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-24-21-9-13  
+// @version      2026-1-15-17-38-23 
 // @description  remove dynamic entry, feed, footer, and search placeholder from bilibili pages
 // @author       You
 // @match        *://www.bilibili.com/*
@@ -39,6 +39,14 @@
     pointer-events: none !important;
     visibility: hidden !important;
 }
+
+        .channel-icons {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+        }
 
         .bili-footer {
             display: none !important;

@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name           Manga-UP Ripper
 // @namespace      https://greasyfork.org/en/users/1553223-ozler365
-// @version        13.4.0
+// @version        13.6.2
 // @description    Manga-UP Ripper with Moveable UI, Series/Chapter renaming, and Red Speed Slider.
-// @author         ozler365 (Modified)
+// @author         ozler365
 // @license        MIT
 // @match          https://global.manga-up.com/*
+// @icon           https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/a9/90/c9/a990c994-1c0f-2af4-745d-d94dc7fea944/Placeholder.mill/400x400bb-75.webp
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
 // @grant          none

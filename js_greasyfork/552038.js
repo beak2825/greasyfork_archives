@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         AI Web Summarizer
-// @namespace    http://tampermonkey.net/
+// @name         Page Content Extractor - Chat With Any Webpage
+// @namespace    faisalbhuiyan@userscripts.com
 // @version      0.8
-// @description  Floating AI summarizer button for web pages with custom prompts, draggable UI, and Readability.js integration. Fixed for Android Chromium.
+// @description  Floating AI chat button for web pages with custom prompts, draggable UI, and Readability.js integration. Fixed for Android Chromium.
 // @author       Faisal Bhuiyan
 // @match        *://*/*
 // @grant        GM_setClipboard
@@ -11,11 +11,11 @@
 // @grant        GM_addStyle
 // @connect      cdn.jsdelivr.net
 // @grant        GM_xmlhttpRequest
-// @downloadURL https://update.greasyfork.org/scripts/552038/AI%20Web%20Summarizer.user.js
-// @updateURL https://update.greasyfork.org/scripts/552038/AI%20Web%20Summarizer.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552038/Page%20Content%20Extractor%20-%20Chat%20With%20Any%20Webpage.user.js
+// @updateURL https://update.greasyfork.org/scripts/552038/Page%20Content%20Extractor%20-%20Chat%20With%20Any%20Webpage.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // Default Chatbots
@@ -86,14 +86,14 @@
     // Styles with namespacing
     GM_addStyle(`
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        #jsTLDR-container {
+        #fbChat38-container {
             position: fixed !important;
             right: 0 !important;
             z-index: 2147483647 !important;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
             touch-action: none !important; /* Important for preventing browser zoom/scroll while dragging */
         }
-        #jsTLDR-main-button {
+        #fbChat38-main-button {
             width: 40px !important;
             height: 40px !important;
             background: rgba(255,255,255,0.1) !important;
@@ -113,13 +113,13 @@
             user-select: none !important;
             -webkit-user-select: none !important;
         }
-        #jsTLDR-main-button:hover {
+        #fbChat38-main-button:hover {
             opacity: 1 !important;
             transform: translateX(-2px) !important;
             background: rgba(255,255,255,0.2) !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
         }
-        .jsTLDR-popup-menu {
+        .fbChat38-popup-menu {
             position: absolute !important;
             bottom: 44px !important;
             right: 2px !important;
@@ -133,10 +133,10 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
             z-index: 2147483647 !important;
         }
-        .jsTLDR-popup-menu.jsTLDR-show {
+        .fbChat38-popup-menu.fbChat38-show {
             display: flex !important;
         }
-        .jsTLDR-menu-button {
+        .fbChat38-menu-button {
             width: 32px !important;
             height: 32px !important;
             background: ${isDarkMode() ? 'rgba(60,60,60,0.8)' : 'rgba(240,240,240,0.8)'} !important;
@@ -151,11 +151,11 @@
             padding: 0 !important;
             margin: 0 !important;
         }
-        .jsTLDR-menu-button:hover {
+        .fbChat38-menu-button:hover {
             background: ${isDarkMode() ? 'rgba(80,80,80,0.9)' : 'rgba(220,220,220,0.9)'} !important;
             transform: scale(1.05) !important;
         }
-        .jsTLDR-dropdown {
+        .fbChat38-dropdown {
             position: absolute !important;
             right: 40px !important;
             bottom: 0 !important;
@@ -170,10 +170,10 @@
             z-index: 2147483648 !important;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
         }
-        .jsTLDR-dropdown.jsTLDR-show {
+        .fbChat38-dropdown.fbChat38-show {
             display: block !important;
         }
-        .jsTLDR-dropdown-item {
+        .fbChat38-dropdown-item {
             padding: 10px 12px !important;
             cursor: pointer !important;
             border: none !important;
@@ -189,18 +189,18 @@
             align-items: center !important;
             justify-content: space-between !important;
         }
-        .jsTLDR-dropdown-item:hover {
+        .fbChat38-dropdown-item:hover {
             background: ${isDarkMode() ? 'rgba(80,80,80,0.5)' : 'rgba(0,0,0,0.05)'} !important;
         }
-        .jsTLDR-dropdown-item.jsTLDR-selected {
+        .fbChat38-dropdown-item.fbChat38-selected {
             background: ${isDarkMode() ? 'rgba(59,130,246,0.2)' : 'rgba(59,130,246,0.1)'} !important;
             color: ${isDarkMode() ? '#60a5fa' : '#2563eb'} !important;
         }
-        .jsTLDR-checkmark {
+        .fbChat38-checkmark {
             font-size: 12px !important;
             margin-left: 8px !important;
         }
-        .jsTLDR-modal-overlay {
+        .fbChat38-modal-overlay {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
@@ -213,10 +213,10 @@
             z-index: 2147483646 !important;
             padding: 20px !important;
         }
-        .jsTLDR-modal-overlay.jsTLDR-show {
+        .fbChat38-modal-overlay.fbChat38-show {
             display: flex !important;
         }
-        .jsTLDR-modal {
+        .fbChat38-modal {
             background: ${isDarkMode() ? '#1a1a1a' : '#ffffff'} !important;
             border-radius: 12px !important;
             width: 100% !important;
@@ -229,21 +229,21 @@
             display: flex;
             flex-direction: column;
         }
-        .jsTLDR-modal-header {
+        .fbChat38-modal-header {
             padding: 20px 24px !important;
             border-bottom: 1px solid ${isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important;
             display: flex !important;
             align-items: center !important;
             justify-content: space-between !important;
         }
-        .jsTLDR-modal-title {
+        .fbChat38-modal-title {
             font-size: 18px !important;
             font-weight: 600 !important;
             color: ${isDarkMode() ? '#fff' : '#000'} !important;
             margin: 0 !important;
             padding: 0 !important;
         }
-        .jsTLDR-modal-close {
+        .fbChat38-modal-close {
             background: none !important;
             border: none !important;
             font-size: 24px !important;
@@ -253,35 +253,35 @@
             margin: 0 !important;
             line-height: 1 !important;
         }
-        .jsTLDR-modal-close:hover {
+        .fbChat38-modal-close:hover {
             color: ${isDarkMode() ? '#fff' : '#000'} !important;
         }
-        .jsTLDR-modal-body {
+        .fbChat38-modal-body {
             padding: 24px !important;
             overflow-y: auto;
         }
-        #jsTLDR-custom-prompt-modal-body {
+        #fbChat38-custom-prompt-modal-body {
              display: flex;
              flex-direction: column;
              gap: 16px;
         }
-        #jsTLDR-custom-prompt-textarea {
+        #fbChat38-custom-prompt-textarea {
             height: 150px;
         }
-        #jsTLDR-custom-prompt-modal-footer {
+        #fbChat38-custom-prompt-modal-footer {
             padding: 16px 24px !important;
             border-top: 1px solid ${isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important;
             display: flex;
             justify-content: flex-end;
             gap: 12px;
         }
-        .jsTLDR-tabs {
+        .fbChat38-tabs {
             display: flex !important;
             gap: 8px !important;
             margin-bottom: 20px !important;
             border-bottom: 1px solid ${isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'} !important;
         }
-        .jsTLDR-tab {
+        .fbChat38-tab {
             padding: 10px 16px !important;
             background: none !important;
             border: none !important;
@@ -292,27 +292,27 @@
             border-bottom: 2px solid transparent !important;
             transition: all 0.2s !important;
         }
-        .jsTLDR-tab.jsTLDR-active {
+        .fbChat38-tab.fbChat38-active {
             color: ${isDarkMode() ? '#60a5fa' : '#2563eb'} !important;
             border-bottom-color: ${isDarkMode() ? '#60a5fa' : '#2563eb'} !important;
         }
-        .jsTLDR-tab-content {
+        .fbChat38-tab-content {
             display: none !important;
         }
-        .jsTLDR-tab-content.jsTLDR-active {
+        .fbChat38-tab-content.fbChat38-active {
             display: block !important;
         }
-        .jsTLDR-form-group {
+        .fbChat38-form-group {
             margin-bottom: 16px !important;
         }
-        .jsTLDR-label {
+        .fbChat38-label {
             display: block !important;
             margin-bottom: 6px !important;
             color: ${isDarkMode() ? '#ccc' : '#333'} !important;
             font-size: 14px !important;
             font-weight: 500 !important;
         }
-        .jsTLDR-input, .jsTLDR-textarea {
+        .fbChat38-input, .fbChat38-textarea {
             width: 100% !important;
             padding: 10px 12px !important;
             background: ${isDarkMode() ? '#2a2a2a' : '#f5f5f5'} !important;
@@ -323,11 +323,11 @@
             font-family: inherit !important;
             box-sizing: border-box !important;
         }
-        .jsTLDR-textarea {
+        .fbChat38-textarea {
             min-height: 120px !important;
             resize: vertical !important;
         }
-        .jsTLDR-button {
+        .fbChat38-button {
             padding: 10px 20px !important;
             background: ${isDarkMode() ? '#3b82f6' : '#2563eb'} !important;
             color: #fff !important;
@@ -338,17 +338,17 @@
             font-weight: 500 !important;
             transition: background 0.2s !important;
         }
-        .jsTLDR-button:hover {
+        .fbChat38-button:hover {
             background: ${isDarkMode() ? '#2563eb' : '#1d4ed8'} !important;
         }
-        .jsTLDR-button-secondary {
+        .fbChat38-button-secondary {
             background: ${isDarkMode() ? '#374151' : '#e5e7eb'} !important;
             color: ${isDarkMode() ? '#fff' : '#000'} !important;
         }
-        .jsTLDR-button-secondary:hover {
+        .fbChat38-button-secondary:hover {
             background: ${isDarkMode() ? '#4b5563' : '#d1d5db'} !important;
         }
-        .jsTLDR-list-item {
+        .fbChat38-list-item {
             padding: 12px !important;
             background: ${isDarkMode() ? '#2a2a2a' : '#f5f5f5'} !important;
             border-radius: 6px !important;
@@ -357,12 +357,12 @@
             justify-content: space-between !important;
             align-items: center !important;
         }
-        .jsTLDR-list-item-content {
+        .fbChat38-list-item-content {
             flex: 1 !important;
             overflow: hidden;
             padding-right: 10px;
         }
-        .jsTLDR-list-item-title {
+        .fbChat38-list-item-title {
             font-weight: 500 !important;
             color: ${isDarkMode() ? '#fff' : '#000'} !important;
             margin-bottom: 2px !important;
@@ -370,18 +370,18 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .jsTLDR-list-item-subtitle {
+        .fbChat38-list-item-subtitle {
             font-size: 12px !important;
             color: ${isDarkMode() ? '#999' : '#666'} !important;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .jsTLDR-list-item-actions {
+        .fbChat38-list-item-actions {
             display: flex !important;
             gap: 8px !important;
         }
-        .jsTLDR-icon-button {
+        .fbChat38-icon-button {
             padding: 6px 10px !important;
             background: ${isDarkMode() ? '#374151' : '#e5e7eb'} !important;
             border: none !important;
@@ -390,14 +390,14 @@
             font-size: 12px !important;
             color: ${isDarkMode() ? '#fff' : '#000'} !important;
         }
-        .jsTLDR-icon-button:hover {
+        .fbChat38-icon-button:hover {
             background: ${isDarkMode() ? '#4b5563' : '#d1d5db'} !important;
         }
-        .jsTLDR-icon-button.jsTLDR-danger:hover {
+        .fbChat38-icon-button.fbChat38-danger:hover {
             background: #dc2626 !important;
             color: #fff !important;
         }
-        #jsTLDR-toast {
+        #fbChat38-toast {
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -411,36 +411,36 @@
             opacity: 0;
             transition: opacity 0.3s, bottom 0.3s;
         }
-        #jsTLDR-toast.jsTLDR-show {
+        #fbChat38-toast.fbChat38-show {
             opacity: 1;
             bottom: 30px;
         }
-        .jsTLDR-setting-row {
+        .fbChat38-setting-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 0;
             border-bottom: 1px solid ${isDarkMode() ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'};
         }
-        .jsTLDR-setting-label {
+        .fbChat38-setting-label {
              color: ${isDarkMode() ? '#eee' : '#111'};
         }
-        .jsTLDR-setting-desc {
+        .fbChat38-setting-desc {
             font-size: 12px;
             color: #888;
         }
-        .jsTLDR-switch {
+        .fbChat38-switch {
             position: relative;
             display: inline-block;
             width: 44px;
             height: 24px;
         }
-        .jsTLDR-switch input {
+        .fbChat38-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        .jsTLDR-slider {
+        .fbChat38-slider {
             position: absolute;
             cursor: pointer;
             top: 0;
@@ -451,7 +451,7 @@
             transition: .4s;
             border-radius: 24px;
         }
-        .jsTLDR-slider:before {
+        .fbChat38-slider:before {
             position: absolute;
             content: "";
             height: 18px;
@@ -462,14 +462,14 @@
             transition: .4s;
             border-radius: 50%;
         }
-        input:checked + .jsTLDR-slider {
+        input:checked + .fbChat38-slider {
             background-color: #2563eb;
         }
-        input:checked + .jsTLDR-slider:before {
+        input:checked + .fbChat38-slider:before {
             transform: translateX(20px);
         }
         @media (max-width: 640px) {
-            .jsTLDR-modal {
+            .fbChat38-modal {
                 width: 100vw !important;
                 height: 100vh !important;
                 max-width: 100% !important;
@@ -477,7 +477,7 @@
                 margin: 0 !important;
                 border-radius: 0 !important;
             }
-            .jsTLDR-dropdown {
+            .fbChat38-dropdown {
                 width: 200px !important;
             }
         }
@@ -495,7 +495,7 @@
             GM_xmlhttpRequest({
                 method: "GET",
                 url: "https://cdn.jsdelivr.net/npm/@mozilla/readability@0.5.0/Readability.js",
-                onload: function(response) {
+                onload: function (response) {
                     if (response.status === 200) {
                         const script = document.createElement('script');
                         script.innerHTML = response.responseText;
@@ -506,7 +506,7 @@
                         reject('Failed to load Readability script');
                     }
                 },
-                onerror: function(error) {
+                onerror: function (error) {
                     reject('Error loading Readability script: ' + error);
                 }
             });
@@ -536,8 +536,8 @@
             }
         }
 
-        const ignore = 'nav, aside, header, footer, button, script, style, form, fieldset, legend, #jsTLDR-container, #jsTLDR-toast, .jsTLDR-modal-overlay';
-        const targets = ['h1','h2','h3','h4','h5','h6','p','li','td','article','section','div:not(:empty)']
+        const ignore = 'nav, aside, header, footer, button, script, style, form, fieldset, legend, #fbChat38-container, #fbChat38-toast, .fbChat38-modal-overlay';
+        const targets = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'li', 'td', 'article', 'section', 'div:not(:empty)']
             .map(tag => `${tag}:not(${ignore}):not(${ignore} *)`).join(', ');
         const els = Array.from(document.querySelectorAll(targets));
         let content = '';
@@ -547,7 +547,7 @@
 
             const parent = el.parentElement;
             if (parent && (parent.matches(targets) || parent.closest(targets))) {
-                if(parent.closest(targets) !== el) continue;
+                if (parent.closest(targets) !== el) continue;
             }
 
             let text = el.innerText.trim().replace(/<[^>]+>/g, '').trim();
@@ -644,22 +644,22 @@
     }
 
     function showToast(message) {
-        const existingToast = document.getElementById('jsTLDR-toast');
+        const existingToast = document.getElementById('fbChat38-toast');
         if (existingToast) {
             existingToast.remove();
         }
 
         const toast = document.createElement('div');
-        toast.id = 'jsTLDR-toast';
+        toast.id = 'fbChat38-toast';
         toast.textContent = message;
         document.body.appendChild(toast);
 
         setTimeout(() => {
-            toast.classList.add('jsTLDR-show');
+            toast.classList.add('fbChat38-show');
         }, 10);
 
         setTimeout(() => {
-            toast.classList.remove('jsTLDR-show');
+            toast.classList.remove('fbChat38-show');
             setTimeout(() => {
                 if (toast.parentElement) {
                     toast.parentElement.removeChild(toast);
@@ -723,27 +723,27 @@
     }
 
     const container = document.createElement('div');
-    container.id = 'jsTLDR-container';
+    container.id = 'fbChat38-container';
     container.style.bottom = getStored('buttonBottom', '80px');
 
     const mainButton = document.createElement('button');
-    mainButton.id = 'jsTLDR-main-button';
+    mainButton.id = 'fbChat38-main-button';
     mainButton.innerHTML = '📋';
 
     const popupMenu = document.createElement('div');
-    popupMenu.className = 'jsTLDR-popup-menu';
+    popupMenu.className = 'fbChat38-popup-menu';
 
     function showMenu() {
         if (menuHideTimeout) {
             clearTimeout(menuHideTimeout);
             menuHideTimeout = null;
         }
-        popupMenu.classList.add('jsTLDR-show');
+        popupMenu.classList.add('fbChat38-show');
     }
 
     function hideMenuWithDelay() {
         menuHideTimeout = setTimeout(() => {
-            popupMenu.classList.remove('jsTLDR-show');
+            popupMenu.classList.remove('fbChat38-show');
         }, 300);
     }
 
@@ -838,8 +838,8 @@
             lastTapTime = 0;
         } else {
             // SINGLE TAP
-            if (popupMenu.classList.contains('jsTLDR-show')) {
-                popupMenu.classList.remove('jsTLDR-show');
+            if (popupMenu.classList.contains('fbChat38-show')) {
+                popupMenu.classList.remove('fbChat38-show');
             } else {
                 showMenu();
             }
@@ -861,12 +861,12 @@
     // --- DROPDOWN & MENU COMPONENTS ---
 
     const botBtn = document.createElement('button');
-    botBtn.className = 'jsTLDR-menu-button';
+    botBtn.className = 'fbChat38-menu-button';
     botBtn.innerHTML = '🤖';
     botBtn.title = 'Select Chatbot';
     const botDropdown = document.createElement('div');
-    botDropdown.className = 'jsTLDR-dropdown';
-    botDropdown.id = 'jsTLDR-bot-dropdown';
+    botDropdown.className = 'fbChat38-dropdown';
+    botDropdown.id = 'fbChat38-bot-dropdown';
 
     function renderBotDropdown() {
         botDropdown.innerHTML = '';
@@ -874,14 +874,14 @@
         const selectedId = getStored('selectedBotId');
         Object.values(allBots).forEach(bot => {
             const item = document.createElement('button');
-            item.className = 'jsTLDR-dropdown-item';
+            item.className = 'fbChat38-dropdown-item';
             if (bot.id === selectedId) {
-                item.classList.add('jsTLDR-selected');
+                item.classList.add('fbChat38-selected');
             }
-            item.innerHTML = `<span>${bot.name}</span>${bot.id === selectedId ? '<span class="jsTLDR-checkmark">✓</span>' : ''}`;
+            item.innerHTML = `<span>${bot.name}</span>${bot.id === selectedId ? '<span class="fbChat38-checkmark">✓</span>' : ''}`;
             item.onclick = () => {
                 setStored('selectedBotId', bot.id);
-                botDropdown.classList.remove('jsTLDR-show');
+                botDropdown.classList.remove('fbChat38-show');
                 renderBotDropdown();
             };
             botDropdown.appendChild(item);
@@ -890,18 +890,18 @@
 
     botBtn.onclick = (e) => {
         e.stopPropagation();
-        botDropdown.classList.toggle('jsTLDR-show');
-        promptDropdown.classList.remove('jsTLDR-show');
+        botDropdown.classList.toggle('fbChat38-show');
+        promptDropdown.classList.remove('fbChat38-show');
         renderBotDropdown();
     };
 
     const promptBtn = document.createElement('button');
-    promptBtn.className = 'jsTLDR-menu-button';
+    promptBtn.className = 'fbChat38-menu-button';
     promptBtn.innerHTML = '📝';
     promptBtn.title = 'Select Prompt';
     const promptDropdown = document.createElement('div');
-    promptDropdown.className = 'jsTLDR-dropdown';
-    promptDropdown.id = 'jsTLDR-prompt-dropdown';
+    promptDropdown.className = 'fbChat38-dropdown';
+    promptDropdown.id = 'fbChat38-prompt-dropdown';
 
     function renderPromptDropdown() {
         promptDropdown.innerHTML = '';
@@ -909,14 +909,14 @@
         const selectedId = getStored('selectedPromptId');
         allPrompts.forEach(prompt => {
             const item = document.createElement('button');
-            item.className = 'jsTLDR-dropdown-item';
+            item.className = 'fbChat38-dropdown-item';
             if (prompt.id === selectedId) {
-                item.classList.add('jsTLDR-selected');
+                item.classList.add('fbChat38-selected');
             }
-            item.innerHTML = `<span>${prompt.name}</span>${prompt.id === selectedId ? '<span class="jsTLDR-checkmark">✓</span>' : ''}`;
+            item.innerHTML = `<span>${prompt.name}</span>${prompt.id === selectedId ? '<span class="fbChat38-checkmark">✓</span>' : ''}`;
             item.onclick = () => {
                 setStored('selectedPromptId', prompt.id);
-                promptDropdown.classList.remove('jsTLDR-show');
+                promptDropdown.classList.remove('fbChat38-show');
                 renderPromptDropdown();
             };
             promptDropdown.appendChild(item);
@@ -925,50 +925,50 @@
 
     promptBtn.onclick = (e) => {
         e.stopPropagation();
-        promptDropdown.classList.toggle('jsTLDR-show');
-        botDropdown.classList.remove('jsTLDR-show');
+        promptDropdown.classList.toggle('fbChat38-show');
+        botDropdown.classList.remove('fbChat38-show');
         renderPromptDropdown();
     };
 
     const customPromptBtn = document.createElement('button');
-    customPromptBtn.className = 'jsTLDR-menu-button';
+    customPromptBtn.className = 'fbChat38-menu-button';
     customPromptBtn.innerHTML = '❓';
     customPromptBtn.title = 'Ask a custom question';
 
     const customPromptModalOverlay = document.createElement('div');
-    customPromptModalOverlay.className = 'jsTLDR-modal-overlay';
-    customPromptModalOverlay.id = 'jsTLDR-custom-prompt-modal-overlay';
+    customPromptModalOverlay.className = 'fbChat38-modal-overlay';
+    customPromptModalOverlay.id = 'fbChat38-custom-prompt-modal-overlay';
 
     function showCustomPromptModal() {
         customPromptModalOverlay.innerHTML = `
-            <div class="jsTLDR-modal">
-                <div class="jsTLDR-modal-header">
-                    <h2 class="jsTLDR-modal-title">Custom Question</h2>
-                    <button class="jsTLDR-modal-close" id="jsTLDR-custom-prompt-close">×</button>
+            <div class="fbChat38-modal">
+                <div class="fbChat38-modal-header">
+                    <h2 class="fbChat38-modal-title">Custom Question</h2>
+                    <button class="fbChat38-modal-close" id="fbChat38-custom-prompt-close">×</button>
                 </div>
-                <div class="jsTLDR-modal-body" id="jsTLDR-custom-prompt-modal-body">
-                    <label for="jsTLDR-custom-prompt-textarea" class="jsTLDR-label">Enter your question or prompt below:</label>
-                    <textarea id="jsTLDR-custom-prompt-textarea" class="jsTLDR-textarea" placeholder="e.g., Explain this to me like I'm five..."></textarea>
+                <div class="fbChat38-modal-body" id="fbChat38-custom-prompt-modal-body">
+                    <label for="fbChat38-custom-prompt-textarea" class="fbChat38-label">Enter your question or prompt below:</label>
+                    <textarea id="fbChat38-custom-prompt-textarea" class="fbChat38-textarea" placeholder="e.g., Explain this to me like I'm five..."></textarea>
                 </div>
-                <div id="jsTLDR-custom-prompt-modal-footer">
-                     <button class="jsTLDR-button jsTLDR-button-secondary" id="jsTLDR-custom-prompt-cancel">Cancel</button>
-                     <button class="jsTLDR-button" id="jsTLDR-custom-prompt-submit">Submit</button>
+                <div id="fbChat38-custom-prompt-modal-footer">
+                     <button class="fbChat38-button fbChat38-button-secondary" id="fbChat38-custom-prompt-cancel">Cancel</button>
+                     <button class="fbChat38-button" id="fbChat38-custom-prompt-submit">Submit</button>
                 </div>
             </div>
         `;
         document.body.appendChild(customPromptModalOverlay);
-        customPromptModalOverlay.classList.add('jsTLDR-show');
+        customPromptModalOverlay.classList.add('fbChat38-show');
 
-        const closeModal = () => customPromptModalOverlay.classList.remove('jsTLDR-show');
+        const closeModal = () => customPromptModalOverlay.classList.remove('fbChat38-show');
 
-        customPromptModalOverlay.querySelector('#jsTLDR-custom-prompt-close').onclick = closeModal;
-        customPromptModalOverlay.querySelector('#jsTLDR-custom-prompt-cancel').onclick = closeModal;
+        customPromptModalOverlay.querySelector('#fbChat38-custom-prompt-close').onclick = closeModal;
+        customPromptModalOverlay.querySelector('#fbChat38-custom-prompt-cancel').onclick = closeModal;
         customPromptModalOverlay.onclick = (e) => {
-             if (e.target === customPromptModalOverlay) closeModal();
+            if (e.target === customPromptModalOverlay) closeModal();
         };
 
-        customPromptModalOverlay.querySelector('#jsTLDR-custom-prompt-submit').onclick = async () => {
-            const promptText = customPromptModalOverlay.querySelector('#jsTLDR-custom-prompt-textarea').value;
+        customPromptModalOverlay.querySelector('#fbChat38-custom-prompt-submit').onclick = async () => {
+            const promptText = customPromptModalOverlay.querySelector('#fbChat38-custom-prompt-textarea').value;
             if (promptText && promptText.trim()) {
                 await executeSummary(promptText.trim());
                 closeModal();
@@ -978,29 +978,29 @@
         };
 
         setTimeout(() => {
-            customPromptModalOverlay.querySelector('#jsTLDR-custom-prompt-textarea').focus();
+            customPromptModalOverlay.querySelector('#fbChat38-custom-prompt-textarea').focus();
         }, 100);
     }
 
     customPromptBtn.onclick = (e) => {
         e.stopPropagation();
-        popupMenu.classList.remove('jsTLDR-show');
+        popupMenu.classList.remove('fbChat38-show');
         showCustomPromptModal();
     };
 
     const settingsBtn = document.createElement('button');
-    settingsBtn.className = 'jsTLDR-menu-button';
+    settingsBtn.className = 'fbChat38-menu-button';
     settingsBtn.innerHTML = '⚙️';
     settingsBtn.title = 'Settings';
     const settingsModalOverlay = document.createElement('div');
-    settingsModalOverlay.className = 'jsTLDR-modal-overlay';
-    settingsModalOverlay.id = 'jsTLDR-settings-modal-overlay';
+    settingsModalOverlay.className = 'fbChat38-modal-overlay';
+    settingsModalOverlay.id = 'fbChat38-settings-modal-overlay';
     const settingsModal = document.createElement('div');
-    settingsModal.className = 'jsTLDR-modal';
+    settingsModal.className = 'fbChat38-modal';
     settingsModalOverlay.appendChild(settingsModal);
 
     function closeSettingsModal() {
-        settingsModalOverlay.classList.remove('jsTLDR-show');
+        settingsModalOverlay.classList.remove('fbChat38-show');
     }
 
     settingsModalOverlay.onclick = (e) => {
@@ -1010,56 +1010,56 @@
     settingsBtn.onclick = (e) => {
         e.stopPropagation();
         renderSettingsModal();
-        settingsModalOverlay.classList.add('jsTLDR-show');
-        popupMenu.classList.remove('jsTLDR-show');
+        settingsModalOverlay.classList.add('fbChat38-show');
+        popupMenu.classList.remove('fbChat38-show');
     };
 
     function renderSettingsModal() {
         settingsModal.innerHTML = `
-            <div class="jsTLDR-modal-header">
-                <h2 class="jsTLDR-modal-title">Settings</h2>
-                <button class="jsTLDR-modal-close">×</button>
+            <div class="fbChat38-modal-header">
+                <h2 class="fbChat38-modal-title">Settings</h2>
+                <button class="fbChat38-modal-close">×</button>
             </div>
-            <div class="jsTLDR-modal-body">
-                <div class="jsTLDR-tabs">
-                    <button class="jsTLDR-tab jsTLDR-active" data-tab="general">General</button>
-                    <button class="jsTLDR-tab" data-tab="prompts">Custom Prompts</button>
-                    <button class="jsTLDR-tab" data-tab="chatbots">Custom Chatbots</button>
-                    <button class="jsTLDR-tab" data-tab="exclusions">Site Exclusions</button>
+            <div class="fbChat38-modal-body">
+                <div class="fbChat38-tabs">
+                    <button class="fbChat38-tab fbChat38-active" data-tab="general">General</button>
+                    <button class="fbChat38-tab" data-tab="prompts">Custom Prompts</button>
+                    <button class="fbChat38-tab" data-tab="chatbots">Custom Chatbots</button>
+                    <button class="fbChat38-tab" data-tab="exclusions">Site Exclusions</button>
                 </div>
-                <div class="jsTLDR-tab-content jsTLDR-active" data-content="general"></div>
-                <div class="jsTLDR-tab-content" data-content="prompts">
-                    <div id="jsTLDR-prompts-list"></div>
-                    <button class="jsTLDR-button" id="jsTLDR-add-prompt">+ Add Prompt</button>
+                <div class="fbChat38-tab-content fbChat38-active" data-content="general"></div>
+                <div class="fbChat38-tab-content" data-content="prompts">
+                    <div id="fbChat38-prompts-list"></div>
+                    <button class="fbChat38-button" id="fbChat38-add-prompt">+ Add Prompt</button>
                 </div>
-                <div class="jsTLDR-tab-content" data-content="chatbots">
-                    <div id="jsTLDR-chatbots-list"></div>
-                    <button class="jsTLDR-button" id="jsTLDR-add-chatbot">+ Add Chatbot</button>
+                <div class="fbChat38-tab-content" data-content="chatbots">
+                    <div id="fbChat38-chatbots-list"></div>
+                    <button class="fbChat38-button" id="fbChat38-add-chatbot">+ Add Chatbot</button>
                 </div>
-                <div class="jsTLDR-tab-content" data-content="exclusions">
-                    <div id="jsTLDR-exclusions-list"></div>
-                    <button class="jsTLDR-button" id="jsTLDR-add-exclusion">+ Exclude Current Site</button>
+                <div class="fbChat38-tab-content" data-content="exclusions">
+                    <div id="fbChat38-exclusions-list"></div>
+                    <button class="fbChat38-button" id="fbChat38-add-exclusion">+ Exclude Current Site</button>
                 </div>
             </div>
         `;
 
-        settingsModal.querySelectorAll('.jsTLDR-tab').forEach(tab => {
+        settingsModal.querySelectorAll('.fbChat38-tab').forEach(tab => {
             tab.onclick = () => {
-                settingsModal.querySelectorAll('.jsTLDR-tab, .jsTLDR-tab-content').forEach(el => el.classList.remove('jsTLDR-active'));
-                tab.classList.add('jsTLDR-active');
-                settingsModal.querySelector(`[data-content="${tab.dataset.tab}"]`).classList.add('jsTLDR-active');
+                settingsModal.querySelectorAll('.fbChat38-tab, .fbChat38-tab-content').forEach(el => el.classList.remove('fbChat38-active'));
+                tab.classList.add('fbChat38-active');
+                settingsModal.querySelector(`[data-content="${tab.dataset.tab}"]`).classList.add('fbChat38-active');
             };
         });
 
-        settingsModal.querySelector('.jsTLDR-modal-close').onclick = closeSettingsModal;
+        settingsModal.querySelector('.fbChat38-modal-close').onclick = closeSettingsModal;
         renderGeneralSettings(settingsModal);
         renderPromptsList(settingsModal);
         renderChatbotsList(settingsModal);
         renderExclusionsList(settingsModal);
 
-        settingsModal.querySelector('#jsTLDR-add-prompt').onclick = () => showPromptForm();
-        settingsModal.querySelector('#jsTLDR-add-chatbot').onclick = () => showChatbotForm();
-        settingsModal.querySelector('#jsTLDR-add-exclusion').onclick = () => {
+        settingsModal.querySelector('#fbChat38-add-prompt').onclick = () => showPromptForm();
+        settingsModal.querySelector('#fbChat38-add-chatbot').onclick = () => showChatbotForm();
+        settingsModal.querySelector('#fbChat38-add-exclusion').onclick = () => {
             const site = window.location.hostname.replace(/^www\./, '');
             const exclusions = getStored('excludedSites', []);
             if (!exclusions.includes(site)) {
@@ -1075,51 +1075,51 @@
         const useReadability = getStored('useReadability', false);
 
         container.innerHTML = `
-            <div class="jsTLDR-setting-row">
+            <div class="fbChat38-setting-row">
                 <div>
-                    <div class="jsTLDR-setting-label">Advanced Content Extraction</div>
-                    <div class="jsTLDR-setting-desc">Uses Mozilla's Readability library for cleaner article text.</div>
+                    <div class="fbChat38-setting-label">Advanced Content Extraction</div>
+                    <div class="fbChat38-setting-desc">Uses Mozilla's Readability library for cleaner article text.</div>
                 </div>
-                <label class="jsTLDR-switch">
-                    <input type="checkbox" id="jsTLDR-readability-toggle" ${useReadability ? 'checked' : ''}>
-                    <span class="jsTLDR-slider"></span>
+                <label class="fbChat38-switch">
+                    <input type="checkbox" id="fbChat38-readability-toggle" ${useReadability ? 'checked' : ''}>
+                    <span class="fbChat38-slider"></span>
                 </label>
             </div>
         `;
 
-        container.querySelector('#jsTLDR-readability-toggle').addEventListener('change', (e) => {
+        container.querySelector('#fbChat38-readability-toggle').addEventListener('change', (e) => {
             setStored('useReadability', e.target.checked);
         });
     }
 
     function showPromptForm(promptToEdit = null, index = -1) {
         const isEditing = promptToEdit !== null;
-        const modalBody = settingsModal.querySelector('.jsTLDR-modal-body');
+        const modalBody = settingsModal.querySelector('.fbChat38-modal-body');
 
         modalBody.innerHTML = `
             <h3 style="color: ${isDarkMode() ? '#fff' : '#000'}; margin-top: 0; margin-bottom: 20px;">${isEditing ? 'Edit' : 'Add'} Custom Prompt</h3>
-            <form id="jsTLDR-prompt-form">
-                 <div class="jsTLDR-form-group">
-                     <label class="jsTLDR-label" for="jsTLDR-prompt-name">Prompt Name</label>
-                     <input type="text" id="jsTLDR-prompt-name" class="jsTLDR-input" required value="${isEditing ? promptToEdit.name.replace(/"/g, '&quot;') : ''}">
+            <form id="fbChat38-prompt-form">
+                 <div class="fbChat38-form-group">
+                     <label class="fbChat38-label" for="fbChat38-prompt-name">Prompt Name</label>
+                     <input type="text" id="fbChat38-prompt-name" class="fbChat38-input" required value="${isEditing ? promptToEdit.name.replace(/"/g, '&quot;') : ''}">
                  </div>
-                 <div class="jsTLDR-form-group">
-                     <label class="jsTLDR-label" for="jsTLDR-prompt-content">Prompt Content</label>
-                     <textarea id="jsTLDR-prompt-content" class="jsTLDR-textarea" required>${isEditing ? promptToEdit.content : ''}</textarea>
+                 <div class="fbChat38-form-group">
+                     <label class="fbChat38-label" for="fbChat38-prompt-content">Prompt Content</label>
+                     <textarea id="fbChat38-prompt-content" class="fbChat38-textarea" required>${isEditing ? promptToEdit.content : ''}</textarea>
                  </div>
                  <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                     <button type="button" class="jsTLDR-button jsTLDR-button-secondary" id="jsTLDR-cancel-prompt">Cancel</button>
-                     <button type="submit" class="jsTLDR-button">Save Prompt</button>
+                     <button type="button" class="fbChat38-button fbChat38-button-secondary" id="fbChat38-cancel-prompt">Cancel</button>
+                     <button type="submit" class="fbChat38-button">Save Prompt</button>
                  </div>
             </form>
         `;
 
-        modalBody.querySelector('#jsTLDR-cancel-prompt').onclick = () => renderSettingsModal();
+        modalBody.querySelector('#fbChat38-cancel-prompt').onclick = () => renderSettingsModal();
 
-        modalBody.querySelector('#jsTLDR-prompt-form').onsubmit = (e) => {
+        modalBody.querySelector('#fbChat38-prompt-form').onsubmit = (e) => {
             e.preventDefault();
-            const name = modalBody.querySelector('#jsTLDR-prompt-name').value;
-            const content = modalBody.querySelector('#jsTLDR-prompt-content').value;
+            const name = modalBody.querySelector('#fbChat38-prompt-name').value;
+            const content = modalBody.querySelector('#fbChat38-prompt-content').value;
             if (!name.trim() || !content.trim()) return;
 
             const customPrompts = getStored('customPrompts', []);
@@ -1138,37 +1138,37 @@
 
     function showChatbotForm(botToEdit = null) {
         const isEditing = botToEdit !== null;
-        const modalBody = settingsModal.querySelector('.jsTLDR-modal-body');
+        const modalBody = settingsModal.querySelector('.fbChat38-modal-body');
 
         modalBody.innerHTML = `
             <h3 style="color: ${isDarkMode() ? '#fff' : '#000'}; margin-top: 0; margin-bottom: 20px;">${isEditing ? 'Edit' : 'Add'} Custom Chatbot</h3>
-            <form id="jsTLDR-chatbot-form">
-                 <div class="jsTLDR-form-group">
-                     <label class="jsTLDR-label" for="jsTLDR-bot-name">Chatbot Name</label>
-                     <input type="text" id="jsTLDR-bot-name" class="jsTLDR-input" required value="${isEditing ? botToEdit.name.replace(/"/g, '&quot;') : ''}">
+            <form id="fbChat38-chatbot-form">
+                 <div class="fbChat38-form-group">
+                     <label class="fbChat38-label" for="fbChat38-bot-name">Chatbot Name</label>
+                     <input type="text" id="fbChat38-bot-name" class="fbChat38-input" required value="${isEditing ? botToEdit.name.replace(/"/g, '&quot;') : ''}">
                  </div>
-                 <div class="jsTLDR-form-group">
-                     <label class="jsTLDR-label" for="jsTLDR-bot-url">URL</label>
-                     <input type="url" id="jsTLDR-bot-url" class="jsTLDR-input" required value="${isEditing ? botToEdit.url.replace(/"/g, '&quot;') : ''}">
+                 <div class="fbChat38-form-group">
+                     <label class="fbChat38-label" for="fbChat38-bot-url">URL</label>
+                     <input type="url" id="fbChat38-bot-url" class="fbChat38-input" required value="${isEditing ? botToEdit.url.replace(/"/g, '&quot;') : ''}">
                  </div>
-                 <div class="jsTLDR-form-group">
-                     <label class="jsTLDR-label" for="jsTLDR-bot-limit">Character Limit (optional)</label>
-                     <input type="number" id="jsTLDR-bot-limit" class="jsTLDR-input" placeholder="e.g., 40000" value="${isEditing && botToEdit.characterLimit ? botToEdit.characterLimit : ''}">
+                 <div class="fbChat38-form-group">
+                     <label class="fbChat38-label" for="fbChat38-bot-limit">Character Limit (optional)</label>
+                     <input type="number" id="fbChat38-bot-limit" class="fbChat38-input" placeholder="e.g., 40000" value="${isEditing && botToEdit.characterLimit ? botToEdit.characterLimit : ''}">
                  </div>
                  <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                     <button type="button" class="jsTLDR-button jsTLDR-button-secondary" id="jsTLDR-cancel-bot">Cancel</button>
-                     <button type="submit" class="jsTLDR-button">Save Chatbot</button>
+                     <button type="button" class="fbChat38-button fbChat38-button-secondary" id="fbChat38-cancel-bot">Cancel</button>
+                     <button type="submit" class="fbChat38-button">Save Chatbot</button>
                  </div>
             </form>
         `;
 
-        modalBody.querySelector('#jsTLDR-cancel-bot').onclick = () => renderSettingsModal();
+        modalBody.querySelector('#fbChat38-cancel-bot').onclick = () => renderSettingsModal();
 
-        modalBody.querySelector('#jsTLDR-chatbot-form').onsubmit = (e) => {
+        modalBody.querySelector('#fbChat38-chatbot-form').onsubmit = (e) => {
             e.preventDefault();
-            const name = modalBody.querySelector('#jsTLDR-bot-name').value;
-            const url = modalBody.querySelector('#jsTLDR-bot-url').value;
-            const limit = modalBody.querySelector('#jsTLDR-bot-limit').value;
+            const name = modalBody.querySelector('#fbChat38-bot-name').value;
+            const url = modalBody.querySelector('#fbChat38-bot-url').value;
+            const limit = modalBody.querySelector('#fbChat38-bot-limit').value;
             if (!name.trim() || !url.trim()) return;
 
             const customBots = getStored('customChatbots', {});
@@ -1187,7 +1187,7 @@
     }
 
     function renderPromptsList(modal) {
-        const container = modal.querySelector('#jsTLDR-prompts-list');
+        const container = modal.querySelector('#fbChat38-prompts-list');
         const customPrompts = getStored('customPrompts', []);
 
         if (customPrompts.length === 0) {
@@ -1198,15 +1198,15 @@
         container.innerHTML = '';
         customPrompts.forEach((prompt, index) => {
             const item = document.createElement('div');
-            item.className = 'jsTLDR-list-item';
+            item.className = 'fbChat38-list-item';
             item.innerHTML = `
-                <div class="jsTLDR-list-item-content">
-                    <div class="jsTLDR-list-item-title">${prompt.name}</div>
-                    <div class="jsTLDR-list-item-subtitle">${prompt.content.substring(0, 50)}...</div>
+                <div class="fbChat38-list-item-content">
+                    <div class="fbChat38-list-item-title">${prompt.name}</div>
+                    <div class="fbChat38-list-item-subtitle">${prompt.content.substring(0, 50)}...</div>
                 </div>
-                <div class="jsTLDR-list-item-actions">
-                    <button class="jsTLDR-icon-button" data-action="edit" data-index="${index}">✏️</button>
-                    <button class="jsTLDR-icon-button jsTLDR-danger" data-action="delete" data-index="${index}">🗑️</button>
+                <div class="fbChat38-list-item-actions">
+                    <button class="fbChat38-icon-button" data-action="edit" data-index="${index}">✏️</button>
+                    <button class="fbChat38-icon-button fbChat38-danger" data-action="delete" data-index="${index}">🗑️</button>
                 </div>
             `;
             container.appendChild(item);
@@ -1232,7 +1232,7 @@
     }
 
     function renderChatbotsList(modal) {
-        const container = modal.querySelector('#jsTLDR-chatbots-list');
+        const container = modal.querySelector('#fbChat38-chatbots-list');
         const customChatbots = getStored('customChatbots', {});
 
         if (Object.keys(customChatbots).length === 0) {
@@ -1243,15 +1243,15 @@
         container.innerHTML = '';
         Object.values(customChatbots).forEach(bot => {
             const item = document.createElement('div');
-            item.className = 'jsTLDR-list-item';
+            item.className = 'fbChat38-list-item';
             item.innerHTML = `
-                <div class="jsTLDR-list-item-content">
-                    <div class="jsTLDR-list-item-title">${bot.name}</div>
-                    <div class="jsTLDR-list-item-subtitle">${bot.url}</div>
+                <div class="fbChat38-list-item-content">
+                    <div class="fbChat38-list-item-title">${bot.name}</div>
+                    <div class="fbChat38-list-item-subtitle">${bot.url}</div>
                 </div>
-                <div class="jsTLDR-list-item-actions">
-                    <button class="jsTLDR-icon-button" data-action="edit" data-id="${bot.id}">✏️</button>
-                    <button class="jsTLDR-icon-button jsTLDR-danger" data-action="delete" data-id="${bot.id}">🗑️</button>
+                <div class="fbChat38-list-item-actions">
+                    <button class="fbChat38-icon-button" data-action="edit" data-id="${bot.id}">✏️</button>
+                    <button class="fbChat38-icon-button fbChat38-danger" data-action="delete" data-id="${bot.id}">🗑️</button>
                 </div>
             `;
             container.appendChild(item);
@@ -1277,7 +1277,7 @@
     }
 
     function renderExclusionsList(modal) {
-        const container = modal.querySelector('#jsTLDR-exclusions-list');
+        const container = modal.querySelector('#fbChat38-exclusions-list');
         const exclusions = getStored('excludedSites', []);
 
         if (exclusions.length === 0) {
@@ -1288,13 +1288,13 @@
         container.innerHTML = '';
         exclusions.forEach((site, index) => {
             const item = document.createElement('div');
-            item.className = 'jsTLDR-list-item';
+            item.className = 'fbChat38-list-item';
             item.innerHTML = `
-                 <div class="jsTLDR-list-item-content">
-                     <div class="jsTLDR-list-item-title">${site}</div>
+                 <div class="fbChat38-list-item-content">
+                     <div class="fbChat38-list-item-title">${site}</div>
                  </div>
-                 <div class="jsTLDR-list-item-actions">
-                     <button class="jsTLDR-icon-button jsTLDR-danger" data-action="delete" data-index="${index}">🗑️</button>
+                 <div class="fbChat38-list-item-actions">
+                     <button class="fbChat38-icon-button fbChat38-danger" data-action="delete" data-index="${index}">🗑️</button>
                  </div>
             `;
             container.appendChild(item);
@@ -1310,7 +1310,7 @@
 
                 const currentSite = window.location.hostname.replace(/^www\./, '');
                 if (removedSite === currentSite) {
-                     document.querySelector('#jsTLDR-container').style.display = 'block';
+                    document.querySelector('#fbChat38-container').style.display = 'block';
                 }
             };
         });
@@ -1329,10 +1329,10 @@
 
     document.addEventListener('click', (e) => {
         if (!botDropdown.contains(e.target) && !botBtn.contains(e.target)) {
-            botDropdown.classList.remove('jsTLDR-show');
+            botDropdown.classList.remove('fbChat38-show');
         }
         if (!promptDropdown.contains(e.target) && !promptBtn.contains(e.target)) {
-            promptDropdown.classList.remove('jsTLDR-show');
+            promptDropdown.classList.remove('fbChat38-show');
         }
     });
 

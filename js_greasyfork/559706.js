@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google AI Studio | Collapse/Expand All Code Blocks (Manual/Automatic)
 // @namespace    https://greasyfork.org/en/users/1462137-piknockyou
-// @version      2.8
+// @version      2.9
 // @author       Piknockyou (vibe-coded)
 // @license      AGPL-3.0
 // @description  Collapse/expand all code blocks with dual toolbar buttons, auto-collapse mode, and lazy loading support.
@@ -651,9 +651,9 @@
 
         expandBtn.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        // Insert into toolbar (before the more_vert button)
-        const moreBtn = toolbar.querySelector('button[iconname="more_vert"]');
-        toolbar.insertBefore(toolbarContainer, moreBtn || null);
+        // Insert into toolbar (before the overflow-menu-wrapper which contains more_vert)
+        const overflowWrapper = toolbar.querySelector('.overflow-menu-wrapper');
+        toolbar.insertBefore(toolbarContainer, overflowWrapper || null);
 
         updateButtonState();
         return true;

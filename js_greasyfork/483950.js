@@ -2,13 +2,14 @@
 // @name            Youtube MP3 download button → ytmp3 (auto-download) - (by SuchtiOnTour)
 // @name:de         Youtube MP3 download button → ytmp3 (Auto-Download) - (by SuchtiOnTour)
 // @namespace       Violentmonkey Scripts
-// @version         1.6.0
+// @version         1.6.6
 // @author          SuchtiOnTour
 // @license         MIT
 // @match           https://www.youtube.com/watch*
 // @match           https://*.youtube.com/*
 // @match           https://ytmp3.la/*
 // @match           https://ytmp3.as/*
+// @match           https://app.ytmp3.as/*
 // @grant           GM_addStyle
 // @run-at          document-idle
 // @description     Adds a Download button next to the Share button and auto-downloads the MP3 via ytmp3.la
@@ -160,18 +161,35 @@ if (location.host.includes('youtube.com')) {
   window.addEventListener('yt-page-data-updated', init);
 }
 
-/* ---------- ytmp3.*: Auto-Download auslösen ---------- */
-if (location.host.startsWith('ytmp3.')) {
-  const isDl = el=>{
-    if(!el) return false;
-    const t = (el.textContent || '').trim().toLowerCase();
-    return t === 'download' || t.startsWith('download ');
-  };
-  const click = ()=>{
-    const el = [...document.querySelectorAll('a,button')].find(isDl);
-    if (el) { el.click(); console.log('[YTMP3] Download-Button geklickt'); }
-    else    setTimeout(click, 400);
-  };
-  setTimeout(click, 200);
+/* ---------- ytmp3.*: Auto-Download auslösen (FIXED) ---------- */
+if (location.host.includes('ytmp3.')) {
+
+    let clicked = false;
+
+    // Funktion sucht gezielt nach dem Button
+    const attemptClick = () => {
+        if(clicked) return;
+
+        // Sucht alle Buttons, die in einem <form> stecken
+        const buttons = document.querySelectorAll('form button');
+
+        for (let btn of buttons) {
+            // Prüfen ob wirklich "Download" draufsteht
+            if ((btn.textContent || '').trim() === 'Download') {
+                console.log('[Auto-Click] Download-Button gefunden. Klicke...');
+                btn.click();
+                clicked = true; // Damit er nicht spammt
+            }
+        }
+    };
+
+    // Prüft jede Sekunde, ob der Button erschienen ist
+    const interval = setInterval(() => {
+        if (clicked) {
+            clearInterval(interval); // Stoppen, wenn geklickt wurde
+        } else {
+            attemptClick();
+        }
+    }, 1000);
 }
 })();

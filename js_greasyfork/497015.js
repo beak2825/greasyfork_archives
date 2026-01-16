@@ -7,7 +7,7 @@
 // @description:ja  フォローアーティスト作品、アーティスト作品、タグ作品ページで、いいね數でソートし、閾値以上の作品のみを表示します。
 // @description:en  Sort Illustration by likes and display only those above the threshold on followed artist illustrations, artist illustrations, and tag illustrations pages.
 // @namespace    https://github.com/Max46656
-// @version      1.10.0
+// @version      1.10.3
 // @author       Max
 // @match        https://www.pixiv.net/bookmark_new_illust.php*
 // @match        https://www.pixiv.net/users/*
@@ -46,7 +46,7 @@ class userStrategy extends pageStrategy{
         return 'div:not([class]) div div div:not([class]) div:not([class]) div:has(li[offset])';
     }
     getArtWallAlignLeftClass(){
-        return 'gqvfWY';
+        return 'iJEVBL';
     }
     getButtonAtClass() {
         return 'nav:not(:has(button))';
@@ -70,13 +70,13 @@ class tagsStrategy extends pageStrategy{
         return 'div~div:has(a[data-gtm-user-id]):not(:has(aside))';
     }
     getArtWallAlignLeftClass(){
-        return 'gqvfWY';
+        return 'iJEVBL';
     }
     getButtonAtClass() {
         return 'div:nth-child(3) div:first-child div:first-child:has(div span+a+button)';
     }
     getAllButtonClass() {
-        return ['crbrJR','kjYafo'];
+        return ['eeVCEP','kAYFHF','dfpVDH'];
     }
     getArtsCountClass(){
         return 'h3+div span:not([class])';
@@ -94,13 +94,13 @@ class subStrategy extends pageStrategy{
         return 'section div:not([class]) div:not([class]) div:has(li[offset])';
     }
     getArtWallAlignLeftClass(){
-        return 'gqvfWY';
+        return 'iJEVBL';
     }
     getButtonAtClass() {
         return 'section div:not([class]) div div:has(a[href="/novel/bookmark_new.php"])';
     }
     getAllButtonClass() {
-        return ['kdFEos'];
+        return ['kLTQrS'];
     }
     getArtsCountClass(){
         return null;

@@ -3,7 +3,7 @@
 // @name:en          HWHHideButtonsExt
 // @name:ru          HWHHideButtonsExt
 // @namespace        HWHHideButtonsExt
-// @version          2.7
+// @version          2.10
 // @description      Extension for HeroWarsHelper script
 // @description:en   Extension for HeroWarsHelper script
 // @description:ru   Расширение для скрипта HeroWarsHelper
@@ -144,6 +144,13 @@
         IS_TURN_ON_TIMER_TITLE: 'Turn on hourly automatic skills improvement',
         IS_TURN_OFF_TIMER_TITLE: 'Turn off hourly automatic skills improvement',
         IS_IMPROVING_SKILLS_TIMER_RESULT: `Hero skills improved <span style="color: Lime;">{skillPointsSpent}</span> times <br> Next upgrade in 1 hour`,
+        LR_LUCKY_ROAD:'Lucky Road',
+        LR_LUCKY_ROAD_TITLE:'Spend lucky coins',
+        LR_NO_EVENT: 'The event is not active',
+        LR_LUCKY_ROAD_RESULT: `Lucky coins spent: <span style="color:Lime;"> {counter} </span>
+          <br> Emeralds received: <span style="color:Lime;"> {starMoney} </span>`,
+        LR_LUCKY_ROAD_PROGRESS: `Lucky coins spent: <span style="color:Lime;"> {counter} </span> / {luckyCoin}`,
+        LR_NOT_ENOUGH_COINS: '<span style="font-size: 30px;">No coins</span><br> <span style="color: LimeGreen; font-size: 30px;">No money, no honey </span>',
     };
 
     i18nLangData['en'] = Object.assign(i18nLangData['en'], i18nLangDataEn);
@@ -260,6 +267,13 @@
         IS_TURN_OFF_TIMER_TITLE: 'Выключить автоматическое улучшение умений каждый час',
         IS_IMPROVING_SKILLS_TIMER_RESULT: `Умения героев улучшены <span style="color: Lime;">{skillPointsSpent}</span> раз
           <br> Следующее улучшение умений через час`,
+        LR_LUCKY_ROAD:'Дорога удачи',
+        LR_LUCKY_ROAD_TITLE:'Потратить монеты удачи',
+        LR_NO_EVENT: 'Ивент не активен',
+        LR_LUCKY_ROAD_RESULT: `Потрачено монет удачи: <span style="color:Lime;"> {counter} </span>
+          <br> Получено изумрудов: <span style="color:Lime;"> {starMoney} </span>`,
+        LR_LUCKY_ROAD_PROGRESS: `Потрачено монет удачи: <span style="color:Lime;"> {counter} </span> / {luckyCoin}`,
+        LR_NOT_ENOUGH_COINS: '<span style="font-size: 30px;">Нэт Монэт</span><br> <span style="color: LimeGreen; font-size: 30px;">Ноу мани - ноу хани</span>',
     };
 
     i18nLangData['ru'] = Object.assign(i18nLangData['ru'], i18nLangDataRu);
@@ -399,6 +413,65 @@
 		},
 		color: 'pink',
 	});
+
+    othersPopupButtons.push({
+        get msg() {
+            return I18N('LR_LUCKY_ROAD');
+        },
+        get title() {
+            return I18N('LR_LUCKY_ROAD_TITLE');
+        },
+        result:async function () {
+            await onClickLuckyRoad();
+        },
+        color: 'pink',
+    });
+
+    async function onClickLuckyRoad() {
+        let result = await Caller.send('lineGacha_getInfo');
+        if (result == null){
+            confShow(I18N('LR_NO_EVENT'));
+            return;
+        }
+        let roadId = result.gachaId;
+        result = await Caller.send('userGetInfo');
+        let starMoneyStart = result.starMoney;
+
+        //Дорога удачи
+        let luckyCoin = 0;
+        let counter = 0;
+        let cycle = true;
+        while (cycle) {
+            //Собрать награды
+            await questFarm();
+
+            luckyCoin = 0;
+            let inventoryGet = await Caller.send('inventoryGet');
+            if (inventoryGet.coin[59]) {
+                luckyCoin = inventoryGet.coin[59];
+            }
+            if (luckyCoin == 0) {
+                cycle = false;
+                break;
+            }
+            for (let i = 1; i <= luckyCoin; i++){
+                try{
+                    await Caller.send({name: 'lineGacha_rollReward', args: {id:roadId}});
+                    setProgress(I18N('LR_LUCKY_ROAD_PROGRESS', {counter: i, luckyCoin }), false, hideProgress);
+                } catch (e) {
+                    break;
+                }
+                counter += 1;
+            }
+        }
+        if (counter == 0){
+            confShow(I18N('LR_NOT_ENOUGH_COINS'));
+            return;
+        }
+        result = await Caller.send('userGetInfo');
+        let starMoneyEnd = result.starMoney;
+        confShow(`${I18N('LR_LUCKY_ROAD_RESULT', { counter, starMoney: starMoneyEnd-starMoneyStart })}`);
+    }
 
     async function onClickSettings() {
         let colorMainButtons = getSaveVal('colorMainButtons', false);
@@ -663,8 +736,6 @@
                 button.color = color;
             }
         }
-        console.log(othersPopupButtons);
-        console.log(newOthersPopupButtons);
         newOthersPopupButtons.push({ result: false, isClose: true });
 
         const answer = await popup.confirm(`${I18N('CHOOSE_ACTION')}:`, newOthersPopupButtons);
@@ -1010,4 +1081,18 @@
         //console.log(skils);
         return skils;
     }
+
+    async function questFarm() {
+        const questGetAll = await Caller.send('questGetAll');
+        const questsFarm = questGetAll.filter((e) => e.state == 2 && e.reward.coin?.[59]);
+        let calls = [];
+        for (let quest of questsFarm) {
+            const questId = +quest.id;
+            calls.push({ name: 'questFarm', args: { questId }});
+        }
+        if (calls.length >= 1) {
+            await Caller.send(calls);
+        }
+    }
+
 })();

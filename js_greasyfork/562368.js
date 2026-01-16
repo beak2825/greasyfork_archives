@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         linux.do player helper
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.3
 // @description  观影助手
 // @match        *://linux.do/*
 // @match        *://idcflare.com/*
@@ -2537,6 +2537,11 @@
         const newDailyApiValue = $('#daily-api-input').val();
         const dailyApiChanged = newDailyApiValue !== originalDailyApiValue;
 
+        // 检查豆瓣代理URL是否发生变化
+        const oldDoubanProxy = getSetting(CONFIG.STORAGE_KEYS.DOUBAN_PROXY, '');
+        const newDoubanProxy = $(`input[data-key="${CONFIG.STORAGE_KEYS.DOUBAN_PROXY}"]`).val() || '';
+        const doubanProxyChanged = oldDoubanProxy !== newDoubanProxy;
+
         // 保存所有API设置
         $('#api-settings .text-input').each(function () {
             localStorage.setItem($(this).data('key'), $(this).val());
@@ -2606,6 +2611,24 @@
         // 如果当前激活的标签页是"每日放送"且API发生了变化，则重新渲染每日放送内容
         if (dailyApiChanged && currentActiveTabId === 'tab1') {
             processAndRenderDailyData(dailyDataPromise);
+        }
+
+        // 如果豆瓣代理URL发生变化，重置豆瓣状态并重新加载
+        if (doubanProxyChanged) {
+            doubanDataLoaded = false;
+            doubanHasMore = true;
+            doubanCurrentPage = 1;
+            doubanTabCache = {};
+            // 清除豆瓣缓存
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.DOUBAN_CACHE_MOVIE);
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.DOUBAN_CACHE_TV);
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.DOUBAN_CACHE_ANIME);
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.DOUBAN_CACHE_VARIETY);
+            localStorage.removeItem(CONFIG.STORAGE_KEYS.DOUBAN_CACHE_TIMESTAMP);
+            // 如果当前在豆瓣查找tab，立即重新加载
+            if (currentActiveTabId === 'tab2') {
+                loadDoubanData(true);
+            }
         }
 
         showNotification('设置已保存并生效');

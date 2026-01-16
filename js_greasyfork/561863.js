@@ -2,8 +2,9 @@
 // @name		Mist Legacy Interactive Map Search
 // @namespace	mist-legacy-interactive-map-search
 // @description This adds a search field to more easily find things on the interactive map website for the game Mist Legacy
-// @version		1.1.1
+// @version		1.2.0
 // @license     MIT
+// @match		http://199.180.155.43/
 // @match		http://199.180.155.43/map
 // @run-at		document-start
 // @grant		none
@@ -92,6 +93,16 @@
 					cursor:pointer;
 				}
 				.leaflet-search-results li { margin-bottom:2px; }
+
+				/* Coordinate display */
+				.leaflet-coord-box {
+					background: rgba(255,255,255,0.75);
+					padding:4px 8px;
+					font-size:12px;
+					border-radius:4px;
+					pointer-events:none;
+					transform: translateX(-50%);
+				}
 			</style>
 		`);
 
@@ -174,6 +185,34 @@
 
 		input.addEventListener('input', runSearch);
 		checkbox.addEventListener('change', runSearch);
-		
+
+		/*************************************************
+		 * Coordinate Display Control (Bottom Center)
+		 *************************************************/
+		const CoordControl = L.Control.extend({
+			options: { position: 'bottomleft' },
+			onAdd() {
+				const div = L.DomUtil.create('div', 'leaflet-coord-box');
+				div.textContent = 'X: –, Y: –';
+				return div;
+			}
+		});
+
+		const coordControl = new CoordControl();
+		map.addControl(coordControl);
+
+		const coordBox = map.getContainer().querySelector('.leaflet-coord-box');
+		if (coordBox) {
+			coordBox.style.position = 'fixed';
+			coordBox.style.left = '50%';
+			coordBox.style.bottom = '6px';
+			coordBox.style.transform = 'translateX(-50%)';
+		}
+
+		map.on('mousemove', e => {
+			const lat = e.latlng.lat.toFixed(5);
+			const lng = e.latlng.lng.toFixed(5);
+			if (coordBox) coordBox.textContent = `X: ${lng}, Y: ${lat}`;
+		});
 	}
 })();

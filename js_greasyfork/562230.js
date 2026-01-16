@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         RED Stats Since Last tmp
-// @version      1.4.2
+// @version      1.4.3
 // @description  Shows how your Upload, Download and Ratio on Redacted have changed since your last visit.
 // @author       Lancer07
 // @include      http*://*redacted.sh/*
@@ -71,7 +71,7 @@
     before.parentNode.insertBefore(li, before);
     var buffer=renderStats((currentStats.up/1.05)-currentStats.down);
     if(window.location.host.indexOf('redacted') != -1)
-      buffer=renderStats((currentStats.up/0.6)-currentStats.down);
+      buffer=renderStats((currentStats.up/0.65)-currentStats.down);
     li.innerHTML='Buffer: <span class="stat">'+buffer+'</span>';
     li.setAttribute('id', 'stats_buffer');
   }
@@ -96,7 +96,7 @@
     var span=li.getElementsByTagName('span')[0];
     var buffer=renderStats((change.up/1.05)-change.down);
     if(window.location.host.indexOf('redacted') != -1)
-      buffer=renderStats((change.up/0.6)-change.down);
+      buffer=renderStats((change.up/0.65)-change.down);
     span.innerHTML += ' <span class="stats_last buffer">('+buffer+')</span>';
     if(difTime)
       span.title = (prettyTime(difTime))+' ago';

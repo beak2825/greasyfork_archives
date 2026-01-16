@@ -17,7 +17,7 @@
 // @supportURL   https://github.com/Max46656/EverythingInGreasyFork/issues
 // @license      MPL2.0
 //
-// @version      2.0.0
+// @version      2.0.1
 // @match        *://*/*
 // @grant        GM_registerMenuCommand
 // @grant        GM_info
@@ -354,7 +354,7 @@ class Error404Handler {
                 #targetUrlContainer { display: none; }
             </style>
             <div class="headerContainer">
-                <h1>${this.GM_info.script.name}</h1>
+                <h1>${GM_info.script.name}</h1>
                 <button id="closeAddMenu" class="closeButton">✕</button>
             </div>
             <h2>${i18n.titleAdd}</h2>
@@ -437,7 +437,7 @@ class Error404Handler {
                 .closeButton{width:auto;padding:5px 10px;margin:0;}
             </style>
             <div class="headerContainer">
-                <h1>${this.GM_info.script.name}</h1>
+                <h1>${GM_info.script.name}</h1>
                 <button id="closeManageMenu" class="closeButton">✕</button>
             </div>
             <h2>${i18n.titleManage}</h2>

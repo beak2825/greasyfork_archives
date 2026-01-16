@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.8.7
+// @version         4.2.8.8
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -3348,12 +3348,8 @@ else if (matchDomain('foreignpolicy.com')) {
 }
 
 else if (matchDomain('fortune.com')) {
-  setCookie(['xbc', 'pcid'], '', 'fortune.com', '/', 0);
-  let paywall = document.querySelector('div.paywallActive');
-  if (paywall)
-    paywall.removeAttribute('class');
-  let banners = 'div.tp-container-inner, div[class^="sc-"]:has( > div[data-cy="leaderboard"]), div[class^="sc-"]:has( > div.nativo-tout)';
-  hideDOMStyle(banners);
+  let ads = 'div.leaderboard-ad-wrapper-parent, div.leading-0, div.z-body-popover, div.nativo-wrapper, div#outbrain-container, div[class^="sc-"]:has(> div[data-cy^="in-stream-"], > div > div[data-google-query-id]), div[class^="min-h-"]:has(> div#article-piano-template-plea-container)';
+  hideDOMStyle(ads);
 }
 
 else if (matchDomain('foxnews.com')) {

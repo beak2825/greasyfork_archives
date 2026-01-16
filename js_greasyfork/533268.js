@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         8chanSS
-// @version      1.58.6
+// @version      1.58.7
 // @namespace    8chanss
 // @description  A userscript to add functionality to 8chan.
 // @author       otakudude
@@ -116,7 +116,7 @@ onReady(async function () {
     const HIDDEN_POSTS_KEY = '8chanSS_hiddenPosts';
     const FILTERED_NAMES_KEY = '8chanSS_filteredNames';
     const FILTERED_IDS_KEY = '8chanSS_filteredIDs';
-    const VERSION = "1.58.6";
+    const VERSION = "1.58.7";
     const scriptSettings = {
         site: {
             _siteTWTitle: { type: "title", label: ":: Thread Watcher" },
@@ -2554,9 +2554,27 @@ onReady(async function () {
                 return ytTitleCache[cleanId];
             }
             try {
-                const r = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${cleanId}&format=json`);
-                if (!r.ok) return null;
-                const data = await r.json();
+                const data = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: "GET",
+                        url: `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${cleanId}&format=json`,
+                        timeout: 8000,
+                        onload: (response) => {
+                            if (response.status === 200) {
+                                try {
+                                    const jsonData = JSON.parse(response.responseText);
+                                    resolve(jsonData);
+                                } catch (e) {
+                                    reject(e);
+                                }
+                            } else {
+                                reject(new Error(`HTTP ${response.status}`));
+                            }
+                        },
+                        onerror: () => reject(new Error('Network error')),
+                        ontimeout: () => reject(new Error('Timeout'))
+                    });
+                });
                 const title = data ? data.title : null;
                 if (title) {
                     ytTitleCache[cleanId] = title;

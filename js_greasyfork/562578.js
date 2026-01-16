@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stake Bonus Claimer
 // @namespace    stake-sniper
-// @version      4.9
+// @version      5.0
 // @description  Automaticaly claims Stake bonus codes in real time
 // @author       stuffman0/stuffman/guns.lol/stuffman/stuffman001/bonusclaimer.replit.app
 // @match        https://stake.com/*
@@ -915,28 +915,28 @@
 
             log(`Code status: ${status}, value: ${bonusValue}`);
 
-            if (status === "bonusCodeAvailable") {
+            if (status === "bonusCodeAvailable" || status === "available") {
                 const valueMsg = bonusValue ? ` ($${bonusValue})` : "";
                 log(`Code found${valueMsg}! Claiming...`);
-            } else if (status === "bonusCodeInactive") {
+            } else if (status === "bonusCodeInactive" || status === "inactive") {
                 stats.failed++;
                 log(`Invalid code: ${code}`);
                 addToHistory(code, false, "Invalid/Inactive code");
                 updateUI();
                 return;
-            } else if (status === "bonusCodeAlreadyClaimed") {
+            } else if (status === "bonusCodeAlreadyClaimed" || status === "alreadyClaimed") {
                 stats.failed++;
                 log(`Already claimed: ${code}`);
                 addToHistory(code, false, "You already claimed this");
                 updateUI();
                 return;
-            } else if (status === "bonusCodeFullyClaimed") {
+            } else if (status === "bonusCodeFullyClaimed" || status === "fullyClaimed") {
                 stats.failed++;
                 log(`Code fully claimed: ${code}`);
                 addToHistory(code, false, "Code fully claimed (limit reached)");
                 updateUI();
                 return;
-            } else if (status === "bonusCodeNotFound") {
+            } else if (status === "bonusCodeNotFound" || status === "notFound") {
                 stats.failed++;
                 log(`Code not found: ${code}`);
                 addToHistory(code, false, "Code does not exist");

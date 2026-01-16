@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wikipedia Nord Dark Theme
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Applies the Nord color palette (https://www.nordtheme.com/) to Wikipedia pages
 // @author       jizhou-wu and Gemini
 // @match        https://*.wikipedia.org/*
@@ -51,11 +51,11 @@
             --background-color-neutral-subtle: var(--nord2) !important;
             --background-color-interactive: var(--nord2) !important;
             --background-color-interactive-subtle: var(--nord1) !important;
-
+            
             --color-base: var(--nord4) !important;
             --color-emphasized: var(--nord6) !important;
             --color-subtle: var(--nord4) !important;
-
+            
             --border-color-base: var(--nord2) !important;
             --border-color-subtle: var(--nord2) !important;
             --border-color-muted: var(--nord2) !important;
@@ -189,9 +189,18 @@
             background-color: var(--nord4) !important; /* Light bg for transparency */
             border: 1px solid var(--nord2) !important;
         }
+        
         /* Specific fix for math images (LaTeX) to invert them to white */
-        .mwe-math-fallback-image-inline, img[src*="latex"] {
+        .mwe-math-fallback-image-inline, 
+        .mwe-math-fallback-image-display,
+        img[src*="latex"] {
             filter: invert(1) hue-rotate(180deg);
+        }
+
+        /* Support for native MathML (if enabled in settings) */
+        math, .mwe-math-element {
+            color: var(--nord6) !important;
+            fill: var(--nord6) !important;
         }
 
         /* --- Categories Box (bottom) --- */
@@ -216,7 +225,7 @@
 
         /* --- Vector 2022 Skin Fixes (Modern Wikipedia) --- */
         .vector-header-container {
-             background-color: var(--nord0) !important;
+             background-color: var(--nord1) !important;
         }
         .vector-search-box-input {
              background-color: var(--nord2) !important;
@@ -268,6 +277,5 @@
     } else {
         addGlobalStyle(nordCss);
     }
-
 
 })();

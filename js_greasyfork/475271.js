@@ -3,7 +3,7 @@
 // @name:en         Twitter Clock
 // @name:ain        Twitter トケ
 // @namespace       http://lit.link/toracatman
-// @version         2025-11-23
+// @version         2026-01-15
 // @description     Twitterに 時計を 表示します。
 // @description:en  Display a Clock on Twitter.
 // @description:ain Twitter タ トケ アヌ。
@@ -24,11 +24,12 @@ Language, ja: Japanese, en: English, ain: Ainu
 let language = "ja";
 
 /*
-true: 20進数, false: 10進数
-true: vigesimal, false: decimal
-true: ホㇳネ リキ, false: ワン リキ
+進数, 10: 10進数, 12: 12進数, 20: 20進数
+Base number, 10: decimal, 12: dozenal, 20: vigesimal
+ソシンリㇳ チピㇱキ, 10: ワン リキ, 12: ペセ リキ, 20: ホㇳネ リキ
+2〰︎20
 */
-let base20 = false;
+let base_num = 10;
 
 /*
 曜日の 色
@@ -78,7 +79,7 @@ Number.prototype.convertBase = function(base) {
     };
     let dc = ["249, 24, 128", "120, 86, 255", "255, 122, 0", "139, 152, 165", "0, 186, 124", "255, 212, 0", "29, 155, 240"];
     let d;
-    let base = base20 ? 20 : 10;
+    let base = base_num;
 
     let a;
     let b;
@@ -111,7 +112,7 @@ Number.prototype.convertBase = function(base) {
                 str = str.replace("YYYY", d.getFullYear().convertBase(base));
                 let m = d.getMonth();
                 let cm = mn[language][m];
-                if (cm == "") cm = m.convertBase(base);
+                if (cm == "") cm = (m + 1).convertBase(base);
                 str = str.replace("MM", cm);
                 str = str.replace("DD", d.getDate().convertBase(base));
                 str = str.replace("WW", day_str);

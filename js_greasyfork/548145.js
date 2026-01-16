@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.6.8
+// @version      0.7.0
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -248,6 +248,8 @@
                     copier_format_author_id: 'AuthorID+ID',
                     copier_format_shortest: 'Shortest',
                     copier_includeEmojis: 'Include emojis',
+					copier_expandHashtags: 'Expand Hashtags to URL',
+					copier_expand_mentions: 'Expand Mentions to URL',
                     
                     autoLoader_batchSize: 'Batch Count',
                     tooltipAutoLoadStart: 'Auto-Load',
@@ -275,6 +277,11 @@
                     copy_meta_stats_total: 'Include Total Count (1.9K)',
                     copy_meta_stats_detailed: 'Include Details (👍❤️)',
                     copy_meta_link_preview: 'Include Link Preview',
+					copy_meta_image_count: 'Include Image Count',
+					image_count_label: 'Images',
+					copy_meta_video_duration: 'Include Video/Reel Duration',
+					label_reel: 'Reel',
+					label_video: 'Video',
                     stats_label_like: 'Like',
                     stats_label_comment: 'Comment',
                     stats_label_share: 'Share',
@@ -411,6 +418,8 @@
                     copier_format_author_id: '作者 ID + 貼文 ID (最可靠)',
                     copier_format_shortest: '最短連結 (fb.com, 相容性較差)',
                     copier_includeEmojis: '複製內容包含表情符號',
+					copier_expandHashtags: '將 Hashtag 展開為網址',
+					copier_expand_mentions: '將提及對象展開為網址',
                     
                     autoLoader_batchSize: '自動載入批次數量',
                     tooltipAutoLoadStart: '自動載入貼文',
@@ -438,6 +447,11 @@
                     copy_meta_stats_total: '包含總數 (1.9K 心情)',
                     copy_meta_stats_detailed: '包含詳細心情 (👍❤️)',
                     copy_meta_link_preview: '包含連結預覽資訊 (標題/來源/摘要)',
+					copy_meta_image_count: '包含圖片數量統計',
+					image_count_label: '圖片',
+					copy_meta_video_duration: '包含影片/Reels 時長',
+					label_reel: 'Reel',
+					label_video: '影片',
                     stats_label_like: '讚',
                     stats_label_comment: '留言',
                     stats_label_share: '分享',
@@ -574,6 +588,8 @@
                     copier_format_author_id: '作者ID+ID (推奨)',
                     copier_format_shortest: '短縮 (fb.com)',
                     copier_includeEmojis: '絵文字を含める',
+					copier_expandHashtags: 'ハッシュタグをURLに展開',
+					copier_expand_mentions: 'メンションをURLに展開',
                     
                     autoLoader_batchSize: '自動読み込みバッチ数',
                     tooltipAutoLoadStart: '投稿を自動読み込み',
@@ -601,6 +617,11 @@
                     copy_meta_stats_total: '合計リアクション数を含める',
                     copy_meta_stats_detailed: '詳細なリアクションを含める',
                     copy_meta_link_preview: 'リンクプレビュー情報を含める',
+					copy_meta_image_count: '画像数を含める',
+					image_count_label: '画像',
+					copy_meta_video_duration: '動画/リールの長さを含める',
+					label_reel: 'リール',
+					label_video: '動画',
                     stats_label_like: 'いいね',
                     stats_label_comment: 'コメント',
                     stats_label_share: 'シェア',
@@ -774,6 +795,10 @@
                             ],
                             group: 'tools'
                         },
+						{ key: 'copy_meta_image_count', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_image_count', group: 'tools' },
+						{ key: 'copier_expandHashtags', type: 'boolean', defaultValue: false, labelKey: 'copier_expandHashtags', group: 'tools' },
+						{ key: 'copy_meta_video_duration', type: 'boolean', defaultValue: true, labelKey: 'copy_meta_video_duration', group: 'tools' },
+						{ key: 'copier_expandMentions', type: 'boolean', defaultValue: true, labelKey: 'copier_expand_mentions', group: 'tools' },
                     ];
                     return [...generalSettings, ...navigationSettings, ...toolsSettings];
                 })(),
@@ -2879,13 +2904,120 @@ Count:  ${successCount} Posts
                     const T = this.app.state.T;
                     const C_TOOLS = this.app.config.SELECTORS.POST_TOOLS;
                     
-                    // Define separator based on mode (Batch vs Single)
-                    // Batch mode uses a lighter separator to avoid confusion with the main post delimiter
+                    // --- 1. Define Tracking Parameters to Remove (US > TW > JP Optimized) ---
+                    const trackingParams = [
+                        // [Global/US] Meta Ecosystem
+                        'fb_content_id', 'encrypted_payload', 'channel_type',
+                        'fbclid', 'ref', 'ref_id', 'h', '__cft__', '__tn__', '__eep__',
+                        'igsh', 'xmt',
+                        
+                        // [Global/US] Google & YouTube
+                        'si', 'feature',
+                        'gclid', 'gclsrc', 'dclid', '_ga', '_gl',
+                        'srsltid', 'gbraid', 'wbraid',
+                        
+                        // [US] X (Twitter) & Reddit
+                        's', 't', 'ref_src', 'twclid',
+                        'share_id', 'ref_campaign', 'ref_source',
+                        
+                        // [US/Global] E-Commerce
+                        'ref_', 'pf_rd_r', 'pf_rd_p', 'pf_rd_m', // Amazon
+                        'mkcid', 'mkrid', '_trkparms', 'ssuid', // eBay
+                        'shpxid', // Shopify
+                        
+                        // [TW/JP] Regional
+                        'ldtag_cl', // LINE
+                        'smtt', 'is_from_login', 'stm_source', 'stm_medium', // Shopee
+                        'yj_r', '_ly_c', '_ly_r', // Yahoo JP
+                        'scid', // Rakuten
+                        
+                        // [Global] Social & Generic
+                        'tt_from', 'tt_medium', 'tt_content', '_r', '_t', // TikTok
+                        'li_fat_id', 'trk', // LinkedIn
+                        'epik', 'pp', // Pinterest
+                        'sc_cid', 'snap_campaign_id', // Snapchat
+                        'mc_cid', 'mc_eid', 'mkt_tok', // Mailchimp/Marketo
+                        '_hsenc', '_hsmi', // HubSpot
+                        'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'utm_id',
+                        'cjevent', 'msclkid'
+                    ];
+
+                    // Helper: Sanitize URL object in place
+                    const sanitizeUrlParams = (urlObj) => {
+                        const keysToDelete = [];
+                        urlObj.searchParams.forEach((_, key) => {
+                            const shouldDelete = trackingParams.some(tp => key === tp || key.startsWith(`${tp}[`));
+                            if (shouldDelete) keysToDelete.push(key);
+                        });
+                        keysToDelete.forEach(k => urlObj.searchParams.delete(k));
+                        return keysToDelete.length > 0;
+                    };
+
+                    // --- NEW Helper: Smart Text Extraction (Distinguishes Lines vs Paragraphs) ---
+                    const getFormattedText = (root) => {
+                        let text = '';
+                        if (!root) return text;
+
+                        // Utility to ensure string ends with specific count of newlines
+                        const ensureNewlines = (count) => {
+                            if (text.length === 0) return; 
+                            let current = 0;
+                            for (let i = text.length - 1; i >= 0; i--) {
+                                if (text[i] === '\n') current++;
+                                else break;
+                            }
+                            while (current < count) {
+                                text += '\n';
+                                current++;
+                            }
+                        };
+
+                        const isBlock = (node) => {
+                            const tag = node.tagName?.toUpperCase();
+                            return ['DIV', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE', 'SECTION', 'ARTICLE'].includes(tag);
+                        };
+
+                        const hasBlockChildren = (node) => {
+                            for (let child of node.children) {
+                                if (isBlock(child)) return true;
+                            }
+                            return false;
+                        };
+
+                        const traverse = (node) => {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                text += node.textContent;
+                            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                                if (node.getAttribute('aria-hidden') === 'true' || node.style.display === 'none') return;
+
+                                const isBlockElem = isBlock(node);
+                                const isContainer = isBlockElem && hasBlockChildren(node);
+                                
+                                if (isBlockElem) ensureNewlines(1);
+
+                                if (node.tagName === 'BR') {
+                                    text += '\n';
+                                } else {
+                                    node.childNodes.forEach(traverse);
+                                }
+
+                                if (isBlockElem) {
+                                    if (isContainer) ensureNewlines(2);
+                                    else ensureNewlines(1);
+                                }
+                            }
+                        };
+
+                        traverse(root);
+                        return text.trim();
+                    };
+
+                    // Define separator
                     const SECTION_SEPARATOR = options.isBatch ? '\n---\n' : '\n-----------------------------------\n';
 
                     const contentContainer = postEl.querySelector(C_TOOLS.CONTENT_BODY);
 
-                    // 1. Expand Content
+                    // --- 2. Expand Content (Read More) ---
                     const expandKeywords = this.app.config.TEXT_EXPANDER.TARGETS;
                     if (contentContainer) {
                         const expandBtn = Array.from(contentContainer.querySelectorAll(C_TOOLS.EXPAND_BTN))
@@ -2898,13 +3030,12 @@ Count:  ${successCount} Posts
                         }
                     }
 
-                    // 2. Prepare Metadata Parts
+                    // --- 3. Build Metadata Parts ---
                     const parts = [];
 
-                    // --- Post Link (Top) ---
+                    // [Meta] Post Link
                     if (settings.copy_includeMetadata && settings.copy_meta_url) {
                         let linkUrl = null;
-                        
                         if (!options.forceRawLink && settings.copier_useSmartLink) {
                             const contentType = this.determinePostContentType(postEl);
                             if (contentType === 'standard') {
@@ -2912,33 +3043,28 @@ Count:  ${successCount} Posts
                                 if (result && result.url) linkUrl = result.url;
                             }
                         }
-                        
                         if (!linkUrl) {
                             const direct = this.getPermalinkDirectlyFromElement(postEl);
                             linkUrl = direct.url;
                         }
-                        
                         if (linkUrl) parts.push(linkUrl + '\n');
                     }
 
-                    // --- Post Order [#xx] & Author ---
+                    // [Meta] Order & Author
                     if (settings.copy_includeMetadata) {
                         let headerLine = '';
-                        
                         if (options.includeOrder) {
                             const order = postEl.getAttribute('aria-posinset');
                             if (order) headerLine += `[#${order}] `;
                         }
-
                         if (settings.copy_meta_author_name) {
                             const authorEl = postEl.querySelector('div[data-ad-rendering-role="profile_name"] h2 strong a, div[data-ad-rendering-role="profile_name"] h2 a');
                             if (authorEl) headerLine += authorEl.textContent.trim();
                         }
-                        
                         if (headerLine) parts.push(headerLine);
                     }
 
-                    // --- Date & Stats ---
+                    // [Meta] Date & Stats & Image Count & Video Duration
                     if (settings.copy_includeMetadata) {
                         let infoLine = '';
                         
@@ -2954,36 +3080,28 @@ Count:  ${successCount} Posts
                             if (dateText) infoLine += dateText;
                         }
 
-                        // Stats Logic (Fix for JP/ZH Units & Labels)
+                        // Stats (Interactions)
                         if (settings.copy_meta_stats) {
                             const stats = [];
                             const toolbar = postEl.querySelector('[role="toolbar"]');
-                            
                             if (toolbar) {
                                 const directContainer = toolbar.parentElement;
                                 const footerArea = toolbar.closest('div[role="article"] > div > div > div > div > div') || directContainer;
-                                
-                                // Regex Components
                                 const unitGroup = '[KkMm萬億万\\u842c\\u5104\\u4e07]';
                                 const numberPatternStr = `[\\d,.]+\\s*(${unitGroup})?(?:人)?`;
                                 const numberRegex = new RegExp(numberPatternStr);
 
-                                // --- 1. Total Reactions ---
+                                // Total Reactions
                                 let totalReactionText = '';
                                 const reactionKeywords = ['All reactions:', '所有心情：', 'すべてのリアクション:', 'All reactions'];
-
                                 const findTotalByLabel = (container) => {
                                     if (!container) return null;
                                     const candidates = Array.from(container.children);
                                     const label = candidates.find(el => reactionKeywords.some(kw => el.textContent.includes(kw)));
-                                    if (label && label.nextElementSibling) {
-                                        return label.nextElementSibling.textContent.trim();
-                                    }
+                                    if (label && label.nextElementSibling) return label.nextElementSibling.textContent.trim();
                                     return null;
                                 };
-
                                 totalReactionText = findTotalByLabel(directContainer) || findTotalByLabel(footerArea);
-
                                 if (!totalReactionText && footerArea) {
                                     const reactionIcon = footerArea.querySelector('[aria-label*="reaction"], [aria-label*="心情"], [aria-label*="リアクション"]');
                                     if (reactionIcon && !reactionIcon.closest('div[role="article"] div[role="article"]')) {
@@ -2993,134 +3111,131 @@ Count:  ${successCount} Posts
                                     }
                                 }
 
-                                // --- 2. Detailed Reactions ---
+                                // Detailed Reactions
                                 const detailedStats = [];
                                 if (settings.copy_meta_stats_detailed && footerArea) {
                                     const reactionButtons = footerArea.querySelectorAll('[aria-label]');
-                                    
-                                    // Fixed Regex for Japanese Full Labels (Strict 7 types)
-                                    const reactionTerms = [
-                                        // English / Chinese
-                                        'Like', 'Love', 'Care', 'Haha', 'Wow', 'Sad', 'Angry',
-                                        '讚', '大心', '加油', '哈', '哇', '嗚', '怒',
-                                        // Japanese (Strict match as verified)
-                                        '超いいね！', 'いいね！', '大切だね', 
-                                        'うけるね', 'すごいね', '悲しいね', 'ひどいね'
-                                    ];
-                                    
+                                    const reactionTerms = ['Like', 'Love', 'Care', 'Haha', 'Wow', 'Sad', 'Angry', '讚', '大心', '加油', '哈', '哇', '嗚', '怒', '超いいね！', 'いいね！', '大切だね', 'うけるね', 'すごいね', '悲しいね', 'ひどいね'];
                                     const reactionRegex = new RegExp(`(${reactionTerms.join('|')})[:：]\\s*(${numberPatternStr})`, 'i');
-                                    
-                                    const emojiMap = {
-                                        // English & Traditional Chinese
-                                        'like': '👍', '讚': '👍',
-                                        'love': '❤️', '大心': '❤️',
-                                        'care': '🫂', '加油': '🫂',
-                                        'haha': '😆', '哈': '😆',
-                                        'wow': '😮', '哇': '😮',
-                                        'sad': '😢', '嗚': '😢',
-                                        'angry': '😡', '怒': '😡',
-                                        
-                                        // Japanese (Exact 7 types)
-                                        'いいね！': '👍',
-                                        '超いいね！': '❤️',
-                                        '大切だね': '🫂',
-                                        'うけるね': '😆',
-                                        'すごいね': '😮',
-                                        '悲しいね': '😢',
-                                        'ひどいね': '😡'
-                                    };
-
+                                    const emojiMap = { 'like': '👍', '讚': '👍', 'love': '❤️', '大心': '❤️', 'care': '🫂', '加油': '🫂', 'haha': '😆', '哈': '😆', 'wow': '😮', '哇': '😮', 'sad': '😢', '嗚': '😢', 'angry': '😡', '怒': '😡', 'いいね！': '👍', '超いいね！': '❤️', '大切だね': '🫂', 'うけるね': '😆', 'すごいね': '😮', '悲しいね': '😢', 'ひどいね': '😡' };
                                     reactionButtons.forEach(btn => {
                                         const label = btn.getAttribute('aria-label');
                                         if (!label) return;
-                                        
                                         const match = label.match(reactionRegex);
                                         if (match) {
                                             const type = match[1]; 
                                             const count = match[2].replace(/\s+|人/g, ''); 
-                                            
-                                            // Direct lookup first, then lowercase check
                                             let emoji = emojiMap[type] || emojiMap[type.toLowerCase()];
-                                            
-                                            if (emoji) {
-                                                detailedStats.push(`${emoji} ${count}`);
-                                            }
+                                            if (emoji) detailedStats.push(`${emoji} ${count}`);
                                         }
                                     });
                                 }
-
                                 if (totalReactionText && settings.copy_meta_stats_total) {
                                     let rStr = `${totalReactionText} ${T.stats_label_reaction}`;
                                     if (detailedStats.length > 0) rStr += ` (${detailedStats.join(' | ')})`;
                                     stats.push(rStr);
-                                } else if (detailedStats.length > 0) {
-                                    stats.push(detailedStats.join(' | '));
-                                }
+                                } else if (detailedStats.length > 0) stats.push(detailedStats.join(' | '));
 
-                                // --- 3. Comments & Shares ---
+                                // Comments & Shares
                                 if (footerArea) {
                                     const icons = Array.from(footerArea.querySelectorAll('i[data-visualcompletion="css-img"]'));
-                                    let commentCount = '';
-                                    let shareCount = '';
-
+                                    let commentCount = '', shareCount = '';
                                     const extractCountFromIcon = (icon) => {
                                         let current = icon.parentElement;
                                         for (let i = 0; i < 4; i++) {
                                             if (!current) break;
                                             const text = current.textContent.trim();
-                                            if (text && new RegExp(`^${numberPatternStr}$`).test(text)) {
-                                                return text.replace(/\s+|人/g, '');
-                                            }
-                                            const m = text.match(numberRegex);
-                                            if (m) {
-                                                return m[0].replace(/\s+|人/g, '');
-                                            }
+                                            if (text && new RegExp(`^${numberPatternStr}$`).test(text)) return text.replace(/\s+|人/g, '');
+                                            const m = text.match(numberRegex); if (m) return m[0].replace(/\s+|人/g, '');
                                             const numberSpan = current.querySelector('span:not(:has(*))');
-                                            if (numberSpan) {
-                                                const spanText = numberSpan.textContent.trim();
-                                                const mSpan = spanText.match(numberRegex);
-                                                if (mSpan) return mSpan[0].replace(/\s+|人/g, '');
-                                            }
+                                            if (numberSpan) { const mSpan = numberSpan.textContent.trim().match(numberRegex); if (mSpan) return mSpan[0].replace(/\s+|人/g, ''); }
                                             current = current.parentElement;
-                                        }
-                                        return null;
+                                        } return null;
                                     };
-
                                     for (const icon of icons) {
-                                        const bgPos = icon.style.backgroundPosition; 
-                                        if (!bgPos) continue;
-                                        const match = bgPos.match(/0px\s+(-?\d+)px/);
-                                        if (!match) continue;
+                                        const bgPos = icon.style.backgroundPosition; if (!bgPos) continue;
+                                        const match = bgPos.match(/0px\s+(-?\d+)px/); if (!match) continue;
                                         const yPos = parseInt(match[1], 10);
-
-                                        if (Math.abs(yPos - (-1037)) < 5 && !commentCount) {
-                                            commentCount = extractCountFromIcon(icon);
-                                        } else if (Math.abs(yPos - (-1054)) < 5 && !shareCount) {
-                                            shareCount = extractCountFromIcon(icon);
-                                        }
+                                        if (Math.abs(yPos - (-1037)) < 5 && !commentCount) commentCount = extractCountFromIcon(icon);
+                                        else if (Math.abs(yPos - (-1054)) < 5 && !shareCount) shareCount = extractCountFromIcon(icon);
                                     }
-
                                     if (!commentCount || !shareCount) {
                                         const footerButtons = Array.from(footerArea.querySelectorAll('[role="button"]'));
                                         for (const btn of footerButtons) {
                                             if (btn.closest('div[role="article"] div[role="article"]')) continue;
                                             if (btn.hasAttribute('aria-label') && /Like|Love|讚|怒|いいね/.test(btn.getAttribute('aria-label'))) continue;
-                                            
                                             const txt = btn.textContent.trim();
-                                            if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) {
-                                                if (!commentCount) commentCount = txt.replace(/\s+|人/g, '');
-                                                else if (!shareCount) shareCount = txt.replace(/\s+|人/g, '');
-                                            }
+                                            if (txt && new RegExp(`^${numberPatternStr}$`).test(txt)) { if (!commentCount) commentCount = txt.replace(/\s+|人/g, ''); else if (!shareCount) shareCount = txt.replace(/\s+|人/g, ''); }
                                         }
                                     }
-
                                     if (commentCount) stats.push(`💬 ${commentCount}`);
                                     if (shareCount) stats.push(`↗️ ${shareCount}`);
                                 }
                             }
+                            if (stats.length > 0) infoLine += (infoLine ? ' • ' : '') + stats.join(' | ');
+                        }
 
-                            if (stats.length > 0) {
-                                infoLine += (infoLine ? ' • ' : '') + stats.join(' | ');
+                        // --- Feature: Image Count (w/ +N fix) ---
+                        if (settings.copy_meta_image_count) {
+                            const uniqueImageIds = new Set();
+                            let extraHiddenImages = 0;
+                            const imageLinks = postEl.querySelectorAll('a[href*="/photo/"][href*="fbid="], a[href*="photo.php"][href*="fbid="]');
+                            imageLinks.forEach(link => {
+                                if (link.querySelector('img')) {
+                                    const href = link.getAttribute('href');
+                                    const fbidMatch = href.match(/fbid=(\d+)/);
+                                    if (fbidMatch) uniqueImageIds.add(fbidMatch[1]);
+                                    const candidates = link.querySelectorAll('div');
+                                    for (const cand of candidates) {
+                                        const txt = cand.textContent.trim();
+                                        if (/^\+\d+$/.test(txt)) {
+                                            const num = parseInt(txt.substring(1), 10);
+                                            if (!isNaN(num)) extraHiddenImages = num;
+                                            break; 
+                                        }
+                                    }
+                                }
+                            });
+                            const totalImages = uniqueImageIds.size + extraHiddenImages - (extraHiddenImages > 0 ? 1 : 0);
+                            if (totalImages > 0) {
+                                const label = T.image_count_label || 'Images';
+                                infoLine += (infoLine ? ' • ' : '') + `[${label}: ${totalImages}]`;
+                            }
+                        }
+
+                        // --- Feature: Video/Reel Duration ---
+                        if (settings.copy_meta_video_duration) {
+                            let duration = null;
+                            let typeLabel = T.video_duration_label || 'Video'; 
+
+                            const reelLink = postEl.querySelector('a[href*="/reel/"]');
+                            const videoLink = postEl.querySelector('a[href*="/videos/"], a[href*="/watch/"]');
+                            if (reelLink) typeLabel = T.label_reel || 'Reel';
+                            else if (videoLink) typeLabel = T.label_video || 'Video';
+
+                            const candidates = Array.from(postEl.querySelectorAll('div, span'));
+                            
+                            // Strategy A: "Current / Total" (Player UI)
+                            const playerTimePattern = /(\d+(?::\d+)+)\s*\/\s*(\d+(?::\d+)+)/;
+                            for (const el of candidates) {
+                                if (el.textContent.includes('/')) {
+                                    const m = el.textContent.match(playerTimePattern);
+                                    if (m) { duration = m[2]; break; }
+                                }
+                            }
+
+                            // Strategy B: Standalone Badge (Thumbnail)
+                            if (!duration && (reelLink || videoLink)) {
+                                const badgePattern = /^(\d+(?::\d+)+)$/;
+                                for (const el of candidates) {
+                                    const txt = el.textContent.trim();
+                                    if (el.closest(C_TOOLS.CONTENT_BODY)) continue;
+                                    if (badgePattern.test(txt)) { duration = txt; break; }
+                                }
+                            }
+
+                            if (duration) {
+                                infoLine += (infoLine ? ' • ' : '') + `[${typeLabel}: ${duration}]`;
                             }
                         }
                         
@@ -3129,11 +3244,12 @@ Count:  ${successCount} Posts
 
                     if (parts.length > 0) parts.push(SECTION_SEPARATOR);
 
-                    // 3. Post Content (Topology Extraction)
+                    // --- 4. Post Content (Topology Extraction & Sanitization) ---
                     if (contentContainer) {
-                        let targetContainer = contentContainer;
+                        let targetContainer = contentContainer.cloneNode(true);
+
+                        // Feature: Emoji Restoration
                         if (settings.copier_includeEmojis) {
-                            targetContainer = contentContainer.cloneNode(true);
                             const images = targetContainer.querySelectorAll('img[src*="emoji"][alt], img[alt]');
                             images.forEach(img => {
                                 const src = img.getAttribute('src') || '';
@@ -3143,39 +3259,134 @@ Count:  ${successCount} Posts
                                 }
                             });
                         }
-                        const bodyText = this.extractTextByTopology(targetContainer);
+
+                        // Feature: Link Expansion, Sanitization, and Hashtag/Mention Handling
+                        const links = targetContainer.querySelectorAll('a[href]');
+
+                        links.forEach(link => {
+                            const href = link.getAttribute('href');
+                            if (!href) return;
+
+                            let fullUrl = href;
+                            
+                            // Decode Shim
+                            if (href.includes('l.facebook.com/l.php')) {
+                                try {
+                                    const urlObj = new URL(href, window.location.origin);
+                                    const uParam = urlObj.searchParams.get('u');
+                                    if (uParam) fullUrl = decodeURIComponent(uParam);
+                                } catch (e) {}
+                            }
+
+                            // Sanitize Params
+                            try {
+                                const urlObj = new URL(fullUrl, window.location.origin); 
+                                const changed = sanitizeUrlParams(urlObj);
+                                fullUrl = urlObj.href; 
+                            } catch (e) {}
+
+                            // Hashtag Decode
+                            const isHashtag = href.includes('/hashtag/');
+                            if (isHashtag) {
+                                try {
+                                    fullUrl = decodeURIComponent(fullUrl);
+                                } catch (e) {}
+                            }
+
+                            // --- [NEW Logic] Smart "Best of Both Worlds" Formatting ---
+                            const originalText = link.textContent.trim();
+                            const isUrlText = /^(https?:\/\/|www\.|[a-z0-9.-]+\.[a-z]{2,})/i.test(originalText) || originalText.includes('...');
+                            const isMention = !isHashtag && !isUrlText;
+
+                            if (isHashtag) {
+                                if (settings.copier_expandHashtags) {
+                                    link.textContent = `${originalText} (${fullUrl})`;
+                                }
+                                return;
+                            }
+
+                            if (isMention) {
+                                if (settings.copier_expandMentions) {
+                                    link.textContent = `${originalText} (${fullUrl})`;
+                                }
+                                return;
+                            }
+
+                            link.textContent = fullUrl;
+                        });
+
+                        // [FIX] Use local getFormattedText to handle block lines correctly (Smart Spacing)
+                        const bodyText = getFormattedText(targetContainer);
                         if (bodyText) parts.push(bodyText);
                     } else {
                         parts.push('[No Text Content]');
                     }
 
-                    // --- 4. Link Preview ---
+                    // --- 5. Link Preview ---
                     if (settings.copy_includeMetadata && settings.copy_meta_link_preview) {
-                        const previewLinks = Array.from(postEl.querySelectorAll('a[role="link"][target="_blank"]'));
-                        const previewLink = previewLinks.find(a => 
+                        // [FIX] REMOVED [target="_blank"] selector to support internal FB links (like Groups)
+                        const previewLinks = Array.from(postEl.querySelectorAll('a[role="link"]'));
+                        
+                        // Strategy 1: Standard External Link (data-ad-rendering-role)
+                        let previewLink = previewLinks.find(a => 
                             a.querySelector('[data-ad-rendering-role="title"]') && 
                             !a.closest(C_TOOLS.CONTENT_BODY)
                         );
 
+                        // Strategy 2 (Internal Entity): Groups/Events without standard attributes
+                        // Look for specific visual clues of a Facebook Card (e.g. line-clamp style on title)
+                        if (!previewLink) {
+                            previewLink = previewLinks.find(a => {
+                                if (a.closest(C_TOOLS.CONTENT_BODY)) return false;
+                                const hasStyledTitle = a.querySelector('[style*="webkit-line-clamp"]');
+                                return hasStyledTitle;
+                            });
+                        }
+
                         if (previewLink) {
-                            parts.push(SECTION_SEPARATOR); // Use dynamic separator
-                            const title = previewLink.querySelector('[data-ad-rendering-role="title"]')?.textContent.trim();
-                            const meta = previewLink.querySelector('[data-ad-rendering-role="meta"]')?.textContent.trim();
+                            parts.push(SECTION_SEPARATOR);
+                            
+                            // Extract Title (Try standard role, then styled text)
+                            let title = previewLink.querySelector('[data-ad-rendering-role="title"]')?.textContent.trim();
+                            if (!title) {
+                                const styledTitle = previewLink.querySelector('[style*="webkit-line-clamp"]');
+                                if (styledTitle) title = styledTitle.textContent.trim();
+                            }
+
+                            // Extract Meta/Description
+                            let meta = previewLink.querySelector('[data-ad-rendering-role="meta"]')?.textContent.trim();
+                            if (!meta && title) {
+                                // Fallback: Try to find text nodes that are NOT the title
+                                const candidates = Array.from(previewLink.querySelectorAll('span'));
+                                for (const span of candidates) {
+                                    const txt = span.textContent.trim();
+                                    if (txt && txt !== title && txt.length > 2 && !txt.includes('http')) {
+                                        meta = txt;
+                                        break; 
+                                    }
+                                }
+                            }
+
                             const desc = previewLink.querySelector('[data-ad-rendering-role="description"]')?.textContent.trim();
-                            const href = previewLink.href;
+                            
+                            let href = previewLink.href;
+                            
+                            // Clean the preview link
+                            try {
+                                const urlObj = new URL(href);
+                                if (urlObj.hostname.includes('facebook.com') && urlObj.searchParams.has('u')) {
+                                    href = decodeURIComponent(urlObj.searchParams.get('u'));
+                                }
+                                // Apply Sanitization
+                                const cleanUrlObj = new URL(href, window.location.origin);
+                                sanitizeUrlParams(cleanUrlObj);
+                                href = cleanUrlObj.toString();
+                            } catch(e) {}
 
                             if (title) parts.push(`➤ ${T.preview_label_title}: ${title}`);
                             if (meta) parts.push(`➤ ${T.preview_label_source}: ${meta}`);
                             if (desc) parts.push(`➤ ${T.preview_label_desc}: ${desc}`);
-                            
-                            let cleanHref = href;
-                            try {
-                                const urlObj = new URL(href);
-                                if (urlObj.hostname.includes('facebook.com') && urlObj.searchParams.has('u')) {
-                                    cleanHref = decodeURIComponent(urlObj.searchParams.get('u'));
-                                }
-                            } catch(e) {}
-                            parts.push(`➤ ${T.preview_label_link}: ${cleanHref}`);
+                            parts.push(`➤ ${T.preview_label_link}: ${href}`);
                         }
                     }
 

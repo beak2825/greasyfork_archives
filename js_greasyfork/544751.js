@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Harmony: Enhancements
 // @namespace    https://musicbrainz.org/user/chaban
-// @version      1.21.2
+// @version      1.22.0
 // @tag          ai-created
 // @description  Adds some convenience features, various UI and behavior settings, as well as an improved language detection to Harmony.
 // @author       chaban
@@ -179,6 +179,26 @@
             key: 'enhancements.label.setNoLabel',
             label: 'Set label to [no label] for self-releases',
             description: 'If a release appears to be self-released (label name is the same as the artist name), automatically set the label to the special purpose label "[no label]".',
+            defaultValue: false,
+            section: 'Release Data',
+            type: 'checkbox',
+            runAt: 'load',
+            paths: [/^\/release(?!\/actions)/],
+        },
+        detectRemixers: {
+            key: 'enhancements.releaseData.detectRemixers',
+            label: 'Detect and remove remixers from track artists',
+            description: 'If an artist is mentioned in the track title\'s version string (e.g. "Title (Artist X Remix)"), remove them from the track artist list.',
+            defaultValue: false,
+            section: 'Release Data',
+            type: 'checkbox',
+            runAt: 'load',
+            paths: [/^\/release(?!\/actions)/],
+        },
+        removeBarcodeCatalogNumbers: {
+            key: 'enhancements.releaseData.removeBarcodeCatalogNumbers',
+            label: 'Remove catalog number if it matches the barcode',
+            description: 'If a label\'s catalog number is identical to the release GTIN (barcode), remove it from the seed data and UI.',
             defaultValue: false,
             section: 'Release Data',
             type: 'checkbox',
@@ -680,11 +700,11 @@
         },
 
         /**
-        * Replaces the content of the main label element with a new name and an optional MB link.
-        * @param {HTMLElement} labelListElement - The <span> element containing the label (e.g., AppState.dom.mainLabelList).
-        * @param {string} newLabelName - The new text for the label.
-        * @param {string | null} [newMbid] - The optional MBID to link to.
-        */
+            * Replaces the content of the main label element with a new name and an optional MB link.
+            * @param {HTMLElement} labelListElement - The <span> element containing the label (e.g., AppState.dom.mainLabelList).
+            * @param {string} newLabelName - The new text for the label.
+            * @param {string | null} [newMbid] - The optional MBID to link to.
+            */
         updateLabelLink: (labelListElement, newLabelName, newMbid) => {
             if (!labelListElement) return;
 
@@ -704,6 +724,63 @@
             } else {
                 labelListElement.appendChild(document.createTextNode(newLabelName));
             }
+        },
+
+        /**
+         * Builds the HTML for a list of artists, preserving links from scraped data if available.
+         * @param {object[]} artists - Array of artist objects {name, mbid?}.
+         * @returns {string} - The constructed HTML string.
+         */
+        buildArtistCreditsHTML: (artists) => {
+            const { scrapedArtistLinks } = AppState.dom;
+            return artists.reduce((html, artist, index) => {
+                let artistLinkHTML = `<span>${artist.name}</span>`;
+
+                // Try to find an existing link for this artist name
+                if (scrapedArtistLinks) {
+                    const matchingSpans = scrapedArtistLinks.filter(data => data.name === artist.name);
+                    if (matchingSpans.length > 0) {
+                        const bestSpanData = matchingSpans.reduce((best, current) => {
+                            return current.count > best.count ? current : best;
+                        }, matchingSpans[0]);
+                        artistLinkHTML = bestSpanData.html;
+                    }
+                }
+
+                html += artistLinkHTML;
+                if (index < artists.length - 1) {
+                    const joinPhrase = (index === artists.length - 2) ? ' & ' : ', ';
+                    html += joinPhrase;
+                }
+                return html;
+            }, '');
+        },
+
+        /**
+         * Updates a tracklist artist cell with new artists, adding an indicator and preserving alt-values.
+         * @param {HTMLTableCellElement} cell - The table cell to update.
+         * @param {object[]} newArtists - The new list of artists.
+         * @param {string} oldArtistsString - The original artist string (for tooltip).
+         * @param {object} [options] - Options for the indicator.
+         */
+        updateTrackArtistCell: (cell, newArtists, oldArtistsString, options = {}) => {
+            if (!cell) return;
+
+            const existingAltValues = cell.querySelector('ul.alt-values');
+            const newHTML = UI_UTILS.buildArtistCreditsHTML(newArtists);
+
+            cell.innerHTML = newHTML;
+
+            const tooltipPrefix = options.tooltipPrefix || 'Original track artists:';
+            const overwrittenSpan = UI_UTILS.createIndicatorSpan('overwritten', oldArtistsString, { ...options, tooltipPrefix });
+            cell.appendChild(overwrittenSpan);
+
+            if (existingAltValues) {
+                cell.appendChild(document.createTextNode(' '));
+                cell.appendChild(existingAltValues);
+            }
+
+            cell.setAttribute(DATA_ATTRIBUTE_APPLIED, 'true');
         },
     };
 
@@ -1862,6 +1939,152 @@
             }
         },
 
+        detectRemixers: () => {
+            const releaseData = getReleaseDataFromJSON();
+            if (!releaseData?.media) return;
+
+            // Keywords that indicate a remix/version string
+            const REMIX_KEYWORDS = ['Remix', 'Rework', 'Edit', 'Mix', 'Flip', 'Bootleg', 'Mashup', 'VIP', 'Dub'];
+            const KEYWORDS_REGEX = new RegExp(`\\b(${REMIX_KEYWORDS.join('|')})\\b`, 'i');
+
+            // Regex to find content in parentheses or brackets at the end of the title
+            // Captures the content inside the brackets/parens
+            const VERSION_REGEX = /(?:[([{\u3010\u300C])([^)}\]\u3011\u300D]*?)(?:[)}\]\u3011\u300D])\s*$/;
+
+            // Separators often found around artist names in these strings
+            const SEPARATORS = '[\\s&,./+()\\[\\]-]';
+            const BOUNDARY_START = `(?:^|${SEPARATORS})`;
+            const BOUNDARY_END = `(?:$|${SEPARATORS})`;
+
+            const { tracklistTitleCells } = AppState.dom;
+            const flattenedTracks = releaseData.media.flatMap(m => m.tracklist || []);
+
+            const removedArtistsLog = [];
+            let changesMade = false;
+
+            flattenedTracks.forEach((track, index) => {
+                const title = track.title;
+                if (!title) return;
+
+                const match = title.match(VERSION_REGEX);
+                if (!match) return;
+
+                const versionString = match[1];
+
+                if (!KEYWORDS_REGEX.test(versionString)) return;
+                if (!track.artists || track.artists.length <= 1) return;
+
+                const keptArtists = [];
+                const removedFromThisTrack = [];
+
+                track.artists.forEach(artist => {
+                    const artistName = artist.name.trim();
+                    const escapedName = artistName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const nameRegex = new RegExp(`${BOUNDARY_START}${escapedName}${BOUNDARY_END}`, 'i');
+
+                    if (nameRegex.test(versionString)) {
+                        removedFromThisTrack.push(artistName);
+                        changesMade = true;
+                    } else {
+                        keptArtists.push(artist);
+                    }
+                });
+
+                if (removedFromThisTrack.length > 0) {
+                    if (keptArtists.length > 0) {
+                        const oldArtistsString = formatArtistString(track.artists);
+                        track.artists = keptArtists;
+                        removedArtistsLog.push({
+                            track: track.number,
+                            title: title,
+                            removed: removedFromThisTrack
+                        });
+
+                        // --- UI Update ---
+                        const titleCell = tracklistTitleCells[index];
+                        if (titleCell) {
+                            const row = titleCell.parentElement;
+                            const artistCell = row.cells[2];
+                            if (artistCell) {
+                                UI_UTILS.updateTrackArtistCell(artistCell, keptArtists, oldArtistsString);
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (changesMade && removedArtistsLog.length > 0) {
+                const lines = removedArtistsLog.map(log =>
+                    `Track ${log.track}: Removed <b>${log.removed.join(', ')}</b> (MATCHED: "${log.title}")`
+                );
+                const messageContent = `Detected and removed remixers from track artists based on title:<br>${lines.join('<br>')}`;
+                createAndInsertMessage('he-remixer-detection', messageContent, 'debug', ['he-artist-sync', 'he-title-style-correction']);
+            }
+        },
+
+        removeBarcodeCatalogNumbers: () => {
+            const releaseData = getReleaseDataFromJSON();
+            const { gtin, labels } = releaseData;
+
+            if (!gtin || !labels || labels.length === 0) return;
+
+            const firstLabelSpan = AppState.dom.mainLabelList;
+            if (!firstLabelSpan) return;
+
+            const labelListItems = firstLabelSpan.closest('ul')?.querySelectorAll('li');
+            if (!labelListItems) return;
+
+            let changesMade = false;
+            const removedLogs = [];
+
+            labels.forEach((label, index) => {
+                const catNum = label.catalogNumber ? String(label.catalogNumber).trim() : '';
+                const cleanGtin = String(gtin).trim();
+
+                if (catNum === cleanGtin) {
+                    label.catalogNumber = null;
+                    changesMade = true;
+                    removedLogs.push(label.name);
+
+                    if (labelListItems[index]) {
+                        const li = labelListItems[index];
+
+                        let textNodeToReplace = null;
+
+                        for (const node of li.childNodes) {
+                            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes(cleanGtin)) {
+                                textNodeToReplace = node;
+                                break;
+                            }
+                        }
+
+                        if (textNodeToReplace) {
+                            textNodeToReplace.textContent = textNodeToReplace.textContent.replace(cleanGtin, '');
+
+                            const removedSpan = UI_UTILS.createIndicatorSpan('removed', cleanGtin, {
+                                type: 'removed',
+                                tooltipPrefix: 'Removed catalog number (matches barcode):',
+                                standalone: true
+                            });
+
+                            const labelLinkSpan = li.querySelector('.entity-links');
+                            if (labelLinkSpan) {
+                                labelLinkSpan.after(removedSpan);
+                                labelLinkSpan.after(' ');
+                            } else {
+                                li.append(removedSpan);
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (changesMade) {
+                const messageContent = `Removed catalog numbers that matched the barcode (${gtin}) for labels: <b>${removedLogs.join(', ')}</b>`;
+                createAndInsertMessage('he-cat-barcode-match', messageContent, 'debug');
+            }
+        },
+
         mapLabelMbids: () => {
             const releaseData = getReleaseDataFromJSON();
             if (!releaseData?.labels?.length || releaseData.labels[0].mbid) {
@@ -1934,34 +2157,11 @@
             const newArtists = formatArtistString(commonTrackArtists);
             AppState.data.release.artists = commonTrackArtists;
 
-            const { artistCreditSpan, scrapedArtistLinks } = AppState.dom;
+            const { artistCreditSpan } = AppState.dom;
             if (artistCreditSpan) {
-                const newCreditHTML = commonTrackArtists.reduce((html, artist, index) => {
-                    const artistLinkHTML = (() => {
-                        const matchingSpans = scrapedArtistLinks.filter(data => data.name === artist.name);
-
-                        if (matchingSpans.length === 0) {
-                            return `<span>${artist.name}</span>`;
-                        }
-
-                        const bestSpanData = matchingSpans.reduce((best, current) => {
-                            return current.count > best.count ? current : best;
-                        }, matchingSpans[0]);
-
-                        return bestSpanData.html;
-                    })();
-
-                    html += artistLinkHTML;
-
-                    if (index < commonTrackArtists.length - 1) {
-                        const joinPhrase = (index === commonTrackArtists.length - 2) ? ' & ' : ', ';
-                        html += joinPhrase;
-                    }
-                    return html;
-                }, '');
-
+                const newCreditHTML = UI_UTILS.buildArtistCreditsHTML(commonTrackArtists);
                 artistCreditSpan.innerHTML = newCreditHTML;
-                const overwrittenSpan = UI_UTILS.createIndicatorSpan('overwritten', oldArtists, 'Original release artists:');
+                const overwrittenSpan = UI_UTILS.createIndicatorSpan('overwritten', oldArtists, { tooltipPrefix: 'Original release artists:' });
                 artistCreditSpan.append(overwrittenSpan);
             }
             const messageContent = `Synced more detailed track artist credit to release artist.<br><b>Before:</b> ${oldArtists}<br><b>After:</b> ${newArtists}`;

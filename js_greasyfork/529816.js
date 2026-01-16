@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Image Uploader to Markdown to CloudFlare-ImgBed
 // @namespace    http://tampermonkey.net/
-// @version      0.4.1-beta
+// @version      0.4.2-beta
 // @description  适配于 CloudFlare-ImgBed 的粘贴上传并生成markdown的脚本, CloudFlare-ImgBed : https://github.com/MarSeventh/CloudFlare-ImgBed
 // @author       calg
 // @match        *://*/*
@@ -25,7 +25,7 @@
 // @updateURL https://update.greasyfork.org/scripts/529816/Image%20Uploader%20to%20Markdown%20to%20CloudFlare-ImgBed.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // 防止重复注入
@@ -62,7 +62,7 @@
             autoRetry: true,
             uploadNameType: 'index', // 可选值为[default, index, origin, short]
             returnFormat: 'full',
-            uploadFolder: 'apiupload' // 指定上传目录，用相对路径表示，例如上传到img/test目录需填img/test
+            uploadFolder: 'apiupload' // 指定上传目录
         },
         NOTIFICATION_DURATION: 3000, // 通知显示时间（毫秒）
         MARKDOWN_TEMPLATE: '![{filename}]({url})', // Markdown 模板
@@ -89,7 +89,7 @@
     }
 
     // 确保所有默认配置项都存在
-    CONFIG = mergeConfig({...DEFAULT_CONFIG}, userConfig);
+    CONFIG = mergeConfig({ ...DEFAULT_CONFIG }, userConfig);
 
     // 验证配置的完整性
     function validateConfig() {
@@ -201,15 +201,16 @@
         .img-upload-form-group input[type="number"],
         .img-upload-form-group textarea {
             width: 100%;
-            padding: 8px;
+            padding: 8px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
+            line-height: 1.5;
+            font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
             box-sizing: border-box;
         }
         .img-upload-form-group textarea {
             min-height: 100px;
-            font-family: monospace;
         }
         .img-upload-form-group input[type="checkbox"] {
             margin-right: 8px;
@@ -323,7 +324,7 @@
     // 添加日志函数
     function log(message, type = 'info') {
         const prefix = '[Image Uploader]';
-        switch(type) {
+        switch (type) {
             case 'error':
                 console.error(`${prefix} ❌ ${message}`);
                 break;
@@ -396,7 +397,7 @@
     // 检查文件大小
     function checkFileSize(file) {
         if (file.size > CONFIG.MAX_FILE_SIZE) {
-            showNotification(`文件大小超过限制（${Math.round(CONFIG.MAX_FILE_SIZE/1024/1024)}MB）`, 'error');
+            showNotification(`文件大小超过限制（${Math.round(CONFIG.MAX_FILE_SIZE / 1024 / 1024)}MB）`, 'error');
             return false;
         }
         return true;
@@ -454,7 +455,7 @@
             return;
         }
 
-        document.addEventListener('paste', async function(event) {
+        document.addEventListener('paste', async function (event) {
             if (!isAllowedHost()) return;
 
             const activeElement = document.activeElement;
@@ -499,7 +500,6 @@
         log(`上传参数: ${JSON.stringify(CONFIG.UPLOAD_PARAMS, null, 2)}`);
 
         const queryParams = new URLSearchParams({
-            authCode: CONFIG.AUTH_CODE,
             ...CONFIG.UPLOAD_PARAMS
         }).toString();
 
@@ -508,15 +508,24 @@
             GM_xmlhttpRequest({
                 method: 'POST',
                 url: `${CONFIG.SERVER_URL}/upload?${queryParams}`,
+                headers: {
+                    'Authorization': `Bearer ${CONFIG.AUTH_CODE}`
+                },
                 data: formData,
-                onload: function(response) {
+                onload: function (response) {
                     if (response.status === 200) {
                         try {
                             const result = JSON.parse(response.responseText);
                             log(`服务器响应: ${JSON.stringify(result, null, 2)}`);
 
                             if (result && result.length > 0) {
-                                const imageUrl = result[0].src;
+                                let imageUrl = result[0].src;
+                                if (!imageUrl.startsWith('http')) {
+                                    // 处理相对路径，确保 URL 拼接正确
+                                    const baseUrl = CONFIG.SERVER_URL.replace(/\/+$/, '');
+                                    const path = imageUrl.replace(/^\/+/, '');
+                                    imageUrl = `${baseUrl}/${path}`;
+                                }
                                 log(`上传成功，图片URL: ${imageUrl}`, 'success');
                                 insertMarkdownImage(imageUrl, targetElement, filename);
                                 showNotification('图片上传成功！', 'success');
@@ -550,7 +559,7 @@
                         showNotification(errorMsg, 'error');
                     }
                 },
-                onerror: function(error) {
+                onerror: function (error) {
                     const errorMsg = '网络错误：无法连接到图床服务器';
                     log(`${errorMsg}: ${error}`, 'error');
                     showNotification(errorMsg, 'error');
@@ -587,7 +596,7 @@
         modal.className = 'img-upload-modal';
 
         const content = `
-            <h2>图床上传配置</h2>
+            <h2>图床上传配置 <a href="https://cfbed.sanyue.de/api/upload.html" target="_blank" style="font-size: 12px; color: #2196F3; text-decoration: none;">(API文档)</a></h2>
             <form id="img-upload-config-form">
                 <div class="img-upload-form-group">
                     <label>认证码</label>
@@ -597,13 +606,16 @@
                 <div class="img-upload-form-group">
                     <label>服务器地址</label>
                     <input type="text" name="SERVER_URL" value="${CONFIG.SERVER_URL}" required>
-                    <div class="img-upload-help-text">图床服务器的URL地址</div>
+                    <div class="img-upload-help-text">图床服务器的URL地址, 不需要添加/upload</div>
                 </div>
                 <div class="img-upload-form-group">
                     <label>上传通道</label>
                     <select name="uploadChannel">
-                        <option value="cfr2" ${CONFIG.UPLOAD_PARAMS.uploadChannel === 'cfr2' ? 'selected' : ''}>CloudFlare R2</option>
                         <option value="telegram" ${CONFIG.UPLOAD_PARAMS.uploadChannel === 'telegram' ? 'selected' : ''}>Telegram</option>
+                        <option value="cfr2" ${CONFIG.UPLOAD_PARAMS.uploadChannel === 'cfr2' ? 'selected' : ''}>CloudFlare R2</option>
+                        <option value="s3" ${CONFIG.UPLOAD_PARAMS.uploadChannel === 's3' ? 'selected' : ''}>S3 Compatible</option>
+                        <option value="discord" ${CONFIG.UPLOAD_PARAMS.uploadChannel === 'discord' ? 'selected' : ''}>Discord</option>
+                        <option value="huggingface" ${CONFIG.UPLOAD_PARAMS.uploadChannel === 'huggingface' ? 'selected' : ''}>HuggingFace</option>
                     </select>
                     <div class="img-upload-help-text">选择图片上传的存储通道</div>
                 </div>
@@ -677,7 +689,7 @@
 
         resetBtn.addEventListener('click', () => {
             if (confirm('确定要重置所有配置到默认值吗？')) {
-                CONFIG = {...DEFAULT_CONFIG};
+                CONFIG = { ...DEFAULT_CONFIG };
                 GM_setValue('userConfig', {});
                 showNotification('配置已重置为默认值！', 'success');
                 closeModal();
@@ -713,7 +725,7 @@
                     AUTO_COPY_URL: formData.get('AUTO_COPY_URL') === 'on'
                 };
 
-                CONFIG = mergeConfig({...DEFAULT_CONFIG}, newConfig);
+                CONFIG = mergeConfig({ ...DEFAULT_CONFIG }, newConfig);
                 GM_setValue('userConfig', CONFIG);
                 showNotification('配置已更新！', 'success');
                 closeModal();

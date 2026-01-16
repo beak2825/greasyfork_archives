@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         tensor.art profile download
 // @namespace    http://tampermonkey.net/
-// @version      2025-12-12v2
+// @version      2025-12-13
 // @description  try to take over the world!
 // @author       You
 // @match        https://tensor.art/u/*
 // @match        https://tensorhub.art/en-US/u/*
+// @match        https://tensorhub.art/u/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tensor.art
 // @grant        GM_download
 // @grant        GM.download
