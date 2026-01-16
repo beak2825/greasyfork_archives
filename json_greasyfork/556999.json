@@ -17,33 +17,7 @@
       "id": 1541892,
       "name": "Otonashix",
       "created_at": "2025-11-26T14:33:35.000Z",
-      "url": "https://greasyfork.org/users/1541892-otonashix",
-      "scripts": [
-        {
-          "id": 556999,
-          "daily_installs": 0,
-          "total_installs": 1,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-11-26T14:37:16.000Z",
-          "code_updated_at": "2025-11-26T14:37:16.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Yahooニュース 通報リンクを完全一致で30pxレインボー",
-          "description": "「記事に関する報告」だけを正確に30pxレインボーに",
-          "url": "https://greasyfork.org/scripts/556999-yahoo%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9-%E9%80%9A%E5%A0%B1%E3%83%AA%E3%83%B3%E3%82%AF%E3%82%92%E5%AE%8C%E5%85%A8%E4%B8%80%E8%87%B4%E3%81%A730px%E3%83%AC%E3%82%A4%E3%83%B3%E3%83%9C%E3%83%BC",
-          "code_url": "https://update.greasyfork.org/scripts/556999/Yahoo%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%20%E9%80%9A%E5%A0%B1%E3%83%AA%E3%83%B3%E3%82%AF%E3%82%92%E5%AE%8C%E5%85%A8%E4%B8%80%E8%87%B4%E3%81%A730px%E3%83%AC%E3%82%A4%E3%83%B3%E3%83%9C%E3%83%BC.user.js",
-          "code_size": 3258,
-          "license": "MIT License",
-          "version": "1.5",
-          "locale": "ja",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1541892-otonashix"
     }
   ],
   "name": "Yahooニュース 通報リンクを完全一致で30pxレインボー",

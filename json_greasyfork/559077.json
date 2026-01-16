@@ -17,7 +17,33 @@
       "id": 1548180,
       "name": "cckdn",
       "created_at": "2025-12-15T01:24:22.000Z",
-      "url": "https://greasyfork.org/users/1548180-cckdn"
+      "url": "https://greasyfork.org/users/1548180-cckdn",
+      "scripts": [
+        {
+          "id": 559077,
+          "daily_installs": 0,
+          "total_installs": 13,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-16T05:23:38.000Z",
+          "code_updated_at": "2025-12-16T05:23:38.000Z",
+          "namespace": "https://www.cckdn.cn/",
+          "support_url": "https://github.com/superman610/WebDAV-Bookmark",
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "网络书签管理器 - WebDAV云同步版",
+          "description": "支持WebDAV的云同步的网络书签管理器，支持多设备多平台（iPhone、Android、windows），使用HTML格式存储，支持多级分类管理，书签批量导入，可拖动按钮，自动同步，完美适配移动端与电脑端。",
+          "url": "https://greasyfork.org/scripts/559077-%E7%BD%91%E7%BB%9C%E4%B9%A6%E7%AD%BE%E7%AE%A1%E7%90%86%E5%99%A8-webdav%E4%BA%91%E5%90%8C%E6%AD%A5%E7%89%88",
+          "code_url": "https://update.greasyfork.org/scripts/559077/%E7%BD%91%E7%BB%9C%E4%B9%A6%E7%AD%BE%E7%AE%A1%E7%90%86%E5%99%A8%20-%20WebDAV%E4%BA%91%E5%90%8C%E6%AD%A5%E7%89%88.user.js",
+          "code_size": 192208,
+          "license": null,
+          "version": "3.9.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "网络书签管理器 - WebDAV云同步版",

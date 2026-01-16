@@ -17,7 +17,33 @@
       "id": 1538571,
       "name": "IzunaRen",
       "created_at": "2025-11-17T02:30:31.000Z",
-      "url": "https://greasyfork.org/users/1538571-izunaren"
+      "url": "https://greasyfork.org/users/1538571-izunaren",
+      "scripts": [
+        {
+          "id": 556369,
+          "daily_installs": 0,
+          "total_installs": 14,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-20T09:12:51.000Z",
+          "code_updated_at": "2026-01-04T06:59:49.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "三节课视频自动播放",
+          "description": "浮动可拖动按钮触发播放，视频完成后自动播放下一个视频或切换章节，所有视频完成后弹窗提醒",
+          "url": "https://greasyfork.org/scripts/556369-%E4%B8%89%E8%8A%82%E8%AF%BE%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE",
+          "code_url": "https://update.greasyfork.org/scripts/556369/%E4%B8%89%E8%8A%82%E8%AF%BE%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE.user.js",
+          "code_size": 32444,
+          "license": "MIT License",
+          "version": "0.7",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "三节课视频自动播放",

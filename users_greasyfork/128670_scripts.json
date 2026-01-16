@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562507,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T08:04:27.000Z",
+    "code_updated_at": "2026-01-13T08:04:27.000Z",
+    "namespace": "https://github.com/gslin/instagram-next-prev-shortcut-userscript",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 128670,
+        "name": "HongKongTony",
+        "created_at": "2017-06-01T07:27:29.000Z",
+        "url": "https://greasyfork.org/users/128670-hongkongtony"
+      }
+    ],
+    "name": "Instagram Next/Prev Shortcut 2 (custom)",
+    "description": "Add shortcuts for Instagram Next/Prev buttons",
+    "url": "https://greasyfork.org/scripts/562507-instagram-next-prev-shortcut-2-custom",
+    "code_url": "https://update.greasyfork.org/scripts/562507/Instagram%20NextPrev%20Shortcut%202%20%28custom%29.user.js",
+    "code_size": 1273,
+    "license": "MIT License",
+    "version": "0.20230608.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

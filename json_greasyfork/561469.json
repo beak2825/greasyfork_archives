@@ -21,8 +21,8 @@
       "scripts": [
         {
           "id": 49,
-          "daily_installs": 0,
-          "total_installs": 874,
+          "daily_installs": 1,
+          "total_installs": 875,
           "fan_score": "56.6",
           "good_ratings": 5,
           "ok_ratings": 0,
@@ -93,8 +93,8 @@
         },
         {
           "id": 29600,
-          "daily_installs": 0,
-          "total_installs": 341,
+          "daily_installs": 1,
+          "total_installs": 342,
           "fan_score": "43.8",
           "good_ratings": 3,
           "ok_ratings": 0,
@@ -117,7 +117,7 @@
         },
         {
           "id": 31360,
-          "daily_installs": 1,
+          "daily_installs": 0,
           "total_installs": 1452,
           "fan_score": "67.6",
           "good_ratings": 8,
@@ -285,8 +285,8 @@
         },
         {
           "id": 409893,
-          "daily_installs": 4,
-          "total_installs": 3097,
+          "daily_installs": 2,
+          "total_installs": 3098,
           "fan_score": "43.6",
           "good_ratings": 5,
           "ok_ratings": 0,
@@ -309,7 +309,7 @@
         },
         {
           "id": 412940,
-          "daily_installs": 1,
+          "daily_installs": 0,
           "total_installs": 93,
           "fan_score": "20.7",
           "good_ratings": 1,
@@ -550,7 +550,7 @@
         {
           "id": 441310,
           "daily_installs": 3,
-          "total_installs": 1174,
+          "total_installs": 1177,
           "fan_score": "9.5",
           "good_ratings": 1,
           "ok_ratings": 0,
@@ -621,7 +621,7 @@
         },
         {
           "id": 448900,
-          "daily_installs": 1,
+          "daily_installs": 0,
           "total_installs": 28,
           "fan_score": "5.0",
           "good_ratings": 0,
@@ -1005,8 +1005,8 @@
         },
         {
           "id": 531568,
-          "daily_installs": 0,
-          "total_installs": 131,
+          "daily_installs": 1,
+          "total_installs": 132,
           "fan_score": "34.2",
           "good_ratings": 2,
           "ok_ratings": 0,

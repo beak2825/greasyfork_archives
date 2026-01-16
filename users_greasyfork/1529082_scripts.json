@@ -165,6 +165,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 560105,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-24T15:34:46.000Z",
+    "code_updated_at": "2026-01-02T09:49:10.000Z",
+    "namespace": "https://greasyfork.org/en/users/1529082-minjae-kim",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529082,
+        "name": "MINJAE KIM",
+        "created_at": "2025-10-21T03:34:21.000Z",
+        "url": "https://greasyfork.org/users/1529082-minjae-kim"
+      }
+    ],
+    "name": "Naver Webtoon Mobile Scroll Saver + cleaner",
+    "description": "save scroll position and clean ads and promotional elements",
+    "url": "https://greasyfork.org/scripts/560105-naver-webtoon-mobile-scroll-saver-cleaner",
+    "code_url": "https://update.greasyfork.org/scripts/560105/Naver%20Webtoon%20Mobile%20Scroll%20Saver%20%2B%20cleaner.user.js",
+    "code_size": 3641,
+    "license": "MIT License",
+    "version": "1.20",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 559711,
     "daily_installs": 0,
     "total_installs": 1,
@@ -199,7 +232,7 @@
   },
   {
     "id": 558506,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 9,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -327,6 +360,6 @@
     "version": "3.22",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

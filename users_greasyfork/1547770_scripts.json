@@ -1,5 +1,71 @@
 [
   {
+    "id": 562823,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-16T02:43:52.000Z",
+    "code_updated_at": "2026-01-16T02:44:33.000Z",
+    "namespace": "https://greasyfork.org/users/1547770",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547770,
+        "name": "NotNightmare",
+        "created_at": "2025-12-13T19:08:01.000Z",
+        "url": "https://greasyfork.org/users/1547770-notnightmare"
+      }
+    ],
+    "name": "preformance booster for eaglercraft :D",
+    "description": "RGB autoclicker-style UI for iPad Safari Userscripts. Uses trusted DOM events (keydown/input/change) instead of real clicks. Works on any site that accepts them; safely does nothing on sites that don't. ArrowUp = toggle, ; = freeze.",
+    "url": "https://greasyfork.org/scripts/562823-preformance-booster-for-eaglercraft-d",
+    "code_url": "https://update.greasyfork.org/scripts/562823/preformance%20booster%20for%20eaglercraft%20%3AD.user.js",
+    "code_size": 6666,
+    "license": null,
+    "version": "0.0.1.20260116024433",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 562822,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-16T02:17:54.000Z",
+    "code_updated_at": "2026-01-16T02:17:54.000Z",
+    "namespace": "https://greasyfork.org/en/users/NotNightmare",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1547770,
+        "name": "NotNightmare",
+        "created_at": "2025-12-13T19:08:01.000Z",
+        "url": "https://greasyfork.org/users/1547770-notnightmare"
+      }
+    ],
+    "name": "AUTO CLICK FR",
+    "description": "Dual left/right autoclicker with 0-100 CPS sliders, toggle/hold keys, and freeze key.",
+    "url": "https://greasyfork.org/scripts/562822-auto-click-fr",
+    "code_url": "https://update.greasyfork.org/scripts/562822/AUTO%20CLICK%20FR.user.js",
+    "code_size": 15278,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 562044,
     "daily_installs": 0,
     "total_installs": 1,
@@ -34,7 +100,7 @@
   },
   {
     "id": 562042,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -365,7 +431,7 @@
   {
     "id": 561082,
     "daily_installs": 0,
-    "total_installs": 6,
+    "total_installs": 8,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -430,8 +496,8 @@
   },
   {
     "id": 560674,
-    "daily_installs": 2,
-    "total_installs": 5,
+    "daily_installs": 0,
+    "total_installs": 6,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -496,8 +562,8 @@
   },
   {
     "id": 559869,
-    "daily_installs": 2,
-    "total_installs": 26,
+    "daily_installs": 1,
+    "total_installs": 27,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -595,8 +661,8 @@
   },
   {
     "id": 559470,
-    "daily_installs": 0,
-    "total_installs": 1,
+    "daily_installs": 1,
+    "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -628,8 +694,8 @@
   },
   {
     "id": 559469,
-    "daily_installs": 0,
-    "total_installs": 1,
+    "daily_installs": 1,
+    "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -727,7 +793,7 @@
   },
   {
     "id": 559432,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -1090,8 +1156,8 @@
   },
   {
     "id": 558952,
-    "daily_installs": 0,
-    "total_installs": 12,
+    "daily_installs": 1,
+    "total_installs": 13,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

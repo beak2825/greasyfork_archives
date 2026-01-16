@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562728,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T08:00:18.000Z",
+    "code_updated_at": "2026-01-15T18:04:49.000Z",
+    "namespace": "ETOPFUN_Roulette_Auto",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 905113,
+        "name": "Huy Vo",
+        "created_at": "2022-04-21T08:49:43.000Z",
+        "url": "https://greasyfork.org/users/905113-huy-vo"
+      }
+    ],
+    "name": "ETOPFUN_Roulette_Auto",
+    "description": "ETOPFUN Roulette Auto",
+    "url": "https://greasyfork.org/scripts/562728-etopfun-roulette-auto",
+    "code_url": "https://update.greasyfork.org/scripts/562728/ETOPFUN_Roulette_Auto.user.js",
+    "code_size": 36190,
+    "license": "MIT License",
+    "version": "1.0.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

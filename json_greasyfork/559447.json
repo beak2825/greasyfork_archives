@@ -1,0 +1,34 @@
+{
+  "id": 559447,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-19T03:54:25.000Z",
+  "code_updated_at": "2025-12-19T03:54:25.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1250244,
+      "name": "Casdy82827272",
+      "created_at": "2024-01-19T08:19:48.000Z",
+      "url": "https://greasyfork.org/users/1250244-casdy82827272",
+      "scripts": []
+    }
+  ],
+  "name": "V's Captcha Crusher - Extreme Edition",
+  "description": "Bypassing \"click in order\" captchas because the Boss said so.",
+  "url": "https://greasyfork.org/scripts/559447-v-s-captcha-crusher-extreme-edition",
+  "code_url": "https://update.greasyfork.org/scripts/559447/V%27s%20Captcha%20Crusher%20-%20Extreme%20Edition.user.js",
+  "code_size": 3114,
+  "license": null,
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

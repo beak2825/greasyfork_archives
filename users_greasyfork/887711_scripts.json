@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562771,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T16:17:55.000Z",
+    "code_updated_at": "2026-01-15T16:17:55.000Z",
+    "namespace": "https://greasyfork.org/users/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 887711,
+        "name": "Rafa Espillaque",
+        "created_at": "2022-03-15T09:51:33.000Z",
+        "url": "https://greasyfork.org/users/887711-rafa-espillaque"
+      }
+    ],
+    "name": "Jaeger Trace Helper",
+    "description": "Helper script for Jaeger traces",
+    "url": "https://greasyfork.org/scripts/562771-jaeger-trace-helper",
+    "code_url": "https://update.greasyfork.org/scripts/562771/Jaeger%20Trace%20Helper.user.js",
+    "code_size": 2723,
+    "license": null,
+    "version": "1.8",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

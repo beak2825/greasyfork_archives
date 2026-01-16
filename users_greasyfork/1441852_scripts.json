@@ -1,0 +1,35 @@
+[
+  {
+    "id": 561124,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-02T08:57:33.000Z",
+    "code_updated_at": "2026-01-03T03:18:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1441852,
+        "name": "virtual___nova",
+        "created_at": "2025-03-03T11:19:03.000Z",
+        "url": "https://greasyfork.org/users/1441852-virtual-nova"
+      }
+    ],
+    "name": "post-extrator-for-tieba",
+    "description": "贴吧帖子提取器；以json的格式，导出帖子内容",
+    "url": "https://greasyfork.org/scripts/561124-post-extrator-for-tieba",
+    "code_url": "https://update.greasyfork.org/scripts/561124/post-extrator-for-tieba.user.js",
+    "code_size": 7898,
+    "license": "MIT License",
+    "version": "0.0.2",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

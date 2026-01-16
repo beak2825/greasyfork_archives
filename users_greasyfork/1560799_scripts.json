@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562824,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-16T02:48:38.000Z",
+    "code_updated_at": "2026-01-16T03:36:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560799,
+        "name": "每天都睡不饱",
+        "created_at": "2026-01-16T02:45:17.000Z",
+        "url": "https://greasyfork.org/users/1560799-%E6%AF%8F%E5%A4%A9%E9%83%BD%E7%9D%A1%E4%B8%8D%E9%A5%B1"
+      }
+    ],
+    "name": "愚公搬cern",
+    "description": "提取唯一YouTube链接并显示播放器、标题、播放量、点赞量、发布时间和作者订阅数，添加复制按钮",
+    "url": "https://greasyfork.org/scripts/562824-%E6%84%9A%E5%85%AC%E6%90%ACcern",
+    "code_url": "https://update.greasyfork.org/scripts/562824/%E6%84%9A%E5%85%AC%E6%90%ACcern.user.js",
+    "code_size": 32857,
+    "license": null,
+    "version": "2.9",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

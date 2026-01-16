@@ -1,7 +1,7 @@
 [
   {
     "id": 562587,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -35,13 +35,13 @@
   {
     "id": 557675,
     "daily_installs": 0,
-    "total_installs": 5,
+    "total_installs": 6,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2025-12-02T18:27:58.000Z",
-    "code_updated_at": "2025-12-03T04:47:12.000Z",
+    "code_updated_at": "2026-01-12T10:08:10.000Z",
     "namespace": "Violentmonkey Scripts",
     "support_url": null,
     "contribution_url": null,
@@ -55,12 +55,12 @@
       }
     ],
     "name": "Torn Chat Banking Helper",
-    "description": "Makes faction chat messages relating to banking withdrawals into clickable links that direct you to the give-to-user page with the requesters ID and Money ammount prefilled to help make banking requests a bit smoother.",
+    "description": "Makes faction chat messages relating to banking withdrawals into clickable links that direct you to the give-to-user page with the requesters ID and Money ammount prefilled to help make banking requests a bit smoother. Also features a toggle that prevents withdrawls that would take the user into a negative balance.",
     "url": "https://greasyfork.org/scripts/557675-torn-chat-banking-helper",
     "code_url": "https://update.greasyfork.org/scripts/557675/Torn%20Chat%20Banking%20Helper.user.js",
-    "code_size": 5405,
+    "code_size": 13841,
     "license": "MIT License",
-    "version": "1.02",
+    "version": "1.11",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

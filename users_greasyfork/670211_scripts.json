@@ -33,6 +33,39 @@
     "visibility": "public"
   },
   {
+    "id": 558685,
+    "daily_installs": 1,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-12T01:58:11.000Z",
+    "code_updated_at": "2025-12-19T01:43:46.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 670211,
+        "name": "罗名扬",
+        "created_at": "2020-07-26T01:31:55.000Z",
+        "url": "https://greasyfork.org/users/670211-%E7%BD%97%E5%90%8D%E6%89%AC"
+      }
+    ],
+    "name": "小红书笔记屏蔽工具 + 纯净悬浮预览 (v1.18 - 极致纯净版)",
+    "description": "屏蔽指定作者；悬浮预览；【新增】预览窗口隐藏作者信息栏；修复自动播放崩溃问题；静音起步，点击一键开声",
+    "url": "https://greasyfork.org/scripts/558685-%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%AC%94%E8%AE%B0%E5%B1%8F%E8%94%BD%E5%B7%A5%E5%85%B7-%E7%BA%AF%E5%87%80%E6%82%AC%E6%B5%AE%E9%A2%84%E8%A7%88-v1-18-%E6%9E%81%E8%87%B4%E7%BA%AF%E5%87%80%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/558685/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%AC%94%E8%AE%B0%E5%B1%8F%E8%94%BD%E5%B7%A5%E5%85%B7%20%2B%20%E7%BA%AF%E5%87%80%E6%82%AC%E6%B5%AE%E9%A2%84%E8%A7%88%20%28v118%20-%20%E6%9E%81%E8%87%B4%E7%BA%AF%E5%87%80%E7%89%88%29.user.js",
+    "code_size": 18985,
+    "license": null,
+    "version": "1.18",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 558203,
     "daily_installs": 0,
     "total_installs": 4,
@@ -133,7 +166,7 @@
   },
   {
     "id": 557964,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 19,
     "fan_score": "5.0",
     "good_ratings": 0,

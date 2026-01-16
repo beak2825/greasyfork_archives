@@ -1,0 +1,59 @@
+{
+  "id": 561240,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-03T12:55:47.000Z",
+  "code_updated_at": "2026-01-03T13:04:49.000Z",
+  "namespace": "http://d.hatena.ne.jp/furyu-tei",
+  "support_url": "https://github.com/kosuke14/KashiKaikin/issues",
+  "contribution_url": "https://memo.furyutei.work/about#send_donation",
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1555581,
+      "name": "kosuke14",
+      "created_at": "2026-01-03T12:54:48.000Z",
+      "url": "https://greasyfork.org/users/1555581-kosuke14",
+      "scripts": [
+        {
+          "id": 561240,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-03T12:55:47.000Z",
+          "code_updated_at": "2026-01-03T13:04:49.000Z",
+          "namespace": "http://d.hatena.ne.jp/furyu-tei",
+          "support_url": "https://github.com/kosuke14/KashiKaikin/issues",
+          "contribution_url": "https://memo.furyutei.work/about#send_donation",
+          "contribution_amount": null,
+          "name": "KashiKaikin X",
+          "description": "歌詞検索サイトの歌詞テキストをコピー可能にする。furyuteiさんのKashiKaikinのフォークです。",
+          "url": "https://greasyfork.org/scripts/561240-kashikaikin-x",
+          "code_url": "https://update.greasyfork.org/scripts/561240/KashiKaikin%20X.user.js",
+          "code_size": 27235,
+          "license": "MIT License",
+          "version": "0.1.0.21",
+          "locale": "ja",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "KashiKaikin X",
+  "description": "歌詞検索サイトの歌詞テキストをコピー可能にする。furyuteiさんのKashiKaikinのフォークです。",
+  "url": "https://greasyfork.org/scripts/561240-kashikaikin-x",
+  "code_url": "https://update.greasyfork.org/scripts/561240/KashiKaikin%20X.user.js",
+  "code_size": 27235,
+  "license": "MIT License",
+  "version": "0.1.0.21",
+  "locale": "ja",
+  "deleted": false,
+  "visibility": "public"
+}

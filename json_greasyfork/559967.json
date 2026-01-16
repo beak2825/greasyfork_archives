@@ -17,33 +17,7 @@
       "id": 1551589,
       "name": "manti-X",
       "created_at": "2025-12-23T16:43:30.000Z",
-      "url": "https://greasyfork.org/users/1551589-manti-x",
-      "scripts": [
-        {
-          "id": 559967,
-          "daily_installs": 0,
-          "total_installs": 24,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-23T16:46:10.000Z",
-          "code_updated_at": "2025-12-23T16:46:10.000Z",
-          "namespace": "https://github.com/manti-X/U-Next_Manga_Downloader",
-          "support_url": "https://github.com/manti-X/U-Next_Manga_Downloader/issues",
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "U-Next Manga Downloader",
-          "description": "Decrypt and download .ubook (Manga) from U-Next",
-          "url": "https://greasyfork.org/scripts/559967-u-next-manga-downloader",
-          "code_url": "https://update.greasyfork.org/scripts/559967/U-Next%20Manga%20Downloader.user.js",
-          "code_size": 11195,
-          "license": "MIT License",
-          "version": "1.1.0",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1551589-manti-x"
     }
   ],
   "name": "U-Next Manga Downloader",

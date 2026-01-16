@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562801,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T21:25:21.000Z",
+    "code_updated_at": "2026-01-15T21:25:21.000Z",
+    "namespace": "lander_scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 59946,
+        "name": "Lander",
+        "created_at": "2016-08-12T23:50:20.000Z",
+        "url": "https://greasyfork.org/users/59946-lander"
+      }
+    ],
+    "name": "Force YouTube Fullscreen",
+    "description": "Adds allowfullscreen attributes to all YouTube iframes",
+    "url": "https://greasyfork.org/scripts/562801-force-youtube-fullscreen",
+    "code_url": "https://update.greasyfork.org/scripts/562801/Force%20YouTube%20Fullscreen.user.js",
+    "code_size": 1703,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

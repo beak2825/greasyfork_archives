@@ -1,0 +1,33 @@
+{
+  "id": 562267,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-11T13:53:20.000Z",
+  "code_updated_at": "2026-01-11T13:53:20.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1559097,
+      "name": "Sethi",
+      "created_at": "2026-01-11T12:46:30.000Z",
+      "url": "https://greasyfork.org/users/1559097-sethi"
+    }
+  ],
+  "name": "Patreon Video Unmute + Caption Helper",
+  "description": "Automatically unmutes Patreon videos and enables captions with a built-in stability safeguard for consistent playback.",
+  "url": "https://greasyfork.org/scripts/562267-patreon-video-unmute-caption-helper",
+  "code_url": "https://update.greasyfork.org/scripts/562267/Patreon%20Video%20Unmute%20%2B%20Caption%20Helper.user.js",
+  "code_size": 5729,
+  "license": "MIT License",
+  "version": "2.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

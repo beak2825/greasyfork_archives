@@ -17,33 +17,7 @@
       "id": 1554250,
       "name": "Tikaiz",
       "created_at": "2025-12-30T13:45:47.000Z",
-      "url": "https://greasyfork.org/users/1554250-tikaiz",
-      "scripts": [
-        {
-          "id": 560783,
-          "daily_installs": 0,
-          "total_installs": 0,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-30T13:54:03.000Z",
-          "code_updated_at": "2025-12-30T13:54:03.000Z",
-          "namespace": "Violentmonkey Scripts",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Gitlab open with Rider",
-          "description": "12/30/2025, 2:03:43 PM",
-          "url": "https://greasyfork.org/scripts/560783-gitlab-open-with-rider",
-          "code_url": "https://update.greasyfork.org/scripts/560783/Gitlab%20open%20with%20Rider.user.js",
-          "code_size": 967,
-          "license": "MIT License",
-          "version": "1.0",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1554250-tikaiz"
     }
   ],
   "name": "Gitlab open with Rider",

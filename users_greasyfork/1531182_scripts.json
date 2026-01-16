@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562800,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T21:18:15.000Z",
+    "code_updated_at": "2026-01-15T21:24:31.000Z",
+    "namespace": "https://zhihu.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1531182,
+        "name": "chloeeee72",
+        "created_at": "2025-10-27T10:40:15.000Z",
+        "url": "https://greasyfork.org/users/1531182-chloeeee72"
+      }
+    ],
+    "name": "知乎多回答字数 & 阅读时间统计",
+    "description": "在知乎问题页为每个回答在正文开头显示字数统计和预计阅读时间，支持“查看全部回答”等动态刷新",
+    "url": "https://greasyfork.org/scripts/562800-%E7%9F%A5%E4%B9%8E%E5%A4%9A%E5%9B%9E%E7%AD%94%E5%AD%97%E6%95%B0-%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1",
+    "code_url": "https://update.greasyfork.org/scripts/562800/%E7%9F%A5%E4%B9%8E%E5%A4%9A%E5%9B%9E%E7%AD%94%E5%AD%97%E6%95%B0%20%20%E9%98%85%E8%AF%BB%E6%97%B6%E9%97%B4%E7%BB%9F%E8%AE%A1.user.js",
+    "code_size": 3150,
+    "license": "MIT License",
+    "version": "4.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

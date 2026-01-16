@@ -17,7 +17,33 @@
       "id": 1548147,
       "name": "Diego Garcia del Rio",
       "created_at": "2025-12-14T21:59:22.000Z",
-      "url": "https://greasyfork.org/users/1548147-diego-garcia-del-rio"
+      "url": "https://greasyfork.org/users/1548147-diego-garcia-del-rio",
+      "scripts": [
+        {
+          "id": 558948,
+          "daily_installs": 0,
+          "total_installs": 5,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-14T22:03:18.000Z",
+          "code_updated_at": "2025-12-14T22:03:18.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Brave-dumps popup cleaner",
+          "description": "Hides the modal dialog and restores right click actions based on ExamTopics Popup Remover by  Aruna Telshan",
+          "url": "https://greasyfork.org/scripts/558948-brave-dumps-popup-cleaner",
+          "code_url": "https://update.greasyfork.org/scripts/558948/Brave-dumps%20popup%20cleaner.user.js",
+          "code_size": 2589,
+          "license": "MIT License",
+          "version": "0.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "Brave-dumps popup cleaner",

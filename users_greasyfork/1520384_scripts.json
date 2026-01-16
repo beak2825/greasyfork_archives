@@ -1,0 +1,35 @@
+[
+  {
+    "id": 559608,
+    "daily_installs": 1,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-20T13:50:32.000Z",
+    "code_updated_at": "2025-12-20T14:14:28.000Z",
+    "namespace": "https://greasyfork.org/scripts/559608",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1520384,
+        "name": "tom eric",
+        "created_at": "2025-09-28T14:17:10.000Z",
+        "url": "https://greasyfork.org/users/1520384-tom-eric"
+      }
+    ],
+    "name": "美丽得Buzzing（多端优化版）",
+    "description": "一个在电脑 / 手机 / 平板 上都用得很舒服的 buzzing.cc 阅读体验增强脚本",
+    "url": "https://greasyfork.org/scripts/559608-%E7%BE%8E%E4%B8%BD%E5%BE%97buzzing-%E5%A4%9A%E7%AB%AF%E4%BC%98%E5%8C%96%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/559608/%E7%BE%8E%E4%B8%BD%E5%BE%97Buzzing%EF%BC%88%E5%A4%9A%E7%AB%AF%E4%BC%98%E5%8C%96%E7%89%88%EF%BC%89.user.js",
+    "code_size": 25535,
+    "license": "MIT License",
+    "version": "1.3.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

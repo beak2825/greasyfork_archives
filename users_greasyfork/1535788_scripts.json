@@ -31,5 +31,38 @@
     "locale": "en",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555258,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T01:54:17.000Z",
+    "code_updated_at": "2025-11-09T01:54:17.000Z",
+    "namespace": "Violentmonkey Scripts",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535788,
+        "name": "NachoCS",
+        "created_at": "2025-11-09T01:35:08.000Z",
+        "url": "https://greasyfork.org/users/1535788-nachocs"
+      }
+    ],
+    "name": "View streams",
+    "description": "View MCSR Ranked Vods",
+    "url": "https://greasyfork.org/scripts/555258-view-streams",
+    "code_url": "https://update.greasyfork.org/scripts/555258/View%20streams.user.js",
+    "code_size": 3250,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

@@ -17,33 +17,7 @@
       "id": 1544419,
       "name": "Luminis",
       "created_at": "2025-12-04T04:09:20.000Z",
-      "url": "https://greasyfork.org/users/1544419-luminis",
-      "scripts": [
-        {
-          "id": 557858,
-          "daily_installs": 0,
-          "total_installs": 3,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-04T04:27:43.000Z",
-          "code_updated_at": "2025-12-05T08:49:27.000Z",
-          "namespace": "https://greasyfork.org/es/users/1544419",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Bplace Dark Mode",
-          "description": "Dark mode for Bplace",
-          "url": "https://greasyfork.org/scripts/557858-bplace-dark-mode",
-          "code_url": "https://update.greasyfork.org/scripts/557858/Bplace%20Dark%20Mode.user.js",
-          "code_size": 5554,
-          "license": "MIT License",
-          "version": "1.7",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1544419-luminis"
     }
   ],
   "name": "Bplace Dark Mode",

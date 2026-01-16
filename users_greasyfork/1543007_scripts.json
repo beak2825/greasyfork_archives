@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557375,
+    "daily_installs": 0,
+    "total_installs": 50,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-30T03:05:20.000Z",
+    "code_updated_at": "2025-11-30T03:07:37.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1543007,
+        "name": "niechy",
+        "created_at": "2025-11-30T02:42:03.000Z",
+        "url": "https://greasyfork.org/users/1543007-niechy"
+      }
+    ],
+    "name": "超星文档下载解锁助手",
+    "description": "解锁超星学习通资料与课程中禁止下载的文档，突破下载限制，支持批量下载PDF、Word等课件资料",
+    "url": "https://greasyfork.org/scripts/557375-%E8%B6%85%E6%98%9F%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD%E8%A7%A3%E9%94%81%E5%8A%A9%E6%89%8B",
+    "code_url": "https://update.greasyfork.org/scripts/557375/%E8%B6%85%E6%98%9F%E6%96%87%E6%A1%A3%E4%B8%8B%E8%BD%BD%E8%A7%A3%E9%94%81%E5%8A%A9%E6%89%8B.user.js",
+    "code_size": 23086,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

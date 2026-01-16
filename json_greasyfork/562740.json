@@ -1,0 +1,59 @@
+{
+  "id": 562740,
+  "daily_installs": 4,
+  "total_installs": 4,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2026-01-15T11:10:53.000Z",
+  "code_updated_at": "2026-01-15T11:19:46.000Z",
+  "namespace": "fontrenderning.cmos4k",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1458948,
+      "name": "Flashlightning",
+      "created_at": "2025-04-17T10:42:00.000Z",
+      "url": "https://greasyfork.org/users/1458948-flashlightning",
+      "scripts": [
+        {
+          "id": 562740,
+          "daily_installs": 4,
+          "total_installs": 4,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2026-01-15T11:10:53.000Z",
+          "code_updated_at": "2026-01-15T11:19:46.000Z",
+          "namespace": "fontrenderning.cmos4k",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "浏览器字体渲染",
+          "description": "解决Windows平台浏览器默认情况下字体渲染偏细的问题。适用于Edge、Chrome、Firefox等。",
+          "url": "https://greasyfork.org/scripts/562740-%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AD%97%E4%BD%93%E6%B8%B2%E6%9F%93",
+          "code_url": "https://update.greasyfork.org/scripts/562740/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AD%97%E4%BD%93%E6%B8%B2%E6%9F%93.user.js",
+          "code_size": 2168,
+          "license": "MIT License",
+          "version": "1.3.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "浏览器字体渲染",
+  "description": "解决Windows平台浏览器默认情况下字体渲染偏细的问题。适用于Edge、Chrome、Firefox等。",
+  "url": "https://greasyfork.org/scripts/562740-%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AD%97%E4%BD%93%E6%B8%B2%E6%9F%93",
+  "code_url": "https://update.greasyfork.org/scripts/562740/%E6%B5%8F%E8%A7%88%E5%99%A8%E5%AD%97%E4%BD%93%E6%B8%B2%E6%9F%93.user.js",
+  "code_size": 2168,
+  "license": "MIT License",
+  "version": "1.3.0",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

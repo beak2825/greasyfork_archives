@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562762,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T14:35:58.000Z",
+    "code_updated_at": "2026-01-15T14:35:58.000Z",
+    "namespace": "https://github.com/vuquan2005/svHaUI-Helper",
+    "support_url": "https://github.com/vuquan2005/svHaUI-Helper/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1483255,
+        "name": "vuquan2005",
+        "created_at": "2025-06-13T12:55:43.000Z",
+        "url": "https://greasyfork.org/users/1483255-vuquan2005"
+      }
+    ],
+    "name": "SV HaUI Helper",
+    "description": "Nâng cao trải nghiệm cho sinh viên HaUI",
+    "url": "https://greasyfork.org/scripts/562762-sv-haui-helper",
+    "code_url": "https://update.greasyfork.org/scripts/562762/SV%20HaUI%20Helper.user.js",
+    "code_size": 18757,
+    "license": "GNU General Public License v3.0 only",
+    "version": "1.2.1",
+    "locale": "vi",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

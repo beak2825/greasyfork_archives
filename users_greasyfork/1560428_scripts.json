@@ -1,0 +1,35 @@
+[
+  {
+    "id": 562689,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-14T22:59:57.000Z",
+    "code_updated_at": "2026-01-14T22:59:57.000Z",
+    "namespace": "https://acme-prototypes.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1560428,
+        "name": "El0Lobo",
+        "created_at": "2026-01-14T22:53:43.000Z",
+        "url": "https://greasyfork.org/users/1560428-el0lobo"
+      }
+    ],
+    "name": "ACME Prototypes Plex Bulk Downloader",
+    "description": "acme-prototypes.com — Adds a download button to Plex desktop.",
+    "url": "https://greasyfork.org/scripts/562689-acme-prototypes-plex-bulk-downloader",
+    "code_url": "https://update.greasyfork.org/scripts/562689/ACME%20Prototypes%20Plex%20Bulk%20Downloader.user.js",
+    "code_size": 48259,
+    "license": "MIT License",
+    "version": "1.7.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

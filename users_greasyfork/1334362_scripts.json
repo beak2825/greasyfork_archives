@@ -31,5 +31,38 @@
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "public"
+  },
+  {
+    "id": 555418,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T13:27:38.000Z",
+    "code_updated_at": "2025-11-10T13:27:38.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1334362,
+        "name": "阿阿萨",
+        "created_at": "2024-07-16T14:21:44.000Z",
+        "url": "https://greasyfork.org/users/1334362-%E9%98%BF%E9%98%BF%E8%90%A8"
+      }
+    ],
+    "name": "B站视频布局：精简评论版",
+    "description": "左侧视频+悬浮居中标题（支持复制），右侧简介+评论区（单滚动条），支持退出恢复原始布局（已加宽右侧界面）+ 弹幕开关+视频信息+关注UP动态（无限加载）+ 作者信息 + 私信功能 + 弹幕输入框开关 + 评论区无限滚动（原生移动版）+ 右侧视频标题 + 视频订阅合集（悬浮按钮版-优化版）- 自动检测合集并定位当前视频（文字提醒版）",
+    "url": "https://greasyfork.org/scripts/555418-b%E7%AB%99%E8%A7%86%E9%A2%91%E5%B8%83%E5%B1%80-%E7%B2%BE%E7%AE%80%E8%AF%84%E8%AE%BA%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/555418/B%E7%AB%99%E8%A7%86%E9%A2%91%E5%B8%83%E5%B1%80%EF%BC%9A%E7%B2%BE%E7%AE%80%E8%AF%84%E8%AE%BA%E7%89%88.user.js",
+    "code_size": 127622,
+    "license": null,
+    "version": "2.9.3",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
   }
 ]

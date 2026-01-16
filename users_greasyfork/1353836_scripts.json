@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555371,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T02:23:46.000Z",
+    "code_updated_at": "2025-11-10T02:23:46.000Z",
+    "namespace": "https://greasyfork.org/users/1353836",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1353836,
+        "name": "premiumsmart",
+        "created_at": "2024-08-18T07:37:43.000Z",
+        "url": "https://greasyfork.org/users/1353836-premiumsmart"
+      }
+    ],
+    "name": "Kick.com Language Filter Memory",
+    "description": "Automatically remembers and restores your selected language filter on Kick.com browse page",
+    "url": "https://greasyfork.org/scripts/555371-kick-com-language-filter-memory",
+    "code_url": "https://update.greasyfork.org/scripts/555371/Kickcom%20Language%20Filter%20Memory.user.js",
+    "code_size": 2987,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "pl",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

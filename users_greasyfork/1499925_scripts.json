@@ -1,5 +1,104 @@
 [
   {
+    "id": 560490,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-28T04:37:42.000Z",
+    "code_updated_at": "2025-12-28T04:37:42.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "Новый фон форума | Black Russia",
+    "description": "Новый стиль и фон форума",
+    "url": "https://greasyfork.org/scripts/560490-%D0%BD%D0%BE%D0%B2%D1%8B%D0%B9-%D1%84%D0%BE%D0%BD-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-black-russia",
+    "code_url": "https://update.greasyfork.org/scripts/560490/%D0%9D%D0%BE%D0%B2%D1%8B%D0%B9%20%D1%84%D0%BE%D0%BD%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%7C%20Black%20Russia.user.js",
+    "code_size": 17510,
+    "license": "MIT License",
+    "version": "2.4",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 558009,
+    "daily_installs": 0,
+    "total_installs": 154,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-05T11:49:04.000Z",
+    "code_updated_at": "2026-01-07T17:41:26.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "[ALL SERVERS] Новогодний стиль | Скрипт для кураторов форума",
+    "description": "Скрипт с новогодним стилем, подходящий для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Также в скрипт встроен счётчик слов в РПБ.",
+    "url": "https://greasyfork.org/scripts/558009-all-servers-%D0%BD%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE%D0%B4%D0%BD%D0%B8%D0%B9-%D1%81%D1%82%D0%B8%D0%BB%D1%8C-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0",
+    "code_url": "https://update.greasyfork.org/scripts/558009/%5BALL%20SERVERS%5D%20%D0%9D%D0%BE%D0%B2%D0%BE%D0%B3%D0%BE%D0%B4%D0%BD%D0%B8%D0%B9%20%D1%81%D1%82%D0%B8%D0%BB%D1%8C%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0.user.js",
+    "code_size": 306005,
+    "license": "MIT License",
+    "version": "1.0.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555421,
+    "daily_installs": 0,
+    "total_installs": 4,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T14:17:03.000Z",
+    "code_updated_at": "2025-11-12T06:24:45.000Z",
+    "namespace": "https://forum.blackrussia.online",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1499925,
+        "name": "Dany Forbs",
+        "created_at": "2025-07-30T16:12:56.000Z",
+        "url": "https://greasyfork.org/users/1499925-dany-forbs"
+      }
+    ],
+    "name": "IZHEVSK 85 | Скрипт для Кураторов Форума [Общий]",
+    "description": "Скрипт, созданный индивидуально для сервера IZHEVSK (85) 🩵",
+    "url": "https://greasyfork.org/scripts/555421-izhevsk-85-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82-%D0%B4%D0%BB%D1%8F-%D0%BA%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2-%D1%84%D0%BE%D1%80%D1%83%D0%BC%D0%B0-%D0%BE%D0%B1%D1%89%D0%B8%D0%B9",
+    "code_url": "https://update.greasyfork.org/scripts/555421/IZHEVSK%2085%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%9E%D0%B1%D1%89%D0%B8%D0%B9%5D.user.js",
+    "code_size": 236359,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "ru",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
     "id": 553830,
     "daily_installs": 0,
     "total_installs": 0,

@@ -30,7 +30,7 @@
     "version": "0.0.4",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   },
   {
     "id": 561508,
@@ -41,7 +41,7 @@
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2026-01-05T14:14:44.000Z",
-    "code_updated_at": "2026-01-10T14:29:57.000Z",
+    "code_updated_at": "2026-01-15T07:05:23.000Z",
     "namespace": "custom.Para_Thenics.torn.com",
     "support_url": null,
     "contribution_url": null,
@@ -58,9 +58,9 @@
     "description": "Display profit per nerve and how to perform",
     "url": "https://greasyfork.org/scripts/561508-arson-bang-for-buck-custom-underko",
     "code_url": "https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom%20underko.user.js",
-    "code_size": 73226,
+    "code_size": 73319,
     "license": null,
-    "version": "0.0.4",
+    "version": "0.0.6",
     "locale": "en",
     "deleted": false,
     "visibility": "unlisted"

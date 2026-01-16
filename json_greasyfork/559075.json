@@ -17,7 +17,33 @@
       "id": 1540526,
       "name": "Shane Yang",
       "created_at": "2025-11-22T16:38:51.000Z",
-      "url": "https://greasyfork.org/users/1540526-shane-yang"
+      "url": "https://greasyfork.org/users/1540526-shane-yang",
+      "scripts": [
+        {
+          "id": 559075,
+          "daily_installs": 0,
+          "total_installs": 21,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-12-16T04:48:25.000Z",
+          "code_updated_at": "2025-12-16T04:48:25.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "115网盘-在新窗口打开",
+          "description": "为115网盘右键添加“新窗口打开”功能",
+          "url": "https://greasyfork.org/scripts/559075-115%E7%BD%91%E7%9B%98-%E5%9C%A8%E6%96%B0%E7%AA%97%E5%8F%A3%E6%89%93%E5%BC%80",
+          "code_url": "https://update.greasyfork.org/scripts/559075/115%E7%BD%91%E7%9B%98-%E5%9C%A8%E6%96%B0%E7%AA%97%E5%8F%A3%E6%89%93%E5%BC%80.user.js",
+          "code_size": 4100,
+          "license": "MIT License",
+          "version": "20.0",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "115网盘-在新窗口打开",

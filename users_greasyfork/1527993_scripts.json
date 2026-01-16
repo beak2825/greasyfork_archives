@@ -34,8 +34,8 @@
   },
   {
     "id": 558739,
-    "daily_installs": 0,
-    "total_installs": 16,
+    "daily_installs": 1,
+    "total_installs": 17,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -198,6 +198,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 556280,
+    "daily_installs": 0,
+    "total_installs": 10,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T12:47:14.000Z",
+    "code_updated_at": "2025-11-19T14:04:03.000Z",
+    "namespace": "https://greasyfork.org/ja/scripts/556280",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1527993,
+        "name": "ForeverPWA",
+        "created_at": "2025-10-18T01:54:14.000Z",
+        "url": "https://greasyfork.org/users/1527993-foreverpwa"
+      }
+    ],
+    "name": "Markdown Image Renderer for Gemini, ChatGPT, Grok",
+    "description": "Gemini,ChatGPT,GrokのチャットでMarkdown画像を表示します。画像クリックで単一のサブウィンドウに表示（上書き）します。",
+    "url": "https://greasyfork.org/scripts/556280-markdown-image-renderer-for-gemini-chatgpt-grok",
+    "code_url": "https://update.greasyfork.org/scripts/556280/Markdown%20Image%20Renderer%20for%20Gemini%2C%20ChatGPT%2C%20Grok.user.js",
+    "code_size": 6962,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "ja",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 556013,
     "daily_installs": 0,
     "total_installs": 0,
@@ -327,6 +360,6 @@
     "version": "4.0",
     "locale": "ja",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

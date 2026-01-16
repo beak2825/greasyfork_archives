@@ -1,5 +1,38 @@
 [
   {
+    "id": 562760,
+    "daily_installs": 1,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T14:07:51.000Z",
+    "code_updated_at": "2026-01-15T14:07:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 982746,
+        "name": "周利斌",
+        "created_at": "2022-11-13T09:15:22.000Z",
+        "url": "https://greasyfork.org/users/982746-%E5%91%A8%E5%88%A9%E6%96%8C"
+      }
+    ],
+    "name": "超星改卷快捷按键脚本",
+    "description": "为超星阅雅(xueya.chaoxing.com)和阅卷(mooc2-ans.chaoxing.com)页面提供键盘快捷操作：1-9键点击对应评分按钮，q/w/e/r/s分别绑定撤销/左旋转/右旋转/水平线/提交等操作，同时为图片添加过渡动画提升体验",
+    "url": "https://greasyfork.org/scripts/562760-%E8%B6%85%E6%98%9F%E6%94%B9%E5%8D%B7%E5%BF%AB%E6%8D%B7%E6%8C%89%E9%94%AE%E8%84%9A%E6%9C%AC",
+    "code_url": "https://update.greasyfork.org/scripts/562760/%E8%B6%85%E6%98%9F%E6%94%B9%E5%8D%B7%E5%BF%AB%E6%8D%B7%E6%8C%89%E9%94%AE%E8%84%9A%E6%9C%AC.user.js",
+    "code_size": 9350,
+    "license": "MIT License",
+    "version": "1.7",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 556267,
     "daily_installs": 0,
     "total_installs": 0,
@@ -30,6 +63,6 @@
     "version": "2025.11.09.001",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

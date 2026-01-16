@@ -99,6 +99,39 @@
     "visibility": "public"
   },
   {
+    "id": 557056,
+    "daily_installs": 0,
+    "total_installs": 3,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-27T06:30:27.000Z",
+    "code_updated_at": "2025-11-28T01:25:24.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 567951,
+        "name": "Stuart Saddler",
+        "created_at": "2020-05-20T07:04:23.000Z",
+        "url": "https://greasyfork.org/users/567951-stuart-saddler"
+      }
+    ],
+    "name": "ReadTheory: Proficiency Leaderboard",
+    "description": "Leaderboard for classes who practice with readtheory.org",
+    "url": "https://greasyfork.org/scripts/557056-readtheory-proficiency-leaderboard",
+    "code_url": "https://update.greasyfork.org/scripts/557056/ReadTheory%3A%20Proficiency%20Leaderboard.user.js",
+    "code_size": 13153,
+    "license": "MIT License",
+    "version": "1.1",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 552459,
     "daily_installs": 0,
     "total_installs": 4,
@@ -129,6 +162,6 @@
     "version": "2.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

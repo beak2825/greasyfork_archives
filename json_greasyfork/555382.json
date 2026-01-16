@@ -1,0 +1,33 @@
+{
+  "id": 555382,
+  "daily_installs": 0,
+  "total_installs": 1,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-10T04:51:30.000Z",
+  "code_updated_at": "2025-11-10T04:51:30.000Z",
+  "namespace": "https://v2explorer.app/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 29277,
+      "name": "jiacchen",
+      "created_at": "2016-02-03T14:16:34.000Z",
+      "url": "https://greasyfork.org/users/29277-jiacchen"
+    }
+  ],
+  "name": "Vetiver Redirect",
+  "description": "点击 v2ex.com/t/{id} 时尝试用 v2explorer://topic/{id} 打开；若未安装应用则静默取消跳转并停留当前页。",
+  "url": "https://greasyfork.org/scripts/555382-vetiver-redirect",
+  "code_url": "https://update.greasyfork.org/scripts/555382/Vetiver%20Redirect.user.js",
+  "code_size": 1903,
+  "license": "MIT License",
+  "version": "1.0.1",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

@@ -33,6 +33,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 555814,
+    "daily_installs": 0,
+    "total_installs": 7,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T07:23:16.000Z",
+    "code_updated_at": "2025-11-21T06:41:08.000Z",
+    "namespace": "https://github.com/explainpark101/law.go.kr.readability",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1443830,
+        "name": "explainpark101",
+        "created_at": "2025-03-09T07:30:26.000Z",
+        "url": "https://greasyfork.org/users/1443830-explainpark101"
+      }
+    ],
+    "name": "국가법령정보센터 가독성 향상",
+    "description": "국가법령정보센터 법령 본문의 줄간격, 문단 여백을 원본 CSS 구조에 맞게 최적화합니다.",
+    "url": "https://greasyfork.org/scripts/555814-%EA%B5%AD%EA%B0%80%EB%B2%95%EB%A0%B9%EC%A0%95%EB%B3%B4%EC%84%BC%ED%84%B0-%EA%B0%80%EB%8F%85%EC%84%B1-%ED%96%A5%EC%83%81",
+    "code_url": "https://update.greasyfork.org/scripts/555814/%EA%B5%AD%EA%B0%80%EB%B2%95%EB%A0%B9%EC%A0%95%EB%B3%B4%EC%84%BC%ED%84%B0%20%EA%B0%80%EB%8F%85%EC%84%B1%20%ED%96%A5%EC%83%81.user.js",
+    "code_size": 4273,
+    "license": "MIT License",
+    "version": "1.6",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 553145,
     "daily_installs": 0,
     "total_installs": 2,

@@ -2,7 +2,7 @@
   {
     "id": 561561,
     "daily_installs": 4,
-    "total_installs": 65,
+    "total_installs": 69,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -26,6 +26,39 @@
     "url": "https://greasyfork.org/scripts/561561-batoto-broken-image-fix",
     "code_url": "https://update.greasyfork.org/scripts/561561/Batoto%20broken%20image%20fix.user.js",
     "code_size": 11192,
+    "license": null,
+    "version": "2026-1-3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 558945,
+    "daily_installs": 0,
+    "total_installs": 126,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-14T21:06:16.000Z",
+    "code_updated_at": "2026-01-03T06:57:19.000Z",
+    "namespace": "https://greasyfork.org/scripts/558945",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1548138,
+        "name": "XComhghall",
+        "created_at": "2025-12-14T21:03:10.000Z",
+        "url": "https://greasyfork.org/users/1548138-xcomhghall"
+      }
+    ],
+    "name": "Manga park broken image fix",
+    "description": "Fix inaccessible images hosted on s02.mpmok.org. Remove external URLs altogether and change to internal links, or automatically change s02, s06, s07, s08, etc. to s01 or custom value.",
+    "url": "https://greasyfork.org/scripts/558945-manga-park-broken-image-fix",
+    "code_url": "https://update.greasyfork.org/scripts/558945/Manga%20park%20broken%20image%20fix.user.js",
+    "code_size": 9824,
     "license": null,
     "version": "2026-1-3",
     "locale": "en",

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 560296,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-26T09:24:59.000Z",
+    "code_updated_at": "2025-12-26T09:24:59.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 701865,
+        "name": "谷鑫斌",
+        "created_at": "2020-11-05T09:26:54.000Z",
+        "url": "https://greasyfork.org/users/701865-%E8%B0%B7%E9%91%AB%E6%96%8C"
+      }
+    ],
+    "name": "DeepWiki Mermaid Copy Tool (Anti-Conflict)",
+    "description": "Adds a copy button to Mermaid diagrams and prevents conflict with image zoom features.",
+    "url": "https://greasyfork.org/scripts/560296-deepwiki-mermaid-copy-tool-anti-conflict",
+    "code_url": "https://update.greasyfork.org/scripts/560296/DeepWiki%20Mermaid%20Copy%20Tool%20%28Anti-Conflict%29.user.js",
+    "code_size": 5096,
+    "license": "MIT License",
+    "version": "0.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

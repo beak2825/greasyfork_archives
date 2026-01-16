@@ -17,33 +17,7 @@
       "id": 1545317,
       "name": "glusyy",
       "created_at": "2025-12-06T16:25:32.000Z",
-      "url": "https://greasyfork.org/users/1545317-glusyy",
-      "scripts": [
-        {
-          "id": 558341,
-          "daily_installs": 1,
-          "total_installs": 20,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-08T18:06:20.000Z",
-          "code_updated_at": "2025-12-12T01:34:01.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "DeepSeek Personalization and System Prompts Injector",
-          "description": "Personalization UI + robust prompt injection for chat.deepseek.com",
-          "url": "https://greasyfork.org/scripts/558341-deepseek-personalization-and-system-prompts-injector",
-          "code_url": "https://update.greasyfork.org/scripts/558341/DeepSeek%20Personalization%20and%20System%20Prompts%20Injector.user.js",
-          "code_size": 16963,
-          "license": "MIT License",
-          "version": "3.4",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1545317-glusyy"
     }
   ],
   "name": "CharacterHub Pagination Fix",

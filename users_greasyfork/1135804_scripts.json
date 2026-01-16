@@ -1,0 +1,35 @@
+[
+  {
+    "id": 557001,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-26T14:40:03.000Z",
+    "code_updated_at": "2025-11-26T14:40:03.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1135804,
+        "name": "calculatortamer",
+        "created_at": "2023-07-25T20:34:39.000Z",
+        "url": "https://greasyfork.org/users/1135804-calculatortamer"
+      }
+    ],
+    "name": "Vider les champs de \"Ma recherche\"",
+    "description": "c'est impossible a supprimer sans ce script...",
+    "url": "https://greasyfork.org/scripts/557001-vider-les-champs-de-ma-recherche",
+    "code_url": "https://update.greasyfork.org/scripts/557001/Vider%20les%20champs%20de%20%22Ma%20recherche%22.user.js",
+    "code_size": 1146,
+    "license": "MIT License",
+    "version": "2025-11-26",
+    "locale": "fr",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

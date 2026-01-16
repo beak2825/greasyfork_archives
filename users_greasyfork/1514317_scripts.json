@@ -99,6 +99,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 555877,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T22:38:24.000Z",
+    "code_updated_at": "2025-11-14T22:38:24.000Z",
+    "namespace": "https://greasyfork.org/users/1514317",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1514317,
+        "name": "CrystallizedV",
+        "created_at": "2025-09-12T15:13:50.000Z",
+        "url": "https://greasyfork.org/users/1514317-crystallizedv"
+      }
+    ],
+    "name": "CRYSTAL's CLAWS Bank Request",
+    "description": "CLAWS Bank Request",
+    "url": "https://greasyfork.org/scripts/555877-crystal-s-claws-bank-request",
+    "code_url": "https://update.greasyfork.org/scripts/555877/CRYSTAL%27s%20CLAWS%20Bank%20Request.user.js",
+    "code_size": 8777,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 555797,
     "daily_installs": 0,
     "total_installs": 5,
@@ -162,6 +195,6 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

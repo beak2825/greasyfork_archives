@@ -132,9 +132,75 @@
     "visibility": "public"
   },
   {
-    "id": 559477,
+    "id": 559533,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T19:00:29.000Z",
+    "code_updated_at": "2025-12-19T19:00:29.000Z",
+    "namespace": "https://greasyfork.org/en/users/000000",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549774,
+        "name": "Hunter Tustin",
+        "created_at": "2025-12-18T21:19:12.000Z",
+        "url": "https://greasyfork.org/users/1549774-hunter-tustin"
+      }
+    ],
+    "name": "NeonTap Autoclicker (PC Only)",
+    "description": "A clean, modular PC autoclicker with CPS control, toggle/hold modes, keybinds, and a neon UI panel.",
+    "url": "https://greasyfork.org/scripts/559533-neontap-autoclicker-pc-only",
+    "code_url": "https://update.greasyfork.org/scripts/559533/NeonTap%20Autoclicker%20%28PC%20Only%29.user.js",
+    "code_size": 9673,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559532,
     "daily_installs": 0,
     "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-12-19T18:54:26.000Z",
+    "code_updated_at": "2025-12-19T18:54:26.000Z",
+    "namespace": "https://greasyfork.org/users/your-id",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1549774,
+        "name": "Hunter Tustin",
+        "created_at": "2025-12-18T21:19:12.000Z",
+        "url": "https://greasyfork.org/users/1549774-hunter-tustin"
+      }
+    ],
+    "name": "Sick auto clicker",
+    "description": "PC-only autoclicker shell with menu, CPS sliders, modes, and keybinds (no actual clicking logic included).",
+    "url": "https://greasyfork.org/scripts/559532-sick-auto-clicker",
+    "code_url": "https://update.greasyfork.org/scripts/559532/Sick%20auto%20clicker.user.js",
+    "code_size": 16914,
+    "license": null,
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 559477,
+    "daily_installs": 1,
+    "total_installs": 3,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -232,8 +298,8 @@
   },
   {
     "id": 559418,
-    "daily_installs": 0,
-    "total_installs": 1,
+    "daily_installs": 1,
+    "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,

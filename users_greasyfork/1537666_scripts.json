@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555816,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T07:41:04.000Z",
+    "code_updated_at": "2025-11-14T07:41:04.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1537666,
+        "name": "代力",
+        "created_at": "2025-11-14T07:30:53.000Z",
+        "url": "https://greasyfork.org/users/1537666-%E4%BB%A3%E5%8A%9B"
+      }
+    ],
+    "name": "QRZ.COM chinese flag fix,QRZ,FLAG,NAME,qrz",
+    "description": "QRZ.COM one chinese flag fix,QRZ,FLAG,NAME,qrz",
+    "url": "https://greasyfork.org/scripts/555816-qrz-com-chinese-flag-fix-qrz-flag-name-qrz",
+    "code_url": "https://update.greasyfork.org/scripts/555816/QRZCOM%20chinese%20flag%20fix%2CQRZ%2CFLAG%2CNAME%2Cqrz.user.js",
+    "code_size": 3376,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

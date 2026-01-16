@@ -1,0 +1,35 @@
+[
+  {
+    "id": 556241,
+    "daily_installs": 0,
+    "total_installs": 81,
+    "fan_score": "34.2",
+    "good_ratings": 2,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-19T05:59:39.000Z",
+    "code_updated_at": "2025-11-25T07:32:48.000Z",
+    "namespace": "https://github.com/YHangbin",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1530057,
+        "name": "Hangbin Y",
+        "created_at": "2025-10-24T02:20:46.000Z",
+        "url": "https://greasyfork.org/users/1530057-hangbin-y"
+      }
+    ],
+    "name": "AI 对话助手(一键同步多模型)",
+    "description": "拒绝复制粘贴！一键将你的问题分发给 ChatGPT、Claude、Gemini、豆包、Kimi 等所有 AI 模型。在任意 AI 网站提问，脚本会自动将问题同步到其他已打开的 AI 标签页。助你快速横向对比模型效果，效率提升 10 倍。",
+    "url": "https://greasyfork.org/scripts/556241-ai-%E5%AF%B9%E8%AF%9D%E5%8A%A9%E6%89%8B-%E4%B8%80%E9%94%AE%E5%90%8C%E6%AD%A5%E5%A4%9A%E6%A8%A1%E5%9E%8B",
+    "code_url": "https://update.greasyfork.org/scripts/556241/AI%20%E5%AF%B9%E8%AF%9D%E5%8A%A9%E6%89%8B%28%E4%B8%80%E9%94%AE%E5%90%8C%E6%AD%A5%E5%A4%9A%E6%A8%A1%E5%9E%8B%29.user.js",
+    "code_size": 79396,
+    "license": "MIT License",
+    "version": "2.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

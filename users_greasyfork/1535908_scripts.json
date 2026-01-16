@@ -1,8 +1,41 @@
 [
   {
+    "id": 555287,
+    "daily_installs": 0,
+    "total_installs": 20,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-11-09T09:31:08.000Z",
+    "code_updated_at": "2025-11-09T09:31:08.000Z",
+    "namespace": "https://your-unique-namespace.com/cave-pvp-panel",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535908,
+        "name": "SHADOWSPULSE",
+        "created_at": "2025-11-09T08:55:41.000Z",
+        "url": "https://greasyfork.org/users/1535908-shadowspulse"
+      }
+    ],
+    "name": "Cave/Hole PvP BEST BLOXD HACK",
+    "description": "Cave/Hole PvP client panel with multiple modules for display and control.",
+    "url": "https://greasyfork.org/scripts/555287-cave-hole-pvp-best-bloxd-hack",
+    "code_url": "https://update.greasyfork.org/scripts/555287/CaveHole%20PvP%20BEST%20BLOXD%20HACK.user.js",
+    "code_size": 3041,
+    "license": "MIT License",
+    "version": "1.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 555286,
-    "daily_installs": 1,
-    "total_installs": 184,
+    "daily_installs": 3,
+    "total_installs": 186,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -26,6 +59,39 @@
     "url": "https://greasyfork.org/scripts/555286-best-bloxd-io-bedwars-cheat-autobedbreak-killaura-aimbot-bowaimbot",
     "code_url": "https://update.greasyfork.org/scripts/555286/BEST%20BLOXD%20IO%20BEDWARS%20CHEAT%20AUTOBEDBREAK%20KILLAURA%20AIMBOT%20BOWAIMBOT.user.js",
     "code_size": 3219,
+    "license": "MIT License",
+    "version": "1.15",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555284,
+    "daily_installs": 1,
+    "total_installs": 68,
+    "fan_score": "0.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 1,
+    "created_at": "2025-11-09T09:09:53.000Z",
+    "code_updated_at": "2025-11-09T09:12:20.000Z",
+    "namespace": "https://your-unique-namespace.com/best-bloxd-pulse",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535908,
+        "name": "SHADOWSPULSE",
+        "created_at": "2025-11-09T08:55:41.000Z",
+        "url": "https://greasyfork.org/users/1535908-shadowspulse"
+      }
+    ],
+    "name": "Best Bloxd IO Pulse Client",
+    "description": "Best Bloxd IO client with multiple modules for display and control.",
+    "url": "https://greasyfork.org/scripts/555284-best-bloxd-io-pulse-client",
+    "code_url": "https://update.greasyfork.org/scripts/555284/Best%20Bloxd%20IO%20Pulse%20Client.user.js",
+    "code_size": 3075,
     "license": "MIT License",
     "version": "1.15",
     "locale": "en",

@@ -8,7 +8,7 @@
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2026-01-03T09:58:37.000Z",
-    "code_updated_at": "2026-01-03T09:58:36.000Z",
+    "code_updated_at": "2026-01-12T09:00:35.000Z",
     "namespace": "http://tampermonkey.net/",
     "support_url": null,
     "contribution_url": null,
@@ -27,7 +27,7 @@
     "code_url": "https://update.greasyfork.org/scripts/561230/RockyIdle%20%E5%A2%9E%E5%BC%BA%E8%BE%85%E5%8A%A9%20%2830%E7%A7%92%E7%89%88%20%2B%20%E8%A7%86%E8%A7%89%E5%8F%8D%E9%A6%88%20%2B%20%E5%BC%80%E5%85%B3%20%2B%20%E9%98%B2%E4%BC%91%E7%9C%A0%29.user.js",
     "code_size": 4864,
     "license": "MIT License",
-    "version": "1.3",
+    "version": "1.6",
     "locale": "zh-CN",
     "deleted": false,
     "visibility": "unknown"

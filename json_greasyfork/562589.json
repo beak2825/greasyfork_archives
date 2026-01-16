@@ -1,7 +1,7 @@
 {
   "id": 562589,
-  "daily_installs": 2,
-  "total_installs": 3,
+  "daily_installs": 1,
+  "total_installs": 4,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -93,7 +93,7 @@
         },
         {
           "id": 537651,
-          "daily_installs": 2,
+          "daily_installs": 0,
           "total_installs": 16,
           "fan_score": "5.0",
           "good_ratings": 0,
@@ -118,7 +118,7 @@
         {
           "id": 537652,
           "daily_installs": 1,
-          "total_installs": 12,
+          "total_installs": 13,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
@@ -309,8 +309,8 @@
         },
         {
           "id": 562589,
-          "daily_installs": 2,
-          "total_installs": 3,
+          "daily_installs": 1,
+          "total_installs": 4,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,
@@ -334,7 +334,7 @@
         {
           "id": 562590,
           "daily_installs": 2,
-          "total_installs": 5,
+          "total_installs": 7,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,

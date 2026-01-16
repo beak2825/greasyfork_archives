@@ -1,7 +1,7 @@
 [
   {
     "id": 562041,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 4,
     "fan_score": "20.7",
     "good_ratings": 1,
@@ -41,7 +41,7 @@
     "ok_ratings": 0,
     "bad_ratings": 0,
     "created_at": "2026-01-08T17:47:18.000Z",
-    "code_updated_at": "2026-01-08T17:47:18.000Z",
+    "code_updated_at": "2026-01-14T05:09:56.000Z",
     "namespace": "http://tampermonkey.net/",
     "support_url": null,
     "contribution_url": null,
@@ -54,11 +54,44 @@
         "url": "https://greasyfork.org/users/1516805-carrot4522"
       }
     ],
-    "name": "Claude Project Bulk Delete (v4)",
-    "description": "Add checkboxes to select multiple conversations in Claude Projects for bulk deletion",
-    "url": "https://greasyfork.org/scripts/561871-claude-project-bulk-delete-v4",
-    "code_url": "https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v4%29.user.js",
-    "code_size": 22566,
+    "name": "Claude Project Bulk Delete (v7)",
+    "description": "Add checkboxes to select multiple conversations in Claude Projects for bulk deletion - Drag the button to move, click to toggle",
+    "url": "https://greasyfork.org/scripts/561871-claude-project-bulk-delete-v7",
+    "code_url": "https://update.greasyfork.org/scripts/561871/Claude%20Project%20Bulk%20Delete%20%28v7%29.user.js",
+    "code_size": 25791,
+    "license": null,
+    "version": "7",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555278,
+    "daily_installs": 0,
+    "total_installs": 6,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-09T08:05:37.000Z",
+    "code_updated_at": "2026-01-05T02:40:46.000Z",
+    "namespace": "https://github.com/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516805,
+        "name": "carrot4522",
+        "created_at": "2025-09-19T05:11:56.000Z",
+        "url": "https://greasyfork.org/users/1516805-carrot4522"
+      }
+    ],
+    "name": "YT Comments Color v4",
+    "description": "Match comment section colors to video description for Youtube-tools-extension custom backgrounds.",
+    "url": "https://greasyfork.org/scripts/555278-yt-comments-color-v4",
+    "code_url": "https://update.greasyfork.org/scripts/555278/YT%20Comments%20Color%20v4.user.js",
+    "code_size": 2870,
     "license": null,
     "version": "4",
     "locale": "en",
@@ -67,8 +100,8 @@
   },
   {
     "id": 555228,
-    "daily_installs": 3,
-    "total_installs": 106,
+    "daily_installs": 2,
+    "total_installs": 108,
     "fan_score": "31.0",
     "good_ratings": 2,
     "ok_ratings": 1,
@@ -101,7 +134,7 @@
   {
     "id": 555226,
     "daily_installs": 1,
-    "total_installs": 20,
+    "total_installs": 21,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -265,8 +298,8 @@
   },
   {
     "id": 555168,
-    "daily_installs": 0,
-    "total_installs": 11,
+    "daily_installs": 1,
+    "total_installs": 12,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -292,6 +325,39 @@
     "code_size": 162402,
     "license": "MIT License",
     "version": "4.10.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 555151,
+    "daily_installs": 0,
+    "total_installs": 18,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-08T00:35:44.000Z",
+    "code_updated_at": "2026-01-05T06:41:56.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1516805,
+        "name": "carrot4522",
+        "created_at": "2025-09-19T05:11:56.000Z",
+        "url": "https://greasyfork.org/users/1516805-carrot4522"
+      }
+    ],
+    "name": "Claude Token Saver v43",
+    "description": "Prevents token waste by enforcing file creation. Smooth draggable UI.",
+    "url": "https://greasyfork.org/scripts/555151-claude-token-saver-v43",
+    "code_url": "https://update.greasyfork.org/scripts/555151/Claude%20Token%20Saver%20v43.user.js",
+    "code_size": 32336,
+    "license": null,
+    "version": "43",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555832,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-14T11:50:30.000Z",
+    "code_updated_at": "2025-11-14T11:50:29.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1171405,
+        "name": "Haiiro98",
+        "created_at": "2023-09-12T07:44:02.000Z",
+        "url": "https://greasyfork.org/users/1171405-haiiro98"
+      }
+    ],
+    "name": "乐天排行榜评价数量下载",
+    "description": "乐天排行榜评价数量下载,可筛选低评价数量的。",
+    "url": "https://greasyfork.org/scripts/555832-%E4%B9%90%E5%A4%A9%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%AF%84%E4%BB%B7%E6%95%B0%E9%87%8F%E4%B8%8B%E8%BD%BD",
+    "code_url": "https://update.greasyfork.org/scripts/555832/%E4%B9%90%E5%A4%A9%E6%8E%92%E8%A1%8C%E6%A6%9C%E8%AF%84%E4%BB%B7%E6%95%B0%E9%87%8F%E4%B8%8B%E8%BD%BD.user.js",
+    "code_size": 10536,
+    "license": "Private Use Only",
+    "version": "0.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "id": 555362,
+  "daily_installs": 0,
+  "total_installs": 19,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-09T23:52:43.000Z",
+  "code_updated_at": "2025-11-10T00:04:54.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1097076,
+      "name": "nihaoshijie999",
+      "created_at": "2023-06-12T10:20:31.000Z",
+      "url": "https://greasyfork.org/users/1097076-nihaoshijie999"
+    }
+  ],
+  "name": "NotebookLM Auto Save",
+  "description": "Auto-save NotebookLM chat content, triggers save on mouse movement (at most once every 10 seconds)",
+  "url": "https://greasyfork.org/scripts/555362-notebooklm-auto-save",
+  "code_url": "https://update.greasyfork.org/scripts/555362/NotebookLM%20Auto%20Save.user.js",
+  "code_size": 11131,
+  "license": "MIT License",
+  "version": "1.0.2",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

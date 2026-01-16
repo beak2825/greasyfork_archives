@@ -57,7 +57,7 @@
     "name": "Real-Time-Rate-Limiting-Queue",
     "description": "If more requests are made within the specified interval than the specified number, it waits until the oldest one is older than the interval before making the next request in the queue.",
     "url": "https://greasyfork.org/scripts/559799-real-time-rate-limiting-queue",
-    "code_url": "https://update.greasyfork.org/scripts/559799/1722339/Real-Time-Rate-Limiting-Queue.js",
+    "code_url": "https://update.greasyfork.org/scripts/559799/1733958/Real-Time-Rate-Limiting-Queue.js",
     "code_size": 33952,
     "license": "MIT (https://mit-license.org/)",
     "version": "1.0.10",

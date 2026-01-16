@@ -30,7 +30,7 @@
     "version": "HALO.7.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
   },
   {
     "id": 562647,
@@ -63,7 +63,7 @@
     "version": "1.0",
     "locale": "en",
     "deleted": false,
-    "visibility": "public"
+    "visibility": "unlisted"
   },
   {
     "id": 561846,
@@ -195,6 +195,6 @@
     "version": "1.6.1",
     "locale": "en",
     "deleted": false,
-    "visibility": "unknown"
+    "visibility": "unlisted"
   }
 ]

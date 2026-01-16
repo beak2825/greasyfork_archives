@@ -1,0 +1,59 @@
+{
+  "id": 555596,
+  "daily_installs": 4,
+  "total_installs": 130,
+  "fan_score": "0.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 1,
+  "created_at": "2025-11-12T08:37:45.000Z",
+  "code_updated_at": "2025-11-12T08:37:45.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1536984,
+      "name": "ARROW RAIN",
+      "created_at": "2025-11-12T08:32:56.000Z",
+      "url": "https://greasyfork.org/users/1536984-arrow-rain",
+      "scripts": [
+        {
+          "id": 555596,
+          "daily_installs": 4,
+          "total_installs": 130,
+          "fan_score": "0.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 1,
+          "created_at": "2025-11-12T08:37:45.000Z",
+          "code_updated_at": "2025-11-12T08:37:45.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "MineFun Korean",
+          "description": "Simple cheat for MineFun.io",
+          "url": "https://greasyfork.org/scripts/555596-minefun-korean",
+          "code_url": "https://update.greasyfork.org/scripts/555596/MineFun%20Korean.user.js",
+          "code_size": 27994,
+          "license": "ISC License",
+          "version": "2.8",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "MineFun Korean",
+  "description": "Simple cheat for MineFun.io",
+  "url": "https://greasyfork.org/scripts/555596-minefun-korean",
+  "code_url": "https://update.greasyfork.org/scripts/555596/MineFun%20Korean.user.js",
+  "code_size": 27994,
+  "license": "ISC License",
+  "version": "2.8",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

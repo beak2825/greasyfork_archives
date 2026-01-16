@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555404,
+    "daily_installs": 6,
+    "total_installs": 551,
+    "fan_score": "20.7",
+    "good_ratings": 1,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-10T09:35:04.000Z",
+    "code_updated_at": "2025-11-15T12:48:18.000Z",
+    "namespace": "https://github.com/ekxs0109/123link",
+    "support_url": "https://github.com/ekxs0109/123link/issues",
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1340140,
+        "name": "ekxs0109",
+        "created_at": "2024-07-26T10:51:46.000Z",
+        "url": "https://greasyfork.org/users/1340140-ekxs0109"
+      }
+    ],
+    "name": "123云盘秒传JSON生成器（夸克网盘/天翼云盘）",
+    "description": "一键生成123云盘秒传JSON，支持夸克网盘、天翼云盘的个人文件和分享链接，配合123FastLink使用",
+    "url": "https://greasyfork.org/scripts/555404-123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0json%E7%94%9F%E6%88%90%E5%99%A8-%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98-%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98",
+    "code_url": "https://update.greasyfork.org/scripts/555404/123%E4%BA%91%E7%9B%98%E7%A7%92%E4%BC%A0JSON%E7%94%9F%E6%88%90%E5%99%A8%EF%BC%88%E5%A4%B8%E5%85%8B%E7%BD%91%E7%9B%98%E5%A4%A9%E7%BF%BC%E4%BA%91%E7%9B%98%EF%BC%89.user.js",
+    "code_size": 82486,
+    "license": "Apache License 2.0",
+    "version": "1.0.4",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

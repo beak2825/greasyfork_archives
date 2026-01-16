@@ -1,5 +1,38 @@
 [
   {
+    "id": 562547,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-13T15:35:16.000Z",
+    "code_updated_at": "2026-01-13T16:32:53.000Z",
+    "namespace": "yooyi",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1302937,
+        "name": "impasse",
+        "created_at": "2024-05-17T06:48:45.000Z",
+        "url": "https://greasyfork.org/users/1302937-impasse"
+      }
+    ],
+    "name": "ChatGPT 代码高亮 + Mermaid 渲染",
+    "description": "为 ChatGPT 添加代码高亮（使用 highlight.js）和 Mermaid 图表渲染",
+    "url": "https://greasyfork.org/scripts/562547-chatgpt-%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE-mermaid-%E6%B8%B2%E6%9F%93",
+    "code_url": "https://update.greasyfork.org/scripts/562547/ChatGPT%20%E4%BB%A3%E7%A0%81%E9%AB%98%E4%BA%AE%20%2B%20Mermaid%20%E6%B8%B2%E6%9F%93.user.js",
+    "code_size": 28617,
+    "license": "MIT License",
+    "version": "3.0.6",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 558804,
     "daily_installs": 0,
     "total_installs": 4,

@@ -1,5 +1,38 @@
 [
   {
+    "id": 562716,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-15T05:51:14.000Z",
+    "code_updated_at": "2026-01-15T05:51:14.000Z",
+    "namespace": "http://leizingyiu.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 901648,
+        "name": "leizingyiu",
+        "created_at": "2022-04-13T10:05:53.000Z",
+        "url": "https://greasyfork.org/users/901648-leizingyiu"
+      }
+    ],
+    "name": "自定义快捷键快捷操作",
+    "description": "目前已腾讯文档表格为例：按 Alt+B 填充，Alt+C 清理背景色（仅在匹配页面生效）",
+    "url": "https://greasyfork.org/scripts/562716-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C",
+    "code_url": "https://update.greasyfork.org/scripts/562716/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BF%AB%E6%8D%B7%E9%94%AE%E5%BF%AB%E6%8D%B7%E6%93%8D%E4%BD%9C.user.js",
+    "code_size": 4710,
+    "license": "GNU AGPLv3",
+    "version": "2026-01-15",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
     "id": 560053,
     "daily_installs": 0,
     "total_installs": 2,

@@ -1,7 +1,7 @@
 {
   "id": 556096,
-  "daily_installs": 2,
-  "total_installs": 93,
+  "daily_installs": 1,
+  "total_installs": 94,
   "fan_score": "0.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1538798,
       "name": "MASTERRONALDOFAN72",
       "created_at": "2025-11-17T13:23:12.000Z",
-      "url": "https://greasyfork.org/users/1538798-masterronaldofan72",
-      "scripts": [
-        {
-          "id": 556096,
-          "daily_installs": 2,
-          "total_installs": 93,
-          "fan_score": "0.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 2,
-          "created_at": "2025-11-17T13:24:13.000Z",
-          "code_updated_at": "2025-11-30T08:33:31.000Z",
-          "namespace": "LA3T",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Arras.io Clone script (patched)",
-          "description": "Right-click on any player and you become his clone! Then you can right-click anywhere again to stop being one. You can adjust the maximum distance from the clone host with the + and - keys. This script allows you to do multiboxing even without a VPN, as well as giving other players bots.",
-          "url": "https://greasyfork.org/scripts/556096-arras-io-clone-script-patched",
-          "code_url": "https://update.greasyfork.org/scripts/556096/Arrasio%20Clone%20script%20%28patched%29.user.js",
-          "code_size": 3518,
-          "license": "MIT License",
-          "version": "1.1",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1538798-masterronaldofan72"
     }
   ],
   "name": "Arras.io Clone script (patched)",

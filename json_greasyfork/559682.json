@@ -17,33 +17,7 @@
       "id": 1550592,
       "name": "hehysh",
       "created_at": "2025-12-21T07:08:36.000Z",
-      "url": "https://greasyfork.org/users/1550592-hehysh",
-      "scripts": [
-        {
-          "id": 559682,
-          "daily_installs": 0,
-          "total_installs": 17,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-12-21T07:12:27.000Z",
-          "code_updated_at": "2025-12-21T07:12:26.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Discord 图片助手",
-          "description": "在Discord图片旁边添加\"保存原图\"和\"复制链接\"按钮，提升图片处理效率",
-          "url": "https://greasyfork.org/scripts/559682-discord-%E5%9B%BE%E7%89%87%E5%8A%A9%E6%89%8B",
-          "code_url": "https://update.greasyfork.org/scripts/559682/Discord%20%E5%9B%BE%E7%89%87%E5%8A%A9%E6%89%8B.user.js",
-          "code_size": 15831,
-          "license": "MIT License",
-          "version": "1.0.1",
-          "locale": "zh-CN",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1550592-hehysh"
     }
   ],
   "name": "Discord 图片助手",

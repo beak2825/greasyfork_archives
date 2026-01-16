@@ -7,7 +7,7 @@
   "ok_ratings": 0,
   "bad_ratings": 0,
   "created_at": "2026-01-12T06:40:06.000Z",
-  "code_updated_at": "2026-01-14T12:37:49.000Z",
+  "code_updated_at": "2026-01-15T07:00:03.000Z",
   "namespace": "http://tampermonkey.net/",
   "support_url": null,
   "contribution_url": null,
@@ -17,16 +17,17 @@
       "id": 1559381,
       "name": "Delay No More",
       "created_at": "2026-01-12T06:38:17.000Z",
-      "url": "https://greasyfork.org/users/1559381-delay-no-more"
+      "url": "https://greasyfork.org/users/1559381-delay-no-more",
+      "scripts": []
     }
   ],
   "name": "Dio Enhancer",
-  "description": "测试服添加队列强化+20 & 贤者之镜合成辅助 (v24: 修复空闲状态下界面挤压扭曲的问题)",
+  "description": "测试服添加队列强化+20",
   "url": "https://greasyfork.org/scripts/562351-dio-enhancer",
   "code_url": "https://update.greasyfork.org/scripts/562351/Dio%20Enhancer.user.js",
-  "code_size": 51302,
+  "code_size": 62868,
   "license": "MIT License",
-  "version": "127.0.0.24",
+  "version": "127.0.0.41",
   "locale": "en",
   "deleted": false,
   "visibility": "public"

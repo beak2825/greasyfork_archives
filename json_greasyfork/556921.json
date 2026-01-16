@@ -17,7 +17,33 @@
       "id": 1541610,
       "name": "Tamhvm",
       "created_at": "2025-11-25T21:22:42.000Z",
-      "url": "https://greasyfork.org/users/1541610-tamhvm"
+      "url": "https://greasyfork.org/users/1541610-tamhvm",
+      "scripts": [
+        {
+          "id": 556921,
+          "daily_installs": 0,
+          "total_installs": 2,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-25T21:32:23.000Z",
+          "code_updated_at": "2025-12-03T01:02:07.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Mejoras en resultados de Mercado Libre Colombia",
+          "description": "Disminuye la opacidad de resultados de Mercado Libre Colombia con tiempo de entrega, promocionados y compra internacional, además de señalar claramente los articulos usados y reacondicionados",
+          "url": "https://greasyfork.org/scripts/556921-mejoras-en-resultados-de-mercado-libre-colombia",
+          "code_url": "https://update.greasyfork.org/scripts/556921/Mejoras%20en%20resultados%20de%20Mercado%20Libre%20Colombia.user.js",
+          "code_size": 2836,
+          "license": "GNU GPLv3",
+          "version": "20251202.2",
+          "locale": "es-419",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "Mejoras en resultados de Mercado Libre Colombia",

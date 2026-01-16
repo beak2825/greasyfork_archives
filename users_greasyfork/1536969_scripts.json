@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555595,
+    "daily_installs": 0,
+    "total_installs": 17,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-12T08:14:41.000Z",
+    "code_updated_at": "2025-11-12T08:14:41.000Z",
+    "namespace": "   http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1536969,
+        "name": "햘루",
+        "created_at": "2025-11-12T08:06:11.000Z",
+        "url": "https://greasyfork.org/users/1536969-%ED%96%98%EB%A3%A8"
+      }
+    ],
+    "name": "숲 멀티뷰 시청자 제거기",
+    "description": "숲 생방송 시청자 목록을 가져오고 멀티뷰를 제거합니다.",
+    "url": "https://greasyfork.org/scripts/555595-%EC%88%B2-%EB%A9%80%ED%8B%B0%EB%B7%B0-%EC%8B%9C%EC%B2%AD%EC%9E%90-%EC%A0%9C%EA%B1%B0%EA%B8%B0",
+    "code_url": "https://update.greasyfork.org/scripts/555595/%EC%88%B2%20%EB%A9%80%ED%8B%B0%EB%B7%B0%20%EC%8B%9C%EC%B2%AD%EC%9E%90%20%EC%A0%9C%EA%B1%B0%EA%B8%B0.user.js",
+    "code_size": 22505,
+    "license": "MIT License",
+    "version": "     1.3",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

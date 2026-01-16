@@ -17,33 +17,7 @@
       "id": 1430973,
       "name": "linlelest",
       "created_at": "2025-02-03T15:53:01.000Z",
-      "url": "https://greasyfork.org/users/1430973-linlelest",
-      "scripts": [
-        {
-          "id": 555988,
-          "daily_installs": 0,
-          "total_installs": 14,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-11-16T08:19:23.000Z",
-          "code_updated_at": "2025-11-16T08:21:14.000Z",
-          "namespace": "https://github.com/GZH2K19/tan8-downloader",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Tan8曲谱下载器修改版",
-          "description": "下载www.tan8.com网页端曲谱图片 (支持所有乐器类型，支持免费PNG/PDF/mp3导出)",
-          "url": "https://greasyfork.org/scripts/555988-tan8%E6%9B%B2%E8%B0%B1%E4%B8%8B%E8%BD%BD%E5%99%A8%E4%BF%AE%E6%94%B9%E7%89%88",
-          "code_url": "https://update.greasyfork.org/scripts/555988/Tan8%E6%9B%B2%E8%B0%B1%E4%B8%8B%E8%BD%BD%E5%99%A8%E4%BF%AE%E6%94%B9%E7%89%88.user.js",
-          "code_size": 28738,
-          "license": "MIT License",
-          "version": "1.0.22",
-          "locale": "zh-CN",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1430973-linlelest"
     }
   ],
   "name": "Tan8曲谱下载器修改版",

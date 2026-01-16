@@ -1,0 +1,33 @@
+{
+  "id": 560361,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-27T01:16:06.000Z",
+  "code_updated_at": "2025-12-27T01:16:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1552917,
+      "name": "Halfi",
+      "created_at": "2025-12-27T00:54:01.000Z",
+      "url": "https://greasyfork.org/users/1552917-halfi"
+    }
+  ],
+  "name": "CS.RIN.RU - Cover on Hover (SteamGridDB) v3",
+  "description": "Shows high-quality game covers and metadata (release year) when hovering over topic titles on CS.RIN.RU using the SteamGridDB API.",
+  "url": "https://greasyfork.org/scripts/560361-cs-rin-ru-cover-on-hover-steamgriddb-v3",
+  "code_url": "https://update.greasyfork.org/scripts/560361/CSRINRU%20-%20Cover%20on%20Hover%20%28SteamGridDB%29%20v3.user.js",
+  "code_size": 8074,
+  "license": null,
+  "version": "3.0",
+  "locale": "en",
+  "deleted": false,
+  "visibility": "public"
+}

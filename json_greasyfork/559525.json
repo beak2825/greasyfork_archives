@@ -21,7 +21,7 @@
       "scripts": [
         {
           "id": 519729,
-          "daily_installs": 2,
+          "daily_installs": 0,
           "total_installs": 97,
           "fan_score": "5.0",
           "good_ratings": 0,
@@ -45,8 +45,8 @@
         },
         {
           "id": 528621,
-          "daily_installs": 9,
-          "total_installs": 2498,
+          "daily_installs": 10,
+          "total_installs": 2508,
           "fan_score": "64.6",
           "good_ratings": 7,
           "ok_ratings": 0,

@@ -1,8 +1,8 @@
 [
   {
     "id": 562509,
-    "daily_installs": 0,
-    "total_installs": 1,
+    "daily_installs": 2,
+    "total_installs": 3,
     "fan_score": "5.0",
     "good_ratings": 0,
     "ok_ratings": 0,
@@ -34,7 +34,7 @@
   },
   {
     "id": 562405,
-    "daily_installs": 1,
+    "daily_installs": 0,
     "total_installs": 2,
     "fan_score": "5.0",
     "good_ratings": 0,
@@ -94,6 +94,39 @@
     "code_size": 2478,
     "license": "GPL",
     "version": "1.3",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  },
+  {
+    "id": 562396,
+    "daily_installs": 0,
+    "total_installs": 2,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2026-01-12T12:37:58.000Z",
+    "code_updated_at": "2026-01-12T12:37:58.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1529000,
+        "name": "Immanuel-Aristotle",
+        "created_at": "2025-10-20T21:09:29.000Z",
+        "url": "https://greasyfork.org/users/1529000-immanuel-aristotle"
+      }
+    ],
+    "name": "YouTube Jump to Time or Percentage",
+    "description": "Jump to a specific timestamp (e.g. 01:23) or percentage (e.g. 50%) in YouTube videos via hotkey Option+J (Alt+J on Windows/Linux).",
+    "url": "https://greasyfork.org/scripts/562396-youtube-jump-to-time-or-percentage",
+    "code_url": "https://update.greasyfork.org/scripts/562396/YouTube%20Jump%20to%20Time%20or%20Percentage.user.js",
+    "code_size": 1755,
+    "license": "GPL",
+    "version": "1.0",
     "locale": "en",
     "deleted": false,
     "visibility": "public"

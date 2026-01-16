@@ -1,0 +1,34 @@
+{
+  "id": 558622,
+  "daily_installs": 0,
+  "total_installs": 0,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-12-11T12:08:53.000Z",
+  "code_updated_at": "2025-12-11T12:27:06.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 1445521,
+      "name": "Rocco Mormont",
+      "created_at": "2025-03-14T06:25:59.000Z",
+      "url": "https://greasyfork.org/users/1445521-rocco-mormont",
+      "scripts": []
+    }
+  ],
+  "name": "notebookLM 增强工具",
+  "description": "notebookLM 页面增强工具",
+  "url": "https://greasyfork.org/scripts/558622-notebooklm-%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7",
+  "code_url": "https://update.greasyfork.org/scripts/558622/notebookLM%20%E5%A2%9E%E5%BC%BA%E5%B7%A5%E5%85%B7.user.js",
+  "code_size": 955,
+  "license": "MIT License",
+  "version": "0.0.2",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}
