@@ -17,7 +17,33 @@
       "id": 1533106,
       "name": "Kanobe Greasyfork",
       "created_at": "2025-11-02T00:10:29.000Z",
-      "url": "https://greasyfork.org/users/1533106-kanobe-greasyfork"
+      "url": "https://greasyfork.org/users/1533106-kanobe-greasyfork",
+      "scripts": [
+        {
+          "id": 554514,
+          "daily_installs": 0,
+          "total_installs": 0,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-02T13:24:19.000Z",
+          "code_updated_at": "2025-11-10T19:30:27.000Z",
+          "namespace": "Violentmonkey Scripts",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "Crawler's Companion Advanced Roller",
+          "description": "Adds a new sidebar for rolling and managing dice roll expressions.",
+          "url": "https://greasyfork.org/scripts/554514-crawler-s-companion-advanced-roller",
+          "code_url": "https://update.greasyfork.org/scripts/554514/Crawler%27s%20Companion%20Advanced%20Roller.user.js",
+          "code_size": 39133,
+          "license": "MIT License",
+          "version": "1.2",
+          "locale": "en",
+          "deleted": false
+        }
+      ]
     }
   ],
   "name": "Crawler's Companion Advanced Roller",

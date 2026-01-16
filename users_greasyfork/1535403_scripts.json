@@ -1,0 +1,35 @@
+[
+  {
+    "id": 555140,
+    "daily_installs": 0,
+    "total_installs": 13,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-07T21:16:15.000Z",
+    "code_updated_at": "2025-11-07T21:57:23.000Z",
+    "namespace": "https://greasyfork.org/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1535403,
+        "name": "skylewl",
+        "created_at": "2025-11-07T21:12:03.000Z",
+        "url": "https://greasyfork.org/users/1535403-skylewl"
+      }
+    ],
+    "name": "MCSR Ranked Match History VOD Synchronizer",
+    "description": "Adds a button to match history pages to sync and watch VODs from both players.",
+    "url": "https://greasyfork.org/scripts/555140-mcsr-ranked-match-history-vod-synchronizer",
+    "code_url": "https://update.greasyfork.org/scripts/555140/MCSR%20Ranked%20Match%20History%20VOD%20Synchronizer.user.js",
+    "code_size": 7943,
+    "license": "MIT License",
+    "version": "1.5",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

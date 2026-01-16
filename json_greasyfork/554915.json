@@ -1,7 +1,7 @@
 {
   "id": 554915,
-  "daily_installs": 0,
-  "total_installs": 8,
+  "daily_installs": 1,
+  "total_installs": 9,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -17,33 +17,7 @@
       "id": 1534552,
       "name": "ryzyk2111",
       "created_at": "2025-11-05T21:54:48.000Z",
-      "url": "https://greasyfork.org/users/1534552-ryzyk2111",
-      "scripts": [
-        {
-          "id": 554915,
-          "daily_installs": 0,
-          "total_installs": 8,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-11-05T21:55:59.000Z",
-          "code_updated_at": "2025-11-05T21:55:59.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "jakubryzyk",
-          "description": "stake larp",
-          "url": "https://greasyfork.org/scripts/554915-jakubryzyk",
-          "code_url": "https://update.greasyfork.org/scripts/554915/jakubryzyk.user.js",
-          "code_size": 5860,
-          "license": "MIT License",
-          "version": "3.2",
-          "locale": "en",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1534552-ryzyk2111"
     }
   ],
   "name": "jakubryzyk",

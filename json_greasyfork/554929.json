@@ -1,0 +1,59 @@
+{
+  "id": 554929,
+  "daily_installs": 0,
+  "total_installs": 6,
+  "fan_score": "5.0",
+  "good_ratings": 0,
+  "ok_ratings": 0,
+  "bad_ratings": 0,
+  "created_at": "2025-11-06T02:40:19.000Z",
+  "code_updated_at": "2025-11-06T03:43:38.000Z",
+  "namespace": "http://tampermonkey.net/",
+  "support_url": null,
+  "contribution_url": null,
+  "contribution_amount": null,
+  "users": [
+    {
+      "id": 122214,
+      "name": "夕口",
+      "created_at": "2017-05-07T17:29:01.000Z",
+      "url": "https://greasyfork.org/users/122214-%E5%A4%95%E5%8F%A3",
+      "scripts": [
+        {
+          "id": 554929,
+          "daily_installs": 0,
+          "total_installs": 6,
+          "fan_score": "5.0",
+          "good_ratings": 0,
+          "ok_ratings": 0,
+          "bad_ratings": 0,
+          "created_at": "2025-11-06T02:40:19.000Z",
+          "code_updated_at": "2025-11-06T03:43:38.000Z",
+          "namespace": "http://tampermonkey.net/",
+          "support_url": null,
+          "contribution_url": null,
+          "contribution_amount": null,
+          "name": "App Store 网页版 地区切换器",
+          "description": "在 App Store 网页版丨可拖动悬浮按钮和菜单丨热门地区丨全球地区按分类展示",
+          "url": "https://greasyfork.org/scripts/554929-app-store-%E7%BD%91%E9%A1%B5%E7%89%88-%E5%9C%B0%E5%8C%BA%E5%88%87%E6%8D%A2%E5%99%A8",
+          "code_url": "https://update.greasyfork.org/scripts/554929/App%20Store%20%E7%BD%91%E9%A1%B5%E7%89%88%20%E5%9C%B0%E5%8C%BA%E5%88%87%E6%8D%A2%E5%99%A8.user.js",
+          "code_size": 26575,
+          "license": "MIT License",
+          "version": "1.3",
+          "locale": "zh-CN",
+          "deleted": false
+        }
+      ]
+    }
+  ],
+  "name": "App Store 网页版 地区切换器",
+  "description": "在 App Store 网页版丨可拖动悬浮按钮和菜单丨热门地区丨全球地区按分类展示",
+  "url": "https://greasyfork.org/scripts/554929-app-store-%E7%BD%91%E9%A1%B5%E7%89%88-%E5%9C%B0%E5%8C%BA%E5%88%87%E6%8D%A2%E5%99%A8",
+  "code_url": "https://update.greasyfork.org/scripts/554929/App%20Store%20%E7%BD%91%E9%A1%B5%E7%89%88%20%E5%9C%B0%E5%8C%BA%E5%88%87%E6%8D%A2%E5%99%A8.user.js",
+  "code_size": 26575,
+  "license": "MIT License",
+  "version": "1.3",
+  "locale": "zh-CN",
+  "deleted": false,
+  "visibility": "public"
+}

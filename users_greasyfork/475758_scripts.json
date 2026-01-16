@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554862,
+    "daily_installs": 1,
+    "total_installs": 28,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-05T08:42:54.000Z",
+    "code_updated_at": "2025-11-05T08:42:54.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 475758,
+        "name": "MHH",
+        "created_at": "2020-04-06T03:44:42.000Z",
+        "url": "https://greasyfork.org/users/475758-mhh"
+      }
+    ],
+    "name": "HNJSWLXY视频自动播放脚本（完整版）",
+    "description": "完整版",
+    "url": "https://greasyfork.org/scripts/554862-hnjswlxy%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC-%E5%AE%8C%E6%95%B4%E7%89%88",
+    "code_url": "https://update.greasyfork.org/scripts/554862/HNJSWLXY%E8%A7%86%E9%A2%91%E8%87%AA%E5%8A%A8%E6%92%AD%E6%94%BE%E8%84%9A%E6%9C%AC%EF%BC%88%E5%AE%8C%E6%95%B4%E7%89%88%EF%BC%89.user.js",
+    "code_size": 13072,
+    "license": "MIT License",
+    "version": "4.0.2",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

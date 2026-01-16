@@ -17,7 +17,8 @@
       "id": 1527707,
       "name": "Dean Harper",
       "created_at": "2025-10-17T08:03:45.000Z",
-      "url": "https://greasyfork.org/users/1527707-dean-harper"
+      "url": "https://greasyfork.org/users/1527707-dean-harper",
+      "scripts": []
     }
   ],
   "name": "Replace egtd-s-h-100 Div on Localhost",

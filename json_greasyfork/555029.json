@@ -17,33 +17,7 @@
       "id": 1534884,
       "name": "Julian Herrera Triana",
       "created_at": "2025-11-06T19:26:47.000Z",
-      "url": "https://greasyfork.org/users/1534884-julian-herrera-triana",
-      "scripts": [
-        {
-          "id": 555029,
-          "daily_installs": 0,
-          "total_installs": 2,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-11-06T19:27:55.000Z",
-          "code_updated_at": "2025-11-06T19:27:55.000Z",
-          "namespace": "http://tampermonkey.net/",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "Guía de resolución (educativa)",
-          "description": "Añade una guía paso a paso para resolver problemas matemáticos (no da respuestas). Útil para estudiar y aprender procedimientos.",
-          "url": "https://greasyfork.org/scripts/555029-gu%C3%ADa-de-resoluci%C3%B3n-educativa",
-          "code_url": "https://update.greasyfork.org/scripts/555029/Gu%C3%ADa%20de%20resoluci%C3%B3n%20%28educativa%29.user.js",
-          "code_size": 6704,
-          "license": null,
-          "version": "1.0",
-          "locale": "es-419",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1534884-julian-herrera-triana"
     }
   ],
   "name": "Guía de resolución (educativa)",

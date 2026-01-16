@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554955,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T08:57:17.000Z",
+    "code_updated_at": "2025-11-06T09:01:21.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1458492,
+        "name": "eastlakeast",
+        "created_at": "2025-04-16T07:32:20.000Z",
+        "url": "https://greasyfork.org/users/1458492-eastlakeast"
+      }
+    ],
+    "name": "hmc olo-live configuration",
+    "description": "olo라이브 로컬프로퍼티 설정",
+    "url": "https://greasyfork.org/scripts/554955-hmc-olo-live-configuration",
+    "code_url": "https://update.greasyfork.org/scripts/554955/hmc%20olo-live%20configuration.user.js",
+    "code_size": 1417,
+    "license": null,
+    "version": "2025-11-06",
+    "locale": "ko",
+    "deleted": false,
+    "visibility": "public"
+  }
+]

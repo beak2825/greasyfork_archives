@@ -1,5 +1,38 @@
 [
   {
+    "id": 555016,
+    "daily_installs": 0,
+    "total_installs": 1,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-06T16:28:11.000Z",
+    "code_updated_at": "2025-11-06T16:33:43.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 994554,
+        "name": "Richard Tyson",
+        "created_at": "2022-12-08T12:14:50.000Z",
+        "url": "https://greasyfork.org/users/994554-richard-tyson"
+      }
+    ],
+    "name": "重庆师范大学考试平台 倍速播放",
+    "description": "适配 ks.cqsdx.cn/exam/ 视频，防检测倍速+自动同步进度",
+    "url": "https://greasyfork.org/scripts/555016-%E9%87%8D%E5%BA%86%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E8%80%83%E8%AF%95%E5%B9%B3%E5%8F%B0-%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE",
+    "code_url": "https://update.greasyfork.org/scripts/555016/%E9%87%8D%E5%BA%86%E5%B8%88%E8%8C%83%E5%A4%A7%E5%AD%A6%E8%80%83%E8%AF%95%E5%B9%B3%E5%8F%B0%20%E5%80%8D%E9%80%9F%E6%92%AD%E6%94%BE.user.js",
+    "code_size": 1506,
+    "license": "MIT License",
+    "version": "0.1.1",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "unknown"
+  },
+  {
     "id": 553790,
     "daily_installs": 1,
     "total_installs": 18,

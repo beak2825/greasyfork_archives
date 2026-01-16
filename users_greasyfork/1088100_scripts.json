@@ -924,6 +924,39 @@
     "visibility": "unlisted"
   },
   {
+    "id": 554570,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T21:40:18.000Z",
+    "code_updated_at": "2025-11-02T21:40:17.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088100,
+        "name": "YouTubeDrawaria",
+        "created_at": "2023-05-31T23:20:20.000Z",
+        "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+      }
+    ],
+    "name": "Drawaria Game Level 9 - Inside the Halls",
+    "description": "Level 9: Inside the Halls. A reflective journey through the castle, meeting the Fairies and preparing for the final ascent.",
+    "url": "https://greasyfork.org/scripts/554570-drawaria-game-level-9-inside-the-halls",
+    "code_url": "https://update.greasyfork.org/scripts/554570/1688336/Drawaria%20Game%20Level%209%20-%20Inside%20the%20Halls.js",
+    "code_size": 190380,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
     "id": 554569,
     "daily_installs": 0,
     "total_installs": 0,
@@ -950,6 +983,39 @@
     "url": "https://greasyfork.org/scripts/554569-drawaria-game-level-8-castle-lands",
     "code_url": "https://update.greasyfork.org/scripts/554569/1688334/Drawaria%20Game%20Level%208%20-%20Castle%20Lands.js",
     "code_size": 87259,
+    "license": "MIT License",
+    "version": "1.0",
+    "locale": "en",
+    "deleted": false,
+    "visibility": "unlisted"
+  },
+  {
+    "id": 554568,
+    "daily_installs": 0,
+    "total_installs": 0,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-02T21:36:50.000Z",
+    "code_updated_at": "2025-11-02T21:36:50.000Z",
+    "namespace": "http://tampermonkey.net/",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1088100,
+        "name": "YouTubeDrawaria",
+        "created_at": "2023-05-31T23:20:20.000Z",
+        "url": "https://greasyfork.org/users/1088100-youtubedrawaria"
+      }
+    ],
+    "name": "Drawaria Game Level 7 - Cold Passages",
+    "description": "Level 7: Cold Passages. Traverse the freezing icy caverns, meeting unique, multiplying characters.",
+    "url": "https://greasyfork.org/scripts/554568-drawaria-game-level-7-cold-passages",
+    "code_url": "https://update.greasyfork.org/scripts/554568/1688332/Drawaria%20Game%20Level%207%20-%20Cold%20Passages.js",
+    "code_size": 82868,
     "license": "MIT License",
     "version": "1.0",
     "locale": "en",

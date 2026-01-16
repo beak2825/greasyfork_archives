@@ -17,33 +17,7 @@
       "id": 1535703,
       "name": "Steve Park",
       "created_at": "2025-11-08T16:29:12.000Z",
-      "url": "https://greasyfork.org/users/1535703-steve-park",
-      "scripts": [
-        {
-          "id": 555205,
-          "daily_installs": 0,
-          "total_installs": 9,
-          "fan_score": "5.0",
-          "good_ratings": 0,
-          "ok_ratings": 0,
-          "bad_ratings": 0,
-          "created_at": "2025-11-08T16:32:00.000Z",
-          "code_updated_at": "2025-11-08T16:32:00.000Z",
-          "namespace": "Violentmonkey Scripts",
-          "support_url": null,
-          "contribution_url": null,
-          "contribution_amount": null,
-          "name": "[루시퍼홍] 부동산 매물 가격 필터(based on 모느나님)_엑셀값붙여넣기_옵션A",
-          "description": "엑셀에 가로 4셀로 '값 붙여넣기' 되도록 TSV/CSV로만 복사(HTML 제거). 업데이트 팝업 비활성화.",
-          "url": "https://greasyfork.org/scripts/555205-%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D-%EB%B6%80%EB%8F%99%EC%82%B0-%EB%A7%A4%EB%AC%BC-%EA%B0%80%EA%B2%A9-%ED%95%84%ED%84%B0-based-on-%EB%AA%A8%EB%8A%90%EB%82%98%EB%8B%98-%EC%97%91%EC%85%80%EA%B0%92%EB%B6%99%EC%97%AC%EB%84%A3%EA%B8%B0-%EC%98%B5%EC%85%98a",
-          "code_url": "https://update.greasyfork.org/scripts/555205/%5B%EB%A3%A8%EC%8B%9C%ED%8D%BC%ED%99%8D%5D%20%EB%B6%80%EB%8F%99%EC%82%B0%20%EB%A7%A4%EB%AC%BC%20%EA%B0%80%EA%B2%A9%20%ED%95%84%ED%84%B0%28based%20on%20%EB%AA%A8%EB%8A%90%EB%82%98%EB%8B%98%29_%EC%97%91%EC%85%80%EA%B0%92%EB%B6%99%EC%97%AC%EB%84%A3%EA%B8%B0_%EC%98%B5%EC%85%98A.user.js",
-          "code_size": 34045,
-          "license": null,
-          "version": "1.10-fix-excel-values-optA",
-          "locale": "ko",
-          "deleted": false
-        }
-      ]
+      "url": "https://greasyfork.org/users/1535703-steve-park"
     }
   ],
   "name": "[루시퍼홍] 부동산 매물 가격 필터(based on 모느나님)_엑셀값붙여넣기_옵션A",

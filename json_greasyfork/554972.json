@@ -1,7 +1,7 @@
 {
   "id": 554972,
   "daily_installs": 2,
-  "total_installs": 22,
+  "total_installs": 24,
   "fan_score": "5.0",
   "good_ratings": 0,
   "ok_ratings": 0,
@@ -21,7 +21,7 @@
       "scripts": [
         {
           "id": 520119,
-          "daily_installs": 1,
+          "daily_installs": 0,
           "total_installs": 16,
           "fan_score": "5.0",
           "good_ratings": 0,
@@ -70,7 +70,7 @@
         {
           "id": 554972,
           "daily_installs": 2,
-          "total_installs": 22,
+          "total_installs": 24,
           "fan_score": "5.0",
           "good_ratings": 0,
           "ok_ratings": 0,

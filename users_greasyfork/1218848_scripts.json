@@ -1,0 +1,35 @@
+[
+  {
+    "id": 554591,
+    "daily_installs": 0,
+    "total_installs": 12,
+    "fan_score": "5.0",
+    "good_ratings": 0,
+    "ok_ratings": 0,
+    "bad_ratings": 0,
+    "created_at": "2025-11-03T03:09:27.000Z",
+    "code_updated_at": "2025-11-03T03:09:27.000Z",
+    "namespace": "bilibili.batch.block",
+    "support_url": null,
+    "contribution_url": null,
+    "contribution_amount": null,
+    "users": [
+      {
+        "id": 1218848,
+        "name": "BingBingAFK",
+        "created_at": "2023-11-17T01:22:17.000Z",
+        "url": "https://greasyfork.org/users/1218848-bingbingafk"
+      }
+    ],
+    "name": "B站批量拉黑用户",
+    "description": "在B站用户搜索页面批量拉黑用户",
+    "url": "https://greasyfork.org/scripts/554591-b%E7%AB%99%E6%89%B9%E9%87%8F%E6%8B%89%E9%BB%91%E7%94%A8%E6%88%B7",
+    "code_url": "https://update.greasyfork.org/scripts/554591/B%E7%AB%99%E6%89%B9%E9%87%8F%E6%8B%89%E9%BB%91%E7%94%A8%E6%88%B7.user.js",
+    "code_size": 38024,
+    "license": "MIT License",
+    "version": "1.0.0",
+    "locale": "zh-CN",
+    "deleted": false,
+    "visibility": "public"
+  }
+]
