@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         M-Team屏蔽指定关键词种子
 // @namespace    m-teamblock
-// @version      20260116
+// @version      20260117
 // @author       Badge8305@M-Team
 // @description  自动删除包含指定关键字的 <tr> 行
 // @match        https://*.m-team.cc/*
@@ -15,7 +15,9 @@
 (function () {
     'use strict';
 
-    // 这里写你要屏蔽的所有关键词
+    const PATH_REGEX = /^\/browse\/adult/;
+
+    // 屏蔽关键词
     const KEYWORDS = [
         '男娘',
         '大屌萌妹',
@@ -32,7 +34,16 @@
         '屎'
     ];
 
+    let observer = null;
+    let active = false;
+
+    function isTargetPage() {
+        return PATH_REGEX.test(location.pathname);
+    }
+
     function removeRows() {
+        if (!isTargetPage()) return;
+
         const rows = document.querySelectorAll('tr');
         rows.forEach(tr => {
             const text = tr.innerText || '';
@@ -42,14 +53,60 @@
         });
     }
 
-    removeRows();
+    function start() {
+        if (active) return;
+        active = true;
 
-    const observer = new MutationObserver(() => {
         removeRows();
+
+        observer = new MutationObserver(() => {
+            removeRows();
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        console.log('[Tampermonkey] adult browse ON');
+    }
+
+    function stop() {
+        if (!active) return;
+        active = false;
+
+        if (observer) {
+            observer.disconnect();
+            observer = null;
+        }
+
+        console.log('[Tampermonkey] adult browse OFF');
+    }
+
+    function checkRoute() {
+        if (isTargetPage()) {
+            start();
+        } else {
+            stop();
+        }
+    }
+
+    checkRoute();
+
+    const _pushState = history.pushState;
+    history.pushState = function () {
+        _pushState.apply(this, arguments);
+        setTimeout(checkRoute, 0);
+    };
+
+    const _replaceState = history.replaceState;
+    history.replaceState = function () {
+        _replaceState.apply(this, arguments);
+        setTimeout(checkRoute, 0);
+    };
+
+    window.addEventListener('popstate', () => {
+        setTimeout(checkRoute, 0);
     });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
 })();

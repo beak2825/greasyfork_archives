@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Toolasha
 // @namespace    http://tampermonkey.net/
-// @version      0.4.937
+// @version      0.4.938
 // @description  Toolasha - Enhanced tools for Milky Way Idle.
 // @author       Celasha and Claude, thank you to bot7420, DrDucky, Frotty, Truth_Light, AlphB, and sentientmilk for providing the basis for a lot of this. Thank you to Miku, Orvel, Jigglymoose, Incinarator, Knerd, and others for their time and help. Thank you to Steez for testing and helping me figure out where I'm wrong! Special thanks to Zaeter for the name.
 // @license      CC-BY-NC-SA-4.0
@@ -26169,7 +26169,7 @@
             const badge = document.createElement('div');
             badge.className = `mwi-badge-price-${type}`;
 
-            // Position: vertically centered on left (bid) or right (ask)
+            // Position: vertically centered on left (ask) or right (bid)
             const isAsk = type === 'ask';
             const color = isAsk ? config.COLOR_INVBADGE_ASK : config.COLOR_INVBADGE_BID;
 
@@ -26177,12 +26177,12 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            ${isAsk ? 'right: 2px;' : 'left: 2px;'}
+            ${isAsk ? 'left: 2px;' : 'right: 2px;'}
             z-index: 1;
             color: ${color};
             font-size: 0.7rem;
             font-weight: bold;
-            text-align: ${isAsk ? 'right' : 'left'};
+            text-align: ${isAsk ? 'left' : 'right'};
             pointer-events: none;
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 0 3px #000;
         `;
@@ -35226,7 +35226,7 @@
         const targetWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
         targetWindow.Toolasha = {
-            version: '0.4.937',
+            version: '0.4.938',
 
             // Feature toggle API (for users to manage settings via console)
             features: {

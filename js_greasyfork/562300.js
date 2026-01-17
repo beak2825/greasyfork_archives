@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Facebook Mobile - Hide suggested posts
 // @namespace    http://tampermonkey.net/
-// @version      2
+// @version      3
 // @description  Hide reels, follow/join/sponsored posts, and suggested friends from the main newsfeed.
 // @author       fejjj
 // @match        https://m.facebook.com/*
@@ -19,7 +19,15 @@
     // Function to check if we should filter on current page
     function shouldFilter() {
         const path = window.location.pathname;
-        return !path.includes('/watch') && !path.includes('/reel');
+        
+        // Only filter on main feed (/) or /watch or /reel pages
+        if (path === '/' || path === '') {
+            return true; // Main feed - run all filters
+        }
+        if (path.includes('/watch') || path.includes('/reel')) {
+            return 'sponsored-only'; // Watch/reel pages - only sponsored filter
+        }
+        return false; // All other pages - don't filter
     }
 
     // ===== FILTER SETTINGS - Change these to true/false to enable/disable filters =====
@@ -95,8 +103,13 @@
     }
 
     function checkPost(post) {
+        const filterMode = shouldFilter();
+        
+        // Don't filter on pages we haven't explicitly allowed
+        if (filterMode === false) return;
+        
         // On /watch or /reel pages, only filter sponsored content
-        if (!shouldFilter()) {
+        if (filterMode === 'sponsored-only') {
             if (FILTERS.hideSponsoredReels) {
                 const sponsoredSpans = post.querySelectorAll('span[class^="f"]');
                 for (const span of sponsoredSpans) {
