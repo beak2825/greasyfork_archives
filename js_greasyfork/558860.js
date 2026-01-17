@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         GSMArena 快速複製 - 廣告屏蔽與佈局優化 v3.7
+// @name         GSMArena 快速複製 - 廣告屏蔽與佈局優化 v4.3
 // @namespace    http://tampermonkey.net/
-// @version      3.7
+// @version      4.3
 // @description  快速複製選單、獨立複製按鈕、屏蔽廣告、右移品牌選單區塊，新增 Launch 發布/發售日期(年/月)辨識與一鍵複製，5G 檢測標記，面板大小控制
 // @author       BUTTST
 // @license MIT; https://opensource.org/licenses/MIT
@@ -9,13 +9,14 @@
 // @match        https://www.gsmarena.com/*
 // @grant        none
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/558860/GSMArena%20%E5%BF%AB%E9%80%9F%E8%A4%87%E8%A3%BD%20-%20%E5%BB%A3%E5%91%8A%E5%B1%8F%E8%94%BD%E8%88%87%E4%BD%88%E5%B1%80%E5%84%AA%E5%8C%96%20v37.user.js
-// @updateURL https://update.greasyfork.org/scripts/558860/GSMArena%20%E5%BF%AB%E9%80%9F%E8%A4%87%E8%A3%BD%20-%20%E5%BB%A3%E5%91%8A%E5%B1%8F%E8%94%BD%E8%88%87%E4%BD%88%E5%B1%80%E5%84%AA%E5%8C%96%20v37.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/558860/GSMArena%20%E5%BF%AB%E9%80%9F%E8%A4%87%E8%A3%BD%20-%20%E5%BB%A3%E5%91%8A%E5%B1%8F%E8%94%BD%E8%88%87%E4%BD%88%E5%B1%80%E5%84%AA%E5%8C%96%20v43.user.js
+// @updateURL https://update.greasyfork.org/scripts/558860/GSMArena%20%E5%BF%AB%E9%80%9F%E8%A4%87%E8%A3%BD%20-%20%E5%BB%A3%E5%91%8A%E5%B1%8F%E8%94%BD%E8%88%87%E4%BD%88%E5%B1%80%E5%84%AA%E5%8C%96%20v43.meta.js
 // ==/UserScript==
 
+
 /*
- * 版本號: 3.7
- * 更新時間: 2025/12/16 12:17
+ * 版本號: 4.3
+ * 更新時間: 2026/01/16 9:08
  * 
  * 功能說明:
  * 1. 屏蔽所有廣告區塊
@@ -73,7 +74,28 @@
  * - 新增：數據收集按鈕（抓取/刷新數據，按住3秒清除）
  * - 改進：將開發者界面移至設置界面中（配色主題下方）
  * - 改進：匯總表格按鈕取代原本的開發者按鈕
- * 
+
+ * v3.8 (2026/01/15 20:09):
+ * - 新增：自動翻譯 Launch 中的英文月份為繁體中文顯示（格式：YYYY年MM月DD日 / YYYY年MM月）
+ * - 新增：在 Launch 行右側加入「複製完整年月日」按鈕，複製格式為 YYYY/MM/DD（若無日則為 YYYY/MM）
+ * - 小幅版本號與時間更新
+ *
+ * v4.3 (2026/01/16 9:08):
+ * - 優化：面板寬度調整為自適應計算（初始約350px/最小約300px），確保年月日完整顯示
+ * - 修復：防止Launch區塊中文年月日被強制換行或隱藏的問題
+ * - 調整：Launch區塊值區域改為固定寬度120px，提升顯示完整性的可靠性
+ *
+ * v3.9 (2026/01/15 20:12):
+ * - 新增：在腳本面板加入「系列」判斷與「複製系列」按鈕，會根據完整型號推斷系列名稱並可一鍵複製
+ * - 新增：系列判斷邏輯與關鍵字映射（支援常見品牌與系列匹配）
+ * - 版本號更新
+ *
+ * - 改進：調整配色方案，更新為4種新的漸變配色選項
+ * - 改進：複製按鈕和整體界面外框也應用主題配色
+ * - 改進：標題文字調整為18px，上下間隔各1px
+ * - 改進：標題內容改為"面板 ＋ 指紋位置、類型"（去掉前綴排序）
+ * - 改進：界面預設展開時為最小尺寸（寬度300px，高度385px，內容區域最大高度345px）
+  * 
  * v2.8 (2025/12/15 12:55):
  * - 新增：5G 檢測功能，自動檢測 Network Technology 是否支援 5G
  * - 新增：5G 標記顯示於「發布日期 / 發售日期（年/月）」標題右側（方形倒圓角設計）
@@ -134,6 +156,12 @@
 
 (function() {
     'use strict';
+
+    // ========== 開發者警告：變數宣告檢查 ==========
+    // 警告：確保所有變數在使用前已經宣告，避免 ReferenceError
+    console.warn('GSMArena 快速複製插件加載中...');
+    console.warn('變數宣告檢查：確保所有 let/const 變數在使用前已經宣告');
+    console.warn('常見錯誤：ReferenceError: Cannot access \'variable\' before initialization');
 
     // ========== 保護的重要內容選擇器 ==========
     // 這些選擇器對應的元素絕對不能被隱藏，確保主要內容區域的安全
@@ -396,7 +424,7 @@
                     box-sizing: border-box;
                     clear: both;
                     position: relative;
-                    z-index: 1 !important;
+                    z-index: 1;
                     word-wrap: break-word !important;
                     overflow-wrap: break-word !important;
                 `;
@@ -596,9 +624,9 @@
                 bodyElement.style.paddingLeft = leftPadding;
                 bodyElement.style.boxSizing = 'border-box';
                 
-                // 確保主內容區域的 z-index 高於 phone-finder-top，避免被遮蓋
+                // 確保主內容區域不會影響浮動面板
                 bodyElement.style.position = 'relative';
-                bodyElement.style.zIndex = '2';
+                bodyElement.style.zIndex = '1';
                 
                 // 如果原本有左側邊距（可能是為了避開左側邊欄），移除它
                 const currentMarginLeft = window.getComputedStyle(bodyElement).marginLeft;
@@ -614,15 +642,15 @@
                     mainReview.style.paddingLeft = leftPadding;
                     mainReview.style.boxSizing = 'border-box';
                 }
-                // 確保 main-review 的 z-index 正確
+                // 確保 main-review 不會影響浮動面板
                 mainReview.style.position = 'relative';
-                mainReview.style.zIndex = '2';
+                mainReview.style.zIndex = '1';
             }
             
-            // 確保 specs-list 的 z-index 正確
+            // 確保 specs-list 不會影響浮動面板
             if (specsList) {
                 specsList.style.position = 'relative';
-                specsList.style.zIndex = '2';
+                specsList.style.zIndex = '1';
             }
         }
 
@@ -879,6 +907,167 @@
         return { year: '', month: '', ym: '' };
     }
 
+    /**
+     * 解析完整日期（年/月/日），並回傳中文顯示與用於複製的格式
+     * 返回格式：
+     *   { year, month, day, chinese, copy }
+     * 例：{ year: '2025', month: 12, day: 19, chinese: '2025年12月19日', copy: '2025/12/19' }
+     */
+    function parseFullDate(text) {
+        const t = normalizeSpaces(text);
+        if (!t) return { year: '', month: '', day: '', chinese: '', copy: '' };
+
+        // 1) Format: "December 19, 2025" or "Dec 19, 2025"
+        let m = t.match(/([A-Za-z]+)\s+(\d{1,2})\s*,\s*(\d{4})/i);
+        if (m) {
+            const month = MONTH_MAP[m[1].toLowerCase()] || '';
+            const day = parseInt(m[2], 10);
+            const year = m[3];
+            const chinese = formatChineseDate(year, month, day);
+            const copy = formatCopyDate(year, month, day);
+            return { year, month, day, chinese, copy };
+        }
+
+        // 2) Format: "2025, December 19" or "2025, December 04"
+        m = t.match(/(\d{4})\s*,\s*([A-Za-z]+)\s+(\d{1,2})/i);
+        if (m) {
+            const year = m[1];
+            const month = MONTH_MAP[m[2].toLowerCase()] || '';
+            const day = parseInt(m[3], 10);
+            const chinese = formatChineseDate(year, month, day);
+            const copy = formatCopyDate(year, month, day);
+            return { year, month, day, chinese, copy };
+        }
+
+        // 3) ISO or numeric: "2025-12-19" or "2025/12/19"
+        m = t.match(/(\d{4})\s*[-/]\s*(\d{1,2})\s*[-/]\s*(\d{1,2})/);
+        if (m) {
+            const year = m[1];
+            const month = parseInt(m[2], 10);
+            const day = parseInt(m[3], 10);
+            const chinese = formatChineseDate(year, month, day);
+            const copy = formatCopyDate(year, month, day);
+            return { year, month, day, chinese, copy };
+        }
+
+        // 4) Year + month only: "2025, December" OR "December, 2025" OR "2025-12" / "2025/12"
+        m = t.match(/([A-Za-z]+)\s*,\s*(\d{4})/i);
+        if (m) {
+            const month = MONTH_MAP[m[1].toLowerCase()] || '';
+            const year = m[2];
+            const chinese = formatChineseDate(year, month, '');
+            const copy = toYM(year, month);
+            return { year, month, day: '', chinese, copy };
+        }
+        m = t.match(/(\d{4})\s*[-/]\s*(\d{1,2})/);
+        if (m) {
+            const year = m[1];
+            const month = parseInt(m[2], 10);
+            const chinese = formatChineseDate(year, month, '');
+            const copy = toYM(year, month);
+            return { year, month, day: '', chinese, copy };
+        }
+
+        // 5) Year only
+        m = t.match(/(\d{4})/);
+        if (m) {
+            const year = m[1];
+            return { year, month: '', day: '', chinese: year + '年', copy: year };
+        }
+
+        return { year: '', month: '', day: '', chinese: '', copy: '' };
+    }
+
+    function pad(n) {
+        if (n === '' || n === undefined || n === null) return '';
+        return String(n).padStart(2, '0');
+    }
+
+    /**
+     * 系列判斷映射（簡化版，按優先順序匹配）
+     * 每個項目：{ brand: 'X', series: 'Y', keywords: [ 'KEY', '\\bREGEX\\b', ... ] }
+     * 關鍵字可為簡單字串（不分大小寫包含）或包含 \b 的正則字串（會以 RegExp 匹配）
+     */
+    const SERIES_MAPPINGS = [
+        { brand: 'APPLE', series: 'IPHONE', keywords: ['IPHONE', '\\bIP\\b'] },
+        { brand: 'SAMSUNG', series: 'S', keywords: ['\\bS\\d{1,3}\\b'] },
+        { brand: 'SAMSUNG', series: 'A', keywords: ['\\bA\\d{1,3}\\b', 'A0', 'A1'] },
+        { brand: 'HUAWEI', series: 'MATE', keywords: ['MATE'] },
+        { brand: 'HUAWEI', series: 'NOVA', keywords: ['NOVA'] },
+        { brand: 'XIAOMI', series: 'MIX', keywords: ['MIX'] },
+        { brand: 'XIAOMI', series: 'CIVI', keywords: ['CIVI'] },
+        { brand: 'XIAOMI', series: 'POCO', keywords: ['POCO', 'POCOPHONE'] },
+        { brand: 'XIAOMI', series: 'MIX', keywords: ['MIX'] },
+        { brand: 'XIAOMI', series: 'NOTE', keywords: ['\\bNOTE\\d{0,3}\\b'] },
+        { brand: 'ONEPLUS', series: 'NORD', keywords: ['NORD'] },
+        { brand: 'GOOGLE', series: 'PIXEL', keywords: ['PIXEL'] },
+        { brand: 'ASUS', series: 'ROG', keywords: ['ROG'] },
+        { brand: 'ASUS', series: 'ZENFONE', keywords: ['ZENFONE', 'ZF', 'ZENFONE MAX', 'MAX PRO'] },
+        { brand: 'REALME', series: 'GT', keywords: ['\\bGT\\b'] },
+        { brand: 'OPPO', series: 'FIND', keywords: ['FIND'] },
+        { brand: 'OPPO', series: 'RENO', keywords: ['RENO'] },
+        { brand: 'VIVO', series: 'IQOO', keywords: ['IQOO'] },
+        { brand: 'NOKIA', series: 'G', keywords: ['\\bG\\d{1,3}\\b'] },
+        { brand: 'NOKIA', series: 'C', keywords: ['\\bC\\d{1,3}\\b'] },
+        { brand: 'REDMI', series: 'NOTE', keywords: ['\\bNOTE\\d{1,3}\\b'] },
+        { brand: 'BLACKSHARK', series: '黑鯊', keywords: ['黑鯊'] },
+        { brand: 'POCO', series: 'POCO', keywords: ['POCO'] },
+        { brand: 'MOTOROLA', series: 'EDGE', keywords: ['EDGE'] },
+        { brand: 'SONY', series: 'XPERIA', keywords: ['XPERIA'] },
+        { brand: 'HTC', series: 'DESIRE', keywords: ['DESIRE'] },
+        // ... 可擴充更多規則
+    ];
+
+    function normalizeModelForMatch(s) {
+        return (s || '').toUpperCase();
+    }
+
+    function matchesKeyword(modelUpper, keyword) {
+        if (!modelUpper || !keyword) return false;
+        if (keyword.indexOf('\\b') !== -1 || keyword.indexOf('(') !== -1 || keyword.indexOf('[') !== -1) {
+            try {
+                const re = new RegExp(keyword, 'i');
+                return re.test(modelUpper);
+            } catch (e) {
+                return false;
+            }
+        }
+        // 普通包含比對，忽略空白與連字號
+        const strippedModel = modelUpper.replace(/[\s-_/]+/g, '');
+        const strippedKey = keyword.toUpperCase().replace(/[\s-_/]+/g, '');
+        return modelUpper.includes(keyword.toUpperCase()) || strippedModel.includes(strippedKey);
+    }
+
+    /**
+     * 根據完整型號判斷系列，優先返回第一個匹配的系列名稱
+     */
+    function getSeriesFromModel(modelName) {
+        const mu = normalizeModelForMatch(modelName);
+        if (!mu) return '';
+        for (const mapping of SERIES_MAPPINGS) {
+            for (const kw of mapping.keywords) {
+                if (matchesKeyword(mu, kw)) {
+                    return mapping.series;
+                }
+            }
+        }
+        return '';
+    }
+
+    function formatChineseDate(year, month, day) {
+        if (!year) return '';
+        if (!month) return `${year}年`;
+        if (!day) return `${year}年${pad(month)}月`;
+        return `${year}年${pad(month)}月${pad(day)}日`;
+    }
+
+    function formatCopyDate(year, month, day) {
+        if (!year) return '';
+        if (!month) return `${year}`;
+        if (!day) return `${year}/${pad(month)}`;
+        return `${year}/${pad(month)}/${pad(day)}`;
+    }
+
     function extractReleasedPart(statusText) {
         const t = normalizeSpaces(statusText);
         const m = t.match(/Released\s+(.+)$/i);
@@ -903,6 +1092,13 @@
         extractedData.launch.releasedRaw = releasedSource;
         extractedData.launch.announcedYM = announcedParsed.ym || '';
         extractedData.launch.releasedYM = releasedParsed.ym || '';
+        // 解析完整日期並產生中文顯示與複製格式
+        const announcedFull = parseFullDate(announcedRaw || '');
+        const releasedFull = parseFullDate(releasedSource || '');
+        extractedData.launch.announcedFullChinese = announcedFull.chinese || (extractedData.launch.announcedYM ? (extractedData.launch.announcedYM.replace('/', '年') + '月') : '');
+        extractedData.launch.releasedFullChinese = releasedFull.chinese || (extractedData.launch.releasedYM ? (extractedData.launch.releasedYM.replace('/', '年') + '月') : '');
+        extractedData.launch.announcedFullCopy = announcedFull.copy || extractedData.launch.announcedYM || '';
+        extractedData.launch.releasedFullCopy = releasedFull.copy || extractedData.launch.releasedYM || '';
     }
 
     /**
@@ -1224,7 +1420,7 @@
             handle.style.cssText = `
                 position: absolute;
                 background: transparent;
-                z-index: 10002;
+                z-index: 2147483647 !important;
             `;
             
             // 設置位置和大小
@@ -1428,13 +1624,42 @@
     }
 
     /**
+     * 計算面板自適應寬度
+     */
+    function calculateAdaptivePanelWidth() {
+        // 基於Launch區塊內容計算最小寬度
+        // Launch區塊每行：label(80px) + gap(4px) + val(100px+) + gap(4px) + btn1(24px) + gap(4px) + btn2(24px) + padding(8px)
+        const launchRowWidth = 80 + 4 + 100 + 4 + 24 + 4 + 24 + 8; // 約248px
+
+        // 其他區塊的估計寬度
+        const otherContentWidth = 250; // 其他內容的估計寬度
+
+        // 左右padding和border
+        const paddingBorderWidth = 20;
+
+        // 計算最小寬度（確保Launch區塊完整顯示）
+        const minWidth = Math.max(280, launchRowWidth + paddingBorderWidth);
+
+        // 計算建議初始寬度（比最小寬度稍大一些，提供舒適的顯示空間）
+        const suggestedWidth = Math.max(350, minWidth + 50);
+
+        return {
+            minWidth: minWidth,
+            suggestedWidth: suggestedWidth
+        };
+    }
+
+    /**
      * 創建彈出界面
      */
     function createCopyPanel() {
         if (copyPanel) return copyPanel;
-        
+
         // 載入保存的大小設定
         loadPanelSizeScale();
+
+        // 計算自適應寬度
+        const adaptiveWidth = calculateAdaptivePanelWidth();
         
         // 查找右側邊欄位置（Phone Finder 下方）
         const rightSidebar = document.querySelector('aside.sidebar.col.right');
@@ -1462,17 +1687,17 @@
             position: fixed;
             bottom: ${initialBottom}px;
             right: ${initialRight}px;
-            width: 300px;
+            width: ${adaptiveWidth.suggestedWidth}px;
             height: 470px;
             background: white;
             border: 2px solid ${themeColor};
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 10000;
+            z-index: 2147483647 !important;
             font-family: Arial, sans-serif;
             font-size: 14px;
             overflow: hidden;
-            min-width: 300px;
+            min-width: ${adaptiveWidth.minWidth}px;
             min-height: 470px;
         `;
         
@@ -1608,14 +1833,14 @@
         launchBox.className = 'section-content section-launch-content';
         launchBox.style.cssText = `
             background: #f5f5f5;
-            padding: 8px;
+            padding: 6px;
             border: 1px solid #e0e0e0;
             border-radius: 3px;
             font-family: monospace;
             font-size: 12px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         `;
 
         function buildLaunchRow(rowClass, labelText, getValueFn, miniType) {
@@ -1624,25 +1849,47 @@
             row.style.cssText = `
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                padding: 4px 6px;
+                gap: 4px;
+                padding: 4px 4px;
                 border-radius: 3px;
             `;
 
             const label = document.createElement('div');
             label.textContent = labelText;
-            label.style.cssText = `width: 88px; color:#333; flex: 0 0 auto;`;
+            label.style.cssText = `
+                min-width: 60px;
+                max-width: 80px;
+                color:#333;
+                flex: 0 0 auto;
+                font-size: 11px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            `;
 
             const val = document.createElement('div');
             val.className = `${rowClass}-value`;
-            val.textContent = getValueFn() || '';
+            // 主要顯示：嘗試使用解析好的中文完整日期，若無則退回到年/月
+            if (miniType === 'launch-announced') {
+                val.textContent = extractedData.launch.announcedFullChinese || getValueFn() || '';
+            } else if (miniType === 'launch-released') {
+                val.textContent = extractedData.launch.releasedFullChinese || getValueFn() || '';
+            } else {
+                val.textContent = getValueFn() || '';
+            }
             val.style.cssText = `
                 flex: 1 1 auto;
+                min-width: 100px;
+                max-width: 160px;
                 color:#111;
                 padding: 2px 6px;
                 border-radius: 3px;
                 background: rgba(255,255,255,0.7);
                 border: 1px solid rgba(0,0,0,0.05);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size: 11px;
             `;
 
             const currentTheme = themeOptions[selectedTheme] || themeOptions['default'];
@@ -1651,15 +1898,18 @@
             btn.title = '點擊複製（單格）';
             btn.style.cssText = `
                 flex: 0 0 auto;
-                padding: 4px 8px;
+                width: 24px;
+                height: 20px;
+                padding: 2px 4px;
                 background: ${currentTheme.backgroundImage};
                 background-color: ${currentTheme.backgroundColor};
                 color: white;
                 border: none;
-                border-radius: 4px;
+                border-radius: 3px;
                 cursor: pointer;
-                font-size: 12px;
+                font-size: 10px;
                 transition: all 0.2s;
+                line-height: 1;
             `;
 
             btn.addEventListener('mouseenter', function() {
@@ -1678,9 +1928,49 @@
                 copyToClipboard(v);
             });
 
+            // 新增：完整日期複製按鈕（位於右側，複製 YYYY/MM/DD 或 YYYY/MM）
+            const fullBtn = document.createElement('button');
+            fullBtn.textContent = '📋';
+            fullBtn.title = '複製完整日期（YYYY/MM/DD）';
+            fullBtn.style.cssText = `
+                flex: 0 0 auto;
+                width: 24px;
+                height: 20px;
+                padding: 2px 4px;
+                margin-left: 4px;
+                background: rgba(0,0,0,0.12);
+                color: white;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 10px;
+                transition: all 0.2s;
+                line-height: 1;
+            `;
+            fullBtn.addEventListener('mouseenter', function() {
+                this.style.opacity = '0.95';
+                this.style.transform = 'scale(1.03)';
+            });
+            fullBtn.addEventListener('mouseleave', function() {
+                this.style.opacity = '1';
+                this.style.transform = 'scale(1)';
+            });
+            fullBtn.addEventListener('click', function() {
+                let copyVal = '';
+                if (miniType === 'launch-announced') {
+                    copyVal = extractedData.launch.announcedFullCopy || extractedData.launch.announcedYM || '';
+                } else if (miniType === 'launch-released') {
+                    copyVal = extractedData.launch.releasedFullCopy || extractedData.launch.releasedYM || '';
+                } else {
+                    copyVal = getValueFn() || '';
+                }
+                copyToClipboard(copyVal);
+            });
+
             row.appendChild(label);
             row.appendChild(val);
             row.appendChild(btn);
+            row.appendChild(fullBtn);
 
             return { row, valEl: val, btnEl: btn };
         }
@@ -1711,7 +2001,7 @@
         sectionLaunch.appendChild(launchBox);
         sectionLaunch.appendChild(launchHint);
 
-        // 區域1：面板＋指紋信息
+        // ===== 區域1：面板＋指紋信息 =====
         const section1 = document.createElement('div');
         section1.className = 'copy-section';
         section1.style.cssText = `
@@ -1721,7 +2011,7 @@
             border-radius: 4px;
             background: #fafafa;
         `;
-        
+
         const section1Title = document.createElement('h3');
         section1Title.className = 'section-title';
         section1Title.textContent = '面板 ＋ 指紋位置、類型';
@@ -1733,7 +2023,7 @@
             border-bottom: 1px solid #e0e0e0;
             padding-bottom: 6px;
         `;
-        
+
         const section1Content = document.createElement('div');
         section1Content.className = 'section-content section-1-content';
         section1Content.style.cssText = `
@@ -1748,7 +2038,7 @@
             font-size: 12px;
         `;
         section1Content.textContent = generateCopyText1();
-        
+
         const section1CopyBtn = document.createElement('button');
         section1CopyBtn.textContent = '📋 複製區域1';
         section1CopyBtn.style.cssText = `
@@ -1765,7 +2055,7 @@
         section1CopyBtn.addEventListener('click', function() {
             copyToClipboard(generateCopyText1());
         });
-        
+
         const section1Note = document.createElement('div');
         section1Note.className = 'section-note';
         section1Note.style.cssText = `
@@ -1775,13 +2065,13 @@
             line-height: 1.4;
         `;
         section1Note.innerHTML = '⚠️注意⚠️ 預設填入"全面屏"<br>需自行確認 [水滴屏、曲面屏] 面板樣式';
-        
+
         section1.appendChild(section1Title);
         section1.appendChild(section1Content);
         section1.appendChild(section1CopyBtn);
         section1.appendChild(section1Note);
-        
-        // 區域2：尺寸信息
+
+        // ===== 區域2：尺寸信息 =====
         const section2 = document.createElement('div');
         section2.className = 'copy-section';
         section2.style.cssText = `
@@ -1790,7 +2080,7 @@
             border-radius: 4px;
             background: #fafafa;
         `;
-        
+
         const section2Title = document.createElement('h3');
         section2Title.className = 'section-title';
         section2Title.textContent = '長寬厚（mm）';
@@ -1802,7 +2092,7 @@
             border-bottom: 1px solid #e0e0e0;
             padding-bottom: 6px;
         `;
-        
+
         const section2Content = document.createElement('div');
         section2Content.className = 'section-content section-2-content';
         section2Content.style.cssText = `
@@ -1817,7 +2107,7 @@
             font-size: 12px;
         `;
         section2Content.textContent = generateCopyText2();
-        
+
         const section2CopyBtn = document.createElement('button');
         section2CopyBtn.textContent = '📋 複製區域2';
         section2CopyBtn.className = 'section-2-copy-btn';
@@ -1834,17 +2124,84 @@
         section2CopyBtn.addEventListener('click', function() {
             copyToClipboard(generateCopyText2());
         });
-        
+
         section2.appendChild(section2Title);
         section2.appendChild(section2Content);
         section2.appendChild(section2CopyBtn);
-        
-        // 組裝
+
+        // ===== 新增：系列判斷與複製 =====
+        const sectionSeries = document.createElement('div');
+        sectionSeries.className = 'copy-section';
+        sectionSeries.style.cssText = `
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fafafa;
+        `;
+
+        const sectionSeriesTitle = document.createElement('h3');
+        sectionSeriesTitle.className = 'section-title';
+        sectionSeriesTitle.style.cssText = `
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 6px;
+        `;
+        sectionSeriesTitle.textContent = '系列';
+
+        const sectionSeriesContent = document.createElement('div');
+        sectionSeriesContent.className = 'section-content section-series-content';
+        sectionSeriesContent.style.cssText = `
+            background: #f5f5f5;
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            font-size: 12px;
+        `;
+        sectionSeriesContent.textContent = ''; // 由定時更新填入
+
+        const sectionSeriesCopyBtn = document.createElement('button');
+        sectionSeriesCopyBtn.textContent = '📋 複製系列';
+        sectionSeriesCopyBtn.className = 'section-series-copy-btn';
+        sectionSeriesCopyBtn.style.cssText = `
+            width: 100%;
+            padding: 6px;
+            background: ${themeColor};
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 6px;
+        `;
+        sectionSeriesCopyBtn.addEventListener('click', function() {
+            const model = getPhoneModel();
+            const series = getSeriesFromModel(model) || '';
+            if (!series) {
+                showToast('無法判斷系列', '#d9534f');
+                return;
+            }
+            copyToClipboard(series);
+        });
+
+        sectionSeries.appendChild(sectionSeriesTitle);
+        sectionSeries.appendChild(sectionSeriesContent);
+        sectionSeries.appendChild(sectionSeriesCopyBtn);
+
+        // 將所有區塊插入到內容區域
         content.appendChild(sectionLaunch);
         content.appendChild(section1);
         content.appendChild(section2);
+        content.appendChild(sectionSeries);
         
-        // 定期更新內容
+            // 定期更新內容
         setInterval(function() {
             const newModel = getPhoneModel();
             if (title.textContent !== newModel) {
@@ -1854,17 +2211,40 @@
             // Refresh extracted data
             refreshLaunchData();
             check5GSupport();
-            
+
             // 更新 5G 標記顯示
             if (badge5G) {
                 badge5G.style.display = extractedData.has5G ? 'inline-block' : 'none';
             }
+
+            // 更新頁面上的中文日期顯示
+            const yearEl = document.querySelector('td[data-spec="year"]');
+            const statusEl = document.querySelector('td[data-spec="status"]');
+            if (yearEl) {
+                let chineseSpan = yearEl.querySelector('.chinese-date-display');
+                if (chineseSpan) {
+                    chineseSpan.textContent = extractedData.launch.announcedFullChinese || '';
+                }
+            }
+            if (statusEl) {
+                let chineseSpan = statusEl.querySelector('.chinese-date-display');
+                if (chineseSpan) {
+                    chineseSpan.textContent = extractedData.launch.releasedFullChinese || '';
+                }
+            }
             
-            // 更新面板內容
-            if (section1Content) section1Content.textContent = generateCopyText1();
-            if (section2Content) section2Content.textContent = generateCopyText2();
-            launchAnnouncedRow.valEl.textContent = generateCopyLaunchAnnouncedSingle() || '';
-            launchReleasedRow.valEl.textContent = generateCopyLaunchReleasedSingle() || '';
+                // 更新面板內容
+                if (section1Content) section1Content.textContent = generateCopyText1();
+                if (section2Content) section2Content.textContent = generateCopyText2();
+                // 使用解析後的中文完整日期顯示（若無日則顯示年/月）
+                launchAnnouncedRow.valEl.textContent = extractedData.launch.announcedFullChinese || generateCopyLaunchAnnouncedSingle() || '';
+                launchReleasedRow.valEl.textContent = extractedData.launch.releasedFullChinese || generateCopyLaunchReleasedSingle() || '';
+                // 更新系列顯示
+                if (sectionSeriesContent) {
+                    const model = getPhoneModel();
+                    const series = getSeriesFromModel(model);
+                    sectionSeriesContent.textContent = series || '(無法判斷系列)';
+                }
         }, 1000);
         
         copyPanel.appendChild(header);
@@ -1906,7 +2286,7 @@
         
         // 添加邊框調整大小功能
         addResizeHandles(copyPanel, {
-            minWidth: 300,
+            minWidth: adaptiveWidth.minWidth,
             minHeight: 470, // 最小高度，確保複製按鈕不被隱藏
             onResize: function(width, height) {
                 responsiveContent(copyPanel, width, height);
@@ -1969,9 +2349,9 @@
             });
         } else {
             content.style.display = 'block';
-            copyPanel.style.width = '300px';
+            copyPanel.style.width = adaptiveWidth.suggestedWidth + 'px';
             copyPanel.style.height = '470px';
-            copyPanel.style.minWidth = '300px';
+            copyPanel.style.minWidth = adaptiveWidth.minWidth + 'px';
             copyPanel.style.minHeight = '470px';
             toggleBtn.textContent = '−';
             copyPanel.style.opacity = '1';
@@ -2005,7 +2385,7 @@
             border: 2px solid ${themeColor};
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10001;
+            z-index: 2147483647 !important;
             font-family: 'Consolas', 'Monaco', monospace;
             font-size: 12px;
             display: none;
@@ -2450,7 +2830,7 @@
             border: 2px solid ${themeColor};
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10001;
+            z-index: 2147483647 !important;
             font-family: Arial, sans-serif;
             font-size: 13px;
             display: none;
@@ -2824,10 +3204,10 @@
             border: 1px solid #ddd;
             text-align: center;
             min-width: 40px;
-            background: #f0f0f0;
-            position: sticky;
-            left: 0;
-            z-index: 10;
+                background: #f0f0f0;
+                position: sticky;
+                left: 0;
+                z-index: 5;
         `;
         headerRow.appendChild(rowNumHeader);
         
@@ -2878,7 +3258,7 @@
                 font-size: 9px;
                 padding: 1px 3px;
                 opacity: 0.6;
-                z-index: 12;
+                z-index: 7;
                 line-height: 1;
                 min-width: 16px;
                 min-height: 16px;
@@ -2907,7 +3287,7 @@
                 width: 6px;
                 height: 100%;
                 cursor: col-resize;
-                z-index: 11;
+                z-index: 6;
             `;
             let startX = 0;
             let startWidth = 0;
@@ -3034,7 +3414,7 @@
                 background: #f9f9f9;
                 position: sticky;
                 left: 0;
-                z-index: 5;
+                z-index: 3;
                 min-width: 64px;
             `;
             const rowBox = document.createElement('div');
@@ -3137,7 +3517,7 @@
                 bottom: -3px;
                 height: 6px;
                 cursor: ns-resize;
-                z-index: 4;
+                z-index: 2;
             `;
             let rowStartY = 0;
             let rowStartH = tr.offsetHeight || 32;
@@ -3355,17 +3735,34 @@
                     }
                 });
             }
-            
+
             const btn = createMiniCopyButton({
                 type: 'launch-announced',
                 title: '點擊複製（發布日期 年/月 單格）',
                 getText: generateCopyLaunchAnnouncedSingle
             });
-            
+
             if (label) {
                 label.appendChild(btn);
             } else {
                 yearEl.parentNode.insertBefore(btn, yearEl.nextSibling);
+            }
+
+            // 在原始文本旁邊添加中文年月日顯示
+            if (!yearEl.querySelector('.chinese-date-display')) {
+                const chineseSpan = document.createElement('span');
+                chineseSpan.className = 'chinese-date-display';
+                chineseSpan.style.cssText = `
+                    margin-left: 12px;
+                    padding: 2px 8px;
+                    background: #f0f0f0;
+                    border-radius: 3px;
+                    font-size: 11px;
+                    color: #666;
+                    font-weight: normal;
+                `;
+                chineseSpan.textContent = extractedData.launch.announcedFullChinese || '';
+                yearEl.appendChild(chineseSpan);
             }
         }
         
@@ -3382,17 +3779,34 @@
                     }
                 });
             }
-            
+
             const btn = createMiniCopyButton({
                 type: 'launch-released',
                 title: '點擊複製（發售日期 年/月 單格）',
                 getText: generateCopyLaunchReleasedSingle
             });
-            
+
             if (label) {
                 label.appendChild(btn);
             } else {
                 statusEl.parentNode.insertBefore(btn, statusEl.nextSibling);
+            }
+
+            // 在原始文本旁邊添加中文年月日顯示
+            if (!statusEl.querySelector('.chinese-date-display')) {
+                const chineseSpan = document.createElement('span');
+                chineseSpan.className = 'chinese-date-display';
+                chineseSpan.style.cssText = `
+                    margin-left: 12px;
+                    padding: 2px 8px;
+                    background: #f0f0f0;
+                    border-radius: 3px;
+                    font-size: 11px;
+                    color: #666;
+                    font-weight: normal;
+                `;
+                chineseSpan.textContent = extractedData.launch.releasedFullChinese || '';
+                statusEl.appendChild(chineseSpan);
             }
         }
     }
@@ -3571,7 +3985,7 @@
             border: 2px solid ${themeColor};
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10002;
+            z-index: 2147483647 !important;
             font-family: Arial, sans-serif;
             font-size: 14px;
             display: none;
@@ -3976,7 +4390,7 @@
     // ========== 初始化控制變數 ==========
     let isInitialized = false;      // 標記是否已初始化，避免重複執行
     let phoneFinderMoved = false;   // 標記 Phone Finder 是否已移動，避免重複移動
-    const VERSION = '3.7';
+    const VERSION = '4.3';
     
     // ========== 大小控制選項 ==========
     let panelSizeScale = 1.0;  // 面板大小縮放比例（預設 1.0 = 100%）

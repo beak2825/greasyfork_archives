@@ -16,7 +16,7 @@
 // @connect     *
 // @require     https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js
 // @run-at      document-idle
-// @version     1.8.1
+// @version     1.8.2
 // @author      quantumcat & nulluser & enhanced & idear
 // @license     MIT
 // @icon        https://www.google.com/s2/favicons?domain=linux.do
@@ -3178,18 +3178,18 @@ class BrowseController {
 
 
             /* 标签页内容区 */
-            .tab-content {
+            .lda-tab-content {
                 display: none;
                 padding: 12px;
                 flex-direction: column;
                 gap: 6px;
             }
 
-            .tab-content.active {
+            .lda-tab-content.active {
                 display: flex;
             }
 
-            .tab-content-title {
+            .lda-tab-content-title {
                 font-size: 13px;
                 font-weight: 600;
                 color: white;
@@ -4479,19 +4479,19 @@ class BrowseController {
 
             // ========== 标签页1内容：账号信息 ==========
             const tab1Content = document.createElement("div");
-            tab1Content.className = "tab-content" + (this.activeTab === 1 ? " active" : "");
+            tab1Content.className = "lda-tab-content" + (this.activeTab === 1 ? " active" : "");
             tab1Content.setAttribute("data-tab", "1");
-            tab1Content.innerHTML = `<div class="tab-content-title">${this.t('sectionAccountInfo')}</div>`;
+            tab1Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionAccountInfo')}</div>`;
             tab1Content.appendChild(this.trustLevelContainer);
             this.tabContainer.appendChild(tab1Content);
 
             // ========== 标签页2内容：积分 ==========
             const tab2Content = document.createElement("div");
-            tab2Content.className = "tab-content" + (this.activeTab === 2 ? " active" : "");
+            tab2Content.className = "lda-tab-content" + (this.activeTab === 2 ? " active" : "");
             tab2Content.setAttribute("data-tab", "2");
 
             if (CURRENT_DOMAIN === 'linux.do') {
-                tab2Content.innerHTML = `<div class="tab-content-title">${this.t('sectionCredit')}</div>`;
+                tab2Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionCredit')}</div>`;
                 // Credit 容器
                 this.creditContainer = document.createElement("div");
                 this.creditContainer.className = "credit-info-row";
@@ -4508,16 +4508,16 @@ class BrowseController {
                 // 注意：积分数据的加载由 initDataLoading() 统一处理
             } else {
                 // 非 linux.do 站点，显示提示
-                tab2Content.innerHTML = `<div class="tab-content-title">${this.t('sectionCredit')}</div>`;
+                tab2Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionCredit')}</div>`;
                 tab2Content.innerHTML += `<div style="color: rgba(255,255,255,0.7); font-size: 12px; padding: 10px;">${this.t('notSupported')}</div>`;
             }
             this.tabContainer.appendChild(tab2Content);
 
             // ========== 标签页3内容：自动阅读 ==========
             const tab3Content = document.createElement("div");
-            tab3Content.className = "tab-content" + (this.activeTab === 3 ? " active" : "");
+            tab3Content.className = "lda-tab-content" + (this.activeTab === 3 ? " active" : "");
             tab3Content.setAttribute("data-tab", "3");
-            tab3Content.innerHTML = `<div class="tab-content-title">${this.t('sectionAutoRead')}</div>`;
+            tab3Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionAutoRead')}</div>`;
             tab3Content.appendChild(this.button);
             tab3Content.appendChild(this.readStatsContainer);
             tab3Content.appendChild(this.likeCounterContainer);
@@ -4559,9 +4559,9 @@ class BrowseController {
 
             // ========== 标签页4内容：CDK 分数 ==========
             const tab4Content = document.createElement("div");
-            tab4Content.className = "tab-content" + (this.activeTab === 4 ? " active" : "");
+            tab4Content.className = "lda-tab-content" + (this.activeTab === 4 ? " active" : "");
             tab4Content.setAttribute("data-tab", "4");
-            tab4Content.innerHTML = `<div class="tab-content-title">${this.t('sectionCdk')}</div>`;
+            tab4Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionCdk')}</div>`;
 
             if (CURRENT_DOMAIN === 'linux.do') {
                 // CDK 数据容器
@@ -4578,9 +4578,9 @@ class BrowseController {
 
             // ========== 标签页5内容：排名 ==========
             const tab5Content = document.createElement("div");
-            tab5Content.className = "tab-content" + (this.activeTab === 5 ? " active" : "");
+            tab5Content.className = "lda-tab-content" + (this.activeTab === 5 ? " active" : "");
             tab5Content.setAttribute("data-tab", "5");
-            tab5Content.innerHTML = `<div class="tab-content-title">${this.t('sectionRanking')}</div>`;
+            tab5Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionRanking')}</div>`;
 
             // 排名数据容器
             this.rankDataContainer = document.createElement("div");
@@ -4595,9 +4595,9 @@ class BrowseController {
 
             // ========== 标签页6内容：设置（包含模式设置、文章页功能、插件设置） ==========
             const tab6Content = document.createElement("div");
-            tab6Content.className = "tab-content" + (this.activeTab === 6 ? " active" : "");
+            tab6Content.className = "lda-tab-content" + (this.activeTab === 6 ? " active" : "");
             tab6Content.setAttribute("data-tab", "6");
-            tab6Content.innerHTML = `<div class="tab-content-title">${this.t('sectionPluginSettings')}</div>`;
+            tab6Content.innerHTML = `<div class="lda-tab-content-title">${this.t('sectionPluginSettings')}</div>`;
 
             // 模式设置
             const modeSettingsSection = document.createElement("div");
@@ -5813,7 +5813,7 @@ class BrowseController {
         });
 
         // 更新标签内容显示
-        const tabContents = this.container.querySelectorAll('.tab-content');
+        const tabContents = this.container.querySelectorAll('.lda-tab-content');
         tabContents.forEach(content => {
             const contentTab = parseInt(content.getAttribute('data-tab'));
             if (contentTab === tabNum) {

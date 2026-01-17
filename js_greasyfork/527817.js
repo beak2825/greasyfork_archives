@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         IMDB to TMDB Linker
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  IMDB 페이지에서 TMDB 정보를 표시합니다
 // @author       DongHaerang
+// @license      CC BY-NC-SA 4.0
 // @match        https://www.imdb.com/*
 // @grant        GM_xmlhttpRequest
 // @downloadURL https://update.greasyfork.org/scripts/527817/IMDB%20to%20TMDB%20Linker.user.js

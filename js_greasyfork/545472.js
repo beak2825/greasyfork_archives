@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RedGIFs Video Download Button
 // @namespace    https://github.com/p65536
-// @version      2.2.1
+// @version      2.3.0
 // @license      MIT
 // @description  Adds a download button (for one-click HD downloads) and an "Open in New Tab" button to each video on the RedGIFs site.
 // @icon         https://www.redgifs.com/favicon.ico
@@ -10,6 +10,7 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.registerMenuCommand
+// @grant        unsafeWindow
 // @run-at       document-start
 // @noframes
 // @downloadURL https://update.greasyfork.org/scripts/545472/RedGIFs%20Video%20Download%20Button.user.js
@@ -27,6 +28,18 @@
     const APPID = 'rgvdb';
     const APPNAME = 'RedGIFs Video Download Button';
     const LOG_PREFIX = `[${APPID.toUpperCase()}]`;
+
+    class HttpError extends Error {
+        /**
+         * @param {number} status
+         * @param {string} message
+         */
+        constructor(status, message) {
+            super(message);
+            this.name = 'HttpError';
+            this.status = status;
+        }
+    }
 
     // =================================================================================
     // SECTION: Configuration Definitions
@@ -94,6 +107,12 @@
              * If disabled, the download button will automatically move up to take its place.
              */
             enabled: true,
+            /**
+             * The type of viewer to open when clicking the "Open in New Tab" button.
+             * Options: 'default' (RedGIFs Watch Page), 'clean' (Video Player Only)
+             * Default: 'default'
+             */
+            viewerType: 'default',
         },
 
         /**
@@ -171,7 +190,7 @@
             position: absolute;
             top: 8px;
             right: 8px;
-            z-index: 1000;
+            z-index: 90;
             width: 32px;
             height: 32px;
             padding: 4px;
@@ -192,7 +211,7 @@
             position: absolute;
             top: 44px; /* Positioned below the open-in-new-tab button */
             right: 8px;
-            z-index: 1000;
+            z-index: 90;
             width: 32px;
             height: 32px;
             padding: 0;
@@ -235,9 +254,9 @@
         .${APPID}-toast.exiting {
             animation: ${APPID}-toast-fade-out 0.3s ease-in forwards;
         }
-        .${APPID}-toast-success { background-color: rgb(40, 167, 69); }
-        .${APPID}-toast-error { background-color: rgb(220, 53, 69); }
-        .${APPID}-toast-info { background-color: rgb(23, 162, 184); }
+        .${APPID}-toast-success { background-color: rgb(40 167 69); }
+        .${APPID}-toast-error { background-color: rgb(220 53 69); }
+        .${APPID}-toast-info { background-color: rgb(23 162 184); }
 
         /* Mobile: Adjust button position to avoid overlapping native UI */
         .App.phone .${APPID}-preview-open-btn {
@@ -247,6 +266,12 @@
         .App.phone .${APPID}-preview-download-btn {
             /* Offset by toolbar height (assumed 56px) + 44px original top */
             top: 100px;
+        }
+
+        /* Hide buttons when the site menu is active */
+        body:has(.activeBurgerMenu) .${APPID}-preview-open-btn,
+        body:has(.activeBurgerMenu) .${APPID}-preview-download-btn {
+            display: none !important;
         }
 
         /* Keyframes */
@@ -408,6 +433,14 @@
             children: [
                 { tag: 'path', props: { d: 'M0 0h24v24H0V0z', fill: 'none' } },
                 { tag: 'path', props: { d: 'M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z' } },
+            ],
+        },
+        PLAY_ARROW: {
+            tag: 'svg',
+            props: BASE_ICON_PROPS,
+            children: [
+                { tag: 'path', props: { d: 'M0 0h24v24H0V0z', fill: 'none' } },
+                { tag: 'path', props: { d: 'M8 5v14l11-7z' } },
             ],
         },
     };
@@ -1266,9 +1299,33 @@
             const previewContent = h(`div#${APPID}-preview-content.${APPID}-input-preview-content`, '');
 
             // Attach input listener for real-time preview
-            filenameInput.addEventListener('input', () => {
-                this._updatePreview(filenameInput.value, warningText, previewContent);
-            });
+            if (filenameInput instanceof HTMLInputElement) {
+                filenameInput.addEventListener('input', () => {
+                    this._updatePreview(filenameInput.value, warningText, previewContent);
+                });
+            }
+
+            // Viewer Type Radio Buttons
+            const viewerTypeContainer = h('div', { style: { display: 'flex', gap: '16px', marginTop: '8px' } }, [
+                h(`label.${APPID}-checkbox-wrapper`, [
+                    h(`input#${APPID}-input-viewertype-default`, {
+                        type: 'radio',
+                        name: 'viewerType',
+                        value: 'default',
+                        checked: config.openInNewTab.viewerType === 'default',
+                    }),
+                    h('span', 'Default (RedGIFs Page)'),
+                ]),
+                h(`label.${APPID}-checkbox-wrapper`, [
+                    h(`input#${APPID}-input-viewertype-clean`, {
+                        type: 'radio',
+                        name: 'viewerType',
+                        value: 'clean',
+                        checked: config.openInNewTab.viewerType === 'clean',
+                    }),
+                    h('span', 'Clean (Video Only)'),
+                ]),
+            ]);
 
             this.overlay = h(
                 `div.${APPID}-modal-overlay`,
@@ -1304,12 +1361,16 @@
                             this._createFormGroup(
                                 'Functionality',
                                 '',
-                                h(`label.${APPID}-checkbox-wrapper`, [
-                                    h(`input#${APPID}-input-newtab`, {
-                                        type: 'checkbox',
-                                        checked: config.openInNewTab.enabled,
-                                    }),
-                                    h('span', 'Enable "Open in New Tab" button'),
+                                h('div', [
+                                    h(`label.${APPID}-checkbox-wrapper`, [
+                                        h(`input#${APPID}-input-newtab`, {
+                                            type: 'checkbox',
+                                            checked: config.openInNewTab.enabled,
+                                        }),
+                                        h('span', 'Enable "Open in New Tab" button'),
+                                    ]),
+                                    h(`div.${APPID}-form-desc`, { style: { marginTop: '12px' } }, 'Viewer Type:'),
+                                    viewerTypeContainer,
                                 ])
                             ),
                         ]),
@@ -1333,10 +1394,11 @@
             document.addEventListener('keydown', this._boundHandleKeyDown);
 
             // Trigger initial preview
-            this._updatePreview(filenameInput.value, warningText, previewContent);
-
-            // Set initial focus
-            filenameInput.focus();
+            if (filenameInput instanceof HTMLInputElement) {
+                this._updatePreview(filenameInput.value, warningText, previewContent);
+                // Set initial focus
+                filenameInput.focus();
+            }
         }
 
         /**
@@ -1362,10 +1424,16 @@
             const filenameInput = document.getElementById(`${APPID}-input-filename`);
             const hoverInput = document.getElementById(`${APPID}-input-hover`);
             const newTabInput = document.getElementById(`${APPID}-input-newtab`);
+            const viewerTypeCleanInput = document.getElementById(`${APPID}-input-viewertype-clean`);
 
-            if (filenameInput) newConfig.download.filenameTemplate = filenameInput.value;
-            if (hoverInput) newConfig.common.showOnlyOnHover = hoverInput.checked;
-            if (newTabInput) newConfig.openInNewTab.enabled = newTabInput.checked;
+            if (filenameInput instanceof HTMLInputElement) newConfig.download.filenameTemplate = filenameInput.value;
+            if (hoverInput instanceof HTMLInputElement) newConfig.common.showOnlyOnHover = hoverInput.checked;
+            if (newTabInput instanceof HTMLInputElement) newConfig.openInNewTab.enabled = newTabInput.checked;
+
+            // Radio button logic
+            if (viewerTypeCleanInput instanceof HTMLInputElement) {
+                newConfig.openInNewTab.viewerType = viewerTypeCleanInput.checked ? 'clean' : 'default';
+            }
 
             await this.configManager.save(newConfig);
             this.close();
@@ -1435,7 +1503,7 @@
         _restoreDefaults() {
             // Restore Filename Template
             const filenameInput = document.getElementById(`${APPID}-input-filename`);
-            if (filenameInput) {
+            if (filenameInput instanceof HTMLInputElement) {
                 filenameInput.value = DEFAULT_CONFIG.download.filenameTemplate;
                 // Trigger preview update manually since programmatic change doesn't fire 'input' event
                 const warningText = document.getElementById(`${APPID}-warning-text`);
@@ -1447,13 +1515,26 @@
 
             // Restore Checkboxes
             const hoverInput = document.getElementById(`${APPID}-input-hover`);
-            if (hoverInput) {
+            if (hoverInput instanceof HTMLInputElement) {
                 hoverInput.checked = DEFAULT_CONFIG.common.showOnlyOnHover;
             }
 
             const newTabInput = document.getElementById(`${APPID}-input-newtab`);
-            if (newTabInput) {
+            if (newTabInput instanceof HTMLInputElement) {
                 newTabInput.checked = DEFAULT_CONFIG.openInNewTab.enabled;
+            }
+
+            // Restore Viewer Type Radio Buttons
+            const defaultType = DEFAULT_CONFIG.openInNewTab.viewerType;
+            const defaultRadio = document.getElementById(`${APPID}-input-viewertype-default`);
+            const cleanRadio = document.getElementById(`${APPID}-input-viewertype-clean`);
+
+            if (defaultRadio instanceof HTMLInputElement && cleanRadio instanceof HTMLInputElement) {
+                if (defaultType === 'clean') {
+                    cleanRadio.checked = true;
+                } else {
+                    defaultRadio.checked = true;
+                }
             }
         }
 
@@ -1526,33 +1607,51 @@
         }
 
         /**
-         * Sets up JSON.parse interceptor to capture API responses.
+         * Sets up interceptors for JSON.parse and Response.prototype.json to capture API responses.
+         * Uses unsafeWindow to ensure access to the page's context.
          * @private
          */
         _initJsonInterceptor() {
-            const originalJsonParse = JSON.parse;
-            const self = this; // Preserve ApiManager instance for use in the closure
+            const globalScope = unsafeWindow;
+            const self = this;
 
-            JSON.parse = function (text, reviver) {
-                // Pass through to the original parser first
+            // 1. Hook JSON.parse
+            // Captures traditional JSON parsing (e.g. from XHR or text-based fetch)
+            const originalJsonParse = globalScope.JSON.parse;
+            globalScope.JSON.parse = function (text, reviver) {
+                // Execute original function first. If this fails, let it throw naturally.
                 const result = originalJsonParse.call(this, text, reviver);
 
+                // Safely intercept the result without affecting the site's flow
                 try {
-                    // 1. Check if the result is an object
-                    if (result && typeof result === 'object') {
-                        // 2. Check for the specific keys we care about (result.gifs or result.gif)
-                        if (Array.isArray(result.gifs) || (result.gif && typeof result.gif === 'object')) {
-                            // 3. If it matches, process the data
-                            self._processApiData(result);
-                        }
-                    }
-                } catch (error) {
-                    Logger.error('JSON PARSE', LOG_STYLES.RED, 'Error during JSON.parse interception:', error, result);
+                    self._processApiData(result);
+                } catch (e) {
+                    // Silent fail to ensure site functionality is never broken
+                    Logger.error('INTERCEPT', LOG_STYLES.RED, 'JSON intercept error:', e);
                 }
 
-                // Always return the original result
                 return result;
             };
+
+            // 2. Hook Response.prototype.json
+            // Captures modern fetch() API calls that use .json() directly
+            if (globalScope.Response && globalScope.Response.prototype) {
+                const originalResponseJson = globalScope.Response.prototype.json;
+                globalScope.Response.prototype.json = async function () {
+                    // Execute original function first. If promise rejects, propagate it.
+                    const result = await originalResponseJson.call(this);
+
+                    // Safely intercept the result
+                    try {
+                        self._processApiData(result);
+                    } catch (e) {
+                        // Silent fail
+                        Logger.error('INTERCEPT', LOG_STYLES.RED, 'Response intercept error:', e);
+                    }
+
+                    return result;
+                };
+            }
         }
 
         /**
@@ -1678,9 +1777,14 @@
             // Remove existing dynamic styles to re-apply
             let styleEl = document.getElementById(id);
             if (!styleEl) {
-                styleEl = h('style', { id: id, type: 'text/css' });
-                document.head.appendChild(styleEl);
+                const newStyleEl = h('style', { id: id, type: 'text/css' });
+                if (newStyleEl instanceof HTMLElement) {
+                    styleEl = newStyleEl;
+                    document.head.appendChild(styleEl);
+                }
             }
+
+            if (!styleEl) return;
 
             // Define class names locally
             const CLS = {
@@ -1738,12 +1842,32 @@
         }
 
         /**
+         * Updates the visual state (icon and title) of all buttons matching the selector.
+         * @param {string} selector - The CSS selector for the buttons.
+         * @param {keyof ICONS} iconName - The new icon name.
+         * @param {string} title - The new tooltip title.
+         */
+        updateButtonVisuals(selector, iconName, title) {
+            const buttons = document.querySelectorAll(selector);
+            buttons.forEach((btn) => {
+                if (!(btn instanceof HTMLElement)) return;
+                // Update Title
+                btn.title = title;
+                // Update Icon
+                this._setButtonIcon(btn, iconName);
+            });
+        }
+
+        /**
          * Creates and appends the toast container to the document body.
          * @private
          */
         _createToastContainer() {
-            this.toastContainer = h(`div.${APPID}-toast-container`);
-            document.body.appendChild(this.toastContainer);
+            const container = h(`div.${APPID}-toast-container`);
+            if (container instanceof HTMLElement) {
+                this.toastContainer = container;
+                document.body.appendChild(this.toastContainer);
+            }
         }
 
         /**
@@ -1796,14 +1920,16 @@
                 onclick: clickHandler,
             });
 
-            this._setButtonIcon(button, iconName);
-            parentElement.appendChild(button);
+            if (button instanceof HTMLElement) {
+                this._setButtonIcon(button, iconName);
+                parentElement.appendChild(button);
+            }
         }
 
         /**
          * Sets the icon for a given button.
          * @param {HTMLElement} button The button or anchor element to modify.
-         * @param {'DOWNLOAD'|'SPINNER'|'SUCCESS'|'ERROR'|'OPEN_IN_NEW'} iconName The name of the icon to set.
+         * @param {string} iconName The name of the icon to set.
          * @private
          */
         _setButtonIcon(button, iconName) {
@@ -1876,8 +2002,10 @@
                 onclick: clickHandler,
             });
 
-            this._setButtonIcon(button, iconName);
-            parentElement.appendChild(button);
+            if (button instanceof HTMLElement) {
+                this._setButtonIcon(button, iconName);
+                parentElement.appendChild(button);
+            }
         }
     }
 
@@ -1954,7 +2082,7 @@
             // Helper to hide ad containers (VisibleOnly elements often cause layout shifts or blank spaces)
             const adHider = (adElement) => {
                 const adContainer = adElement.closest('.GifPreview.VisibleOnly');
-                if (adContainer) {
+                if (adContainer instanceof HTMLElement) {
                     // Do NOT use .remove() as it breaks the site's virtual DOM state.
                     // Use inline style to force hide.
                     adContainer.style.setProperty('display', 'none', 'important');
@@ -1969,7 +2097,7 @@
             // Handle Boosted Ad Posts
             sentinel.on('.metaInfo_isBoosted', (infoElement) => {
                 const container = infoElement.closest('.GifPreview');
-                if (container) {
+                if (container instanceof HTMLElement) {
                     container.style.setProperty('display', 'none', 'important');
                 }
             });
@@ -2237,6 +2365,9 @@
             this.activeDownloads = new Map();
             /** @type {SettingsModal|null} */
             this.settingsModal = null;
+
+            // Subscribe to config updates to refresh button icons
+            EventBus.subscribe(EVENTS.CONFIG_UPDATED, (config) => this._handleConfigUpdate(config), createEventKey(this, EVENTS.CONFIG_UPDATED));
         }
 
         /**
@@ -2274,6 +2405,9 @@
 
             // Shared ID extractor for dataset-based IDs
             const getFeedId = (el) => {
+                // Ensure element is HTMLElement to access dataset
+                if (!(el instanceof HTMLElement)) return null;
+
                 // ID is in 'data-feed-item-id'
                 const feedId = el.dataset.feedItemId;
                 // Filter out non-video items (e.g. 'feed-module-...') and normalize to lowercase
@@ -2296,12 +2430,16 @@
 
             // Setup observer for Tile Items (Grid View)
             registerObserver(CONSTANTS.TILE_ITEM_SELECTOR, (element) => {
-                this._onElementFound(element, getFeedId, CONSTANTS.CONTEXT_TYPE.TILE);
+                if (element instanceof HTMLElement) {
+                    this._onElementFound(element, getFeedId, CONSTANTS.CONTEXT_TYPE.TILE);
+                }
             });
 
             // Setup observer for Video Containers (Preview/Watch View)
             registerObserver(CONSTANTS.VIDEO_CONTAINER_SELECTOR, (element) => {
-                this._onElementFound(element, getFeedId, CONSTANTS.CONTEXT_TYPE.PREVIEW);
+                if (element instanceof HTMLElement) {
+                    this._onElementFound(element, getFeedId, CONSTANTS.CONTEXT_TYPE.PREVIEW);
+                }
             });
 
             Logger.log('INIT', LOG_STYLES.GREEN, 'Initialized and observing DOM for new content.');
@@ -2343,13 +2481,38 @@
                 const className = isTile ? `${APPID}-open-in-new-tab-btn` : `${APPID}-preview-open-btn`;
                 const url = `${CONSTANTS.WATCH_URL_BASE}${videoId}`;
 
+                // Determine icon and title based on config
+                const config = this.configManager.get();
+                const isClean = config.openInNewTab.viewerType === 'clean';
+                const iconName = isClean ? 'PLAY_ARROW' : 'OPEN_IN_NEW';
+                const title = isClean ? 'Play in Clean Viewer' : 'Open in new tab';
+
                 this.ui.createLinkButton({
                     parentElement: element,
                     className: className,
-                    title: 'Open in new tab',
-                    iconName: 'OPEN_IN_NEW',
+                    title: title,
+                    iconName: iconName,
                     href: url,
-                    clickHandler: (e) => e.stopPropagation(), // Only stop propagation to prevent parent navigation
+                    // Intercept click if 'Clean Viewer' is enabled
+                    clickHandler: (e) => {
+                        // Re-check config at click time to ensure latest setting is used
+                        const currentConfig = this.configManager.get();
+                        if (currentConfig.openInNewTab.viewerType === 'clean') {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            const videoInfo = this.apiManager.getCachedVideoInfo(videoId);
+                            if (videoInfo) {
+                                this._openCleanViewer(videoInfo, videoId);
+                            } else {
+                                // Fallback if info not cached: open standard page
+                                window.open(url, '_blank');
+                            }
+                        } else {
+                            // Default behavior: stop propagation to prevent parent navigation, but let the link work
+                            e.stopPropagation();
+                        }
+                    },
                 });
             }
 
@@ -2369,6 +2532,22 @@
         }
 
         /**
+         * Handles configuration updates to refresh UI components.
+         * @param {object} config The new configuration object.
+         * @private
+         */
+        _handleConfigUpdate(config) {
+            const isClean = config.openInNewTab.viewerType === 'clean';
+            const icon = isClean ? 'PLAY_ARROW' : 'OPEN_IN_NEW';
+            const title = isClean ? 'Play in Clean Viewer' : 'Open in new tab';
+
+            // Update Tile Buttons
+            this.ui.updateButtonVisuals(`.${APPID}-open-in-new-tab-btn`, icon, title);
+            // Update Preview Buttons
+            this.ui.updateButtonVisuals(`.${APPID}-preview-open-btn`, icon, title);
+        }
+
+        /**
          * Handles the click event on the download button.
          * Manages download start, 1s lock, and cancellation.
          * @param {MouseEvent} e - The click event.
@@ -2379,6 +2558,7 @@
             e.stopPropagation(); // Prevent parent elements from handling the click.
 
             const button = e.currentTarget;
+            if (!(button instanceof HTMLButtonElement)) return; // Type Guard
 
             // --- 1. Cancellation Logic ---
             // Check if this videoId is already being downloaded
@@ -2446,11 +2626,11 @@
                         // Check if cleanup is needed
                         this.ui.updateButtonState(button, 'IDLE');
                     }
-                } else if (error.status === 404) {
+                } else if (error instanceof HttpError && error.status === 404) {
                     Logger.warn('DOWNLOAD', LOG_STYLES.YELLOW, `Download failed: Not Found (404) for ${videoId}`, error);
                     this.ui.showToast('Video not found (404).', 'error');
                     this.ui.updateButtonState(button, 'ERROR');
-                } else if (error.status === 403) {
+                } else if (error instanceof HttpError && error.status === 403) {
                     Logger.warn('DOWNLOAD', LOG_STYLES.YELLOW, `Download failed: Forbidden (403) for ${videoId}`, error);
                     this.ui.showToast('Access forbidden (403).', 'error');
                     this.ui.updateButtonState(button, 'ERROR');
@@ -2522,9 +2702,8 @@
             const response = await fetch(url, { signal }); // Pass signal to fetch
             // Throw a more user-friendly error message for HTTP errors.
             if (!response.ok) {
-                const err = new Error(`Server responded with ${response.status}`);
-                err.status = response.status;
-                throw err;
+                // Use HttpError for status code handling
+                throw new HttpError(response.status, `Server responded with ${response.status}`);
             }
 
             const videoBlob = await response.blob();
@@ -2536,16 +2715,126 @@
                     href: objectUrl,
                     download: filename,
                 });
-                document.body.appendChild(link);
-                link.click();
+                if (link instanceof HTMLElement) {
+                    document.body.appendChild(link);
+                    link.click();
+                }
             } finally {
-                if (link) {
+                if (link instanceof HTMLElement) {
                     document.body.removeChild(link);
                 }
                 if (objectUrl) {
                     URL.revokeObjectURL(objectUrl);
                 }
             }
+        }
+
+        /**
+         * Opens the video in a clean, minimalist viewer in a new tab.
+         * @param {object} videoInfo - The cached video info.
+         * @param {string} videoId - The video ID.
+         * @private
+         */
+        _openCleanViewer(videoInfo, videoId) {
+            const { hdUrl, userName } = videoInfo;
+            const watchUrl = `${CONSTANTS.WATCH_URL_BASE}${videoId}`;
+            // Construct title: "UserName - VideoID" or fallback to "RedGIFs - VideoID"
+            const pageTitle = userName ? `${userName} - ${videoId}` : `RedGIFs - ${videoId}`;
+
+            const newWindow = window.open('', '_blank');
+            if (!newWindow) {
+                this.ui.showToast('Popup blocked. Please allow popups for this site.', 'error');
+                return;
+            }
+
+            // Security: Disconnect opener reference safely
+            try {
+                newWindow.opener = null;
+            } catch {
+                // Ignore: Some browsers may disallow setting opener
+            }
+
+            const doc = newWindow.document;
+
+            // DOM Initialization Safety
+            // Ensure essential nodes exist. If document is fundamentally broken, fallback to standard page.
+            try {
+                if (!doc || !doc.documentElement) {
+                    throw new Error('Document structure is not ready');
+                }
+                // Auto-heal missing head/body (common in about:blank)
+                if (!doc.head) doc.documentElement.appendChild(doc.createElement('head'));
+                if (!doc.body) doc.documentElement.appendChild(doc.createElement('body'));
+            } catch (e) {
+                // Fallback: Navigate the blank window to the standard watch page
+                newWindow.location.href = watchUrl;
+                return;
+            }
+
+            doc.title = pageTitle;
+
+            // Apply body styles directly
+            Object.assign(doc.body.style, {
+                margin: '0',
+                padding: '0',
+                backgroundColor: '#000',
+                height: '100vh',
+                width: '100vw',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
+                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+            });
+
+            // Create styles for Back Link and Video
+            const styleEl = doc.createElement('style');
+            styleEl.textContent = `
+                video {
+                    max-width: 100%;
+                    max-height: 100%;
+                    outline: none;
+                    box-shadow: 0 0 20px rgb(0 0 0 / 0.5);
+                }
+                .back-link {
+                    position: absolute;
+                    top: 16px;
+                    right: 16px;
+                    color: rgb(255 255 255 / 0.5);
+                    text-decoration: none;
+                    background: rgb(0 0 0 / 0.5);
+                    padding: 8px 12px;
+                    border-radius: 4px;
+                    font-size: 14px;
+                    backdrop-filter: blur(4px);
+                    transition: color 0.2s, background 0.2s;
+                    z-index: 9999;
+                }
+                .back-link:hover {
+                    color: #fff;
+                    background: rgb(0 0 0 / 0.8);
+                }
+            `;
+            doc.head.appendChild(styleEl);
+
+            // Create Video Element
+            const videoEl = doc.createElement('video');
+            videoEl.src = hdUrl;
+            videoEl.controls = true;
+            videoEl.autoplay = true;
+            videoEl.loop = true;
+            videoEl.muted = true; // Required for autoplay
+            videoEl.playsInline = true;
+            doc.body.appendChild(videoEl);
+
+            // Create Back Link Element
+            const linkEl = doc.createElement('a');
+            linkEl.href = watchUrl;
+            linkEl.className = 'back-link';
+            linkEl.target = '_blank';
+            linkEl.rel = 'noopener noreferrer';
+            linkEl.textContent = 'Open Original Page';
+            doc.body.appendChild(linkEl);
         }
     }
 

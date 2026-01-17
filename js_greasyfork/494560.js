@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SpringSunday-Torrent-Assistant 测试版
 // @namespace    http://tampermonkey.net/
-// @version      1.2.122
+// @version      1.2.123
 // @description  春天审种助手
 // @author       SSD
 // @include      http*://springsunday.net/details.php*
@@ -636,7 +636,7 @@
             $('#assistant-tooltips').append('主标题包含中文或中文字符<br/>');
             error = true;
         }
-        if (/(-|@)(CTRLHD|SmY)/.test(title_lowercase)) {
+        if (/(-|@)(CTRLHD|SmY|FZHD)/.test(title_lowercase)) {
             $('#assistant-tooltips').append('主标题包含禁发小组，请检查<br/>');
             error = true;
         }

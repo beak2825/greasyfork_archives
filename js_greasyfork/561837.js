@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         SeaArt - Improved batch work item selection, download and deletion
+// @name         SeaArt - Improved Batch Work Item Selection, Download and Deletion
 // @description  Makes batch downloading and deleting work items a lot more comfortable
 // @author       TheRealHawk
 // @license      MIT
 // @namespace    https://greasyfork.org/en/users/18936-therealhawk
 // @match        https://www.seaart.ai/*
-// @version      1.53
+// @version      1.54
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js
 // @connect      cdn.seaart.ai
 // @connect      seaart.ai
@@ -13,8 +13,8 @@
 // @connect      *
 // @grant        GM_xmlhttpRequest
 // @grant        GM_download
-// @downloadURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20batch%20work%20item%20selection%2C%20download%20and%20deletion.user.js
-// @updateURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20batch%20work%20item%20selection%2C%20download%20and%20deletion.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20Batch%20Work%20Item%20Selection%2C%20Download%20and%20Deletion.user.js
+// @updateURL https://update.greasyfork.org/scripts/561837/SeaArt%20-%20Improved%20Batch%20Work%20Item%20Selection%2C%20Download%20and%20Deletion.meta.js
 // ==/UserScript==
 
 /* globals $ */
@@ -120,46 +120,132 @@
         $(document).trigger('seaart_download_update', { state, progress });
     }
 
-    function downloadAndVerify(url) {
+    async function downloadAndVerify(url) {
         const absoluteUrl = resolveUrl(url);
         const fileName = absoluteUrl.split('/').pop().split('?')[0] || 'seaart_batch.zip';
+        const CHUNK_SIZE = 20 * 1024 * 1024; // 20MB chunks
+        const MAX_RETRIES = 3;
+        const RETRY_DELAY = 10000;
 
-        triggerDownloadState('Verifying', 0);
-
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url: absoluteUrl,
-            responseType: 'blob',
-            onprogress: function(e) {
-                if (e.lengthComputable) {
-                    const percent = Math.floor((e.loaded / e.total) * 100);
-                    triggerDownloadState('Downloading', percent);
+        // Helper: Promisified GM_xmlhttpRequest
+        const fetchRange = (rangeStart, rangeEnd, method = 'GET') => {
+            return new Promise((resolve, reject) => {
+                const headers = {};
+                if (rangeStart !== null && rangeEnd !== null) {
+                    headers['Range'] = `bytes=${rangeStart}-${rangeEnd}`;
                 }
-            },
-            onload: function(response) {
-                if (response.status >= 200 && response.status < 300) {
-                    const blob = response.response;
-                    const contentLength = response.responseHeaders.match(/content-length:\s*(\d+)/i);
-                    const expectedSize = contentLength ? parseInt(contentLength[1], 10) : null;
 
-                    if (expectedSize && blob.size !== expectedSize) {
-                        triggerDownloadState('Corrupt');
-                        const serverMB = (blob.size / (1024 * 1024)).toFixed(2);
-                        const expectedMB = (expectedSize / (1024 * 1024)).toFixed(2);
-                        alert(`Download failed validation. Server sent ${serverMB} MB, expected ${expectedMB} MB.`);
-                        return;
-                    }
+                GM_xmlhttpRequest({
+                    method: method,
+                    url: absoluteUrl,
+                    headers: headers,
+                    responseType: 'blob',
+                    onload: function(res) {
+                        if (res.status >= 200 && res.status < 300) {
+                            resolve(res);
+                        } else {
+                            reject(new Error(`HTTP Status ${res.status}`));
+                        }
+                    },
+                    onerror: (err) => reject(err),
+                    ontimeout: (err) => reject(err)
+                });
+            });
+        };
 
-                    saveFile(blob, fileName);
-                    triggerDownloadState('Complete');
-                } else {
-                    triggerDownloadState('Error');
+        // Helper: Sleep function
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        try {
+            triggerDownloadState('Verifying', 0);
+
+            // Step 1: Get Content-Length
+            let totalSize = 0;
+            try {
+                const headRes = await fetchRange(null, null, 'HEAD');
+                const lenMatch = headRes.responseHeaders.match(/content-length:\s*(\d+)/i);
+                if (lenMatch) {
+                    totalSize = parseInt(lenMatch[1], 10);
                 }
-            },
-            onerror: function(err) {
-                triggerDownloadState('Error');
+            } catch (e) {
+                console.warn('HEAD request failed, attempting simple download', e);
             }
-        });
+
+            // Fallback for servers not reporting size or single-shot needed
+            if (!totalSize) {
+                // ... (Original simple download logic could go here, but SeaArt supports size)
+                // For safety, we just try to download the whole thing in one go if size is unknown
+                const res = await fetchRange(null, null, 'GET');
+                saveFile(res.response, fileName);
+                triggerDownloadState('Complete');
+                return;
+            }
+
+            // Step 2: Chunked Download Loop
+            let downloadedBytes = 0;
+            let chunks = [];
+
+            while (downloadedBytes < totalSize) {
+                const chunkEnd = Math.min(downloadedBytes + CHUNK_SIZE - 1, totalSize - 1);
+                let attempts = 0;
+                let success = false;
+
+                while (attempts < MAX_RETRIES) {
+                    try {
+                        const progress = Math.floor((downloadedBytes / totalSize) * 100);
+                        triggerDownloadState('Downloading', progress);
+
+                        const res = await fetchRange(downloadedBytes, chunkEnd);
+
+                        if (res.status === 200) {
+                            // Server ignored range request and sent everything
+                            chunks = [res.response];
+                            downloadedBytes = totalSize;
+                            success = true;
+                            break;
+                        } else if (res.status === 206) {
+                            // Partial content received
+                            chunks.push(res.response);
+                            downloadedBytes += res.response.size;
+                            success = true;
+                            break;
+                        }
+                    } catch (error) {
+                        attempts++;
+                        console.error(`Chunk error (Attempt ${attempts}/${MAX_RETRIES}):`, error);
+                        
+                        if (attempts >= MAX_RETRIES) break;
+                        
+                        triggerDownloadState(`Retry ${attempts}...`, Math.floor((downloadedBytes / totalSize) * 100));
+                        await sleep(RETRY_DELAY);
+                    }
+                }
+
+                if (!success) {
+                    throw new Error(`Failed to download chunk after ${MAX_RETRIES} attempts.`);
+                }
+            }
+
+            // Step 3: Assembly and Validation
+            triggerDownloadState('Verifying', 100);
+            const finalBlob = new Blob(chunks, { type: 'application/zip' });
+
+            if (finalBlob.size !== totalSize) {
+                const serverMB = (finalBlob.size / (1024 * 1024)).toFixed(2);
+                const expectedMB = (totalSize / (1024 * 1024)).toFixed(2);
+                alert(`Download validation failed. Received ${serverMB} MB, expected ${expectedMB} MB.`);
+                triggerDownloadState('Corrupt');
+                return;
+            }
+
+            saveFile(finalBlob, fileName);
+            triggerDownloadState('Complete');
+
+        } catch (err) {
+            console.error(err);
+            triggerDownloadState('Error');
+            alert(`Download error: ${err.message}`);
+        }
     }
 
     function saveFile(blob, filename) {

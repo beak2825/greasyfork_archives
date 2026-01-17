@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Dio Enhancer
-// @version      127.0.0.41
+// @version      127.0.0.43
 // @namespace    http://tampermonkey.net/
-// @description  测试服添加队列强化+20
+// @description  无
 // @author       DelayNoMore
 // @match        https://test.milkywayidle.com/*
 // @match        https://test.milkywayidlecn.com/*
@@ -24,7 +24,7 @@
         DEFAULT_PROT: "mirror_of_protection",
         MOO_SECONDARY: "philosophers_mirror",
         DIO_DELAY: { MIN: 1500, MAX: 1800 },
-        MOO_DELAY: 6000,
+        MOO_DELAY: 4500,
         SELECTORS: {
             ENHANCE_BTN: 'button[class*="Button_success"][class*="Button_fullWidth"]',
             ITEM_CONTAINER: '.SkillActionDetail_primaryItemSelectorContainer__nrvNW',
@@ -225,10 +225,11 @@
         Planner: {
             calcHardcoreNeeds: (inventoryInput) => {
                 let simInventory = { ...inventoryInput };
-                let dioNeeds = { 10: 0, 11: 0 };
+                let dioNeeds = {};
                 let mooSteps = [];
                 const resolveNeed = (level) => {
-                    if (level <= 11) {
+                    // v43: 递归下沉至10和9。即：如果需要10但不满足，不拆解为9+8，而是直接将10作为Dio需求。
+                    if (level <= 10) {
                         if (simInventory[level] && simInventory[level] > 0) { simInventory[level]--; }
                         else { dioNeeds[level] = (dioNeeds[level] || 0) + 1; }
                         return;
@@ -247,11 +248,19 @@
 
                 if (State.isHardcore) {
                     const plan = Core.Planner.calcHardcoreNeeds(input);
-                    const c10 = plan.dioNeeds[10] || 0, c11 = plan.dioNeeds[11] || 0;
-                    for (let i=0; i<c11; i++) tasks.push(11);
-                    for (let i=0; i<c10; i++) tasks.push(10);
-                    if (tasks.length === 0) return null;
-                    msg = `Hardcore Dio 确认：<br>保护策略：<b>${protItem}</b><br>+11: <b>${c11}</b> 个<br>+10: <b>${c10}</b> 个<br>总计 <b>${tasks.length}</b> 个队列`;
+                    // v42/43: 通用化处理Dio任务
+                    const neededLevels = Object.keys(plan.dioNeeds).map(Number).sort((a,b) => b-a);
+
+                    if (neededLevels.length === 0) return null;
+
+                    msg = `Hardcore Dio 确认：<br>保护策略：<b>${protItem}</b><br>`;
+                    for (let lvl of neededLevels) {
+                        const count = plan.dioNeeds[lvl];
+                        for(let k=0; k<count; k++) tasks.push(lvl);
+                        msg += `+${lvl}: <b>${count}</b> 个<br>`;
+                    }
+                    msg += `总计 <b>${tasks.length}</b> 个队列`;
+
                 } else {
                     const baseLevel = input;
                     const cHigh = Utils.getFib(CONFIG.MAX_LEVEL - baseLevel);
@@ -268,20 +277,33 @@
                 let msg = "";
                 if (State.isHardcore) {
                     const plan = Core.Planner.calcHardcoreNeeds(input);
-                    let need10 = plan.dioNeeds[10] || 0;
-                    let need11 = plan.dioNeeds[11] || 0;
+
+                    let missingBaseStr = "";
+                    let hasMissing = false;
+                    for (let lvl in plan.dioNeeds) {
+                        if (plan.dioNeeds[lvl] > 0) {
+                            hasMissing = true;
+                            missingBaseStr += `+${lvl}: ${plan.dioNeeds[lvl]}个, `;
+                        }
+                    }
+
+                    // 尝试智能抵扣逻辑
                     let conversionMsg = "";
-                    let canProceed = false;
-                    if (need10 === 0 && need11 === 0) canProceed = true;
-                    else if (need11 > 0) canProceed = false;
-                    else if (need10 > 0) {
+                    let canProceed = !hasMissing;
+
+                    if (hasMissing) {
+                        const need10 = plan.dioNeeds[10] || 0;
                         const surplus11 = plan.leftovers[11] || 0;
-                        if (surplus11 >= need10) {
+                        const onlyMissing10 = Object.keys(plan.dioNeeds).length === 1 && need10 > 0;
+
+                        if (onlyMissing10 && surplus11 >= need10) {
                             canProceed = true;
                             conversionMsg = `<br><span style='color:#22c55e'>✅ 智能策略：检测到 +10 不足，但 +11 溢出。利用溢出抵扣，允许执行。</span><br>`;
-                        } else canProceed = false;
+                        } else {
+                             throw new Error(`基底不足！请先执行 Dio 补充：\n${missingBaseStr.slice(0, -2)}`);
+                        }
                     }
-                    if (!canProceed) throw new Error(`基底不足！请先执行 Dio 补充：\n+10: ${need10}个, +11: ${need11}个`);
+
                     if (plan.mooSteps.length === 0) return null;
                     tasks = plan.mooSteps.sort((a, b) => a.target - b.target).map(s => s.target);
                     const counts = {};
@@ -442,7 +464,7 @@
             const style = document.createElement('style');
             style.id = 'dnm-style';
             style.textContent = `
-                /* 面板布局：居中，固定宽度 - v41 */
+                /* 面板布局：居中，固定宽度 */
                 .dnm-enhancer-panel { margin: 15px auto; padding: 15px; padding-bottom: 25px; background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 12px; color: #e2e8f0; position: relative; width: 420px; box-sizing: border-box; clear: both; transition: all 0.3s ease; }
 
                 /* 头部布局：分两行 */
@@ -522,7 +544,7 @@
                 .dnm-btn-stop { background: #ef4444; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); animation: pulse 2s infinite; display: none; margin-top: 10px;}
                 .dnm-btn:disabled { background: #475569; cursor: not-allowed; opacity: 0.7; }
 
-                /* 硬核模式 Grid 修正 */
+                /* 硬核模式 Grid */
                 .dnm-hardcore-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 5px; }
                 .dnm-input-group { display: flex; align-items: center; justify-content: center; gap: 8px; }
                 .dnm-input-label { font-size: 10px; color: #94a3b8; width: 25px; text-align: right; }
@@ -613,9 +635,9 @@
                 btnMoo
             ]);
 
-            // 硬核模式特有UI
+            // 硬核模式特有UI: v42 - 增加 +9
             const grid = el('div', 'dnm-hardcore-grid');
-            for (let i = 10; i <= 19; i++) {
+            for (let i = 9; i <= 19; i++) {
                 grid.appendChild(el('div', 'dnm-input-group', {}, [
                     el('span', 'dnm-input-label', { textContent: `+${i}` }),
                     el('input', 'dnm-num-input', { type: 'number', min: '0', value: '0', dataset: { level: i } })
@@ -640,7 +662,7 @@
                 el('div', 'dnm-progress-bg', {}, [el('div', 'dnm-progress-fill')])
             ]);
 
-            const footer = el('div', 'dnm-footer', { textContent: 'v127.0.0.41' });
+            const footer = el('div', 'dnm-footer', { textContent: 'v127.0.0.43' });
 
             const panel = el('div', CONFIG.SELECTORS.CUSTOM_PANEL_CLASS, {}, [
                 header, divHard, columns, statusBar, btnStop, footer
@@ -738,7 +760,7 @@
         }
     };
 
-    console.log('🚀 Dio Enhancer v127.0.0.41 Loaded');
+    console.log('🚀 Dio Enhancer v127.0.0.43 Loaded');
     Network.hook();
     UI.init();
 

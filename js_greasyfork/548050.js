@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         tixcraft_select_quant
 // @namespace    tixcraft_select_quant_cc
-// @version      0.1.1
+// @version      0.1.2
 // @description  拓元售票：自動選票數、自動勾同意、自動 focus 在輸入驗證碼、自動填入會員或信用卡驗證碼、輸入驗證碼
 // @author       cc
 // @match        https://ticket-training.onrender.com/*
@@ -24,8 +24,8 @@
   //param end
 
   //tuned param
-  const random_min_ms = 10;
-  const random_max_ms = 100;
+  const random_min_ms = 100;
+  const random_max_ms = 500;
   //tuned param end
 
   const checkbox = document.querySelector('#TicketForm_agree');

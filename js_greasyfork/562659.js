@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         全网通用返回顶部按钮
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  在所有页面增加一个返回顶部按钮，位于右下角，支持平滑滚动。智能逻辑：如果检测到页面自带返回顶部按钮，则自动隐藏。
-// @author       Rcccccccc
+// @version      1.01
+// @description  美化界面：在所有页面增加一个返回顶部按钮，位于右下角，支持平滑滚动。智能逻辑：如果检测到页面自带返回顶部按钮，则自动隐藏。
+// @author      Rcccccccc
 // @match        *://*/*
 // @grant        none
 // @license      MIT
@@ -105,13 +105,23 @@
     function hasNativeButton() {
         // 常见的返回顶部按钮选择器特征
         const selectors = [
+            // 通用类名/ID
             '[class*="back-to-top"]', '[id*="back-to-top"]',
             '[class*="backToTop"]', '[id*="backToTop"]',
             '[class*="scrollToTop"]', '[id*="scrollToTop"]',
             '[class*="go-top"]', '[id*="go-top"]',
             '[class*="gotop"]', '[id*="gotop"]',
-            '[title="返回顶部"]', '[aria-label="返回顶部"]',
-            '[title="Top"]', '[class*="back_to_top"]'
+            '[class*="back_to_top"]',
+
+            // 针对你提供的 HTML 补充的规则：
+            '[class*="ontop"]',             // 匹配 class="float-btn ontop..."
+            '[data-original-title="返回顶部"]', // 匹配 Bootstrap 提示工具
+            '[href*="scrollTo"]',           // 匹配 href="javascript:(scrollTo());"
+
+            // 属性匹配
+            '[title="返回顶部"]',
+            '[aria-label="返回顶部"]',
+            '[title="Top"]'
         ];
 
         // 查找 DOM 中是否有匹配元素

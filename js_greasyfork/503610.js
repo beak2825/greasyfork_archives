@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Histo Message Remove
 // @namespace    Histo Message Remove
-// @version      38.5.0
+// @version      38.5.6
 // @description  Strike des msg depuis l'histo et/ou sur des topics supprimes
 // @author       Atlantis
 // @icon         https://images.emojiterra.com/google/noto-emoji/unicode-15.1/color/128px/274e.png
@@ -172,7 +172,7 @@ function main() {
 
             // Créez le bouton
             const contenuBloc = bloc.querySelector('.bloc-contenu');
-            contenuBloc.insertAdjacentHTML('beforeend', `<button class="icon__strike icon__strike--auto"></button>`);  //🔗
+            contenuBloc.insertAdjacentHTML('beforeend', `<button class="icon__strike icon__strike--auto"></button>`); //❎❌
             contenuBloc.querySelector('.icon__strike').onclick = async () => {
                 await fetch("/forums/modal_del_message.php", {
                     method: "POST",

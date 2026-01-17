@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X 翻译姬
 // @namespace    https://github.com/sixiaolong1117/Tampermonkey
-// @version      0.3
+// @version      0.4
 // @description  将推文翻译为简体中文，并在下方显示
 // @license      MIT
 // @icon         https://x.com/favicon.ico
@@ -506,11 +506,41 @@
         });
     }
 
+    // 查找并翻译读者背景信息（Community Notes）
+    function findAndTranslateCommunityNotes() {
+        // 查找所有包含读者背景信息的容器
+        const communityNotes = document.querySelectorAll('[data-testid="birdwatch-pivot"]');
+        
+        communityNotes.forEach(noteContainer => {
+            // 查找背景信息的主要文本内容
+            // 通常在包含长文本的 div 中
+            const noteTextElements = noteContainer.querySelectorAll('div[dir="ltr"]');
+            
+            noteTextElements.forEach(element => {
+                const text = element.textContent.trim();
+                
+                // 过滤掉标题和按钮文本
+                if (text.length < 10) return;
+                if (text.includes('读者添加了背景信息') || text.includes('Reader added context')) return;
+                if (text.includes('你觉得此信息是否有帮助') || text.includes('Helpful?')) return;
+                if (text.includes('请进行评价') || text.includes('Rate it')) return;
+                
+                // 检查是否包含实质性内容（通常包含链接或较长文本）
+                const hasSubstantialContent = text.length > 20 || element.querySelector('a');
+                
+                if (hasSubstantialContent) {
+                    processTranslation(element, false);
+                }
+            });
+        });
+    }
+
     // 查找并翻译所有内容
     function findAndTranslateAll() {
         findAndTranslateTweets();
         findAndTranslateUserDescription();
         findAndTranslateTrends();
+        findAndTranslateCommunityNotes();
     }
 
     // 监听DOM变化，处理动态加载的内容

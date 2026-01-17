@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Multi-Database Search for TMDB
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Add multi-database search functionality to TMDB
-// @author       You
+// @author       DongHaerang
+// @license      CC BY-NC-SA 4.0
 // @match        https://www.themoviedb.org/*
 // @grant        GM_xmlhttpRequest
 // @downloadURL https://update.greasyfork.org/scripts/527813/Multi-Database%20Search%20for%20TMDB.user.js

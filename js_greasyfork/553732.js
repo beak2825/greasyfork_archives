@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         泡泡玛特API拦截器
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  拦截购物车相关API,修改库存和价格显示(iOS兼容)
 // @author       You
-// @match        https://*.popmart.com/hk/*
+// @match        https://*.popmart.com/*/*
 // @grant        unsafeWindow
 // @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/553732/%E6%B3%A1%E6%B3%A1%E7%8E%9B%E7%89%B9API%E6%8B%A6%E6%88%AA%E5%99%A8.user.js

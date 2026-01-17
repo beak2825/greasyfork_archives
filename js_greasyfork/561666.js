@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Weibo Media Lightbox (Ultimate Fix v2.2)
+// @name         Weibo Media Lightbox (Ultimate Fix v2.3)
 // @namespace    http://tampermonkey.net/
-// @version      2.2
-// @description  微博全能看图模式：深度挖掘混合媒体、多视频、Live Photo。支持数据解密获取视频地址。
+// @version      2.3
+// @description  微博全能看图模式：深度挖掘混合媒体、多视频、Live Photo。支持微博搜索页(s.weibo.com)适配。
 // @author       You
 // @license      MIT
 // @match        *://weibo.com/*
@@ -11,8 +11,8 @@
 // @include      *
 // @grant        GM_addStyle
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561666/Weibo%20Media%20Lightbox%20%28Ultimate%20Fix%20v22%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561666/Weibo%20Media%20Lightbox%20%28Ultimate%20Fix%20v22%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561666/Weibo%20Media%20Lightbox%20%28Ultimate%20Fix%20v23%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561666/Weibo%20Media%20Lightbox%20%28Ultimate%20Fix%20v23%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -61,8 +61,15 @@
             position: absolute; color: white; font-size: 14px; display: none;
             z-index: 10000000; pointer-events: none;
         }
-        /* 鼠标样式 */
-        .woo-picture-slot img, .media-piclist img, .vjs-poster img, img[src*="sinaimg.cn"] { cursor: zoom-in; }
+        /* 鼠标样式适配：包含搜索页的类名 */
+        .woo-picture-slot img, 
+        .media-piclist img, 
+        .vjs-poster img, 
+        li[action-type="fl_pics"] img,
+        img[src*="sinaimg.cn"] { cursor: zoom-in; }
+        
+        /* 搜索页特殊处理：让遮罩层也显示放大镜 */
+        .picture-cover, .hoverMask { cursor: zoom-in; }
     `;
 
     if (typeof GM_addStyle !== 'undefined') {
@@ -135,16 +142,16 @@
     }
 
     // --------------------------------------------------------
-    // 4. 深度解析工具 (Deep Mining)
+    // 4. 深度解析工具
     // --------------------------------------------------------
 
     function getHighResUrl(url) {
         if (!url) return '';
-        // 替换所有常见的缩略图规则为高清规则 (mw2000)
+        // 兼容所有缩略图规则
         return url.replace(/\/(orj480|orj360|mw690|thumb150|small|bmiddle|mw1024|wap180|thumbnail|crop\.[^/]+)\//, '/mw2000/');
     }
 
-    // 解析 action-data 字符串，提取 video_src, gif_url 等
+    // 解析 action-data 字符串 (搜索页核心)
     function parseActionData(element) {
         if (!element) return {};
         const actionDataStr = element.getAttribute('action-data');
@@ -159,19 +166,20 @@
     }
 
     // --------------------------------------------------------
-    // 5. 核心：超级媒体提取器
+    // 5. 核心：媒体提取器 (适配搜索页结构)
     // --------------------------------------------------------
     function extractMediaInfo(img) {
         let videoSrc = null;
-        let isLivePhoto = false;
         const highResSrc = getHighResUrl(img.src);
 
         // 查找相关容器
-        const itemInlineBlock = img.closest('.woo-box-item-inlineBlock') || img.closest('li') || img.parentElement;
-        const videoJsContainer = img.closest('.video-js');
-        const feedVideoContainer = img.closest('[class*="_feedVideo_"]'); // 微博新版视频容器
+        const itemInlineBlock = img.closest('.woo-box-item-inlineBlock') || img.parentElement; // 首页
+        const searchItemLi = img.closest('li[action-type="fl_pics"]'); // 搜索页
 
-        // >>> 策略 1: 查找显式的 <video> 标签 (针对已加载的视频)
+        const videoJsContainer = img.closest('.video-js');
+        const feedVideoContainer = img.closest('[class*="_feedVideo_"]');
+
+        // >>> 策略 1: 查找显式的 <video> 标签
         if (videoJsContainer || feedVideoContainer) {
             const container = videoJsContainer || feedVideoContainer;
             const videoEl = container.querySelector('video');
@@ -180,56 +188,76 @@
             }
         }
 
-        // >>> 策略 2: 挖掘 action-data (针对混合宫格、搜索结果视频)
-        if (!videoSrc) {
-            // 尝试从当前 item 向上找 action-data
-            // 很多时候 video_src 藏在 li 标签或 div._item_... 上
-            const dataContainer = img.closest('[action-data]');
-            if (dataContainer) {
-                const data = parseActionData(dataContainer);
-                if (data.video_src) videoSrc = data.video_src;
-                else if (data.gif_url) videoSrc = data.gif_url; // 动图也是视频
-                else if (data.mp4_url) videoSrc = data.mp4_url;
+        // >>> 策略 2: 搜索页 action-data (搜索页核心逻辑)
+        if (!videoSrc && searchItemLi) {
+            // 搜索页的数据在 li 标签的 action-data 里
+            // 格式如: uid=...&pic_id=...&gif_url=...
+            const data = parseActionData(searchItemLi);
+            if (data.video_src) videoSrc = data.video_src;
+            else if (data.gif_url) videoSrc = data.gif_url; 
+            else if (data.mp4_url) videoSrc = data.mp4_url;
+            
+            // 搜索页有时还有 data-gifviedo (拼写错误兼容)
+            if (!videoSrc) {
+                const gifVideo = img.getAttribute('data-gifviedo');
+                if (gifVideo) videoSrc = gifVideo;
             }
         }
 
-        // >>> 策略 3: 挖掘 video-sources 属性 (旧版兼容)
+        // >>> 策略 3: 首页 action-data
+        if (!videoSrc) {
+            const dataContainer = img.closest('[action-data]');
+            if (dataContainer && !searchItemLi) {
+                const data = parseActionData(dataContainer);
+                if (data.video_src) videoSrc = data.video_src;
+                else if (data.gif_url) videoSrc = data.gif_url;
+            }
+        }
+
+        // >>> 策略 4: HTML5 video-sources
         if (!videoSrc) {
             videoSrc = img.getAttribute('video-sources') || img.getAttribute('data-mp4');
         }
 
-        // >>> 策略 4: 检测 Live Photo 标记 (并推导地址)
-        // 你的截图显示 Live 标记在 woo-box-item-inlineBlock 内部
+        // >>> 策略 5: Live Photo 推导 (首页 + 搜索页通用)
+        // 搜索页如果不给 gif_url，我们可以尝试构造 .mov 地址
         if (!videoSrc) {
+            let isLive = false;
+            
+            // 首页 Live 标
             if (itemInlineBlock) {
-                // 查找包含 "Live" 文本的元素 或 特定的 Live 图标类名
                 const liveTag = Array.from(itemInlineBlock.querySelectorAll('*')).find(el => 
-                    el.innerText === 'Live' || 
-                    el.className.includes('_live_') || 
-                    el.className.includes('tag_live')
+                    el.innerText === 'Live' || el.className.includes('_live_') || el.className.includes('tag_live')
                 );
-
-                if (liveTag) {
-                    isLivePhoto = true;
-                    // Live Photo 命名规则推导
-                    try {
-                        const urlObj = new URL(highResSrc);
-                        const pathParts = urlObj.pathname.split('/');
-                        const filename = pathParts[pathParts.length - 1].split('.')[0];
-                        // 构造 Live 视频地址 (海外源，需翻墙，但配合 onerror 降级完美)
-                        videoSrc = `https://us.sinaimg.cn/${filename}.mov`;
-                    } catch(e) {}
-                }
+                if (liveTag) isLive = true;
             }
+            
+            // 如果没找到标，但我们想强行测试(搜索页可能没标)，也可以放宽条件
+            // 但为了防止普通图报错，我们依赖 .mov 加载失败后的降级机制
+            
+            // 尝试构造 Live 地址 (对搜索页也有效)
+            try {
+                const urlObj = new URL(highResSrc);
+                const pathParts = urlObj.pathname.split('/');
+                const filename = pathParts[pathParts.length - 1].split('.')[0];
+                const liveUrl = `https://us.sinaimg.cn/${filename}.mov`;
+                
+                // 如果确认为 Live，或者是在搜索页且看起来像 Live (这里可以增加逻辑，目前保持保守)
+                if (isLive) {
+                    videoSrc = liveUrl;
+                }
+                // 搜索页兜底：如果 action-data 里的 pic_ids 有多个，且没有 gif_url，可能也是 Live
+                // 但由于 us.sinaimg.cn 被墙概率大，且没有 Live 标，这里暂不强制搜索页所有图都去试 .mov
+                // 除非用户有明确需求
+            } catch(e) {}
         }
 
-        // >>> 协议修复
+        // 协议修复
         if (videoSrc && videoSrc.startsWith('//')) videoSrc = 'https:' + videoSrc;
 
         return {
             src: highResSrc,
-            videoSrc: videoSrc,
-            isLive: isLivePhoto
+            videoSrc: videoSrc
         };
     }
 
@@ -244,24 +272,21 @@
         const item = currentMediaList[currentIndex];
         ui.counter.textContent = `${currentIndex + 1} / ${currentMediaList.length}`;
 
-        // 重置状态
         ui.loading.style.display = 'none';
         ui.img.classList.add('ws-hidden');
         ui.video.classList.add('ws-hidden');
         ui.video.pause();
-        ui.video.removeAttribute('src'); // 彻底清除旧源
+        ui.video.removeAttribute('src');
 
         if (item.videoSrc) {
-            // === 视频/Live 模式 ===
             ui.loading.style.display = 'block';
             ui.video.classList.remove('ws-hidden');
             
-            ui.video.poster = item.src; // 使用高清图做封面，体验无缝
+            ui.video.poster = item.src;
             ui.video.src = item.videoSrc;
 
-            // 错误处理 (关键)：如果视频加载失败 (比如Live图被墙)，瞬间切回图片
             ui.video.onerror = () => {
-                console.warn('[WeiboLightbox] Video load error, fallback to image:', item.videoSrc);
+                console.warn('[WeiboLightbox] Video failed, fallback to image:', item.videoSrc);
                 ui.loading.style.display = 'none';
                 ui.video.classList.add('ws-hidden');
                 ui.img.classList.remove('ws-hidden');
@@ -272,18 +297,13 @@
             
             const playPromise = ui.video.play();
             if (playPromise !== undefined) {
-                playPromise.catch(e => {
-                    // 自动播放失败通常是因为浏览器策略，保持 Loading 消失，显示控件让用户点
-                    ui.loading.style.display = 'none';
-                });
+                playPromise.catch(() => ui.loading.style.display = 'none');
             }
         } else {
-            // === 纯图模式 ===
             ui.img.classList.remove('ws-hidden');
             ui.img.src = item.src;
         }
 
-        // 导航按钮状态
         if (currentMediaList.length <= 1) {
             ui.prev.style.display = 'none';
             ui.next.style.display = 'none';
@@ -307,22 +327,27 @@
         ui.overlay.classList.remove('ws-active');
         document.body.style.overflow = '';
         ui.video.pause();
-        ui.video.removeAttribute('src');
         ui.img.src = '';
         setTimeout(() => window.scrollTo(0, savedScrollTop), 0);
     }
 
     // --------------------------------------------------------
-    // 7. 点击监听 (入口)
+    // 7. 点击监听 (适配搜索页结构)
     // --------------------------------------------------------
     document.addEventListener('click', function(e) {
         let target = e.target;
 
-        // 处理点击了播放按钮、遮罩层等情况，寻找最近的图片
+        // >>> 搜索页特殊处理：点击了 picture-cover 或 hoverMask
+        // 结构: li > img + i.picture-cover + i.hoverMask
+        if (target.tagName === 'I' && (target.classList.contains('picture-cover') || target.classList.contains('hoverMask'))) {
+            // 尝试找同级的 img
+            const siblingImg = target.parentElement.querySelector('img');
+            if (siblingImg) target = siblingImg;
+        }
+
+        // 常规蒙版处理
         if (target.tagName !== 'IMG') {
-            // 尝试向下找
             let img = target.querySelector('img');
-            // 尝试向上找容器再找图片 (比如点击了播放图标 <i>)
             if (!img) {
                 const wrapper = target.closest('.woo-picture-main') || target.closest('.vjs-poster') || target.closest('.video-js');
                 if (wrapper) img = wrapper.querySelector('img');
@@ -333,11 +358,12 @@
         if (target.tagName !== 'IMG') return;
         if (!target.src.includes('sinaimg.cn') || target.width < 50) return;
 
-        // 确定 Feed 容器
+        // 确定容器 (新增搜索页容器选择器)
         const feedContainer = target.closest('.wbpro-feed-content') || 
                               target.closest('[class*="feed-content"]') ||
                               target.closest('.vue-recycle-scroller__item-view') || 
-                              target.closest('[node-type="fl_pic_list"]') ||
+                              target.closest('[node-type="fl_pic_list"]') || // 搜索页
+                              target.closest('.media-piclist') || // 搜索页
                               target.closest('.card-wrap');
 
         if (feedContainer) {
@@ -345,30 +371,29 @@
             e.stopPropagation();
             e.stopImmediatePropagation();
 
-            // 1. 收集容器内所有有效的“媒体封面图”
+            // 收集图片
             const allImgs = Array.from(feedContainer.querySelectorAll('img[src*="sinaimg.cn"]'));
             
-            // 2. 筛选
+            // 筛选
             const galleryImgs = allImgs.filter(img => {
-                if (img.clientWidth < 50) return false; // 忽略头像
-                // 必须在特定的内容结构中
-                return img.closest('.woo-picture-slot') || // 普通/Live宫格
-                       img.closest('.woo-picture-img') ||  // 单图
-                       img.closest('.vjs-poster') ||       // 视频封面
-                       img.closest('[class*="_feedVideo_"]') || // 视频容器
-                       img.closest('li[action-type="fl_pics"]'); // 搜索页
+                if (img.clientWidth < 50) return false;
+                
+                return img.closest('.woo-picture-slot') || 
+                       img.closest('.woo-picture-img') ||  
+                       img.closest('.vjs-poster') ||       
+                       img.closest('[class*="_feedVideo_"]') || 
+                       img.closest('li[action-type="fl_pics"]'); // 搜索页 li
             });
 
-            // 如果没找到（比如结构变了），兜底使用所有大图
+            // 兜底
             const finalImgs = galleryImgs.length > 0 ? galleryImgs : allImgs.filter(i => i.clientWidth > 100);
 
-            // 3. 提取每一项的媒体信息 (Video/Live/Image)
+            // 提取数据
             const mediaList = finalImgs.map(img => extractMediaInfo(img));
 
-            // 4. 定位当前点击的图片
+            // 定位
             let clickIndex = finalImgs.indexOf(target);
             if (clickIndex === -1) {
-                // 如果 DOM 引用对不上，尝试匹配 src
                 clickIndex = finalImgs.findIndex(i => i.src === target.src);
             }
 

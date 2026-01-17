@@ -5,8 +5,8 @@
 // @match        *://*.ithome.com/*
 // @run-at       document-start
 // @namespace    https://github.com/wang93wei/IThome-Pro-fix
+// @supportURL   https://github.com/wang93wei/IThome-Pro-fix/issues
 // @license MIT
-
 // @downloadURL https://update.greasyfork.org/scripts/562621/IThome%20Pro%20fix.user.js
 // @updateURL https://update.greasyfork.org/scripts/562621/IThome%20Pro%20fix.meta.js
 // ==/UserScript==

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         大连理工教师评教问卷自动提交工具
 // @namespace    https://github.com/Lentinel/DUT_TeacherEvaluation_Auto_Submit_Tool
-// @version      1.6
+// @version      1.7
 // @description  DUT_TeacherEvaluation_Auto_Submit_Tool
 // @author       Lentinel
 // @match        *://jxgl.dlut.edu.cn/evaluation-student-frontend/*
@@ -41,7 +41,7 @@
     }
 
     setTimeout(function () {
-        showAutoCloseAlert('请在进入教师评教问卷页面后再点击“点我评教！”按钮。<br><br>1分钟内最多只能提交4份问卷，请慢点交！<br><br>请不要在问卷页面刷新网页，如需刷新，请关闭当前页面后重新从教务系统进入问卷，否则会导致问卷无法提交！', 10000);
+        showAutoCloseAlert('请在进入教师评教问卷页面后再点击“点我评教！”按钮。<br><br>1分钟内最多只能提交5份问卷，请慢点交！<br><br>请不要在问卷页面刷新网页，如需刷新，请关闭当前页面后重新从教务系统进入问卷，否则会导致问卷无法提交！', 10000);
 
         const containerDiv = doc.querySelector('div[class="main-container"]');
         if (!containerDiv) return;
@@ -52,8 +52,6 @@
         containerDiv.appendChild(newButton);
 
         newButton.addEventListener('click', function () {
-            console.log("Starting evaluation...");
-
             const radioButtons = doc.querySelectorAll('input[type="radio"]');
             const targetText = {
                 "教师对学生是否存在过于严厉、对考核要求过于严格的现象？": "否",
@@ -88,7 +86,6 @@
                 //无视题目直接选择“优秀”
                 if (optionText === "优秀") {
                     radio.click();
-                    console.log("已选择：优秀");
                 }
             });
 
@@ -101,13 +98,8 @@
                         const scoreOption = doc.querySelector('ul.el-scrollbar__view > li.el-select-dropdown__item:last-child');
                         if (scoreOption) {
                             scoreOption.click();
-                            console.log('已选择 100 分');
-                        } else {
-                            console.error('评分选项未找到');
                         }
                     }, 150);
-                } else {
-                    console.error('评分输入框未找到');
                 }
             }, 300);
 
@@ -124,15 +116,11 @@
                     block: 'center',
                     inline: 'nearest'
                 });
-                console.log("滚动到提交按钮处");
-            } else {
-                console.error("未找到提交按钮");
             }
 
             setTimeout(function () {
                 const submitButton = doc.querySelector('button.el-button--primary');
                 if (submitButton) {
-                    console.log("Submitting evaluation...");
                     submitButton.click();
                 }
             }, 1000);

@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         GuresTürkiye - İsim Etiketi (v14.6 Final - Proxy)
+// @name         GuresTürkiye - İsim Etiketi (v14.7.0)
 // @namespace    http://tampermonkey.net/
-// @version      14.6.0
+// @version      14.7.0
 // @description  GuresTurkiye.net gelişmiş isim etiketi sistemi. Proxy entegrasyonu ile erişim engeli aşılmıştır.
 // @author       Elricsilverhand
 // @match        *://*.guresturkiye.net/*
@@ -14,8 +14,8 @@
 // @connect      cdn.discordapp.com
 // @run-at       document-body
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/541346/GuresT%C3%BCrkiye%20-%20%C4%B0sim%20Etiketi%20%28v146%20Final%20-%20Proxy%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/541346/GuresT%C3%BCrkiye%20-%20%C4%B0sim%20Etiketi%20%28v146%20Final%20-%20Proxy%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/541346/GuresT%C3%BCrkiye%20-%20%C4%B0sim%20Etiketi%20%28v1470%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/541346/GuresT%C3%BCrkiye%20-%20%C4%B0sim%20Etiketi%20%28v1470%29.meta.js
 // ==/UserScript==
 (function(){'use strict';
 const _0x1=['Y3JpbXNvbg==','YmVycnk=','c2t5','dGVhbA==','Zm9yZXN0','YnViYmxlX2d1bQ==','dmlvbGV0','Y29iYWx0','Y2xvdmVy','bGVtb24=','d2hpdGU=','aHR0cHM6Ly9jZG4uZGlzY29yZGFwcC5jb20vYXNzZXRzLw==','Y29udGVudC8=','Y29sbGVjdGlibGVzL25hbWVwbGF0ZXMv','Z3JhZGllbnRUb25lXw==','c2VsZWN0ZWRUaGVtZV8=','Z3QtZHluYW1pYy1uYW1lcGxhdGUtc3R5bGU=','Z3QtbWVudS1zZXR0aW5ncy1idG4=','Z3QtdGhlbWUtbW9kYWwtb3ZlcmxheQ==','LnAtbmF2Z3JvdXAucC1hY2NvdW50','LnAtbmF2Z3JvdXAtbGluay0tc2VhcmNo','Z3QtaGVhZGVyLWJ0bg==','aHR0cHM6Ly9taW5kc3VnaS50ci9wcm94eS5waHA/dXJsPQ=='];
@@ -134,7 +134,10 @@ camo_master:{n:'Camo Master',v:'06343ef776b710cf13bcb5ed9fc2d6b177415e5df4aeef06
 squad_wipe:{n:'Squad Wipe',v:'4d2e225645e7456cb70f6cc2d428ecc0d551cb723aff474ce24a36972bd00114',t:1,c:'#FFFFFF',p:'teal'},
 bye_bye:{n:'Bye-Bye',v:'0690b4eae2b81b9cea835beab78b2081d816364a59bbebde76329425b9904577',t:1,c:'#FFFFFF',p:'violet'},
 2035:{n:'2035',v:'cf0f27b19f0609f7c342e5852ec198b5d4232adae31b5dff1d89d556220186cb',t:1,c:'#FFFFFF',p:'cobalt'},
-fluttering_static:{n:'Fluttering Static',v:'9c4b9ccfb8629473202b9d9670de75d1f6f16edf7168f22f4c45f831322df10c',t:1,c:'#FFFFFF',p:'crimson'}
+fluttering_static:{n:'Fluttering Static',v:'9c4b9ccfb8629473202b9d9670de75d1f6f16edf7168f22f4c45f831322df10c',t:1,c:'#FFFFFF',p:'crimson'},
+dream_waves_blue:{n:'Dream Waves',v:'31e22587544a5957543357a8ab2d96687a33f0bb8f9d7aa56542acdb09502c04',t:1,c:'#FFFFFF',p:'cobalt'},
+moon_bloom:{n:'Moon Bloom',v:'53645fdb5d924907ec9ef5551d8ceddd6e4e36f792e554eb891302269caf3bfb',t:1,c:'#FFFFFF',p:'berry'},
+star_drift:{n:'Star Drift',v:'70662acfb76a799f54c5caf3bfc9e90eafbd34f5bd6b8011c7f79d17c1ec6b0a',t:1,c:'#FFFFFF',p:'violet'}
 };
 const _G=(_tObj)=>{const _pb=_S(22);const _db=_S(11);const _cb=_S(12);const _ab=_S(13);if(_tObj.t===1){return _pb+_db+_cb+_tObj.v}else{return _pb+_db+_ab+_tObj.v}};
 function _GetUID(){const _e=document.querySelector('.p-navgroup-link--user .avatar[data-user-id]');return _e?_e.dataset.userId:null;}

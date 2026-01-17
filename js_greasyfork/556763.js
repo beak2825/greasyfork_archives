@@ -4,7 +4,6 @@
 // @version      1.2.5
 // @description  管理摸鱼派鱼油的好感度系统，支持好感度查询、修改和导入导出
 // @author      ZeroDream
-// @match        https://fishpi.cn/*
 // @match        https://fishpi.cn/cr
 // @icon         https://fishpi.cn/images/favicon.png
 // @grant        GM_registerMenuCommand

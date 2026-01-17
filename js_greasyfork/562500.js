@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2.0
 // @description  Normally, the volume changes in 5% increments when using the up and down arrow keys on the keyboard, but this script changes it to adjust in 1% increments.
-// @author       YourName
+// @author       81standard
 // @match        *://www.youtube.com/*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562500/YouTube%20Volume%201%25%20Step%20with%20OSD.user.js

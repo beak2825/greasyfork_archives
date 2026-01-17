@@ -1,15 +1,29 @@
 // ==UserScript==
 // @name         Twitter排行榜：TikTok版
+// @name:en      Twitter Ranking: TikTok Style Player
+// @name:ja      Twitterランキング：TikTokスタイル
+// @name:ko      Twitter 랭킹: 틱톡 스타일
+// @name:ru      Рейтинг Twitter: Плеер в стиле TikTok
+// @name:th      การจัดอันดับ Twitter: ผู้เล่นสไตล์ TikTok
 // @namespace    loadingi.local
-// @version      2.1
+// @version      2.7
 // @description  视频模态框播放器 - 支持TikTok风格上下滑动切换,无需跳转页面
+// @description:en Video modal player - Supports TikTok-style swipe switching without page redirection
+// @description:ja 動画モーダルプレーヤー - TikTokスタイルのスワイプ切り替え、ページ遷移なし
+// @description:ko 비디오 모달 플레이어 - 페이지 이동 없이 틱톡 스타일의 스와이프 전환 지원
+// @description:ru Модальный видеоплеер - Поддерживает переключение свайпом в стиле TikTok без перенаправления
+// @description:th เครื่องเล่นวิดีโอโมดอล - รองรับการสลับแบบปัดสไตล์ TikTok โดยไม่ต้องเปลี่ยนหน้า
 // @author       Chris_C
+// @license      MIT
 // @match        https://twitter-ero-video-ranking.com/*
 // @match        https://x-ero-anime.com/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @grant        GM_openInTab
 // @connect      twitter-ero-video-ranking.com
+// @connect      video.twimg.com
+// @connect      pbs.twimg.com
+// @connect      *
 // @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/562631/Twitter%E6%8E%92%E8%A1%8C%E6%A6%9C%EF%BC%9ATikTok%E7%89%88.user.js
 // @updateURL https://update.greasyfork.org/scripts/562631/Twitter%E6%8E%92%E8%A1%8C%E6%A6%9C%EF%BC%9ATikTok%E7%89%88.meta.js
@@ -42,6 +56,14 @@
     const styles = `
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap');
 
+        body {
+            background-color: #000 !important;
+        }
+
+        body > div.container.mx-auto.mt-3.mb-3.px-2.relative {
+            background-color: #fff !important;
+        }
+
         :root {
             --primary-red: #FE2C55;
             --primary-cyan: #25F4EE;
@@ -55,6 +77,7 @@
             --ease-smooth: cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        html.tiktok-modal-open,
         body.tiktok-modal-open {
             overflow: hidden !important;
             position: fixed !important;
@@ -62,6 +85,7 @@
             height: 100% !important;
             overscroll-behavior: none !important;
             touch-action: none !important;
+            background-color: #000 !important;
         }
 
         .tiktok-modal-overlay {
@@ -166,7 +190,6 @@
         .tiktok-progress-container::before {
             content: '';
             position: absolute;
-            bottom: 0;
             left: -10px;  /* 抵消父元素 padding */
             right: -10px; /* 抵消父元素 padding */
             height: 120px;
@@ -176,19 +199,50 @@
         }
 
         .tiktok-video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: contain;
             cursor: pointer;
             z-index: 1;
-            background: transparent;
+            background: #000;
+            opacity: 0;
+            transition: opacity 0.15s ease-out;
+        }
+
+        .tiktok-video-player.visible {
+            opacity: 1;
+        }
+
+        .tiktok-thumbnail-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.15s ease-out;
+            background: #000;
+        }
+
+        .tiktok-thumbnail-layer.hidden {
+            opacity: 0;
         }
         
         /* 隐藏原生控件 */
         .tiktok-video-player::-webkit-media-controls { display: none !important; }
         .tiktok-video-player::-webkit-media-controls-enclosure { display: none !important; }
 
-        /* --- 控件通用样式：磨砂玻璃 --- */
+        /* --- 视频切换动画 --- */
+        .tiktok-video-player.slide-out-up, .tiktok-thumbnail-layer.slide-out-up { animation: slideOutUp 0.3s ease-out forwards; }
+        .tiktok-video-player.slide-in-up, .tiktok-thumbnail-layer.slide-in-up { animation: slideInUp 0.3s ease-out forwards; }
+        .tiktok-video-player.slide-out-down, .tiktok-thumbnail-layer.slide-out-down { animation: slideOutDown 0.3s ease-out forwards; }
+        .tiktok-video-player.slide-in-down, .tiktok-thumbnail-layer.slide-in-down { animation: slideInDown 0.3s ease-out forwards; }
         .glass-panel {
             background: var(--glass-bg);
             backdrop-filter: var(--glass-blur);
@@ -577,12 +631,39 @@
             this.videoElement = null;
             this.isLiked = false;
 
-            // 预加载缓存系统
-            this.preloadCache = new Map(); // { url: { blobUrl, timestamp } }
+            // ========================================
+            // 🚀 Blob 预取系统 (iOS Safari 兼容)
+            // ========================================
+            this.blobCache = new Map(); // { realVideoUrl: { blob, objectUrl, timestamp, isPartial } }
+            this.frameCache = new Map(); // { realVideoUrl: imageDataUrl (首帧截图) }
             this.videoUrlCache = new Map(); // { pageUrl: realVideoUrl }
-            this.PRELOAD_BYTES = 1024 * 1024; // 1MB
-            this.MAX_CACHE_SIZE = 10; // 最多缓存10个视频
-            this.lastPreloadedIndex = -1; // 防止重复预加载
+            this.PREFETCH_SIZE = 3 * 1024 * 1024; // 预下载 3MB（约10-15秒视频）
+            this.MAX_BLOB_CACHE_SIZE = 5; // Blob 缓存数量限制
+            this.prefetchQueue = []; // 预取队列
+            this.isPrefetching = false; // 预取锁
+            
+            // 平台检测 (增强版Safari/iOS检测)
+            this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPad Pro with iPadOS
+            this.isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
+                            (/AppleWebKit/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent));
+            this.isIOSSafari = this.isIOS && this.isSafari;
+            
+            // iOS版本检测 (用于针对特定版本的workaround)
+            this.iOSVersion = (() => {
+                const match = navigator.userAgent.match(/OS (\d+)_(\d+)/);
+                return match ? parseFloat(`${match[1]}.${match[2]}`) : 0;
+            })();
+            
+            // Safari对Blob URL的支持状态
+            // iOS 15-17有严重的Blob URL问题，iOS 18+已修复
+            this.safariHasBlobIssues = this.isIOSSafari && this.iOSVersion >= 15 && this.iOSVersion < 18;
+            
+            // 旧系统兼容 (将逐步废弃)
+            this.preloadCache = new Map();
+            this.PRELOAD_BYTES = 1024 * 1024;
+            this.MAX_CACHE_SIZE = 10;
+            this.lastPreloadedIndex = -1;
 
             // 动画状态
             this.isTransitioning = false;
@@ -590,12 +671,21 @@
             // 进度条拖拽状态
             this.isProgressDragging = false;
 
+            // 重试机制状态
+            this.retryCount = 0;
+            this.MAX_RETRIES = 3;
+            this.retryTimeoutId = null; // 用于取消旧的重试定时器
+            this.loadVersion = 0; // 加载版本号，用于丢弃过期的回调
+
             // 已观看视频记录 (localStorage)
             this.WATCHED_STORAGE_KEY = 'tiktok_modal_watched_videos';
             this.watchedVideos = this.loadWatchedVideos();
 
             // 只看未读模式
             this.unreadOnlyMode = false;
+
+            // Debug模式开关
+            this.debugMode = false;
 
             this.init();
         }
@@ -607,6 +697,19 @@
             meta.content = "no-referrer";
             document.head.appendChild(meta);
 
+            // 确保 viewport-fit=cover 以扩展到安全区域 (解决底部白条)
+            const viewport = document.querySelector('meta[name="viewport"]');
+            if (viewport) {
+                if (!viewport.content.includes('viewport-fit=cover')) {
+                    viewport.content = `${viewport.content}, viewport-fit=cover`;
+                }
+            } else {
+                const v = document.createElement('meta');
+                v.name = 'viewport';
+                v.content = 'width=device-width, initial-scale=1, viewport-fit=cover';
+                document.head.appendChild(v);
+            }
+
             // 注入样式
             this.injectStyles();
 
@@ -616,24 +719,354 @@
             // 绑定事件
             this.bindEvents();
 
+            // 初始化可视区域观察者 (用于智能预加载)
+            this.initViewportObserver();
+
             // 异步收集视频列表 - 不阻塞模态框初始化
             this.scheduleVideoCollection();
 
+            // 启动 DOM 监听，处理动态加载的内容 (修复切换排序后失效的问题)
+            this.setupMutationObserver();
+
             console.log('🎬 TikTok Modal Player 初始化完成 - 模态框已就绪');
+        }
+
+        setupMutationObserver() {
+            // 防抖定时器
+            let timeout = null;
+
+            const observer = new MutationObserver((mutations) => {
+                // 如果模态框是打开的，暂停DOM扫描以节省资源
+                if (this.isModalOpen()) return;
+
+                // 检查是否有相关节点变动 (简单的性能优化)
+                let shouldUpdate = false;
+                for (const mutation of mutations) {
+                    if (mutation.addedNodes.length > 0) {
+                        shouldUpdate = true;
+                        break;
+                    }
+                }
+
+                if (shouldUpdate) {
+                    if (timeout) clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        console.log('DOM 变动检测 - 重新扫描视频...');
+                        this.collectVideoLinks();
+                    }, 500); // 缩短防抖时间到 500ms，提高响应速度
+                }
+            });
+
+            // 监听 body 的子树变化
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            console.log('👀 DOM 监听器已启动');
+        }
+
+        // 初始化可视区域观察者
+        initViewportObserver() {
+            // 使用 IntersectionObserver 监听视频元素是否进入可视区域
+            this.viewportObserver = new IntersectionObserver((entries) => {
+                // 如果模态框已打开，暂停预加载以节省带宽
+                if (this.isModalOpen()) return;
+
+                entries.forEach(entry => {
+                    // 当元素进入可视区域超过 10% 时触发
+                    if (entry.isIntersecting && entry.intersectionRatio > 0.1) {
+                        const element = entry.target;
+                        // 找到对应的视频对象
+                        const index = this.videoList.findIndex(v => v.element === element);
+                        if (index !== -1) {
+                            // 触发预加载 (带有防抖，避免滚动过快时触发太多请求)
+                            this.scheduleSingleVideoPreload(index);
+                        }
+                    }
+                });
+            }, {
+                root: null, // 视口作为根
+                rootMargin: '100px', // 提前 100px 触发
+                threshold: 0.1
+            });
+        }
+
+        scheduleSingleVideoPreload(index) {
+            // 简单的防抖机制
+            if (this._preloadTimeout) clearTimeout(this._preloadTimeout);
+
+            this._preloadTimeout = setTimeout(() => {
+                this.preloadSingleVideo(index);
+            }, 500); // 停留 500ms 后才开始预加载
+        }
+
+        async preloadSingleVideo(index) {
+            const video = this.videoList[index];
+            if (!video) return;
+
+            // 1. 如果没有真实URL，先解析
+            if (!this.videoUrlCache.has(video.url)) {
+                // console.log(`👁️ 视频进入可视区域/悬停，触发预解析: ${index}`);
+                try {
+                    const realUrl = await this.fetchRealVideoUrl(video.url);
+                    if (realUrl) {
+                        this.videoUrlCache.set(video.url, realUrl);
+                        this.warmupVideoConnection(realUrl);
+                    }
+                } catch (e) {
+                    console.error('预解析失败:', e);
+                }
+            } else {
+                // 2. 如果已有真实URL，直接预热连接
+                // console.log(`🔥 视频已解析，触发连接预热: ${index}`);
+                const realUrl = this.videoUrlCache.get(video.url);
+                this.warmupVideoConnection(realUrl);
+            }
         }
 
         // 使用空闲时间收集视频，不阻塞其他操作
         scheduleVideoCollection() {
             const collect = () => {
                 this.collectVideoLinks();
-                console.log('📹 视频采集完成 - 找到', this.videoList.length, '个视频');
+                // 首次收集后，如果列表为空，可能页面还没渲染完，设置一个短定时器再次检查
+                if (this.videoList.length === 0) {
+                    setTimeout(() => this.collectVideoLinks(), 1000);
+                }
             };
 
-            // 优先使用 requestIdleCallback，否则使用 setTimeout
-            if (typeof requestIdleCallback !== 'undefined') {
-                requestIdleCallback(collect, { timeout: 2000 });
-            } else {
-                setTimeout(collect, 0);
+            // 立即尝试一次
+            collect();
+
+            // 确保在 DOM 加载完成后再次执行
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', collect);
+                window.addEventListener('load', collect);
+            }
+        }
+
+        // 启动列表预加载（核心优化：提前解析视频地址）
+        async startListPreloading() {
+            if (this.isListPreloading) return;
+            this.isListPreloading = true;
+
+            // console.log('🚀 启动列表预解析 (Top 5)...');
+
+            // 优化：优先预加载前3个视频，确保首屏秒开
+            const videosToPreload = this.videoList.slice(0, 3);
+            let hasNewPreload = false;
+
+            for (const video of videosToPreload) {
+                // 如果已经缓存了真实URL，跳过
+                if (this.videoUrlCache.has(video.url)) continue;
+
+                hasNewPreload = true;
+                try {
+                    // 仅解析真实URL，存入缓存
+                    const realUrl = await this.fetchRealVideoUrl(video.url);
+                    if (realUrl) {
+                        this.videoUrlCache.set(video.url, realUrl);
+                        // 启动 Blob 预取
+                        this.warmupVideoConnection(realUrl);
+                    }
+                    // 减少间隔，加速预热队列的处理
+                    await new Promise(r => setTimeout(r, 100));
+                } catch (e) {
+                    console.error('列表预解析失败:', video.url, e);
+                }
+            }
+
+            this.isListPreloading = false;
+            if (hasNewPreload) {
+                console.log('✨ 列表预解析完成 (新缓存已更新)');
+            }
+        }
+
+        // 🚀 新版预热：优先使用 GM_xmlhttpRequest 绕过 CORS
+        async warmupVideoConnection(url) {
+            if (this.videoElement && this.videoElement.readyState < 3 && this.videoElement.src) {
+                return;
+            }
+
+            if (this.blobCache.has(url)) {
+                return;
+            }
+            
+            // Safari有Blob问题时，跳过部分预取，只预热URL解析
+            if (this.safariHasBlobIssues) {
+                console.log(`📡 [Safari] 跳过Blob预取，使用流式模式: ${url.slice(-40)}`);
+                return;
+            }
+
+            console.log(`🚀 [Blob预取] 开始: ${url.slice(-40)}`);
+
+            const handleSuccess = (blob, isPartial) => {
+                const objectUrl = URL.createObjectURL(blob);
+                this.manageBlobCacheSize();
+                this.blobCache.set(url, {
+                    blob,
+                    objectUrl,
+                    timestamp: Date.now(),
+                    isPartial
+                });
+                console.log(`✅ [Blob预取] 完成: ${(blob.size / 1024 / 1024).toFixed(2)}MB${isPartial ? ' (部分)' : ''}`);
+                
+                if (!isPartial || !this.isSafari) {
+                    this.extractFirstFrame(objectUrl, url);
+                }
+            };
+
+            // 尝试使用 GM_xmlhttpRequest (最强能力)
+            if (typeof GM_xmlhttpRequest !== 'undefined') {
+                try {
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: url,
+                        headers: { 'Range': `bytes=0-${this.PREFETCH_SIZE - 1}` },
+                        responseType: 'blob',
+                        onload: (response) => {
+                            if (response.status >= 200 && response.status < 300) {
+                                handleSuccess(response.response, response.status === 206);
+                            } else {
+                                console.warn(`⚠️ [GM预取] 状态码 ${response.status}, 降级到 fetch`);
+                                this.warmupWithFetch(url, handleSuccess);
+                            }
+                        },
+                        onerror: (e) => {
+                            console.warn(`⚠️ [GM预取] 错误, 降级到 fetch:`, e);
+                            this.warmupWithFetch(url, handleSuccess);
+                        },
+                        ontimeout: () => {
+                            console.log('⏱️ [GM预取] 超时');
+                        },
+                        timeout: 20000
+                    });
+                    return; // GM 请求已发送
+                } catch (e) {
+                    console.warn('⚠️ [GM预取] 异常, 降级到 fetch:', e);
+                }
+            }
+
+            // 降级方案
+            await this.warmupWithFetch(url, handleSuccess);
+        }
+
+        async warmupWithFetch(url, onSuccess) {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                const response = await fetch(url, {
+                    headers: { 'Range': `bytes=0-${this.PREFETCH_SIZE - 1}` },
+                    signal: controller.signal,
+                    cache: 'no-store',
+                    referrerPolicy: 'no-referrer'
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok && response.status !== 206) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const blob = await response.blob();
+                onSuccess(blob, response.status === 206);
+
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.log(`⏱️ [Fetch预取] 超时: ${url.slice(-30)}`);
+                } else {
+                    console.error(`❌ [Fetch预取] 失败:`, error);
+                }
+            }
+        }
+
+        extractFirstFrame(videoSrc, cacheKey) {
+            return new Promise((resolve) => {
+                if (this.safariHasBlobIssues && videoSrc.startsWith('blob:')) {
+                    resolve(null);
+                    return;
+                }
+                
+                const video = document.createElement('video');
+                video.muted = true;
+                video.playsInline = true;
+                video.crossOrigin = 'anonymous';
+                video.preload = 'metadata';
+                video.setAttribute('webkit-playsinline', '');
+
+                const cleanup = () => {
+                    video.src = '';
+                    video.load();
+                };
+
+                const extractFrame = async () => {
+                    try {
+                        if (this.isSafari) {
+                            await new Promise(r => setTimeout(r, 100));
+                        }
+                        
+                        const canvas = document.createElement('canvas');
+                        canvas.width = video.videoWidth || 640;
+                        canvas.height = video.videoHeight || 360;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(video, 0, 0);
+
+                        const frameDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        this.frameCache.set(cacheKey, frameDataUrl);
+
+                        console.log(`🖼️ [首帧] 已提取: ${canvas.width}x${canvas.height}`);
+                        resolve(frameDataUrl);
+                    } catch (e) {
+                        resolve(null);
+                    }
+                    cleanup();
+                };
+
+                video.onloadeddata = extractFrame;
+
+                video.onerror = () => {
+                    cleanup();
+                    resolve(null);
+                };
+
+                setTimeout(() => {
+                    if (!this.frameCache.has(cacheKey)) {
+                        cleanup();
+                        resolve(null);
+                    }
+                }, 5000);
+
+                video.src = videoSrc;
+            });
+        }
+
+        manageBlobCacheSize() {
+            // 获取当前正在播放的真实URL (防止误删)
+            const currentVideo = this.getActiveVideoList()[this.currentVideoIndex];
+            const currentRealUrl = currentVideo ? this.videoUrlCache.get(currentVideo.url) : null;
+
+            if (this.blobCache.size >= this.MAX_BLOB_CACHE_SIZE) {
+                const entries = [...this.blobCache.entries()]
+                    .sort((a, b) => a[1].timestamp - b[1].timestamp);
+
+                // 过滤掉当前正在播放的视频
+                const candidates = entries.filter(([key]) => key !== currentRealUrl);
+
+                // 如果过滤后没有可删除的了，就暂时不删
+                if (candidates.length === 0) return;
+
+                // 计算需要删除的数量
+                const deleteCount = Math.max(0, this.blobCache.size - this.MAX_BLOB_CACHE_SIZE + 1);
+                const toRemove = candidates.slice(0, deleteCount);
+
+                for (const [key, value] of toRemove) {
+                    URL.revokeObjectURL(value.objectUrl);
+                    this.blobCache.delete(key);
+                    this.frameCache.delete(key);
+                    console.log(`🗑️ [缓存] LRU淘汰: ${key.slice(-30)}`);
+                }
             }
         }
 
@@ -662,22 +1095,26 @@
                     </svg>
                 </button>
 
-                <div class="tiktok-video-container" id="tiktok-container">
-                    <div class="tiktok-loading" id="tiktok-loading">
-                        <div class="tiktok-loading-spinner"></div>
-                        <div class="tiktok-loading-text">加载中...</div>
-                    </div>
+<div class="tiktok-video-container" id="tiktok-container">
+                        <div class="tiktok-loading" id="tiktok-loading">
+                            <div class="tiktok-loading-spinner"></div>
+                            <div class="tiktok-loading-text">加载中...</div>
+                        </div>
 
-                    <div class="tiktok-error" id="tiktok-error">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                        </svg>
-                        <h3>视频加载失败</h3>
-                        <p>无法加载视频,请尝试在原页面观看</p>
-                        <button class="tiktok-error-btn" id="tiktok-retry">重试</button>
-                    </div>
+                        <div class="tiktok-error" id="tiktok-error">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                            </svg>
+                            <h3>视频加载失败</h3>
+                            <p>无法加载视频,请尝试在原页面观看</p>
+                            <button class="tiktok-error-btn" id="tiktok-retry">重试</button>
+                        </div>
 
-                    <video class="tiktok-video-player" id="tiktok-player" playsinline webkit-playsinline referrerpolicy="no-referrer"></video>
+                        <!-- 双层渲染：缩略图层（立即显示） -->
+                        <img class="tiktok-thumbnail-layer" id="tiktok-thumbnail" alt="" />
+
+                        <!-- 双层渲染：视频层（背后加载） -->
+                        <video class="tiktok-video-player" id="tiktok-player" playsinline webkit-playsinline x5-playsinline preload="metadata" muted referrerpolicy="no-referrer"></video>
 
                     <div class="tiktok-progress-container" id="tiktok-progress-container">
                         <div class="tiktok-progress-bar" id="tiktok-progress-bar">
@@ -830,6 +1267,10 @@
                 }
             }, { passive: true });
 
+            container.addEventListener('touchcancel', () => {
+                this.isDragging = false;
+            }, { passive: true });
+
             // 鼠标滚轮导航 - PC端
             let wheelTimeout = null;
             container.addEventListener('wheel', (e) => {
@@ -901,46 +1342,113 @@
                 });
             });
 
-            // 视频加载完成
+            // 初始化视频事件绑定
             this.videoElement = document.getElementById('tiktok-player');
-            this.videoElement.addEventListener('loadedmetadata', () => {
+            this.bindVideoPlayerEvents(this.videoElement);
+
+            // 进度条交互
+            this.setupProgressBarInteraction();
+        }
+
+        // 绑定视频播放器相关的所有事件
+        bindVideoPlayerEvents(videoEl) {
+            // 清除旧的事件监听器 (如果需要完全重置，可以考虑 cloneNode，但这里我们主要依靠新元素是新的)
+            // 注意：如果传入的是已经绑定过的元素，可能会导致重复绑定，但在"换头"策略中，
+            // 预热的元素是全新的，没有任何业务逻辑绑定，所以是安全的。
+
+            // 视频加载完成
+            videoEl.addEventListener('loadedmetadata', () => {
+                if (this.loadStartTime) {
+                    console.log(`[Timer] 视频元数据加载完成 (loadedmetadata)，总耗时: ${Date.now() - this.loadStartTime}ms`);
+                }
                 this.hideLoading();
-                this.updateNavigation();
                 this.updateTimeDisplay();
             });
 
-            // 视频可以播放时触发预加载 - 确保当前视频优先
-            this.videoElement.addEventListener('canplay', () => {
-                // 使用 requestIdleCallback 异步预加载相邻视频
-                this.schedulePreload(this.currentVideoIndex);
+            videoEl.addEventListener('loadeddata', () => {
+                if (this.loadStartTime) {
+                    console.log(`[Timer] 视频首帧加载完成 (loadeddata)，总耗时: ${Date.now() - this.loadStartTime}ms`);
+                }
+            });
+
+            videoEl.addEventListener('canplay', () => {
             }, { once: false });
 
-            this.videoElement.addEventListener('error', (e) => {
-                console.error('视频加载错误:', e);
-                this.showError();
-            });
-
-            this.videoElement.addEventListener('ended', () => {
-                // 自动播放下一个视频
-                this.nextVideo();
-            });
-
-            // 点击视频播放/暂停
-            this.videoElement.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.togglePlay();
-            });
-
-            // 进度条更新
-            this.videoElement.addEventListener('timeupdate', () => {
-                // 只有非拖拽状态才更新进度条，避免拖拽时抖动
+            videoEl.addEventListener('timeupdate', () => {
                 if (!this.isProgressDragging) {
                     this.updateProgressBar();
                 }
             });
 
-            // 进度条交互
-            this.setupProgressBarInteraction();
+            // 视频加载错误处理
+            videoEl.addEventListener('error', (e) => {
+                if (e.target !== this.videoElement) {
+                    console.log('⏭️ 忽略旧视频的 error 事件 (已切换到其他视频)');
+                    return;
+                }
+
+                const currentVideo = this.getCurrentVideo();
+                const currentSrc = videoEl.src;
+                
+                // Safari Blob URL失败时，立即回退到流式URL
+                if (this.isSafari && currentSrc && currentSrc.startsWith('blob:') && currentVideo) {
+                    const realUrl = this.videoUrlCache.get(currentVideo.url);
+                    if (realUrl && !realUrl.startsWith('blob:')) {
+                        console.log('🔄 [Safari] Blob URL失败，回退到流式URL');
+                        this.blobCache.delete(realUrl);
+                        videoEl.src = realUrl;
+                        videoEl.load();
+                        return;
+                    }
+                }
+
+                if (this.retryCount < this.MAX_RETRIES) {
+                    this.retryCount++;
+                    const delay = Math.pow(2, this.retryCount) * 1000;
+                    console.log(`🔄 视频加载失败，${delay / 1000}秒后尝试第 ${this.retryCount}/${this.MAX_RETRIES} 次重试...`);
+
+                    const versionAtError = this.loadVersion;
+                    if (currentVideo) {
+                        if (this.videoUrlCache.has(currentVideo.url)) {
+                            console.log('🧹 清除可能的过期URL缓存');
+                            this.videoUrlCache.delete(currentVideo.url);
+                        }
+                        
+                        const cachedRealUrl = this.videoUrlCache.get(currentVideo.url);
+                        if (cachedRealUrl && this.blobCache.has(cachedRealUrl)) {
+                            console.log('🧹 清除失败的Blob缓存');
+                            this.blobCache.delete(cachedRealUrl);
+                        }
+
+                        if (this.retryTimeoutId) {
+                            clearTimeout(this.retryTimeoutId);
+                        }
+
+                        this.retryTimeoutId = setTimeout(() => {
+                            if (this.loadVersion !== versionAtError) {
+                                console.log('⏭️ 放弃重试 (用户已切换视频)');
+                                return;
+                            }
+                            console.log('🔁 发起重试...');
+                            this.loadVideoSource(currentVideo.url);
+                        }, delay);
+                        return;
+                    }
+                }
+
+                this.showError();
+            });
+
+            videoEl.addEventListener('ended', () => {
+                // 自动播放下一个视频
+                this.nextVideo();
+            });
+
+            // 点击视频播放/暂停
+            videoEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.togglePlay();
+            });
         }
 
         // 进度条更新
@@ -1117,7 +1625,17 @@
                 let index = 0;
                 allLinks.forEach(link => {
                     const href = link.href;
-                    if (href && !this.videoList.some(v => v.url === href)) {
+                    if (!href) return;
+
+                    const existingVideo = this.videoList.find(v => v.url === href);
+
+                    if (existingVideo) {
+                        // Update element reference if changed
+                        if (existingVideo.element !== link) {
+                            existingVideo.element = link;
+                            existingVideo.hasBoundEvents = false;
+                        }
+                    } else {
                         // 获取视频标题和时长信息
                         const parent = link.closest('.block, [class*="video"], [class*="movie"], .relative');
                         let title = '';
@@ -1152,7 +1670,7 @@
 
                         this.videoList.push({
                             url: href,
-                            title: title || `视频 ${index + 1}`,
+                            title: title || `视频 ${this.videoList.length + 1}`,
                             duration: duration,
                             thumbnail: thumbnail,
                             likes: likes,
@@ -1161,10 +1679,11 @@
                             element: link,
                             movieId: movieId
                         });
-
-                        index++;
                     }
                 });
+
+                // 触发预加载
+                this.startListPreloading();
             } else {
                 // 备用策略:查找其他可能的视频链接
                 const videoSelectors = [
@@ -1253,6 +1772,12 @@
         enhanceVideoElements() {
             // 为视频元素添加视觉提示
             this.videoList.forEach((video, index) => {
+                // 防止重复绑定
+                if (video.hasBoundEvents || !video.element) return;
+
+                // 标记已绑定
+                video.hasBoundEvents = true;
+
                 if (video.element) {
                     // 触摸追踪变量
                     let touchStartX = 0;
@@ -1302,7 +1827,14 @@
                     video.element.addEventListener('mouseenter', () => {
                         video.element.style.transform = 'scale(1.02)';
                         video.element.style.transition = 'transform 0.2s';
+                        // 鼠标悬停时触发高优先级预加载
+                        this.preloadSingleVideo(index);
                     });
+
+                    // 注册到可视区域观察者 (移动端/滚动预加载)
+                    if (this.viewportObserver) {
+                        this.viewportObserver.observe(video.element);
+                    }
 
                     video.element.addEventListener('mouseleave', () => {
                         video.element.style.transform = 'scale(1)';
@@ -1347,6 +1879,7 @@
 
             // iOS Safari: 禁用橡皮筋效果和滚动
             document.body.classList.add('tiktok-modal-open');
+            document.documentElement.classList.add('tiktok-modal-open');
             document.body.style.overflow = 'hidden';
 
             // iOS Safari: 设置状态栏颜色
@@ -1370,8 +1903,13 @@
             const modal = document.getElementById('tiktok-modal');
             modal.classList.remove('active');
 
+            // 状态重置
+            this.isTransitioning = false;
+            this.isDragging = false;
+
             // iOS Safari: 恢复滚动
             document.body.classList.remove('tiktok-modal-open');
+            document.documentElement.classList.remove('tiktok-modal-open');
             document.body.style.overflow = '';
 
             // iOS Safari: 恢复状态栏颜色
@@ -1404,21 +1942,32 @@
         }
 
         showLoading() {
-            document.getElementById('tiktok-loading').style.display = 'flex';
-            document.getElementById('tiktok-player').style.display = 'none';
-            document.getElementById('tiktok-error').style.display = 'none';
+            const loading = document.getElementById('tiktok-loading');
+            const error = document.getElementById('tiktok-error');
+
+            if (loading) loading.style.display = 'flex';
+            if (error) error.style.display = 'none';
         }
 
         hideLoading() {
-            document.getElementById('tiktok-loading').style.display = 'none';
-            document.getElementById('tiktok-player').style.display = 'block';
-            document.getElementById('tiktok-error').style.display = 'none';
+            const loading = document.getElementById('tiktok-loading');
+            const error = document.getElementById('tiktok-error');
+
+            if (loading) loading.style.display = 'none';
+            if (error) error.style.display = 'none';
         }
 
         showError() {
-            document.getElementById('tiktok-loading').style.display = 'none';
-            document.getElementById('tiktok-player').style.display = 'none';
-            document.getElementById('tiktok-error').style.display = 'block';
+            const loading = document.getElementById('tiktok-loading');
+            const error = document.getElementById('tiktok-error');
+            const thumbnailLayer = document.getElementById('tiktok-thumbnail');
+
+            if (loading) loading.style.display = 'none';
+            if (thumbnailLayer) thumbnailLayer.classList.add('hidden');
+            if (error) error.style.display = 'block';
+        }
+
+        updateDebugInfo(status, extra = '') {
         }
 
         loadVideo(index) {
@@ -1429,226 +1978,194 @@
                 return;
             }
 
-            this.showLoading();
             const video = list[index];
-
-            // 设置缩略图背景
             const container = document.getElementById('tiktok-container');
+            const thumbnailLayer = document.getElementById('tiktok-thumbnail');
+            const videoLayer = document.getElementById('tiktok-player');
+
+            console.log(`[Timer] 开始加载视频: ${index} (URL: ${video.url})`);
+            this.loadStartTime = Date.now();
+
+            this.retryCount = 0;
+            if (this.retryTimeoutId) {
+                clearTimeout(this.retryTimeoutId);
+                this.retryTimeoutId = null;
+            }
+            this.loadVersion++;
+            const currentLoadVersion = this.loadVersion;
+
+            thumbnailLayer.classList.remove('hidden');
+            videoLayer.classList.remove('visible');
+
+            const realUrl = this.videoUrlCache.get(video.url);
+            if (realUrl && this.frameCache.has(realUrl)) {
+                thumbnailLayer.src = this.frameCache.get(realUrl);
+                console.log(`⚡ [秒开] 首帧已显示: ${Date.now() - this.loadStartTime}ms`);
+            } else if (video.thumbnail) {
+                thumbnailLayer.src = video.thumbnail;
+            } else {
+                thumbnailLayer.src = '';
+            }
+
             if (video.thumbnail) {
                 container.style.backgroundImage = `url(${video.thumbnail})`;
             } else {
                 container.style.backgroundImage = 'none';
             }
 
-            // 更新视频信息
             this.updateVideoInfo(video);
-
-            // 更新计数
-            document.getElementById('tiktok-count').textContent =
-                `${index + 1} / ${list.length}`;
-
-            // 标记为已观看
+            document.getElementById('tiktok-count').textContent = `${index + 1} / ${list.length}`;
             this.markVideoAsWatched(video.url);
 
-            // 尝试加载视频 (预加载将在 canplay 事件后异步触发)
-            this.loadVideoSource(video.url);
+            this.loadVideoWithBlobCache(video, currentLoadVersion);
+
+            this.scheduleSmartPrefetch(index, list);
         }
 
-        // 调度预加载 - 使用空闲时间，不阻塞当前视频
-        schedulePreload(currentIndex) {
-            // 防止重复预加载同一个索引
-            if (this.lastPreloadedIndex === currentIndex) {
-                return;
-            }
-            this.lastPreloadedIndex = currentIndex;
-
-            const doPreload = () => {
-                this.preloadAdjacentVideos(currentIndex);
-            };
-
-            if (typeof requestIdleCallback !== 'undefined') {
-                requestIdleCallback(doPreload, { timeout: 3000 });
-            } else {
-                setTimeout(doPreload, 100);
-            }
-        }
-
-        // ========================================
-        // 预加载系统
-        // ========================================
-        async preloadAdjacentVideos(currentIndex) {
-            const indicesToPreload = [];
-
-            // 预加载下一个和上一个视频
-            if (currentIndex + 1 < this.videoList.length) {
-                indicesToPreload.push(currentIndex + 1);
-            }
-            if (currentIndex - 1 >= 0) {
-                indicesToPreload.push(currentIndex - 1);
-            }
-            // 可选: 预加载下下个
-            if (currentIndex + 2 < this.videoList.length) {
-                indicesToPreload.push(currentIndex + 2);
-            }
-
-            for (const idx of indicesToPreload) {
-                const video = this.videoList[idx];
-                if (!video || this.videoUrlCache.has(video.url)) continue;
-
-                try {
-                    // 先获取真实视频URL
-                    let realUrl = video.url;
-                    if (video.url.includes('/movie/')) {
-                        realUrl = await this.fetchRealVideoUrl(video.url);
-                        if (realUrl) {
-                            this.videoUrlCache.set(video.url, realUrl);
-                        }
-                    }
-
-                    // 预加载部分数据
-                    if (realUrl && !this.preloadCache.has(realUrl)) {
-                        this.preloadVideoData(realUrl);
-                    }
-                } catch (e) {
-                    console.log('预加载失败:', e);
-                }
-            }
-        }
-
-        async preloadVideoData(videoUrl) {
-            if (this.preloadCache.has(videoUrl)) return;
-
-            console.log('📦 预加载视频:', videoUrl.substring(0, 80) + '...');
-
+        async loadVideoWithBlobCache(video, loadVersion) {
             try {
-                if (typeof GM_xmlhttpRequest !== 'undefined') {
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: videoUrl,
-                        responseType: 'blob',
-                        headers: {
-                            'Range': `bytes=0-${this.PRELOAD_BYTES - 1}`,
-                            'Referer': 'https://twitter.com/',
-                            'Origin': 'https://twitter.com'
-                        },
-                        onload: (response) => {
-                            if (response.status === 200 || response.status === 206) {
-                                // 缓存管理: 超过上限时删除最旧的
-                                if (this.preloadCache.size >= this.MAX_CACHE_SIZE) {
-                                    const oldestKey = this.preloadCache.keys().next().value;
-                                    const oldEntry = this.preloadCache.get(oldestKey);
-                                    if (oldEntry && oldEntry.blobUrl) {
-                                        URL.revokeObjectURL(oldEntry.blobUrl);
-                                    }
-                                    this.preloadCache.delete(oldestKey);
-                                }
+                let realUrl = this.videoUrlCache.get(video.url);
 
-                                const blob = response.response;
-                                const blobUrl = URL.createObjectURL(blob);
-                                this.preloadCache.set(videoUrl, {
-                                    blobUrl: blobUrl,
-                                    partial: true,
-                                    size: blob.size,
-                                    timestamp: Date.now()
-                                });
-                                console.log('✅ 预加载完成:', (blob.size / 1024).toFixed(1) + 'KB');
-                            }
-                        },
-                        onerror: (e) => {
-                            console.log('预加载请求失败:', e);
-                        },
-                        timeout: 15000
-                    });
-                }
-            } catch (e) {
-                console.log('预加载异常:', e);
-            }
-        }
-
-        async loadVideoSource(videoUrl) {
-            try {
-                let finalVideoUrl = videoUrl;
-
-                // 检查是否是 /movie/{id} 格式,需要获取真实视频URL
-                if (videoUrl.includes('/movie/')) {
-                    console.log('🎬 检测到movie链接,正在获取真实视频URL...');
-                    // 优先使用缓存
-                    if (this.videoUrlCache.has(videoUrl)) {
-                        finalVideoUrl = this.videoUrlCache.get(videoUrl);
-                        console.log('💾 使用缓存的视频URL');
-                    } else {
-                        finalVideoUrl = await this.fetchRealVideoUrl(videoUrl);
-                        if (finalVideoUrl) {
-                            this.videoUrlCache.set(videoUrl, finalVideoUrl);
-                        }
-                    }
-
-                    if (!finalVideoUrl) {
-                        console.error('无法获取真实视频URL');
-                        this.showErrorWithOriginalLink(videoUrl);
-                        return;
+                if (!realUrl && video.url.includes('/movie/')) {
+                    realUrl = await this.fetchRealVideoUrl(video.url);
+                    if (this.loadVersion !== loadVersion) return;
+                    if (realUrl) {
+                        this.videoUrlCache.set(video.url, realUrl);
                     }
                 }
-                // 检查是否是直接的视频文件URL
-                else if (videoUrl.match(/\.(mp4|webm|mov|ogg)$/i)) {
-                    finalVideoUrl = videoUrl;
-                }
-                // 尝试使用GM_xmlhttpRequest获取真实URL
-                else if (typeof GM_xmlhttpRequest !== 'undefined') {
-                    await this.fetchVideoUrl(videoUrl);
-                }
-                // 显示错误但提供原链接
-                else {
-                    console.log('无法直接加载视频,请使用原链接访问');
-                    this.showErrorWithOriginalLink(videoUrl);
+
+                if (!realUrl) {
+                    this.showErrorWithOriginalLink(video.url);
                     return;
                 }
 
-                if (finalVideoUrl) {
-                    // 检查是否是 Twitter 视频,需要特殊处理
-                    if (finalVideoUrl.includes('video.twimg.com')) {
-                        console.log('🐦 检测到Twitter视频,使用特殊处理...');
-                        await this.handleTwitterVideo(finalVideoUrl);
-                    } else {
-                        // 普通视频直接加载
-                        this.videoElement.src = finalVideoUrl;
-                        this.videoElement.load();
+                let videoSrc = realUrl;
+                const cached = this.blobCache.get(realUrl);
 
-                        const playPromise = this.videoElement.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => {
-                                console.log('自动播放被阻止,等待用户交互');
-                            });
-                        }
+                // Safari/iOS 15-17对部分Blob有严重问题，使用流式URL代替
+                const shouldUseStreamingUrl = this.safariHasBlobIssues && cached && cached.isPartial;
+                
+                if (cached && !shouldUseStreamingUrl) {
+                    videoSrc = cached.objectUrl;
+                    console.log(`💾 [Blob缓存] 命中: ${(cached.blob.size / 1024 / 1024).toFixed(2)}MB`);
+                } else if (shouldUseStreamingUrl) {
+                    console.log(`📡 [Safari兼容] 跳过部分Blob，使用流式URL`);
+                }
+
+                const videoLayer = document.getElementById('tiktok-player');
+                const thumbnailLayer = document.getElementById('tiktok-thumbnail');
+                const loadingLayer = document.getElementById('tiktok-loading');
+
+                // iOS硬重置: 强制释放解码器资源
+                videoLayer.pause();
+                videoLayer.removeAttribute('src');
+                videoLayer.load();
+                
+                // Safari需要额外等待解码器释放
+                if (this.isIOSSafari) {
+                    await new Promise(r => setTimeout(r, 50));
+                }
+
+                videoLayer.src = videoSrc;
+                this.videoElement = videoLayer;
+                
+                // Safari需要显式触发load
+                if (this.isSafari) {
+                    videoLayer.load();
+                }
+
+                const FIRST_FRAME_TIMEOUT = this.isIOSSafari ? 2500 : 1500;
+                const thumbnailTimeout = setTimeout(() => {
+                    if (this.loadVersion === loadVersion) {
+                        if (videoLayer.readyState >= 3) return;
+                        
+                        console.warn('⚠️ [超时] 首帧等待过久，显示Loading...');
+                        thumbnailLayer.classList.add('hidden');
+                        loadingLayer.style.display = 'flex';
                     }
+                }, FIRST_FRAME_TIMEOUT);
+
+                const onVideoReady = async () => {
+                    if (this.loadVersion !== loadVersion) return;
+                    
+                    videoLayer.removeEventListener('canplay', onVideoReady);
+                    videoLayer.removeEventListener('loadeddata', onVideoReady);
+                    clearTimeout(thumbnailTimeout);
+                    
+                    // Safari需要额外等待帧数据可用
+                    if (this.isIOSSafari) {
+                        await new Promise(r => setTimeout(r, 80));
+                    }
+
+                    loadingLayer.style.display = 'none';
+                    thumbnailLayer.classList.add('hidden');
+                    videoLayer.classList.add('visible');
+
+                    videoLayer.muted = false;
+                    const playPromise = videoLayer.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(e => {
+                            console.log('自动播放被阻止，尝试静音播放', e);
+                            videoLayer.muted = true;
+                            videoLayer.play().catch(() => {});
+                        });
+                    }
+
+                    console.log(`🎬 [秒开] 视频就绪: ${Date.now() - this.loadStartTime}ms`);
+                    this.loadStartTime = null;
+                };
+
+                // Safari使用loadeddata事件更可靠
+                if (this.isSafari) {
+                    videoLayer.addEventListener('loadeddata', onVideoReady);
+                } else {
+                    videoLayer.addEventListener('canplay', onVideoReady);
+                }
+
+                if (videoLayer.readyState >= 3) {
+                    onVideoReady();
                 }
 
             } catch (error) {
+                if (this.loadVersion !== loadVersion) return;
                 console.error('加载视频失败:', error);
-                this.showErrorWithOriginalLink(videoUrl);
+                this.showErrorWithOriginalLink(video.url);
             }
         }
 
-        async handleTwitterVideo(twitterVideoUrl) {
-            console.log('🐦 处理Twitter视频:', twitterVideoUrl);
+        scheduleSmartPrefetch(currentIndex, videoList) {
+            const indicesToPrefetch = [
+                currentIndex + 1,
+                currentIndex - 1,
+                currentIndex + 2,
+            ].filter(i => i >= 0 && i < videoList.length);
 
-            // 方案1: 直接播放 (配合 referrerpolicy="no-referrer")
-            // video.twimg.com 通常支持直接播放，不需要通过Blob下载（Blob下载会导致加载慢且容易失败）
-            try {
-                this.videoElement.src = twitterVideoUrl;
-                this.videoElement.load();
+            this.executePrefetchQueue(indicesToPrefetch, videoList);
+        }
 
-                const playPromise = this.videoElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(e => {
-                        console.log('自动播放被阻止,等待用户交互');
-                    });
+        async executePrefetchQueue(indices, videoList) {
+            for (let i = 0; i < indices.length; i++) {
+                const index = indices[i];
+                const video = videoList[index];
+                if (!video) continue;
+
+                let realUrl = this.videoUrlCache.get(video.url);
+                if (!realUrl) {
+                    try {
+                        realUrl = await this.fetchRealVideoUrl(video.url);
+                        if (realUrl) this.videoUrlCache.set(video.url, realUrl);
+                    } catch (e) {
+                        continue;
+                    }
                 }
-                return true;
-            } catch (error) {
-                console.error('直接播放失败:', error);
-                this.showErrorWithOriginalLink(twitterVideoUrl);
-                return false;
+
+                if (realUrl && !this.blobCache.has(realUrl)) {
+                    await this.warmupVideoConnection(realUrl);
+                }
+
+                if (i < indices.length - 1) {
+                    await new Promise(r => setTimeout(r, 100));
+                }
             }
         }
 
@@ -1752,35 +2269,6 @@
             });
         }
 
-        async fetchVideoUrl(videoUrl) {
-            return new Promise((resolve) => {
-                GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: videoUrl,
-                    onload: (response) => {
-                        // 尝试从响应中提取视频URL
-                        const videoUrlMatch = response.responseText.match(/video_url["']:\s*["']([^"']+)["']/);
-                        const mediaMatch = response.responseText.match(/<video[^>]+src=["']([^"']+)["']/);
-
-                        if (videoUrlMatch) {
-                            this.videoElement.src = videoUrlMatch[1];
-                        } else if (mediaMatch) {
-                            this.videoElement.src = mediaMatch[1];
-                        } else {
-                            // 如果无法提取,显示错误
-                            this.showErrorWithOriginalLink(videoUrl);
-                        }
-                        resolve();
-                    },
-                    onerror: (error) => {
-                        console.error('请求失败:', error);
-                        this.showErrorWithOriginalLink(videoUrl);
-                        resolve();
-                    }
-                });
-            });
-        }
-
         showErrorWithOriginalLink(videoUrl) {
             this.showError();
 
@@ -1834,36 +2322,62 @@
         }
 
         transitionToVideo(newIndex, direction) {
-            if (this.isTransitioning) return;
-            this.isTransitioning = true;
-
+            const thumbnailLayer = document.getElementById('tiktok-thumbnail');
             const player = this.videoElement;
+
+            // 允许打断：如果正在进行转场，立即清理上一轮的定时器和状态
+            if (this.isTransitioning) {
+                // 清理所有潜在的定时器
+                if (this.transitionTimers) {
+                    this.transitionTimers.forEach(t => clearTimeout(t));
+                }
+                // 立即移除所有动画类，复位状态
+                player.classList.remove('slide-out-up', 'slide-out-down', 'slide-in-up', 'slide-in-down');
+                if (thumbnailLayer) {
+                    thumbnailLayer.classList.remove('slide-out-up', 'slide-out-down', 'slide-in-up', 'slide-in-down');
+                }
+            }
+
+            this.isTransitioning = true;
+            this.transitionTimers = [];
+
+            const list = this.getActiveVideoList();
+            const action = direction === 'up' ? 'Next (↓)' : 'Prev (↑)';
+            console.log(`🖱️ 用户操作: ${action} -> 目标索引: ${newIndex + 1}/${list.length}`);
+
             const outClass = direction === 'up' ? 'slide-out-up' : 'slide-out-down';
             const inClass = direction === 'up' ? 'slide-in-up' : 'slide-in-down';
 
-            // 清除之前的动画类
-            player.classList.remove('slide-out-up', 'slide-out-down', 'slide-in-up', 'slide-in-down');
+            // 1. 立即播放退出动画 (视频和缩略图一起动)
+            const container = document.getElementById('tiktok-container');
+            // 清除背景图防止"鬼影" (旧缩略图在视频滑出后显示)
+            if (container) container.style.backgroundImage = 'none';
 
-            // 播放退出动画
             player.classList.add(outClass);
+            if (thumbnailLayer) thumbnailLayer.classList.add(outClass);
 
-            // 动画结束后加载新视频并播放进入动画
-            setTimeout(() => {
+            // 2. 动画结束时切换数据 (同步 300ms 动画时间)
+            const loadTimer = setTimeout(() => {
                 player.classList.remove(outClass);
+                if (thumbnailLayer) thumbnailLayer.classList.remove(outClass);
+                
                 this.currentVideoIndex = newIndex;
-
-                // 加载新视频
                 this.loadVideo(this.currentVideoIndex);
-
-                // 播放进入动画
+                
                 player.classList.add(inClass);
+                if (thumbnailLayer) thumbnailLayer.classList.add(inClass);
+            }, 300); 
+            this.transitionTimers.push(loadTimer);
 
-                // 动画结束后清理
-                setTimeout(() => {
-                    player.classList.remove(inClass);
-                    this.isTransitioning = false;
-                }, 300);
-            }, 280);
+            // 3. 进场动画结束清理
+            const cleanupTimer = setTimeout(() => {
+                player.classList.remove(inClass);
+                if (thumbnailLayer) thumbnailLayer.classList.remove(inClass);
+                
+                this.isTransitioning = false;
+                this.transitionTimers = [];
+            }, 600); // 300ms + 300ms
+            this.transitionTimers.push(cleanupTimer);
         }
 
         togglePlay() {

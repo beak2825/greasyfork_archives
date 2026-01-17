@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         이미지 다운로더 + HR
-// @version         2.90.0.8.260108
+// @version         2.90.0.8.260116
 // @namespace       http://tampermonkey.net/
 // @description     Images can be extracted and batch downloaded from most websites. Especially for websites the right click fails or image can not save. Extra features: zip download / auto-enlarge image. See the script description at info page (suitable for chrome/firefox+tampermonkey)
 // @author          桃源隐叟-The hide oldman in taoyuan mountain, donghaerang
@@ -325,91 +325,20 @@ https://github.com/nodeca/pako/blob/master/LICENSE
     var preImgSrcs=[];
     let originalSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
 
-    // === 이미지 확대 및 잘라내기 헬퍼 함수 추가 시작 ===
-    function resizeAndCropImage(imageObject) {
-        return new Promise((resolve) => {
-            const targetWidth = 500;
-            const targetHeight = 750;
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-
-            const sourceWidth = imageObject.width;
-            const sourceHeight = imageObject.height;
-
-            const sourceRatio = sourceWidth / sourceHeight;
-            const targetRatio = targetWidth / targetHeight;
-
-            let newWidth, newHeight, x = 0, y = 0;
-
-            // "background-size: cover"와 동일한 로직으로 확대/축소 비율 및 위치 계산
-            if (sourceRatio > targetRatio) {
-                // 원본이 타겟보다 가로로 더 넓은 경우 -> 높이에 맞춰 스케일링
-                newHeight = targetHeight;
-                newWidth = newHeight * sourceRatio;
-                x = (targetWidth - newWidth) / 2; // 가로 중앙 정렬
-            } else {
-                // 원본이 타겟보다 세로로 더 길거나 같은 경우 -> 너비에 맞춰 스케일링
-                newWidth = targetWidth;
-                newHeight = newWidth / sourceRatio;
-                y = (targetHeight - newHeight) / 2; // 세로 중앙 정렬
-            }
-
-            // 계산된 크기와 위치로 캔버스에 이미지를 그림 (넘치는 부분은 자동으로 잘림)
-            ctx.drawImage(imageObject, x, y, newWidth, newHeight);
-
-            // 캔버스의 내용을 'image/jpeg' 타입의 Blob으로 변환하여 반환
-            canvas.toBlob(resolve, 'image/jpeg', 0.95);
-        });
-    }
-    // === 헬퍼 함수 추가 끝 ===
-
-    // === .webp to .jpg 변환 헬퍼 함수 추가 시작 ===
-    function convertWebpToJpg(webpBlob) {
-        return new Promise((resolve, reject) => {
-            const img = new Image();
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const url = URL.createObjectURL(webpBlob);
-
-            img.onload = function() {
-                canvas.width = this.width;
-                canvas.height = this.height;
-                ctx.drawImage(this, 0, 0);
-                // canvas의 내용을 'image/jpeg' 타입의 Blob으로 변환 (품질 90%)
-                canvas.toBlob(resolve, 'image/jpeg', 0.9);
-                URL.revokeObjectURL(url); // 메모리 누수 방지를 위해 Object URL 해제
-            };
-
-            img.onerror = function(err) {
-                reject(err);
-                URL.revokeObjectURL(url);
-            };
-
-            img.src = url;
-        });
-    }
-    // === 변환 헬퍼 함수 추가 끝 ===
-
-    // 이미지 비율을 유지하며 타겟 해상도에 맞춰 확대/축소 후 중앙을 기준으로 잘라내는 만능 함수
-    function resizeAndCropGeneric(imageObject, targetWidth, targetHeight) {
+// 이미지 스케일링 및 중앙 기준 잘라내기를 수행하는 코어 함수 (1~10 규칙의 기반)
+    function processImageAdvanced(imageObject, targetWidth, targetHeight, format = 'image/jpeg') {
         return new Promise((resolve) => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-
             canvas.width = targetWidth;
             canvas.height = targetHeight;
 
-            const sourceWidth = imageObject.width;
-            const sourceHeight = imageObject.height;
-            const sourceRatio = sourceWidth / sourceHeight;
+            const sourceRatio = imageObject.width / imageObject.height;
             const targetRatio = targetWidth / targetHeight;
 
             let drawWidth, drawHeight, x = 0, y = 0;
 
-            // 중앙 정렬 및 가득 채우기(Cover) 로직
+            // 중앙 정렬 및 가득 채우기(Cover) 알고리즘
             if (sourceRatio > targetRatio) {
                 drawHeight = targetHeight;
                 drawWidth = drawHeight * sourceRatio;
@@ -421,7 +350,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             }
 
             ctx.drawImage(imageObject, x, y, drawWidth, drawHeight);
-            canvas.toBlob(resolve, 'image/jpeg', 0.95); // 항상 jpg로 변환
+            canvas.toBlob(resolve, format, 0.95);
         });
     }
 
@@ -433,66 +362,46 @@ https://github.com/nodeca/pako/blob/master/LICENSE
             img.onload = function() {
                 const w = this.width;
                 const h = this.height;
-                // jpeg, jpg, webp 포맷 체크 (MIME 타입 기준)
-                const isTargetFormat = ['image/jpeg', 'image/webp'].includes(blob.type);
+                const isTving = url.includes("tving.com");
+                const isJpgWebp = ['image/jpeg', 'image/webp'].includes(blob.type);
 
-                // 1. tving.com & 1280x720: 해상도 유지, .jpg 변환
-                if (url.includes("tving.com") && w === 1280 && h === 720) {
-                    resizeAndCropGeneric(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
-                    URL.revokeObjectURL(objectUrl);
-                    return;
-                }
-
-                // 2. Not tving.com & .png: 원본 유지 다운로드
-                if (!url.includes("tving.com") && blob.type === 'image/png') {
+                // 규칙 1: tving + 특정 해상도 -> 포맷만 jpg로 변경
+                if (isTving && ((w === 1920 && h === 1080) || (w === 1280 && h === 720))) {
+                    processImageAdvanced(this, w, h).then(b => saveAs(b, `${filename}.jpg`));
+                } 
+                // 규칙 2: tving 아님 + PNG -> 그대로 유지
+                else if (!isTving && blob.type === 'image/png') {
                     saveAs(blob, `${filename}.png`);
-                    URL.revokeObjectURL(objectUrl);
-                    return;
-                }
-
-                // 3~8번 조건: .jpeg, .jpg, .webp 파일인 경우
-                if (isTargetFormat) {
+                } 
+                // 규칙 3~8: 대상 포맷인 경우 해상도 로직 적용
+                else if (isJpgWebp) {
                     if (w > h) { // 가로형 (Landscape)
-                        // 3. 가로 > 3840 또는 세로 > 2160: 3840x2160 축소 및 잘라내기
-                        if (w > 3840 || h > 2160) {
-                            resizeAndCropGeneric(this, 3840, 2160).then(b => saveAs(b, `${filename}.jpg`));
-                        } 
-                        // 4. 가로 < 1280 이고 세로 < 720: 1280x720 확대 및 잘라내기
-                        else if (w < 1280 && h < 720) {
-                            resizeAndCropGeneric(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
-                        } 
-                        // 5. 범위 내 가로형: 16:9 비율로 맞춤 (현재 가로 길이 기준)
-                        else {
-                            let targetH = Math.round(w / (16 / 9));
-                            resizeAndCropGeneric(this, w, targetH).then(b => saveAs(b, `${filename}.jpg`));
+                        if (w > 3840 || h > 2160) { // 규칙 3: 축소
+                            processImageAdvanced(this, 3840, 2160).then(b => saveAs(b, `${filename}.jpg`));
+                        } else if (w < 1280 && h < 720) { // 규칙 4: 확대
+                            processImageAdvanced(this, 1280, 720).then(b => saveAs(b, `${filename}.jpg`));
+                        } else { // 규칙 5: 16:9 비율 조정 (현재 너비 기준)
+                            processImageAdvanced(this, w, Math.round(w / (16/9))).then(b => saveAs(b, `${filename}.jpg`));
                         }
                     } else if (w < h) { // 세로형 (Portrait)
-                        // 6. 가로 > 2000 또는 세로 > 3000: 2000x3000 축소 및 잘라내기
-                        if (w > 2000 || h > 3000) {
-                            resizeAndCropGeneric(this, 2000, 3000).then(b => saveAs(b, `${filename}.jpg`));
-                        } 
-                        // 7. 가로 < 500 이고 세로 < 750: 500x750 확대 및 잘라내기
-                        else if (w < 500 && h < 750) {
-                            resizeAndCropGeneric(this, 500, 750).then(b => saveAs(b, `${filename}.jpg`));
-                        } 
-                        // 8. 범위 내 세로형: 2:3 비율로 맞춤 (현재 세로 길이 기준)
-                        else {
-                            let targetW = Math.round(h / (3 / 2));
-                            resizeAndCropGeneric(this, targetW, h).then(b => saveAs(b, `${filename}.jpg`));
+                        if (w > 2000 || h > 3000) { // 규칙 6: 축소
+                            processImageAdvanced(this, 2000, 3000).then(b => saveAs(b, `${filename}.jpg`));
+                        } else if (w < 500 && h < 750) { // 규칙 7: 확대
+                            processImageAdvanced(this, 500, 750).then(b => saveAs(b, `${filename}.jpg`));
+                        } else { // 규칙 8: 2:3 비율 조정 (현재 높이 기준)
+                            processImageAdvanced(this, Math.round(h / (3/2)), h).then(b => saveAs(b, `${filename}.jpg`));
                         }
-                    } else {
-                        // 9. 정사각형 등 기타 조건: 변환 없이 그대로 (MIME 타입 확장자 추출)
-                        let ext = blob.type.split('/')[1].replace('jpeg', 'jpg');
-                        saveAs(blob, `${filename}.${ext}`);
+                    } else { // 규칙 9: 정사각형 등
+                        saveAs(blob, `${filename}.jpg`);
                     }
-                } else {
-                    // 9. 규칙 외 이미지: 원본 해상도와 포맷 유지
+                } 
+                // 규칙 9: 기타 모든 조건 외 이미지
+                else {
                     let ext = blob.type.split('/')[1].replace('jpeg', 'jpg') || 'jpg';
                     saveAs(blob, `${filename}.${ext}`);
                 }
                 URL.revokeObjectURL(objectUrl);
             };
-
             img.onerror = function() {
                 // 로드 실패 시 안전하게 원본 다운로드
                 let ext = blob.type.split('/')[1].replace('jpeg', 'jpg') || 'jpg';
@@ -1311,6 +1220,7 @@ https://github.com/nodeca/pako/blob/master/LICENSE
                         img = img.replace(/\/webp/g, "/png");
                     }
                 }
+                // 이미지 해상도 정보를 캔버스 렌더링 없이도 프리뷰에서 볼 수 있게 개선
                 let insertImg = `<div class="tyc-img-item-container-${index}" style="text-align:center;font-size:0px;
     margin:5px;border:1px solid #99d;border-radius:3px;
     ">

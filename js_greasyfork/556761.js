@@ -3,7 +3,6 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0.17
 // @description  仅头像生成按钮的脚本
-// @match        https://fishpi.cn/*
 // @match        https://fishpi.cn/cr
 // @icon         https://fishpi.cn/images/favicon.png
 // @grant        GM_registerMenuCommand

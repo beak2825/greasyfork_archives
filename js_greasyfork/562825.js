@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Universal Exporter (Pro)
-// @version      2.0.0
-// @description  Based on v1.0.0 & v1.9.0. Scans BOTH main conversations AND conversations inside Projects/GPTs.
+// @version      2.1.1
+// @description  Fixed "No Reaction" issue. Adds immediate scanning UI feedback and robust error handling. Floating UI style.
 // @author       huhu
 // @match        https://chatgpt.com/*
 // @match        https://chat.openai.com/*
@@ -32,7 +32,6 @@
             if (options?.headers?.['ChatGPT-Account-Id']) {
                 const id = options.headers['ChatGPT-Account-Id'];
                 if (id && !capturedWorkspaceIds.has(id)) {
-                    console.log('🎯 [Fetch] 捕获到 Workspace ID:', id);
                     capturedWorkspaceIds.add(id);
                 }
             }
@@ -47,7 +46,6 @@
                         tryCaptureToken(this.getRequestHeader('Authorization'));
                         const id = this.getRequestHeader('ChatGPT-Account-Id');
                         if (id && !capturedWorkspaceIds.has(id)) {
-                            console.log('🎯 [XHR] 捕获到 Workspace ID:', id);
                             capturedWorkspaceIds.add(id);
                         }
                     } catch (_) {}
@@ -71,7 +69,7 @@
         try {
             const session = await (await fetch('/api/auth/session?unstable_client=true')).json();
             if (session.accessToken) { accessToken = session.accessToken; return accessToken; }
-        } catch (_) {}
+        } catch (e) { console.error('Token fetch error', e); }
         alert('无法获取 Access Token。请刷新页面或打开任意一个对话后再试。');
         return null;
     }
@@ -80,13 +78,17 @@
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     const jitter = () => BASE_DELAY + Math.random() * JITTER;
     const sanitizeFilename = (name) => name.replace(/[\/\\?%*:|"<>]/g, '-').trim();
-    function getOaiDeviceId() { const m = document.cookie.match(/oai-did=([^;]+)/); return m ? m[1] : null; }
+    
+    function getOaiDeviceId() { 
+        const m = document.cookie.match(/oai-did=([^;]+)/); 
+        return m ? m[1] : null; 
+    }
 
-    // --- 3. 核心 API 请求逻辑 (新增项目扫描) ---
+    // --- 3. 核心 API 请求逻辑 ---
 
     // 获取项目列表 (GPTs)
     async function getProjects(workspaceId) {
-        if (!workspaceId) return []; // 个人空间通常没有复杂的项目结构，或者API不同，这里主要针对团队
+        if (!workspaceId) return [];
         const deviceId = getOaiDeviceId();
         const headers = { 'Authorization': `Bearer ${accessToken}`, 'ChatGPT-Account-Id': workspaceId, 'oai-device-id': deviceId };
         try {
@@ -103,26 +105,21 @@
         } catch (e) { console.error('Get Projects Failed', e); return []; }
     }
 
-    // 通用获取列表函数 (支持主列表和项目列表)
-    async function fetchListFromEndpoint(endpoint, workspaceId, sourceLabel) {
+    // 通用获取列表函数
+    async function fetchListFromEndpoint(endpoint, workspaceId, sourceLabel, statusCallback) {
         const list = [];
         const deviceId = getOaiDeviceId();
         const headers = { 'Authorization': `Bearer ${accessToken}`, 'oai-device-id': deviceId };
         if (workspaceId) headers['ChatGPT-Account-Id'] = workspaceId;
 
-        // 项目 API 使用 cursor，主列表使用 offset，这里做个简化的统一处理
-        // 为了稳定性，我们这里使用“尽可能获取前50-100条”的策略，避免无限加载太慢
-        // 如果是项目(Gizmo)，参数通常是 limit & cursor
-        // 如果是主列表，参数通常是 offset & limit & order
-        
         const isGizmo = endpoint.includes('/gizmos/');
         let hasMore = true;
         let offset = 0;
         let cursor = null;
         let pageCount = 0;
 
-        // 限制最多扫描 3 页，防止请求过多
-        while (hasMore && pageCount < 3) {
+        // 限制扫描页数，防止卡死
+        while (hasMore && pageCount < 5) {
             let url = endpoint;
             if (isGizmo) {
                 url += `?limit=${PAGE_LIMIT}${cursor ? '&cursor='+cursor : ''}`;
@@ -131,6 +128,7 @@
             }
 
             try {
+                if(statusCallback) statusCallback(`正在读取 ${sourceLabel} (页数 ${pageCount+1})...`);
                 const r = await fetch(url, { headers });
                 if (!r.ok) break;
                 const j = await r.json();
@@ -140,7 +138,7 @@
                         list.push({
                             id: it.id,
                             title: it.title || 'Untitled',
-                            source: sourceLabel // 标记来源：主列表 or 项目名
+                            source: sourceLabel 
                         });
                     });
                     
@@ -154,34 +152,35 @@
                     hasMore = false;
                 }
                 pageCount++;
-                await sleep(100);
-            } catch (e) { break; }
+                await sleep(150);
+            } catch (e) { console.error(e); break; }
         }
         return list;
     }
 
-    // [核心] 扫描总指挥：获取所有对话（主列表 + 所有项目）
-    async function fetchAllConversations(btn, workspaceId) {
+    // [核心] 扫描总指挥
+    async function fetchAllConversations(workspaceId, updateStatus) {
         let allConversations = [];
 
         // 1. 扫描主对话列表
-        if (btn) btn.textContent = '🔍 正在扫描主列表...';
-        const mainList = await fetchListFromEndpoint(`/backend-api/conversations`, workspaceId, 'Main Chat');
+        updateStatus('🔍 正在扫描主对话列表...');
+        const mainList = await fetchListFromEndpoint(`/backend-api/conversations`, workspaceId, 'Main Chat', updateStatus);
         allConversations = allConversations.concat(mainList);
 
-        // 2. 扫描项目 (仅当有 workspaceId 时，即团队/企业版)
+        // 2. 扫描项目
         if (workspaceId) {
-            if (btn) btn.textContent = '🔍 正在发现项目...';
+            updateStatus('🔍 正在获取项目列表...');
             const projects = await getProjects(workspaceId);
             
             for (let i = 0; i < projects.length; i++) {
                 const proj = projects[i];
-                if (btn) btn.textContent = `🔍 扫描项目 (${i+1}/${projects.length}): ${proj.title.substring(0,10)}...`;
+                updateStatus(`🔍 扫描项目 (${i+1}/${projects.length}): ${proj.title.substring(0,10)}...`);
                 
                 const projList = await fetchListFromEndpoint(
                     `/backend-api/gizmos/${proj.id}/conversations`, 
                     workspaceId, 
-                    `Project: ${proj.title}` // 标记来源为项目名
+                    `Project: ${proj.title}`,
+                    null // 子循环不频繁更新UI以免闪烁
                 );
                 allConversations = allConversations.concat(projList);
                 await sleep(jitter());
@@ -191,12 +190,12 @@
         return allConversations;
     }
 
-    // --- 4. 数据导出与格式化 (保持不变) ---
+    // --- 4. 数据导出与格式化 ---
     async function getConversation(id, workspaceId) {
         const headers = { 'Authorization': `Bearer ${accessToken}`, 'oai-device-id': getOaiDeviceId() };
         if (workspaceId) headers['ChatGPT-Account-Id'] = workspaceId;
         const r = await fetch(`/backend-api/conversation/${id}`, { headers });
-        if(!r.ok) throw new Error('Fetch failed');
+        if(!r.ok) throw new Error('Fetch failed ' + r.status);
         return await r.json();
     }
 
@@ -228,46 +227,71 @@
 
     // --- 5. UI 逻辑 ---
     
+    // [修复] 独立的扫描状态界面
+    function renderScanningUI(msg) {
+        const dialog = document.getElementById('export-dialog');
+        if(!dialog) return;
+        dialog.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:20px;">
+                <div style="font-size:24px; margin-bottom:15px;">⏳</div>
+                <h3 style="margin:0 0 10px 0;">正在扫描对话</h3>
+                <p id="cge-scan-status" style="color:#666; font-size:14px; text-align:center;">${msg}</p>
+            </div>
+        `;
+    }
+
+    function updateScanningText(msg) {
+        const el = document.getElementById('cge-scan-status');
+        if(el) el.textContent = msg;
+    }
+
     // 步骤 1: 开始流程
     async function startScanAndSelect(workspaceId) {
-        const btn = document.getElementById('cge-action-btn');
-        if(!btn) return;
-        btn.disabled = true;
+        console.log("Start scanning for workspace:", workspaceId);
         
-        if (!await ensureAccessToken()) { btn.disabled = false; return; }
+        // 1. 立即切换界面，防止“无反应”
+        renderScanningUI("准备开始...");
+
+        // 2. 检查权限
+        if (!await ensureAccessToken()) { 
+            alert("获取 Token 失败，请刷新页面");
+            showExportDialog(); // 回到主页
+            return; 
+        }
 
         try {
-            // [修改] 调用新的总指挥函数
-            const list = await fetchAllConversations(btn, workspaceId);
+            // 3. 执行扫描
+            const list = await fetchAllConversations(workspaceId, updateScanningText);
+            
+            // 4. 渲染结果
             renderSelectionScreen(list, workspaceId);
         } catch (e) {
             console.error(e);
             alert('扫描失败: ' + e.message);
-            btn.textContent = '重试';
-            btn.disabled = false;
+            showExportDialog(); // 回到主页
         }
     }
 
-    // 步骤 2: 渲染列表 (增加来源显示)
+    // 步骤 2: 渲染列表
     function renderSelectionScreen(list, workspaceId) {
         const dialog = document.getElementById('export-dialog');
+        if (!dialog) return;
         
         let html = `
-            <h2 style="margin-top:0; font-size:18px; display:flex; justify-content:space-between;">
+            <h2 style="margin-top:0; font-size:18px; display:flex; justify-content:space-between; align-items:center;">
                 <span>选择对话</span>
                 <span style="font-size:12px; color:#666; font-weight:normal;">共 ${list.length} 个</span>
             </h2>
             <div style="margin-bottom:10px; display:flex; gap:10px;">
-                <input type="text" id="cge-search" placeholder="搜索标题..." style="flex:1; padding:6px; border:1px solid #ccc; border-radius:4px;">
+                <input type="text" id="cge-search" placeholder="搜索..." style="flex:1; padding:6px; border:1px solid #ccc; border-radius:4px;">
                 <button id="cge-sel-all" style="padding:4px 8px; font-size:12px;">全选</button>
                 <button id="cge-sel-none" style="padding:4px 8px; font-size:12px;">清空</button>
             </div>
             <div id="cge-list-container" style="height:300px; overflow-y:auto; border:1px solid #eee; border-radius:4px; padding:5px;">
-                ${list.length === 0 ? '<p style="text-align:center; color:#999; margin-top:20px;">未找到任何对话</p>' : ''}
+                ${list.length === 0 ? '<p style="text-align:center; color:#999; margin-top:20px;">未找到任何对话<br>可能是权限不足或列表为空</p>' : ''}
                 ${list.map(item => {
-                    // 根据来源显示不同颜色的标签
                     const isProject = item.source.startsWith('Project');
-                    const badgeColor = isProject ? '#e0f2fe' : '#f3f4f6'; // 蓝色 vs 灰色
+                    const badgeColor = isProject ? '#e0f2fe' : '#f3f4f6';
                     const badgeText = isProject ? '#0369a1' : '#374151';
                     
                     return `
@@ -281,7 +305,7 @@
                 }).join('')}
             </div>
             <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
-                <button id="cge-back-step" style="padding:8px 12px; border:1px solid #ccc; background:#fff; border-radius:6px; cursor:pointer;">取消</button>
+                <button id="cge-back-step" style="padding:8px 12px; border:1px solid #ccc; background:#fff; border-radius:6px; cursor:pointer;">返回</button>
                 <button id="cge-confirm-export" style="padding:8px 16px; border:none; background:#10a37f; color:#fff; border-radius:6px; font-weight:bold; cursor:pointer;">
                     导出选中 (0)
                 </button>
@@ -314,7 +338,6 @@
         };
 
         document.getElementById('cge-back-step').onclick = () => {
-            document.body.removeChild(document.getElementById('export-dialog-overlay'));
             showExportDialog(); 
         };
 
@@ -325,6 +348,7 @@
         };
     }
 
+    // 步骤 3: 导出执行
     async function executeExport(ids, fullList, workspaceId, btn) {
         btn.disabled = true;
         const zip = new JSZip();
@@ -335,10 +359,8 @@
                 btn.textContent = `处理中 ${i+1}/${ids.length}`;
                 
                 const data = await getConversation(id, workspaceId);
-                if (meta && meta.title) data.title = meta.title; // Fix title if needed
+                if (meta && meta.title) data.title = meta.title;
                 
-                // 放入文件夹：根据来源分类
-                // 如果是 Main Chat，直接放根目录；如果是 Project，放入对应文件夹
                 let folder = zip;
                 if (meta.source.startsWith('Project: ')) {
                     const folderName = sanitizeFilename(meta.source.replace('Project: ', ''));
@@ -353,11 +375,15 @@
             const blob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
             downloadFile(blob, `chatgpt_export_${new Date().toISOString().slice(0,10)}.zip`);
             btn.textContent = '✅ 完成';
-            setTimeout(() => { document.body.removeChild(document.getElementById('export-dialog-overlay')); }, 2000);
+            setTimeout(() => { 
+                // 导出完成后不直接关闭，给用户一个反馈，或者可以选择返回
+                alert('导出完成！');
+                showExportDialog();
+            }, 500);
         } catch(e) { alert('Err: ' + e.message); btn.disabled = false; }
     }
 
-    // --- UI 主入口 (检测逻辑保持不变) ---
+    // --- UI 主入口 ---
     function detectAllWorkspaceIds() {
         const foundIds = new Set(capturedWorkspaceIds);
         try {
@@ -380,7 +406,11 @@
     }
 
     function showExportDialog() {
-        if (document.getElementById('export-dialog-overlay')) return;
+        if (document.getElementById('export-dialog-overlay')) {
+            // 如果已存在，先移除旧的，重新渲染，保证状态重置
+            document.body.removeChild(document.getElementById('export-dialog-overlay'));
+        }
+
         const overlay = document.createElement('div'); overlay.id = 'export-dialog-overlay';
         Object.assign(overlay.style, { position: 'fixed', top: '0', left: '0', width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', zIndex: '99998', display: 'flex', alignItems: 'center', justifyContent: 'center' });
         
@@ -410,7 +440,7 @@
             dialog.innerHTML = html;
             
             if(step === 'initial') {
-                document.getElementById('sel-personal').onclick = () => { overlay.innerHTML = ''; startScanAndSelect(null); }; // 个人空间直接开始扫描
+                document.getElementById('sel-personal').onclick = () => { startScanAndSelect(null); }; 
                 document.getElementById('sel-team').onclick = () => renderStep('team');
                 document.getElementById('cancel-btn').onclick = () => document.body.removeChild(overlay);
             } else {
@@ -420,7 +450,6 @@
                     const manual = document.getElementById('manual_id');
                     const id = radio ? radio.value : (manual ? manual.value.trim() : null);
                     if(id) {
-                        // 启动扫描逻辑
                         startScanAndSelect(id);
                     } else { alert('请输入或选择 ID'); }
                 };
@@ -430,11 +459,49 @@
         overlay.appendChild(dialog); document.body.appendChild(overlay); renderStep('initial');
     }
 
+    // [关键修改] 修改为悬浮球样式
     function addBtn() {
         if (document.getElementById('gpt-rescue-btn')) return;
-        const b = document.createElement('button'); b.id = 'gpt-rescue-btn'; b.textContent = 'Export Conversations';
-        Object.assign(b.style, { position: 'fixed', bottom: '24px', right: '24px', zIndex: '99997', padding: '10px 14px', borderRadius: '8px', border: 'none', cursor: 'pointer', fontWeight: 'bold', background: '#10a37f', color: '#fff', fontSize: '14px', boxShadow: '0 3px 12px rgba(0,0,0,.15)' });
-        b.onclick = showExportDialog; document.body.appendChild(b);
+        
+        // 插入样式
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #gpt-rescue-btn {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background-color: #10a37f;
+                color: white;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 99997;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                transition: transform 0.2s, background-color 0.2s;
+            }
+            #gpt-rescue-btn:hover {
+                transform: scale(1.1);
+                background-color: #0d8a6a;
+            }
+            #gpt-rescue-btn:active {
+                transform: scale(0.95);
+            }
+        `;
+        document.head.appendChild(style);
+
+        const b = document.createElement('button');
+        b.id = 'gpt-rescue-btn';
+        b.innerHTML = '📥'; // 使用图标
+        b.title = '导出 ChatGPT 对话';
+        b.onclick = showExportDialog;
+        document.body.appendChild(b);
     }
+    
     setTimeout(addBtn, 2000);
 })();

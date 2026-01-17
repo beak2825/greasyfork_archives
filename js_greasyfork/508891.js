@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stream recorder for adult cam sites that do not support HLS
 // @namespace    Everywhere
-// @version      1.0.6
+// @version      1.0.8
 // @description  Record stripchat, livejasmin and other cam sites that do not full support HLS/m3u8
 // @author       Ladroop
 // @license	     MIT
@@ -75,10 +75,14 @@
     var recordedBlobs;
     var stream;
     var video;
+    var blob;
     var vidObj=0;
     var observer= new MutationObserver(pagechange1);
     var wtime=false;
     var interval=false;
+    var firefox=false;
+	var starttime="";
+
 
     pagechange();
 
@@ -156,17 +160,18 @@
 
     function getStream(){
         stream = video.captureStream ? video.captureStream() : video.mozCaptureStream();
+        if (!video.captureStream) {firefox=true;}
         makepopitup();
         document.getElementById("minivideo").srcObject=stream;
     }
 
     function startDownload() {
-        var blob = new Blob(recordedBlobs, {type: 'video/webm codecs="vp8" opus'});
+        blob = new Blob(recordedBlobs, {type: 'video/webm'});
         var url = window.URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.style.display = 'none';
         a.href = url;
-        a.download = recName+'.webm';
+        a.download = recName+starttime+'.webm';
         document.body.appendChild(a);
         a.click();
         setTimeout(function(){
@@ -185,6 +190,8 @@
     }
 
     function startRecording() {
+		starttime="_"+new Date().toISOString().split(".")[0]+"GMT";
+        starttime=starttime.replaceAll(":","-");
         count=0;
         recordedBlobs = [];
         try {
@@ -246,7 +253,6 @@
     }
 
     function pauzerecord(){
-        status="pauze";
         mediaRecorder.pause();
         document.getElementById("pauzebutton").style.display="none";
         document.getElementById("pauzerecbutton").style.display="inline-block";
@@ -262,9 +268,7 @@
     function miniunmute(){
         document.getElementById("minivideo").muted=false;
         document.getElementById("minimute").style.display="none";
-
     }
-
 
     function makepopitup(){
         var popstyle="color:black;z-index:100000;top:100px;left:10px;box-shadow:0px 0px 32px rgba(0, 0, 0, 0.32);border-radius:4px;border:1px solid rgb(221, 221, 221);background-color:rgb(200, 200, 200);position:fixed; display:inline-block; height: auto; width:auto; padding: 6px 0px 6px 6px;";
@@ -288,15 +292,17 @@
         newelem.appendChild(newdiv);
         var newdiv2=document.createElement('div');
         newdiv2.style.position="relative";
-        newdiv=document.createElement('div');
-        newdiv.innerHTML="🔇";
-        newdiv.id="minimute";
-        newdiv.style.position="absolute";
-        newdiv.style.zIndex="100001";
-        newdiv.style.top="0px";
-        newdiv.style.cursor="pointer";
-        newdiv.addEventListener("click",miniunmute);
-        newdiv2.appendChild(newdiv);
+        if (firefox){
+            newdiv=document.createElement('div');
+            newdiv.innerHTML="🔇";
+            newdiv.id="minimute";
+            newdiv.style.position="absolute";
+            newdiv.style.zIndex="100001";
+            newdiv.style.top="0px";
+            newdiv.style.cursor="pointer";
+            newdiv.addEventListener("click",miniunmute);
+            newdiv2.appendChild(newdiv);
+        }
         newdiv=document.createElement('video');
         newdiv.style.position="relative";
         newdiv.style.width="120px";
@@ -312,7 +318,6 @@
         newdiv.addEventListener("mousedown",dragMouseDown);
         newdiv2.appendChild(newdiv);
         newelem.appendChild(newdiv2);
-
         document.getElementsByTagName("body")[0].appendChild(newelem);
         document.getElementById("recbutton").addEventListener("click",startrecord);
         document.getElementById("stopbutton").addEventListener("click",stoprecord);
@@ -355,5 +360,4 @@
         document.onmouseup = null;
         document.onmousemove = null;
     }
-
 })();

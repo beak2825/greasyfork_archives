@@ -3,7 +3,7 @@
 // @namespace    https://github.com/examplecode/useful-user-scripts
 // @homepageURL  https://scriptcat.org/zh-CN/users/157252
 // @author       examplecode && Aloazny && Gemini
-// @version      3.0
+// @version      3.3
 // @description  二改@examplecode的搜索脚本，感谢@examplecode，添加MD3配色+高斯模糊+编辑/添加搜索引擎功能+搜索栏切换顶部底部+搜索框，保留原本的X浏览器搜索引擎读取，排序等功能。
 // @match        *://*/*
 // @icon          data:image/png;base64,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
@@ -25,7 +25,7 @@
     const queryParams = ["q", "s", "p", "wd", "word", "keyword", "text", "query", "key", "result" ];
 
     const defaultTheme = { primary: '#6750a4', opacity: 0.7, blur: 18, themeStyle: 'MIUIX' };
-    const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1 };
+    const defaultLayout = { pos: 'bottom', offset: 24, autoHide: false, showInput: false, inputStyle: 1, shrinkMode: false };
     const defaultEngines = [
         { name: '必应', host: 'bing.com', url: 'https://www.bing.com/search?q=%s' },
         { name: 'Yandex', host: 'yandex', url: 'https://yandex.com/search/touch/?text=%s' },
@@ -259,6 +259,7 @@
                         <button id="l-hide" style="flex:1;padding:10px;border-radius:12px;border:none;background:${layout.autoHide?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.autoHide?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.autoHide?'✅':'🚫'} 滑动隐藏</button>
                         <button id="l-input" style="flex:1;padding:10px;border-radius:12px;border:none;background:${layout.showInput?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.showInput?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.showInput?'✅':'🚫'} 搜索框</button>
                     </div>
+                    <button id="l-shrink" style="width:100%;margin-bottom:12px;padding:10px;border-radius:12px;border:none;background:${layout.shrinkMode?'var(--qs-pri)':'rgba(0,0,0,0.05)'};color:${layout.shrinkMode?'var(--qs-on-pri)':'#49454f'};font-weight:600;cursor:pointer;font-size:12px;">${layout.shrinkMode?'✅':'🚫'} 贴边收缩模式</button>
                     <div id="m-style-cycle" style="cursor:pointer;font-size:12px;padding:10px;background:var(--qs-pri);color:var(--qs-on-pri);border-radius:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 8px rgba(var(--qs-pri-rgb),0.2);">🔍搜索框样式 ${layout.inputStyle || 1}</div>
                 </div>
             </div>
@@ -311,9 +312,10 @@
             btn.style.background = active ? 'var(--qs-pri)' : 'rgba(0,0,0,0.05)';
             btn.style.color = active ? 'var(--qs-on-pri)' : '#49454f';
         };
-        card.querySelector('#l-hide').onclick = () => { layout.autoHide = !layout.autoHide; storage.layoutSave(layout); updateLayoutBtn('#l-hide', layout.autoHide, ' 滑动隐藏'); };
         card.querySelector('#l-input').onclick = () => { layout.showInput = !layout.showInput; storage.layoutSave(layout); updateLayoutBtn('#l-input', layout.showInput, ' 搜索框'); };
-        
+        card.querySelector('#l-hide').onclick = () => { layout.autoHide = !layout.autoHide; if (layout.autoHide) layout.shrinkMode = false; storage.layoutSave(layout); updateLayoutBtn('#l-hide', layout.autoHide, ' 滑动隐藏'); updateLayoutBtn('#l-shrink', layout.shrinkMode, ' 贴边收缩模式'); };
+        card.querySelector('#l-shrink').onclick = () => { layout.shrinkMode = !layout.shrinkMode; if (layout.shrinkMode) layout.autoHide = false; storage.layoutSave(layout); updateLayoutBtn('#l-shrink', layout.shrinkMode, ' 贴边收缩模式'); updateLayoutBtn('#l-hide', layout.autoHide, ' 滑动隐藏'); };
+     
         const render = () => {
             const list = card.querySelector('#m-list');
             list.innerHTML = '';
@@ -420,20 +422,11 @@
             const bar = document.createElement('div');
             bar.className = 'qs-bar';
             bar.style[layout.pos === 'top' ? 'top' : 'bottom'] = `${layout.offset}px`;
-            const matchedEngines = allEngines.filter(e => e.visible && e.host && e._matchFn(location.host.toLowerCase()));
-            const bestMatched = matchedEngines
-                .sort((a, b) => {
-                    const isRegA = a.host.startsWith('/') ? 1 : 0;
-                    const isRegB = b.host.startsWith('/') ? 1 : 0;
-                    if (isRegA !== isRegB) return isRegA - isRegB;
-                    return b.host.length - a.host.length;
-                })[0];
-            const syncInputs = (val) => {
-                bar.querySelectorAll('.qs-main-input').forEach(el => { if (el.value !== val) el.value = val; });
-            };
-
-            const doSearch = (targetEngine, keyword) => { let targetUrl = targetEngine.url; const isCur = targetEngine.host && targetEngine._matchFn(location.host.toLowerCase()); if (isCur) { try { const uObj = new URL(targetEngine.url); targetUrl = location.origin + uObj.pathname + uObj.search; } catch {} } location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword)); };
-            const curStyle = layout.inputStyle || 1
+            const getBestMatched = () => allEngines.filter(e => e.visible && e.host && e._matchFn(location.host.toLowerCase())).map(e => { let s = (e.host === location.host.toLowerCase() ? 1000 : (!e.host.includes('/') ? 500 : 0)), u; try { u = new URL(e.url); s += (u.pathname !== '/' && location.pathname.toLowerCase().includes(u.pathname.toLowerCase()) ? 200 : 0); u.searchParams.forEach(v => { const f = v.replace(/%s|%keywords%/g, '').trim().toLowerCase(); if (f) s += decodeURIComponent(location.href.toLowerCase()).includes(f) ? 600 : -800; }); } catch(e) {} return { e, s: s + (allEngines.length - allEngines.indexOf(e)) }; }).sort((a, b) => b.s - a.s)[0]?.e;
+            const bestMatched = getBestMatched();
+            const syncInputs = (val) => { bar.querySelectorAll('.qs-main-input').forEach(el => { if (el.value !== val) el.value = val; });};
+            const doSearch = (targetEngine, keyword) => { let targetUrl = targetEngine.url; const isCur = targetEngine.host && targetEngine._matchFn(location.host.toLowerCase()); if (isCur) { try { const uObj = new URL(targetEngine.url); targetUrl = location.origin + uObj.pathname + uObj.search; } catch {} } location.href = targetUrl.replace(/%s/g, encodeURIComponent(keyword)).replace(/%keywords%/g, encodeURIComponent(keyword));};
+            const curStyle = layout.inputStyle || 1;
 
             if (curStyle === 3 && layout.showInput) {
                 const input = document.createElement('input');
@@ -444,7 +437,7 @@
                 input.onfocus = () => { input.style.width = '130px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.15)'; };
                 input.onblur = () => { input.style.width = '80px'; input.style.background = 'rgba(var(--qs-pri-rgb),0.08)'; };
                 input.oninput = (ev) => syncInputs(ev.target.value);
-                input.onkeydown = (e) => { if (e.key === 'Enter') doSearch(bestMatched || allEngines[0], input.value); };
+                input.onkeydown = (e) => {e.stopPropagation();if (e.key === 'Enter') doSearch(bestMatched || allEngines[0], input.value);};
                 bar.appendChild(input);
             }
 
@@ -462,7 +455,7 @@
                         input.oninput = (ev) => syncInputs(ev.target.value);
                         input.onfocus = () => input.style.width = '140px';
                         input.onblur = () => input.style.width = '90px';
-                        input.onkeydown = (ev) => { if (ev.key === 'Enter') doSearch(e, input.value); };
+                        input.onkeydown = (ev) => {ev.stopPropagation(); if (ev.key === 'Enter') doSearch(e, input.value);};
                         const label = document.createElement('span');
                         label.textContent = e.name;
                         label.style.cssText = `padding:0 14px 0 8px;color:var(--qs-on-pri);font-size:14px;font-weight:600;white-space:nowrap;`;
@@ -477,7 +470,7 @@
                         input.oninput = (ev) => syncInputs(ev.target.value);
                         input.onfocus = () => input.style.width = '130px';
                         input.onblur = () => input.style.width = '80px';
-                        input.onkeydown = (ev) => { if (ev.key === 'Enter') doSearch(e, input.value); };
+                        input.onkeydown = (ev) => { ev.stopPropagation(); if (ev.key === 'Enter') doSearch(e, input.value);};
                         bar.appendChild(input);
                     }
                 }
@@ -507,20 +500,17 @@
                 if (activeEl) bar.scrollLeft = activeEl.offsetLeft - (bar.offsetWidth / 2) + (activeEl.offsetWidth / 2);
             }, 100);
 
-            if (layout.autoHide) {
-                let lastY = window.scrollY;
-                window.addEventListener('scroll', () => {
-                    const curY = window.scrollY;
-                    if (Math.abs(curY - lastY) < 10) return;
-                    if (curY > lastY && curY > 60) {
-                        bar.style.transform = `translateX(-50%) translateY(${layout.pos === 'bottom' ? '180%' : '-180%'})`;
-                        bar.style.opacity = '0';
-                    } else {
-                        bar.style.transform = 'translateX(-50%) translateY(0)';
-                        bar.style.opacity = '1';
-                    }
-                    lastY = curY;
-                }, { passive: true });
+            if (layout.autoHide || layout.shrinkMode) {
+                let lastY = window.scrollY, isShrunk = false;
+                const applyState = (s) => { isShrunk = s; if (layout.shrinkMode) {
+                    bar.style.cssText += `transition:all .4s cubic-bezier(0.4,0,0.2,1);max-width:${s?'120px':'92vw'};padding-right:${s?'12px':'8px'};transform:translateX(calc(-50% + ${s?'200px':'0px'}));border-radius:${s?'30px 0 0 30px':'var(--qs-radius)'};`;
+                    Array.from(bar.children).forEach(item => { const isCore = item.classList.contains('qs-main-input') || item.classList.contains('qs-btn-active') || item.getAttribute('data-active') === 'true';
+                        item.style.display = s ? (isCore ? '' : 'none') : (item.innerText === '⚙️' ? 'flex' : '');
+                        if (item.classList.contains('qs-main-input') || item.tagName === 'INPUT') item.style.width = item.style.minWidth = s ? '70px' : ''; });
+                    if (s) bar.scrollLeft = 0; else setTimeout(() => { const a = bar.querySelector('[data-active="true"]'); if (a) bar.scrollTo({left: a.offsetLeft - bar.offsetWidth/2 + a.offsetWidth/2, behavior: 'smooth'}); }, 400);
+                } else { bar.style.transform = s ? `translateX(-50%) translateY(${layout.pos === 'bottom' ? '180%' : '-180%'})` : 'translateX(-50%) translateY(0)'; bar.style.opacity = s ? '0' : '1'; }};
+                bar.onclick = (e) => { if (isShrunk && layout.shrinkMode) { applyState(false); e.stopPropagation(); }};
+                window.addEventListener('scroll', () => { const curY = window.scrollY; if (Math.abs(curY - lastY) > 15) { applyState(curY > lastY && curY > 60); lastY = curY; } }, { passive: true });
             }
         });
     }

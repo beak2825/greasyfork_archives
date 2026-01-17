@@ -2,7 +2,7 @@
 // @name         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @name:ko         SOOP (숲) - 사이드바 UI 변경(백업본)
 // @namespace    https://greasyfork.org/ko/scripts/551140
-// @version      20251208(08.01)
+// @version      20260116 (08.01)
 // @description  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @description:ko  사이드바 UI 변경, 월별 리캡, 채팅 모아보기, 차단기능 등
 // @author       askld / eldirna(복구)
@@ -8000,7 +8000,7 @@ body:not(.screen_mode):not(.fullScreen_mode):has(#sidebar.min) #webplayer_conten
             } finally {
                 span.textContent = originalText;
             }
-        });
+        }, true);
 
         // --- DOM 변경을 감시하여 버튼이 사라지면 다시 생성하는 로직 ---
         const parentSelector = '#logArea';

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         豆瓣书名号转搜索链接
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  将豆瓣网站上的书名号《》中的内容转换为可点击的搜索链接，就像豆瓣 App 一样！点击书名号内的文字即可快速搜索，无需手动复制粘贴。
 // @author       You
 // @license      MIT
@@ -124,8 +124,10 @@
                     if (!parent || shouldSkipElement(parent)) {
                         return NodeFilter.FILTER_REJECT;
                     }
-                    // 检查父元素是否已经是链接
-                    if (parent.closest("a")) {
+                    // 检查父元素是否已经是链接（但允许处理新展开的内容）
+                    const closestLink = parent.closest("a");
+                    if (closestLink && closestLink.href && closestLink.href.includes("douban.com/search")) {
+                        // 如果已经是我们创建的搜索链接，跳过
                         return NodeFilter.FILTER_REJECT;
                     }
                     // 只处理包含书名号的文本节点
@@ -153,7 +155,12 @@
 
     // 防抖函数
     let debounceTimer = null;
-    function debounceProcess(container) {
+    function debounceProcess(container, immediate = false) {
+        if (immediate) {
+            // 立即处理，不使用防抖
+            processContainer(container);
+            return;
+        }
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(() => {
             processContainer(container);
@@ -176,35 +183,61 @@
         initProcess();
     }
 
-    // 使用 MutationObserver 监听 DOM 变化，处理动态加载的内容
-    const observer = new MutationObserver(function (mutations) {
+    // 处理新增或变化的节点
+    function handleNodeChanges(mutations) {
         // 如果正在处理中，忽略观察事件
         if (isProcessing) {
             return;
         }
 
-        // 收集所有新增的节点
-        const addedNodes = new Set();
+        // 收集所有需要处理的节点
+        const nodesToProcess = new Set();
 
         mutations.forEach(function (mutation) {
+            // 处理新增的节点
             mutation.addedNodes.forEach(function (node) {
-                // 只处理元素节点和文本节点
                 if (node.nodeType === Node.ELEMENT_NODE) {
-                    addedNodes.add(node);
+                    nodesToProcess.add(node);
                 } else if (node.nodeType === Node.TEXT_NODE && node.parentElement) {
-                    addedNodes.add(node.parentElement);
+                    nodesToProcess.add(node.parentElement);
                 }
             });
+
+            // 处理属性变化（只处理可能表示内容展开的 class 变化）
+            if (mutation.type === "attributes" && mutation.attributeName === "class") {
+                const target = mutation.target;
+                // 只处理明确的展开相关 class，避免过度触发
+                if (
+                    target.classList.contains("expanded") ||
+                    target.classList.contains("show-all") ||
+                    target.classList.contains("full-content")
+                ) {
+                    nodesToProcess.add(target);
+                    if (target.parentElement) {
+                        nodesToProcess.add(target.parentElement);
+                    }
+                }
+            }
+
+            // 处理文本内容变化
+            if (mutation.type === "characterData" && mutation.target.parentElement) {
+                nodesToProcess.add(mutation.target.parentElement);
+            }
         });
 
-        // 对每个新增的节点进行处理
-        addedNodes.forEach((node) => {
-            if (node.nodeType === Node.ELEMENT_NODE) {
+        // 对每个需要处理的节点进行处理
+        nodesToProcess.forEach((node) => {
+            if (node && node.nodeType === Node.ELEMENT_NODE) {
                 debounceProcess(node);
-            } else if (node.nodeType === Node.TEXT_NODE) {
+            } else if (node && node.nodeType === Node.TEXT_NODE) {
                 processTextNode(node);
             }
         });
+    }
+
+    // 使用 MutationObserver 监听 DOM 变化，处理动态加载的内容
+    const observer = new MutationObserver(function (mutations) {
+        handleNodeChanges(mutations);
     });
 
     // 开始观察
@@ -212,6 +245,96 @@
         observer.observe(document.body, {
             childList: true,
             subtree: true,
+            attributes: true,
+            attributeFilter: ["class"], // 只监听 class 变化（用于检测展开状态）
+            characterData: true, // 监听文本内容变化
         });
     }
+
+    // 监听点击事件，处理展开操作
+    // 使用更智能的方式：监听点击后立即开始监控容器变化
+    document.addEventListener(
+        "click",
+        function (event) {
+            const target = event.target;
+            if (!target) return;
+
+            // 快速检查：先检查文本内容（最常见的展开按钮）
+            const buttonText = target.textContent?.trim() || "";
+            const hasExpandText =
+                buttonText.includes("展开") ||
+                buttonText.includes("显示全部") ||
+                buttonText.includes("查看全部") ||
+                buttonText.includes("全文") ||
+                buttonText.includes("更多");
+
+            // 如果文本不匹配，再检查 class（避免不必要的 DOM 查询）
+            const hasExpandClass =
+                !hasExpandText &&
+                (target.classList.contains("expand") ||
+                    target.classList.contains("toggle") ||
+                    target.closest(".expand") ||
+                    target.closest(".toggle") ||
+                    target.closest("a[href*='expand']") ||
+                    target.closest(".more") ||
+                    target.closest("[class*='expand']") ||
+                    target.closest("[class*='toggle']"));
+
+            if (!hasExpandText && !hasExpandClass) {
+                return; // 提前返回，不处理非展开按钮的点击
+            }
+
+            // 找到被展开的容器（尝试多种选择器）
+            const container =
+                target.closest(
+                    ".review-item, .comment-item, .review, .comment, [class*='review'], [class*='comment'], [class*='Review'], [class*='Comment'], [id*='review'], [id*='comment']"
+                ) ||
+                target.parentElement?.parentElement?.parentElement ||
+                target.parentElement?.parentElement ||
+                target.parentElement;
+
+            if (!container || container === document.body) {
+                return; // 如果找不到合适的容器，不处理
+            }
+
+            // 记录点击前的容器状态
+            const initialHeight = container.offsetHeight;
+            const initialTextLength = container.textContent.length;
+
+            // 使用 requestAnimationFrame 快速检测内容变化
+            let checkCount = 0;
+            const maxChecks = 20; // 减少到20次（约0.33秒），通常足够
+
+            function checkAndProcess() {
+                checkCount++;
+                const currentHeight = container.offsetHeight;
+                const currentTextLength = container.textContent.length;
+
+                // 如果容器高度或文本长度增加了，说明内容已展开
+                if (
+                    currentHeight > initialHeight ||
+                    currentTextLength > initialTextLength ||
+                    checkCount >= maxChecks
+                ) {
+                    // 立即处理
+                    debounceProcess(container, true);
+                    // 如果内容还在变化且未达到最大次数，继续检查一次
+                    if (
+                        checkCount < maxChecks &&
+                        (currentHeight > initialHeight || currentTextLength > initialTextLength)
+                    ) {
+                        requestAnimationFrame(checkAndProcess);
+                    }
+                } else {
+                    // 内容还没展开，继续检查
+                    requestAnimationFrame(checkAndProcess);
+                }
+            }
+
+            // 立即开始第一次检查
+            requestAnimationFrame(checkAndProcess);
+        },
+        true // 使用捕获阶段，确保能捕获到事件
+    );
+
 })();

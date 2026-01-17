@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autodarts – MatchInsights
 // @namespace    http://tampermonkey.net/
-// @version      0.14.149
+// @version      0.14.155
 // @author       ThunderB
 // @license      All Rights Reserved
 // @description  Holt aus deiner Historie neue Innsights für dein Spiel!
@@ -249,7 +249,7 @@ const DEBUG_ATC_FIELDS = false;
     const SCRIPT_VERSION =
           (typeof GM_info !== "undefined" && GM_info && GM_info.script && GM_info.script.version) ? GM_info.script.version :
     (typeof GM !== "undefined" && GM && GM.info && GM.info.script && GM.info.script.version) ? GM.info.script.version :
-    "0.14.149";
+    "0.14.155";
     // =========================
     // Settings
     // =========================
@@ -938,6 +938,26 @@ const DEBUG_ATC_FIELDS = false;
             .filter((x) => x.dayKey !== "unknown")
             .sort((a, b) => (b.dayKey.localeCompare(a.dayKey)));
     }
+
+    // ATC Fokus: Tages-Aggregation nach LEGS (ein ATC-Match kann mehrere Legs enthalten)
+    function aggregateAtcByDayLegs(sessions) {
+        const m = new Map();
+        for (const s of (sessions || [])) {
+            const k = s?.dayKey || "unknown";
+            if (!m.has(k)) m.set(k, { dayKey: k, legs: 0, sessions: 0, darts: 0, hits: 0, points: 0 });
+            const a = m.get(k);
+            a.sessions += 1;
+            const lg = Number(s?.legs ?? s?.count ?? 1);
+            a.legs += (Number.isFinite(lg) && lg > 0) ? lg : 1;
+            a.darts += Number(s?.darts || 0);
+            a.hits += Number(s?.hits || 0);
+            a.points += Number(s?.points || 0);
+        }
+        return Array.from(m.values())
+            .filter((x) => x.dayKey !== "unknown")
+            .sort((a, b) => (String(b.dayKey).localeCompare(String(a.dayKey))));
+    }
+
 
     function aggregateByTarget(sessions) {
         const m = new Map();
@@ -4190,8 +4210,8 @@ const DEBUG_ATC_FIELDS = false;
 
           <div class="ad-ext-grid-seg">
             <div class="ad-ext-card ad-ext-card-seg-hits">
-              <div class="ad-ext-chart-title">Treffer je Target (Hits)</div>
-              <canvas id="ad-ext-chart-bar" class="ad-ext-chart-canvas" width="900" height="420"></canvas>
+              <div class="ad-ext-chart-title">Performance (Hit %)</div>
+              <canvas id="ad-ext-chart-radar" class="ad-ext-chart-canvas" width="900" height="420"></canvas>
             </div>
 
             <div class="ad-ext-card ad-ext-card-seg-donut">
@@ -4200,8 +4220,8 @@ const DEBUG_ATC_FIELDS = false;
             </div>
 
             <div class="ad-ext-card ad-ext-card-seg-radar">
-              <div class="ad-ext-chart-title">Performance (Hit %)</div>
-              <canvas id="ad-ext-chart-radar" class="ad-ext-chart-canvas" width="520" height="220"></canvas>
+              <div class="ad-ext-chart-title">Treffer je Target (Hits)</div>
+              <canvas id="ad-ext-chart-bar" class="ad-ext-chart-canvas" width="520" height="220"></canvas>
             </div>
           </div>
 
@@ -5927,6 +5947,12 @@ const DEBUG_ATC_FIELDS = false;
         const maxV = Math.max(1, rawMaxV * (1 + (Number.isFinite(headroom) ? headroom : 0)));
         const barW = plotW / n;
 
+        // optional persistent highlight (Index)
+        const hiRaw = opts?.highlightIndex;
+        const hi = (hiRaw === null || hiRaw === undefined)
+        ? null
+        : (Number.isFinite(Number(hiRaw)) ? Number(hiRaw) : null);
+
         ctx.strokeStyle = "rgba(255,255,255,0.14)";
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -5937,6 +5963,7 @@ const DEBUG_ATC_FIELDS = false;
 
         const strokeCol = "rgb(125, 211, 252)";
         const fillCol = _adExtColorWithAlpha(strokeCol, 0.16);
+        const fillColHi = _adExtColorWithAlpha(strokeCol, 0.30);
 
         const bars = [];
 
@@ -5946,12 +5973,14 @@ const DEBUG_ATC_FIELDS = false;
             const x = padL + i * barW + barW * 0.16;
             const y = padT + plotH - hh;
             const bw = Math.max(2, barW * 0.68);
+            const isHi = (hi !== null && hi === i);
+            const useFill = isHi ? _adExtColorWithAlpha(strokeCol, 0.28) : fillCol;
 
-            ctx.fillStyle = fillCol;
+            ctx.fillStyle = useFill;
             ctx.fillRect(x, y, bw, hh);
 
             ctx.strokeStyle = strokeCol;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = isHi ? 2 : 1;
             ctx.strokeRect(x + 0.5, y + 0.5, bw, hh);
 
             bars.push({
@@ -7593,7 +7622,7 @@ const DEBUG_ATC_FIELDS = false;
         body.innerHTML = rows.map((d) => `
       <tr data-day-key="${escapeHtml(String(d.dayKey || ""))}">
         <td>${escapeHtml(dayKeyToGerman(d.dayKey))}</td>
-        <td class="ad-ext-table-value-right">${fmtInt(d.sessions)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(d.legs ?? d.sessions ?? 0)}</td>
         <td class="ad-ext-table-value-right">${fmtInt(d.darts)}</td>
         <td class="ad-ext-table-value-right">${fmtInt(d.hits)}</td>
         <td class="ad-ext-table-value-right">${fmtPct(d.hits, d.darts)}</td>
@@ -7774,7 +7803,7 @@ const DEBUG_ATC_FIELDS = false;
     function atcFieldSortValue(row, sortKey) {
         const k = String(sortKey || "hitPct");
         if (k === "field") return atcFieldKeyParts(row?.field);
-        if (k === "sessions") return Number(row?.sessions) || 0;
+        if (k === "legs" || k === "sessions") return Number(row?.legs ?? row?.sessions) || 0;
         if (k === "darts") return Number(row?.darts) || 0;
         if (k === "hits") return Number(row?.hits) || 0;
         if (k === "hitPct") {
@@ -7821,7 +7850,7 @@ const DEBUG_ATC_FIELDS = false;
             const ar = (Number(a?.darts) || 0) > 0 ? (Number(a?.hits) || 0) / (Number(a?.darts) || 1) : -Infinity;
             const br = (Number(b?.darts) || 0) > 0 ? (Number(b?.hits) || 0) / (Number(b?.darts) || 1) : -Infinity;
             if (br !== ar) return br - ar;
-            if ((Number(b?.sessions) || 0) !== (Number(a?.sessions) || 0)) return (Number(b?.sessions) || 0) - (Number(a?.sessions) || 0);
+            if ((Number(b?.legs ?? b?.sessions) || 0) !== (Number(a?.legs ?? a?.sessions) || 0)) return (Number(b?.legs ?? b?.sessions) || 0) - (Number(a?.legs ?? a?.sessions) || 0);
 
             const fa2 = atcFieldKeyParts(a?.field);
             const fb2 = atcFieldKeyParts(b?.field);
@@ -7839,7 +7868,8 @@ const DEBUG_ATC_FIELDS = false;
         const table = body?.closest?.("table");
         if (!table) return;
 
-        const key = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+        let key = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+        if (key === "sessions") key = "legs";
         const dir = (String(cache?.filtersATC?.fieldSortDir || "desc").toLowerCase() === "asc") ? "asc" : "desc";
 
         const ths = table.querySelectorAll("th[data-sort-key]");
@@ -7984,7 +8014,7 @@ const DEBUG_ATC_FIELDS = false;
                     const k = String(field);
                     let r = fieldMap.get(k);
                     if (!r) {
-                        r = { field: k, darts: 0, hits: 0, sessionsSet: new Set() };
+                        r = { field: k, darts: 0, hits: 0, legs: 0, sessionsSet: new Set() };
                         fieldMap.set(k, r);
                     }
                     return r;
@@ -8012,6 +8042,7 @@ const DEBUG_ATC_FIELDS = false;
 
                         const rows = Array.from(fieldMap.values()).map((r) => ({
                             field: r.field,
+                            legs: Math.max(0, Math.round(Number(r.legs) || 0)),
                             sessions: r.sessionsSet.size,
                             darts: Math.max(0, Math.round(Number(r.darts) || 0)),
                             hits: Math.max(0, Math.round(Number(r.hits) || 0)),
@@ -8061,6 +8092,16 @@ const DEBUG_ATC_FIELDS = false;
                         if (!matchId || !allowedMatchIds.has(matchId)) { cursor.continue(); return; }
                     }
 
+                    const matchLegs = (() => {
+                        const tl = Number(stats?.totalLegs ?? stats?.match?.totalLegs ?? stats?.meta?.totalLegs ?? 0);
+                        if (Number.isFinite(tl) && tl > 0) return tl;
+                        const ls = Array.isArray(stats?.legStats) ? stats.legStats.length : 0;
+                        if (ls > 0) return ls;
+                        const gs = Array.isArray(stats?.games) ? stats.games.length : 0;
+                        if (gs > 0) return gs;
+                        return 1;
+                    })();
+
                     const tstats = extractTargetStatsFromStatsPayload(stats);
                     if (!tstats.length) { cursor.continue(); return; }
 
@@ -8106,6 +8147,7 @@ const DEBUG_ATC_FIELDS = false;
                             if (!seenFieldsThisMatch.has(fieldLabel)) {
                                 seenFieldsThisMatch.add(fieldLabel);
                                 row.sessionsSet.add(matchId);
+                                row.legs += (Number.isFinite(matchLegs) && matchLegs > 0) ? matchLegs : 1;
                             }
                         }
 
@@ -8129,7 +8171,10 @@ const DEBUG_ATC_FIELDS = false;
 
         const allUnsorted = (Array.isArray(fieldAgg) ? fieldAgg : []).slice();
 
-        const sortKey = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+        let sortKey = String(cache?.filtersATC?.fieldSortKey || "hitPct");
+
+        // Backward compat: früher hieß das in ATC "sessions", jetzt "legs"
+        if (sortKey === "sessions") sortKey = "legs";
         const sortDir = String(cache?.filtersATC?.fieldSortDir || "desc");
 
         const all = sortATCFieldRows(allUnsorted, sortKey, sortDir);
@@ -8144,7 +8189,7 @@ const DEBUG_ATC_FIELDS = false;
         body.innerHTML = all.map((t) => `
       <tr data-field="${escapeHtml(String(t.field || ""))}">
         <td>${escapeHtml(t.field)}</td>
-        <td class="ad-ext-table-value-right">${fmtInt(t.sessions)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(t.legs ?? t.sessions ?? 0)}</td>
         <td class="ad-ext-table-value-right">${fmtInt(t.darts)}</td>
         <td class="ad-ext-table-value-right">${fmtInt(t.hits)}</td>
         <td class="ad-ext-table-value-right">${fmtPct(t.hits, t.darts)}</td>
@@ -8170,7 +8215,7 @@ const DEBUG_ATC_FIELDS = false;
     function stTargetSortValue(row, sortKey) {
         const k = String(sortKey || "hitPct");
         if (k === "target") return stTargetKeyParts(row?.target);
-        if (k === "sessions") return Number(row?.sessions) || 0;
+        if (k === "legs" || k === "sessions") return Number(row?.legs ?? row?.sessions) || 0;
         if (k === "darts") return Number(row?.darts) || 0;
         if (k === "hits") return Number(row?.hits) || 0;
         if (k === "hitPct") {
@@ -8212,7 +8257,7 @@ const DEBUG_ATC_FIELDS = false;
             const ar = (Number(a?.darts) || 0) > 0 ? (Number(a?.hits) || 0) / (Number(a?.darts) || 1) : -Infinity;
             const br = (Number(b?.darts) || 0) > 0 ? (Number(b?.hits) || 0) / (Number(b?.darts) || 1) : -Infinity;
             if (br !== ar) return br - ar;
-            if ((Number(b?.sessions) || 0) !== (Number(a?.sessions) || 0)) return (Number(b?.sessions) || 0) - (Number(a?.sessions) || 0);
+            if ((Number(b?.legs ?? b?.sessions) || 0) !== (Number(a?.legs ?? a?.sessions) || 0)) return (Number(b?.legs ?? b?.sessions) || 0) - (Number(a?.legs ?? a?.sessions) || 0);
             return String(a?.target || "").localeCompare(String(b?.target || ""), "de");
         });
 
@@ -8268,7 +8313,7 @@ const DEBUG_ATC_FIELDS = false;
         body.innerHTML = rows.map((t) => `
       <tr data-target="${escapeHtml(String(t.target || ""))}">
         <td>${escapeHtml(t.target)}</td>
-        <td class="ad-ext-table-value-right">${fmtInt(t.sessions)}</td>
+        <td class="ad-ext-table-value-right">${fmtInt(t.legs ?? t.sessions ?? 0)}</td>
         <td class="ad-ext-table-value-right">${fmtInt(t.darts)}</td>
         <td class="ad-ext-table-value-right">${fmtInt(t.hits)}</td>
         <td class="ad-ext-table-value-right">${fmtPct(t.hits, t.darts)}</td>
@@ -8414,9 +8459,11 @@ const DEBUG_ATC_FIELDS = false;
 
         const barCanvas = panel.querySelector("#ad-ext-chart-bar");
         if (barCanvas) {
-            // Treffer je Target (Hits) als horizontale Balken:
-            // X-Achse = Anzahl Hits, Y-Achse = Target (z.B. D8, D12, ...)
-            // Sortierung: D (aufsteigend) -> S -> T, Random-Targets ausgeschlossen
+            // Treffer je Target (Hits) als vertikale Balken (Top N):
+            // Y-Achse = Anzahl Hits, X-Achse = Target (z.B. D8, D12, ...)
+            // Auswahl: Top N nach Hits (Random-Targets ausgeschlossen), Anzeige sortiert D -> S -> T, Zahl aufsteigend
+            const TOP_N = 10;
+
             const keyOf = (label) => {
                 const s = String(label || "").trim();
                 const m = s.match(/^([DST])\s*(\d+)/i);
@@ -8427,8 +8474,36 @@ const DEBUG_ATC_FIELDS = false;
                 return { grp, num: Number.isFinite(num) ? num : 999, txt: s };
             };
 
-            const items = (Array.isArray(targetAgg) ? targetAgg : [])
+            const allItems = (Array.isArray(targetAgg) ? targetAgg : [])
             .filter((x) => x && x.target !== "DRandom" && x.target !== "SRandom")
+            .slice();
+
+            // total hits across all targets (for tooltip share)
+            const totalHitsAll = allItems.reduce((a, x) => a + (Number(x.hits) || 0), 0);
+
+            // pick Top N by hits (desc)
+            const byHits = allItems
+            .slice()
+            .sort((a, b) => {
+                const ha = Number(a?.hits) || 0;
+                const hb = Number(b?.hits) || 0;
+                if (hb !== ha) return hb - ha;
+                return String(a?.target || "").localeCompare(String(b?.target || ""), "de");
+            });
+
+            let picked = byHits.slice(0, TOP_N);
+
+            // pin selected target if not in Top N
+            if (selectedTarget) {
+                const sel = allItems.find(x => String(x?.target || "") === String(selectedTarget));
+                if (sel && !picked.some(x => String(x?.target || "") === String(selectedTarget))) {
+                    picked = picked.slice(0, Math.max(0, TOP_N - 1));
+                    picked.push(sel);
+                }
+            }
+
+            // display order: D -> S -> T, then number asc
+            picked = picked
             .slice()
             .sort((a, b) => {
                 const ka = keyOf(a.target);
@@ -8438,16 +8513,14 @@ const DEBUG_ATC_FIELDS = false;
                 return ka.txt.localeCompare(kb.txt, "de");
             });
 
-            const labels = items.map((x) => x.target);
-            const values = items.map((x) => x.hits);
-            const totalHitsAll = items.reduce((a, x) => a + (Number(x.hits) || 0), 0);
+            const labels = picked.map((x) => x.target);
+            const values = picked.map((x) => x.hits);
 
             const hi = selectedTarget ? labels.findIndex(l => l === selectedTarget) : -1;
 
-            const layout = drawBarsHorizontal(barCanvas, labels, values, items, {
+            const layout = drawBarsVertical(barCanvas, labels, values, picked, {
                 showCategoryLabels: true,
                 showValueLabels: false,
-                tickCount: 5,
                 total: totalHitsAll,
                 headroom: 0.10,
                 highlightIndex: (hi >= 0 ? hi : null),
@@ -8455,6 +8528,7 @@ const DEBUG_ATC_FIELDS = false;
 
             cache._st_layouts = cache._st_layouts || {};
             cache._st_layouts.bar = layout;
+
         }
     }
 
@@ -13031,7 +13105,7 @@ function renderMasterHallOfFame(panel) {
                 const label = row?.target || layout.labels?.[idx] || "";
                 const hits = Number(row?.hits ?? 0);
                 const darts = Number(row?.darts ?? 0);
-                const sessions = Number(row?.sessions ?? 0);
+                const sessions = Number(row?.sessions ?? row?.legs ?? 0);
                 const hitPct = darts > 0 ? (hits * 100) / darts : Number(layout.values?.[idx] ?? 0);
 
                 const line = `<div class="ad-ext-tooltip-title">${escapeHtml(label)}</div>
@@ -13796,12 +13870,21 @@ function renderMasterHallOfFame(panel) {
         cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
         const st = cache.trainingPlan;
 
+        const __firstInit = !cache._planWeekInitDone;
+        cache._planWeekInitDone = true;
+
         const available = (Array.isArray(weeksAsc) ? weeksAsc : [])
         .map(w => String(w?.weekKey || ""))
         .filter(Boolean);
 
         const thisKey = weekKeyFromDate(new Date());
         let sel = st.selectedWeekKey;
+
+        if (__firstInit) {
+            // Beim ersten Laden immer in die aktuelle Woche springen (wie gewünscht),
+            // danach bleibt die Auswahl persistent wie bisher.
+            if (thisKey) sel = thisKey;
+        }
 
         if (available.length) {
             if (!sel || !available.includes(sel)) {
@@ -13954,11 +14037,6 @@ function renderMasterHallOfFame(panel) {
 
         try {
             await loadFromDbOnce();
-            renderSegmentTraining(panel, cache.sessions, cache.filters, cache.meta);
-            renderX01(panel);
-            renderTimeTab(panel);
-            renderTrainingTab(panel);
-            renderMasterHallOfFame(panel);
         } catch (e) {
             console.warn("[AD Ext] IDB read failed:", e);
             setSourceLabel(panel, "Datenquelle: IndexedDB nicht verfügbar");
@@ -13974,10 +14052,18 @@ function renderMasterHallOfFame(panel) {
             setText(panel, "#ad-ext-st-kpi-hitrate", "—");
 
             renderX01Kpis(panel, [], null);
-            renderTimeTab(panel);
-            renderTrainingTab(panel);
-            renderMasterHallOfFame(panel);
+            try { renderTimeTab(panel); } catch (e2) { console.warn("[AD Ext] renderTimeTab failed:", e2); }
+            try { renderTrainingTab(panel); } catch (e2) { console.warn("[AD Ext] renderTrainingTab failed:", e2); }
+            try { renderMasterHallOfFame(panel); } catch (e2) { console.warn("[AD Ext] renderMasterHallOfFame failed:", e2); }
+            return;
         }
+
+        try { renderSegmentTraining(panel, cache.sessions, cache.filters, cache.meta); } catch (e) { console.warn("[AD Ext] renderSegmentTraining failed:", e); }
+        try { renderX01(panel); } catch (e) { console.warn("[AD Ext] renderX01 failed:", e); }
+        try { renderTimeTab(panel); } catch (e) { console.warn("[AD Ext] renderTimeTab failed:", e); }
+        try { renderTrainingTab(panel); } catch (e) { console.warn("[AD Ext] renderTrainingTab failed:", e); }
+        try { renderMasterHallOfFame(panel); } catch (e) { console.warn("[AD Ext] renderMasterHallOfFame failed:", e); }
+
     }
 
     // =========================
@@ -14722,7 +14808,7 @@ function renderMasterHallOfFame(panel) {
 
               <div class="ad-ext-kpi-grid">
                 <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Sessions</div>
+                  <div class="ad-ext-kpi-title">Legs</div>
                   <div class="ad-ext-kpi-value" id="ad-ext-atc-kpi-sessions">—</div>
                 </div>
                 <div class="ad-ext-kpi-tile">
@@ -14731,7 +14817,7 @@ function renderMasterHallOfFame(panel) {
                   <div class="ad-ext-kpi-sub" id="ad-ext-atc-kpi-time-sub">—</div>
                 </div>
                 <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Ø Darts / Session</div>
+                  <div class="ad-ext-kpi-title">Ø Darts / Leg</div>
                   <div class="ad-ext-kpi-value" id="ad-ext-atc-kpi-points">—</div>
                 </div>
                 <div class="ad-ext-kpi-tile">
@@ -14759,13 +14845,13 @@ function renderMasterHallOfFame(panel) {
 
               <div class="ad-ext-grid-2">
                 <div>
-                  <div class="ad-ext-section-title">SESSIONS (TAGESBASIS)</div>
+                  <div class="ad-ext-section-title">LEGS (TAGESBASIS)</div>
                   <div class="ad-ext-card" style="padding:0;">
                     <table class="ad-ext-table">
                       <thead>
                         <tr>
                           <th>Datum</th>
-                          <th class="ad-ext-table-value-right">Sessions</th>
+                          <th class="ad-ext-table-value-right">Legs</th>
                           <th class="ad-ext-table-value-right">Darts</th>
                           <th class="ad-ext-table-value-right">Hits</th>
                           <th class="ad-ext-table-value-right">Hit %</th>
@@ -14785,7 +14871,7 @@ function renderMasterHallOfFame(panel) {
                       <thead>
                         <tr>
                           <th class="ad-ext-th-sortable" data-sort-key="field" title="Feld (1..20, BULL)">Feld</th>
-                          <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="sessions" title="Anzahl Sessions">Sessions</th>
+                          <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="legs" title="Anzahl Legs">Legs</th>
                           <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="darts" title="Geworfene Darts">Darts</th>
                           <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="hits" title="Treffer (Hits)">Hits</th>
                           <th class="ad-ext-table-value-right ad-ext-th-sortable" data-sort-key="hitPct" title="Trefferquote (Hits/Darts)">Hit %</th>
@@ -14828,7 +14914,8 @@ function renderMasterHallOfFame(panel) {
                 if (!Number.isFinite(points)) points = darts || 0;
                 const dayKey = s?.dayKey || parseIsoDateToDayKey(s?.createdAt) || "unknown";
                 const mode = s?.mode || "FULL";
-                return { ...s, darts, hits, points, dayKey, mode };
+                const legs = Number(s?.legs ?? s?.count ?? 1);
+                return { ...s, darts, hits, points, dayKey, mode, legs: (Number.isFinite(legs) && legs > 0) ? legs : 1 };
               });
 
               // base filter (dropdowns)
@@ -14863,7 +14950,7 @@ function renderMasterHallOfFame(panel) {
               let selectedField = normFieldKey(f2.selectedField);
 
               // 2) sanitize selection (if selected day not present anymore -> clear)
-              const dayAggAll = aggregateByDay(baseFiltered);
+              const dayAggAll = aggregateAtcByDayLegs(baseFiltered);
               if (selectedDayKey && !dayAggAll.some((d) => String(d?.dayKey || "") === String(selectedDayKey))) {
                 selectedDayKey = null;
                 f2.selectedDayKey = null;
@@ -14933,7 +15020,7 @@ function renderMasterHallOfFame(panel) {
               if (selectedField && matchIdsForSelectedFieldAll && matchIdsForSelectedFieldAll.size) {
                 sessionsForDays = sessionsForDays.filter((s) => matchIdsForSelectedFieldAll.has(String(s?.matchId || "")));
               }
-              const dayAggFacet = aggregateByDay(sessionsForDays);
+              const dayAggFacet = aggregateAtcByDayLegs(sessionsForDays);
 
               // KPI sessions (narrowed by BOTH selections)
               let focusSessions = baseFiltered;
@@ -14951,6 +15038,7 @@ function renderMasterHallOfFame(panel) {
 
               // KPIs (analog Segment-Fokus)
               try {
+                const totalLegs = focusSessions.reduce((a, s) => a + (Number(s?.legs ?? s?.count ?? 1) || 1), 0);
                 const totalSessions = focusSessions.length;
                 const totalDarts = focusSessions.reduce((a, s) => a + (s.darts || 0), 0);
                 const totalHits = focusSessions.reduce((a, s) => a + (s.hits || 0), 0);
@@ -14963,7 +15051,7 @@ function renderMasterHallOfFame(panel) {
                 );
                 const daysCount = dayKeysSet.size;
 
-                setText(panel, "#ad-ext-atc-kpi-sessions", fmtInt(totalSessions));
+                setText(panel, "#ad-ext-atc-kpi-sessions", fmtInt(totalLegs));
                 setText(panel, "#ad-ext-atc-kpi-time", totalDurationSec > 0 ? fmtHours(totalDurationSec) : "—");
                 if (totalDurationSec > 0 && daysCount > 0) {
                   setText(panel, "#ad-ext-atc-kpi-time-sub", `Ø ${fmtMinPerLeg(totalDurationSec / daysCount)} pro Tag`);
@@ -14971,7 +15059,7 @@ function renderMasterHallOfFame(panel) {
                   setText(panel, "#ad-ext-atc-kpi-time-sub", "—");
                 }
 
-                const avgDartsPerSession = totalSessions > 0 ? (totalDarts / totalSessions) : NaN;
+                const avgDartsPerSession = totalLegs > 0 ? (totalDarts / totalLegs) : NaN;
                 setText(panel, "#ad-ext-atc-kpi-points", Number.isFinite(avgDartsPerSession) ? fmtDec(avgDartsPerSession, 1).replace(/\.0$/, "") : "—");
                 setText(panel, "#ad-ext-atc-kpi-hitrate", fmtPct(totalHits, totalDarts));
               } catch {}
@@ -15216,11 +15304,11 @@ function renderMasterHallOfFame(panel) {
                 const label = row?.field || layout.labels?.[idx] || "";
                 const hits = Number(row?.hits ?? 0);
                 const darts = Number(row?.darts ?? 0);
-                const sessions = Number(row?.sessions ?? 0);
+                const legs = Number(row?.legs ?? row?.sessions ?? 0);
                 const hitPct = darts > 0 ? (hits * 100) / darts : Number(layout.values?.[idx] ?? 0);
 
                 const line = `<div class="ad-ext-tooltip-title">${escapeHtml(label)}</div>
-<div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Sessions</div><div style="font-weight:900;">${fmtInt(sessions)}</div></div>
+<div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Legs</div><div style="font-weight:900;">${fmtInt(legs)}</div></div>
 <div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Hits / Darts</div><div style="font-weight:900;">${fmtInt(hits)} / ${fmtInt(darts)}</div></div>
 <div class="ad-ext-tooltip-kv"><div style="opacity:.78;">Hit %</div><div style="font-weight:900;">${(Number.isFinite(hitPct) ? hitPct : 0).toFixed(2)}%</div></div>`;
                 tooltipShow(ev, line);

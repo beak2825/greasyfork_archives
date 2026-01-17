@@ -2,7 +2,7 @@
 // @name         收藏插件
 // @namespace    https://www.milkywayidle.com/
 // @namespace    https://www.milkywayidlecn.com/
-// @version      1.458
+// @version      1.462
 // @description  Alt+点击收藏市场商品和背包物品，区分铁牛标准牛；强化界面优化，保护等级快捷按钮，当前强化等级检测，自定义键触发停止按钮
 // @author       baozhi
 // @match        https://www.milkywayidle.com/*
@@ -11,6 +11,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_deleteValue
 // @grant        GM_registerMenuCommand
 // @icon         https://www.milkywayidle.com/favicon.svg
 // @license MIT 
@@ -26,16 +27,89 @@
     let currentCharacterId = null;
     let pluginInitialized = false;
 
+    // 获取主设置对象
+    function getMainSettings() {
+        return GM_getValue('mwc_settings', { characters: {}, ui: {} });
+    }
+
+    // 保存主设置对象
+    function saveMainSettings(settings) {
+        GM_setValue('mwc_settings', settings);
+    }
+
+    // 获取角色特定设置
+    function getCharacterSettings() {
+        updateCharacterId();
+        const settings = getMainSettings();
+        if (!settings.characters) {
+            settings.characters = {};
+        }
+        if (!settings.characters[currentCharacterId]) {
+            settings.characters[currentCharacterId] = {
+                favorites: [],
+                marketFavoriteEnhanceHighlight: true,
+                headerMonitorEnabled: false,
+                keyboardShortcutEnabled: false,
+                lazyButtonsEnabled: true,
+                enhanceThreshold: 0,
+                customShortcut: '`'
+            };
+        }
+        return settings.characters[currentCharacterId];
+    }
+
+    // 保存角色特定设置
+    function saveCharacterSettings(characterSettings) {
+        updateCharacterId();
+        const settings = getMainSettings();
+        if (!settings.characters) {
+            settings.characters = {};
+        }
+        settings.characters[currentCharacterId] = characterSettings;
+        saveMainSettings(settings);
+    }
+
+    // 获取全局UI设置
+    function getUISettings() {
+        const settings = getMainSettings();
+        if (!settings.ui) {
+            settings.ui = {
+                positions: {
+                    stopButton: null,
+                    alertOverlay: null
+                },
+                customCombinedLevels: [
+                    { enhanceLevel: 10, protectLevel: 5 },
+                    { enhanceLevel: 10, protectLevel: 6 },
+                    { enhanceLevel: 10, protectLevel: 7 },
+                    { enhanceLevel: 10, protectLevel: 8 }
+                ],
+                enhanceLevelButtons: [5, 7, 8, 10],
+                protectLevelButtons: [2, 5, 6, 7, 8],
+                repeatCountButtons: [2, 20, 200, 2000]
+            };
+        }
+        return settings.ui;
+    }
+
+    // 保存全局UI设置
+    function saveUISettings(uiSettings) {
+        const settings = getMainSettings();
+        settings.ui = uiSettings;
+        saveMainSettings(settings);
+    }
+
     // 获取自定义键盘快捷键
     function getCustomShortcut() {
-        const characterKey = getCharacterKey('mwc_custom_shortcut');
-        return GM_getValue(characterKey, '`'); // 默认反引号键
+        const characterSettings = getCharacterSettings();
+        return characterSettings.customShortcut || '`';
     }
 
     // 保存自定义键盘快捷键
     function saveCustomShortcut(key) {
-        const characterKey = getCharacterKey('mwc_custom_shortcut');
-        GM_setValue(characterKey, key);
+        const characterSettings = getCharacterSettings();
+        characterSettings.customShortcut = key;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取键盘快捷键对应的键盘码
@@ -156,48 +230,45 @@
         return currentCharacterId;
     }
 
-    // 获取角色特定的存储键
-    function getCharacterKey(baseKey) {
-        updateCharacterId();
-        return `${baseKey}_${currentCharacterId}`;
-    }
-
     // 获取收藏列表
     function getFavorites() {
-        const characterKey = getCharacterKey('mwc_favorites');
-        return GM_getValue(characterKey, []);
+        const characterSettings = getCharacterSettings();
+        return characterSettings.favorites || [];
     }
 
     // 保存收藏列表
     function saveFavorites(favorites) {
-        const characterKey = getCharacterKey('mwc_favorites');
-        GM_setValue(characterKey, favorites);
+        const characterSettings = getCharacterSettings();
+        characterSettings.favorites = favorites;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取市场强化装备高亮开关状态
     function getMarketFavoriteEnhanceHighlight() {
-        const characterKey = getCharacterKey('mwc_market_fav_enhance_highlight');
-        return GM_getValue(characterKey, true);
+        const characterSettings = getCharacterSettings();
+        return characterSettings.marketFavoriteEnhanceHighlight !== undefined ? characterSettings.marketFavoriteEnhanceHighlight : true;
     }
 
     // 保存开关状态
     function saveMarketFavoriteEnhanceHighlight(enabled) {
-        const characterKey = getCharacterKey('mwc_market_fav_enhance_highlight');
-        GM_setValue(characterKey, enabled);
+        const characterSettings = getCharacterSettings();
+        characterSettings.marketFavoriteEnhanceHighlight = enabled;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取所有角色的收藏统计
     function getAllCharactersFavorites() {
-        const allValues = GM_getValue(null) || {};
+        const settings = getMainSettings();
         const favoritesByCharacter = {};
 
-        for (const [key, value] of Object.entries(allValues)) {
-            if (key.startsWith('mwc_favorites_')) {
-                const characterId = key.replace('mwc_favorites_', '');
-                favoritesByCharacter[characterId] = {
-                    favorites: value,
-                    count: value.length
-                };
+        if (settings.characters) {
+            for (const [characterId, characterSettings] of Object.entries(settings.characters)) {
+                if (characterSettings.favorites) {
+                    favoritesByCharacter[characterId] = {
+                        favorites: characterSettings.favorites,
+                        count: characterSettings.favorites.length
+                    };
+                }
             }
         }
 
@@ -206,92 +277,64 @@
 
     // 获取头部信息监控开关状态
     function getHeaderMonitorEnabled() {
-        const characterKey = getCharacterKey('mwc_header_monitor_enabled');
-        return GM_getValue(characterKey, false); // 默认不开启
+        const characterSettings = getCharacterSettings();
+        return characterSettings.headerMonitorEnabled !== undefined ? characterSettings.headerMonitorEnabled : false;
     }
 
     // 保存头部信息监控开关状态
     function saveHeaderMonitorEnabled(enabled) {
-        const characterKey = getCharacterKey('mwc_header_monitor_enabled');
-        GM_setValue(characterKey, enabled);
+        const characterSettings = getCharacterSettings();
+        characterSettings.headerMonitorEnabled = enabled;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取键盘快捷键开关状态
     function getKeyboardShortcutEnabled() {
-        const characterKey = getCharacterKey('mwc_keyboard_shortcut_enabled');
-        return GM_getValue(characterKey, false); // 默认不开启
+        const characterSettings = getCharacterSettings();
+        return characterSettings.keyboardShortcutEnabled !== undefined ? characterSettings.keyboardShortcutEnabled : false;
     }
 
     // 保存键盘快捷键开关状态
     function saveKeyboardShortcutEnabled(enabled) {
-        const characterKey = getCharacterKey('mwc_keyboard_shortcut_enabled');
-        GM_setValue(characterKey, enabled);
+        const characterSettings = getCharacterSettings();
+        characterSettings.keyboardShortcutEnabled = enabled;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取懒鬼按钮功能开关状态
     function getLazyButtonsEnabled() {
-        const characterKey = getCharacterKey('mwc_lazy_buttons_enabled');
-        return GM_getValue(characterKey, true); // 默认开启
+        const characterSettings = getCharacterSettings();
+        return characterSettings.lazyButtonsEnabled !== undefined ? characterSettings.lazyButtonsEnabled : true;
     }
 
     // 保存懒鬼按钮功能开关状态
     function saveLazyButtonsEnabled(enabled) {
-        const characterKey = getCharacterKey('mwc_lazy_buttons_enabled');
-        GM_setValue(characterKey, enabled);
+        const characterSettings = getCharacterSettings();
+        characterSettings.lazyButtonsEnabled = enabled;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取强化等级检测阈值
     function getEnhanceThreshold() {
-        const characterKey = getCharacterKey('mwc_enhance_threshold');
-        const threshold = GM_getValue(characterKey, 0);
+        const characterSettings = getCharacterSettings();
+        const threshold = characterSettings.enhanceThreshold !== undefined ? characterSettings.enhanceThreshold : 0;
         // 确保阈值在0-20范围内
         return Math.min(20, Math.max(0, parseInt(threshold) || 0));
     }
 
     // 保存强化等级检测阈值
     function saveEnhanceThreshold(threshold) {
-        const characterKey = getCharacterKey('mwc_enhance_threshold');
+        const characterSettings = getCharacterSettings();
         // 限制在0-20范围内
         const safeThreshold = Math.min(20, Math.max(0, parseInt(threshold) || 0));
-        GM_setValue(characterKey, safeThreshold);
-    }
-
-    // 获取全局UI位置设置
-    function getUIPositions() {
-        // 获取统一的UI位置设置
-        const uiPositions = GM_getValue('mwc_ui_positions', {});
-
-        // 处理旧的存储格式，确保向后兼容
-        if (!uiPositions.stopButton) {
-            const oldStopPos = GM_getValue('mwc_stop_button_position', null);
-            if (oldStopPos) {
-                uiPositions.stopButton = oldStopPos;
-            }
-        }
-
-        if (!uiPositions.alertOverlay) {
-            const oldAlertPos = GM_getValue('mwc_alert_overlay_position', null);
-            if (oldAlertPos) {
-                uiPositions.alertOverlay = oldAlertPos;
-            }
-        }
-
-        // 保存整合后的设置（如果有旧数据需要迁移）
-        GM_setValue('mwc_ui_positions', uiPositions);
-
-        return uiPositions;
-    }
-
-    // 保存全局UI位置设置
-    function saveUIPositions(uiPositions) {
-        GM_setValue('mwc_ui_positions', uiPositions);
+        characterSettings.enhanceThreshold = safeThreshold;
+        saveCharacterSettings(characterSettings);
     }
 
     // 获取自定义联合按钮设置
     function getCustomCombinedLevels() {
-        const uiPositions = getUIPositions();
-        // 如果没有自定义设置，返回默认按钮配置
-        return uiPositions.customCombinedLevels || [
+        const uiSettings = getUISettings();
+        return uiSettings.customCombinedLevels || [
             { enhanceLevel: 10, protectLevel: 5 },
             { enhanceLevel: 10, protectLevel: 6 },
             { enhanceLevel: 10, protectLevel: 7 },
@@ -301,67 +344,54 @@
 
     // 保存自定义联合按钮设置
     function saveCustomCombinedLevels(levels) {
-        const uiPositions = getUIPositions();
-        uiPositions.customCombinedLevels = levels;
-        saveUIPositions(uiPositions);
+        const uiSettings = getUISettings();
+        uiSettings.customCombinedLevels = levels;
+        saveUISettings(uiSettings);
     }
 
     // 获取自定义强化等级按钮设置
     function getCustomEnhanceLevelButtons() {
-        const uiPositions = getUIPositions();
-
-        // 处理旧的存储格式，确保向后兼容
-        let buttons = uiPositions.enhanceLevelButtons;
-
-        // 如果没有设置或使用的是旧格式（包含displayText），转换为新格式
-        if (!buttons) {
-            // 默认按钮配置
-            buttons = [5, 7, 8, 10];
-        } else if (buttons.length > 0 && typeof buttons[0] === 'object') {
-            // 转换旧格式为新格式
-            buttons = buttons.map(btn => btn.level);
-        }
-
-        return buttons;
+        const uiSettings = getUISettings();
+        return uiSettings.enhanceLevelButtons || [5, 7, 8, 10];
     }
 
     // 保存自定义强化等级按钮设置
     function saveCustomEnhanceLevelButtons(levels) {
-        const uiPositions = getUIPositions();
-        uiPositions.enhanceLevelButtons = levels;
-        saveUIPositions(uiPositions);
+        const uiSettings = getUISettings();
+        uiSettings.enhanceLevelButtons = levels;
+        saveUISettings(uiSettings);
     }
 
     // 获取自定义保护等级按钮设置
     function getCustomProtectLevelButtons() {
-        const uiPositions = getUIPositions();
-
-        // 处理旧的存储格式，确保向后兼容
-        let buttons = uiPositions.protectLevelButtons;
-
-        // 如果没有设置或使用的是旧格式（包含displayText），转换为新格式
-        if (!buttons) {
-            // 默认按钮配置
-            buttons = [2, 5, 6, 7, 8];
-        } else if (buttons.length > 0 && typeof buttons[0] === 'object') {
-            // 转换旧格式为新格式
-            buttons = buttons.map(btn => btn.level);
-        }
-
-        return buttons;
+        const uiSettings = getUISettings();
+        return uiSettings.protectLevelButtons || [2, 5, 6, 7, 8];
     }
 
     // 保存自定义保护等级按钮设置
     function saveCustomProtectLevelButtons(levels) {
-        const uiPositions = getUIPositions();
-        uiPositions.protectLevelButtons = levels;
-        saveUIPositions(uiPositions);
+        const uiSettings = getUISettings();
+        uiSettings.protectLevelButtons = levels;
+        saveUISettings(uiSettings);
+    }
+
+    // 获取自定义重复次数按钮设置
+    function getCustomRepeatCountButtons() {
+        const uiSettings = getUISettings();
+        return uiSettings.repeatCountButtons || [2, 20, 200, 2000];
+    }
+
+    // 保存自定义重复次数按钮设置
+    function saveCustomRepeatCountButtons(counts) {
+        const uiSettings = getUISettings();
+        uiSettings.repeatCountButtons = counts;
+        saveUISettings(uiSettings);
     }
 
     // 获取停止按钮位置
     function getStopButtonPosition() {
-        const uiPositions = getUIPositions();
-        const position = uiPositions.stopButton;
+        const uiSettings = getUISettings();
+        const position = uiSettings.positions?.stopButton;
         if (position) {
             return { top: position.top || 30, left: position.left || 350 };
         }
@@ -370,15 +400,18 @@
 
     // 保存停止按钮位置
     function saveStopButtonPosition(top, left) {
-        const uiPositions = getUIPositions();
-        uiPositions.stopButton = { top, left };
-        saveUIPositions(uiPositions);
+        const uiSettings = getUISettings();
+        if (!uiSettings.positions) {
+            uiSettings.positions = {};
+        }
+        uiSettings.positions.stopButton = { top, left };
+        saveUISettings(uiSettings);
     }
 
     // 获取强化信息提示框位置
     function getAlertOverlayPosition() {
-        const uiPositions = getUIPositions();
-        const position = uiPositions.alertOverlay;
+        const uiSettings = getUISettings();
+        const position = uiSettings.positions?.alertOverlay;
         if (position) {
             return { top: position.top || 110, left: position.left || 230 };
         }
@@ -387,9 +420,12 @@
 
     // 保存强化信息提示框位置
     function saveAlertOverlayPosition(top, left) {
-        const uiPositions = getUIPositions();
-        uiPositions.alertOverlay = { top, left };
-        saveUIPositions(uiPositions);
+        const uiSettings = getUISettings();
+        if (!uiSettings.positions) {
+            uiSettings.positions = {};
+        }
+        uiSettings.positions.alertOverlay = { top, left };
+        saveUISettings(uiSettings);
     }
 
     // 严格检查是否为市场列表容器（仅市场列表触发模糊匹配）
@@ -1125,27 +1161,30 @@
             lazyButtonsStatus.textContent = enabled ? '已开启' : '已关闭';
 
             // 如果关闭懒鬼按钮功能，立即移除所有相关按钮
-            if (!enabled) {
-                const enhanceContainer = document.querySelector('div.SkillActionDetail_notes__2je2F > div + div');
-                const protectContainer = document.getElementById('mwiProtectionButtonContainer');
-                const combinedContainer = document.getElementById('mwiCombinedLevelButtons');
-                const targetLevelBtnContainer = document.getElementById('mwiTargetLevelBtnContainer');
-                const protectionLevelBtnContainer = document.getElementById('mwiProtectionLevelBtnContainer');
+                if (!enabled) {
+                    const enhanceContainer = document.querySelector('div.SkillActionDetail_notes__2je2F > div + div');
+                    const protectContainer = document.getElementById('mwiProtectionButtonContainer');
+                    const combinedContainer = document.getElementById('mwiCombinedLevelButtons');
+                    const repeatCountContainer = document.getElementById('mwiRepeatCountButtonContainer');
+                    const targetLevelBtnContainer = document.getElementById('mwiTargetLevelBtnContainer');
+                    const protectionLevelBtnContainer = document.getElementById('mwiProtectionLevelBtnContainer');
 
-                if (enhanceContainer) enhanceContainer.remove();
-                if (protectContainer) protectContainer.remove();
-                if (combinedContainer) combinedContainer.remove();
-                if (targetLevelBtnContainer) targetLevelBtnContainer.remove();
-                if (protectionLevelBtnContainer) protectionLevelBtnContainer.remove();
-            } else {
-                // 如果开启懒鬼按钮功能，确保按钮被重新添加
-                setTimeout(() => {
-                    addButtonsToSkillActionDetail();
-                    addButtonsToSkillProtectionLevel();
-                    addCombinedLevelButtons();
-                    addLevelButtonsForBothInputs();
-                }, 150);
-            }
+                    if (enhanceContainer) enhanceContainer.remove();
+                    if (protectContainer) protectContainer.remove();
+                    if (combinedContainer) combinedContainer.remove();
+                    if (repeatCountContainer) repeatCountContainer.remove();
+                    if (targetLevelBtnContainer) targetLevelBtnContainer.remove();
+                    if (protectionLevelBtnContainer) protectionLevelBtnContainer.remove();
+                } else {
+                    // 如果开启懒鬼按钮功能，确保按钮被重新添加
+                    setTimeout(() => {
+                        addButtonsToSkillActionDetail();
+                        addButtonsToSkillProtectionLevel();
+                        addCombinedLevelButtons();
+                        addButtonsToSkillRepeatCount();
+                        addLevelButtonsForBothInputs();
+                    }, 150);
+                }
         });
 
         // 自定义快捷键输入框事件
@@ -1925,78 +1964,475 @@
             const settings = document.createElement('div');
             settings.className = 'mwc-combined-settings mwc-settings';
             settings.innerHTML = `
-                <div class="mwc-settings-content" style="width: 600px;">
+                <style>
+                    /* 整体优化样式 - 更简洁的设计 */
+                    .mwc-settings-content {
+                        width: 640px !important;
+                        background: var(--color-midnight-900) !important;
+                    }
+
+                    /* 模块容器 */
+                    .mwc-settings-content > div:not(.mwc-close):not(:last-of-type) {
+                        margin-bottom: 12px !important;
+                        padding: 12px !important;
+                        background: var(--color-midnight-800) !important;
+                        border: 1px solid var(--color-midnight-700) !important;
+                        border-radius: 4px !important;
+                    }
+
+                    /* 标题样式优化 */
+                    .mwc-settings-content h3 {
+                        margin-top: 0 !important;
+                        margin-bottom: 12px !important;
+                        font-size: 16px !important;
+                        color: var(--color-neutral-200) !important;
+                    }
+
+                    .mwc-settings-content h4 {
+                        margin-top: 0 !important;
+                        margin-bottom: 10px !important;
+                        font-size: 14px !important;
+                        color: var(--color-ocean-300) !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        gap: 6px !important;
+                    }
+
+                    /* 按钮列表容器 - 简洁网格布局 */
+                    .mwc-button-list {
+                        display: flex !important;
+                        flex-wrap: wrap !important;
+                        gap: 8px !important;
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        background: transparent !important;
+                        min-height: auto !important;
+                    }
+
+                    /* 拖拽相关样式 - 简化设计 */
+                    .mwc-draggable-item {
+                        position: relative;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 6px;
+                        padding: 8px 12px;
+                        background: var(--color-midnight-700);
+                        border: 1px solid var(--color-midnight-600);
+                        border-radius: 4px;
+                        cursor: move;
+                        transition: all 0.15s ease;
+                        font-size: 12px;
+                        min-width: auto;
+                        max-width: none;
+                        height: auto;
+                        min-height: 36px;
+                    }
+
+                    .mwc-draggable-item:hover {
+                        background: var(--color-midnight-600);
+                        border-color: var(--color-ocean-500);
+                    }
+
+                    .mwc-draggable-item.dragging {
+                        opacity: 0.5;
+                        transform: scale(1.02);
+                    }
+
+                    .mwc-draggable-item.drag-over {
+                        border-color: var(--color-ocean-300);
+                        background: var(--color-midnight-600);
+                    }
+
+                    /* 简化拖拽提示 */
+                    .mwc-draggable-item::before {
+                        content: "";
+                        position: absolute;
+                        top: 4px;
+                        left: 4px;
+                        width: 12px;
+                        height: 12px;
+                        background: linear-gradient(var(--color-neutral-500) 20%, transparent 20%, transparent 40%, var(--color-neutral-500) 40%, var(--color-neutral-500) 60%, transparent 60%, transparent 80%, var(--color-neutral-500) 80%);
+                        border-radius: 2px;
+                        cursor: grab;
+                        opacity: 0.6;
+                    }
+
+                    /* 删除按钮样式 - 简化设计 */
+                    .mwc-draggable-item .mwc-remove-fav {
+                        position: absolute;
+                        top: -6px;
+                        right: -6px;
+                        width: 18px;
+                        height: 18px;
+                        padding: 0;
+                        background: var(--color-red-500);
+                        color: white;
+                        border: none;
+                        border-radius: 50%;
+                        cursor: pointer;
+                        font-size: 10px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        transition: all 0.15s ease;
+                    }
+
+                    .mwc-draggable-item .mwc-remove-fav:hover {
+                        background: var(--color-red-400);
+                        transform: scale(1.1);
+                    }
+
+                    /* 按钮项内部样式 - 优化输入框 */
+                    .mwc-draggable-item input {
+                        padding: 4px 6px;
+                        border: 1px solid var(--color-midnight-500);
+                        border-radius: 3px;
+                        background: var(--color-midnight-900);
+                        color: var(--color-neutral-200);
+                        width: 42px;
+                        text-align: center;
+                        font-size: 12px;
+                        margin: 0;
+                        outline: none;
+                        transition: border-color 0.15s ease;
+                    }
+
+                    /* 重复次数输入框特殊样式 - 更宽以容纳4-5位数 */
+                    .mwc-draggable-item input[placeholder="次数"] {
+                        width: 70px;
+                    }
+
+                    /* 等级输入框特殊样式 - 更宽以显示完整中文 */
+                    .mwc-draggable-item input[placeholder="等级"] {
+                        width: 55px;
+                    }
+
+                    /* 强化和保护输入框特殊样式 - 更宽以显示完整中文 */
+                    .mwc-draggable-item input[placeholder="强化"],
+                    .mwc-draggable-item input[placeholder="保护"] {
+                        width: 50px;
+                    }
+
+                    .mwc-draggable-item input:focus {
+                        border-color: var(--color-ocean-400);
+                    }
+
+                    /* 联合按钮特殊样式 - 简化设计 */
+                    .mwc-draggable-item span {
+                        color: var(--color-orange-400);
+                        font-weight: 600;
+                        font-size: 12px;
+                        margin: 0 2px;
+                    }
+
+                    /* 联合按钮容器 - 水平排列 */
+                    .mwc-draggable-item .combined-levels {
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        margin: 0;
+                    }
+
+                    /* 联合按钮项特殊处理 */
+                    .mwc-draggable-item:has(.combined-levels) {
+                        padding: 8px 12px;
+                        gap: 4px;
+                    }
+
+                    /* 块状添加按钮样式 - 简化设计 */
+                    .mwc-add-block-btn {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 6px;
+                        padding: 8px 16px;
+                        background: var(--color-midnight-700);
+                        border: 1px dashed var(--color-ocean-500);
+                        border-radius: 4px;
+                        cursor: pointer;
+                        transition: all 0.15s ease;
+                        font-size: 12px;
+                        color: var(--color-ocean-400);
+                        min-height: 36px;
+                        min-width: 80px;
+                        flex: 0 0 auto;
+                    }
+
+                    .mwc-add-block-btn:hover {
+                        background: var(--color-midnight-600);
+                        border-color: var(--color-ocean-400);
+                        color: var(--color-ocean-300);
+                    }
+
+                    .mwc-add-block-btn .add-icon {
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+
+                    /* 分隔线 */
+                    .mwc-separator {
+                        margin: 16px 0 !important;
+                        border: none !important;
+                        border-top: 1px solid var(--color-midnight-700) !important;
+                    }
+
+                    /* 保存按钮区域优化 */
+                    .mwc-settings-content > div:last-of-type {
+                        margin-top: 16px !important;
+                        padding: 12px !important;
+                        background: var(--color-midnight-800) !important;
+                        border: 1px solid var(--color-midnight-700) !important;
+                    }
+
+                    .mwc-settings-content .mwc-btn {
+                        font-size: 13px;
+                        padding: 8px 16px;
+                        border-radius: 4px;
+                        border: none;
+                        cursor: pointer;
+                        transition: all 0.15s ease;
+                    }
+
+                    .mwc-settings-content .mwc-btn:first-of-type {
+                        background: var(--color-ocean-500);
+                        color: white;
+                    }
+
+                    .mwc-settings-content .mwc-btn:first-of-type:hover {
+                        background: var(--color-ocean-400);
+                    }
+
+                    .mwc-settings-content .mwc-btn:last-of-type {
+                        background: var(--color-midnight-600);
+                        color: var(--color-neutral-300);
+                    }
+
+                    .mwc-settings-content .mwc-btn:last-of-type:hover {
+                        background: var(--color-midnight-500);
+                    }
+                </style>
+                <div class="mwc-settings-content">
                     <button class="mwc-close" title="关闭">×</button>
-                    <h3>⭐ 强化按钮设置</h3>
+                    <h3>⭐ 按钮设置 <span style="font-size: 12px; color: var(--color-neutral-400);">拖拽排序，点击编辑</span></h3>
 
                     <!-- 强化等级按钮设置 -->
-                    <div style="margin-bottom: 20px; padding: 15px; background: var(--color-midnight-700); border-radius: 8px;">
-                        <h4 style="margin-top: 0; margin-bottom: 10px; color: var(--color-ocean-300);">强化等级按钮</h4>
-                        <p style="color: var(--color-neutral-400); font-size: 12px; margin-bottom: 10px;">
-                            添加或修改自定义的强化等级快速按钮
-                        </p>
+                    <div>
+                        <h4><span>⚡ 强化等级</span></h4>
 
-                        <div id="enhance-levels-list" style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                        <div id="enhance-levels-list" class="mwc-button-list">
                             ${customEnhanceButtons.map((level, index) => `
-                                <div class="mwc-toggle" style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                                    <input type="number" placeholder="等级" min="0" max="20" value="${level}" style="width: 60px; padding: 5px;">
-                                    <button class="mwc-remove-fav" data-index="${index}" style="padding: 4px 8px; font-size: 12px;">删除</button>
+                                <div class="mwc-draggable-item" draggable="true" data-index="${index}">
+                                    <input type="number" placeholder="等级" min="0" max="20" value="${level}">
+                                    <button class="mwc-remove-fav" data-index="${index}">×</button>
                                 </div>
                             `).join('')}
+                            <button id="add-enhance-level" class="mwc-add-block-btn">
+                                <span class="add-icon">+</span>
+                                <span>添加</span>
+                            </button>
                         </div>
-
-                        <button id="add-enhance-level" class="mwc-btn" style="margin-bottom: 10px; padding: 6px 12px; font-size: 13px;">添加新按钮</button>
                     </div>
 
                     <!-- 保护等级按钮设置 -->
-                    <div style="margin-bottom: 20px; padding: 15px; background: var(--color-midnight-700); border-radius: 8px;">
-                        <h4 style="margin-top: 0; margin-bottom: 10px; color: var(--color-ocean-300);">保护等级按钮</h4>
-                        <p style="color: var(--color-neutral-400); font-size: 12px; margin-bottom: 10px;">
-                            添加或修改自定义的保护等级快速按钮
-                        </p>
+                    <div>
+                        <h4><span>🛡️ 保护等级</span></h4>
 
-                        <div id="protect-levels-list" style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                        <div id="protect-levels-list" class="mwc-button-list">
                             ${customProtectButtons.map((level, index) => `
-                                <div class="mwc-toggle" style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                                    <input type="number" placeholder="等级" min="0" max="20" value="${level}" style="width: 60px; padding: 5px;">
-                                    <button class="mwc-remove-fav" data-index="${index}" style="padding: 4px 8px; font-size: 12px;">删除</button>
+                                <div class="mwc-draggable-item" draggable="true" data-index="${index}">
+                                    <input type="number" placeholder="等级" min="0" max="20" value="${level}">
+                                    <button class="mwc-remove-fav" data-index="${index}">×</button>
                                 </div>
                             `).join('')}
+                            <button id="add-protect-level" class="mwc-add-block-btn">
+                                <span class="add-icon">+</span>
+                                <span>添加</span>
+                            </button>
                         </div>
+                    </div>
 
-                        <button id="add-protect-level" class="mwc-btn" style="margin-bottom: 10px; padding: 6px 12px; font-size: 13px;">添加新按钮</button>
+                    <!-- 重复次数按钮设置 -->
+                    <div>
+                        <h4><span>🔢 重复次数</span></h4>
+
+                        <div id="repeat-count-list" class="mwc-button-list">
+                            ${getCustomRepeatCountButtons().map((count, index) => `
+                                <div class="mwc-draggable-item" draggable="true" data-index="${index}">
+                                    <input type="number" placeholder="次数" min="1" max="99999" value="${count}">
+                                    <button class="mwc-remove-fav" data-index="${index}">×</button>
+                                </div>
+                            `).join('')}
+                            <button id="add-repeat-count" class="mwc-add-block-btn">
+                                <span class="add-icon">+</span>
+                                <span>添加</span>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- 联合按钮设置 -->
-                    <div style="margin-bottom: 20px; padding: 15px; background: var(--color-midnight-700); border-radius: 8px;">
-                        <h4 style="margin-top: 0; margin-bottom: 10px; color: var(--color-ocean-300);">联合快捷按钮</h4>
-                        <p style="color: var(--color-neutral-400); font-size: 12px; margin-bottom: 10px;">
-                            添加或修改自定义的强化等级和保护等级组合按钮
-                        </p>
-
-                        <div id="combined-levels-list" style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h4>
+                            <span>🔄 联合快捷</span>
+                            <span style="font-size: 11px; color: var(--color-neutral-400); font-weight: normal; margin-left: 8px;">
+                                格式：强化等级+保护等级+次数 | 次数不填或填0代表99999
+                            </span>
+                        </h4>
+                        <div id="combined-levels-list" class="mwc-button-list">
                             ${customCombinedLevels.map((level, index) => `
-                                <div class="mwc-toggle" style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                                    <input type="number" placeholder="强化" min="0" max="20" value="${level.enhanceLevel}" style="width: 50px; padding: 5px;">
-                                    <span style="color: var(--color-orange-300); font-weight: bold;">+</span>
-                                    <input type="number" placeholder="保护" min="0" max="20" value="${level.protectLevel}" style="width: 50px; padding: 5px;">
-                                    <button class="mwc-remove-fav" data-index="${index}" style="padding: 4px 8px; font-size: 12px;">删除</button>
+                                <div class="mwc-draggable-item" draggable="true" data-index="${index}">
+                                    <div class="combined-levels">
+                                        <input type="number" placeholder="强化" min="0" max="20" value="${level.enhanceLevel}">
+                                        <span>+</span>
+                                        <input type="number" placeholder="保护" min="0" max="20" value="${level.protectLevel}">
+                                        <span>×</span>
+                                        <input type="number" placeholder="次数" min="0" max="99999" value="${level.count || ''}">
+                                    </div>
+                                    <button class="mwc-remove-fav" data-index="${index}">×</button>
                                 </div>
                             `).join('')}
+                            <button id="add-combined-level" class="mwc-add-block-btn">
+                                <span class="add-icon">+</span>
+                                <span>添加</span>
+                            </button>
                         </div>
-
-                        <button id="add-combined-level" class="mwc-btn" style="margin-bottom: 10px; padding: 6px 12px; font-size: 13px;">添加新组合</button>
                     </div>
 
+                    <hr class="mwc-separator">
+
                     <!-- 统一的保存和关闭按钮 -->
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button class="mwc-btn" id="save-all-settings" style="margin-right: 10px;">保存所有设置</button>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="mwc-btn" id="save-all-settings">保存设置</button>
                         <button class="mwc-btn" id="close-all-settings">关闭</button>
                     </div>
                 </div>
             `;
 
             document.body.appendChild(settings);
+
+            // ==================== 拖拽排序功能 ====================
+            // 当前拖拽的元素 - 移到外部以便在所有事件中共享
+            let draggedItem = null;
+
+            function initDragEvents(item) {
+                // 开始拖拽
+                item.addEventListener('dragstart', (e) => {
+                    draggedItem = e.target;
+                    e.target.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/html', e.target.innerHTML);
+                });
+
+                // 拖拽过程中
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+
+                    const target = e.target.closest('.mwc-draggable-item');
+                    if (!target || target === draggedItem) return;
+
+                    // 移除其他元素的拖放指示
+                    target.parentElement.querySelectorAll('.drag-over').forEach(el => {
+                        el.classList.remove('drag-over');
+                    });
+
+                    // 添加拖放指示
+                    target.classList.add('drag-over');
+                });
+
+                // 离开拖放区域
+                item.addEventListener('dragleave', (e) => {
+                    const target = e.target.closest('.mwc-draggable-item');
+                    if (target && !target.contains(e.relatedTarget)) {
+                        target.classList.remove('drag-over');
+                    }
+                });
+
+                // 放置元素
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+
+                    const target = e.target.closest('.mwc-draggable-item');
+                    if (!target || target === draggedItem) return;
+
+                    const container = target.parentElement;
+                    const targetIndex = Array.from(container.children).indexOf(target);
+                    const draggedIndex = Array.from(container.children).indexOf(draggedItem);
+
+                    // 根据位置决定插入位置
+                    if (targetIndex > draggedIndex) {
+                        container.insertBefore(draggedItem, target.nextSibling);
+                    } else {
+                        container.insertBefore(draggedItem, target);
+                    }
+
+                    // 移除拖放指示
+                    target.classList.remove('drag-over');
+
+                    // 更新所有元素的索引
+                    updateItemIndexes(container);
+                });
+
+                // 拖拽结束
+                item.addEventListener('dragend', () => {
+                    if (draggedItem) {
+                        draggedItem.classList.remove('dragging');
+                        draggedItem.parentElement.querySelectorAll('.drag-over').forEach(el => {
+                            el.classList.remove('drag-over');
+                        });
+                        draggedItem = null;
+                    }
+                });
+            }
+
+            // 更新所有元素的索引
+            function updateItemIndexes(container) {
+                const items = container.querySelectorAll('.mwc-draggable-item');
+                items.forEach((item, index) => {
+                    item.dataset.index = index;
+                    const removeBtn = item.querySelector('.mwc-remove-fav');
+                    if (removeBtn) {
+                        removeBtn.dataset.index = index;
+                    }
+                });
+            }
+
+            // 为容器添加拖放支持
+            function initContainerDrag(container) {
+                // 确保容器可以接受拖放
+                container.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+
+                // 处理在容器空白处的放置
+                container.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (!draggedItem || container.contains(draggedItem)) {
+                        draggedItem.classList.remove('dragging');
+                        draggedItem = null;
+                    }
+                });
+            }
+
+            // 初始化所有容器的拖拽支持
+            const containers = [
+                settings.querySelector('#enhance-levels-list'),
+                settings.querySelector('#protect-levels-list'),
+                settings.querySelector('#combined-levels-list'),
+                settings.querySelector('#repeat-count-list')
+            ];
+            containers.forEach(container => {
+                if (container) {
+                    initContainerDrag(container);
+                }
+            });
+
+            // 初始化所有现有元素的拖拽事件
+            const allItems = settings.querySelectorAll('.mwc-draggable-item');
+            allItems.forEach(item => {
+                initDragEvents(item);
+            });
 
             // ==================== 强化等级按钮设置 ====================
             // 添加新强化等级按钮事件
@@ -2006,28 +2442,25 @@
             addEnhanceBtn.addEventListener('click', () => {
                 const newIndex = enhanceList.children.length;
                 const newBtnRow = document.createElement('div');
-                newBtnRow.className = 'mwc-toggle';
-                newBtnRow.style.margin = '0';
-                newBtnRow.style.display = 'flex';
-                newBtnRow.style.alignItems = 'center';
-                newBtnRow.style.gap = '8px';
+                newBtnRow.className = 'mwc-draggable-item';
+                newBtnRow.draggable = true;
+                newBtnRow.dataset.index = newIndex;
                 newBtnRow.innerHTML = `
-                    <input type="number" placeholder="等级" min="0" max="20" style="width: 60px; padding: 5px;">
-                    <button class="mwc-remove-fav" data-index="${newIndex}" style="padding: 4px 8px; font-size: 12px;">删除</button>
+                    <input type="number" placeholder="等级" min="0" max="20">
+                    <button class="mwc-remove-fav" data-index="${newIndex}">×</button>
                 `;
                 enhanceList.appendChild(newBtnRow);
+
+                // 添加拖拽事件监听器
+                initDragEvents(newBtnRow);
             });
 
             // 删除强化等级按钮事件
             enhanceList.addEventListener('click', (e) => {
                 if (e.target.classList.contains('mwc-remove-fav')) {
-                    e.target.closest('.mwc-toggle').remove();
-
-                    // 更新所有删除按钮的索引
-                    const removeButtons = enhanceList.querySelectorAll('.mwc-remove-fav');
-                    removeButtons.forEach((btn, i) => {
-                        btn.dataset.index = i;
-                    });
+                    e.target.closest('.mwc-draggable-item').remove();
+                    // 更新所有元素的索引
+                    updateItemIndexes(enhanceList);
                 }
             });
 
@@ -2039,28 +2472,25 @@
             addProtectBtn.addEventListener('click', () => {
                 const newIndex = protectList.children.length;
                 const newBtnRow = document.createElement('div');
-                newBtnRow.className = 'mwc-toggle';
-                newBtnRow.style.margin = '0';
-                newBtnRow.style.display = 'flex';
-                newBtnRow.style.alignItems = 'center';
-                newBtnRow.style.gap = '8px';
+                newBtnRow.className = 'mwc-draggable-item';
+                newBtnRow.draggable = true;
+                newBtnRow.dataset.index = newIndex;
                 newBtnRow.innerHTML = `
-                    <input type="number" placeholder="等级" min="0" max="20" style="width: 60px; padding: 5px;">
-                    <button class="mwc-remove-fav" data-index="${newIndex}" style="padding: 4px 8px; font-size: 12px;">删除</button>
+                    <input type="number" placeholder="等级" min="0" max="20">
+                    <button class="mwc-remove-fav" data-index="${newIndex}">×</button>
                 `;
                 protectList.appendChild(newBtnRow);
+
+                // 添加拖拽事件监听器
+                initDragEvents(newBtnRow);
             });
 
             // 删除保护等级按钮事件
             protectList.addEventListener('click', (e) => {
                 if (e.target.classList.contains('mwc-remove-fav')) {
-                    e.target.closest('.mwc-toggle').remove();
-
-                    // 更新所有删除按钮的索引
-                    const removeButtons = protectList.querySelectorAll('.mwc-remove-fav');
-                    removeButtons.forEach((btn, i) => {
-                        btn.dataset.index = i;
-                    });
+                    e.target.closest('.mwc-draggable-item').remove();
+                    // 更新所有元素的索引
+                    updateItemIndexes(protectList);
                 }
             });
 
@@ -2072,30 +2502,59 @@
             addCombinedBtn.addEventListener('click', () => {
                 const newIndex = combinedList.children.length;
                 const newLevelRow = document.createElement('div');
-                newLevelRow.className = 'mwc-toggle';
-                newLevelRow.style.margin = '0';
-                newLevelRow.style.display = 'flex';
-                newLevelRow.style.alignItems = 'center';
-                newLevelRow.style.gap = '8px';
+                newLevelRow.className = 'mwc-draggable-item';
+                newLevelRow.draggable = true;
+                newLevelRow.dataset.index = newIndex;
                 newLevelRow.innerHTML = `
-                    <input type="number" placeholder="强化" min="0" max="20" style="width: 50px; padding: 5px;">
-                    <span style="color: var(--color-orange-300); font-weight: bold;">+</span>
-                    <input type="number" placeholder="保护" min="0" max="20" style="width: 50px; padding: 5px;">
-                    <button class="mwc-remove-fav" data-index="${newIndex}" style="padding: 4px 8px; font-size: 12px;">删除</button>
+                    <input type="number" placeholder="强化" min="0" max="20">
+                    <span style="color: var(--color-orange-300); font-weight: bold; font-size: 14px;">+</span>
+                    <input type="number" placeholder="保护" min="0" max="20">
+                    <span style="color: var(--color-orange-300); font-weight: bold; font-size: 14px;">×</span>
+                    <input type="number" placeholder="次数" min="0" max="99999">
+                    <button class="mwc-remove-fav" data-index="${newIndex}">×</button>
                 `;
                 combinedList.appendChild(newLevelRow);
+
+                // 添加拖拽事件监听器
+                initDragEvents(newLevelRow);
             });
 
             // 删除联合按钮事件
             combinedList.addEventListener('click', (e) => {
                 if (e.target.classList.contains('mwc-remove-fav')) {
-                    e.target.closest('.mwc-toggle').remove();
+                    e.target.closest('.mwc-draggable-item').remove();
+                    // 更新所有元素的索引
+                    updateItemIndexes(combinedList);
+                }
+            });
 
-                    // 更新所有删除按钮的索引
-                    const removeButtons = combinedList.querySelectorAll('.mwc-remove-fav');
-                    removeButtons.forEach((btn, i) => {
-                        btn.dataset.index = i;
-                    });
+            // ==================== 重复次数按钮设置 ====================
+            // 添加新重复次数按钮事件
+            const addRepeatCountBtn = settings.querySelector('#add-repeat-count');
+            const repeatCountList = settings.querySelector('#repeat-count-list');
+
+            addRepeatCountBtn.addEventListener('click', () => {
+                const newIndex = repeatCountList.children.length;
+                const newCountRow = document.createElement('div');
+                newCountRow.className = 'mwc-draggable-item';
+                newCountRow.draggable = true;
+                newCountRow.dataset.index = newIndex;
+                newCountRow.innerHTML = `
+                    <input type="number" placeholder="次数" min="1" max="99999">
+                    <button class="mwc-remove-fav" data-index="${newIndex}">×</button>
+                `;
+                repeatCountList.appendChild(newCountRow);
+
+                // 添加拖拽事件监听器
+                initDragEvents(newCountRow);
+            });
+
+            // 删除重复次数按钮事件
+            repeatCountList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('mwc-remove-fav')) {
+                    e.target.closest('.mwc-draggable-item').remove();
+                    // 更新所有元素的索引
+                    updateItemIndexes(repeatCountList);
                 }
             });
 
@@ -2103,7 +2562,7 @@
             const saveAllBtn = settings.querySelector('#save-all-settings');
             saveAllBtn.addEventListener('click', () => {
                 // 保存强化等级按钮设置
-                const enhanceRows = enhanceList.querySelectorAll('.mwc-toggle');
+                const enhanceRows = enhanceList.querySelectorAll('.mwc-draggable-item');
                 const newEnhanceButtons = [];
 
                 enhanceRows.forEach(row => {
@@ -2116,7 +2575,7 @@
                 });
 
                 // 保存保护等级按钮设置
-                const protectRows = protectList.querySelectorAll('.mwc-toggle');
+                const protectRows = protectList.querySelectorAll('.mwc-draggable-item');
                 const newProtectButtons = [];
 
                 protectRows.forEach(row => {
@@ -2129,18 +2588,41 @@
                 });
 
                 // 保存联合按钮设置
-                const combinedRows = combinedList.querySelectorAll('.mwc-toggle');
+                const combinedRows = combinedList.querySelectorAll('.mwc-draggable-item');
                 const newCombinedLevels = [];
 
                 combinedRows.forEach(row => {
-                    const enhanceInput = row.querySelector('input:nth-child(1)');
-                    const protectInput = row.querySelector('input:nth-child(3)');
+                    const inputs = row.querySelectorAll('input');
+                    if (inputs.length < 3) return;
+
+                    const enhanceInput = inputs[0];
+                    const protectInput = inputs[1];
+                    const countInput = inputs[2];
 
                     const enhanceLevel = parseInt(enhanceInput.value);
                     const protectLevel = parseInt(protectInput.value);
+                    const count = parseInt(countInput.value);
 
                     if (!isNaN(enhanceLevel) && !isNaN(protectLevel) && enhanceLevel >= 0 && protectLevel >= 0) {
-                        newCombinedLevels.push({ enhanceLevel, protectLevel });
+                        const combinedData = { enhanceLevel, protectLevel };
+                        // 如果次数不是0且不是空，则保存次数
+                        if (!isNaN(count) && count > 0) {
+                            combinedData.count = count;
+                        }
+                        newCombinedLevels.push(combinedData);
+                    }
+                });
+
+                // 保存重复次数按钮设置
+                const repeatCountRows = repeatCountList.querySelectorAll('.mwc-draggable-item');
+                const newRepeatCountButtons = [];
+
+                repeatCountRows.forEach(row => {
+                    const countInput = row.querySelector('input');
+                    const count = parseInt(countInput.value);
+
+                    if (!isNaN(count) && count >= 1 && count <= 99999) {
+                        newRepeatCountButtons.push(count);
                     }
                 });
 
@@ -2148,6 +2630,7 @@
                 saveCustomEnhanceLevelButtons(newEnhanceButtons);
                 saveCustomProtectLevelButtons(newProtectButtons);
                 saveCustomCombinedLevels(newCombinedLevels);
+                saveCustomRepeatCountButtons(newRepeatCountButtons);
 
                 // 重新加载所有按钮
                 const enhanceContainer = document.querySelector('div.SkillActionDetail_notes__2je2F > div + div');
@@ -2159,9 +2642,13 @@
                 const combinedContainer = document.getElementById('mwiCombinedLevelButtons');
                 if (combinedContainer) combinedContainer.remove();
 
+                const repeatCountContainer = document.getElementById('mwiRepeatCountButtonContainer');
+                if (repeatCountContainer) repeatCountContainer.remove();
+
                 addButtonsToSkillActionDetail();
                 addButtonsToSkillProtectionLevel();
                 addCombinedLevelButtons();
+                addButtonsToSkillRepeatCount();
 
                 // 关闭弹窗
                 settings.remove();
@@ -2197,7 +2684,7 @@
             combinedContainer.style.flexWrap = 'wrap';
 
             // 创建联合按钮的函数
-            const createCombinedButton = (id, text, enhanceLevel, protectLevel) => {
+            const createCombinedButton = (id, text, enhanceLevel, protectLevel, count) => {
                 const btn = createButton(id, text, `${enhanceLevel}+${protectLevel}`, (e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -2205,6 +2692,10 @@
                     // 同时设置强化等级和保护等级
                     simulateInput('div.EnhancingPanel_skillActionDetailContainer__1pV1w > div > div > div.SkillActionDetail_inputs__2tnEq > div.SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl > div.SkillActionDetail_input__1G-kE > div > input', enhanceLevel);
                     simulateInput('.SkillActionDetail_protectionMinLevelInputContainer__1HSzb input.Input_input__2-t98', protectLevel);
+
+                    // 设置重复次数：如果count存在且大于0则使用该值，否则设置为99999
+                    const repeatCount = (count && count > 0) ? count : 99999;
+                    simulateInput('.SkillActionDetail_maxActionCountInput__1C0Pw input.Input_input__2-t98', repeatCount);
                 });
 
                 // 调整按钮样式，保持与其他按钮一致但更宽
@@ -2219,11 +2710,18 @@
 
             // 创建所有按钮（默认或自定义）
             customLevels.forEach((level, index) => {
+                // 构建按钮文本，包含次数信息（如果有）
+                let btnText = `${level.enhanceLevel}+${level.protectLevel}`;
+                if (level.count && level.count > 0) {
+                    btnText += `×${level.count}`;
+                }
+
                 const btn = createCombinedButton(
                     `mwiCombinedCustom${index}`,
-                    `${level.enhanceLevel}+${level.protectLevel}`,
+                    btnText,
                     level.enhanceLevel,
-                    level.protectLevel
+                    level.protectLevel,
+                    level.count
                 );
                 combinedContainer.appendChild(btn);
             });
@@ -2235,6 +2733,52 @@
         }
 
         // 在技能详情面板添加第二个输入框（保护最小等级）的快速按钮
+        function addButtonsToSkillRepeatCount() {
+            // 检查懒鬼按钮功能是否开启
+            if (!getLazyButtonsEnabled()) return;
+
+            // 找到重复次数输入框容器
+            const target = document.querySelector('.SkillActionDetail_maxActionCountInput__1C0Pw');
+            if (!target) return;
+
+            // 检查是否已经添加了自定义按钮
+            if (document.getElementById('mwiRepeatCountButton1')) return;
+
+            // 找到原生的1按钮和无穷按钮
+            const nativeButtons = target.querySelectorAll('.Button_button__1Fe9z');
+            if (nativeButtons.length < 2) return;
+
+            const oneButton = nativeButtons[0];
+            const infinityButton = nativeButtons[1];
+
+            // 获取自定义重复次数按钮设置
+            const customButtons = getCustomRepeatCountButtons();
+
+            // 创建按钮的函数，使用与原生按钮相同的样式
+            const createRepeatCountButton = (id, text, value) => {
+                const btn = document.createElement('button');
+                btn.id = id;
+                btn.className = 'Button_button__1Fe9z Button_small__3fqC7';
+                btn.textContent = text;
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    simulateInput('.SkillActionDetail_maxActionCountInput__1C0Pw input.Input_input__2-t98', value);
+                };
+                return btn;
+            };
+
+            // 创建并插入自定义按钮到原生1按钮和无穷按钮之间
+            customButtons.forEach((count, index) => {
+                const btn = createRepeatCountButton(
+                    `mwiRepeatCountButton${index + 1}`,
+                    `${count}`,
+                    count
+                );
+                target.insertBefore(btn, infinityButton);
+            });
+        }
+
         function addButtonsToSkillProtectionLevel() {
             // 检查懒鬼按钮功能是否开启
             if (!getLazyButtonsEnabled()) return;
@@ -2689,6 +3233,7 @@
                         addButtonsToSkillProtectionLevel();
                         addLevelButtonsForBothInputs();
                         addCombinedLevelButtons(); // 添加联合快捷按钮
+                        addButtonsToSkillRepeatCount(); // 添加重复次数快捷按钮
                     }, 150);
                 }
             });
@@ -2700,15 +3245,122 @@
             });
         }
 
-        // 页面加载后或面板出现时调用
-        setTimeout(() => {
-            widenEnhancementContainer();
-            observeSkillPanelChanges();
-            initDualLevelButtons();
+        // 数据迁移函数 - 将旧的存储格式迁移到新的统一存储结构
+    function migrateOldData() {
+        const allValues = GM_getValue(null) || {};
+        let needsMigration = false;
+        const migratedSettings = getMainSettings();
+        const migratedCharacters = {};
+        const migratedUI = migratedSettings.ui || {};
 
-            // 启动头部信息监听
-            setTimeout(monitorHeaderInfo, 2000);
-        }, 1000); // 延迟确保游戏界面加载完成
+        // 迁移角色特定数据
+        for (const [key, value] of Object.entries(allValues)) {
+            if (key.startsWith('mwc_favorites_') ||
+                key.startsWith('mwc_market_fav_enhance_highlight_') ||
+                key.startsWith('mwc_header_monitor_enabled_') ||
+                key.startsWith('mwc_keyboard_shortcut_enabled_') ||
+                key.startsWith('mwc_lazy_buttons_enabled_') ||
+                key.startsWith('mwc_enhance_threshold_') ||
+                key.startsWith('mwc_custom_shortcut_')) {
+
+                needsMigration = true;
+                const parts = key.split('_');
+                const characterId = parts.pop();
+                const baseKey = parts.join('_');
+
+                if (!migratedCharacters[characterId]) {
+                    migratedCharacters[characterId] = {
+                        favorites: [],
+                        marketFavoriteEnhanceHighlight: true,
+                        headerMonitorEnabled: false,
+                        keyboardShortcutEnabled: false,
+                        lazyButtonsEnabled: true,
+                        enhanceThreshold: 0,
+                        customShortcut: '`'
+                    };
+                }
+
+                switch (baseKey) {
+                    case 'mwc_favorites':
+                        migratedCharacters[characterId].favorites = value;
+                        break;
+                    case 'mwc_market_fav_enhance_highlight':
+                        migratedCharacters[characterId].marketFavoriteEnhanceHighlight = value;
+                        break;
+                    case 'mwc_header_monitor_enabled':
+                        migratedCharacters[characterId].headerMonitorEnabled = value;
+                        break;
+                    case 'mwc_keyboard_shortcut_enabled':
+                        migratedCharacters[characterId].keyboardShortcutEnabled = value;
+                        break;
+                    case 'mwc_lazy_buttons_enabled':
+                        migratedCharacters[characterId].lazyButtonsEnabled = value;
+                        break;
+                    case 'mwc_enhance_threshold':
+                        migratedCharacters[characterId].enhanceThreshold = value;
+                        break;
+                    case 'mwc_custom_shortcut':
+                        migratedCharacters[characterId].customShortcut = value;
+                        break;
+                }
+            }
+        }
+
+        // 迁移UI位置数据
+        if (allValues['mwc_ui_positions']) {
+            needsMigration = true;
+            migratedUI.positions = allValues['mwc_ui_positions'];
+        } else {
+            if (allValues['mwc_stop_button_position']) {
+                needsMigration = true;
+                if (!migratedUI.positions) migratedUI.positions = {};
+                migratedUI.positions.stopButton = allValues['mwc_stop_button_position'];
+            }
+            if (allValues['mwc_alert_overlay_position']) {
+                needsMigration = true;
+                if (!migratedUI.positions) migratedUI.positions = {};
+                migratedUI.positions.alertOverlay = allValues['mwc_alert_overlay_position'];
+            }
+        }
+
+        // 如果有需要迁移的数据，保存到新结构中
+        if (needsMigration) {
+            const finalSettings = {
+                characters: { ...migratedSettings.characters, ...migratedCharacters },
+                ui: migratedUI
+            };
+            saveMainSettings(finalSettings);
+
+            // 清理旧数据
+            for (const [key] of Object.entries(allValues)) {
+                if (key.startsWith('mwc_favorites_') ||
+                    key.startsWith('mwc_market_fav_enhance_highlight_') ||
+                    key.startsWith('mwc_header_monitor_enabled_') ||
+                    key.startsWith('mwc_keyboard_shortcut_enabled_') ||
+                    key.startsWith('mwc_lazy_buttons_enabled_') ||
+                    key.startsWith('mwc_enhance_threshold_') ||
+                    key.startsWith('mwc_custom_shortcut_') ||
+                    key === 'mwc_ui_positions' ||
+                    key === 'mwc_stop_button_position' ||
+                    key === 'mwc_alert_overlay_position') {
+                    GM_deleteValue(key);
+                }
+            }
+        }
+    }
+
+    // 页面加载后或面板出现时调用
+    setTimeout(() => {
+        // 先执行数据迁移
+        migrateOldData();
+
+        widenEnhancementContainer();
+        observeSkillPanelChanges();
+        initDualLevelButtons();
+
+        // 启动头部信息监听
+        setTimeout(monitorHeaderInfo, 2000);
+    }, 1000); // 延迟确保游戏界面加载完成
 
     })();
 })();

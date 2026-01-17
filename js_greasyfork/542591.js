@@ -1,17 +1,15 @@
-/* ATTENDRE ZONE DE TEXTE JS */
-function waittext(callback) {
-    const container = document.querySelector('#forums-post-message-editor, #forums-post-topic-editor, .jv-editor');
-    if (!container) return void console.warn("Pas de zone de texte"); // exit
-    const editor = container.querySelector('.messageEditor__containerEdit');
-    if (editor) return callback(); // trouve au chargement du script exit
-    const observer = new MutationObserver(() => {
-        if (container.querySelector('.messageEditor__containerEdit')) {
+(function() {
+    const container = document.querySelector('#bloc-formulaire-forum form, #repondre-mp form');
+    if (!container) return console.warn("Pas de zone de texte"); // exit
+    const textReact = '.messageEditor__containerEdit';
+    if (container.querySelector(textReact)) return main(); //déjà là => start et exit
+    const observer = new MutationObserver((muts) => {
+        if (container.querySelector(textReact)) {
             observer.disconnect();
             clearTimeout(timeout);
-            callback();
+            main();
         }
     });
     observer.observe(container, { childList: true, subtree: true });
     const timeout = setTimeout(() => observer.disconnect(), 4000); // abandon après 4 sec  exit
-}
-/* ATTENDRE ZONE DE TEXTE JS */
+})();

@@ -4,7 +4,6 @@
 // @version      1.0.11
 // @description  整合小尾巴和单词功能的精简版脚本   try to thank APTX-4869!
 // @author       ZeroDream
-// @match        https://fishpi.cn/*
 // @match        https://fishpi.cn/cr
 // @icon         https://fishpi.cn/images/favicon.png
 // @grant        GM_registerMenuCommand

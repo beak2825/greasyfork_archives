@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better Miyoushe
 // @namespace    http://xrafece.com
-// @version      1.3.12
+// @version      1.3.15
 // @author       Xrafece
 // @description  Make Miyoushe Great Again 美化米游社页面，让米游社再次伟大！！！
 // @icon         https://img-static.mihoyo.com/favicon.ico

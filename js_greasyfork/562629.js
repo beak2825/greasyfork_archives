@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         M-Team屏蔽指定关键词种子
 // @namespace    m-teamblock
-// @version      20260115
+// @version      20260116
 // @author       Badge8305@M-Team
 // @description  自动删除包含指定关键字的 <tr> 行
 // @match        https://*.m-team.cc/*
@@ -20,6 +20,8 @@
         '男娘',
         '大屌萌妹',
         '男の娘',
+        'HSM-',
+        'hsm-',
         '伪娘人妖',
         '变性',
         '喝尿',

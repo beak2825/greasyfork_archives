@@ -1,20 +1,20 @@
 // ==UserScript==
-// @name          mods.de Forum - Verbesserungen und Funktionen für mehr Benutzerfreundlichkeit
-// @description   Verbessert die Navigation, Lesezeichenverwaltung und Threadliste des Forums
+// @name          mods.de Foren / Public Offtopic - Gottloses Abbrunchen, professionell aber
+// @description   Quality of Life Features für die mods.de Foren (nicht nur das pOT)
 // @author        TheRealHawk
 // @license       MIT
 // @namespace     https://greasyfork.org/en/users/18936-therealhawk
 // @match         https://forum.mods.de/*
 // @match         https://forum.mods.de/bb/*
 // @icon          https://i.imgur.com/wwA18B8.png
-// @version       2.13
+// @version       2.23
 // @grant         GM_openInTab
 // @grant         GM_addStyle
 // @require       https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js
 // @require       https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js
 // @require       https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js
-// @downloadURL https://update.greasyfork.org/scripts/562398/modsde%20Forum%20-%20Verbesserungen%20und%20Funktionen%20f%C3%BCr%20mehr%20Benutzerfreundlichkeit.user.js
-// @updateURL https://update.greasyfork.org/scripts/562398/modsde%20Forum%20-%20Verbesserungen%20und%20Funktionen%20f%C3%BCr%20mehr%20Benutzerfreundlichkeit.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562398/modsde%20Foren%20%20Public%20Offtopic%20-%20Gottloses%20Abbrunchen%2C%20professionell%20aber.user.js
+// @updateURL https://update.greasyfork.org/scripts/562398/modsde%20Foren%20%20Public%20Offtopic%20-%20Gottloses%20Abbrunchen%2C%20professionell%20aber.meta.js
 // ==/UserScript==
 
 /* globals $, async_get */
@@ -27,6 +27,9 @@
     const isBoardPage = pathname.indexOf('/board.php') !== -1;
     const isThreadPage = pathname.indexOf('/thread.php') !== -1;
     const isReplyPage = pathname.indexOf('/newreply.php') !== -1 || pathname.indexOf('/editreply.php') !== -1;
+
+    let hiddenThreadsVisible = false;
+    let hiddenPostsVisible = false;
 
     const smileys = [
         {code: ':)', src: './img/smilies/icon7.gif', desc: 'Fröhlich'},
@@ -254,6 +257,118 @@
         return null;
     }
 
+    function toggleHiddenThreads() {
+        hiddenThreadsVisible = !hiddenThreadsVisible;
+        if (hiddenThreadsVisible) {
+            $('tr.hidden-thread').show();
+        } else {
+            $('tr.hidden-thread').hide();
+        }
+    }
+
+    function toggleHiddenPosts() {
+        hiddenPostsVisible = !hiddenPostsVisible;
+        if (hiddenPostsVisible) {
+            $('.hidden-post .shortened').hide();
+            $('.hidden-post .full').show();
+        } else {
+            $('.hidden-post .shortened').show();
+            $('.hidden-post .full').hide();
+        }
+    }
+
+	function processNestedQuotes() {
+		// Process each top-level quote block
+		$('.quote').each(function() {
+			const $outerQuote = $(this);
+			
+			// Skip if this quote is itself nested (we only process from top-level)
+			if ($outerQuote.parents('.quote').length > 0) return;
+			
+			// Find all nested quotes within this top-level quote
+			const $allNestedQuotes = $outerQuote.find('.quote');
+			
+			$allNestedQuotes.each(function() {
+				const $nestedQuote = $(this);
+				
+				// Skip if already processed
+				if ($nestedQuote.hasClass('hidden-post')) return;
+				
+				// Calculate nesting depth relative to outer quote
+				const depth = $nestedQuote.parents('.quote').length - 1;
+				
+				const $contentBold = $nestedQuote.find('> b').first();
+				if ($contentBold.length === 0) return;
+				
+				// Depth 0: First nested quote (direct child of outer quote)
+				// Should be shortened if > 120 chars
+				if (depth === 0) {
+					const $tempContent = $contentBold.clone();
+					$tempContent.find('table').remove();
+					$tempContent.find('.quote').remove();
+					
+					const directText = $tempContent.text().trim();
+					
+					if (directText.length > 120) {
+						const fullHtml = $contentBold.html();
+						const shortText = directText.substring(0, 120) + '...';
+						
+						$nestedQuote.addClass('hidden-post');
+						$contentBold.empty();
+						
+						const $shortSpan = $('<span>')
+							.addClass('shortened')
+							.text(shortText)
+							.css({
+								'cursor': 'pointer',
+								'title': 'Klicken zum Anzeigen'
+							})
+							.on('click', function(e) {
+								e.stopPropagation();
+								$(this).hide();
+								$(this).next('.full').show();
+							});
+						
+						const $fullSpan = $('<span>')
+							.addClass('full')
+							.html(fullHtml)
+							.hide();
+						
+						$contentBold.append($shortSpan).append($fullSpan);
+					}
+				}
+				// Depth >= 1: Deeper nested quotes
+				// Should be completely hidden by default
+				else {
+					const fullHtml = $contentBold.html();
+					
+					$nestedQuote.addClass('hidden-post');
+					$contentBold.empty();
+					
+					const $shortSpan = $('<span>')
+						.addClass('shortened')
+						.text('...')
+						.css({
+							'cursor': 'pointer',
+							'title': 'Klicken zum Anzeigen'
+						})
+						.on('click', function(e) {
+							e.stopPropagation();
+							$(this).hide();
+							$(this).next('.full').show();
+						});
+					
+					const $fullSpan = $('<span>')
+						.addClass('full')
+						.html(fullHtml)
+						.hide();
+					
+					$contentBold.append($shortSpan).append($fullSpan);
+				}
+			});
+		});
+	}
+
     function handleGlobalKeydown(e) {
         if ($(e.target).is('input, textarea, select, [contenteditable]')) {
             if (e.ctrlKey && (e.key === 'Enter' || e.which === 13)) {
@@ -304,10 +419,7 @@
                     navigateToLink('a:contains("nächste »"):first');
                 }
             }
-        }
-
-        if (isThreadPage) {
-            if (isCtrl && checkKey('ArrowUp', 38)) {
+            else if (isCtrl && checkKey('ArrowUp', 38)) {
                 e.preventDefault();
                 window.scrollTo(0, 0);
             }
@@ -318,7 +430,14 @@
             else if (!isCtrl && checkKey('i', 73)) {
                 window.location.assign('http://forum.mods.de/');
             }
-            else if (!isCtrl && checkKey('p', 80)) {
+            // Toggle Hidden Threads on Board with 'S'
+            else if (isBoardPage && !isCtrl && checkKey('s', 83)) {
+                toggleHiddenThreads();
+            }
+        }
+
+        if (isThreadPage) {
+            if (!isCtrl && checkKey('p', 80)) {
                 navigateToLink('a[href^="newreply.php"]');
             }
             else if (!isCtrl && checkKey('l', 76)) {
@@ -332,6 +451,16 @@
                         }
                     }
                 }
+            }
+            else if (!isCtrl && checkKey('t', 84)) {
+                const $boardLink = $('a[href^="board.php?BID="]').first();
+                if ($boardLink.length) {
+                    const href = $boardLink.attr('href');
+                    if (href) window.location.assign(href);
+                }
+            }
+            else if (!isCtrl && checkKey('s', 83)) {
+                toggleHiddenPosts();
             }
         }
     }
@@ -350,13 +479,13 @@
     function hideThreads() {
         $('body > div:eq(2) > table:eq(1) > tbody > tr > td > table > tbody > tr').each(function() {
             const $bookmarkLink = $('td:eq(2) > a', this);
-            if ($bookmarkLink.hasClass('bookmark')) {
-                $(this).hide();
-            }
-
             const $closedIcon = $('td:eq(0) > img[src*="closed.gif"]', this);
-            if ($closedIcon.length > 0) {
-                $(this).hide();
+
+            if ($bookmarkLink.hasClass('bookmark') || $closedIcon.length > 0) {
+                $(this).addClass('hidden-thread');
+                if (!hiddenThreadsVisible) {
+                    $(this).hide();
+                }
             }
         });
     }
@@ -568,6 +697,10 @@
         if (isBoardPage) {
             hideThreads();
             appendSecondBoardPageThreads();
+        }
+
+        if (isThreadPage) {
+            processNestedQuotes();
         }
 
         $(document).on('keydown', handleGlobalKeydown);

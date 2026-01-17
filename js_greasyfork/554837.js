@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         LIMS 생산 자동화
 // @namespace    http://tampermonkey.net/
-// @version      1.4
-// @description  LIMS '주문조회'에서 '생산결정' 및 '생산완료'를 자동화합니다. (v1.4 - 비상 정지 기능 추가)
+// @version      1.4.1
+// @description  LIMS '주문조회'에서 '생산결정' 및 '생산완료'를 자동화합니다. (v1.4.1 - 결과 로그 자동 다운로드 추가)
 // @author       김재형
 // @match        *://*/ngs/order/retrieveNgsOrdForm.do*
 // @match        *://*/ngs/order/retrieveOrdSearchDetailForm.do*
@@ -16,7 +16,7 @@
 // @updateURL https://update.greasyfork.org/scripts/554837/LIMS%20%EC%83%9D%EC%82%B0%20%EC%9E%90%EB%8F%99%ED%99%94.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // --- 대상 페이지 식별자 ---
@@ -338,14 +338,14 @@
         alertHookActive = true;
 
         // Confirm 창은 항상 'true' (확인)
-        unsafeWindow.confirm = function(message) {
+        unsafeWindow.confirm = function (message) {
             if (workerStopMonitor === null) return false; // 중지 요청 시 '취소'
             console.log(`[LIMS Auto] [${currentOrderNo}] [HOOK-CONFIRM] ${message}`);
             return true;
         };
 
         // Alert 창은 메시지 내용에 따라 분기 처리
-        unsafeWindow.alert = function(message) {
+        unsafeWindow.alert = function (message) {
             if (workerStopMonitor === null) return; // 중지 요청 시 알림 무시
 
             console.log(`[LIMS Auto] [${currentOrderNo}] [HOOK-ALERT] (${currentStep} 단계) ${message}`);
@@ -394,7 +394,7 @@
                     moveToNext(false); // 기타 -> 실패
                 }
 
-            // === '생산완료' 단계 알림 처리 ===
+                // === '생산완료' 단계 알림 처리 ===
             } else if (currentStep === 'complete') {
 
                 if (!waitingForSecondCompleteAlert) {
@@ -816,7 +816,7 @@
                 <div class="lims-modal-content">
                     <span id="limsBatchClose">&times;</span>
                     <h2 id="limsModalTitle" style="display: inline-block; margin-right: 10px;">LIMS 생산 자동화</h2>
-                    <a id="limsUpdateHistoryLink">업데이트 내역 (v1.4)</a>
+                    <a id="limsUpdateHistoryLink">업데이트 내역 (v1.4.1)</a>
                     <p id="limsModalInstructions" style="margin-top: 15px;">처리할 주문번호(Ord. #) 목록을 한 줄에 하나씩 붙여넣으세요.<br><small style="color: #666;">※ 생산결정 → 생산완료까지 자동으로 연속 처리됩니다.</small></p>
                     <textarea id="limsOrderList" style="width: 95%; height: 100px; border: 1px solid #ccc; padding: 5px; font-family: monospace;"></textarea>
 
@@ -853,10 +853,14 @@
             <div id="gmUpdateModal" class="gm-modal-overlay" style="display: none; z-index: 9999;">
                 <div class="gm-modal-content" style="min-width: 500px; margin: 15% auto;">
                     <div class="gm-modal-header">
-                        <span>업데이트 내역 (v1.4)</span>
+                        <span>업데이트 내역 (v1.4.1)</span>
                         <span id="gmCloseUpdateModal" class="gm-modal-close">&times;</span>
                     </div>
                     <div class="gm-modal-body">
+                        <p><b>v1.4.1 (2026-01-16) - 결과 로그 자동 다운로드 추가</b></p>
+                        <ul>
+                            <li><b>[신규]</b> 생산 결과 로그 자동 다운로드: 작업이 완료되거나 중지될 때, 상세 내역이 담긴 .txt 파일을 자동으로 저장합니다.</li>
+                        </ul>
                         <p><b>v1.4 (2025-01-12) - 비상 정지 기능 추가</b></p>
                         <ul>
                             <li><b>[신규]</b> '🚨 생산 비상 정지' 버튼 추가: 스크립트가 멈추거나 오작동할 때 모든 상태를 강제로 초기화합니다.</li>
@@ -905,14 +909,14 @@
             if (event.target == document.getElementById('gmUpdateModal')) document.getElementById('gmUpdateModal').style.display = 'none';
         };
 
-        batchButton.onclick = function() {
+        batchButton.onclick = function () {
             resetUI(true); // UI를 '시작' 상태로 초기화
             modal.style.display = 'block';
             orderListText.focus();
         };
 
         // 🆕 '생산 비상 정지' 버튼 클릭 이벤트
-        forceResetButton.onclick = function() {
+        forceResetButton.onclick = function () {
             resetUI(false);
             document.getElementById('limsModalTitle').innerHTML = '생산 비상 정지';
             document.getElementById('limsModalInstructions').style.display = 'none';
@@ -1076,8 +1080,8 @@
      */
     function stopWork() {
         if (confirm('작업을 중지하시겠습니까?\n\n' +
-                  '현재 진행 중인 주문이 1개라도 있을 경우,\n' +
-                  '해당 주문은 [시스템: 사용자 요청으로 중지됨]으로 기록됩니다.')) {
+            '현재 진행 중인 주문이 1개라도 있을 경우,\n' +
+            '해당 주문은 [시스템: 사용자 요청으로 중지됨]으로 기록됩니다.')) {
             console.log('[LIMS Auto] 사용자가 작업 중지를 요청했습니다.');
             localStorage.setItem('limsAutomationStopRequested', 'true');
             stopButton.disabled = true;
@@ -1219,6 +1223,7 @@
             const errors = getLogFromStorage('limsAutomationErrors');
 
             showReportModal(status, successes, warnings, errors);
+            downloadLogFile(status, successes, warnings, errors); // 🆕 로그 파일 자동 다운로드
             notifyUser(status, successes, warnings, errors);
             resetUI(false);
             clearLocalStorage(); // '시작 탭'이 스토리지 정리
@@ -1330,7 +1335,7 @@
 
         // 복사 버튼에 이벤트 리스너 추가 (개별 항목 복사)
         document.querySelectorAll('.lims-copy-btn[data-copy-text]').forEach(btn => {
-            btn.onclick = function(e) {
+            btn.onclick = function (e) {
                 e.preventDefault();
                 const textToCopy = this.getAttribute('data-copy-text').replace(/&quot;/g, '"');
 
@@ -1370,7 +1375,7 @@
         const copyErrorBtn = document.getElementById('limsCopyErrorOrders');
 
         if (copyWarningBtn) {
-            copyWarningBtn.onclick = function(e) {
+            copyWarningBtn.onclick = function (e) {
                 e.preventDefault();
                 const orderNumbers = decisionProblems.map(log => log.orderNo).join('\n');
                 if (!orderNumbers) {
@@ -1382,7 +1387,7 @@
         }
 
         if (copyErrorBtn) {
-            copyErrorBtn.onclick = function(e) {
+            copyErrorBtn.onclick = function (e) {
                 e.preventDefault();
                 const orderNumbers = completeProblems.map(log => log.orderNo).join('\n');
                 if (!orderNumbers) {
@@ -1399,10 +1404,10 @@
 
         let statusText = '';
         if (status === 'STOPPED') {
-             if (errors.some(e => e.message.includes('수동으로 닫혔'))) {
-                 statusText = '<strong style="color: #d9534f;">⚠️ 작업 탭이 수동으로 닫혔습니다.</strong><br>';
-             } else {
-                 statusText = '<strong style="color: #d9534f;">⚠️ 사용자가 작업을 중지했습니다.</strong><br>';
+            if (errors.some(e => e.message.includes('수동으로 닫혔'))) {
+                statusText = '<strong style="color: #d9534f;">⚠️ 작업 탭이 수동으로 닫혔습니다.</strong><br>';
+            } else {
+                statusText = '<strong style="color: #d9534f;">⚠️ 사용자가 작업을 중지했습니다.</strong><br>';
             }
         }
 
@@ -1463,6 +1468,89 @@
             clearInterval(titleBlinkInterval);
             titleBlinkInterval = null;
             document.title = originalTitle;
+        }
+    }
+
+    /**
+     * 🆕 [신규] 생산 결과 로그를 .txt 파일로 생성하여 자동 다운로드
+     */
+    function downloadLogFile(status, successes, warnings, errors) {
+        try {
+            const now = new Date();
+            const dateStr = now.getFullYear() + '-' +
+                String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                String(now.getDate()).padStart(2, '0') + ' ' +
+                String(now.getHours()).padStart(2, '0') + ':' +
+                String(now.getMinutes()).padStart(2, '0') + ':' +
+                String(now.getSeconds()).padStart(2, '0');
+
+            const fileNameDate = now.getFullYear() +
+                String(now.getMonth() + 1).padStart(2, '0') +
+                String(now.getDate()).padStart(2, '0') + '_' +
+                String(now.getHours()).padStart(2, '0') +
+                String(now.getMinutes()).padStart(2, '0');
+
+            // 보고서 분류 (showReportModal과 동일 로직)
+            const decisionProblems = [...warnings];
+            const completeProblems = [];
+            errors.forEach(err => {
+                if (err.message.includes('[생산결정]')) {
+                    decisionProblems.push(err);
+                } else {
+                    completeProblems.push(err);
+                }
+            });
+
+            let content = `[LIMS 생산 자동화 결과 로그]\n`;
+            content += `작업 일시: ${dateStr}\n`;
+            content += `최종 상태: ${status === 'STOPPED' ? '중지됨 (사용자 요청 또는 오류)' : '완료'}\n`;
+            content += `--------------------------------------------------\n`;
+            content += `📊 총 시도: ${successes.length + decisionProblems.length + completeProblems.length}건\n`;
+            content += `✅ 성공: ${successes.length}건\n`;
+            content += `🟠 확인필요: ${decisionProblems.length}건\n`;
+            content += `❌ 실패: ${completeProblems.length}건\n`;
+            content += `--------------------------------------------------\n\n`;
+
+            if (successes.length > 0) {
+                content += `[✅ 성공 항목]\n`;
+                successes.forEach(log => {
+                    content += `- ${log.orderNo}: ${log.message}\n`;
+                });
+                content += `\n`;
+            }
+
+            if (decisionProblems.length > 0) {
+                content += `[🟠 확인필요 항목 (생산결정)]\n`;
+                decisionProblems.forEach(log => {
+                    content += `- ${log.orderNo}: ${log.message}\n`;
+                });
+                content += `\n`;
+            }
+
+            if (completeProblems.length > 0) {
+                content += `[❌ 실패 항목 (생산완료/시스템)]\n`;
+                completeProblems.forEach(log => {
+                    content += `- ${log.orderNo}: ${log.message}\n`;
+                });
+                content += `\n`;
+            }
+
+            content += `\n[로그 끝]`;
+
+            // Blob 생성 및 다운로드
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `LIMS_Auto_Log_${fileNameDate}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            console.log(`[LIMS Auto] 로그 파일 자동 다운로드 완료: ${a.download}`);
+        } catch (e) {
+            console.error('[LIMS Auto] 로그 파일 생성 중 오류 발생:', e);
         }
     }
 

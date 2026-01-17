@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         tianteng
 // @namespace    https://greasyfork.org/xmlspy
-// @version      2.0.20
+// @version      2.0.22
 // @author       xmlspy
 // @description  各种开车网站的优化,javbus,javlib
 // @license      MIT
@@ -1173,7 +1173,7 @@
           a.style = "font-size:20px;";
         }
       });
-      if (/.*\?v=.*/.test(location.href)) {
+      if (/\/.*jav.*\.html/.test(location.href)) {
         debug("详情页面", "Javlib");
         debug("添加 复制车牌 按钮", "Javlib");
         let chePai = document.querySelector("#video_id > table > tbody > tr > td.text").innerText;

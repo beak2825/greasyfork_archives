@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Enhancer
 // @namespace    Violentmonkey Scripts
-// @version      1.1.2
+// @version      1.1.3
 // @description  Reduz uso de CPU (Smart Mode), personaliza layout, remove Shorts e adiciona relógio customizável.
 // @author       John Wiliam & IA
 // @match        *://www.youtube.com/*
@@ -18,7 +18,7 @@
 (function() {
     'use strict';
 
-    const FLAG = "__yt_enhancer_v1_1_2__";
+    const FLAG = "__yt_enhancer_v1_1_3__";
     if (window[FLAG]) return;
     window[FLAG] = true;
 
@@ -144,11 +144,11 @@
     // 1. CONFIG MANAGER
     // =======================================================
     const ConfigManager = {
-        CONFIG_VERSION: '1.1.2',
+        CONFIG_VERSION: '1.1.3',
         STORAGE_KEY: 'YT_ENHANCER_CONFIG',
         
         defaults: {
-            version: '1.1.2',
+            version: '1.1.3',
             VIDEOS_PER_ROW: 5,
             FEATURES: {
                 CPU_TAMER: true,
@@ -679,7 +679,7 @@
                 const isFullscreen = document.fullscreenElement != null;
                 const areControlsVisible = !this.playerElement.classList.contains('ytp-autohide');
                 const baseMargin = this.config.CLOCK_STYLE.margin;
-                const finalBottom = (isFullscreen && areControlsVisible) ? baseMargin + 110 : baseMargin;
+                const finalBottom = (isFullscreen && areControlsVisible) ? baseMargin + 100 : baseMargin;
                 this.clockElement.style.bottom = `${finalBottom}px`;
             } catch (e) { console.error(e); }
         },

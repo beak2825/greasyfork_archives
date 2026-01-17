@@ -2,7 +2,7 @@
 // @name         MZone Advanced: Table, Stats & Play-off / MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @name:tr      MZone Gelişmiş: Tablo, İstatistik & Play-off
 // @namespace    http://tampermonkey.net/
-// @version      2.90
+// @version      2.93
 // @description  A powerful suite combining the Advanced League Table (live scores, FD), Player Stat Averages, and the new Play-off/Play-out Predictor. Now with Excel export, Shortlist Filtering and Transfer Tracker with charts.
 // @description:tr Gelişmiş Lig Tablosu (canlı skorlar, FZ), Oyuncu İstatistik Ortalamaları ve yeni Play-Off/Play-Out Tahmincisi betiklerini tek bir güçlü araçta birleştirir. Şimdi Excel'e aktarma, Takip Listesi Filtreleme ve Grafikli Transfer Takipçisi özelliğiyle.
 // @author       alex66
@@ -5980,6 +5980,8 @@
                 return;
             }
 
+            initializeSellTaxCalculator();
+
             try {
                 // Global menü her zaman çalışmalı, çünkü ayarlara erişim buradan sağlanıyor.
                 initializeGlobalInfoMenu();
@@ -8427,5 +8429,262 @@ function initializeFriendlyMatchAutomationScript() {
                 enrichMatchHeader();
             }
         }
+
+   /****************************************************************************************
+ *                                                                                      *
+ *  BÖLÜM EK: SATIŞ VERGİSİ HESAPLAYICI (EVRENSEL DİL DESTEĞİ v7)                       *
+ *                                                                                      *
+ ****************************************************************************************/
+function initializeSellTaxCalculator() {
+    'use strict';
+    const $ = unsafeWindow.jQuery;
+    console.log('[MZ TAX v7] Modül Başlatıldı (Universal Language Fix).');
+
+    const i18n = {
+        tr: {
+            calcTitle: "Vergi İndirimi Hesaplayıcısı",
+            lastTransferDate: "Son Transfer Tarihi",
+            daysElapsed: "Geçen Süre",
+            currentTax: "Mevcut Vergi",
+            days: "gün",
+            taxDrop50: "%50'ye Düşüş",
+            taxDrop15: "%15'e Düşüş",
+            originalPlayer: "İlk/Altyapı Oyuncusu",
+            originalNote: "Vergi sadece yaşa bağlıdır.",
+            passed: "Geçti",
+            age: "Yaş",
+            nextSeason: "Gelecek Sezon",
+            taxDrop20: "%20'ye Düşüş (20 Yaş)",
+            taxDrop15_age: "%15'e Düşüş (21 Yaş)",
+            minTaxReached: "Minimum vergi oranına ulaşıldı (%15)."
+        },
+        en: {
+            calcTitle: "Tax Calculator",
+            lastTransferDate: "Last Transfer",
+            daysElapsed: "Elapsed",
+            currentTax: "Current Tax",
+            days: "days",
+            taxDrop50: "Drop to 50%",
+            taxDrop15: "Drop to 15%",
+            originalPlayer: "Original Player",
+            originalNote: "Tax depends on age only.",
+            passed: "Passed",
+            age: "Age",
+            nextSeason: "Next Season",
+            taxDrop20: "Drop to 20% (Age 20)",
+            taxDrop15_age: "Drop to 15% (Age 21)",
+            minTaxReached: "Minimum tax rate reached (15%)."
+        }
+    };
+    const lang = ($('meta[name="language"]').attr('content') || 'en') === 'tr' ? 'tr' : 'en';
+    const getText = (key) => i18n[lang][key] || i18n['en'][key];
+
+    function formatDate(date) {
+        return date.toLocaleDateString(lang === 'tr' ? 'tr-TR' : 'en-GB');
+    }
+
+    /**
+     * Oyuncunun yaşını bulur. (Dilden bağımsız - Yapısal Analiz)
+     * MZ HTML yapısında yaş, oyuncu bilgi tablosundaki kalın (strong) yazılan
+     * ve 10-50 arasında olan İLK sayıdır.
+     */
+    function getPlayerAge() {
+        let age = null;
+
+        // Yaşı ayıklayan yardımcı fonksiyon
+        const extractAgeFromContainer = (container) => {
+            // Konteyner içindeki tüm kalın (strong) etiketlerini bul
+            const strongTags = container.find('strong');
+
+            for (let i = 0; i < strongTags.length; i++) {
+                // Sayısal değeri al
+                const val = parseInt($(strongTags[i]).text().trim(), 10);
+
+                // Kontrol: Sayı mı? Mantıklı bir yaş aralığında mı? (15-50 arası)
+                // Değer (Value) veya Maaş (Wage) çok yüksek sayılar olduğu için karışmaz.
+                if (!isNaN(val) && val >= 10 && val <= 60) {
+                    return val; // İlk bulduğu mantıklı sayıyı yaş olarak döndür
+                }
+            }
+            return null;
+        };
+
+        // 1. YÖNTEM: Tıklanan son oyuncu kutusundan (Kadro Listesi)
+        if (window.mzLastClickedPlayerContainer) {
+            age = extractAgeFromContainer(window.mzLastClickedPlayerContainer);
+        }
+
+        // 2. YÖNTEM: Tekil Oyuncu Sayfası (.dg_playerview_info)
+        if (!age && $('.dg_playerview_info').length > 0) {
+            age = extractAgeFromContainer($('.dg_playerview_info'));
+        }
+
+        // 3. YÖNTEM: Mobil Görünüm (.pp-1-1)
+        if (!age && $('.pp-1-1').length > 0) {
+            age = extractAgeFromContainer($('.pp-1-1'));
+        }
+
+        return age;
+    }
+
+    // Tıklamaları izleyip son tıklanan oyuncu konteynerini kaydet
+    $(document).on('click', '.sell_player a', function() {
+        window.mzLastClickedPlayerContainer = $(this).closest('.playerContainer');
+    });
+
+    function watchForPopup() {
+        if ($('#mz-tax-calculator-panel').length > 0) return;
+
+        const helpBtns = $('.help_button');
+
+        helpBtns.each(function() {
+            const btn = $(this);
+            if (!btn.is(':visible')) return;
+            if (btn.data('tax-processed')) return;
+
+            const onClick = this.getAttribute('onclick');
+            if (!onClick || onClick.indexOf('showHelpLayer') === -1) return;
+
+            try {
+                // showHelpLayer parametrelerini al
+                const match = onClick.match(/showHelpLayer\(['"]([^'"]+)['"]/);
+
+                if (match) {
+                    const decoded = decodeURIComponent(match[1].replace(/\+/g, ' '));
+
+                    // --- DİLDEN BAĞIMSIZ KONTROL ---
+                    // 1. Tarih formatı var mı? (Transfer geçmişi)
+                    const hasDate = /\d{1,2}[-./]\d{1,2}[-./]\d{4}/.test(decoded);
+
+                    // 2. HTML Tablosu var mı? (Altyapı oyuncularında vergi tablosu çıkar)
+                    // "tablesorter" sınıfı tüm dillerde aynıdır.
+                    const hasTable = decoded.includes('tablesorter');
+
+                    if (hasDate || hasTable) {
+                        console.log('[MZ TAX v7] Hedef bulundu, panel ekleniyor.');
+                        injectPanel(btn, decoded);
+                        btn.data('tax-processed', true);
+                        return false;
+                    }
+                }
+            } catch (e) {
+                console.error("[MZ TAX v7] Hata:", e);
+            }
+        });
+    }
+
+    function injectPanel(helpBtn, decodedHtml) {
+        const dateRegex = /(\d{1,2})[-./](\d{1,2})[-./](\d{4})/;
+        const dateMatch = decodedHtml.match(dateRegex);
+
+        const panel = $('<div id="mz-tax-calculator-panel"></div>').css({
+            'background': '#f1f8e9', 'border': '1px solid #81c784', 'padding': '8px',
+            'margin-top': '8px', 'border-radius': '4px', 'font-size': '11px', 'color': '#333',
+            'line-height': '1.4', 'z-index': '99999', 'position': 'relative', 'display': 'block',
+            'box-shadow': '0 2px 5px rgba(0,0,0,0.1)'
+        });
+
+        let content = `<div style="font-weight:bold; color:#2e7d32; border-bottom:1px solid #a5d6a7; margin-bottom:4px;">${getText('calcTitle')}</div>`;
+
+        if (dateMatch) {
+            // --- TRANSFERLİ OYUNCU ---
+            const day = parseInt(dateMatch[1], 10);
+            const month = parseInt(dateMatch[2], 10) - 1;
+            const year = parseInt(dateMatch[3], 10);
+            const transferDate = new Date(year, month, day);
+
+            // --- DÜZELTME: Saat farkını sıfırla ve +1 gün ekle ---
+            const now = new Date();
+            now.setHours(0, 0, 0, 0); // Saati gece yarısına çekiyoruz
+
+            const diffTime = Math.abs(now - transferDate);
+            // "Geçen Süre" gösterimi için bugünü dahil et (+1)
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            // OYUN MANTIĞI: Oyuncu listelendiğinde en erken 1 gün sonra satılır.
+            // Bu yüzden vergi oranı, (Bugün + 1) gün sonrasına göre hesaplanmalıdır.
+            // Örn: Bugün 70. gün ise, satış 71. gün olur ve vergi %15'e düşer.
+            const effectiveSaleDays = diffDays + 1;
+            // --- DÜZELTME SONU ---
+
+            // Menajerler için önemli olan "Hangi gün listeye koyabilirim?" sorusudur.
+            // Satış 1 gün sonra olduğu için, listeleme tarihi 1 gün erkendir.
+            // %50 için: 29. gün satış olması lazım -> 28. gün (27 gün sonrası) listelenebilir.
+            const date50 = new Date(transferDate);
+            date50.setDate(date50.getDate() + 27);
+
+            // %15 için: 71. gün satış olması lazım -> 70. gün (69 gün sonrası) listelenebilir.
+            const date15 = new Date(transferDate);
+            date15.setDate(date15.getDate() + 69);
+
+            let taxRateDisplay = "15%";
+            let taxColor = "green";
+
+            // Hesaplamada 'diffDays' yerine 'effectiveSaleDays' kullanıyoruz
+            if (effectiveSaleDays <= 28) { taxRateDisplay = "95%"; taxColor = "#d32f2f"; }
+            else if (effectiveSaleDays <= 70) { taxRateDisplay = "50%"; taxColor = "#f57c00"; }
+
+            // İçerik oluşturulurken "Geçen Süre" olarak hala 'diffDays' (70 gün) gösteriyoruz
+            content += `
+                <div style="display:flex; justify-content:space-between;">
+                    <span>${getText('currentTax')}:</span> <strong style="color:${taxColor}; font-size:12px;">${taxRateDisplay}</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <span>${getText('daysElapsed')}:</span> <strong>${diffDays} ${getText('days')}</strong>
+                </div>
+                <hr style="margin:4px 0; border:0; border-top:1px dashed #ccc;">
+                <div style="display:flex; justify-content:space-between; color:${effectiveSaleDays > 28 ? '#999' : '#333'}">
+                    <span>${getText('taxDrop50')}:</span> <span>${effectiveSaleDays > 28 ? getText('passed') : formatDate(date50)}</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; color:${effectiveSaleDays > 70 ? '#999' : '#333'}">
+                    <span>${getText('taxDrop15')}:</span> <span>${effectiveSaleDays > 70 ? getText('passed') : formatDate(date15)}</span>
+                </div>
+            `;
+        } else {
+            // --- ALTYAPI OYUNCUSU (Dilden Bağımsız Yaş Tespiti) ---
+            const age = getPlayerAge();
+            let taxRate = "15%";
+            let taxColor = "green";
+            let nextInfo = "";
+
+            if (age !== null) {
+                if (age <= 19) {
+                    taxRate = "25%"; taxColor = "#d32f2f";
+                    nextInfo = `<div style="margin-top:4px; color:#555;">${getText('taxDrop20')}: <strong>${getText('nextSeason')}</strong></div>`;
+                } else if (age === 20) {
+                    taxRate = "20%"; taxColor = "#f57c00";
+                    nextInfo = `<div style="margin-top:4px; color:#555;">${getText('taxDrop15_age')}: <strong>${getText('nextSeason')}</strong></div>`;
+                } else {
+                    taxRate = "15%"; taxColor = "green";
+                    nextInfo = `<div style="margin-top:4px; color:green; font-style:italic;">${getText('minTaxReached')}</div>`;
+                }
+
+                content += `
+                    <div style="color:#1565c0; margin-bottom:2px;">${getText('originalPlayer')}</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span>${getText('age')}: <strong>${age}</strong></span>
+                        <span>${getText('currentTax')}: <strong style="color:${taxColor}; font-size:12px;">${taxRate}</strong></span>
+                    </div>
+                    <hr style="margin:4px 0; border:0; border-top:1px dashed #ccc;">
+                    ${nextInfo}
+                `;
+            } else {
+                // Yaş bulunamazsa
+                content += `<div style="color:#1565c0;">${getText('originalPlayer')}</div><div style="font-style:italic; font-size:10px;">${getText('originalNote')}</div>`;
+            }
+        }
+
+        panel.html(content);
+
+        const container = helpBtn.closest('td');
+        if(container.length > 0) {
+            container.append(panel);
+        } else {
+            helpBtn.parent().parent().append(panel);
+        }
+    }
+
+    setInterval(watchForPopup, 1000);
+}
 
 })();

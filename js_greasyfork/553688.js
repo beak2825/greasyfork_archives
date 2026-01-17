@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         AssTars Card Master
+// @name         триплЭсс Card Master
 // @namespace    asstars.tv
-// @version      20.5.1
+// @version      21
 // @description  1)Показывает спрос на карты
-// @description  2)Показывает дубликаты карт.
-// @description  3)Отправляет карты в Не нужное.
+// @description  2)Показывает дубликаты карт
+// @description  3)Отправляет карты в Ненужное
 // @description  4)Собирает карты с просмотра видео.
 // @description  5)Собирает кристаллы на странице Аниме.
 
@@ -18,6 +18,8 @@
 // @match        https://as1.asstars.tv/*
 // @match        https://as2.asstars.tv/*
 // @match        https://asstars.online/*
+// @match        https://animesss.tv/*
+// @match        https://animesss.com/*
 
 // @grant        GM_getValue
 // @grant         GM_setValue
@@ -34,8 +36,8 @@
 // @license MIT
 // @downloadURL
 // @updateURL
-// @downloadURL https://update.greasyfork.org/scripts/553688/AssTars%20Card%20Master.user.js
-// @updateURL https://update.greasyfork.org/scripts/553688/AssTars%20Card%20Master.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/553688/%D1%82%D1%80%D0%B8%D0%BF%D0%BB%D0%AD%D1%81%D1%81%20Card%20Master.user.js
+// @updateURL https://update.greasyfork.org/scripts/553688/%D1%82%D1%80%D0%B8%D0%BF%D0%BB%D0%AD%D1%81%D1%81%20Card%20Master.meta.js
 // ==/UserScript==
 
 // --- getAssTarsCardMasterRequestCount() --- прописать в консоле что-бы узнать общее кол-во запросов.

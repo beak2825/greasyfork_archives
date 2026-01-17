@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Zoom Transcript to Gemini AI (Enhanced + Network VTT)
+// @name         Zoom Transcript to Gemini AI (HTML Renderer)
 // @namespace    fiverr.com/web_coder_nsd
-// @version      6.0.1
-// @description  Zoom transcript extraction with Gemini AI, dynamic model switching, mermaid charts. Optimized.
+// @version      9.0.0
+// @description  Zoom transcript extraction with Gemini AI. Generates and RENDERs HTML/CSS visualizations directly in the modal.
 // @author       noushadBug
 // @match        https://fiverrzoom.zoom.us/rec/play/*
 // @icon         https://fiverrzoom.zoom.us/favicon.ico
 // @license      MIT
 // @grant        GM.xmlHttpRequest
-// @downloadURL https://update.greasyfork.org/scripts/520214/Zoom%20Transcript%20to%20Gemini%20AI%20%28Enhanced%20%2B%20Network%20VTT%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/520214/Zoom%20Transcript%20to%20Gemini%20AI%20%28Enhanced%20%2B%20Network%20VTT%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/520214/Zoom%20Transcript%20to%20Gemini%20AI%20%28HTML%20Renderer%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/520214/Zoom%20Transcript%20to%20Gemini%20AI%20%28HTML%20Renderer%29.meta.js
 // ==/UserScript==
 
 (() => {
@@ -55,48 +55,6 @@
 
     const extractConversation = () => extractedConv || '[Transcript not loaded yet]';
 
-    // --- Function to load and render Mermaid diagram ---
-    async function loadAndRenderMermaid(mermaidCode, mermaidContainer) {
-        return new Promise((resolve, reject) => {
-            try {
-                // remove any previously added script with the same id
-                const existing = document.getElementById('mermaid-cdn-zoom');
-                if (existing) existing.remove();
-
-                const s = document.createElement('script');
-                s.id = 'mermaid-cdn-zoom';
-                s.src = 'https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js';
-                s.onload = () => {
-                    try {
-                        mermaid.initialize({ startOnLoad: false });
-
-                        // Clear container and create diagram
-                        mermaidContainer.innerHTML = '';
-                        const diagramId = 'mermaid-diagram-' + Date.now();
-                        const diagramContainer = document.createElement('div');
-                        diagramContainer.id = diagramId;
-                        mermaidContainer.appendChild(diagramContainer);
-
-                        diagramContainer.innerHTML = `<div class="mermaid">${mermaidCode}</div>`;
-                        mermaid.init(undefined, diagramContainer.querySelectorAll('.mermaid'));
-
-                        resolve();
-                    } catch (err) {
-                        console.error('Mermaid rendering error:', err);
-                        reject(err);
-                    }
-                };
-                s.onerror = () => {
-                    console.error('Failed to load Mermaid.js');
-                    reject(new Error('Failed to load Mermaid.js'));
-                };
-                document.head.appendChild(s);
-            } catch (err) {
-                reject(err);
-            }
-        });
-    }
-
     // --- Vertical Sidebar UI ---
     const styleElem = document.createElement("style");
     styleElem.innerHTML = `
@@ -123,8 +81,7 @@
             border-radius: 10px;
             font-size: 24px;
             cursor: pointer;
-            transition: all 0.2s
-        ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -285,7 +242,6 @@
     class GeminiClient {
         constructor() {
             this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
-            // Optimized model list - most reliable models only
             this.modelConfigs = [
                 { name: 'gemini-2.5-flash', retries: 1 },
                 { name: 'gemini-2.0-flash', retries: 1 },
@@ -300,7 +256,6 @@
                 { name: 'gemini-2.5-pro-exp', retries: 1 },
                 { name: 'gemini-2.5-flash-preview-09-2025', retries: 1 },
                 { name: 'gemini-flash-latest', retries: 1 },
-
             ];
             this.loadPerformanceData();
             this.reorderModelsByPerformance();
@@ -342,7 +297,6 @@
         }
 
         reorderModelsByPerformance() {
-            // Sort models by success rate and recency
             this.modelConfigs.sort((a, b) => {
                 const aSuccesses = this.performance[a.name]?.successes || 0;
                 const aFailures = this.performance[a.name]?.failures || 0;
@@ -355,7 +309,6 @@
                 const aRecent = this.performance[a.name]?.lastSuccess || 0;
                 const bRecent = this.performance[b.name]?.lastSuccess || 0;
 
-                // Prioritize higher success rate, then more recent success
                 if (Math.abs(aRate - bRate) > 0.1) return bRate - aRate;
                 return bRecent - aRecent;
             });
@@ -391,7 +344,6 @@
                         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                     });
 
-                    // Handle specific HTTP errors
                     if (!resp.ok) {
                         const errorText = await resp.text();
                         let errorData;
@@ -405,15 +357,12 @@
                         const errorMsg = errorData.error?.message || errorData.message || resp.statusText;
 
                         if (status === 429) {
-                            // Rate limit - retry with backoff
                             throw new Error(`Rate limit (429): ${errorMsg}`);
                         } else if (status === 400) {
-                            // Bad request - don't retry
                             console.warn(`Bad request for ${model}: ${errorMsg}`);
                             this.recordFailure(model);
-                            return null; // Skip to next model
+                            return null;
                         } else if (status >= 500) {
-                            // Server error - retry once
                             if (retry === 0) {
                                 throw new Error(`Server error (${status}): ${errorMsg}`);
                             } else {
@@ -422,7 +371,6 @@
                                 return null;
                             }
                         } else {
-                            // Other errors - don't retry
                             console.warn(`HTTP ${status} for ${model}: ${errorMsg}`);
                             this.recordFailure(model);
                             return null;
@@ -442,14 +390,12 @@
                     lastError = err;
                     console.warn(`Failed ${model} (attempt ${retry + 1}/${maxRetries + 1}):`, err.message);
 
-                    // If it's not a retryable error or we're out of retries, break
                     if (!err.message.includes('429') && !err.message.includes('Server error')) {
                         break;
                     }
                 }
             }
 
-            // All retries exhausted
             this.recordFailure(model);
             return null;
         }
@@ -472,35 +418,28 @@
                 }
             }
 
-            // If we get here, all models failed
             const errorMsg = `❌ All ${this.modelConfigs.length} models failed. Please check your API key and try again later.`;
             console.error(errorMsg);
             throw new Error(errorMsg);
         }
     }
 
-
     const callGeminiAPI = async (action, convText, command, statusCallback = null) => {
         let prompt = "This is a transcript between Noushad Bhuiyan (me) and my client. Study every detail so I can later ask about what was agreed. Transcript:\n" + convText + "\n\n";
 
         if (action === 'summarizeAndExplainWithChart') {
-            prompt += `Based on the transcript and these instructions: "${command}", provide a response in JSON format with the following structure:
+            prompt += `Based on the transcript and these instructions: "${command}", provide a response in strict JSON format (no markdown, no \`\`\`json wrapper) with the following structure:
 {
   "response": "Your detailed text response here",
-  "mermaid": "graph TD\\nA[Start] --> B{Choice}\\nB -->|Yes| C[Do this]\\nB -->|No| D[Do that]\\nC --> E[End]\\nD --> E"
+  "html_code": "<div style='font-family: Arial; padding: 10px; ...'>...visual content...</div>"
 }
 
-IMPORTANT:
-- The "response" should be your detailed analysis/explanation
-- The "mermaid" should contain valid Mermaid.js syntax that visualizes the key concepts, workflow, or relationships from the analysis
-- Use Mermaid.js syntax:
-  * For flowcharts: "graph TD" (top-down) or "graph LR" (left-right)
-  * Nodes: A[Text], B{Decision}, C((Process))
-  * Connections: A --> B, B -->|Yes| C, B -->|No| D
-  * Subgraphs: subgraph Title [content] end
-  * Styling: classDef default fill:#3742fa,stroke:#2563eb,color:#fff
-  * Example: "graph TD\\nA[Client Request] --> B{Requirements}\\nB -->|Approved| C[Development]\\nB -->|Rejected| D[Revisions]\\nC --> E[Testing]\\nD --> A\\nE --> F[Deployment]"
-- Return ONLY the JSON, no additional text before or after`;
+CRITICAL REQUIREMENTS:
+1. Return ONLY the raw JSON object. Do not wrap it in markdown code blocks.
+2. The "response" should be your detailed analysis/explanation.
+3. The "html_code" field must contain a single HTML element (e.g., a <div> or <section>) that renders the visualization.
+4. IMPORTANT: Do NOT include <html>, <head>, <body>, or <DOCTYPE> tags in "html_code". Just the inner container with inline styles or a <style> block.
+5. The visualization should look like a professional diagram using CSS for styling boxes, arrows, and text.`;
         } else if (action === 'summarizeAndExplain') {
             prompt += `Based on the transcript and these instructions: "${command}",  Provide a concise data to lookup and understand.`;
         } else if (action === 'extendedExplanation') {
@@ -557,8 +496,8 @@ IMPORTANT:
           display: flex;
           flex-direction: column;
           overflow: hidden;
-          flex: 0 0 400px;
-          min-width: 350px;
+          flex: 0 0 500px; /* Wider for diagrams */
+          min-width: 400px;
         }
 
         .notion-header {
@@ -572,6 +511,8 @@ IMPORTANT:
           flex: 1;
           overflow-y: auto;
           padding: 24px;
+          display: flex;
+          flex-direction: column;
         }
 
         .notion-input-section {
@@ -699,36 +640,28 @@ IMPORTANT:
           overflow-y: auto;
         }
 
-        .notion-chart-container {
-          background: var(--bg-primary);
+        .visual-preview-container {
+          background: white;
           border-radius: var(--radius-md);
-          padding: 20px;
+          padding: 0;
           min-height: 400px;
           border: 1px solid var(--border-color);
           display: flex;
-          align-items: center;
-          justify-content: center;
+          flex-direction: column;
           position: relative;
-          overflow: auto;
+          overflow: hidden;
+          flex: 1;
         }
 
-        .mermaid-container {
-          width: 100%;
-          height: 350px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .mermaid {
-          text-align: center;
-          max-width: 100%;
-          max-height: 100%;
-        }
-
-        .mermaid svg {
-          max-width: 100%;
-          max-height: 100%;
+        /* Ensure injected HTML renders correctly */
+        .visual-content-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         .notion-empty-state {
@@ -736,6 +669,7 @@ IMPORTANT:
           color: var(--text-secondary);
           font-size: 14px;
           padding: 40px 20px;
+          width: 100%;
         }
 
         .notion-icon {
@@ -806,11 +740,11 @@ IMPORTANT:
             <textarea
               id="instruction-input"
               class="notion-textarea"
-              placeholder="Enter your analysis request...&#10;Examples:&#10;• Summarize key agreements and action items&#10;• Create a workflow diagram of the process&#10;• Explain technical concepts discussed&#10;• Identify next steps and deliverables&#10;&#10;The AI will generate both detailed analysis AND a visual workflow diagram"
+              placeholder="Enter your analysis request...&#10;Examples:&#10;• Summarize key agreements and action items&#10;• Create a visual workflow of the process&#10;• Explain technical concepts discussed&#10;• Identify next steps and deliverables&#10;&#10;The AI will render a visual diagram for you."
             ></textarea>
             <button id="modal-think-btn" class="notion-button">
               <span>🚀</span>
-              <span>Generate Analysis & Workflow</span>
+              <span>Generate & Render</span>
             </button>
             <div id="modal-status" class="notion-status"></div>
           </div>
@@ -824,7 +758,7 @@ IMPORTANT:
               <div class="notion-empty-state">
                 <div style="font-size: 48px; margin-bottom: 12px;">🤔</div>
                 <div>Your analysis will appear here</div>
-                <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Enter a question above and click analyze</div>
+                <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Enter a question above and click generate</div>
               </div>
             </div>
           </div>
@@ -833,22 +767,21 @@ IMPORTANT:
         <!-- Resizable Divider -->
         <div class="notion-resizer" id="notion-resizer" title="Drag to resize"></div>
 
-        <!-- Right Column: Chart Section -->
+        <!-- Right Column: Visual Preview Section -->
         <div class="notion-main">
           <div class="notion-header">
             <div class="notion-section-title" style="margin: 0;">
-              <span>📊</span> Visual Workflow
+              <span>🎨</span> Visual Preview
             </div>
           </div>
 
           <div class="notion-content">
-            <div id="mermaid-container" class="notion-chart-container">
+            <div id="visual-container" class="visual-preview-container">
               <div class="notion-empty-state">
-                <div style="font-size: 48px; margin-bottom: 12px;">📊</div>
-                <div>Visual workflow will appear here</div>
-                <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Generated automatically from your analysis</div>
+                <div style="font-size: 48px; margin-bottom: 12px;">🖼️</div>
+                <div>Visual diagram will appear here</div>
+                <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Rendered directly from AI HTML</div>
               </div>
-              <div id="mermaid-diagram" class="mermaid-container" style="display: none;"></div>
             </div>
           </div>
         </div>
@@ -858,7 +791,7 @@ IMPORTANT:
 
         const { inner } = openModal(modalContent);
 
-        // Setup resizable columns for Notion-style design
+        // Setup resizable columns
         const resizer = inner.querySelector('#notion-resizer');
         const workspace = inner.querySelector('#notion-workspace');
         const sidebar = inner.querySelector('.notion-sidebar');
@@ -879,7 +812,6 @@ IMPORTANT:
             const workspaceRect = workspace.getBoundingClientRect();
             const newSidebarWidth = e.clientX - workspaceRect.left;
 
-            // Ensure minimum and maximum widths (300px to 600px for sidebar, 350px minimum for right column)
             if (newSidebarWidth >= 300 && newSidebarWidth <= 600) {
                 sidebar.style.flex = `0 0 ${newSidebarWidth}px`;
             }
@@ -899,10 +831,8 @@ IMPORTANT:
         const btn = inner.querySelector("#modal-think-btn");
         const statusDiv = inner.querySelector("#modal-status");
         const resultDiv = inner.querySelector("#modal-result");
-        const mermaidContainer = inner.querySelector("#mermaid-container");
-        const mermaidDiagram = inner.querySelector("#mermaid-diagram");
+        const visualContainer = inner.querySelector("#visual-container");
 
-        // Add keyboard shortcuts and enhanced interactions
         instr.addEventListener("keydown", e => {
             if (e.key === "Enter" && e.ctrlKey) {
                 e.preventDefault();
@@ -915,7 +845,6 @@ IMPORTANT:
 
         btn.onclick = async () => {
             if (!instr.value.trim()) {
-                // Show subtle validation feedback
                 instr.focus();
                 instr.style.borderColor = '#ef4444';
                 setTimeout(() => {
@@ -924,18 +853,15 @@ IMPORTANT:
                 return;
             }
 
-            // Update button state
             btn.disabled = true;
             const originalBtnContent = btn.innerHTML;
-            btn.innerHTML = '<span class="notion-spinner"></span><span>Generating Analysis & Diagram...</span>';
+            btn.innerHTML = '<span class="notion-spinner"></span><span>Generating & Rendering...</span>';
 
-            // Update status with loading state
             statusDiv.className = 'notion-status loading';
             statusDiv.textContent = "🔄 Initializing AI analysis...";
 
-            // Clear previous results with loading states
             resultDiv.innerHTML = '<div class="notion-empty-state"><div style="font-size: 32px; margin-bottom: 12px;">⚡</div><div>Analyzing conversation...</div></div>';
-            mermaidContainer.innerHTML = '<div class="notion-empty-state"><div style="font-size: 32px; margin-bottom: 12px;">📊</div><div>Generating workflow diagram...</div></div><div id="mermaid-diagram" class="mermaid-container" style="display: none;"></div>';
+            visualContainer.innerHTML = '<div class="notion-empty-state"><div style="font-size: 32px; margin-bottom: 12px;">🎨</div><div>Generating visual HTML...</div></div>';
 
             const conv = extractConversation();
             try {
@@ -944,76 +870,63 @@ IMPORTANT:
                     statusDiv.innerHTML = `🔄 ${status}`;
                 });
 
-                // Parse JSON response using the proper technique
                 let responseText = res;
-                let mermaidCode = null;
+                let htmlContent = null;
 
-                // Find the first { and last } to extract JSON
-                const firstBrace = res.indexOf('{');
-                const lastBrace = res.lastIndexOf('}');
+                // Robust JSON Extraction
+                let cleanRes = res.trim();
+
+                // Remove markdown code blocks if present
+                cleanRes = cleanRes.replace(/^```json\s*/, '');
+                cleanRes = cleanRes.replace(/^```\s*/, '');
+                cleanRes = cleanRes.replace(/\s*```$/, '');
+
+                const firstBrace = cleanRes.indexOf('{');
+                const lastBrace = cleanRes.lastIndexOf('}');
 
                 if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-                    const jsonStr = res.substring(firstBrace, lastBrace + 1);
-
-                    // Try to parse the JSON
+                    const jsonStr = cleanRes.substring(firstBrace, lastBrace + 1);
                     try {
                         const jsonData = JSON.parse(jsonStr);
                         console.log('Parsed JSON:', jsonData);
                         responseText = jsonData.response || res;
-                        mermaidCode = jsonData.mermaid || null;
+                        htmlContent = jsonData.html_code || null;
                     } catch (e) {
-                        // If JSON parsing fails, treat the entire response as text
-                        responseText = res;
-                        mermaidCode = null;
-                        console.warn('Failed to parse JSON response:', e);
-                        console.log('Attempted to parse:', jsonStr.substring(0, 200) + '...');
+                        // Parsing failed
+                        console.error('JSON Parse Error:', e);
+                        responseText = "The AI returned an invalid JSON format. Raw response:\n" + res;
+                        htmlContent = null;
                     }
                 } else {
-                    // No JSON structure found, treat as plain text
-                    responseText = res;
-                    mermaidCode = null;
+                    // No JSON found
                     console.warn('No JSON structure found in response');
+                    responseText = res;
                 }
 
-                // Success state
                 statusDiv.className = 'notion-status success';
                 statusDiv.innerHTML = '✅ Analysis complete';
 
-                // Format and display the response
+                // Display Text Response
                 const formattedResponse = convertMarkdownToUnicode(responseText);
                 resultDiv.innerHTML = `<div style="line-height: 1.8;">${formattedResponse.replace(/\n/g, '<br>')}</div>`;
 
-                // Render Mermaid diagram with proper implementation
-                if (mermaidCode) {
-                    statusDiv.innerHTML = '✅ Analysis complete • Loading Mermaid library...';
-
-                    // Load and render Mermaid fresh each time
-                    try {
-                        await loadAndRenderMermaid(mermaidCode, mermaidContainer);
-                        statusDiv.innerHTML = '✅ Analysis complete • Workflow diagram rendered';
-                    } catch (err) {
-                        console.error('Mermaid loading/rendering error:', err);
-                        mermaidContainer.innerHTML = `
-                            <div class="notion-empty-state">
-                                <div style="font-size: 32px; margin-bottom: 12px;">⚠️</div>
-                                <div>Workflow diagram rendering failed</div>
-                                <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Check the console for details</div>
-                            </div>
-                        `;
-                    }
+                // Render HTML Directly
+                if (htmlContent) {
+                    statusDiv.innerHTML = '✅ Analysis complete • Visual Rendered';
+                    // Inject HTML directly into the container
+                    visualContainer.innerHTML = `<div class="visual-content-wrapper">${htmlContent}</div>`;
                 } else {
-                    mermaidContainer.innerHTML = `
+                    visualContainer.innerHTML = `
                         <div class="notion-empty-state">
                             <div style="font-size: 32px; margin-bottom: 12px;">📝</div>
-                            <div>No workflow data available</div>
-                            <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Try asking for process flow or workflow</div>
+                            <div>No visual generated</div>
+                            <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Try asking for a diagram or workflow</div>
                         </div>
                     `;
                 }
             } catch (err) {
                 console.error('Analysis error:', err);
 
-                // Error state
                 statusDiv.className = 'notion-status error';
                 statusDiv.innerHTML = '❌ Analysis failed';
 
@@ -1022,19 +935,16 @@ IMPORTANT:
                         <div style="font-size: 32px; margin-bottom: 12px;">💥</div>
                         <div>Something went wrong</div>
                         <div style="font-size: 14px; margin-top: 8px; color: #ef4444;">${err.message}</div>
-                        <div style="font-size: 12px; margin-top: 16px; opacity: 0.7;">Please try again or check your API key</div>
                     </div>
                 `;
 
-                flowchartContainer.innerHTML = `
+                visualContainer.innerHTML = `
                     <div class="notion-empty-state">
                         <div style="font-size: 32px; margin-bottom: 12px;">🚫</div>
-                        <div>Could not generate workflow diagram</div>
-                        <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">Please try the analysis again</div>
+                        <div>Could not generate visual</div>
                     </div>
                 `;
             } finally {
-                // Reset button state
                 btn.disabled = false;
                 btn.innerHTML = originalBtnContent;
             }
@@ -1064,7 +974,6 @@ IMPORTANT:
             statusDiv = inner.querySelector("#modal-custom-status"),
             resDiv = inner.querySelector("#modal-custom-result");
 
-        // Add hover effects
         convoEl.addEventListener('focus', () => convoEl.style.borderColor = '#667eea');
         convoEl.addEventListener('blur', () => convoEl.style.borderColor = '#e5e7eb');
         instrEl.addEventListener('focus', () => instrEl.style.borderColor = '#667eea');
@@ -1110,7 +1019,6 @@ IMPORTANT:
     btnCustom.addEventListener('click', openCustomModal);
 
 
-
     // --- Markdown to Unicode Conversion ---
     const convertMarkdownToUnicode = text => {
         const charMapping = { 'A': '𝗔', 'B': '𝗕', 'C': '𝗖', 'D': '𝗗', 'E': '𝗘', 'F': '𝗙', 'G': '𝗚', 'H': '𝗛', 'I': '𝗜', 'J': '𝗝', 'K': '𝗞', 'L': '𝗟', 'M': '𝗠', 'N': '𝗡', 'O': '𝗢', 'P': '𝗣', 'Q': '𝗤', 'R': '𝗥', 'S': '𝗦', 'T': '𝗧', 'U': '𝗨', 'V': '𝗩', 'W': '𝗪', 'X': '𝗫', 'Y': '𝗬', 'Z': '𝗭', 'a': '𝗮', 'b': '𝗯', 'c': '𝗰', 'd': '𝗱', 'e': '𝗲', 'f': '𝗳', 'g': '𝗴', 'h': '𝗵', 'i': '𝗶', 'j': '𝗷', 'k': '𝗸', 'l': '𝗹', 'm': '𝗺', 'n': '𝗻', 'o': '𝗼', 'p': '𝗽', 'q': '𝗾', 'r': '𝗿', 's': '𝘀', 't': '𝘁', 'u': '𝘂', 'v': '𝘃', 'w': '𝘄', 'x': '𝘅', 'y': '𝘆', 'z': '𝘇' };
@@ -1154,4 +1062,3 @@ IMPORTANT:
     };
 
 })();
-

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JAV-JHS
 // @namespace    JAV-JHS
-// @version      3.3.6.008
+// @version      3.3.6.009
 // @author       JAV-JHS
 // @description  Jav-鉴黄师 收藏、屏蔽、标记已下载; 屏蔽标签、屏蔽演员、同步收藏演员、新作品检测; 免VIP查看热播、Top250排行榜、Fc2ppv、可查看所有评论信息、相关清单; 支持云盘备份; 以图识图; 字幕搜索; JavDb|JavBus
 // @license      MIT
@@ -1717,7 +1717,7 @@ window.ImageHoverPreview = class {
             header.className = "console-logger-header";
             const title = document.createElement("div");
             title.className = "console-logger-title";
-            title.textContent = "JHS V3.3.6.008";
+            title.textContent = "JHS V3.3.6.009";
             const controls = document.createElement("div");
             controls.className = "console-logger-controls";
             this.maximizeBtn = document.createElement("button");
@@ -3850,9 +3850,23 @@ class OtherSitePlugin extends BasePlugin {
                 $btn.css("backgroundColor", this.errorBackgroundColor);
             }
             insertCacheData && this.asyncQueue.addTask((() => {
-                const newCacheData = localStorage.getItem(cacheKey) ? JSON.parse(localStorage.getItem(cacheKey)) : {};
-                newCacheData[siteKey] = insertCacheData;
-                localStorage.setItem(cacheKey, JSON.stringify(newCacheData));
+                const performWrite = () => {
+                    const newCacheData = localStorage.getItem(cacheKey) ? JSON.parse(localStorage.getItem(cacheKey)) : {};
+                    newCacheData[siteKey] = insertCacheData;
+                    localStorage.setItem(cacheKey, JSON.stringify(newCacheData));
+                };
+                try {
+                    performWrite();
+                } catch (error) {
+                    if ("QuotaExceededError" === error.name || "NS_ERROR_DOM_QUOTA_REACHED" === error.name || "SecurityError" === error.name) try {
+                        clog.warn("【缓存警告】localStorage空间已满，正在清理并尝试重写...");
+                        this.getBean("SettingPlugin").cleanAllJhsLocalStorageCache();
+                        performWrite();
+                        clog.log("【缓存修复】空间清理成功，数据已重新写入");
+                    } catch (retryError) {
+                        clog.error("【重试失败】清理后仍无法写入数据：", retryError);
+                    } else clog.error("【意外错误】写入 localStorage 时发生非容量相关错误：", error);
+                }
             }));
             tagHtml && $btn.append(tagHtml);
         } catch (e) {
@@ -7485,10 +7499,9 @@ class SettingPlugin extends BasePlugin {
             "jhs_dmm_video" === key && localStorage.removeItem("jhs_other_site_dmm");
         }));
         $("#clean-all").on("click", (() => {
-            this.cacheItems.forEach((item => localStorage.removeItem(item.key)));
+            this.cleanAllJhsLocalStorageCache();
             show.ok("全部缓存已清理");
             $("#cache-data-display").hide();
-            localStorage.removeItem("jhs_other_site_dmm");
         }));
         $(".view-btn").on("click", (event => {
             const key = $(event.currentTarget).data("key"), data = localStorage.getItem(key), displayDiv = $("#cache-data-display"), pre = displayDiv.find("pre");
@@ -7904,6 +7917,10 @@ class SettingPlugin extends BasePlugin {
             console.error(err);
             show.error("导出数据时出错: " + err.message);
         }
+    }
+    cleanAllJhsLocalStorageCache() {
+        this.cacheItems.forEach((item => localStorage.removeItem(item.key)));
+        localStorage.removeItem("jhs_other_site_dmm");
     }
 }
 
@@ -9182,15 +9199,15 @@ class ScreenShotPlugin extends BasePlugin {
         return imgUrl;
     }
     async getJavStoreScreenShot(carNum2) {
-        let url = `https://javstore.net/search?q=${carNum2}`;
+        let url = `https://javstore.net/search?q=${carNum2.toLowerCase().replace("fc2-", "")}`;
         clog.log("正在解析缩略图:", url);
         let html = await gmHttp.get(url);
-        const $dom = utils.htmlTo$dom(html), tempCarNum = carNum2.toLowerCase().replace("fc2-", "").replace("-", "");
+        const $dom = utils.htmlTo$dom(html), tempCarNum = carNum2.toLowerCase().replace(/fc2-(ppv-)?/g, "").replace(/-/g, "");
         let detailPageUrl = null;
         const $itemList = $dom.find("main .grid a");
         for (let i = 0; i < $itemList.length; i++) {
             const href = $($itemList[i]).attr("href") || "";
-            if (href.toLowerCase().replace(/fc2-(ppv-)?/g, "").replace("-", "").includes(tempCarNum)) {
+            if (href.toLowerCase().replace(/fc2-(ppv-)?/g, "").replaceAll("-", "").includes(tempCarNum)) {
                 detailPageUrl = new URL(href, "https://javstore.net").href;
                 break;
             }
@@ -9207,51 +9224,6 @@ class ScreenShotPlugin extends BasePlugin {
             return null;
         }
         return imgUrl.replace(".th", "");
-    }
-    async getJavBestScreenShot(carNum2) {
-        let url = `https://javbest.net/?s=${carNum2}`;
-        clog.log("正在解析缩略图:", url);
-        let html = await gmHttp.get(url);
-        const $dom = utils.htmlTo$dom(html), href = $dom.find(".app_loop_thumb a").first().attr("href");
-        if (!href) {
-            clog.error("解析JavBest搜索页失败:", url);
-            throw new Error("解析JavBest搜索页失败");
-        }
-        const title = $dom.find(".app_loop_thumb a").first().attr("title");
-        if (!title.toLowerCase().includes(carNum2.toLowerCase())) {
-            clog.error("解析JavBest搜索页失败:", title);
-            throw new Error("解析JavBest搜索页失败");
-        }
-        const detailPageHtml = await gmHttp.get(href);
-        let imgUrl = $(detailPageHtml).find('#content a img[src*="_t.jpg"]').attr("src");
-        if (!imgUrl) {
-            clog.error("解析JavBest缩略图失败:", url);
-            throw new Error("解析JavBest缩略图失败");
-        }
-        imgUrl = imgUrl.replace("_t", "").replace("http:", "https:");
-        return imgUrl;
-    }
-    async getJavFreeScreenShot(carNum2) {
-        let url = `https://javfree.me/search/${carNum2}/`, html = await gmHttp.get(url);
-        const $itemList = utils.htmlTo$dom(html).find("article h2.entry-title a");
-        if (!$itemList || 0 === $itemList.length) {
-            clog.error("解析JavFree搜索页失败:", url);
-            throw new Error("解析JavFree搜索页失败");
-        }
-        let detailPageUrl = $($itemList[0]).attr("href"), detailPageHtml = await gmHttp.get(detailPageUrl);
-        const $imgList = utils.htmlTo$dom(detailPageHtml).find("#main > article > .entry-content > p img");
-        if (!$imgList || 0 === $imgList.length) {
-            clog.error("解析JavFree详情页失败:", detailPageUrl);
-            throw new Error("解析JavFree详情页失败");
-        }
-        const srcList = $imgList.filter((function() {
-            const src = $(this).attr("src");
-            return src && src.toLowerCase().endsWith(".jpeg");
-        })).map((function() {
-            return $(this).attr("src");
-        })).get();
-        console.log(srcList);
-        return srcList.at(-1);
     }
     addImg(title, imgUrl) {
         if (imgUrl) {

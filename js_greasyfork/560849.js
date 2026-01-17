@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.1.2
+// @version      1.1.3
 // @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + Demulti 실시간 알림
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -417,9 +417,9 @@
         GM_setValue(RUNNING_LIST_KEY, currentlyRunningKeys);
         GM_setValue(HOLD_LIST_KEY, currentlyHoldKeys);
 
-        // UI 표시용 (Running은 Run단위, Hold/Completed는 Cell단위 수량 표시)
-        const uniqueRunningPlateCount = [...new Set(runningItems.map(item => item.imprtId || item.insId))].length;
-        currentCounts['status-dem-run'] = uniqueRunningPlateCount;
+        // UI 표시용 (모든 상태 Cell단위 수량 표시)
+        const runningCount = runningItems.length;
+        currentCounts['status-dem-run'] = runningCount;
         currentCounts['status-dem-hold'] = holdItems.length;
         currentCounts['status-dem-cfmd'] = cfmdItems.length;
 
@@ -428,8 +428,8 @@
         const cfmdEl = document.getElementById('status-dem-cfmd');
 
         if (runEl) {
-            runEl.innerText = uniqueRunningPlateCount;
-            runEl.style.color = uniqueRunningPlateCount > 0 ? '#2563eb' : '#cbd5e1';
+            runEl.innerText = runningCount;
+            runEl.style.color = runningCount > 0 ? '#2563eb' : '#cbd5e1';
         }
         if (holdEl) {
             holdEl.innerText = holdItems.length;
@@ -488,7 +488,7 @@
                 📊 LRS 실시간 상세 현황
                 <span id="modal-update-time" style="font-size: 13px; color: #94a3b8; font-weight: normal;"></span>
             </h2>
-
+            
             <!-- (1) LIB 상세 -->
             <div style="background: #efefff; padding: 25px; border-radius: 20px; border: 2px solid #4834d4; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(72, 52, 212, 0.1);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 3px solid #fff; padding-bottom: 12px;">

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         uwuowo 한글패치
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-28
+// @version      2026-01-15.1
 // @description  로스트아크 북미 미터기 한글패치
 // @author       AGAK
 // @match        https://uwuowo.mathi.moe/*
@@ -19,31 +19,8 @@
     // 대소문자를 구분합니다.
     const customTranslations = {
         "Raid Statistics": "레이드 통계",
-        "Stats": "통계",
-        "Leaderboards": "순위표",
-        "Style Book": "스타일 북",
-
         "Filters": "필터",
         "Raid": "레이드",
-
-        "Behemoth, the Storm Commander": "폭풍의 지휘관, 베히모스",
-        "Behemoth - Gate 1": "베히모스 1관문",
-        "Behemoth, Cruel Storm Slayer": "잔혹한 폭풍의 처단자, 베히모스",
-        "Behemoth - Gate 2": "베히모스 2관문",
-        "Akkan, Lord of Death": "죽음의 왕, 일리아칸",
-        "Aegir - Gate 1": "1막 1관문 - 일리아칸",
-        "Aegir, the Oppressor": "짓밟는 자, 에기르",
-        "Aegir - Gate 2": "1막 2관문 - 에기르",
-        "Narok the Butcher": "도륙하는 자, 나로크",
-        "Brelshaza - Gate 1": "2막 1관문 - 나로크",
-        "Phantom Manifester Brelshaza": "몽환의 현시자, 아브렐슈드",
-        "Brelshaza - Gate 2": "2막 2관문 - 아브렐슈드",
-        "Infernas": "어둠의 주인 카멘",
-        "Mordum - Gate 1": "3막 1관문 - 카멘",
-        "Blossoming Fear, Naitreya": "만개한 공포, 나이트레야",
-        "Mordum - Gate 2": "3막 2관문 - 나이트레아",
-        "Mordum, the Abyssal Punisher": "심연의 징벌자, 모르둠",
-        "Mordum - Gate 3": "3막 3관문 - 모르둠",
 
         "Difficulty": "난이도",
         "Normal": "노말",
@@ -52,14 +29,12 @@
         "Item Level": "아이템 레벨",
         "Combat Power": "전투력",
         "Show stats from": "통계 범위 :",
-        "and less than": "~",
+        "Damage Type": "데미지 타입(uDPS: 버프제외)",
         "Additional Options": "추가 옵션",
         "Include Bus": "버스 포함",
         "Include Weird": "이상한 파티 포함",
         "Patch": "패치 버전",
         "Call of the Wildsoul": "환수사 추가",
-        "April Balance": "4월 밸런스 패치",
-        "July Balance": "7월 밸런스 패치",
         "Sort By": "정렬 기준",
         "Floor": "저점",
         "Q1": "하위 25%",
@@ -69,15 +44,6 @@
         "Best": "최고기록",
         "Popularity": "표본수",
 
-        "Behemoth Gate 1": "베히모스 1관문 - 베히모스",
-        "Behemoth Gate 2": "베히모스 2관문 - 베히모스",
-        "Aegir Gate 1": "1막 1관문 - 일리아칸",
-        "Aegir Gate 2": "1막 2관문 - 에기르",
-        "Brelshaza Gate 1": "2막 1관문 - 나로크",
-        "Brelshaza Gate 2": "2막 2관문 - 아브렐슈드",
-        "Mordum Gate 1": "3막 1관문 - 카멘",
-        "Mordum Gate 2": "3막 2관문 - 나이트레아",
-        "Mordum Gate 3": "3막 3관문 - 모르둠",
         "Normal": "노말",
         "Hard": "하드",
         "DPS Performance": "DPS 통계",
@@ -91,6 +57,7 @@
         "Judgment": "심판자",
         "Predator": "포식자",
         "Punisher": "처단자",
+        "Shining Knight": "빛의 기사",
         "Grace of the Empress": "황후의 은총",
         "Order of the Emperor": "황제의 칙령",
         "Communication Overflow": "넘치는 교감",
@@ -139,6 +106,7 @@
         "Gunlancer": "워로드",
         "Paladin": "홀리나이트",
         "Slayer": "슬레이어",
+        "Valkyrie": "발키리",
         "Arcana": "아르카나",
         "Summoner": "서머너",
         "Sorceress": "소서리스",

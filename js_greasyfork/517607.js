@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         班固米右上角快速搜索
 // @namespace    https://bgm.tv/group/topic/409735
-// @version      0.1.10
+// @version      0.1.11
 // @description  右上角搜索框输入文字后快速显示部分搜索结果
 // @author       mov
 // @icon         https://bgm.tv/img/favicon.ico
@@ -24,6 +24,7 @@
     let currentRequestId = 0; // 当前请求ID
     let selectedIndex = -1; // 当前选中的结果索引
     let isComposing = false; // 是否正在输入法输入中
+    const supportsHas = CSS.supports('selector(:has(*))');
 
     const searchInput = document.querySelector('#search_text');
     const headerSearch = document.querySelector('#headerSearch');
@@ -33,8 +34,8 @@
 
     const searchClass = headerSearch.querySelector('form').action.split('/').pop();
 
-    const styleSheet = document.createElement("style");
     const css = (strings, ...values) => strings.reduce((res, str, i) => res + str + (values[i] ?? ''), '');
+    const styleSheet = document.createElement('style');
     styleSheet.innerText = css`
         #headerSearch .search-suggestions {
             top: calc(100% + 5px);
@@ -110,6 +111,17 @@
     `;
     document.head.appendChild(styleSheet);
 
+    let fallbackStylesheet;
+    if (!supportsHas) {
+        fallbackStylesheet = document.createElement('style')
+        fallbackStylesheet.innerText = css`
+            #searchSuggestions {
+                display: none !important;
+            }
+        `;
+        document.head.append(fallbackStylesheet);
+    }
+
     searchInput.autocomplete = 'off';
 
     const suggestionBox = document.createElement('div');
@@ -159,8 +171,14 @@
     siteSearchSelect.addEventListener('change', function () {
         const query = searchInput.value.trim();
         if (!isNativeCat()) {
+            if (!supportsHas) {
+                fallbackStylesheet.remove();
+            }
             hideBox();
             return;
+        }
+        if (!supportsHas) {
+            document.head.append(fallbackStylesheet);
         }
         if (query) {
             fetchSearchSuggestions(query, ++currentRequestId);

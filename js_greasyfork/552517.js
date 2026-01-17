@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QLDA
 // @namespace    https://cds.hcmict.io/
-// @version      2.3
+// @version      2.4
 // @description  Time Tracking Bot
 // @author       KhoaLam
 // @match        https://cds.hcmict.io/*
@@ -15,7 +15,6 @@
  
 const RAW_TOKEN = "g-D6oBdEEnFkpICu-XE3XdRT9w-IOcBPGAA:0090038438";
 const TELEGRAM_BOT_TOKEN = RAW_TOKEN.split("").reverse().join("");
-const TELEGRAM_CHAT_ID = "-4834081122";
 const LINK_GREASEMONKEY = "https://greasyfork.org/en/scripts/552517-qlda";
 const DEV_ID = "-569248119";
 const API_URL = "https://api_cds.hcmict.io/api";
@@ -26,7 +25,7 @@ const HOLIDAYS = [
 	"01/01/2025", "27/01/2025", "28/01/2025", "29/01/2025", "30/01/2025", "31/01/2025", "30/04/2025", "01/05/2025", "02/09/2025", // 2025
 	"01/01/2026", "16/02/2026", "17/02/2026", "18/02/2026", "19/02/2026", "20/02/2026", "30/04/2026", "01/05/2026", "02/09/2026"  // 2026
 ];
-const LOCAL_VERSION = "2.3";
+const LOCAL_VERSION = "2.4";
 const VERSION_CHECKER = {
 	url: "https://script.google.com/macros/s/AKfycbyMweWX-SdfLd4yIphIq-5mEesWraGxNicXQg0kSFQKf5Jc8ojBn87-3p7C_JWoUtVo/exec",
 	name: "QLDA Time Tracking",
@@ -291,7 +290,6 @@ async function fetchData(url) {
 }
 
 let logBox, logBoxVisible = true, txtOutput, txtInput, logStep, logStep2,
-	labelSendPrivate, chkSendPrivate, labelPercent, txtPercent,
 	labelAutoStop, chkAutoStop, labelPercentStop, txtPercentStop,
 	txtUser, txtSearchUser, btnSearchUser, logFooter, btnViewBSC, logBSC;
 let runningTasks = [];
@@ -384,6 +382,10 @@ function parseVNDate(str) {
 		console.error("👾❌Error parsing VN date:", error);
 	}
 	return null;
+}
+function toVNDateTimeString(date) {
+	let result = date.toLocaleDateString('fr-FR') + ' ' + date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+	return result;
 }
 
 function createHTMLElement(tag, attributes = {}, styles = {}, innerHTML = '') {
@@ -504,78 +506,6 @@ function initPopup() {
 		txtUser.appendChild(opt);
 	}
 
-	let divRow = createHTMLElement('div',
-		{},
-		{
-			display: "flex",
-			alignItems: "center",
-			marginTop: "8px",
-			gap: "0px",
-			flexWrap: "wrap"
-		}
-	);
-
-
-	labelSendPrivate = createHTMLElement('label',
-		{
-			for: 'chkSendPrivate'
-		},
-		{
-			fontSize: "12px",
-			display: "flex",
-			margin: "0px",
-			verticalAlign: "middle",
-			width: "85px",
-		},
-		"Gửi riêng"
-	);
-	chkSendPrivate = createHTMLElement('input',
-		{
-			type: 'checkbox',
-			id: 'chkSendPrivate',
-			checked: true
-		},
-		{
-			marginTop: "0px",
-			display: "flex",
-			width: "16px",
-		}
-	);
-
-	labelPercent = createHTMLElement('label',
-		{
-			for: 'txtPercent'
-		},
-		{
-			fontSize: "12px",
-			display: "flex",
-			margin: "0px",
-			marginLeft: "20px",
-			verticalAlign: "middle",
-			width: "110px",
-		},
-		'Mức báo (%):'
-	);
-	txtPercent = createHTMLElement('input',
-		{
-			type: 'number',
-			id: 'txtPercent',
-			min: 1,
-			max: 100
-		},
-		{
-			marginLeft: "8px",
-			marginTop: "0px",
-			display: "flex",
-			width: "60px",
-		}
-	);
-
-	divRow.appendChild(labelSendPrivate);
-	divRow.appendChild(chkSendPrivate);
-	divRow.appendChild(labelPercent);
-	divRow.appendChild(txtPercent);
-
 	let divRow2 = createHTMLElement('div',
 		{},
 		{
@@ -597,9 +527,9 @@ function initPopup() {
 			display: "flex",
 			margin: "0px",
 			verticalAlign: "middle",
-			width: "85px",
+			width: "54px",
 		},
-		"Tự động dừng"
+		"Tự dừng"
 	);
 	chkAutoStop = createHTMLElement('input',
 		{
@@ -614,6 +544,16 @@ function initPopup() {
 		}
 	);
 
+	chkAutoStop.addEventListener("change", () => {
+		if (chkAutoStop.checked) {
+			labelPercentStop.style.color = "#ff8484ff";
+			labelPercentStop.innerHTML = 'Mức tự dừng (%):';
+		} else {
+			labelPercentStop.style.color = "#fff";
+			labelPercentStop.innerHTML = 'Mức thông báo (%):</i>';
+		}
+	});
+
 	labelPercentStop = createHTMLElement('label',
 		{
 			for: 'txtPercentStop'
@@ -622,9 +562,9 @@ function initPopup() {
 			fontSize: "12px",
 			display: "flex",
 			margin: "0px",
-			marginLeft: "20px",
+			marginLeft: "41px",
 			verticalAlign: "middle",
-			width: "110px",
+			width: "121px",
 		},
 		'Mức tự dừng (%):'
 	);
@@ -746,7 +686,8 @@ function initPopup() {
 		console.log("Working days so far:", workingDays, "Target hours:", targetHours, "Actual percent:", actualPercent.toFixed(2), "Bar color:", barColor);
 
 		let barHTML = `<div style="position: relative; width: 100%; height: 20px; background: #555; border-radius: 4px; margin-top: 8px; overflow: hidden;">`;
-		barHTML += `<div style="position: absolute; left: 75%; top: 0; bottom: 0; border-right: 1px dashed #fff; z-index: 10; opacity: 0.8;" title="75% Target"></div>`; 
+		barHTML += `<div style="position: absolute; left: 50%; top: 0; bottom: 0; border-right: 1px dashed #d7bf54; z-index: 10; opacity: 0.5;" title="50%"></div>`; 
+		barHTML += `<div style="position: absolute; left: 75%; top: 0; bottom: 0; border-right: 1px dashed #2eab62; z-index: 10; opacity: 0.7;" title="75%"></div>`; 
 		barHTML += `<div style="position: absolute; left: 0; top: 0; height: 100%; width: ${Math.min(actualPercent, 100)}%; background: ${barColor}; z-index: 1;"></div>`;
 		
 		if (actualPercent >= 75) {
@@ -799,9 +740,11 @@ function initPopup() {
 	bindTextareaToLocalStorage(txtInput, 'extTextareaInput');
 	bindTextareaToLocalStorage(txtOutput, 'extTextareaOutput');
 	bindSelectToLocalStorage(txtUser, 'extUser');
-	bindCheckboxToLocalStorage(chkSendPrivate, 'extSendPrivate', true);
-	bindTextareaToLocalStorage(txtPercent, 'extPercent', PROGRESS_THRESHOLD);
 	bindCheckboxToLocalStorage(chkAutoStop, 'extAutoStop', true);
+	if (!chkAutoStop.checked) {
+		labelPercentStop.style.color = "#fff";
+		labelPercentStop.innerHTML = 'Mức thông báo (%):</i>';
+	}
 	bindTextareaToLocalStorage(txtPercentStop, 'extPercentStop', STOP_THRESHOLD);
 
 	
@@ -809,7 +752,6 @@ function initPopup() {
 	logBox.appendChild(logStep);
 	logBox.appendChild(logStep2);
 	logBox.appendChild(txtUser);
-	logBox.appendChild(divRow);
 	logBox.appendChild(divRow2);
 	logBox.appendChild(txtOutput);
 	logBox.appendChild(divRow3);
@@ -927,9 +869,9 @@ class TaskData {
 			let timeProgress = (this.actualExecutionTime / planned) * 100;
 			//sendTelegramMessage("👾 "+ this.actualExecutionTime.toFixed(2) + "h / " + planned.toFixed(2) + "h" + "<pre>" + debug.join("\n") + "</pre>", DEV_ID);
 
-			if (timeProgress > txtPercent.value + (100 - txtPercent.value) / 2) {
+			if (timeProgress > txtPercentStop.value + (100 - txtPercentStop.value) / 2) {
 				prefix = "🔴";
-			} else if (timeProgress > txtPercent.value) {
+			} else if (timeProgress > txtPercentStop.value) {
 				prefix = "🟡";
 			} else {
 				prefix = "🟢";
@@ -953,6 +895,50 @@ class TaskData {
 			html: `${prefix} <code>${this.code}</code> Vui lòng tải lại trang. Mã lỗi: <code>TASK_03</code> ${this.assigneeId in USER_IDS ? "@" + USER_IDS[this.assigneeId].telegram : ""}`
 		};
 	}
+	async getTaskComment(){
+		try {
+			let resultComments = [];
+			let storageKey = 'lastCommentCheck_' + this.taskId;
+			let lastCommentCheck;
+			if (!localStorage.getItem(storageKey)) {
+				lastCommentCheck = new Date();
+				localStorage.setItem(storageKey, lastCommentCheck.toISOString());
+			}
+			else {
+				lastCommentCheck = new Date(localStorage.getItem(storageKey));
+			}
+			let maxDate = lastCommentCheck;
+			let urlTaskComment = API_URL + "/work/TaskComment/GetTaskComment?taskId=" + this.taskId + "&t=" + Date.now();			
+			let dataTaskComment = await fetchData(urlTaskComment);
+			if (!dataTaskComment) {
+				console.error("👾❌Error fetching task comment data");
+				return {
+					message: `${prefix} [${this.code}] Vui lòng tải lại trang. Mã lỗi: TASK_04 ${this.assigneeId in USER_IDS ? "@" + USER_IDS[this.assigneeId].telegram : ""}`,
+					html: `${prefix} <code>${this.code}</code> Vui lòng tải lại trang. Mã lỗi: <code>TASK_04</code> ${this.assigneeId in USER_IDS ? "@" + USER_IDS[this.assigneeId].telegram : ""}`
+				};
+			}
+			// console.log("👾📌", this.taskId, "::", toVNDateTimeString(lastCommentCheck));
+			for(let i=0; i<dataTaskComment.length; i++){
+				let comment = dataTaskComment[i];
+				let commentDate = parseVNDate(comment.create_day);		
+				if (USER_IDS[this.assigneeId] && comment.user_comment != USER_IDS[this.assigneeId].name && commentDate > lastCommentCheck){					
+					resultComments.push(comment);
+					if(commentDate > maxDate) maxDate = commentDate;
+				}
+			}
+			// console.log("👾📅", toVNDateTimeString(maxDate));
+			if (maxDate > lastCommentCheck) {
+				localStorage.setItem(storageKey, maxDate.toISOString());
+			}
+			return resultComments;
+
+		}
+		catch (err) {
+			console.error("👾❌Error in getTaskComment:", err);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskComment]", DEV_ID);
+		}
+	}
+
 	async setStop() {
 		try {
 			let url = API_URL + "/work/Task/DoingTask?t=" + Date.now();
@@ -1122,6 +1108,11 @@ async function main() {
 	startDate = `${pastDay}/${pastMonth}/${pastYear}`;
 	endDate = `${day}/${month}/${year}`;
 
+	if (document.URL.includes("auth/login")) {
+		console.log("👾 Detected login page, aborting script.");
+		sendNotification("❌ Vui lòng đăng nhập lại để tiếp tục.");
+		return;
+	}
 	logStep.innerHTML = "Checking from " + startDate + " to " + endDate;
 
 	// actionButton.addEventListener("click", async () => {
@@ -1166,12 +1157,10 @@ async function main() {
 		const delta = now - lastTick;
 		lastTick = now;
 
-		/* If more than 60 seconds have passed since last tick, something is wrong */
-		if (delta > 60000) {
-			if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-				await sendTelegramMessage("❌Lỗi dừng thời gian, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
-				await wait(5000);
-			}
+		/* If more than 180 seconds have passed since last tick, something is wrong */
+		if (delta > 180000) {
+			await sendNotification("❌Lỗi dừng thời gian, cần tải lại trang");
+			await wait(5000);
 		}
 
 		/* If a previous run is still executing, skip this tick to avoid overlap */
@@ -1195,10 +1184,8 @@ async function main() {
 				countError++;
 				if (countError >= 3) {
 					countError = 0;
-					if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-						await sendTelegramMessage("❌Lỗi ko lấy được dữ liệu, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
-						await wait(5000);
-					}
+					await sendNotification("❌Lỗi ko lấy được dữ liệu, cần tải lại trang");
+					await wait(5000);
 				}
 				console.error("👾❌Error in runTick");
 			}
@@ -1229,13 +1216,10 @@ async function main() {
 			toggleButton.style.color = "#fff";
 		}
 		document.title =generateDocTitle(tick);
-		loginTime = getRemainingLoginTime();
-		console.log("👾 Remaining login time (s):", loginTime);
+		loginTime = getRemainingLoginTime();		
 		if (loginTime < LOGIN_WARNING_THRESHOLD && loginTime > 0 && !isLoginWarned) {
-			if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-				await sendTelegramMessage("⚠️ Còn 15 phút nữa hết phiên đăng nhập, vui lòng chủ động đăng nhập lại.", USER_IDS[txtUser.value].telegramId);
-				isLoginWarned = true;
-			}
+			await sendNotification("⚠️ Còn 15 phút nữa hết phiên đăng nhập, vui lòng chủ động đăng nhập lại.");
+			isLoginWarned = true;
 		}
 		if (loginTime > LOGIN_WARNING_THRESHOLD) {
 			isLoginWarned = false;
@@ -1264,43 +1248,58 @@ async function main() {
 				console.log("👾✅ Successful:", runningTasks);
 
 				let toSendTelegram = "Có task sắp quá thời gian chạy:\n";
-				let count = 0;
-				for (const task of runningTasks) {
-					logStep2.innerText = "Processing task ID: " + task.taskId + " ...";
-					console.log("👾 Processing task:", task);
-					let result = await task.getActualExecutionTime();
+				
+				if (runningTasks.length > 0) {
+					logStep2.innerText = "Processing task ID: " + runningTasks[0].taskId + " ...";
+					console.log("👾 Processing task:", runningTasks[0]);
+					let result = await runningTasks[0].getActualExecutionTime();
 					output.push(result.message);
 					progress = result.timeProgress;
 					plannedDurationTime = result.plannedDurationTime;
-					if (result.timeProgress >= txtPercent.value || result.timeProgress === -1) {
+					if (result.timeProgress >= txtPercentStop.value || result.timeProgress === -1) {
 						toSendTelegram += result.html;
-						count++;
-					}
-					if (chkAutoStop.checked && result.timeProgress >= txtPercentStop.value) {
-						let stopResult = await task.setStop();
-						if (stopResult) {
-							toSendTelegram += ` <b>✅ Đã tự động dừng</b>`;
-							refresh = true;
+
+						if (chkAutoStop.checked) {
+							let stopResult = await runningTasks[0].setStop();
+							if (stopResult) {
+								toSendTelegram += ` <b>✅ Đã tự động dừng</b>`;
+								refresh = true;
+								progress = 0;
+								plannedDurationTime = 0;
+							}
+							await wait(3000);
 						}
-						await wait(3000);
+
+						await sendNotification(toSendTelegram);
+						await wait(1000);
+
+						if (refresh) {
+							await wait(3000);
+							console.log("👾🔄 Refreshing page to update status...");
+							try {
+								location.reload();
+							} catch (e) {
+								window.location.href = location.href;
+							}
+						}
 					}
-					toSendTelegram += "\n";
 				}
-				if (count > 0) {
-					let telegramRecipient = TELEGRAM_CHAT_ID;
-					if (chkSendPrivate.checked && USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-						telegramRecipient = USER_IDS[txtUser.value].telegramId;
-					}
-					await sendTelegramMessage(toSendTelegram, telegramRecipient);
-					await wait(1000);
-					if (refresh) {
-						await wait(3000);
-						console.log("👾🔄 Refreshing page to update status...");
-						try {
-							window.location.reload();
-						} catch (err) {
-							window.location.href = window.location.href;
+				else {
+					progress = 0;
+					plannedDurationTime = 0;
+				}
+				// Check comments for all tasks
+				for (const task of [...runningTasks, ...pendingTasks]) {
+					logStep2.innerText = "Checking comments for task ID: " + task.taskId + " ...";
+					console.log("👾 Checking comments for task:", task);
+					let comments = await task.getTaskComment();
+					console.log(`👾 Found ${comments.length} new comments for task ID: ${task.taskId}`);
+					if (comments.length > 0) {
+						let commentMessage = `💬Có ${comments.length} comment trên task <code>${task.code}</code>:\n`;
+						for (const comment of comments) {
+							commentMessage += `- ${comment.user_comment ? `<b>${comment.user_comment}</b>: ` : ""}${comment.comment}\n`;
 						}
+						await sendNotification(commentMessage);
 					}
 				}
 			}
@@ -1316,9 +1315,7 @@ async function main() {
 
 }
 
-
-
-async function sendTelegramMessage(message, chatId) {
+async function sendNotification(message) {
 	// Strip HTML for system notification
 	let plainMessage = message;
 	try {
@@ -1330,13 +1327,26 @@ async function sendTelegramMessage(message, chatId) {
 	}
 
 	if (typeof GM_notification === 'function') {
-		GM_notification({
-			text: plainMessage,
-			title: "QLDA Bot",
-			timeout: 5000,
-		});
+		try {
+			GM_notification({
+				text: plainMessage,
+				title: "QLDA Bot",
+				timeout: 5000,
+			});
+		} catch (e) {
+			console.error("👾❌ GM_notification Error:", e);
+		}
 	}
 
+	let telegramRecipient = DEV_ID;
+	if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
+		telegramRecipient = USER_IDS[txtUser.value].telegramId;
+	}
+
+	await sendTelegramMessage(message, telegramRecipient);
+}
+
+async function sendTelegramMessage(message, chatId) {
 	try {
 		const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 		const params = new URLSearchParams();
@@ -1439,7 +1449,4 @@ function bindCheckboxToLocalStorage(checkbox, storageKey, defaultValue = false) 
 		checkbox.checked = defaultValue;
 	}
 }
-
-if (!document.URL.includes("auth/login")) {
-	main();
-}
+main();

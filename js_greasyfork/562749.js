@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Poker Join/Leave Monitor
 // @namespace    torn.poker.monitor
-// @version      2.0.25
+// @version      2.0.29
 // @description  Monitor poker table join/leave events
 // @author       Flav
 // @license      MIT
@@ -11,6 +11,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
+// @grant        GM_notification
+// @grant        window.focus
 // @run-at       document-start
 
 // @downloadURL https://update.greasyfork.org/scripts/562749/Torn%20Poker%20JoinLeave%20Monitor.user.js
@@ -233,7 +235,7 @@ runWhenJQueryReady(function (unsafeWindow, $) {
             if (tab) {
                 PRELOADED_TABS.set(userId, tab);
                 tab.blur();
-                window.focus();
+                setTimeout(() => window.focus(), 100);
                 goBtn.style.display = 'inline-block';
             }
         });
@@ -368,31 +370,42 @@ runWhenJQueryReady(function (unsafeWindow, $) {
             const checkbox = document.getElementById(`poker-check-${userId}`);
             const isIgnored = checkbox && checkbox.checked;
 
-            if (!isIgnored) {
-
-
-                if (user.potAmount >= FL_MIN_MUG_AMOUNT) {
-
-                    try {
-                        const audio = new Audio('https://notificationsounds.com/storage/sounds/file-sounds-1230-pretty-good.ogg');
-                        audio.play();
-                    } catch (e) {
-                        console.log("Couldn't play audio");
-                    }
-
-                    const goBtn = document.getElementById(`poker-go-${userId}`);
-
-                    if (goBtn && goBtn.style.display !== 'none') {
-                        // Go button is visible - focus it and play sound
-                        goBtn.focus();
-
-                    } else {
-                        // Go button is hidden - open and focus new tab
-                        const attackUrl = `https://www.torn.com/loader.php?sid=attack&user2ID=${userId}`;
-                        const newTab = window.open(attackUrl, '_blank');
-                        if (newTab) newTab.focus();
-                    }
+            if (!isIgnored && user.potAmount >= FL_MIN_MUG_AMOUNT) {
+                try {
+                    const audio = new Audio('https://notificationsounds.com/storage/sounds/file-sounds-1230-pretty-good.ogg');
+                    audio.play();
+                } catch (e) {
+                    console.log("Couldn't play audio");
                 }
+
+                const goBtn = document.getElementById(`poker-go-${userId}`);
+
+                if (goBtn && goBtn.style.display !== 'none') {
+                    // Go button is visible - focus it and play sound
+                    goBtn.focus();
+
+                } else {
+                    // Go button is hidden - open and focus new tab
+                    const attackUrl = `https://www.torn.com/loader.php?sid=attack&user2ID=${userId}`;
+                    const newTab = window.open(attackUrl, '_blank');
+                    if (newTab) newTab.focus();
+                }
+
+
+                const mugText = `BS: ${user.formattedBs} - ${user.mugText}`;
+
+                GM_notification({
+                    text: mugText,
+                    title: "POKER Mug",
+                    image: "",
+                    silent: false,
+                    timeout: 60 * 1000,
+                    highlight: false,
+                    onclick: function () {
+                        window.open(`https://www.torn.com/loader.php?sid=attack&user2ID=${userId}`);
+                    }
+                });
+
             }
 
             // Highlight the user row to show it will be removed

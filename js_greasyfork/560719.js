@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pinterest Ads UTM
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Pinterest Ads UTM Tool For Saker!
 // @author       Jimmy
 // @include      *.pinterest.com/advertiser/*
@@ -247,7 +247,7 @@
             switch(datestr){
                 case "yesterday":
                     frompicker = moment().subtract(1, 'days').format('YYYY-MM-DD');
-                    topicker = moment().format('YYYY-MM-DD');
+                    topicker = moment().subtract(1, 'days').format('YYYY-MM-DD');
                     break;
                 case "last 7 days":
                     frompicker = moment().subtract(6, 'days').format('YYYY-MM-DD');

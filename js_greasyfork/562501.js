@@ -5,7 +5,7 @@
 // @version      1.3
 // @description  A function that only takes screenshots. Press the **[S]** key on the paused screen.
 // @description:ja スクリーンショットを撮るだけの機能。停止画面でキーボードの[S]を押します。
-// @author       Gemini
+// @author       81standard
 // @match        https://www.youtube.com/*
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue

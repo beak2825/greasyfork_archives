@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         HSGuru 中文美化脚本
 // @namespace    http://tampermonkey.net/
-// @version      34.4.0.2
+// @version      34.4.0.5
 // @description  将HSGuru网站的部分英文替换为中文，并提供界面美化。
 // @author       深海之鱼
 // @match        https://www.hsguru.com/*
@@ -2124,7 +2124,7 @@
             'Armor': '龟',
             'Bounce': '减费',
             'Defense': '防御',
-            '"Frost"': '"冰"',
+            '"Frost"': '蓝蓝绿',
             'Frost': '冰',
             'Hydration': '补水',
             'No Minion': '法术',
@@ -2158,7 +2158,6 @@
             'Herenn':'赫雷恩',
             'Stego':'剑龙',
             'Toki':'托奇',
-            'Tick Tock':'新任务',
             'Loh-cky':'洛',
             'Wilted': '枯萎',
             'Malygos': '玛里苟斯',
@@ -2177,6 +2176,8 @@
             'Zealot': '狂热者',
             'Peddler': '精魂',
             'Nebula': '星云',
+            'Tick Tock': '新任务',
+            'Huddle Up': '抱团',
             'Fyrakk': '火龙',
             'Turbulus': '特布勒斯',
             'Arkwing': '阿肯飞翼',
@@ -2211,6 +2212,7 @@
             'Boar': '野猪',
             'Orb': '法球',
             'Ravenous': '猎犬',
+            'Broxigar': '奇闻',
             'Supernova': '超级新星',
             'Tog': '托瓦格尔',
             'Rafaam': '拉法姆',

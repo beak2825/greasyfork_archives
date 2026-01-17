@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         BanG Dream官网图片修复
-// @version      1.2.3
+// @version      1.2.4
 // @description  修复BanG Dream官网使用的失效AWS S3端点(s3-ap-northeast-1.amazonaws.com)的资源url，替换为有效端点(s3.ap-northeast-1.amazonaws.com)，以解决官网图片无法加载的问题。
 // @author       白金石勒喀@bilibili
 // @license      MIT
 // @match        *://*bang-dream.com/*
 // @match        *://*.bang-dream.com/*
+// @match        *://*bushiroad.com/*
+// @match        *://*.bushiroad.com/*
 // @grant        none
 // @run-at       document-start
 // @icon         https://bang-dream.com/favicon.ico
@@ -20,9 +22,9 @@
     // ==================== 用户配置区 ====================
     const USER_CONFIG = {
         // 是否启用控制台日志
-        enableLogging: true,
+        enableLogging: false,
         // 防抖延迟（毫秒）
-        debounceDelay: 50,
+        debounceDelay: 128,
         // 自动重载修复后的失败资源
         autoReloadFixedResources: true,
         // 调试模式（输出详细日志）
@@ -31,13 +33,13 @@
 
     // ==================== 核心配置 ====================
     const ENDPOINT_FIXES = [
+        // BanG Dream S3修复规则
         {
             name: 'bang-dream-portal-fix',
-            // 修复：支持查询参数，不再将 & 和 ? 作为分隔符
             pattern: /https?:\/\/s3-ap-northeast-1\.amazonaws\.com\/bang-dream-portal\/([^"'<\s]*)/gi,
             replacement: 'https://bang-dream-portal.s3.ap-northeast-1.amazonaws.com/$1'
         },
-        // 兜底通用修复规则
+        // 兜底通用S3修复规则
         {
             name: 'general-ap-northeast-1-fix',
             pattern: /https?:\/\/s3-ap-northeast-1\.amazonaws\.com\/([^"'<\s]*)/gi,
@@ -317,7 +319,7 @@
 
             // 等待DOM就绪后启动观察 - 修复：添加最大重试限制
             let retryCount = 0;
-            const MAX_RETRIES = 10; // 最大重试10次（约0.5秒）
+            const MAX_RETRIES = 10; // 最大重试10次（约1秒）
             function startObserving() {
                 if (document.documentElement) {
                     observer.observe(document.documentElement, {

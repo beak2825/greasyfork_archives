@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CLIP STUDIO笔刷入库
 // @namespace    http://tampermonkey.net/
-// @version      4.6
-// @description  自动点击收藏和下载按钮，可选阻止弹窗和下载后自动关闭，并在排行榜/搜索页面手动触发打开未入库素材
+// @version      4.7
+// @description  自动点击收藏和下载按钮，可选阻止弹窗和下载后自动关闭，支持自动跳转繁中，并在排行榜/搜索页面手动触发打开未入库素材
 // @author       You
 // @match        https://assets.clip-studio.com/*
 // @grant        GM_openInTab
@@ -25,9 +25,11 @@
     const CONFIG_KEY = 'blockPopup';
     const AUTO_CLOSE_KEY = 'autoClose';
     const SKIP_PAID_KEY = 'skipPaidMaterials';
+    const AUTO_REDIRECT_ZHTW_KEY = 'autoRedirectZhTw';
     let blockPopupEnabled = GM_getValue(CONFIG_KEY, true); // 默认启用阻止弹窗
     let autoCloseEnabled = GM_getValue(AUTO_CLOSE_KEY, false); // 默认不启用自动关闭
     let skipPaidMaterials = GM_getValue(SKIP_PAID_KEY, false); // 默认不跳过付费素材
+    let autoRedirectZhTw = GM_getValue(AUTO_REDIRECT_ZHTW_KEY, false); // 默认不启用自动跳转繁中
 
     // 注册菜单命令
     const updateMenuCommand = () => {
@@ -74,8 +76,46 @@
     updateSkipPaidCommand();
     console.log('当前跳过付费素材状态:', skipPaidMaterials ? '启用' : '禁用');
 
+    // 注册自动跳转繁中菜单命令
+    const updateAutoRedirectCommand = () => {
+        const statusText = autoRedirectZhTw ? '✓ 已启用' : '✗ 已禁用';
+        GM_registerMenuCommand(`${statusText} 自动跳转繁中`, () => {
+            autoRedirectZhTw = !autoRedirectZhTw;
+            GM_setValue(AUTO_REDIRECT_ZHTW_KEY, autoRedirectZhTw);
+            const newStatus = autoRedirectZhTw ? '已启用' : '已禁用';
+            alert(`自动跳转繁中功能${newStatus}\n\n${autoRedirectZhTw ? '✓ 所有语种页面将自动跳转到繁体中文 (zh-tw) 版本' : '✗ 保持原语种页面不跳转'}\n\n刷新页面后生效`);
+            console.log(`自动跳转繁中功能已${newStatus}:`, autoRedirectZhTw);
+        });
+    };
+
+    updateAutoRedirectCommand();
+    console.log('当前自动跳转繁中状态:', autoRedirectZhTw ? '启用' : '禁用');
+
     // ========================================
-    // 功能 1: 阻止下载弹窗（可选）
+    // 功能 1: 自动跳转繁中（可选）
+    // ========================================
+    if (autoRedirectZhTw) {
+        const currentPath = window.location.pathname;
+        // 匹配路径中的语言代码 (如 /ko-kr/, /en-us/, /ja-jp/ 等)
+        const langMatch = currentPath.match(/^\/(\w{2}-\w{2})\//i);
+
+        if (langMatch && langMatch[1].toLowerCase() !== 'zh-tw') {
+            const currentLang = langMatch[1];
+            const newUrl = window.location.href.replace(
+                new RegExp(`/${currentLang}/`, 'i'),
+                '/zh-tw/'
+            );
+            console.log(`检测到语言: ${currentLang}, 自动跳转到繁中版本...`);
+            console.log(`原URL: ${window.location.href}`);
+            console.log(`新URL: ${newUrl}`);
+            window.location.replace(newUrl);
+        } else if (langMatch) {
+            console.log('当前已是繁中页面,无需跳转');
+        }
+    }
+
+    // ========================================
+    // 功能 2: 阻止下载弹窗（可选）
     // ========================================
     // 等待 CatalogMaterial 对象加载
     const checkAndReplace = () => {
@@ -145,7 +185,7 @@
     }
 
     // ========================================
-    // 功能 2: 自动点击收藏和下载按钮
+    // 功能 3: 自动点击收藏和下载按钮
     // ========================================
     let clickAttempts = 0;
     const maxAttempts = 50; // 最多尝试 50 次
@@ -260,7 +300,7 @@
     console.log('✓ 自动点击功能已启用');
 
     // ========================================
-    // 功能 3: 排行榜页面手动触发打开未入库素材
+    // 功能 4: 排行榜页面手动触发打开未入库素材
     // ========================================
     const initRankingPageButton = () => {
         // 只在排行榜或搜索页面执行
@@ -354,7 +394,7 @@
         });
 
         buttonContainer.appendChild(button);
-        document.body.appendChild(buttonContainer); 
+        document.body.appendChild(buttonContainer);
 
         console.log('✓ 手动触发按钮已添加到页面右上角');
     };

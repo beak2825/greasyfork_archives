@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME Amtliche Hausnummern Import
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      5.1.0
-// @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) - ALLE 16 Bundesländer + AT + CH + Speicher-Fehler Analyse + Geschwindigkeits-Einstellungen
+// @version      5.2.0
+// @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) - ALLE 16 Bundesländer + AT + CH + Speicher-Fehler Analyse + Geschwindigkeits-Einstellungen + Verbesserte Insel-Zuordnung
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
@@ -3300,6 +3300,7 @@ class WMEHouseNumberManager {
 
     // Nächstes Segment für Hausnummer finden - VERBESSERTE VERSION FÜR KREUZUNGEN
     // Priorisiert Straßennamen-Match bei ähnlichen Distanzen
+    // VERBESSERT: Bessere Zuordnung bei "Inseln" zwischen mehreren Straßen
     findNearestSegment(lon, lat, streetName = null, returnDetails = false) {
         if (!W?.model?.segments) {
             console.log(`${SCRIPT_NAME}: Keine Segmente verfügbar`);
@@ -3315,7 +3316,8 @@ class WMEHouseNumberManager {
         // Sammle ALLE Kandidaten innerhalb des Suchradius
         const candidates = [];
         const maxDistance = 100; // Meter - maximale Distanz für Zuordnung
-        const junctionRadius = 25; // Meter - Radius in dem Kreuzungs-Logik greift
+        const junctionRadius = 50; // Meter - Radius für "Insel"-Erkennung (erhöht von 25m)
+        const streetNamePriorityRadius = 80; // Meter - Innerhalb dieses Radius hat Straßenname IMMER Vorrang
         let checkedCount = 0;
 
         // GeoJSON Point für die Hausnummer-Position erstellen
@@ -3410,17 +3412,53 @@ class WMEHouseNumberManager {
 
         const nearest = candidates[0];
 
-        // ===== KREUZUNGS-LOGIK =====
-        // Wenn mehrere Segmente sehr nah beieinander sind (Kreuzung),
-        // bevorzuge das mit passendem Straßennamen
+        // ===== INSEL-/KREUZUNGS-LOGIK =====
+        // Wenn ein Straßenname aus den amtlichen Daten vorhanden ist,
+        // hat dieser IMMER Vorrang innerhalb des streetNamePriorityRadius
         if (streetName && candidates.length > 1) {
-            // Finde alle Segmente innerhalb des Kreuzungs-Radius vom nächsten
+            // Finde alle Segmente mit passendem Straßennamen
+            const matchingNameCandidates = candidates.filter(c =>
+                c.nameMatch && c.distance <= streetNamePriorityRadius
+            );
+
+            // Wenn es Segmente mit passendem Namen gibt, wähle das nächste davon
+            if (matchingNameCandidates.length > 0) {
+                // Sortiere nach Distanz
+                matchingNameCandidates.sort((a, b) => a.distance - b.distance);
+                const best = matchingNameCandidates[0];
+
+                // Logging wenn ein anderes Segment als das nächste gewählt wird
+                if (best.segment !== nearest.segment) {
+                    console.log(`${SCRIPT_NAME}: INSEL-KORREKTUR! ` +
+                        `Nächstes Segment: "${nearest.streetName || 'unbekannt'}" (${nearest.distance.toFixed(1)}m), ` +
+                        `Gewählt wegen Straßenname: "${best.streetName}" (${best.distance.toFixed(1)}m, ${Math.round(best.similarity*100)}% Match) ` +
+                        `für amtliche Adresse: "${streetName}"`);
+                }
+
+                if (returnDetails) {
+                    return {
+                        segment: best.segment,
+                        distance: best.distance,
+                        nameMatch: true,
+                        nameSimilarity: best.similarity,
+                        segmentStreetName: best.streetName,
+                        requestedStreet: streetName,
+                        reason: 'street_name_priority',
+                        isIsland: true,
+                        candidateCount: candidates.length,
+                        matchingNameCount: matchingNameCandidates.length
+                    };
+                }
+                return best.segment;
+            }
+
+            // Fallback: Finde alle Segmente innerhalb des Kreuzungs-Radius vom nächsten
             const nearbySegments = candidates.filter(c =>
                 c.distance <= nearest.distance + junctionRadius
             );
 
             if (nearbySegments.length > 1) {
-                // Mehrere Segmente in der Nähe = wahrscheinlich Kreuzung
+                // Mehrere Segmente in der Nähe = wahrscheinlich Kreuzung/Insel
                 // Sortiere nach: 1. Namens-Match, 2. Ähnlichkeit, 3. Distanz
                 nearbySegments.sort((a, b) => {
                     // Namens-Match hat höchste Priorität
@@ -3466,8 +3504,8 @@ class WMEHouseNumberManager {
         if (streetName) {
             const matchingCandidate = candidates.find(c => c.nameMatch);
             if (matchingCandidate) {
-                // Toleranz: Segment mit passendem Namen darf bis zu 30m weiter weg sein
-                const nameTolerance = 30;
+                // Toleranz: Segment mit passendem Namen darf bis zu 50m weiter weg sein (erhöht von 30m)
+                const nameTolerance = 50;
                 if (matchingCandidate.distance <= nearest.distance + nameTolerance) {
                     if (returnDetails) {
                         return {
@@ -3700,13 +3738,11 @@ class WMEHouseNumberManager {
         // Dies ist die ZUVERLÄSSIGSTE Methode um zu prüfen ob eine HN auf dem Segment existiert!
         try {
             const segmentHNArray = segment?.attributes?.houseNumbers || [];
-            console.log(`${SCRIPT_NAME}: [DEBUG] Segment ${segmentId} hat ${segmentHNArray.length} HN in attributes.houseNumbers`);
 
             for (const hn of segmentHNArray) {
                 const existingNum = String(hn?.number || hn?.houseNumber || '').trim().toLowerCase();
-                console.log(`${SCRIPT_NAME}: [DEBUG] Vergleiche: "${existingNum}" mit "${numberLower}"`);
                 if (existingNum === numberLower) {
-                    console.log(`${SCRIPT_NAME}: SEGMENT-ARRAY DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId} (segment.attributes.houseNumbers)`);
+                    console.log(`${SCRIPT_NAME}: SEGMENT-ARRAY DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId}`);
                     this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
                     return { success: false, reason: 'duplicate_segment_array' };
                 }
@@ -3718,24 +3754,20 @@ class WMEHouseNumberManager {
         // ===== ALTERNATIVE SEGMENT-PRÜFUNG: Direkt über W.model.segmentHouseNumbers =====
         try {
             if (W?.model?.segmentHouseNumbers?.objects) {
-                let foundOnSegment = 0;
                 for (const hnId in W.model.segmentHouseNumbers.objects) {
                     const hn = W.model.segmentHouseNumbers.objects[hnId];
                     const hnSegId = hn?.attributes?.segID || hn?.segID;
 
                     if (String(hnSegId) === String(segmentId)) {
-                        foundOnSegment++;
                         const existingNum = String(hn?.attributes?.number || hn?.number || '').trim().toLowerCase();
-                        console.log(`${SCRIPT_NAME}: [DEBUG] segmentHouseNumbers: HN "${existingNum}" auf Segment ${segmentId}`);
 
                         if (existingNum === numberLower) {
-                            console.log(`${SCRIPT_NAME}: SEGMENT-HN DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId} (W.model.segmentHouseNumbers)`);
+                            console.log(`${SCRIPT_NAME}: SEGMENT-HN DUPLIKAT: HN ${numberStr} existiert bereits auf Segment ${segmentId}`);
                             this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
                             return { success: false, reason: 'duplicate_segment_hn_model' };
                         }
                     }
                 }
-                console.log(`${SCRIPT_NAME}: [DEBUG] ${foundOnSegment} HN auf Segment ${segmentId} in segmentHouseNumbers gefunden`);
             }
         } catch (e) {
             console.log(`${SCRIPT_NAME}: Fehler bei W.model.segmentHouseNumbers Prüfung:`, e);

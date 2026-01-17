@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KoGaMa Custom Profile BG
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.2
 // @description  Modifica el banner de tu perfíl de KoGaMa, los otros que tengan el script también lo verán.
 // @author       Haden
 // @match        https://www.kogama.com/profile/*
@@ -665,29 +665,31 @@
     }
 
     function findBiographyContainer() {
+        // Buscar en el textarea de descripción (página de edición)
         const textarea = document.querySelector('textarea[name="description"], textarea#description');
         if (textarea) {
             return textarea;
         }
-
+        
+        // Buscar específicamente el div de biografía con la clase correcta
+        const biographyDiv = document.querySelector('div._1aUa_[itemprop="description"]');
+        if (biographyDiv) {
+            console.log('✅ Contenedor de biografía encontrado (específico)');
+            return biographyDiv;
+        }
+        
+        // Fallback: buscar divs que contengan específicamente el patrón bg seguido de caracteres válidos
         const allDivs = document.querySelectorAll('div');
         for (const div of allDivs) {
+            // Solo verificar divs que no sean muy grandes (evitar contenedores principales)
+            if (div.children.length > 10) continue;
+            
             const text = div.textContent || div.innerText || '';
-            if (text.match(/bg[A-Za-z0-9+\-$]{10,}/)) {
-                // Verificar que no sea un contenedor padre muy grande
-                if (text.length < 5000) {
-                    console.log('✅ Contenedor de biografía encontrado');
-                    return div;
-                }
-            }
-        }
-
-        const biographyElements = document.querySelectorAll('div[class*="MuiTypography"]');
-        for (const element of biographyElements) {
-            const text = element.textContent || element.innerText || '';
-            if (text.match(/bg[A-Za-z0-9+\-$]{10,}/)) {
-                console.log('✅ Contenedor de biografía encontrado (MuiTypography)');
-                return element;
+            // Buscar específicamente el patrón bg seguido de al menos 20 caracteres válidos
+            const bgMatch = text.match(/bg[A-Za-z0-9+\-$]{20,}/);
+            if (bgMatch && text.length < 2000) { // Evitar contenedores muy grandes
+                console.log('✅ Contenedor de biografía encontrado (fallback)');
+                return div;
             }
         }
 
@@ -709,11 +711,12 @@
             biographyText = biographyContainer.textContent || biographyContainer.innerText || '';
         }
 
-        console.log('📖 Texto de biografía:', biographyText);
+        console.log('📖 Texto de biografía:', biographyText.substring(0, 200) + '...');
 
-        const bgMatch = biographyText.match(/bg([A-Za-z0-9+\-$]+)/);
+        // Buscar específicamente el patrón bg seguido de al menos 20 caracteres válidos
+        const bgMatch = biographyText.match(/bg([A-Za-z0-9+\-$]{20,})/);
         if (!bgMatch || !bgMatch[1]) {
-            console.log('❌ No se encontró código de fondo en la biografía');
+            console.log('❌ No se encontró código de fondo válido en la biografía');
             return null;
         }
 
@@ -736,6 +739,7 @@
             const opacity = parseFloat(parts[1]) || 0.5;
             const blur = parseFloat(parts[2]) || 0;
 
+            // Todo lo que viene después del tercer pipe es parte de socialLinks
             const socialLinks = parts.slice(3).join('|');
 
             console.log(`✅ URL: ${url}, Opacidad: ${opacity}, Blur: ${blur}`);

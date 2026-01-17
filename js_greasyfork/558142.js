@@ -3,13 +3,13 @@
 // @namespace   https://greasyfork.org/users/1545341
 // @match       *://www.abcya.com/*
 // @grant       GM_getResourceText
-// @version     2.6
+// @version     2.9
 // @license     MIT
 // @author      abcenjoyer
 // @description User script to bypass the paywall on ABCya games. Fullscreen button support requires synchronous page mode to work reliably, if you're using Violentmonkey on a Chromium-based browser.
 // @run-at      document-start
 // @inject-into page
-// @resource    main.js https://www.abcya.com/client/main-353a87d78169b430c481.js
+// @resource    main.js https://www.abcya.com/client/main-74886ee59e9c119257b0.js
 // @noframes
 // @downloadURL https://update.greasyfork.org/scripts/558142/ABCya%20Games%20Paywall%20Bypass.user.js
 // @updateURL https://update.greasyfork.org/scripts/558142/ABCya%20Games%20Paywall%20Bypass.meta.js
@@ -60,8 +60,8 @@ if (isGamePage(location.pathname)) {
   let newScript = GM_getResourceText("main.js");
 
   // remove code for fullscreen button paywall
-  newScript = newScript.replace("if(rn(c.H0.free))", "");
-  newScript = newScript.replace('else Fa(p),d(n.createElement(n.Fragment,null,n.createElement("div",{className:"modal-content-header"},Za("join.0")),n.createElement("p",null,Za("game.fullscreen.signup")),n.createElement("div",null,n.createElement("button",{type:"button",onClick:()=>{Ga({...p,interaction:"primary cta"}),xn(a.pathname,"game-fullscreen-modal"),qa("full screen","in content",Za("game.fullscreen.title.0"),a.pathname),t(La.SUBSCRIBE)},className:"button-flat-color pt-green round auto"},Za("join.3"),n.createElement(Tl,{className:"inline-arrow"}))))),nn(c.H0.free)&&d(n.createElement(n.Fragment,null,n.createElement("div",{className:"modal-content-header"},Za("join.0")),n.createElement("p",null,Za("game.fullscreen.upgrade")),n.createElement("div",null,n.createElement("button",{type:"button",onClick:()=>{Ga({...p,interaction:"primary cta"}),t({pathname:La.MANAGE,hash:(0,c.zr)("subscription")})},className:"button-flat-color pt-green round auto"},Za("manage.title.0"),n.createElement(Tl,{className:"inline-arrow"}))))),i(!0)', "");
+  newScript = newScript.replace("if(on(c.H0.free))", "");
+  newScript = newScript.replace('else Ka(p),d(n.createElement(n.Fragment,null,n.createElement("div",{className:"modal-content-header"},Xa("join.0")),n.createElement("p",null,Xa("game.fullscreen.signup")),n.createElement("div",null,n.createElement("button",{type:"button",onClick:()=>{qa({...p,interaction:"primary cta"}),Dn(a.pathname,"game-fullscreen-modal"),Ua("full screen","in content",Xa("game.fullscreen.title.0"),a.pathname),t(Ta.SUBSCRIBE)},className:"button-flat-color pt-green round auto"},Xa("join.3"),n.createElement(Il,{className:"inline-arrow"}))))),sn(c.H0.free)&&d(n.createElement(n.Fragment,null,n.createElement("div",{className:"modal-content-header"},Xa("join.0")),n.createElement("p",null,Xa("game.fullscreen.upgrade")),n.createElement("div",null,n.createElement("button",{type:"button",onClick:()=>{qa({...p,interaction:"primary cta"}),t({pathname:Ta.MANAGE,hash:(0,c.zr)("subscription")})},className:"button-flat-color pt-green round auto"},Xa("manage.title.0"),n.createElement(Il,{className:"inline-arrow"}))))),i(!0)', "");
 
   const newScriptElement = document.createElement("script");
   newScriptElement.textContent = newScript;

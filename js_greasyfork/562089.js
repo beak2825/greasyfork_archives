@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         2libra-enhance
 // @namespace    http://tampermonkey.net/
-// @version      1.6.3
+// @version      1.6.4
 // @description  2libra.com 论坛增强：帖子快速查看、智能返回顶部
 // @author       twocold0451
 // @homepage     https://github.com/twocold0451/2libra-enhance
@@ -1131,7 +1131,11 @@
             }
         });
         //找到所有 href 以 /post-flat开头的a标签
-        const postFlatLinks = document.querySelectorAll('a[href^="/post-flat"]');
+        let postFlatLinks = document.querySelectorAll('a[href^="/post-flat"]');
+        if(!postFlatLinks || postFlatLinks.length==0){
+        	//firefox中url不一样？
+            postFlatLinks = document.querySelectorAll('a[href^="/post/"]');
+        }
         postFlatLinks.forEach(postLink => {
             //过滤掉class 包含 join-item 的标签
             if (postLink.classList.contains('join-item')) return;

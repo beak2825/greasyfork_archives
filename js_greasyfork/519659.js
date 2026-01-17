@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IT之家移动页面热门评论高亮
 // @namespace    http://tampermonkey.net/
-// @version      1.0.6
+// @version      1.0.7
 // @description  在全部评论中匹配热门评论并高亮显示，避免重复查看热门评论、精简评论样式、隐藏0赞0反按钮、自动点击更多评论、根据评论总数隐藏一部分低赞低反评论
 // @author       hui-Zz
 // @match        http*://m.ithome.com/*
@@ -25,7 +25,12 @@
             contentSelector: '.user-review',                    // 评论内容选择器
             commentContainerHot: '.hot-comment',               // 热门评论区域选择器
             commentContainer: '.all-comment',                   // 全部评论区域选择器
-            initAction: () => $('.hot-comment').hide()          // 初始化操作：隐藏热门评论区域
+            initAction: () => {
+                const tip = document.querySelector('.hot_comment_tip');
+                if(tip.classList.contains('hide')){
+                    $('.hot-comment').hide();          // 初始化操作：隐藏热门评论区域
+                }
+            }
         }
     };
 
@@ -43,6 +48,8 @@
         constructor() {
             this.hotComments = new Map();   // 使用Map存储热门评论（O(1)查找）
             this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            this.hotCommentElementCount = 0;
+            this.hotNum = 1;
             this.commentElementCount = 0;
             this.initObservers();
             this.collectHotComments();     // 初始收集热门评论
@@ -75,9 +82,9 @@
 
             document.querySelectorAll(config.hotCommentSelector)
                 .forEach(commentElement => {
+                    this.hotCommentElementCount++;
                     const username = this.getText(commentElement, config.usernameSelector);
                     const content = this.getText(commentElement, config.contentSelector);
-
                     if (username && content) {
                         this.hotComments.set(getCommentKey({ username, content }), true);
                         this.processSpecialElements(commentElement); // 处理特殊元素
@@ -110,12 +117,29 @@
                         userwritemsg.style.float = 'right';
                         userwritemsg.style.marginTop = '-20px';
                         userreview.style.marginTop = '5px';
-                        // 根据评论总数隐藏一部分低赞低反评论（🎈不隐藏看所有评论注释掉下一行代码）
+                        // 根据评论总数隐藏一部分低赞低反评论（🎈不隐藏热门评论就注释掉下一行代码）
                         this.hideComments(commentElement);
-                    }
-                    // 高亮匹配的评论
-                    if (username && content && this.hotComments.has(getCommentKey({ username, content }))) {
-                        commentElement.classList.add('hot-comment-highlight');
+                        // 高亮匹配的评论
+                        if (username && content && this.hotComments.has(getCommentKey({ username, content }))) {
+                            if (commentElement.classList.contains('placeholder') && commentElement.classList.contains('main-floor')) {
+                                commentElement.className = 'placeholder main-floor hot-comment-highlight';
+                            }else{
+                                commentElement.classList.add('hot-comment-highlight');
+                            }
+                            // 防重复：判断当前评论是否已添加序号，避免重复生成
+                            if (!commentElement.querySelector(".ithome-comment-num")){
+                                // 创建序号标签 + 美化样式
+                                const numSpan = document.createElement("span");
+                                numSpan.className = "ithome-comment-num";
+                                numSpan.style.cssText = "color:#999;font-size:0.95em;margin-right:6px;display:inline-block;";
+                                numSpan.textContent = `${this.hotCommentElementCount}-${this.hotNum ++}`; // 索引从0开始，序号+1 → 1. 2. 3.
+                                // 把序号插入到【当前评论内容的最前面】
+                                commentElement.insertBefore(numSpan, commentElement.firstChild);
+                            }
+                            const currentMainLi = commentElement.closest('li.placeholder.main-floor');
+                            // 如果子评论是热门评论则修改确保不隐藏主评论的class
+                            if (currentMainLi) currentMainLi.className = 'placeholder main-floor hot-comment-highlight';
+                        }
                     }
                 });
         }
@@ -131,35 +155,44 @@
                 // 根据评论数量确定支持/反对的隐藏阈值
                 let hideStandbyThreshold = [];
                 let opposeStandbyThreshold = [];
+                let hideNum = 0;
                 if (this.commentElementCount < 20) {
                     // 小于20条，显示所有
                     hideStandbyThreshold = [];
                     opposeStandbyThreshold = [];
-                } else if (this.commentElementCount < 50) {
-                    // 20-50条，隐藏0、1、2支持/反对
-                    hideStandbyThreshold = [0, 1, 2];
-                    opposeStandbyThreshold = [0, 1, 2];
-                } else if (this.commentElementCount < 100) {
-                    // 50-100条，隐藏0、1、2、3、4支持/反对
-                    hideStandbyThreshold = [0, 1, 2, 3, 4];
-                    opposeStandbyThreshold = [0, 1, 2, 3, 4];
-                } else if (this.commentElementCount < 200) {
-                    // 100-200条，隐藏10以下支持/反对
-                    hideStandbyThreshold = Array.from({ length: 10 }, (_, i) => i);
-                    opposeStandbyThreshold = Array.from({ length: 10 }, (_, i) => i);
                 } else {
-                    // 大于200条，隐藏20以下支持/反对
-                    hideStandbyThreshold = Array.from({ length: 20 }, (_, i) => i);
-                    opposeStandbyThreshold = Array.from({ length: 20 }, (_, i) => i);
+                    if (this.commentElementCount < 50) {
+                        // 20-50条，隐藏0、1、2支持/反对
+                        hideStandbyThreshold = [0, 1, 2];
+                        opposeStandbyThreshold = [0, 1, 2];
+                        hideNum = 3;
+                    } else if (this.commentElementCount < 100) {
+                        // 50-100条，隐藏0、1、2、3、4支持/反对
+                        hideStandbyThreshold = [0, 1, 2, 3, 4];
+                        opposeStandbyThreshold = [0, 1, 2, 3, 4];
+                        hideNum = 5;
+                    } else if (this.commentElementCount < 200) {
+                        // 100-200条，隐藏10以下支持/反对
+                        hideStandbyThreshold = Array.from({ length: 9 }, (_, i) => i);
+                        opposeStandbyThreshold = Array.from({ length: 9 }, (_, i) => i);
+                        hideNum = 10;
+                    } else {
+                        // 大于200条，隐藏20以下支持/反对
+                        hideStandbyThreshold = Array.from({ length: 19 }, (_, i) => i);
+                        opposeStandbyThreshold = Array.from({ length: 19 }, (_, i) => i);
+                        hideNum = 20;
+                    }
+                    // 统计热门评论数量
+                    const titleDom = document.querySelector(".hot-comment-box .re-tags .tags-name");
+                    titleDom.innerHTML = `热门评论 <span style="font-size:0.9em;color:#999;margin-left:4px;">(${this.hotCommentElementCount}) 隐藏正反均${hideNum}以下评论</span>`;
                 }
-
                 // 处理支持按钮
                 if (standby) {
                     const standbyText = standby.textContent?.trim();
                     const match = standbyText?.match(/支持\((\d+)\)/);
                     if (match) {
                         const count = parseInt(match[1]);
-                        if (hideStandbyThreshold.includes(count)) {
+                        if (count == 0) {
                             standby.style.display = 'none';
                         }
                     }
@@ -170,7 +203,7 @@
                     const match = opposeText?.match(/反对\((\d+)\)/);
                     if (match) {
                         const count = parseInt(match[1]);
-                        if (opposeStandbyThreshold.includes(count)) {
+                        if (count == 0) {
                             oppose.style.display = 'none';
                         }
                     }
@@ -188,10 +221,10 @@
 
                         if (hideStandbyThreshold.includes(standbyCount) && opposeStandbyThreshold.includes(opposeCount)) {
                             reviewfooter.style.display = 'none';
-                            var hasDeputyFloor = commentElement.querySelector('li.placeholder.deputy-floor');
-                            if (!hasDeputyFloor && commentElement.classList.contains('placeholder') && commentElement.classList.contains('main-floor')) {
-                                // 隐藏当前符合隐藏条件并且没有回复的评论
-                                commentElement.style.display = 'none';
+                            //var hasDeputyFloor = commentElement.querySelector('li.placeholder.deputy-floor');
+                            if (commentElement.classList.contains('placeholder') && commentElement.classList.contains('main-floor')) {
+                                // 隐藏当前符合隐藏条件评论
+                                commentElement.classList.add('hide');
                             }
                         }
                     }

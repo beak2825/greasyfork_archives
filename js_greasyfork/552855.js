@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WarSoul Daily Tasks
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  自动完成每日祈福和每日挑战
+// @version      1.2
+// @description  自动完成每日祈福、每日挑战和每月1号大荒野
 // @author       Lunaris
 // @match        https://aring.cc/awakening-of-war-soul-ol/
 // @icon         https://aring.cc/awakening-of-war-soul-ol/favicon.ico
@@ -35,10 +35,13 @@
         }
     }
 
+
+
     let taskStatus = {
         completed: false,
         blessing: false,
-        challenges: false
+        challenges: false,
+        wilderness: false
     };
 
     function createPanel() {
@@ -107,6 +110,7 @@
             '⚠️ 提醒：即将开启自动后台执行模式\n\n' +
             '开启后脚本将：\n' +
             '• 自动在后台完成每日任务\n' +
+            '• 每月1号自动点击大荒野\n' +
             '• 不再弹出任何面板提示\n' +
             '• 每次打开页面自动执行\n\n' +
             '如需关闭提示，请在脚本中修改 AUTO_MODE_ENABLED 为 false。\n\n' +
@@ -166,7 +170,7 @@
         updateStatus('正在进行祈福...');
         await sleep(500);
 
-        // 找到“免费祈福”按钮（不依赖 data-v）
+        // 找到"免费祈福"按钮（不依赖 data-v）
         const freeBlessBtn = Array.from(document.querySelectorAll('button')).find(btn =>
             btn.textContent.includes('免费祈福')
         );
@@ -196,7 +200,7 @@
         updateStatus('检查每日挑战...');
         await sleep(500);
 
-        // 找到“每日挑战”区域
+        // 找到"每日挑战"区域
         const dungeonElements = document.querySelectorAll('.dungeon.affix');
         let dailyChallengeSection = null;
 
@@ -256,6 +260,57 @@
         return false;
     }
 
+    // 新增：大荒野功能
+    async function doWilderness() {
+        const today = new Date();
+
+        // 检查是否是每月1号
+        if (today.getDate() !== 1) {
+            console.log('[大荒野] 今天不是1号，跳过');
+            taskStatus.wilderness = true;
+            return false;
+        }
+
+        updateStatus('检查大荒野...');
+        await sleep(500);
+
+        // 查找大荒野区域
+        const borderWraps = document.querySelectorAll('.border-wrap.big-wild');
+        let wildernessSection = null;
+
+        for (let wrap of borderWraps) {
+            const h4 = wrap.querySelector('h4');
+            if (h4 && h4.textContent.includes('大荒野')) {
+                wildernessSection = wrap;
+                break;
+            }
+        }
+
+        if (!wildernessSection) {
+            updateStatus('未找到大荒野区域');
+            taskStatus.wilderness = true;
+            return false;
+        }
+
+        // 查找"进入"按钮
+        const enterBtn = wildernessSection.querySelector('button.el-button--success');
+        
+        if (enterBtn && enterBtn.textContent.includes('进入')) {
+            updateStatus('点击大荒野进入按钮...');
+            enterBtn.click();
+            
+            taskStatus.wilderness = true;
+            
+            updateStatus('大荒野已进入');
+            await sleep(1000);
+            return true;
+        } else {
+            updateStatus('未找到大荒野进入按钮');
+            taskStatus.wilderness = true;
+            return false;
+        }
+    }
+
     async function executeDailyTasks() {
         if (taskStatus.completed) {
             updateStatus('今日任务已完成');
@@ -274,6 +329,9 @@
             await sleep(1000);
 
             await doChallenges();
+            await sleep(1000);
+
+            await doWilderness();
             await sleep(1000);
 
             taskStatus.completed = true;
@@ -320,6 +378,10 @@
             await doChallenges();
             await sleep(1000);
 
+            console.log('[每日任务] 检查大荒野...');
+            await doWilderness();
+            await sleep(1000);
+
             taskStatus.completed = true;
             console.log('[每日任务] ✅ 后台执行完毕');
 
@@ -349,6 +411,27 @@
                     if (match && parseInt(match[1], 10) > 0) {
                         hasUnfinishedTask = true;
                         break;
+                    }
+                }
+            }
+        }
+
+        // 检查大荒野（每月1号）
+        const today = new Date();
+        if (today.getDate() === 1) {
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            const lastClick = getLastWildernessClick();
+            
+            if (lastClick !== todayStr) {
+                const borderWraps = document.querySelectorAll('.border-wrap.big-wild');
+                for (let wrap of borderWraps) {
+                    const h4 = wrap.querySelector('h4');
+                    if (h4 && h4.textContent.includes('大荒野')) {
+                        const enterBtn = wrap.querySelector('button.el-button--success');
+                        if (enterBtn && enterBtn.textContent.includes('进入')) {
+                            hasUnfinishedTask = true;
+                            break;
+                        }
                     }
                 }
             }

@@ -1,20 +1,22 @@
 // ==UserScript==
-// @name         Bing/Google屏蔽搜索结果
+// @name         搜索引擎屏蔽搜索结果
 // @namespace    http://example.com
-// @version      3.2
-// @description  基于uBlacklist规则的Bing/Google搜索结果屏蔽工具
+// @version      3.3
+// @description  基于uBlacklist规则的Bing/Google/DuckDuckGo搜索结果屏蔽工具
 // @author       南雪莲
 // @license      MIT
 // @match        https://www.bing.com/*
 // @match        https://cn.bing.com/*
 // @match        https://www.google.com/*
 // @match        https://www.google.com.*/*
+// @match        https://duckduckgo.com/*
+// @match        https://*.duckduckgo.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/552394/BingGoogle%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C.user.js
-// @updateURL https://update.greasyfork.org/scripts/552394/BingGoogle%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552394/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C.user.js
+// @updateURL https://update.greasyfork.org/scripts/552394/%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E5%B1%8F%E8%94%BD%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C.meta.js
 // ==/UserScript==
 
 (function() {
@@ -197,6 +199,7 @@
         const url = window.location.href;
         if (url.includes('bing.com')) return 'bing';
         if (url.includes('google.com')) return 'google';
+        if (url.includes('duckduckgo.com')) return 'duckduckgo';
         return 'other';
     }
     
@@ -204,6 +207,7 @@
     const selectors = {
         bing: 'li.b_algo, div.b_algo',
         google: 'div.g, div[data-snf], div[data-hveid]',
+        duckduckgo: '[data-testid="result"]',
         other: 'div.g, li.b_algo'
     };
     
@@ -345,7 +349,7 @@
         updateStatus(blocked);
     }
     
-    // 修复：改进Google标题获取
+    // 修复：改进各搜索引擎标题获取
     function getResultTitle(result, engine) {
         if (engine === 'bing') {
             return result.querySelector('h2 a')?.textContent?.trim() || 
@@ -360,6 +364,12 @@
                    result.querySelector('.sXLaOe')?.textContent?.trim() ||
                    result.querySelector('.c9DxTc')?.textContent?.trim() ||
                    result.querySelector('a h3')?.textContent?.trim() ||
+                   '';
+        } else if (engine === 'duckduckgo') {
+            // DuckDuckGo标题获取
+            return result.querySelector('a[data-testid="result-title-a"]')?.textContent?.trim() ||
+                   result.querySelector('h2 a')?.textContent?.trim() ||
+                   result.querySelector('a h2')?.textContent?.trim() ||
                    '';
         }
         return '';

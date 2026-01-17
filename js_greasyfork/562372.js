@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         仿M浏览器元素审查
 // @namespace    https://viayoo.com/81gzxv
-// @version      2.6
+// @version      2.8
 // @description  利用AI模仿并生成M浏览器的元素审查，在脚本菜单开启元素审查，专注AD规则生成，支持规则编辑。
 // @author       Via && Gemini
 // @match        *://*/*
@@ -128,18 +128,29 @@
         .node-row.selected { background: rgba(30, 144, 255, 0.2); outline: 1px solid #1e90ff; }
         .toggle-btn { width: 18px; flex-shrink: 0; text-align: center; font-size: 10px; color: #999; cursor: pointer; }
 
-        #mb-debug-trigger { position: fixed; right: 16px; width: 32px; height: 32px; background: var(--mb-glass-bg); backdrop-filter: blur(15px) saturate(160%); -webkit-backdrop-filter: blur(15px) saturate(160%); border-radius: 14px; border: 1.5px solid var(--mb-glass-border); box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 2px rgba(255,255,255,0.8); cursor: pointer; z-index: 2147483646; display: none; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); user-select: none; -webkit-tap-highlight-color: transparent; }
+        #mb-debug-trigger { position: fixed; right: 16px; width: 32px; height: 32px; background: var(--mb-glass-bg); backdrop-filter: blur(15px) saturate(160%); -webkit-backdrop-filter: blur(15px) saturate(160%); border-radius: 14px; border: 1.5px solid var(--glass-border); box-shadow: 0 6px 16px rgba(0,0,0,0.12), inset 0 0 2px rgba(255,255,255,0.8); cursor: pointer; z-index: 2147483646; display: none; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); user-select: none; -webkit-tap-highlight-color: transparent; }
         #mb-debug-trigger:active { transform: scale(0.92); }
         #mb-debug-trigger svg { width: 22px; height: 22px; filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.15)); }
 
-        #mb-js-content { flex: 1; display: flex; flex-direction: column; padding: 10px; background: var(--mb-bg) !important; }
-        #mb-js-input { width: 100%; height: 120px; font-family: monospace; font-size: 14px; padding: 10px; border: 1px solid var(--mb-border); background: var(--mb-item-bg); color: var(--mb-text); resize: none; border-radius: 6px; outline: none; }
-        #mb-js-log { flex: 1; margin-top: 10px; overflow-y: auto; font-family: monospace; font-size: 12px; border-top: 1px solid var(--mb-border); padding-top: 10px; }
-        .log-item { margin-bottom: 4px; border-bottom: 1px solid var(--mb-border); padding-bottom: 2px; word-break: break-all; }
-        .log-error { color: #ff4757; }
-        .log-result { color: #009432; }
-      
+        #mb-js-content {height: 100%;display: flex;flex-direction: column; padding: 10px; box-sizing: border-box;background: var(--mb-bg) !important;}
+        #mb-js-log {flex: 1; margin-top: 10px;overflow-y: auto !important;font-family: monospace;font-size: 11px;border-top: 1px solid var(--mb-border);padding-top: 5px;-webkit-overflow-scrolling: touch;}
+        #mb-js-input {flex-shrink: 0; height: 100px;}       
+        .log-item { border-bottom: 0.5px solid var(--mb-border); padding: 4px 0; white-space: pre-wrap; font-size: 11px;}
+        .log-warn { color: #f1c40f; }
+        .log-error { color: #ff4757; background: rgba(255, 71, 87, 0.05); }
+        .log-result { color: #2ecc71; }
+ 
         body.mb-picking-mode { cursor: crosshair !important; }
+
+        @media (min-width: 768px) {
+            #mb-debug-panel { height: 45% !important; }
+            #mb-js-content { flex-direction: row; gap: 12px; }
+            #mb-js-input { flex: 1; height: auto !important; }
+            #mb-js-log { flex: 1; margin-top: 0; border-top: none; border-left: 1px solid var(--mb-border); padding-left: 10px; }
+            #mb-ad-content, #mb-data-content, #mb-icon-content { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
+            #mb-debug-content { max-width: 900px; margin: 0 auto; }
+            .ad-rule-item, .data-group-box, .icon-config-card { margin-bottom: 0; }
+        }
     `);
 
 
@@ -177,6 +188,7 @@
                     <div class="ad-action-bar" style="margin-top:8px;">
                         <button class="ad-mini-btn" id="btn-js-run" style="background:#f1c40f; color:#000; border:none; font-weight:bold;">执行</button>
                         <button class="ad-mini-btn" id="btn-js-clear">清空日志</button>
+                        <button class="ad-mini-btn" id="btn-js-copy-all">复制日志</button>
                     </div>
                     <div id="mb-js-log"></div>
                 </div>
@@ -208,11 +220,14 @@
     const jsInput = document.getElementById('mb-js-input');
 
     function addLog(msg, type = '') {
-        const div = document.createElement('div');
-        div.className = `log-item ${type}`;
-        div.innerText = `> ${msg}`;
-        jsLog.prepend(div);
-    }
+      const div = document.createElement('div'); div.className = `log-item ${type}`;
+       if (typeof msg === 'object' && msg !== null) { try { msg = JSON.stringify(msg); } catch (e) { msg = Object.prototype.toString.call(msg); }} div.innerText = `[${new Date().toLocaleTimeString(undefined, {hour12:false})}] ${msg}`; jsLog.prepend(div);}
+       const originalConsole = {log: console.log,error: console.error,warn: console.warn,info: console.info};
+       const hookConsole = (level, type) => { console[level] = (...args) => { originalConsole[level].apply(console, args); addLog(args.length > 1 ? args : args[0], type);};};
+       hookConsole('log', ''); hookConsole('error', 'log-error'); hookConsole('warn', 'log-error'); hookConsole('info', 'log-result');
+       window.addEventListener('error', (e) => { addLog(`${e.message} at ${e.filename}:${e.lineno}`, 'log-error');});
+       window.addEventListener('unhandledrejection', (e) => { addLog(`Promise Error: ${e.reason}`, 'log-error');
+    });
 
     function switchToPage(index) {
         stage.style.transform = `translateX(-${index * 100}%)`;
@@ -225,7 +240,9 @@
             panel.style.height = '40px';
             btnFold.innerText = '▲展开';
         } else {
-            panel.style.height = '50%';
+            const adaptiveHeight = window.innerHeight < 600 ? '40%' : '50%';
+            panel.style.height = adaptiveHeight;
+            document.body.style.paddingBottom = adaptiveHeight.replace('%', 'vh');
             btnFold.innerText = '▼收起';
         }
     }
@@ -613,7 +630,8 @@
             if (selectedNode) {
                 selectedNode.scrollIntoView({
                     behavior: 'smooth',
-                    block: 'center'
+                    block: 'center',
+                    inline: 'nearest'
                 });
             }
         }, 50);
@@ -656,11 +674,12 @@
     document.getElementById('mb-btn-to-icon').onclick = () => { renderIconPage(); switchToPage(4); };
     document.getElementById('mb-btn-back').onclick = () => switchToPage(0);
     document.getElementById('mb-btn-close').onclick = () => togglePanel(false);
-    document.getElementById('mb-btn-copy-html').onclick = () => { if (currentTarget) api.setClipboard(currentTarget.outerHTML); };
+    document.getElementById('mb-btn-copy-html').onclick = () => { if (currentTarget) {const clone = currentTarget.cloneNode(true);clone.classList.remove('mb-inspect-hl');if (clone.classList.length === 0) clone.removeAttribute('class');api.setClipboard(clone.outerHTML);}};
     document.getElementById('mb-btn-parent').onclick = () => { if (currentTarget && currentTarget.parentElement) { highlight(currentTarget.parentElement); renderDOM(); } };
     document.getElementById('mb-btn-restore').onclick = () => { if (activePreviewStyle) { activePreviewStyle.remove(); activePreviewStyle = null; } };
     document.getElementById('btn-js-clear').onclick = () => { jsLog.innerHTML = ''; };
-    document.getElementById('btn-js-run').onclick = () => { const code = jsInput.value.trim(); if (!code) return; try { const result = eval(code); addLog(result === undefined ? '执行成功' : result, 'log-result'); } catch (e) { addLog(e.message, 'log-error'); } };
+    document.getElementById('btn-js-run').onclick = () => { const code = jsInput.value.trim(); if (!code) return; try { const result = window.eval(code); if (result !== undefined) addLog(result, 'log-result'); } catch (e) { addLog(e.stack || e.message, 'log-error');}};
+    document.getElementById('btn-js-copy-all').onclick = () => { const logs = Array.from(jsLog.querySelectorAll('.log-item')); if (logs.length === 0) { alert('没有可复制的日志'); return;} const text = logs.map(el => el.innerText).reverse().join('\n'); api.setClipboard(text);};
 
     api.registerMenu("开启/关闭审查面板", () => togglePanel(!isDebugMode));
     api.registerMenu("显示/隐藏悬浮图标", () => toggleIconVisible());

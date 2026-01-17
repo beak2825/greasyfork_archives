@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TVDB Episode Matcher
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @description  Match torrent episodes with TheTVDB data
 // @author       Dooky
 // @match        https://*/*torrents*
@@ -32,7 +32,7 @@
         const fullText = torrentNameEl.textContent.trim();
         const akaMatch = fullText.match(/^(.+?)\s+AKA\s+/i);
         let seriesName = '';
-        
+
         if (akaMatch) {
             seriesName = akaMatch[1].trim();
         } else {
@@ -43,12 +43,12 @@
                 return null;
             }
         }
-        
+
         const seasonMatch = fullText.match(/S(?:eason\s*)?(\d+)/i);
         if (!seasonMatch) return null;
-        
+
         const seasonNumber = parseInt(seasonMatch[1], 10);
-        
+
         seriesName = seriesName
             .replace(/\s*\((\d{4})\)\s*$/, '')
             .replace(/\s+(\d{4})\s*$/, '')
@@ -56,12 +56,27 @@
             .replace(/\s*\((\d{4})\)\s*/, ' ')
             .replace(/\s+\d{4}\s+/g, ' ')
             .trim();
-        
+
         return {
             seriesName: seriesName,
             seasonNumber: seasonNumber,
             fullText: fullText
         };
+    }
+
+    function extractTVDBId() {
+        const tvdbLink = document.querySelector('a.meta-id-tag[href*="thetvdb.com"][href*="id="]');
+        if (!tvdbLink) return null;
+
+        const href = tvdbLink.getAttribute('href');
+        if (!href) return null;
+
+        const match = href.match(/[?&]id=(\d+)/);
+        if (match && match[1]) {
+            return parseInt(match[1], 10);
+        }
+
+        return null;
     }
 
     function getAPIKey() {
@@ -72,10 +87,10 @@
         const modal = document.createElement('div');
         modal.className = 'tvdb-settings-modal';
         modal.style.display = 'block';
-        
+
         const currentKey = getAPIKey() || '';
         const maskedKey = currentKey ? '*'.repeat(Math.min(currentKey.length, 20)) + (currentKey.length > 20 ? '...' : '') : '';
-        
+
         modal.innerHTML = `
             <div class="tvdb-settings-modal-content">
                 <span class="tvdb-modal-close">&times;</span>
@@ -83,10 +98,10 @@
                 <form id="tvdb-settings-form">
                     <div class="tvdb-settings-form-group">
                         <label class="tvdb-settings-label" for="tvdb-api-key">TheTVDB API Key</label>
-                        <input 
-                            type="password" 
-                            id="tvdb-api-key" 
-                            class="tvdb-settings-input" 
+                        <input
+                            type="password"
+                            id="tvdb-api-key"
+                            class="tvdb-settings-input"
                             placeholder="Enter your TheTVDB API key"
                             value="${currentKey}"
                         />
@@ -163,7 +178,7 @@
         form.onsubmit = (e) => {
             e.preventDefault();
             const apiKey = apiKeyInput.value.trim();
-            
+
             if (!apiKey) {
                 showStatus('Please enter an API key', 'error');
                 return;
@@ -172,9 +187,9 @@
             GM_setValue(TVDB_API_KEY_STORAGE, apiKey);
             GM_setValue(TVDB_TOKEN_STORAGE, '');
             GM_setValue(TVDB_TOKEN_EXPIRY, 0);
-            
+
             showStatus('✓ Settings saved successfully!', 'success');
-            
+
             setTimeout(closeModal, 1500);
         };
 
@@ -192,7 +207,7 @@
         return new Promise((resolve, reject) => {
             const cachedToken = GM_getValue(TVDB_TOKEN_STORAGE);
             const tokenExpiry = GM_getValue(TVDB_TOKEN_EXPIRY, 0);
-            
+
             if (cachedToken && tokenExpiry > Date.now()) {
                 resolve(cachedToken);
                 return;
@@ -267,6 +282,39 @@
         });
     }
 
+    function getTVDBSeriesById(seriesId, token) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `${TVDB_API_BASE}/series/${seriesId}`,
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/json",
+                    "Accept-Language": "eng"
+                },
+                onload: function(response) {
+                    if (response.status === 200) {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            if (data.data) {
+                                resolve(data.data);
+                            } else {
+                                reject(new Error("No series data in response"));
+                            }
+                        } catch (e) {
+                            reject(new Error("Failed to parse series response: " + e.message));
+                        }
+                    } else {
+                        reject(new Error(`Failed to get series: ${response.status} ${response.statusText}`));
+                    }
+                },
+                onerror: function(error) {
+                    reject(new Error("Network error: " + error));
+                }
+            });
+        });
+    }
+
     function getTVDBEpisodeDetails(episodeId, token) {
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
@@ -310,7 +358,7 @@
                     if (response.status === 200) {
                         try {
                             const data = JSON.parse(response.responseText);
-                            
+
                             let episodes = [];
                             if (data.data) {
                                 if (Array.isArray(data.data)) {
@@ -321,7 +369,7 @@
                                     episodes = [data.data.episode];
                                 }
                             }
-                            
+
                             if (episodes.length > 0) {
                                 const needsDetails = episodes.some(ep => {
                                     const hasName = ep.nameTranslations?.eng || ep.nameTranslations?.en ||
@@ -329,7 +377,7 @@
                                                    ep.name || ep.episodeName || ep.title || ep.episodeTitle;
                                     return !hasName && (ep.id || ep.episodeId || ep.episode_id);
                                 });
-                                
+
                                 if (needsDetails) {
                                     try {
                                         const episodesWithDetails = await Promise.all(
@@ -354,7 +402,7 @@
                                     }
                                 }
                             }
-                            
+
                             resolve({ episodes: episodes });
                         } catch (e) {
                             reject(new Error("Failed to parse episodes response: " + e.message));
@@ -384,7 +432,7 @@
                     if (response.status === 200) {
                         try {
                             const data = JSON.parse(response.responseText);
-                            
+
                             let episodes = [];
                             if (data.data) {
                                 if (Array.isArray(data.data)) {
@@ -395,7 +443,7 @@
                                     episodes = [data.data.episode];
                                 }
                             }
-                            
+
                             if (episodes.length > 0) {
                                 const needsDetails = episodes.some(ep => {
                                     const hasName = ep.nameTranslations?.eng || ep.nameTranslations?.en ||
@@ -403,7 +451,7 @@
                                                    ep.name || ep.episodeName || ep.title || ep.episodeTitle;
                                     return !hasName && (ep.id || ep.episodeId || ep.episode_id);
                                 });
-                                
+
                                 if (needsDetails) {
                                     try {
                                         const episodesWithDetails = await Promise.all(
@@ -428,7 +476,7 @@
                                     }
                                 }
                             }
-                            
+
                             resolve({ episodes: episodes, isAbsolute: true });
                         } catch (e) {
                             reject(new Error("Failed to parse episodes response: " + e.message));
@@ -447,9 +495,9 @@
     function extractEpisodeFiles() {
         const files = [];
         const videoExtensions = ['.mkv', '.mp4', '.avi', '.m4v', '.mov', '.webm'];
-        
+
         const dialog = document.querySelector('dialog.dialog.dialog--auto-width');
-        
+
         if (dialog) {
             const hierarchyPanel = dialog.querySelector('[data-tab="hierarchy"]');
             if (hierarchyPanel) {
@@ -460,12 +508,12 @@
                         files.push(text);
                     }
                 });
-                
+
                 if (files.length === 0) {
                     const allSummaries = hierarchyPanel.querySelectorAll('details summary');
                     allSummaries.forEach(summary => {
                         const text = summary.textContent.trim();
-                        if (text.match(/[Ss]\d+[Ee]\d+/) && 
+                        if (text.match(/[Ss]\d+[Ee]\d+/) &&
                             videoExtensions.some(ext => text.toLowerCase().includes(ext))) {
                             const match = text.match(/(.+\.(mkv|mp4|avi|m4v|mov|webm))$/i);
                             if (match && !files.includes(match[1])) {
@@ -503,7 +551,7 @@
                         }
                     });
                 }
-                
+
                 if (files.length === 0) {
                     const bracketEpisodeMatches = allText.match(/\[[^\]]+\].*?- \d{2,3}(?:v\d+)?.*?\.(mkv|mp4|avi|m4v|mov|webm)/gi);
                     if (bracketEpisodeMatches) {
@@ -516,14 +564,14 @@
                 }
             }
         }
-        
+
         if (files.length === 0) {
             const allElements = document.querySelectorAll('*');
             const seenFiles = new Set();
-            
+
             allElements.forEach(el => {
                 const text = el.textContent || '';
-                
+
                 const seMatches = text.matchAll(/([Ss]\d+[Ee]\d+.*?\.(mkv|mp4|avi|m4v|mov|webm))/gi);
                 for (const match of seMatches) {
                     if (!seenFiles.has(match[1])) {
@@ -531,7 +579,7 @@
                         files.push(match[1]);
                     }
                 }
-                
+
                 const absMatches = text.matchAll(/((?:\[[^\]]+\]\s*)?[A-Za-z][A-Za-z0-9&]*[.\s\-]\d{2,3}(?:v\d+)?[\s\-\[(.].*?\.(mkv|mp4|avi|m4v|mov|webm))/gi);
                 for (const match of absMatches) {
                     if (!seenFiles.has(match[1])) {
@@ -543,6 +591,77 @@
         }
 
         return files;
+    }
+
+    function countMkvFiles() {
+        let count = 0;
+        const videoExtensions = ['.mkv', '.mp4', '.avi', '.m4v', '.mov', '.webm'];
+        const dialog = document.querySelector('dialog.dialog.dialog--auto-width');
+
+        if (dialog) {
+            const hierarchyPanel = dialog.querySelector('[data-tab="hierarchy"]');
+            if (hierarchyPanel) {
+                const fileElements = hierarchyPanel.querySelectorAll('details summary span[style*="word-break"]');
+                fileElements.forEach(el => {
+                    const text = el.textContent.trim();
+                    if (text && videoExtensions.some(ext => text.toLowerCase().endsWith(ext))) {
+                        count++;
+                    }
+                });
+
+                if (count === 0) {
+                    const allSummaries = hierarchyPanel.querySelectorAll('details summary');
+                    allSummaries.forEach(summary => {
+                        const text = summary.textContent.trim();
+                        if (text && videoExtensions.some(ext => text.toLowerCase().endsWith(ext))) {
+                            count++;
+                        }
+                    });
+                }
+            }
+
+            const listPanel = dialog.querySelector('[data-tab="list"]');
+            if (listPanel && count === 0) {
+                const rows = listPanel.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                    const nameCell = row.querySelector('td:nth-child(2)');
+                    if (nameCell) {
+                        const text = nameCell.textContent.trim();
+                        if (text && videoExtensions.some(ext => text.toLowerCase().endsWith(ext))) {
+                            count++;
+                        }
+                    }
+                });
+            }
+
+            if (count === 0) {
+                const allText = dialog.textContent || dialog.innerText;
+                const videoMatches = allText.match(/\.(mkv|mp4|avi|m4v|mov|webm)/gi);
+                if (videoMatches) {
+                    count = videoMatches.length;
+                }
+            }
+        }
+
+        if (count === 0) {
+            const allElements = document.querySelectorAll('*');
+            const seenFiles = new Set();
+
+            allElements.forEach(el => {
+                const text = el.textContent || '';
+                const videoMatches = text.match(/\.(mkv|mp4|avi|m4v|mov|webm)/gi);
+                if (videoMatches) {
+                    videoMatches.forEach(match => {
+                        if (!seenFiles.has(match)) {
+                            seenFiles.add(match);
+                            count++;
+                        }
+                    });
+                }
+            });
+        }
+
+        return count;
     }
 
     function parseEpisodeNumber(filename) {
@@ -557,7 +676,7 @@
             }
             return episodes.length > 0 ? episodes : null;
         }
-        
+
         const match = filename.match(/[Ss](\d+)[Ee](\d+)|(\d+)[xX](\d+)/);
         if (match) {
             return [{
@@ -565,7 +684,7 @@
                 episode: parseInt(match[2] || match[4], 10)
             }];
         }
-        
+
         const absoluteMatch = filename.match(/[.\s\-](\d{2,4})(?:v\d+)?[\s\-]*[\[(]?(?:\d+p|DVD|BD|WEB|BluRay|FLAC|AAC|Hi10P|Hi10|x264|x265|HEVC)/i);
         if (absoluteMatch) {
             const epNum = parseInt(absoluteMatch[1], 10);
@@ -577,7 +696,7 @@
                 }];
             }
         }
-        
+
         const simpleAbsoluteMatch = filename.match(/^[A-Za-z][A-Za-z0-9\s]*[.\s\-](\d{2,3})[.\s\-]/);
         if (simpleAbsoluteMatch) {
             const epNum = parseInt(simpleAbsoluteMatch[1], 10);
@@ -589,16 +708,16 @@
                 }];
             }
         }
-        
+
         return null;
     }
 
     function extractEpisodeTitleFromFilename(filename) {
         const epMatch = filename.match(/[Ss]\d+[Ee]\d+(?:[-]?[Ee]\d+)?[.\s]+/i);
         if (!epMatch) return null;
-        
+
         const afterEpisode = filename.substring(epMatch.index + epMatch[0].length);
-        
+
         const qualityMarkers = [
             /\.\d+p/i,
             /\.\d+i/i,
@@ -617,7 +736,7 @@
             /\.mov$/i,
             /\.webm$/i
         ];
-        
+
         let titleEnd = afterEpisode.length;
         for (const marker of qualityMarkers) {
             const match = afterEpisode.match(marker);
@@ -625,12 +744,12 @@
                 titleEnd = match.index;
             }
         }
-        
+
         let title = afterEpisode.substring(0, titleEnd);
-        
+
         if (title.includes('.-.')) {
             const rawParts = title.split(/\.-\./);
-            
+
             const titleParts = rawParts.map((part) => {
                 let cleaned = part.replace(/\./g, ' ').trim();
                 cleaned = cleaned.replace(/[-\s.]+$/g, '');
@@ -653,36 +772,36 @@
                 if (words.length === 1 && singleQualityTerm.test(words[0])) return false;
                 return true;
             });
-            
+
             return titleParts.length > 0 ? titleParts : null;
         }
-        
+
         title = title.replace(/\./g, ' ').trim();
         title = title.replace(/[-\s.]+$/g, '');
-        
+
         if (!title || title.length < 3) return null;
         if (/^\d{4}$/.test(title)) return null;
-        
+
         const startsWithBracketedQuality = /^[\[(]\s*(2160p|1080p|720p|480p|4K|8K|BD|UHD|HDR|SDR|WEB-DL|WEB|NF|AMZN|ATVP|DSNP|HMAX|PCOK|STAN|H\.?265|H\.?264|HEVC|AVC|DDP|Atmos|DTS|AAC|FLAC|Opus)/i;
         if (startsWithBracketedQuality.test(title)) return null;
-        
+
         const startsWithQuality = /^(\d+p|\d+i|1080p|720p|2160p|480p|360p|4K|8K|WEB-DL|WEBRip|BLURAY|DVD|HDTV|REPACK|PROPER|INTERNAL|LIMITED|EXTENDED|UNRATED|BD|NF|AMZN|ATVP|DSNP|HMAX|HDR|SDR|UHD|H\.?265|H\.?264|HEVC|AVC|DDP|Atmos|DTS|AAC|FLAC|Opus|Dual-Audio|German|Japanese|English|French|Spanish|Italian|Korean|Chinese)/i;
         if (startsWithQuality.test(title)) return null;
-        
+
         const isOnlyTechnicalInfo = /^[\s\[\]()]*(\d+p|BD|NF|WEB-DL|WEB|H\.?265|H\.?264|HEVC|AVC|SDR|HDR|DDP|Atmos|AAC|Opus|Dual-Audio|German|Japanese|English|[A-F0-9]{6,8}|[A-Za-z0-9_-]+|[\s\[\]().\-])+[\s\[\]()]*$/i;
         const containsTitleWord = /[a-zA-Z]{4,}/;
         const technicalWords = /(2160p|1080p|720p|480p|4K|8K|BD|UHD|HDR|SDR|WEB-DL|WEB|WEBRip|NF|AMZN|ATVP|DSNP|HMAX|PCOK|H265|H264|HEVC|AVC|x265|x264|DDP|Atmos|DTS|AAC|FLAC|Opus|Dual-Audio|German|Japanese|English|French|Spanish|Italian|Korean|Chinese|HONE|REMUX|BluRay|MiB|GiB)/gi;
         const strippedTitle = title.replace(technicalWords, '').replace(/[\[\]().\-\s]+/g, ' ').trim();
         if (!strippedTitle || strippedTitle.length < 3) return null;
-        
+
         const isHashOnly = /^[\s\[\]()]*[A-F0-9]{6,}[\s\[\]()]*$/i;
         if (isHashOnly.test(title)) return null;
-        
+
         const words = title.split(/\s+/).filter(w => w.length > 0);
         if (words.length === 0) return null;
         const singleQualityTerm = /^(\d+p|\d+i|1080p|720p|2160p|4K|8K|WEB-DL|WEBRip|DL|BluRay|REMUX|UHD|HDR|BD|NF|AMZN|SDR|H265|H264|HEVC|AVC|DDP|Atmos|AAC|Opus)$/i;
         if (words.length === 1 && singleQualityTerm.test(words[0])) return null;
-        
+
         return title;
     }
 
@@ -693,31 +812,31 @@
         if (series.translations?.en && typeof series.translations.en === 'string') {
             return series.translations.en;
         }
-        
+
         if (series.translations?.eng?.name) return series.translations.eng.name;
         if (series.translations?.en?.name) return series.translations.en.name;
-        
+
         if (series.nameTranslations?.eng) return series.nameTranslations.eng;
         if (series.nameTranslations?.en) return series.nameTranslations.en;
-        
+
         if (series.overviewTranslations?.eng) return series.overviewTranslations.eng;
-        
+
         if (series.aliases && Array.isArray(series.aliases)) {
-            const englishAlias = series.aliases.find(a => 
+            const englishAlias = series.aliases.find(a =>
                 (a.language === 'eng' || a.language === 'en') && a.name
             );
             if (englishAlias) return englishAlias.name;
-            
-            const latinAlias = series.aliases.find(a => 
+
+            const latinAlias = series.aliases.find(a =>
                 a.name && /^[A-Za-z0-9\s\-':.,!?()]+$/.test(a.name)
             );
             if (latinAlias) return latinAlias.name;
         }
-        
+
         if (series.extended_title) return series.extended_title;
         if (series.english_name) return series.english_name;
         if (series.englishName) return series.englishName;
-        
+
         return series.name || series.seriesName || series.title;
     }
 
@@ -737,17 +856,17 @@
             const chars2 = {};
             for (const c of word1) chars1[c] = (chars1[c] || 0) + 1;
             for (const c of word2) chars2[c] = (chars2[c] || 0) + 1;
-            
+
             let commonChars = 0;
             for (const c in chars1) {
                 if (chars2[c]) {
                     commonChars += Math.min(chars1[c], chars2[c]);
                 }
             }
-            
+
             const totalChars = Math.max(word1.length, word2.length);
             if (commonChars >= totalChars * 0.85) return true;
-            
+
             let matchCount = 0;
             const minLen = Math.min(word1.length, word2.length);
             for (let i = 0; i < minLen; i++) {
@@ -760,57 +879,57 @@
 
     function titlesMatch(filenameTitle, tvdbTitle) {
         if (!filenameTitle || !tvdbTitle) return false;
-        
+
         const normalizedFilename = normalizeTitle(filenameTitle);
         const normalizedTVDB = normalizeTitle(tvdbTitle);
-        
+
         if (normalizedFilename === normalizedTVDB) return true;
-        
+
         const tvdbWords = normalizedTVDB.split(/\s+/).filter(w => w.length > 0);
         const filenameWords = normalizedFilename.split(/\s+/).filter(w => w.length > 0);
-        
+
         if (tvdbWords.length > 0 && filenameWords.length > 0) {
-            const allWordsMatch = tvdbWords.every(tvdbWord => 
-                filenameWords.some(filenameWord => 
-                    filenameWord === tvdbWord || 
+            const allWordsMatch = tvdbWords.every(tvdbWord =>
+                filenameWords.some(filenameWord =>
+                    filenameWord === tvdbWord ||
                     filenameWord.includes(tvdbWord) ||
                     tvdbWord.includes(filenameWord) ||
                     wordsSimilar(filenameWord, tvdbWord)
                 )
             );
-            
+
             const allFilenameWordsInTVDB = filenameWords.every(filenameWord =>
-                tvdbWords.some(tvdbWord => 
-                    tvdbWord === filenameWord || 
+                tvdbWords.some(tvdbWord =>
+                    tvdbWord === filenameWord ||
                     tvdbWord.includes(filenameWord) ||
                     filenameWord.includes(tvdbWord) ||
                     wordsSimilar(tvdbWord, filenameWord)
                 )
             );
-            
+
             if (allWordsMatch) return true;
             if (allFilenameWordsInTVDB && filenameWords.length <= tvdbWords.length + 2) return true;
         }
-        
+
         if (normalizedFilename.includes(normalizedTVDB) || normalizedTVDB.includes(normalizedFilename)) {
             return true;
         }
-        
+
         if (tvdbWords.length > 0 && filenameWords.length > 0) {
-            const matchingWords = tvdbWords.filter(tvdbWord => 
-                filenameWords.some(filenameWord => 
-                    filenameWord === tvdbWord || 
-                    filenameWord.startsWith(tvdbWord) || 
+            const matchingWords = tvdbWords.filter(tvdbWord =>
+                filenameWords.some(filenameWord =>
+                    filenameWord === tvdbWord ||
+                    filenameWord.startsWith(tvdbWord) ||
                     tvdbWord.startsWith(filenameWord) ||
                     wordsSimilar(filenameWord, tvdbWord)
                 )
             ).length;
-            
+
             if (matchingWords >= Math.ceil(tvdbWords.length * 0.8)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -818,7 +937,7 @@
         const modal = document.createElement('div');
         modal.className = 'tvdb-modal';
         modal.style.display = 'block';
-        
+
         modal.innerHTML = `
             <div class="tvdb-modal-content">
                 <span class="tvdb-modal-close">&times;</span>
@@ -855,26 +974,26 @@
 
     function compareEpisodes(tvdbEpisodes, fileEpisodes, isAbsoluteMode = false) {
         const results = [];
-        
+
         const tvdbMap = new Map();
         tvdbEpisodes.forEach(ep => {
             let epNumber;
             if (isAbsoluteMode) {
-                epNumber = ep.absoluteNumber || 
+                epNumber = ep.absoluteNumber ||
                            ep.airedEpisodeNumber ||
-                           ep.number || 
+                           ep.number ||
                            ep.episodeNumber;
             } else {
-                epNumber = ep.number || 
-                           ep.episodeNumber || 
-                           ep.episode || 
-                           ep.airedEpisodeNumber || 
+                epNumber = ep.number ||
+                           ep.episodeNumber ||
+                           ep.episode ||
+                           ep.airedEpisodeNumber ||
                            ep.episode_id ||
                            ep.episodeId ||
                            ep.episodeNumberInSeason ||
                            ep.episodeInSeason;
             }
-            
+
             let epName = ep.nameTranslations?.eng ||
                         ep.nameTranslations?.en ||
                         ep.nameTranslations?.['en-US'] ||
@@ -885,15 +1004,15 @@
                         ep.translations?.en?.name ||
                         ep.translations?.['en-US']?.name ||
                         ep.translations?.['en-GB']?.name ||
-                        ep.name || 
-                        ep.episodeName || 
-                        ep.title || 
+                        ep.name ||
+                        ep.episodeName ||
+                        ep.title ||
                         ep.episodeTitle;
-            
+
             if (!epName) {
                 if (ep.nameTranslations && typeof ep.nameTranslations === 'object') {
-                    epName = ep.nameTranslations.eng || 
-                            ep.nameTranslations.en || 
+                    epName = ep.nameTranslations.eng ||
+                            ep.nameTranslations.en ||
                             ep.nameTranslations['en-US'] ||
                             ep.nameTranslations['en-GB'] ||
                             Object.values(ep.nameTranslations)[0];
@@ -904,16 +1023,16 @@
                         epName = enTranslation?.name || ep.translations[0]?.name;
                     } else if (typeof ep.translations === 'object') {
                         epName = ep.translations.eng?.name ||
-                                ep.translations.en?.name || 
+                                ep.translations.en?.name ||
                                 ep.translations['en-US']?.name ||
                                 ep.translations['en-GB']?.name ||
                                 Object.values(ep.translations)[0]?.name;
                     }
                 }
             }
-            
+
             if (!epName) epName = '';
-            
+
             if (epNumber) {
                 tvdbMap.set(epNumber, {
                     number: epNumber,
@@ -929,7 +1048,7 @@
             if (epInfoList && Array.isArray(epInfoList)) {
                 const extractedTitles = extractEpisodeTitleFromFilename(filename);
                 const titleArray = Array.isArray(extractedTitles) ? extractedTitles : (extractedTitles ? [extractedTitles] : [null]);
-                
+
                 epInfoList.forEach((epInfo, index) => {
                     if (!fileMap.has(epInfo.episode)) {
                         fileMap.set(epInfo.episode, []);
@@ -951,25 +1070,25 @@
         });
 
         const allEpisodes = new Set([...tvdbMap.keys(), ...fileMap.keys()]);
-        
+
         allEpisodes.forEach(epNum => {
             const tvdbEp = tvdbMap.get(epNum);
             const fileEps = fileMap.get(epNum) || [];
-            
+
             if (tvdbEp && fileEps.length > 0) {
                 let titleMatch = false;
                 let titleMismatchFiles = [];
                 let hasAnyTitle = false;
                 let matchedTitle = null;
-                
+
                 fileEps.forEach(fileInfo => {
                     const filename = typeof fileInfo === 'string' ? fileInfo : fileInfo.filename;
                     let extractedTitle = typeof fileInfo === 'string' ? null : fileInfo.extractedTitle;
-                    
+
                     if (!extractedTitle) {
                         extractedTitle = extractEpisodeTitleFromFilename(filename);
                     }
-                    
+
                     let titleToMatch = null;
                     if (Array.isArray(extractedTitle)) {
                         for (const title of extractedTitle) {
@@ -988,8 +1107,8 @@
                         if (!titleToMatch && extractedTitle.length > 0) {
                             const nonNullTitles = extractedTitle.filter(t => t !== null);
                             if (nonNullTitles.length > 0) {
-                                titleMismatchFiles.push({ 
-                                    filename, 
+                                titleMismatchFiles.push({
+                                    filename,
                                     extractedTitle: nonNullTitles.length === 1 ? nonNullTitles[0] : nonNullTitles.join(' / ')
                                 });
                             }
@@ -1001,17 +1120,17 @@
                             titleMatch = true;
                             matchedTitle = extractedTitle;
                         } else {
-                            titleMismatchFiles.push({ 
-                                filename, 
+                            titleMismatchFiles.push({
+                                filename,
                                 extractedTitle: extractedTitle
                             });
                         }
                     }
                 });
-                
-                const status = !hasAnyTitle ? 'no_title' : 
+
+                const status = !hasAnyTitle ? 'no_title' :
                               (titleMatch && titleMismatchFiles.length === 0 ? 'match' : 'title_mismatch');
-                
+
                 results.push({
                     episode: epNum,
                     tvdbName: tvdbEp.name,
@@ -1050,7 +1169,7 @@
         display.id = "tvdb-results-display";
 
         const isComplete = fileCount >= tvdbCount;
-        const summaryText = isComplete 
+        const summaryText = isComplete
             ? `${fileCount}/${tvdbCount} episodes found (complete)`
             : `${fileCount}/${tvdbCount} episodes found`;
 
@@ -1101,11 +1220,11 @@
         const noTitleCount = results.filter(r => r.status === 'no_title').length;
         const missingCount = results.filter(r => r.status === 'missing').length;
         const extraCount = results.filter(r => r.status === 'extra').length;
-        
+
         const totalFound = matchCount + titleMismatchCount + noTitleCount;
         const totalExpected = matchCount + titleMismatchCount + noTitleCount + missingCount;
         const allNoTitles = noTitleCount > 0 && titleMismatchCount === 0 && matchCount === 0;
-        
+
         const allMatched = matchCount > 0 && titleMismatchCount === 0 && noTitleCount === 0 && missingCount === 0 && extraCount === 0;
         let inOrder = false;
         if (allMatched) {
@@ -1113,7 +1232,7 @@
             const firstEp = matchedEpisodes[0];
             inOrder = matchedEpisodes.length > 0 && matchedEpisodes.every((ep, index) => ep === firstEp + index);
         }
-        
+
         let summaryText;
         if (allMatched && inOrder) {
             summaryText = `${matchCount}/${matchCount} episodes in the right order`;
@@ -1148,18 +1267,18 @@
                 if (result.tvdbName) {
                     content += `"${result.tvdbName}" `;
                 }
-                
+
                 if (result.status === 'match') {
                     const fileNames = result.files.map(f => {
                         const filename = typeof f === 'string' ? f : f.filename || f;
                         return filename.split('/').pop();
                     }).join(', ');
                     content += `✓ Found in files: ${fileNames}`;
-                    
+
                     if (result.matchedTitle) {
                         content += `<div class="tvdb-title-info">✓ Title matches: "${result.matchedTitle}"</div>`;
                     } else {
-                        const extractedTitle = result.files.length > 0 ? 
+                        const extractedTitle = result.files.length > 0 ?
                             extractEpisodeTitleFromFilename(result.files[0]) : null;
                         if (extractedTitle) {
                             const titleDisplay = Array.isArray(extractedTitle) ? extractedTitle.join(', ') : extractedTitle;
@@ -1178,13 +1297,13 @@
                         return filename.split('/').pop();
                     }).join(', ');
                     content += `⚠ Found in files but title mismatch: ${fileNames}`;
-                    
+
                     if (result.titleMismatches && result.titleMismatches.length > 0) {
                         result.titleMismatches.forEach(mismatch => {
                             content += `<div class="tvdb-title-info">⚠ Filename title: "${mismatch.extractedTitle}" (expected: "${result.tvdbName}")</div>`;
                         });
                     } else {
-                        const extractedTitle = result.files.length > 0 ? 
+                        const extractedTitle = result.files.length > 0 ?
                             extractEpisodeTitleFromFilename(result.files[0]) : null;
                         if (extractedTitle) {
                             content += `<div class="tvdb-title-info">⚠ Filename title: "${extractedTitle}" (expected: "${result.tvdbName}")</div>`;
@@ -1236,6 +1355,12 @@
             return;
         }
 
+        const tvdbId = extractTVDBId();
+        if (!tvdbId) {
+            alert("TVDB ID not found on page. Please ensure the torrent page has TVDB metadata.");
+            return;
+        }
+
         const seriesInfo = extractSeriesInfo();
         if (!seriesInfo) {
             alert("Could not extract series information from page");
@@ -1245,59 +1370,54 @@
         try {
             const token = await getTVDBToken();
 
-            let seriesList = await searchTVDBSeries(seriesInfo.seriesName, token);
-
-            if (seriesList.length === 0) {
-                alert("No series found on TheTVDB");
-                return;
-            }
-
-            let selectedSeries = null;
-            
-            const exactMatch = seriesList.find(s => 
-                normalizeTitle(getEnglishSeriesName(s)) === normalizeTitle(seriesInfo.seriesName)
-            );
-
-            if (exactMatch && seriesList.length === 1) {
-                selectedSeries = exactMatch;
-            } else if (exactMatch) {
-                selectedSeries = exactMatch;
-            } else if (seriesList.length === 1) {
-                selectedSeries = seriesList[0];
-            } else {
-                await new Promise((resolve) => {
-                    showSeriesSelectionModal(seriesList, (series) => {
-                        selectedSeries = series;
-                        resolve();
-                    });
-                });
-            }
+            const selectedSeries = await getTVDBSeriesById(tvdbId, token);
 
             if (!selectedSeries) {
+                alert("Failed to fetch series information from TheTVDB");
                 return;
             }
 
+            const seriesId = selectedSeries.tvdb_id || selectedSeries.id || tvdbId;
+
             const fileEpisodes = extractEpisodeFiles();
-            
+
             if (fileEpisodes.length === 0) {
                 alert("No episode files found on page. Please open the Files dialog first.");
                 return;
             }
-            
+
             const firstParsed = parseEpisodeNumber(fileEpisodes[0]);
             const isAbsoluteMode = firstParsed && firstParsed[0]?.isAbsolute;
-            
-            const seasonData = await getTVDBSeasonEpisodes(selectedSeries.tvdb_id, seriesInfo.seasonNumber, token);
+
+            const seasonData = await getTVDBSeasonEpisodes(seriesId, seriesInfo.seasonNumber, token);
             let tvdbEpisodes = seasonData.episodes || [];
-            
+
             tvdbEpisodes = tvdbEpisodes.filter(ep => {
                 const epSeason = ep.seasonNumber || ep.season || ep.season_id || ep.seasonId;
                 return epSeason === seriesInfo.seasonNumber;
             });
-            
+
             if (tvdbEpisodes.length === 0) {
                 alert(`No episodes found for Season ${seriesInfo.seasonNumber}`);
                 return;
+            }
+
+            const parsedEpisodes = fileEpisodes.map(f => parseEpisodeNumber(f)).filter(p => p !== null);
+
+            if (parsedEpisodes.length === 0) {
+                let fileCount = fileEpisodes.length;
+
+                if (fileCount === 0) {
+                    fileCount = countMkvFiles();
+                }
+
+                if (fileCount > 0) {
+                    displayCountResults(fileCount, tvdbEpisodes.length, seriesInfo);
+                    return;
+                } else {
+                    alert("Could not detect episode numbering or count video files. Please ensure the Files dialog is open.");
+                    return;
+                }
             }
 
             if (isAbsoluteMode) {
@@ -1328,21 +1448,21 @@
         btn.textContent = text;
         if (title) btn.title = title;
         btn.style.cssText = 'background:#2e3445;border:none;color:#fff;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:12px';
-        
+
         btn.addEventListener('click', function(e) {
             e.stopImmediatePropagation();
             e.preventDefault();
             clickHandler();
         });
-        
+
         btn.addEventListener('mouseenter', function() {
             this.style.backgroundColor = '#2d6cd3';
         });
-        
+
         btn.addEventListener('mouseleave', function() {
             this.style.backgroundColor = '#2e3445';
         });
-        
+
         return btn;
     }
 
@@ -1352,7 +1472,7 @@
         var headings = document.querySelectorAll('h2.panel__heading');
         var autoModHeading = null;
         var moderationHeading = null;
-        
+
         for (var i = 0; i < headings.length; i++) {
             var text = headings[i].textContent;
             if (text.indexOf('Auto Moderation') !== -1) {

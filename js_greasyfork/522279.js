@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Netflix DNM URL 링크 추가
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Netflix 미디어 센터 페이지의 개별 영상물 페이지에서 상단에 DNM URL 링크 생성
 // @match        https://media.netflix.com/*
 // @grant        none
 // @author       DongHaerang
+// @license      CC BY-NC-SA 4.0
 // @downloadURL https://update.greasyfork.org/scripts/522279/Netflix%20DNM%20URL%20%EB%A7%81%ED%81%AC%20%EC%B6%94%EA%B0%80.user.js
 // @updateURL https://update.greasyfork.org/scripts/522279/Netflix%20DNM%20URL%20%EB%A7%81%ED%81%AC%20%EC%B6%94%EA%B0%80.meta.js
 // ==/UserScript==

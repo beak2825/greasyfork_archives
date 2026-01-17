@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         PokeClicker 简体中文补全（仅 Bundle 模式）
+// @name         PokeClicker 宝可梦点击 简体中文补全
 // @namespace    https://github.com/mianfeipiao123/pokeclicker-auto
-// @version      0.1.49
+// @version      0.1.51
 // @description  从 GitHub 仓库加载 zh-Hans/bundle.json（单文件），并替换页面中仍以英文显示的文本
 // @homepageURL  https://github.com/mianfeipiao123/pokeclicker-auto
 // @supportURL   https://github.com/mianfeipiao123/pokeclicker-auto/issues
@@ -13,8 +13,8 @@
 // @match        https://dreamnya.github.io/pokeclicker/*
 // @run-at       document-start
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/562815/PokeClicker%20%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E8%A1%A5%E5%85%A8%EF%BC%88%E4%BB%85%20Bundle%20%E6%A8%A1%E5%BC%8F%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/562815/PokeClicker%20%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E8%A1%A5%E5%85%A8%EF%BC%88%E4%BB%85%20Bundle%20%E6%A8%A1%E5%BC%8F%EF%BC%89.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562815/PokeClicker%20%E5%AE%9D%E5%8F%AF%E6%A2%A6%E7%82%B9%E5%87%BB%20%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E8%A1%A5%E5%85%A8.user.js
+// @updateURL https://update.greasyfork.org/scripts/562815/PokeClicker%20%E5%AE%9D%E5%8F%AF%E6%A2%A6%E7%82%B9%E5%87%BB%20%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%E8%A1%A5%E5%85%A8.meta.js
 // ==/UserScript==
 
 (() => {
@@ -76,7 +76,7 @@
         setTimeout(() => clearInterval(interval), 10000);
     }
 
-    const SCRIPT_VERSION = '0.1.49';
+    const SCRIPT_VERSION = '0.1.51';
 
     const DEFAULT_TRANSLATIONS_PARAM_VALUE = 'github:mianfeipiao123/pokeclicker-auto/main';
     let TRANSLATIONS_PARAM_VALUE = DEFAULT_TRANSLATIONS_PARAM_VALUE;

@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name           豆瓣电影 · 资源搜索
 // @namespace      https://github.com/garinasset/DoubanMovieResourceLinks
-// @version        3.0.0
+// @version        5.0.0
 //
-// @description    在“豆瓣电影”页面信息栏，添加相应“电影”的“第三方资源搜索”链接，例如海盗湾等，点击即可跳转到对应电影的第三方资源搜索结果页面，便利”资源“搜索。
+// @description    在"豆瓣电影"页面信息栏，添加相应"电影"的"第三方资源搜索"链接，例如海盗湾等，点击即可跳转到对应电影的第三方资源搜索结果页面，便利"资源"搜索。
 //
 // @author         garinasset
 // @license        MIT
@@ -42,19 +42,31 @@
             name: '海盗湾',
             favicon: 'https://thepiratebay.org/favicon.ico',
             href: (imdbId, cnTitle, year) => `https://thepiratebay.org/search.php?q=${imdbId}`,
-            className: 'hdw'
+            className: 'thepiratebay'
         },
         {
             name: '电影天堂',
             favicon: 'https://www.dytt8899.com/favicon.ico',
             onClick: (imdbId, cnTitle, year) => openDyttSearch(cnTitle),
-            className: 'dytt'
+            className: 'dytt8899'
+        },
+        {
+            name: 'YYeTs',
+            favicon: 'https://yyets.click/svg/logo.svg',
+            href: (imdbId, cnTitle, year) => `https://yyets.click/search?keyword=${encodeURIComponent(cnTitle)}&type=resource`,
+            className: 'yyets'
+        },
+        {
+            name: 'SubHD',
+            favicon: 'https://subhd.tv/public/images/favicon-32x32.png',
+            href: (imdbId, cnTitle, year) => `https://subhd.tv/search/${encodeURIComponent(cnTitle)}${year ? '+' + year : ''}`,
+            className: 'subhd'
         },
         {
             name: '伪·射手网',
             favicon: 'https://assrt.net/favicon.ico',
             href: (imdbId, cnTitle, year) => `https://assrt.net/sub/?searchword=${encodeURIComponent(cnTitle)}${year ? '+' + year : ''}`,
-            className: 'shooter'
+            className: 'assrt'
         }
     ];
 
@@ -64,7 +76,6 @@
     (function addResourceIconStyle() {
         const style = document.createElement('style');
         let cssText = `
-            .tm-douban-resource__container { white-space: nowrap; }
             .tm-douban-resource__link {
                 position: relative; display: inline-flex; align-items: center;
                 padding-left: 18px; line-height: 1.2; vertical-align: middle; text-decoration: none;
@@ -122,7 +133,7 @@
      * ========================= */
     function insertLinks() {
         const info = document.querySelector('#info');
-        if (!info || info.querySelector('.tm-douban-resource__container')) return false;
+        if (!info || info.querySelector('.tm-douban-resource__link')) return false;
 
         const imdbLabel = Array.from(info.querySelectorAll('span.pl'))
             .find(span => span.textContent.trim() === 'IMDb:');
@@ -138,8 +149,11 @@
         const year = getYear() || '';
 
         const container = document.createElement('span');
-        container.className = 'tm-douban-resource__container';
-        let html = '<span class="pl">磁力资源:</span>';
+        container.className = 'pl';
+        container.textContent = '资源:';
+
+        const linkContainer = document.createElement('span');
+        let html = '';
 
         RESOURCES.forEach((res, idx) => {
             const cls = res.className || res.name.toLowerCase();
@@ -156,21 +170,29 @@
             if (idx < RESOURCES.length - 1) html += '&nbsp;/&nbsp;';
         });
 
-        container.innerHTML = html;
+        linkContainer.innerHTML = html;
 
         // 绑定点击事件
         RESOURCES.forEach(res => {
             if (res.onClick) {
                 const cls = res.className || res.name.toLowerCase();
-                container.querySelector(`.tm-douban-resource__action-${cls}`)
+                linkContainer.querySelector(`.tm-douban-resource__action-${cls}`)
                     .addEventListener('click', () => res.onClick(imdbId, cnTitle, year));
             }
         });
 
+        // 创建容器包装，使其布局与豆瓣其他信息一致
+        const wrapper = document.createElement('div');
+        wrapper.appendChild(container);
+        wrapper.appendChild(linkContainer);
+
         const br = document.createElement('br');
         const imdbBr = imdbTextNode.nextSibling;
-        if (imdbBr && imdbBr.tagName === 'BR') imdbBr.after(container, br);
-        else info.append(container, br);
+        if (imdbBr && imdbBr.tagName === 'BR') {
+            imdbBr.after(wrapper, br);
+        } else {
+            info.append(wrapper, br);
+        }
 
         return true;
     }
@@ -187,4 +209,3 @@
 
     waitForInfo();
 })();
-

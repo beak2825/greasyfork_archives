@@ -4,8 +4,9 @@
 // @description  Améliore l'interface de Kraland
 // @author       Somin
 // @namespace    somin
-// @version      beta.0.14
+// @version      beta.0.16
 // @match        http://www.kraland.org/*
+// @match        http://kraland.org/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=kraland.org
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/562131/Eleven.user.js
@@ -112,6 +113,10 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     var minichat = false;
     // affichage du minichat
 
+    //--- Rapport privé
+    var couleurNouveaux='red';
+    // couleur des nouveaux évènements
+
     //+------------ Paramétrages du Script --------------+
 
     //--- Variables Globales
@@ -146,7 +151,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         pforum : paddingForum,
         fempire : drapeauForum,
         fpnj : pnjIcon,
-        ffonction : fonctionIcon
+        ffonction : fonctionIcon,
+        prc: couleurNouveaux,
     }
 
     var savedTxtData=[];
@@ -165,17 +171,23 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 //help();
                 break;
             default:
+                console.log('not yet');
                 return;
         }
     }else{
        // check rapport privé
-        let myTab=document.querySelector('#myTab');
-        if(myTab){rp();}
+        function isReportPage() {
+            return window.location.pathname === '/report'
+            || document.getElementById('myTab');
+        }
+        if (isReportPage()) {
+            rp();
+        }
     }
 
     function main(){
         globalki();
-        let navbar=document.querySelector('#navbar');
+        let navbar=document.getElementById('navbar');
         var kili, lia;
         if(navbar){
             kili=navbar.querySelector('li.dropdown.active');
@@ -220,15 +232,15 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     }
 
     function globalki(){
-        if(!aparam.mc){document.querySelector('#flap_closed').remove();}
-        var contentki=document.querySelector('#content');
+        if(!aparam.mc){document.getElementById('flap_closed').remove();}
+        var contentki=document.getElementById('content');
         contentki.style.width='auto';
         var rowki=contentki.querySelector('.row');
         rowki.style.marginLeft='0';
         rowki.style.marginRight='0';
 
         //--- gestion pub et top
-        var topKi=document.querySelector('#top');
+        var topKi=document.getElementById('top');
         topKi.style.height='auto';
         /*
         var noad=document.createElement('button');
@@ -282,59 +294,40 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
     function play(){
         pinup();
-/*
-        var content=document.querySelector('#content');
-        //content.style.display='flex';
-        var row=document.querySelector('#content');
-        //row.style.display='flex';
 
-        var cLeft=document.querySelector('#col-left');
-        cLeft.style.width='fit-content';
-*/
-        var cRight=document.querySelector('#col-right');
-        //cRight.style.flex='1';
-
+        var cRight=document.getElementById('col-right');
         var containerf=cRight.querySelector('.container-fluid');
         containerf.style.padding='0px';
         containerf.style.margin='0px';
-
         var mBottomSize='5px'; // taille de marge inférieure entre les panels
-        //--- pj side
-        let pjSide=cRight.querySelector('.dashboard');
-        let panelDefault=pjSide.querySelectorAll('.panel-default');
-        for(let i=0;i<panelDefault.length;i++){
-            panelDefault[i].style.marginBottom=mBottomSize;
-            //panelDefault[i].style.minWidth='fit-content';
-            //panelDefault[i].style.maxWidth='50%';
-            //panelDefault[i].style.float='left';
-            let panelHeading=panelDefault[i].querySelector('.panel-heading');
-            panelHeading.style.padding='5px';
-            let panelBody=panelDefault[i].querySelector('.panel-body');
-            panelBody.style.paddingTop='0px';
-            panelBody.style.paddingBottom='0px';
-            panelBody.style.paddingLeft='0px';
-            panelBody.style.paddingRight='2px';
-            let pLink=panelBody.querySelector('td').querySelectorAll('a');
-            for(let j=0;j<pLink.length;j++){
-                pLink[j].style.clear = 'both';
-                let aColor=getComputedStyle(pLink[j]).borderBottomColor;
-                pLink[j].style.border='none';
-                pLink[j].style.padding='0px';
-                //pLink[j].style.display = 'block';
-                pLink[j].style.overflow = 'hidden';
-                pLink[j].style.textDecoration = 'none';
-                if(j>0 && pLink.length>0){
-                    pLink[j].style.borderTop = '2px solid';
-                    pLink[j].style.borderTopColor = aColor;
-                }
-                let ava=pLink[j].querySelector('img.pull-left');
-                ava.style.margin='5px';
-                ava.style.width=aparam.avaIg+'px';
-                ava.style.height=aparam.avaIg+'px';
-            }
+
+        //--- détection de la page
+        let path = window.location.pathname;
+        switch(path) {
+            case '/jouer/plateau':
+                mainp();
+                break;
+            case '/jouer/materiel':
+                matp();
+                break;
+            case '/jouer/perso':
+                persop();
+                break;
+            case '/jouer/bat':
+                batp();
+                break;
+            case '/jouer/pnj':
+                pnjp();
+                break;
+            default:
         }
 
-        /*
+        function mainp(){
+            //--- pj side
+            let pjSide=cRight.querySelector('.dashboard');
+            pjStyle(pjSide);
+
+            /*
         function avatar(pp){
             pp.style.width = aparam.avaIg + 'px';
             pp.style.height = aparam.avaIg + 'px';
@@ -351,69 +344,194 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }
         */
 
-        // bâtiment
-        let bSide=cRight.querySelectorAll('.dashboard')[1];
-        let bat, commerce, materiel;
+            // bâtiment
+            let bSide=cRight.querySelectorAll('.dashboard')[1];
+            boxStyle(bSide);
 
-        let bpanels=bSide.querySelectorAll('.panel.panel-default');
-        for(let i=0;i<bpanels.length;i++){
-            bpanels[i].style.marginBottom=mBottomSize;
-            let panelTitle=bpanels[i].querySelector('.panel-heading');
-            panelTitle.style.padding='5px';
-            let boxType=bpanels[i].querySelector('h3').lastChild.textContent.trim();
-            //console.log(boxType);
-            switch(boxType){
-                case "Bâtiment":
-                    bStyle(bpanels[i]);
-                    break;
-                case "Commerce":
-                    cStyle(bpanels[i]);
-                    break;
-                case "Matériel":
-                    mStyle(bpanels[i]);
-                    break;
-                case "Installation":
-                    console.log('test4');
-                    iStyle(bpanels[i]);
-                    break;
-                default :
+        }
+
+        function matp(){
+            let invSide=cRight.querySelector('.dashboard');
+            boxStyle(invSide);
+            let matSide=cRight.querySelectorAll('.dashboard')[1];
+            boxStyle(matSide);
+            let wpanel=matSide.querySelector("div.well");
+            wpanel.style.padding='5px';
+        }
+
+        function pnjp(){
+
+        }
+        function batp(){
+
+        }
+        function persop(){
+            let panels=containerf.querySelectorAll('.panel-default');
+            for(let i=0;i<panels.length;i++){
+                panels[i].style.marginBottom=mBottomSize;
+                let panelHeading=panels[i].querySelector('.panel-heading');
+                panelHeading.style.padding='5px';
+                let panelBody=panels[i].querySelector('.panel-body');
+                panelBody.style.padding='5px';
+                let boxType=panels[i].querySelector('h3').lastChild.textContent.trim();
+                switch(boxType){
+                    case 'Citoyenneté':
+                        tdStyle(panels[i]);
+                        break;
+                    case 'Maladies':
+                        break;
+                    case 'Finance':
+                        nop(panels[i]);
+                        break;
+                    case'Organisations':
+                        tdStyle(panels[i]);
+                        break;
+                    case'Avis de Recherche':
+                        tdStyle(panels[i]);
+                        break;
+                    default:
+                        console.log('not found persop boxType : '+boxType);
+                }
+            }
+            function nop(panel){
+                let panelp=panel.querySelectorAll('p');
+                for(let i=0;i<panelp.length;i++){
+                    panelp[i].style.margin='0 0 0 0';
+                }
+            }
+
+            function tdStyle(panel){
+                let alltd=panel.querySelectorAll('td');
+                for(let i=0;i<alltd.length;i++){
+                    alltd[i].style.padding='0px';
+                }
+
             }
         }
 
-        function bStyle(bbox){
-            let abox=bbox.querySelector('a');
-            abox.style.border='none';
-            abox.style.padding='0px';
-            let pbody=bbox.querySelector('.panel-body');
-            pbody.style.paddingBottom='5px';
-            pbody.style.paddingTop='5px';
-            let pdb=bbox.querySelector('.panel-body .row .progress');
-            pdb.style.marginBottom='0px';
+        function pjStyle(dashboard){
+            let panelDefault=dashboard.querySelectorAll('.panel-default');
+            for(let i=0;i<panelDefault.length;i++){
+                panelDefault[i].style.marginBottom=mBottomSize;
+                let panelHeading=panelDefault[i].querySelector('.panel-heading');
+                panelHeading.style.padding='5px';
+                let panelBody=panelDefault[i].querySelector('.panel-body');
+                panelBody.style.paddingTop='0px';
+                panelBody.style.paddingBottom='0px';
+                panelBody.style.paddingLeft='0px';
+                let istd=panelBody.querySelector('td');
+                var pLink;
+                if(istd){
+                    pLink=istd.querySelectorAll('a');
+                    panelBody.style.paddingRight='2px';
+                }else{
+                    pLink=panelBody.querySelectorAll('a');
+                    panelBody.style.paddingRight='0px';
+                }
+                for(let j=0;j<pLink.length;j++){
+                    if(!istd){
+                        let span = pLink[j].querySelector('span');
+                        span.style.display = 'inline-block';
+                        span.style.paddingRight = '3px';
+                    }
+                    pLink[j].style.clear = 'both';
+                    let aColor=getComputedStyle(pLink[j]).borderBottomColor;
+                    pLink[j].style.border='none';
+                    pLink[j].style.padding='0px';
+                    //pLink[j].style.display = 'block';
+                    pLink[j].style.overflow = 'hidden';
+                    pLink[j].style.textDecoration = 'none';
+                    if(j>0 && pLink.length>0){
+                        pLink[j].style.borderTop = '2px solid';
+                        pLink[j].style.borderTopColor = aColor;
+                    }
+                    let ava=pLink[j].querySelector('img.pull-left');
+                    ava.style.margin='5px';
+                    ava.style.width=aparam.avaIg+'px';
+                    ava.style.height=aparam.avaIg+'px';
+                }
+            }
         }
 
-        function cStyle(cbox){
-            gStyle(cbox);
+        function boxStyle(dashboard){
+            let bpanels=dashboard.querySelectorAll('.panel.panel-default:not(.well)');
+            for(let i=0;i<bpanels.length;i++){
+                bpanels[i].style.marginBottom=mBottomSize;
+                let boxType=bpanels[i].querySelector('h3').lastChild.textContent.trim();
+                if(boxType!=='Bâtiment'){pbStyle(bpanels[i]);}
+                switch(boxType){
+                    case "Bâtiment":
+                        bStyle(bpanels[i]);
+                        break;
+                    case "Commerce":
+                        cStyle(bpanels[i]);
+                        break;
+                    case "Matériel":
+                        mStyle(bpanels[i]);
+                        break;
+                    case "Installation":
+                        iStyle(bpanels[i]);
+                        break;
+                    case "Argent" :
+                        vStyle();
+                        break;
+                    case "Bâtiments Privés":
+                        break;
+                    case "Bâtiments Publics":
+                        break;
+                    case "Employés":
+                        break;
+                    case "Employés de fonction":
+                        break;
+                    case "Esclaves":
+                        break;
+                    default :
+                        console.log('boxType unknown : '+boxType);
+                }
+            }
+
+            function cStyle(cbox){
+
+            }
+
+            function mStyle(mbox){
+
+            }
+            function iStyle(ibox){
+
+            }
+
+            // box batiment
+            function bStyle(bbox){
+                let abox=bbox.querySelector('a');
+                abox.style.border='none';
+                abox.style.padding='0px';
+                let pbody=bbox.querySelector('.panel-body');
+                pbody.style.paddingBottom='5px';
+                pbody.style.paddingTop='5px';
+                let pdb=bbox.querySelector('.panel-body .row .progress');
+                pdb.style.marginBottom='0px';
+            }
+
+            // page inventaire
+            function vStyle(){
+            }
+
         }
 
-        function mStyle(mbox){
-            gStyle(mbox);
-        }
+        function pbStyle(panel){
+            let panelTitle=panel.querySelector('.panel-heading');
+            panelTitle.style.padding='5px';
 
-        function iStyle(ibox){
-            gStyle(ibox);
-        }
-
-        function gStyle(bpanel){
-            let pbody=bpanel.querySelector('.panel-body');
+            let pbody=panel.querySelector('.panel-body');
             pbody.style.padding='0px';
-
             let items=pbody.querySelectorAll('a');
             for(let i=0;i<items.length;i++){
                 items[i].style.padding='5px';
                 items[i].style.borderBottom='none';
                 items[i].style.borderLeft='none';
                 items[i].style.borderRight='none';
-            }
+                }
             let titleh=pbody.querySelectorAll('div.list-group-item');
             for(let i=0;i<titleh.length;i++){
                 titleh[i].style.padding='5px';
@@ -423,12 +541,17 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 //titleh[i].querySelector('h4').style.fontWeight='bold';
             }
         }
+
+        function gbox(panel){
+
+        }
     }
 
     function forum(){
-        var cRight=document.querySelector('#col-right');
-        var cLeft=document.querySelector('#col-left');
-        var row=document.querySelector('#content .row');
+        var cRight=document.getElementById('col-right');
+        var cLeft=document.getElementById('col-left');
+        var content=document.getElementById('content');
+        var row=content.querySelector('.row');
 
         let isTopicPage=document.querySelector('#content ul.media-list.forum');
         if(isTopicPage){
@@ -439,7 +562,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
         function topicSetUp(){
             // sujet
-/*
+            /*
             cRight.style.width=aparam.twidth+'%';
             if(aparam.twidth<=80){
                 cLeft.remove();
@@ -455,12 +578,14 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             var userinfo=document.querySelectorAll('div.user-info');
             for(let i=0;i<userinfo.length;i++){
                 let ava=userinfo[i].querySelector('.avatar');
-                ava.classList.remove('img-thumbnail');
-                ava.style.display='inline';
-                ava.style.width=aparam.avaFora+'px';
-                ava.style.maxWidth='100%';
-                ava.style.maxHeight=(2*aparam.avaFora)+'px';
-                ava.style.marginBottom='5px';
+                if(ava){
+                    ava.classList.remove('img-thumbnail');
+                    ava.style.display='inline';
+                    ava.style.width=aparam.avaFora+'px';
+                    ava.style.maxWidth='100%';
+                    ava.style.maxHeight=(2*aparam.avaFora)+'px';
+                    ava.style.marginBottom='5px';
+                }
 
                 //---
                 let cart=userinfo[i].querySelector('.cartouche');
@@ -524,6 +649,27 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                     bquote[i].querySelector('i').remove();
                 }
             }
+            ezSpoiler();
+
+            //--- insertion formulaire réponse
+            let libox=document.createElement('li');
+            let replyBox=document.createElement('div');
+            let ultopic=document.querySelector('');
+
+            var replyb=document.querySelectorAll('a[data-original-title="répondre"]');
+
+            var tdoc=loadPage(replyb[0].href);
+
+            const form = tdoc.querySelector('form');
+            if (!form) {
+                console.log('No form found in ',replyb[0].href);
+                return;
+            }
+            let formClone=form.cloneNode(true);
+
+            for(let i=0;i<replyb.length;i++){
+
+            }
 
             //--- naviguer avec les flèches
             try{
@@ -533,8 +679,6 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
                 console.log(err);
             }
 
-
-            ezSpoiler();
         }
 
         function forumSetUp(){
@@ -577,7 +721,7 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
     }
 
     function km(){
-        var cLeft=document.querySelector('#col-left');
+        var cLeft=document.getElementById('col-left');
 
     }
 
@@ -601,13 +745,14 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
     //+------------ Rapport privé --------------+
     function rp(){
-        // bg-info
         var newEv=document.querySelectorAll('.bg-info');
         for(let i=0;i<newEv.length;i++){
             newEv[i].style.backgroundColor=getComputedStyle(document.body).backgroundColor;
-            newEv[i].style.borderLeft = '3px solid red';
+
+            newEv[i].style.borderLeft = `3px solid ${aparam.prc}`;
             /*if(i===newEv.length-1){
                 newEv[i].style.borderBottom = '2px solid red';
+                // bordure horizontale, discord style
             }*/
         }
         ezSpoiler();
@@ -633,9 +778,9 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
 
     //+------------ Epingler les menus ---------------+
     function pinup(){
-        var cLeft=document.querySelector('#col-left');
-        var cRight=document.querySelector('#col-right');
-        var content=document.querySelector('#content');
+        var cLeft=document.getElementById('col-left');
+        var cRight=document.getElementById('col-right');
+        var content=document.getElementById('content');
         content.style.width='100%';
         var row=content.querySelector('.row');
         if(!aparam.pinup){
@@ -660,8 +805,8 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
         }else{
             const navbar = document.querySelector('nav');
             const footer = document.querySelector('footer');
-            const parent = document.querySelector('#content');
-            document.querySelector('#top-link').remove();
+            const parent = document.getElementById('content');
+            document.getElementById('top-link').remove();
 
             const navbarHeight = navbar.offsetHeight;
             const footerHeight = footer.offsetHeight;
@@ -672,12 +817,10 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             parent.style.overflow = 'hidden';
 
             // cLeft
-            const cLeft = document.querySelector('#col-left');
             cLeft.style.width = 'fit-content';
             cLeft.style.overflow = 'hidden';
 
             // cRight
-            const cRight = document.querySelector('#col-right');
             cRight.style.display = 'flex';
             cRight.style.flexDirection = 'column';
             cRight.style.flex = '1 1 0';
@@ -723,5 +866,21 @@ L'utilisation de ce script se fait sous votre propre responsabilité.
             window.open(nlink, '_self');
         });
     }
-//--- fin du code
+
+    //---GET request
+    async function loadPage(theURL) {
+        const response = await fetch(theURL, { credentials: 'same-origin' });
+
+        if (!response.ok) {
+            throw new Error('HTTP error ' + response.status);
+        }
+
+        const html = await response.text();
+
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(html, 'text/html');
+
+        return htmlDoc;
+    }
+    //--- fin du code
 })();

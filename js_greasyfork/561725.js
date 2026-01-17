@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FMP Training History
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  look players training history
 // @match        https://footballmanagerproject.com/Team/Player?id=*
 // @match        https://footballmanagerproject.com/Team/Player/?id=*
@@ -14,6 +14,9 @@
 // @downloadURL https://update.greasyfork.org/scripts/561725/FMP%20Training%20History.user.js
 // @updateURL https://update.greasyfork.org/scripts/561725/FMP%20Training%20History.meta.js
 // ==/UserScript==
+
+let skillChart = null;
+let deltaChart = null;
 
 const FP2POS = {
     GK:0,
@@ -31,6 +34,7 @@ const FP2POS = {
     OMR:34,
     FC:64
 };
+
 
 (function () {
     'use strict';
@@ -157,16 +161,19 @@ function buildSkillTable(skillHistory,pos) {
         return "<p>No data</p>";
     }
 
-    const sorted = [...skillHistory].sort((a, b) => a.day - b.day);
-
     const skillKeys = new Set();
-    sorted.forEach(r => {
+    skillHistory.forEach(r => {
         if (r.skillDecode) {
             Object.keys(r.skillDecode).forEach(k => skillKeys.add(k));
         }
     });
 
-    const headers = ["Age", ...Array.from(skillKeys)];
+    let headers;
+    if (pos===0) {
+        headers = ["Age", "Sta","Pac", "Han","One","Pos", "Ref","Aer","Ele", "Jum","Kic","Thr", "Rou", "For"];
+    }else{
+        headers = ["Age", "Sta","Pac", "Mar","Tak","Pos", "Pas","Tec","Cro", "Fin","Hea","Lon", "Rou", "For"];
+    }
 
     let html = `
     <table style="
@@ -209,15 +216,31 @@ function buildSkillTable(skillHistory,pos) {
 
     html += "</tr></thead><tbody>";
 
-    sorted.forEach(r => {
+    for (let i = 0; i < skillHistory.length; i++) {
+        const curr = skillHistory[i];
+        const prev = skillHistory[i - 1];
+
         html += "<tr>";
+
         headers.forEach(h => {
-            html += `<td style="padding:4px;border:1px solid rgba(255,255,255,0.08);text-align:center">
-                ${h === "Age" ? formatAgeYM(r.age) : (r.skillDecode?.[h].toFixed(1) ?? "")}
+            if (h === "Age") {
+                html += `
+            <td style="padding:4px;border:1px solid rgba(255,255,255,0.08);text-align:center">
+                ${formatAgeYM(curr.age)}
             </td>`;
+            } else {
+                const v2 = curr.skillDecode?.[h];
+                const v1 = prev?.skillDecode?.[h];
+
+                html += `
+            <td style="padding:4px;border:1px solid rgba(255,255,255,0.08);text-align:center">
+                ${v2 !== undefined ? formatSkillWithDelta(v2, v1) : ""}
+            </td>`;
+            }
         });
+
         html += "</tr>";
-    });
+    }
 
     html += "</tbody></table>";
     return html;
@@ -320,7 +343,7 @@ function buildSkillSeries(skillHistory) {
 function renderSkillChart(container, skillHistory) {
     const series = buildSkillSeries(skillHistory);
 
-    Highcharts.chart(container, {
+    skillChart = Highcharts.chart(container, {
         chart: {
             backgroundColor: "transparent",
             type: "line",
@@ -344,7 +367,8 @@ function renderSkillChart(container, skillHistory) {
                      formatter: function () {
                          return formatAgeYM(this.value);
                      }
-                    }
+                    },
+
         },
         yAxis: {
             title: { text: "Skill Value", style: { color: "#ccc" } },
@@ -377,6 +401,13 @@ function renderSkillChart(container, skillHistory) {
                     },
                     hover: {
                         lineWidthPlus: 2
+                    }
+                },
+                point: {
+                    events: {
+                        mouseOver: function () {
+                            syncHover(skillChart, deltaChart, this.x);
+                        }
                     }
                 }
             }
@@ -421,7 +452,7 @@ function buildSkillDeltaSeries(skillHistory ) {
 function renderSkillDeltaLineChart(container, skillHistory) {
     const series = buildSkillDeltaSeries(skillHistory);
 
-    Highcharts.chart(container, {
+    deltaChart = Highcharts.chart(container, {
         chart: {
             type: "line",
             zoomType: "x",
@@ -439,7 +470,7 @@ function renderSkillDeltaLineChart(container, skillHistory) {
                 formatter: function () {
                     return formatAgeYM(this.value);
                 }
-            }
+            },
         },
 
         yAxis: {
@@ -460,6 +491,13 @@ function renderSkillDeltaLineChart(container, skillHistory) {
                 states: {
                     inactive: { opacity: 0.25 },
                     hover: { lineWidthPlus: 2 }
+                },
+                point: {
+                    events: {
+                        mouseOver: function () {
+                            syncHover(deltaChart, skillChart, this.x);
+                        }
+                    }
                 }
             }
         },
@@ -488,3 +526,38 @@ function renderSkillDeltaLineChart(container, skillHistory) {
     });
 }
 
+let isSyncing = false;
+
+function syncHover(sourceChart, targetChart, xValue) {
+    if (!targetChart || isSyncing) return;
+
+    const points = [];
+    targetChart.series.forEach(series => {
+        if (!series.visible) return;
+        const p = series.points.find(pt => pt.x === xValue);
+        if (p) points.push(p);
+    });
+
+    if (points.length) {
+        isSyncing = true;
+        targetChart.tooltip.refresh(points);
+        targetChart.xAxis[0].drawCrosshair(null, points[0]);
+        isSyncing = false;
+    }
+}
+
+function formatSkillWithDelta(curr, prev) {
+    if (prev === undefined) {
+        return curr.toFixed(1);
+    }
+
+    const delta = Math.round((curr - prev) * 10) / 10;
+    if (delta === 0) {
+        return `${curr.toFixed(1)} <span style="color:#999">(0.0)</span>`;
+    }
+
+    const color = delta > 0 ? "#6ee7b7" : "#fca5a5";
+    const d = Math.abs(delta) < 1e-9 ? 0 : delta;
+    const deltaText = Math.abs(d).toFixed(1);
+    return `${curr.toFixed(1)} <span style="color:${color}">(${deltaText})</span>`;
+}

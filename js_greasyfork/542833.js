@@ -2,9 +2,9 @@
 // @name         海角社区
 // @name:zh-TW   海角社區
 // @namespace    http://tampermonkey.net/
-// @version      v1.92
-// @description  🚀新功能上线，不浪费一秒，会员随时停启💰。不限次看付费视频，查看封禁内容、下载视频，复制播放链接，保存账号密码免输入，帖子是否有视频图片提示(标题前缀)，自动展开帖子，屏蔽广告等
-// @description:zh-TW 🚀新功能上線，不浪費一秒，會員隨時停啟💰。不限次看付费视频，查看封禁内容、下载视频，复制播放链接，保存账号密码免输入，帖子是否有视频图片提示(标题前缀)，自动展开帖子，屏蔽广告等
+// @version      v1.93
+// @description  🚀新功能上线，不浪费一秒，会员随时停启💰。付费内容无限次观看、便捷下载和即时分享链接。受益于保存的登录信息、媒体帖子视觉提示(红色标题)、内容自动展开和完全无广告的环境🚀。
+// @description:zh-TW 🚀新功能上線，不浪費一秒，會員隨時停啟💰。付費內容無限次觀看、便捷下載和即時分享連結受益於保存的登錄信息、媒體帖子視覺提示（紅色標題）、內容自動展開和完全無廣告的環境🚀。
 // @author            lx
 // @match          https://hjcx.org/*
 // @match          https://hjcx.org/*
@@ -44,11 +44,13 @@
     videoBaseUrl: "",
     videoArticleId: "",
     downloadUrl: "",
+    isNormal: true,
   };
   let hjsqUserKye = "hjsq_gm_key";
   let baseDownadloadUrl = baseUrl + "/business/download/down.m3u8?token=";
   let m3u8Url = "";
   let hasPrev = false;
+  let m3u8Content = "";
   waitForPageLoad()
     .then((body) => {
       fetchUserInfo();
@@ -1051,7 +1053,9 @@
       <h3 style="margin: 0 0 20px; font-size: 20px; color: #333; font-weight: 500;">下载确认</h3>
       <p style="margin: 0 0 8px; color: #666; font-size: 15px;">本次下载将消耗1次下载机会</p>
       <p style="margin: 0 0 25px; font-size: 15px;">
-          剩余下载次数：<span style="color: #ff4444; font-weight: 600;">${vipUser.downloadNum}</span>
+          剩余下载次数：<span style="color: #ff4444; font-weight: 600;">${
+            vipUser.downloadNum || "免费"
+          }</span>
       </p>
       <div style="margin-top: 25px;">
           <button id="confirmDownload" class="dialog-btn primary-btn">确认下载</button>
@@ -1114,6 +1118,7 @@
       // 复制链接事件
       document.getElementById("copyLink").addEventListener("click", () => {
         navigator.clipboard.writeText(slefVideo.downloadUrl);
+        console.log("下载链接已复制到剪贴板", slefVideo.downloadUrl);
         showApiMessage("下载链接已复制到剪贴板");
       });
 
@@ -1130,15 +1135,19 @@
       .getElementById("confirmDownload")
       .addEventListener("click", async () => {
         firstDialog.remove();
-        let result = await gcreateDownloadUrl();
-        if (result.code == 200) {
-          slefVideo.downloadUrl = baseDownadloadUrl + result.data;
-          if (vipUser.downloadNum == 0) {
-            showApiMessage("下载次数已用完", "error");
-            return;
+        if (slefVideo.isNormal) {
+          slefVideo.videoPlayUrl = slefVideo.downloadUrl;
+        } else {
+          let result = await gcreateDownloadUrl();
+          if (result.code == 200) {
+            slefVideo.downloadUrl = baseDownadloadUrl + result.data;
+            if (vipUser.downloadNum == 0) {
+              showApiMessage("下载次数已用完", "error");
+              return;
+            }
           }
-          showDownloadOptions();
         }
+        showDownloadOptions();
       });
 
     // 取消下载事件
@@ -1287,24 +1296,18 @@
       );
       return;
     }
-    let params = Object.assign(
-      {},
-      {
-        remoteUrl: slefVideo.videoPlayUrl,
-        videoArticleId: slefVideo.articleId,
-        videoDuration: slefVideo.videoDuration,
-        videoId: slefVideo.id,
-        siteCode: siteCode,
+    if (slefVideo.isNormal) {
+      window.hlsPlayer.setContent(slefVideo.videoPlayUrl);
+      window.hlsPlayer.play();
+    } else {
+      if (slefVideo.m3u8Content == "") {
+        showApiMessage("视频解析失败，请尝试刷新", "error");
+        return;
       }
-    );
-    let result = await postAsync(baseUrl + "/business/video/serialize", params);
-    slefVideo.iv = result.data.iv;
-    slefVideo.videoBaseUrl = result.data.videoBaseUrl;
-    slefVideo.uri = result.data.videoKeyUri;
-    slefVideo.tsFileName = result.data.videoTsName;
-    let temp = generateM3U8FromVideo(slefVideo, slefVideo.videoDuration);
-    window.hlsPlayer.setContent(temp);
-    window.hlsPlayer.play();
+      window.hlsPlayer.setContent(m3u8Content);
+      window.hlsPlayer.play();
+    }
+
     toggleVisibility();
   }
   function generateM3U8FromVideo(slefVideo, duration) {
@@ -1543,8 +1546,6 @@
         username = user.username || username;
         password = user.password || password;
       }
-      console.log(user);
-      console.log(user.username);
       const inputs = form.querySelectorAll(inputSelector);
       if (inputs.length >= 2) {
         // 停止观察，因为我们已经找到了需要的元素
@@ -1583,18 +1584,84 @@
     let jsonStr = decodeURIComponent(escape(atob(atob(atob(content)))));
     let objectData = JSON.parse(jsonStr, `utf-8`);
     slefVideo.articleId = objectData.topicId;
-    objectData.attachments.forEach((item) => {
-      if (item.category == "video" && item.remoteUr != "") {
+    objectData.attachments.forEach(async (item) => {
+      if (item.category == "video" && item.remoteUrl != "") {
         slefVideo.videoPlayUrl = item.remoteUrl;
         slefVideo.m3u8Url = item.remoteUrl;
         slefVideo.videoDuration = item.video_time_length;
         slefVideo.id = item.id;
+        slefVideo.isNormal = false;
         // Extract URI from preview URL
       }
-      // if(item.category == "video" && item.remoteUr ==""){
-      //   console.log("普通视频!")
-      //}
+      if (item.category == "video" && item.remoteUrl == "") {
+        const uid = getCookie("uid");
+        const token = getCookie("token");
+        await analysisNormalVideo(uid, token, item.id, objectData.topicId);
+      }
     });
+    if (!slefVideo.isNormal) {
+      let params = Object.assign(
+        {},
+        {
+          remoteUrl: slefVideo.videoPlayUrl,
+          videoArticleId: slefVideo.articleId,
+          videoDuration: slefVideo.videoDuration,
+          videoId: slefVideo.id,
+          siteCode: siteCode,
+        }
+      );
+      let result = await postAsync(
+        baseUrl + "/business/video/serialize",
+        params
+      );
+      slefVideo.iv = result.data.iv;
+      slefVideo.videoBaseUrl = result.data.videoBaseUrl;
+      slefVideo.uri = result.data.videoKeyUri;
+      slefVideo.tsFileName = result.data.videoTsName;
+      m3u8Content = generateM3U8FromVideo(slefVideo, slefVideo.videoDuration);
+    }
+  }
+  function getCookie(name) {
+    const match = document.cookie.match(
+      new RegExp("(^|;\\s)" + name + "=([^;]+)")
+    );
+    return match ? match[2] : null;
+  }
+
+  function analysisNormalVideo(uid, token, itemId, topicId) {
+    fetch(location.origin + "/api/attachment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-User-Id": uid,
+        "X-User-Token": token,
+      },
+      body: JSON.stringify({
+        id: itemId,
+        resource_type: "topic",
+        resource_id: topicId,
+        line: "",
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        let res = JSON.parse(
+          decodeURIComponent(escape(atob(atob(atob(data.data))))),
+          `utf-8`
+        );
+        slefVideo.m3u8Url = res.remoteUrl;
+        slefVideo.videoPlayUrl = res.remoteUrl;
+        slefVideo.downloadUrl = res.remoteUrl;
+        slefVideo.isNormal = true;
+      })
+      .catch((error) => {
+        console.error("Request failed:", error);
+      });
   }
 
   function analysisTitle(content) {
@@ -1912,7 +1979,7 @@
   function removeAdds() {
     GM_addStyle(
       //海角
-      ".containeradvertising { display: none; } .page-container{display: none;} .my-swipe{ display: none;} .bannerliststyle{display: none;} .topbanmer{display: none;} .btnbox{display: none;} .addbox{display: none;}  .van-swipe__track{display: none;} .html-bottom-box{display: none;} #bbs_float_menu{display: none;} #tidio-chat{display: none;} .ishide {max-height: unset !important; overflow: visible !important;position: relative;}"
+      ".containeradvertising { display: none; } .my-swipe{ display: none;} .bannerliststyle{display: none;} .topbanmer{display: none;} .btnbox{display: none;} .addbox{display: none;}  .van-swipe__track{display: none;} .html-bottom-box{display: none;} #bbs_float_menu{display: none;} #tidio-chat{display: none;} .ishide {max-height: unset !important; overflow: visible !important;position: relative;}"
     );
     waitForElement(".my-swipe").then((e) => {
       e.style.display = "none";

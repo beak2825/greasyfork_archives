@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pokechill EN-CN
 // @namespace    https://play-pokechill.github.io/
-// @version      2.4.1
+// @version      2.4.2
 // @description  Pokechill 全页面离线简体中文汉化
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -70,11 +70,11 @@
         [/^Power doubles if the target is (\w+)/i, '目标$1时威力翻倍'],
         [/^Power randomly varies from x(\d+) to x(\d+)/i, '威力在$1倍到$2倍之间随机变化'],
         [/^Multiplies by (\d+\.?\d*)x the base damage of moves with equal or less than (\d+) power/i, '威力小于等于$2的招式威力乘以$1倍'],
-        [/^Multiplies the power of moves by x(\d+\.?\d*) when the opposite Pokemon shares a type/i, '目标与自身属性相同时，最终伤害乘以$1倍'],//代码为伤害，而非招式伤害
+        [/^Multiplies the damage by x(\d+\.?\d*) when the opposite Pokemon shares a type/i, '目标与自身属性相同时，伤害乘以$1倍'],
         [/^"([^"]+)"-related moves have their base damage multiplied by x([\d.]+)/i, '"$1"类招式基础威力乘以$2倍'],
         [/^"([^"]+)"-related moves are executed twice as fast/i, '"$1"类招式速度变快为原来的2倍'],
         [/^Multiplies Same-Type-Attack-Bonus by x(\d+\.?\d*)/i, '属性一致加成从1.5倍提升至1.7倍'],//原文属性一致加成乘以$1倍
-        [/^Positive secondary effect of damaging moves are removed, and their power is multiplied by x([\d\.]+)/i, '移除进攻招式的所有追加效果（不含进攻速度修正），最终伤害乘以$1倍'],//代码为伤害，而非招式伤害
+        [/^Positive secondary effect of damaging moves are removed, and their damage is multiplied by x([\d\.]+)/i, '移除进攻招式的所有追加效果（不含进攻速度修正），伤害乘以$1倍'],//代码为伤害，而非招式伤害
         [/^Multiplies by x(\d+\.?\d*) the power of (\w+)-type moves of all team members/i, '我方全队$2属性招式威力乘以$1'],
         [/^Increases the Damage dealt by x(\d+\.?\d*) for every team member defeated/i, '每有一名队友倒下，造成伤害乘以$1倍'],
         [/^Increases the Damage dealt by x(\d+\.?\d*) when afflicted with (\w+), and nullifies the damage overtime caused by it/i, '处于$2状态时，造成伤害乘以$1倍，并免疫该状态的持续伤害'],
@@ -104,7 +104,7 @@
         [/^When held: Increases the duration of /i, '持有时：持有者引发'],
         [/^ weather by (\d+) turns/i, '的持续时间提升$1回合'],
         [/^When held: Increases the experience gained by the pokemon by (\d+)%/i, '持有时：持有者获得的经验值提升$1%'],
-        [/^When held: If a Pokemon has not fully evolved, increase overall defense by x(\d+\.?\d*)/i, '持有时：如果持有者是未完全进化形态（有Mega进化不触发），物防与特防乘以$1'],
+        [/^When held: If a Pokemon has not fully evolved, increase overall defense by x(\d+\.?\d*). This does not apply to final-stage Pokemon with a Mega-Evolution/i, '持有时：如果持有者是未完全进化形态，物防与特防乘以$1。这个效果无法作用于最终形态但有Mega进化的宝可梦。'],
         [/^When held: Increases the duration of positive buffs used by (\d+) turn and increases damage dealt by (\d+)%/i, '持有时：持有者增益效果持续时间提升$1回合，并提高持有者造成的伤害$2%'],
         [/^When held: Decreases the duration of negative buffs received by (\d+) turn and decreases damage taken by (\d+)%/i, '持有时：持有者受到的负面效果持续时间降低$1回合，并减少持有者受到的伤害$2%'],
         [/^When held: Increases the (.+) of the user by x(\d+\.?\d*), but inflicts /i, '持有时：持有者的$1乘以$2，但持有者会被施加'],
@@ -1472,16 +1472,33 @@
         //蕾冠王
         "Calyrex Ice": "白马蕾冠王",
         "Calyrex Shadow": "黑马蕾冠王",
-        //灵兽形态
-        "Tornadus Therian": "龙卷云 灵兽形态",
-        "Thundurus Therian": "雷电云 灵兽形态",
-        "Landorus Therian": "土地云 灵兽形态",
-        "Enamorus Therian": "眷恋云 灵兽形态",
-        //MissingNo.
-        "MissingNo": "错误宝可梦",
+        //彩粉蝶
+        "Vivillon Archipelago": "彩粉蝶 群岛花纹",
+        "Vivillon Continental": "彩粉蝶 大陆花纹",
+        "Vivillon Elegant": "彩粉蝶 高雅花纹",
+        "Vivillon Fancy": "彩粉蝶 幻彩花纹",
+        "Vivillon Garden": "彩粉蝶 庭园花纹",
+        "Vivillon High Plains": "彩粉蝶 荒野花纹",
+        "Vivillon Icy Snow": "彩粉蝶 冰雪花纹",
+        "Vivillon Jungle": "彩粉蝶 热带雨林花纹",
+        "Vivillon Marine": "彩粉蝶 大海花纹",
+        "Vivillon Meadow": "彩粉蝶 花园花纹",
+        "Vivillon Modern": "彩粉蝶 摩登花纹",
+        "Vivillon Monsoon": "彩粉蝶 骤雨花纹",
+        "Vivillon Ocean": "彩粉蝶 大洋花纹",
+        "Vivillon Poke Ball": "彩粉蝶 球球花纹",
+        "Vivillon Polar": "彩粉蝶 雪国花纹",
+        "Vivillon River": "彩粉蝶 大河花纹",
+        "Vivillon Sandstorm": "彩粉蝶 沙尘花纹",
+        "Vivillon Savanna": "彩粉蝶 热带草原花纹",
+        "Vivillon Sun": "彩粉蝶 太阳花纹",
+        "Vivillon Tundra": "彩粉蝶 雪原花纹",
+        //花叶蒂
+        "Floette Eternal": "花叶蒂 永恒之花",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
+        "Hydration": "湿润之躯",
         "Grab Guard": "格斗守护",
         "Water Guard": "水之守护",
         "Flame Guard": "火焰守护",
@@ -2790,7 +2807,7 @@
         "Nihil Light": "归无之光",
 
         //未有官方译名
-        "Fog":"起雾",
+        "Fog":"浓雾",
 
         // 野外区域
         "Verdant Forest":"翠绿森林",
@@ -3728,8 +3745,16 @@
         "Gal.":"迦勒尔",
         "Hsn.":"洗翠",
         "Pal.":"帕底亚",
-        "Clone.":"克隆体",
-
+        "Clone":"克隆体",
+        //灵兽形态
+        "Therian": "灵兽形态",
+        //MissingNo.
+        "MissingNo": "错误宝可梦",
+        //四季鹿
+        "Spring":"春",
+        "Summer":"夏",
+        "Autumn":"秋",
+        "Winter":"冬",
     };
 
     function buildTrie(dict) {

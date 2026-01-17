@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         E-Mesem Toplu Seçim ve Karne Oluşturma
 // @namespace    http://tampermonkey.net/
-// @version      5.5
+// @version      5.6
 // @description  E-Mesem Toplu Seçim özellikleri, tüm karneleri oluşturma ve "G" ile doldurma butonu ekler
 // @author       Fatih D.
 // @match        https://e-mesem.meb.gov.tr/*
@@ -25,6 +25,7 @@
         { buttonPrefix: 'rgOgrenci', buttonSuffix: '', styleUnchecked: 'imgCheck24n.png', styleChecked: 'imgCheck24e.png', headerText: 'Sınava Girecek' , onayTarihiHeaderText: 'Sıra No', aciklamaHeaderText: 'Id' },
         { buttonPrefix: 'rgOgrenciListesi', buttonSuffix: 'btnOnayGetirmedi', styleUnchecked: 'imgCheck24n.png', styleChecked: 'imgCheck24r.png', headerText: 'Getirmedi' , onayTarihiHeaderText: 'Getirdi', aciklamaHeaderText: 'Durum' },
         { buttonPrefix: 'rgOgrenciListesi', buttonSuffix: 'btnOnayGetirdi', styleUnchecked: 'imgCheck24n.png', styleChecked: 'imgCheck24e.png', headerText: 'Getirdi' , onayTarihiHeaderText: 'Ayrılış', aciklamaHeaderText: 'Getirmedi' },
+        { buttonPrefix: 'rgOgrenciGecmisOdemeEvraki', buttonSuffix: 'btnOnayGetirmedi', styleUnchecked: 'imgCheck24n.png', styleChecked: 'imgCheck24r.png', headerText: 'Getirmedi' , onayTarihiHeaderText: 'Ayrılış', aciklamaHeaderText: 'Durum' },
     ];
 
     function addManagementCheckbox(targetCell, buttonPrefix, styleUnchecked, styleChecked, buttonSuffix = '') {
@@ -107,9 +108,13 @@
     function addFillGButton() {
         var targetText = 'Öğrenci Not Kilitleme İşlemleri';
         var targetElement = Array.from(document.querySelectorAll('span'))
-            .find(span => span.textContent.trim() === targetText);
+            .find(span => span.textContent.trim().includes(targetText));
 
-        if (!targetElement || document.getElementById('fillGButton')) return;
+        // Sadece span başlığına bağlı kalma; ilgili input mevcutsa yine de butonu ekle
+        if (!targetElement && !document.getElementById('rgOgrenci_ctl00_ctl02_ctl01_FilterTextBox_coldbDalAdi')) {
+            return;
+        }
+        if (document.getElementById('fillGButton')) return;
 
         const fillGButton = document.createElement('button');
         fillGButton.id = 'fillGButton';
@@ -176,8 +181,78 @@
     var startRowIndex = 0;
     var endRowIndex = 200;
     var failedRows = [];
+    var successRows = [];
     var isProcessing = false;
     var isObserverActive = true;
+    var currentRowLabel = '';
+    var examColumnIndex = null;
+
+    function getErrorMessage() {
+        var errEl = document.getElementById('wucPageAlert1_NotificationError_simpleContentDiv');
+        return errEl ? errEl.textContent.trim() : '';
+    }
+
+    function getExamColumnIndex() {
+        if (examColumnIndex !== null) return examColumnIndex;
+        var header = findHeaderContainingText('Sınav Tanımı');
+        if (header && typeof header.cellIndex === 'number') {
+            examColumnIndex = header.cellIndex;
+        }
+        return examColumnIndex;
+    }
+
+    function createStatusPanel() {
+        if (document.getElementById('karneStatusPanel')) return;
+        var panel = document.createElement('div');
+        panel.id = 'karneStatusPanel';
+        panel.style.position = 'fixed';
+        panel.style.top = '80px';
+        panel.style.right = '10px';
+        panel.style.width = '320px';
+        panel.style.maxHeight = '70vh';
+        panel.style.overflowY = 'auto';
+        panel.style.background = '#f7f9fb';
+        panel.style.border = '1px solid #cfd8dc';
+        panel.style.borderRadius = '6px';
+        panel.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+        panel.style.fontSize = '12px';
+        panel.style.zIndex = '9999';
+        panel.style.padding = '12px';
+        panel.innerHTML = '<div style="font-weight:600;margin-bottom:6px;">Karne Durumu</div><div id="karneStatusContent" style="white-space:pre-wrap;font-family:monospace;line-height:1.4;"></div>';
+        document.body.appendChild(panel);
+    }
+
+    function updateStatusPanel() {
+        createStatusPanel();
+        var content = document.getElementById('karneStatusContent');
+        if (!content) return;
+        var lines = [];
+        if (successRows.length) {
+            lines.push('Tamamlananlar:');
+            successRows.forEach(item => lines.push('✔ ' + item));
+            lines.push('');
+        }
+        if (failedRows.length) {
+            lines.push('Tamamlanamayanlar:');
+            failedRows.forEach(item => lines.push('✖ ' + item));
+        }
+        content.textContent = lines.join('\n') || 'Henüz kayıt yok.';
+    }
+
+    function extractRowLabel(row) {
+        if (!row) return '';
+        var idx = getExamColumnIndex();
+        var cells = Array.from(row.cells || []);
+        if (idx !== null && cells[idx]) {
+            var examText = (cells[idx].textContent || '').trim();
+            if (examText) return examText;
+        }
+        for (var i = 0; i < cells.length; i++) {
+            var t = (cells[i].textContent || '').trim();
+            if (t) return t;
+        }
+        return '';
+    }
 
     function addKarneButton() {
         var existingButton = document.getElementById('btnKarneOlustur');
@@ -215,6 +290,8 @@
             currentRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
             currentRow.click();
             console.log('Satır ' + currentRowId + ' tıklandı ve görünürlüğü ayarlandı.');
+            currentRowLabel = extractRowLabel(currentRow) || currentRowId;
+            updateStatusPanel();
             waitForKarneOlusturButton(index);
         } else {
             console.log('Satır ' + currentRowId + ' bulunamadı. İşlem tamamlandı.');
@@ -228,22 +305,52 @@
             var karneOlusturButton = document.getElementById('btnKarneOlustur');
             if (karneOlusturButton && !karneOlusturButton.disabled) {
                 clearInterval(checkInterval);
+                clearTimeout(fallbackTimeout);
                 karneOlusturButton.click();
                 console.log('Karne Oluştur butonuna tıklandı.');
                 waitForPopupClose(rowIndex);
             }
         }, 1000);
 
-        setTimeout(function() {
-            console.log('Satır ' + 'rgSinifList_ctl00__' + rowIndex + ' işlemi tamamlanamadı. İşlem tamamlandı popupı gösterilecek.');
+        var fallbackTimeout = setTimeout(function() {
+            console.log('Satır ' + 'rgSinifList_ctl00__' + rowIndex + ' işlemi tamamlanamadı, sonraki satıra geçiliyor.');
             clearInterval(checkInterval);
-            failedRows.push('rgSinifList_ctl00__' + rowIndex);
-            showFinishMessage();
+            var err = getErrorMessage();
+            var label = currentRowLabel || ('rgSinifList_ctl00__' + rowIndex);
+            failedRows.push(err ? (label + '\n    ' + err) : label);
+            updateStatusPanel();
+            startRowIndex++;
+            if (startRowIndex <= endRowIndex && isProcessing) {
+                setTimeout(function() { processRows(startRowIndex); }, 1000);
+            } else {
+                isProcessing = false;
+                showFinishMessage();
+            }
         }, 30000);
     }
 
     function waitForPopupClose(rowIndex) {
         var popupCheckInterval = setInterval(function() {
+            var errorCloseIcon = document.getElementById('wucPageAlert1_NotificationError_rnCloseIcon');
+            if (errorCloseIcon && errorCloseIcon.offsetParent !== null) {
+                clearInterval(popupCheckInterval);
+                clearTimeout(popupFallbackTimeout);
+                errorCloseIcon.click();
+                console.log('Hata popupı kapatıldı, sonraki satıra geçiliyor.');
+                var errMsg = getErrorMessage();
+                var failLabel = currentRowLabel || ('rgSinifList_ctl00__' + rowIndex);
+                failedRows.push(errMsg ? (failLabel + '\n    ' + errMsg) : failLabel);
+                updateStatusPanel();
+                startRowIndex++;
+                if (startRowIndex <= endRowIndex && isProcessing) {
+                    processRows(startRowIndex);
+                } else {
+                    isProcessing = false;
+                    showFinishMessage();
+                }
+                return;
+            }
+
             var popup = document.getElementById('wucPageAlert1_NotificationOk_popup');
             if (popup && popup.style.display !== 'none') {
                 clearInterval(popupCheckInterval);
@@ -253,6 +360,9 @@
                     console.log('Pop-up kapatıldı.');
                     startRowIndex++;
                     if (startRowIndex <= endRowIndex) {
+                        successRows.push(currentRowLabel || ('rgSinifList_ctl00__' + rowIndex));
+                        updateStatusPanel();
+                        clearTimeout(popupFallbackTimeout);
                         setTimeout(function() {
                             processRows(startRowIndex);
                         }, 2000);
@@ -263,6 +373,22 @@
                 }
             }
         }, 100);
+
+        var popupFallbackTimeout = setTimeout(function() {
+            console.log('Pop-up zaman aşımına uğradı veya kapatılamadı, sonraki satıra geçiliyor.');
+            clearInterval(popupCheckInterval);
+            var errMsg = getErrorMessage();
+            var failLabel = currentRowLabel || ('rgSinifList_ctl00__' + rowIndex);
+            failedRows.push(errMsg ? (failLabel + '\n    ' + errMsg) : failLabel);
+            updateStatusPanel();
+            startRowIndex++;
+            if (startRowIndex <= endRowIndex && isProcessing) {
+                processRows(startRowIndex);
+            } else {
+                isProcessing = false;
+                showFinishMessage();
+            }
+        }, 10000);
     }
 
     function showFinishMessage() {

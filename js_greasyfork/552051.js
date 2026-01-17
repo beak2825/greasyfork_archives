@@ -2,7 +2,7 @@
 // @name         HWM: Прогресс достижений
 // @author       Sargonnas
 // @namespace    hwm-achievements-progress
-// @version      1.1.3
+// @version      1.1.4
 // @description  Достижения, комплекты, медали и прочее в виде прогресса
 // @match        https://www.heroeswm.ru/pl_info.php*
 // @match        https://mirror.heroeswm.ru/pl_info.php*
@@ -3387,6 +3387,21 @@ const SETS = {
 ],
 
 "Комплект Легенд": [
+  {
+    "fname": "icemask3.png",
+    "src": "/i/artifacts/events/icemask3.png",
+    "name": "Маска морозного притворства"
+  },
+  {
+    "fname": "icemask2.png",
+    "src": "/i/artifacts/events/icemask2.png",
+    "name": "Маска морозного обмана"
+  },
+  {
+    "fname": "icemask1.png",
+    "src": "/i/artifacts/events/icemask1.png",
+    "name": "Маска морозного долга"
+  },
   {
     "fname": "legend_nature3.png",
     "src": "/i/artifacts/events/legend_nature3.png",

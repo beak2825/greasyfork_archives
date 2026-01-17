@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OTT URL 필터 버튼
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  OTT 페이지 상단 가운데에 현재의 URL을 깔끔하게 정리하여 클립보드에 복사하는 버튼 표시
 // @author       DongHaerang
 // @match        *://*.coupangplay.com/titles*
@@ -10,7 +10,7 @@
 // @match        *://*.wavve.com/player/vod*
 // @match        *://*.watcha.com/contents*
 // @grant        none
-// @license      MIT
+// @license      CC BY-NC-SA 4.0
 // @downloadURL https://update.greasyfork.org/scripts/543323/OTT%20URL%20%ED%95%84%ED%84%B0%20%EB%B2%84%ED%8A%BC.user.js
 // @updateURL https://update.greasyfork.org/scripts/543323/OTT%20URL%20%ED%95%84%ED%84%B0%20%EB%B2%84%ED%8A%BC.meta.js
 // ==/UserScript==

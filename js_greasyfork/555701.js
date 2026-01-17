@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NHentai Web Clipper for Obsidian
 // @namespace    https://nhentai.net
-// @version      v1.0.37.20260102
+// @version      v1.0.40.20260116
 // @description  🔞 A user script that exports NHentai gallery metadata as Obsidian Markdown files (Obsidian NHentai Web Clipper).
 // @author       abc202306
 // @match        https://nhentai.net/g/*
@@ -95,10 +95,10 @@
         } else if (Main.KEY_MAP[key]) {
           const newKey = Main.KEY_MAP[key];
           data[newKey] = this.toArray(data[newKey])
-            .concat(Array.from(tagGroupCon.querySelectorAll(".name")).map(el => `[[exhentai-tag-${this.getTagName(el)}|${this.getTagName(el)}]]`));
+            .concat(Array.from(tagGroupCon.querySelectorAll(".name")).map(el => this.getTagWikiLink(el)));
         } else {
           data.unindexedData[key] = this.toArray(data.unindexedData[key])
-            .concat(Array.from(tagGroupCon.querySelectorAll(".name")).map(el => `[[exhentai-tag-${this.getTagName(el)}|${this.getTagName(el)}]]`));
+            .concat(Array.from(tagGroupCon.querySelectorAll(".name")).map(el => this.getTagWikiLink(el)));
         }
       });
 
@@ -151,6 +151,12 @@ mtime: ${data.mtime}${this.util.getUnindexedDataFrontMatterPartStrBlock(data.uni
 
     getTagName(tagNameEl) {
       return this.util.getTagNameStr(tagNameEl.innerText);
+    }
+
+    getTagWikiLink(tagNameEl) {
+      const tagName = this.getTagName(tagNameEl);
+      const linkText = tagName === "keywords" ? `nhentai-tag-${tagName}` : `exhentai-tag-${tagName}`;
+      return `[[${linkText}|${tagName}]]`;
     }
 
     toArray(value) {

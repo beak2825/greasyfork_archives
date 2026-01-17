@@ -1,17 +1,19 @@
 // ==UserScript==
 // @name         百合会论坛阅读增强
 // @namespace    http://tampermonkey.net/
-// @version      2.1.0
+// @version      2.2.0
 // @description  为百合会论坛提供漫画/小说的沉浸式阅读体验，支持多种阅读模式、暗色模式、Material Design风格
 // @author       bluelightgit
 // @match        https://bbs.yamibo.com/thread-*
 // @match        https://bbs.yamibo.com/forum.php?mod=viewthread*
+// @match        https://bbs.yamibo.com/forum-*-*.html
 // @icon         https://bbs.yamibo.com/favicon.ico
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // @connect      bbs.yamibo.com
+// @connect      *
 // @run-at       document-end
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/553075/%E7%99%BE%E5%90%88%E4%BC%9A%E8%AE%BA%E5%9D%9B%E9%98%85%E8%AF%BB%E5%A2%9E%E5%BC%BA.user.js
@@ -57,6 +59,136 @@
             return clamped;
         }
 
+        function isForumListPage() {
+            if (typeof window === 'undefined') {
+                return false;
+            }
+            if (/\/forum-\d+-\d+\.html$/i.test(window.location.pathname || '')) {
+                return true;
+            }
+            return !!document.getElementById('threadlisttableid');
+        }
+
+        function normalizeTitleForFavoriteMatch(rawTitle) {
+            const normalized = normalizeSeriesTitle(rawTitle || '');
+            return normalized
+                .toLowerCase()
+                .replace(/[^0-9a-z\u3400-\u9fff\u3040-\u30ff\uac00-\ud7af]+/g, '');
+        }
+
+        function createFavoriteTitleMatcher(favoriteTitles) {
+            const favorites = [];
+            const seen = new Set();
+
+            for (const title of favoriteTitles || []) {
+                if (typeof title !== 'string') continue;
+                const norm = normalizeTitleForFavoriteMatch(title);
+                if (!norm) continue;
+                if (seen.has(norm)) continue;
+                seen.add(norm);
+                favorites.push(norm);
+            }
+
+            if (favorites.length === 0) {
+                return null;
+            }
+
+            const buckets3 = new Map();
+            const buckets2 = new Map();
+            const addToBucket = (bucketMap, key, value) => {
+                if (!key) return;
+                const list = bucketMap.get(key);
+                if (list) {
+                    list.push(value);
+                } else {
+                    bucketMap.set(key, [value]);
+                }
+            };
+
+            for (const fav of favorites) {
+                if (fav.length >= 3) {
+                    addToBucket(buckets3, fav.slice(0, 3), fav);
+                }
+                if (fav.length >= 2) {
+                    addToBucket(buckets2, fav.slice(0, 2), fav);
+                } else {
+                    addToBucket(buckets2, fav, fav);
+                }
+            }
+
+            const matchesFavorite = (titleNorm, favoriteNorm) => {
+                if (!titleNorm || !favoriteNorm) return false;
+                if (favoriteNorm.length < 4) {
+                    return titleNorm.includes(favoriteNorm);
+                }
+                if (titleNorm.includes(favoriteNorm)) {
+                    return true;
+                }
+
+                const required = Math.ceil(favoriteNorm.length * 0.9);
+                if (titleNorm.length < required) {
+                    return false;
+                }
+
+                let matched = 0;
+                let titlePos = 0;
+                for (let i = 0; i < favoriteNorm.length; i++) {
+                    if (matched + (favoriteNorm.length - i) < required) {
+                        return false;
+                    }
+                    const ch = favoriteNorm[i];
+                    const found = titleNorm.indexOf(ch, titlePos);
+                    if (found !== -1) {
+                        matched += 1;
+                        titlePos = found + 1;
+                        if (matched >= required) {
+                            return true;
+                        }
+                    }
+                }
+                return matched >= required;
+            };
+
+            return (rawForumTitle) => {
+                const titleNorm = normalizeTitleForFavoriteMatch(rawForumTitle);
+                if (!titleNorm) {
+                    return false;
+                }
+
+                const candidates = new Set();
+                const scanWindow = Math.min(titleNorm.length, 24);
+
+                for (let i = 0; i <= scanWindow - 3; i++) {
+                    const token = titleNorm.slice(i, i + 3);
+                    const bucket = buckets3.get(token);
+                    if (bucket) {
+                        for (const fav of bucket) {
+                            candidates.add(fav);
+                        }
+                    }
+                }
+
+                if (candidates.size === 0) {
+                    for (let i = 0; i <= scanWindow - 2; i++) {
+                        const token = titleNorm.slice(i, i + 2);
+                        const bucket = buckets2.get(token);
+                        if (bucket) {
+                            for (const fav of bucket) {
+                                candidates.add(fav);
+                            }
+                        }
+                    }
+                }
+
+                for (const fav of candidates) {
+                    if (matchesFavorite(titleNorm, fav)) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+        }
+
         // =========================
         const CONFIG = {
             GOLDEN_RATIO: 0.618,
@@ -67,9 +199,12 @@
             MAX_SEARCH_PAGES: 10,
             IMAGE_SIZE_THRESHOLD: 100 * 1024,
             PRELOAD_COUNT: 3,
-            SEARCH_RETRY_DELAY: 10000,
+            SEARCH_RETRY_MAX_ATTEMPTS: 5,
+            SEARCH_RETRY_INTERVAL_MS: 2000,
             STORAGE_KEY: 'yamibo_reader_data',
             AUTO_OPEN_KEY: 'yamibo_reader_auto_open',
+            WEBDAV_CONFIG_KEY: 'yamibo_reader_webdav_config',
+            WEBDAV_STATE_KEY: 'yamibo_reader_webdav_state',
             // 阅读模式
             VIEW_MODES: {
                 SCROLL_DOWN: 'scroll-down',
@@ -92,12 +227,14 @@
             settings: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>',
             close: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
             search: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>',
+            searchSpinner: '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M7.248 1.307A.75.75 0 118.252.193l2.5 2.25a.75.75 0 010 1.114l-2.5 2.25a.75.75 0 01-1.004-1.114l1.29-1.161a4.5 4.5 0 103.655 2.832.75.75 0 111.398-.546A6 6 0 118.018 2l-.77-.693z"/></svg>',
             arrowLeft: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>',
             arrowRight: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>',
             chevronsLeft: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 7.41L15.59 6l-6 6 6 6L17 16.59 12.41 12z"/><path d="M11 7.41L9.59 6l-6 6 6 6L11 16.59 6.41 12z"/></svg>',
             chevronsRight: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 6L5.59 7.41 10.17 12l-4.58 4.59L7 18l6-6z"/><path d="M15 6l-1.41 1.41L18.17 12l-4.58 4.59L15 18l6-6z"/></svg>',
             darkMode: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2c-1.05 0-2.05.16-3 .46 4.06 1.27 7 5.06 7 9.54 0 4.48-2.94 8.27-7 9.54.95.3 1.95.46 3 .46 5.52 0 10-4.48 10-10S14.52 2 9 2z"/></svg>',
             lightMode: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>',
+            cloudSync: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 4a4 4 0 0 0-3.999 4.102 1 1 0 0 1-.75.992A3.002 3.002 0 0 0 7 15h1a1 1 0 1 1 0 2H7a5 5 0 0 1-1.97-9.596 6 6 0 0 1 11.169-2.4A6 6 0 0 1 16 17a1 1 0 1 1 0-2 4 4 0 1 0-.328-7.987 1 1 0 0 1-.999-.6A4.001 4.001 0 0 0 11 4zm.293 5.293a1 1 0 0 1 1.414 0l2 2a1 1 0 0 1-1.414 1.414L13 12.414V20a1 1 0 1 1-2 0v-7.586l-.293.293a1 1 0 0 1-1.414-1.414l2-2z" fill="#0D0D0D"/></svg>',
             viewMode: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>',
             play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>',
             delete: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>'
@@ -157,42 +294,126 @@
     // 数据存储管理
     // =========================
     class DataStore {
-        constructor() {
-            this.data = this.load();
-            this.ensureStructure();
-        }
+         constructor() {
+             this._changeListeners = new Set();
+             this._suppressChangeNotifications = 0;
+             this.data = this.load();
+             this.ensureStructure();
+         }
 
-        load() {
-            const stored = GM_getValue(CONFIG.STORAGE_KEY, '{}');
-            try {
-                const data = JSON.parse(stored);
-                return data;
-            } catch (e) {
-                console.error('Failed to parse storage data:', e);
-                return {
-                    favorites: {},
-                    readingProgress: {},
-                    settings: {
-                        darkMode: false,
-                        viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
-                        floatingButtonPosition: null,
-                        searchResultsPerPage: CONFIG.SEARCH_RESULTS_PER_PAGE_DEFAULT,
-                        sidebarCollapsed: false
-                    }
-                };
-            }
-        }
+         load() {
+             const stored = GM_getValue(CONFIG.STORAGE_KEY, '{}');
+             try {
+                 const data = JSON.parse(stored);
+                 return data;
+             } catch (e) {
+                 console.error('Failed to parse storage data:', e);
+                 const now = Date.now();
+                 return {
+                     meta: {
+                         schemaVersion: 1,
+                         createdAt: now,
+                         updatedAt: now
+                     },
+                     favorites: {},
+                     readingProgress: {},
+                     settings: {
+                         darkMode: false,
+                         viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
+                         floatingButtonPosition: null,
+                         searchResultsPerPage: CONFIG.SEARCH_RESULTS_PER_PAGE_DEFAULT,
+                         sidebarCollapsed: false
+                     }
+                 };
+             }
+         }
 
-        save() {
-            GM_setValue(CONFIG.STORAGE_KEY, JSON.stringify(this.data));
-        }
+         onChange(listener) {
+             if (typeof listener !== 'function') {
+                 return () => {};
+             }
+             this._changeListeners.add(listener);
+             return () => this._changeListeners.delete(listener);
+         }
 
-        ensureStructure() {
-            let settingsUpdated = false;
-            if (!this.data.settings) {
-                this.data.settings = {
-                    darkMode: false,
-                    viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
+         runWithSuppressedNotifications(fn) {
+             this._suppressChangeNotifications += 1;
+             try {
+                 return fn();
+             } finally {
+                 this._suppressChangeNotifications = Math.max(0, this._suppressChangeNotifications - 1);
+             }
+         }
+
+         _emitChange(payload) {
+             if (this._suppressChangeNotifications > 0) {
+                 return;
+             }
+             for (const listener of this._changeListeners) {
+                 try {
+                     listener(payload);
+                 } catch (e) {
+                     console.warn('[DataStore] change listener error:', e);
+                 }
+             }
+         }
+
+         save(options = {}) {
+             this.touchMeta();
+             GM_setValue(CONFIG.STORAGE_KEY, JSON.stringify(this.data));
+             const notify = options.notify !== false;
+             if (notify) {
+                 this._emitChange({
+                     origin: typeof options.origin === 'string' ? options.origin : '',
+                     timestamp: Date.now()
+                 });
+             }
+         }
+
+         touchMeta() {
+             if (!this.data.meta || typeof this.data.meta !== 'object') {
+                 this.data.meta = {};
+             }
+             const now = Date.now();
+             const createdAt = Number(this.data.meta.createdAt);
+             if (!Number.isFinite(createdAt) || createdAt <= 0) {
+                 this.data.meta.createdAt = now;
+             }
+             const schemaVersion = Number(this.data.meta.schemaVersion);
+             if (!Number.isFinite(schemaVersion) || schemaVersion <= 0) {
+                 this.data.meta.schemaVersion = 1;
+             }
+             this.data.meta.updatedAt = now;
+         }
+
+         ensureStructure() {
+             let settingsUpdated = false;
+             let metaUpdated = false;
+             if (!this.data.meta || typeof this.data.meta !== 'object') {
+                 const now = Date.now();
+                 this.data.meta = { schemaVersion: 1, createdAt: now, updatedAt: now };
+                 metaUpdated = true;
+             } else {
+                 const schemaVersion = Number(this.data.meta.schemaVersion);
+                 if (!Number.isFinite(schemaVersion) || schemaVersion <= 0) {
+                     this.data.meta.schemaVersion = 1;
+                     metaUpdated = true;
+                 }
+                 const createdAt = Number(this.data.meta.createdAt);
+                 if (!Number.isFinite(createdAt) || createdAt <= 0) {
+                     this.data.meta.createdAt = Date.now();
+                     metaUpdated = true;
+                 }
+                 const updatedAt = Number(this.data.meta.updatedAt);
+                 if (!Number.isFinite(updatedAt) || updatedAt <= 0) {
+                     this.data.meta.updatedAt = Date.now();
+                     metaUpdated = true;
+                 }
+             }
+             if (!this.data.settings) {
+                 this.data.settings = {
+                     darkMode: false,
+                     viewMode: CONFIG.VIEW_MODES.SCROLL_DOWN,
                     floatingButtonPosition: null,
                     searchResultsPerPage: CONFIG.SEARCH_RESULTS_PER_PAGE_DEFAULT,
                     sidebarCollapsed: false
@@ -262,10 +483,13 @@
                 });
             }
 
-            if (favoritesUpdated || settingsUpdated) {
-                this.save();
-            }
-        }
+             if (favoritesUpdated || settingsUpdated) {
+                 this.save({ notify: false, origin: 'ensureStructure' });
+             }
+             if (metaUpdated && !(favoritesUpdated || settingsUpdated)) {
+                 this.save({ notify: false, origin: 'ensureStructure' });
+             }
+         }
 
         migrateLegacyFavorites() {
             const favorites = this.data.favorites;
@@ -330,7 +554,7 @@
             });
 
             this.data.favorites = migrated;
-            this.save();
+            this.save({ notify: false, origin: 'migrateLegacyFavorites' });
         }
 
         addOrUpdateFavorite(seriesKey, payload) {
@@ -578,17 +802,17 @@
                 floor,
                 timestamp: Date.now()
             };
-            this.save();
+            this.save({ origin: 'setProgress' });
         }
 
         getProgress(threadId) {
             return this.data.readingProgress && this.data.readingProgress[threadId];
         }
 
-        setSetting(key, value) {
+        setSetting(key, value, options = {}) {
             if (!this.data.settings) this.data.settings = {};
             this.data.settings[key] = value;
-            this.save();
+            this.save({ origin: `setSetting:${key}`, notify: options.notify });
         }
 
         getSetting(key, defaultValue) {
@@ -621,17 +845,22 @@
             this.setSetting('floatingButtonPosition', payload);
         }
 
-        exportData(pretty = true) {
-            const payload = {
-                favorites: this.data.favorites || {},
-                settings: this.data.settings || {},
-                readingProgress: this.data.readingProgress || {},
-                seriesNameOverrides: this.data.seriesNameOverrides || {}
-            };
-            return JSON.stringify(payload, pretty ? 2 : 0);
-        }
+         getExportPayload() {
+             return {
+                 meta: this.data.meta || {},
+                 favorites: this.data.favorites || {},
+                 settings: this.data.settings || {},
+                 readingProgress: this.data.readingProgress || {},
+                 seriesNameOverrides: this.data.seriesNameOverrides || {}
+             };
+         }
 
-        importData(jsonInput) {
+         exportData(pretty = true) {
+             const payload = this.getExportPayload();
+             return JSON.stringify(payload, null, pretty ? 2 : 0);
+         }
+
+        importData(jsonInput, options = {}) {
             if (!jsonInput) {
                 throw new Error('数据为空');
             }
@@ -645,25 +874,350 @@
                 }
             }
 
-            if (!parsed || typeof parsed !== 'object') {
-                throw new Error('数据格式不正确');
-            }
+             if (!parsed || typeof parsed !== 'object') {
+                 throw new Error('数据格式不正确');
+             }
 
-            const nextData = {
-                favorites: typeof parsed.favorites === 'object' && parsed.favorites !== null ? parsed.favorites : {},
-                settings: typeof parsed.settings === 'object' && parsed.settings !== null ? parsed.settings : {},
-                readingProgress: typeof parsed.readingProgress === 'object' && parsed.readingProgress !== null ? parsed.readingProgress : {},
-                seriesNameOverrides: typeof parsed.seriesNameOverrides === 'object' && parsed.seriesNameOverrides !== null ? parsed.seriesNameOverrides : {}
-            };
+             const parsedMeta = parsed.meta && typeof parsed.meta === 'object' ? parsed.meta : {};
+             const nextData = {
+                 meta: {
+                     ...(this.data.meta && typeof this.data.meta === 'object' ? this.data.meta : {}),
+                     ...parsedMeta
+                 },
+                 favorites: typeof parsed.favorites === 'object' && parsed.favorites !== null ? parsed.favorites : {},
+                 settings: typeof parsed.settings === 'object' && parsed.settings !== null ? parsed.settings : {},
+                 readingProgress: typeof parsed.readingProgress === 'object' && parsed.readingProgress !== null ? parsed.readingProgress : {},
+                 seriesNameOverrides: typeof parsed.seriesNameOverrides === 'object' && parsed.seriesNameOverrides !== null ? parsed.seriesNameOverrides : {}
+             };
 
-            this.data = {
-                ...this.data,
-                ...nextData
-            };
-            this.ensureStructure();
-            this.save();
-        }
-    }
+             const notify = options.notify !== false;
+             const origin = typeof options.origin === 'string' && options.origin ? options.origin : 'importData';
+
+             this.runWithSuppressedNotifications(() => {
+                 this.data = {
+                     ...this.data,
+                     ...nextData
+                 };
+                 this.ensureStructure();
+                 this.save({ notify: false, origin });
+             });
+
+             if (notify) {
+                 this._emitChange({ origin, timestamp: Date.now() });
+             }
+         }
+     }
+
+     function gmRequest({ method, url, headers = {}, data, responseType = 'text', timeout = 30000 }) {
+         return new Promise((resolve, reject) => {
+             GM_xmlhttpRequest({
+                 method,
+                 url,
+                 headers,
+                 data,
+                 responseType,
+                 timeout,
+                 onload: (response) => resolve(response),
+                 onerror: (err) => reject(err),
+                 ontimeout: () => reject(new Error('请求超时'))
+             });
+         });
+     }
+
+     function parseResponseHeaders(rawHeaders) {
+         const headers = {};
+         if (!rawHeaders) return headers;
+         rawHeaders.split(/\r?\n/).forEach((line) => {
+             const index = line.indexOf(':');
+             if (index <= 0) return;
+             const key = line.slice(0, index).trim().toLowerCase();
+             const value = line.slice(index + 1).trim();
+             if (key) {
+                 headers[key] = value;
+             }
+         });
+         return headers;
+     }
+
+     function normalizeWebDavUrl(rawUrl) {
+         const url = typeof rawUrl === 'string' ? rawUrl.trim() : '';
+         if (!url) return '';
+         return url;
+     }
+
+     function buildBasicAuthHeader(username, password) {
+         const user = typeof username === 'string' ? username : '';
+         const pass = typeof password === 'string' ? password : '';
+         if (!user && !pass) return null;
+         return 'Basic ' + btoa(`${user}:${pass}`);
+     }
+
+     function coercePlainObject(value) {
+         return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+     }
+
+     function mergeReaderPayload(localPayload, remotePayload) {
+         const local = coercePlainObject(localPayload);
+         const remote = coercePlainObject(remotePayload);
+
+         const localMeta = coercePlainObject(local.meta);
+         const remoteMeta = coercePlainObject(remote.meta);
+         const localUpdatedAt = Number(localMeta.updatedAt) || 0;
+         const remoteUpdatedAt = Number(remoteMeta.updatedAt) || 0;
+         const newerOverridesOlder = remoteUpdatedAt >= localUpdatedAt;
+
+         const localFavorites = coercePlainObject(local.favorites);
+         const remoteFavorites = coercePlainObject(remote.favorites);
+         const mergedFavorites = {};
+         const seriesKeys = new Set([...Object.keys(localFavorites), ...Object.keys(remoteFavorites)]);
+         seriesKeys.forEach((seriesKey) => {
+             const a = coercePlainObject(localFavorites[seriesKey]);
+             const b = coercePlainObject(remoteFavorites[seriesKey]);
+             if (!Object.keys(a).length) {
+                 mergedFavorites[seriesKey] = b;
+                 return;
+             }
+             if (!Object.keys(b).length) {
+                 mergedFavorites[seriesKey] = a;
+                 return;
+             }
+
+             const aChapters = coercePlainObject(a.chapters);
+             const bChapters = coercePlainObject(b.chapters);
+             const mergedChapters = {};
+             const chapterIds = new Set([...Object.keys(aChapters), ...Object.keys(bChapters)]);
+             chapterIds.forEach((threadId) => {
+                 const ca = coercePlainObject(aChapters[threadId]);
+                 const cb = coercePlainObject(bChapters[threadId]);
+                 if (!Object.keys(ca).length) {
+                     mergedChapters[threadId] = cb;
+                     return;
+                 }
+                 if (!Object.keys(cb).length) {
+                     mergedChapters[threadId] = ca;
+                     return;
+                 }
+                 const ta = Number(ca.lastVisited) || 0;
+                 const tb = Number(cb.lastVisited) || 0;
+                 if (tb > ta) {
+                     mergedChapters[threadId] = cb;
+                 } else if (ta > tb) {
+                     mergedChapters[threadId] = ca;
+                 } else {
+                     const fa = Number(ca.currentFloor) || 0;
+                     const fb = Number(cb.currentFloor) || 0;
+                     mergedChapters[threadId] = fb >= fa ? cb : ca;
+                 }
+             });
+
+             let latestThreadId = '';
+             let latestVisited = -1;
+             Object.keys(mergedChapters).forEach((threadId) => {
+                 const chapter = mergedChapters[threadId];
+                 const visited = Number(chapter?.lastVisited) || 0;
+                 if (visited > latestVisited) {
+                     latestVisited = visited;
+                     latestThreadId = threadId;
+                 }
+             });
+             const latestChapter = latestThreadId ? mergedChapters[latestThreadId] : null;
+             const mergedLastVisited = Math.max(Number(a.lastVisited) || 0, Number(b.lastVisited) || 0, latestVisited > 0 ? latestVisited : 0);
+             const mergedAddedAt = Math.min(Number(a.addedAt) || Date.now(), Number(b.addedAt) || Date.now());
+             const mergedDirectoryCount = Math.max(
+                 Number(a.directoryCount) || 0,
+                 Number(b.directoryCount) || 0,
+                 Object.keys(mergedChapters).length
+             );
+
+             mergedFavorites[seriesKey] = {
+                 ...a,
+                 ...b,
+                 seriesKey: seriesKey || a.seriesKey || b.seriesKey,
+                 seriesTitle: (newerOverridesOlder ? (b.seriesTitle || a.seriesTitle) : (a.seriesTitle || b.seriesTitle)) || '',
+                 author: a.author || b.author || '',
+                 chapters: mergedChapters,
+                 latestThreadId: latestThreadId || a.latestThreadId || b.latestThreadId || '',
+                 latestTitle: latestChapter?.title || latestChapter?.chapterTitle || a.latestTitle || b.latestTitle || '',
+                 latestUrl: latestChapter?.url || a.latestUrl || b.latestUrl || '',
+                 latestFloor: Number(latestChapter?.currentFloor) || Number(a.latestFloor) || Number(b.latestFloor) || 0,
+                 latestTotalFloors: Number(latestChapter?.totalFloors) || Number(a.latestTotalFloors) || Number(b.latestTotalFloors) || 0,
+                 directoryCount: mergedDirectoryCount,
+                 addedAt: mergedAddedAt,
+                 lastVisited: mergedLastVisited
+             };
+         });
+
+         const localProgress = coercePlainObject(local.readingProgress);
+         const remoteProgress = coercePlainObject(remote.readingProgress);
+         const mergedProgress = {};
+         const threadIds = new Set([...Object.keys(localProgress), ...Object.keys(remoteProgress)]);
+         threadIds.forEach((threadId) => {
+             const a = coercePlainObject(localProgress[threadId]);
+             const b = coercePlainObject(remoteProgress[threadId]);
+             if (!Object.keys(a).length) {
+                 mergedProgress[threadId] = b;
+                 return;
+             }
+             if (!Object.keys(b).length) {
+                 mergedProgress[threadId] = a;
+                 return;
+             }
+             const ta = Number(a.timestamp) || 0;
+             const tb = Number(b.timestamp) || 0;
+             if (tb > ta) {
+                 mergedProgress[threadId] = b;
+                 return;
+             }
+             if (ta > tb) {
+                 mergedProgress[threadId] = a;
+                 return;
+             }
+             const fa = Number(a.floor) || 0;
+             const fb = Number(b.floor) || 0;
+             mergedProgress[threadId] = fb >= fa ? b : a;
+         });
+
+         const localOverrides = coercePlainObject(local.seriesNameOverrides);
+         const remoteOverrides = coercePlainObject(remote.seriesNameOverrides);
+         const mergedOverrides = { ...localOverrides, ...remoteOverrides };
+         if (!newerOverridesOlder) {
+             Object.keys(localOverrides).forEach((key) => {
+                 mergedOverrides[key] = localOverrides[key];
+             });
+         }
+
+         const localSettings = coercePlainObject(local.settings);
+         const remoteSettings = coercePlainObject(remote.settings);
+         const mergedSettings = newerOverridesOlder
+             ? { ...localSettings, ...remoteSettings }
+             : { ...remoteSettings, ...localSettings };
+
+         const schemaVersion = Math.max(Number(localMeta.schemaVersion) || 1, Number(remoteMeta.schemaVersion) || 1);
+         const createdAt = Math.min(Number(localMeta.createdAt) || Date.now(), Number(remoteMeta.createdAt) || Date.now());
+         const mergedMeta = {
+             schemaVersion,
+             createdAt,
+             updatedAt: Date.now()
+         };
+
+         return {
+             meta: mergedMeta,
+             favorites: mergedFavorites,
+             settings: mergedSettings,
+             readingProgress: mergedProgress,
+             seriesNameOverrides: mergedOverrides
+         };
+     }
+
+     class WebDAVSyncService {
+         constructor(dataStore) {
+             this.dataStore = dataStore;
+         }
+
+         getConfig() {
+             const raw = GM_getValue(CONFIG.WEBDAV_CONFIG_KEY, '{}');
+             try {
+                 const parsed = JSON.parse(raw);
+                 const url = normalizeWebDavUrl(parsed.url);
+                 return {
+                     url,
+                     username: typeof parsed.username === 'string' ? parsed.username : '',
+                     password: typeof parsed.password === 'string' ? parsed.password : ''
+                 };
+             } catch (e) {
+                 return { url: '', username: '', password: '' };
+             }
+         }
+
+         setConfig(config) {
+             const url = normalizeWebDavUrl(config?.url);
+             const username = typeof config?.username === 'string' ? config.username : '';
+             const password = typeof config?.password === 'string' ? config.password : '';
+             GM_setValue(CONFIG.WEBDAV_CONFIG_KEY, JSON.stringify({ url, username, password }));
+         }
+
+         getState() {
+             const raw = GM_getValue(CONFIG.WEBDAV_STATE_KEY, '{}');
+             try {
+                 const parsed = JSON.parse(raw);
+                 return {
+                     etag: typeof parsed.etag === 'string' ? parsed.etag : '',
+                     lastSyncAt: Number(parsed.lastSyncAt) || 0
+                 };
+             } catch (e) {
+                 return { etag: '', lastSyncAt: 0 };
+             }
+         }
+
+         setState(state) {
+             const etag = typeof state?.etag === 'string' ? state.etag : '';
+             const lastSyncAt = Number(state?.lastSyncAt) || 0;
+             GM_setValue(CONFIG.WEBDAV_STATE_KEY, JSON.stringify({ etag, lastSyncAt }));
+         }
+
+         async download() {
+             const config = this.getConfig();
+             if (!config.url) {
+                 throw new Error('请先填写 WebDAV 文件 URL');
+             }
+             const auth = buildBasicAuthHeader(config.username, config.password);
+             const headers = auth ? { Authorization: auth } : {};
+             const response = await gmRequest({ method: 'GET', url: config.url, headers, responseType: 'text' });
+             const status = Number(response.status) || 0;
+             if (status === 404) {
+                 return { payload: null, etag: '' };
+             }
+             if (status < 200 || status >= 300) {
+                 throw new Error(`拉取失败: HTTP ${status}`);
+             }
+             const text = typeof response.responseText === 'string' ? response.responseText.trim() : '';
+             if (!text) {
+                 return { payload: null, etag: '' };
+             }
+             let payload = null;
+             try {
+                 payload = JSON.parse(text);
+             } catch (e) {
+                 throw new Error('拉取失败: 远端内容不是有效 JSON');
+             }
+             const headersMap = parseResponseHeaders(response.responseHeaders);
+             const etag = headersMap['etag'] || '';
+             return { payload, etag };
+         }
+
+         async upload(payload) {
+             const config = this.getConfig();
+             if (!config.url) {
+                 throw new Error('请先填写 WebDAV 文件 URL');
+             }
+             const auth = buildBasicAuthHeader(config.username, config.password);
+             const headers = {
+                 'Content-Type': 'application/json; charset=utf-8'
+             };
+             if (auth) {
+                 headers.Authorization = auth;
+             }
+             const body = JSON.stringify(payload, null, 2);
+             const response = await gmRequest({ method: 'PUT', url: config.url, headers, data: body, responseType: 'text' });
+             const status = Number(response.status) || 0;
+             if (status < 200 || status >= 300) {
+                 throw new Error(`上传失败: HTTP ${status}`);
+             }
+             const headersMap = parseResponseHeaders(response.responseHeaders);
+             const etag = headersMap['etag'] || '';
+             return { etag };
+         }
+
+         async syncBidirectional() {
+             const localPayload = this.dataStore.getExportPayload();
+             const { payload: remotePayload, etag: remoteEtag } = await this.download();
+             const merged = mergeReaderPayload(localPayload, remotePayload);
+             this.dataStore.importData(merged, { notify: false, origin: 'webdav-sync' });
+             const { etag: nextEtag } = await this.upload(merged);
+             this.setState({ etag: nextEtag || remoteEtag || '', lastSyncAt: Date.now() });
+             return { merged, etag: nextEtag || remoteEtag || '' };
+         }
+     }
 
     // =========================
     // 内容解析器
@@ -804,16 +1358,18 @@
     // 阅读模式界面
     // =========================
     class ReaderUI {
-        constructor(parser, dataStore) {
-            this.parser = parser;
-            this.dataStore = dataStore;
-            this.isReaderMode = false;
+         constructor(parser, dataStore) {
+             this.parser = parser;
+             this.dataStore = dataStore;
+             this.isReaderMode = false;
             this.currentFloor = 0;
             this.currentImageIndex = 0;
             this.posts = [];
             this.allImages = [];
             this.directory = [];
             this.searchRetryTimer = null;
+            this.searchRetryRemaining = 0;
+            this.lastSearchQuery = '';
             this.readerContainer = null;
             const storedViewMode = dataStore.getSetting('viewMode', CONFIG.VIEW_MODES.SCROLL_DOWN);
             this.viewMode = LEGACY_VIEW_MODE_MAP[storedViewMode] || storedViewMode;
@@ -823,12 +1379,20 @@
             } else if (this.viewMode !== storedViewMode) {
                 this.dataStore.setSetting('viewMode', this.viewMode);
             }
-            this.darkMode = dataStore.getSetting('darkMode', false);
-            this.imageCache = new ImageCache(); // 图片缓存
-            this.scrollHandler = null;
-            this.scrollUpdateScheduled = false;
-            this.currentScrollImageIndex = 0;
-            this.lastFlipDirection = 'next';
+             this.darkMode = dataStore.getSetting('darkMode', false);
+             this.imageCache = new ImageCache(); // 图片缓存
+             this.webdavSync = new WebDAVSyncService(this.dataStore);
+             this.webdavSyncButton = null;
+             this.webdavSyncInFlight = false;
+             this.webdavSyncQueued = false;
+             this.webdavSyncStatusTimer = null;
+             this.webdavAutoSyncTimer = null;
+             this.webdavLastAutoSyncStartAt = 0;
+             this.webdavAutoSyncPending = false;
+             this.scrollHandler = null;
+             this.scrollUpdateScheduled = false;
+             this.currentScrollImageIndex = 0;
+             this.lastFlipDirection = 'next';
             this.baseSeriesKey = buildSeriesKey(this.parser.threadTitle);
             const defaultSeriesName = this.parser.seriesTitle || normalizeSeriesTitle(this.parser.threadTitle) || this.parser.threadTitle || '未命名合集';
             const storedSeriesName = this.dataStore.getSeriesNameOverride(this.baseSeriesKey);
@@ -843,10 +1407,13 @@
             this.mainWidthRatio = Math.min(Math.max(this.mainWidthRatio, 0.5), 0.9);
             this.sidebarCollapsed = !!this.dataStore.getSetting('sidebarCollapsed', false);
 
-            this.currentDirectoryCount = null;
-            this.createFloatingButton();
-            this.autoOpenIfRequested();
-        }
+             this.currentDirectoryCount = null;
+             this.unsubscribeStoreChange = typeof this.dataStore.onChange === 'function'
+                 ? this.dataStore.onChange((event) => this.handleDataStoreChange(event))
+                 : null;
+             this.createFloatingButton();
+             this.autoOpenIfRequested();
+         }
 
         createFloatingButton() {
             const button = document.createElement('div');
@@ -871,12 +1438,14 @@
             const saved = this.dataStore.getFloatingButtonPosition();
             const element = this.floatingBtn;
             if (saved) {
+                element.classList.remove('default-position');
                 element.style.left = `${saved.left}px`;
                 element.style.top = `${saved.top}px`;
                 element.style.right = 'auto';
                 element.style.bottom = 'auto';
                 element.style.transform = 'none';
             } else {
+                element.classList.add('default-position');
                 element.style.left = 'auto';
                 element.style.bottom = 'auto';
                 element.style.right = '20px';
@@ -897,17 +1466,25 @@
             const threshold = 12;
             const nearLeft = rect.left <= threshold;
             const nearRight = window.innerWidth - rect.right <= threshold;
-            const isLeftOnly = nearLeft && !nearRight;
-            const isRightOnly = nearRight && !nearLeft;
             let dockState = '';
-            if (isLeftOnly) {
+            if (nearLeft || nearRight) {
+                if (nearLeft && !nearRight) {
+                    dockState = 'left';
+                } else if (nearRight && !nearLeft) {
+                    dockState = 'right';
+                } else {
+                    const distanceLeft = Math.abs(rect.left);
+                    const distanceRight = Math.abs(window.innerWidth - rect.right);
+                    dockState = distanceLeft <= distanceRight ? 'left' : 'right';
+                }
+            }
+
+            if (dockState === 'left') {
                 this.floatingBtn.classList.add('edge-left');
                 this.floatingBtn.classList.remove('edge-right');
-                dockState = 'left';
-            } else if (isRightOnly) {
+            } else if (dockState === 'right') {
                 this.floatingBtn.classList.add('edge-right');
                 this.floatingBtn.classList.remove('edge-left');
-                dockState = 'right';
             } else {
                 this.floatingBtn.classList.remove('edge-left', 'edge-right');
             }
@@ -1163,6 +1740,7 @@
                 container.remove();
             }
             this.readerContainer = null;
+            this.webdavSyncButton = null;
         }
 
         createReaderContainer() {
@@ -1174,14 +1752,17 @@
                 <div class="reader-main" id="reader-main">
                     <div class="reader-main-inner">
                         <div class="reader-toolbar">
-                            <div class="toolbar-left">
-                                <button id="view-mode-btn" class="icon-btn" title="切换阅读模式">
-                                    ${ICONS.viewMode}
-                                </button>
-                                <button id="dark-mode-btn" class="icon-btn" title="切换暗色模式">
-                                    ${this.darkMode ? ICONS.lightMode : ICONS.darkMode}
-                                </button>
-                            </div>
+                             <div class="toolbar-left">
+                                 <button id="view-mode-btn" class="icon-btn" title="切换阅读模式">
+                                     ${ICONS.viewMode}
+                                 </button>
+                                 <button id="dark-mode-btn" class="icon-btn" title="切换暗色模式">
+                                     ${this.darkMode ? ICONS.lightMode : ICONS.darkMode}
+                                 </button>
+                                 <button id="webdav-sync-btn" class="icon-btn webdav-sync-btn" title="WebDAV 同步">
+                                     ${ICONS.cloudSync}
+                                 </button>
+                             </div>
                             <div class="toolbar-center">
                                 <div class="reader-controls">
                                     <button id="prev-floor" class="nav-btn" title="上一页">
@@ -1274,20 +1855,38 @@
                         </label>
                         <input type="range" id="menu-preload-slider" min="0" max="10" step="1" value="${currentPreload}">
                         <label class="menu-input-label" for="menu-search-per-page">每页搜索数量</label>
-                        <input
-                            type="number"
-                            id="menu-search-per-page"
-                            class="menu-number-input"
-                            min="${CONFIG.SEARCH_RESULTS_PER_PAGE_MIN}"
-                            max="${CONFIG.SEARCH_RESULTS_PER_PAGE_MAX}"
-                            step="10"
-                            value="${this.getSearchResultsPerPage()}">
-                        <div class="menu-hint">少于该数量时停止翻页</div>
-                        <div class="menu-cache-info">已缓存: <span id="menu-cache-count">${cachedCount}</span> 张</div>
-                        <button id="menu-clear-cache" class="menu-action-btn">清除图片缓存</button>
-                        <button id="menu-data-transfer" class="menu-action-btn">导入/导出</button>
-                    </div>
-                </div>
+                         <input
+                             type="number"
+                             id="menu-search-per-page"
+                             class="menu-number-input"
+                             min="${CONFIG.SEARCH_RESULTS_PER_PAGE_MIN}"
+                             max="${CONFIG.SEARCH_RESULTS_PER_PAGE_MAX}"
+                             step="10"
+                             value="${this.getSearchResultsPerPage()}">
+                         <div class="menu-hint">少于该数量时停止翻页</div>
+                         <div class="menu-toggle-row" id="menu-auto-webdav-row">
+                             <label class="menu-toggle" for="menu-auto-webdav-sync">
+                                 <input type="checkbox" id="menu-auto-webdav-sync">
+                                 <span>自动 WebDAV 同步</span>
+                             </label>
+                             <span class="menu-toggle-state" id="menu-auto-webdav-state">未就绪</span>
+                         </div>
+                         <label class="menu-input-label" for="menu-auto-webdav-interval">自动同步间隔(秒)</label>
+                         <input
+                             type="number"
+                             id="menu-auto-webdav-interval"
+                             class="menu-number-input"
+                             min="0"
+                             max="3600"
+                             step="5"
+                             value="${this.getAutoWebdavSyncIntervalSeconds()}">
+                         <div class="menu-hint">0 = 关闭自动同步</div>
+                         <div class="menu-hint" id="menu-auto-webdav-hint">需先配置 WebDAV 且至少成功同步一次</div>
+                         <div class="menu-cache-info">已缓存: <span id="menu-cache-count">${cachedCount}</span> 张</div>
+                         <button id="menu-clear-cache" class="menu-action-btn">清除图片缓存</button>
+                         <button id="menu-data-transfer" class="menu-action-btn">导入/导出</button>
+                     </div>
+                 </div>
             `;
 
             document.body.appendChild(container);
@@ -1298,6 +1897,7 @@
             }
             this.applyLayoutSizing();
             this.bindReaderEvents();
+            this.updateWebdavSyncIndicators();
             this.setupResizer();
             this.applySidebarState();
         }
@@ -1405,6 +2005,17 @@
             // 暗色模式切换
             document.getElementById('dark-mode-btn').addEventListener('click', () => this.toggleDarkMode());
 
+            // WebDAV 同步
+            this.webdavSyncButton = document.getElementById('webdav-sync-btn');
+            if (this.webdavSyncButton) {
+                this.webdavSyncButton.addEventListener('click', async () => {
+                    if (this.webdavSyncButton.disabled) {
+                        return;
+                    }
+                    await this.triggerWebdavSync({ source: 'toolbar', isAuto: false });
+                });
+            }
+
             // 阅读模式切换
             document.getElementById('view-mode-btn').addEventListener('click', (e) => {
                 const menu = document.getElementById('view-mode-menu');
@@ -1451,6 +2062,8 @@
                 const cacheCountSpan = document.getElementById('menu-cache-count');
                 const clearCacheBtn = document.getElementById('menu-clear-cache');
                 const perPageInput = document.getElementById('menu-search-per-page');
+                const autoWebdavSyncCheckbox = document.getElementById('menu-auto-webdav-sync');
+                const autoWebdavIntervalInput = document.getElementById('menu-auto-webdav-interval');
 
                 if (preloadSlider && preloadValue && !preloadSlider.dataset.bound) {
                     preloadSlider.dataset.bound = 'true';
@@ -1477,6 +2090,31 @@
                         cacheCountSpan.textContent = '0';
                     });
                 }
+
+                if (autoWebdavSyncCheckbox && !autoWebdavSyncCheckbox.dataset.bound) {
+                    autoWebdavSyncCheckbox.dataset.bound = 'true';
+                    autoWebdavSyncCheckbox.addEventListener('change', (event) => {
+                        const checked = !!event.target.checked;
+                        this.dataStore.setSetting('autoWebdavSync', checked);
+                        this.syncMenuSettingControls();
+                        this.updateWebdavSyncIndicators();
+                    });
+                }
+
+                if (autoWebdavIntervalInput && !autoWebdavIntervalInput.dataset.bound) {
+                    autoWebdavIntervalInput.dataset.bound = 'true';
+                    autoWebdavIntervalInput.addEventListener('change', (event) => {
+                        const value = Number(event.target.value);
+                        const normalized = Number.isFinite(value) && value >= 0 ? Math.min(3600, Math.floor(value)) : 60;
+                        event.target.value = normalized;
+                        this.dataStore.setSetting('autoWebdavSyncIntervalSec', normalized);
+                        if (normalized === 0) {
+                            this.dataStore.setSetting('autoWebdavSync', false, { notify: false });
+                        }
+                        this.syncMenuSettingControls();
+                        this.updateWebdavSyncIndicators();
+                    });
+                }
             });
 
             this.updateFavoriteButton();
@@ -1493,11 +2131,9 @@
             const sidebarRatio = 1 - ratio;
             const mainWidthPercent = (ratio * 100).toFixed(3) + '%';
             const sidebarWidthPercent = (sidebarRatio * 100).toFixed(3) + '%';
-            const contentScale = (ratio / CONFIG.DEFAULT_MAIN_WIDTH_RATIO).toFixed(3);
 
             container.style.setProperty('--main-width', mainWidthPercent);
             container.style.setProperty('--sidebar-width', sidebarWidthPercent);
-            container.style.setProperty('--content-scale', contentScale);
         }
 
         setupResizer() {
@@ -2218,39 +2854,76 @@
             }
         }
 
-        showDataTransferDialog() {
-            const existingOverlay = document.getElementById('data-transfer-overlay');
-            if (existingOverlay) {
-                existingOverlay.remove();
-            }
+         showDataTransferDialog() {
+             const existingOverlay = document.getElementById('data-transfer-overlay');
+             if (existingOverlay) {
+                 existingOverlay.remove();
+             }
 
             const overlay = document.createElement('div');
-            overlay.id = 'data-transfer-overlay';
-            overlay.className = 'data-transfer-overlay';
-            overlay.innerHTML = `
-                <div class="data-transfer-dialog">
-                    <div class="data-transfer-header">
-                        <h3>数据导入 / 导出</h3>
-                        <button type="button" class="data-transfer-close" title="关闭">${ICONS.close}</button>
-                    </div>
-                    <div class="data-transfer-body">
-                        <textarea id="data-transfer-textarea" spellcheck="false"></textarea>
-                        <div class="data-transfer-desc">包含收藏、阅读设置与阅读进度。打开时会展示当前保存的数据。</div>
-                    </div>
-                    <div class="data-transfer-footer">
-                        <button type="button" class="data-transfer-btn primary" id="data-transfer-save">保存</button>
-                        <button type="button" class="data-transfer-btn secondary" id="data-transfer-cancel">关闭</button>
+             overlay.id = 'data-transfer-overlay';
+             overlay.className = 'data-transfer-overlay';
+             const webdavConfig = this.webdavSync ? this.webdavSync.getConfig() : { url: '', username: '', password: '' };
+             const webdavState = this.webdavSync ? this.webdavSync.getState() : { etag: '', lastSyncAt: 0 };
+             const lastSyncText = webdavState.lastSyncAt
+                 ? `上次同步: ${new Date(webdavState.lastSyncAt).toLocaleString()}`
+                 : '上次同步: 无';
+             overlay.innerHTML = `
+                 <div class="data-transfer-dialog">
+                     <div class="data-transfer-header">
+                         <h3>数据导入 / 导出</h3>
+                         <button type="button" class="data-transfer-close" title="关闭">${ICONS.close}</button>
+                     </div>
+                     <div class="data-transfer-body">
+                         <textarea id="data-transfer-textarea" spellcheck="false"></textarea>
+                         <div class="data-transfer-desc">包含收藏、阅读设置与阅读进度。打开时会展示当前保存的数据。</div>
+                         <div class="data-transfer-section">
+                             <div class="data-transfer-section-title">WebDAV 同步</div>
+                             <div class="data-transfer-grid">
+                                 <label class="data-transfer-label" for="webdav-url">WebDAV 文件 URL</label>
+                                 <input id="webdav-url" class="data-transfer-input" type="text" placeholder="https://example.com/dav/yamibo-reader.json">
+                                 <label class="data-transfer-label" for="webdav-username">用户名</label>
+                                 <input id="webdav-username" class="data-transfer-input" type="text" autocomplete="username">
+                                 <label class="data-transfer-label" for="webdav-password">密码</label>
+                                 <input id="webdav-password" class="data-transfer-input" type="password" autocomplete="current-password">
+                             </div>
+                             <div class="data-transfer-actions">
+                                 <button type="button" class="data-transfer-btn secondary" id="webdav-save">保存配置</button>
+                                 <button type="button" class="data-transfer-btn primary" id="webdav-sync">同步(双向合并)</button>
+                                 <button type="button" class="data-transfer-btn secondary" id="webdav-download">仅下载(覆盖本地)</button>
+                                 <button type="button" class="data-transfer-btn secondary" id="webdav-upload">仅上传(覆盖远端)</button>
+                             </div>
+                             <div class="data-transfer-status" id="webdav-status"></div>
+                             <div class="data-transfer-hint">提示：部分脚本管理器需要在脚本头部允许该域名的 <code>@connect</code> 才能访问 WebDAV。</div>
+                         </div>
+                     </div>
+                     <div class="data-transfer-footer">
+                         <button type="button" class="data-transfer-btn primary" id="data-transfer-save">保存</button>
+                         <button type="button" class="data-transfer-btn secondary" id="data-transfer-cancel">关闭</button>
                     </div>
                 </div>
             `;
 
             document.body.appendChild(overlay);
 
-            const dialog = overlay.querySelector('.data-transfer-dialog');
-            const textarea = overlay.querySelector('#data-transfer-textarea');
-            const saveBtn = overlay.querySelector('#data-transfer-save');
-            const cancelBtn = overlay.querySelector('#data-transfer-cancel');
-            const closeBtn = overlay.querySelector('.data-transfer-close');
+             const dialog = overlay.querySelector('.data-transfer-dialog');
+             const textarea = overlay.querySelector('#data-transfer-textarea');
+             const saveBtn = overlay.querySelector('#data-transfer-save');
+             const cancelBtn = overlay.querySelector('#data-transfer-cancel');
+             const closeBtn = overlay.querySelector('.data-transfer-close');
+             const webdavUrlInput = overlay.querySelector('#webdav-url');
+             const webdavUsernameInput = overlay.querySelector('#webdav-username');
+             const webdavPasswordInput = overlay.querySelector('#webdav-password');
+             const webdavSaveBtn = overlay.querySelector('#webdav-save');
+             const webdavSyncBtn = overlay.querySelector('#webdav-sync');
+             const webdavDownloadBtn = overlay.querySelector('#webdav-download');
+             const webdavUploadBtn = overlay.querySelector('#webdav-upload');
+             const webdavStatus = overlay.querySelector('#webdav-status');
+
+             if (webdavUrlInput) webdavUrlInput.value = webdavConfig.url || '';
+             if (webdavUsernameInput) webdavUsernameInput.value = webdavConfig.username || '';
+             if (webdavPasswordInput) webdavPasswordInput.value = webdavConfig.password || '';
+             if (webdavStatus) webdavStatus.textContent = lastSyncText;
 
             let handleKeydown = null;
             const closeDialog = () => {
@@ -2275,10 +2948,10 @@
                 textarea.select();
             }
 
-            if (saveBtn && textarea) {
-                saveBtn.addEventListener('click', () => {
-                    const raw = textarea.value.trim();
-                    if (!raw) {
+             if (saveBtn && textarea) {
+                 saveBtn.addEventListener('click', () => {
+                     const raw = textarea.value.trim();
+                     if (!raw) {
                         alert('请先填写 JSON 数据');
                         textarea.focus();
                         return;
@@ -2291,14 +2964,158 @@
                     } catch (err) {
                         console.error('导入失败', err);
                         alert(`导入失败: ${err.message || err}`);
-                    }
-                });
-            }
+                     }
+                 });
+             }
 
-            const registerClose = (element) => {
-                if (!element) {
-                    return;
-                }
+             const setWebdavStatus = (message) => {
+                 if (!webdavStatus) return;
+                 webdavStatus.textContent = message || '';
+             };
+
+             const setWebdavBusy = (busy) => {
+                 [webdavSaveBtn, webdavSyncBtn, webdavDownloadBtn, webdavUploadBtn].forEach((btn) => {
+                     if (btn) {
+                         btn.disabled = !!busy;
+                     }
+                 });
+             };
+
+             const persistWebdavConfig = () => {
+                 if (!this.webdavSync) {
+                     throw new Error('WebDAV 同步模块未初始化');
+                 }
+                 const url = webdavUrlInput ? webdavUrlInput.value.trim() : '';
+                 const username = webdavUsernameInput ? webdavUsernameInput.value : '';
+                 const password = webdavPasswordInput ? webdavPasswordInput.value : '';
+                 this.webdavSync.setConfig({ url, username, password });
+                 setWebdavStatus('配置已保存');
+                 this.updateWebdavSyncIndicators();
+             };
+
+             if (webdavSaveBtn) {
+                 webdavSaveBtn.addEventListener('click', () => {
+                     try {
+                         persistWebdavConfig();
+                     } catch (err) {
+                         setWebdavStatus(`保存失败: ${err?.message || err}`);
+                     }
+                 });
+             }
+
+             if (webdavSyncBtn) {
+                 webdavSyncBtn.addEventListener('click', async () => {
+                     try {
+                         persistWebdavConfig();
+                         setWebdavBusy(true);
+                         setWebdavStatus('同步中...');
+                         const result = await this.triggerWebdavSync({ source: 'dialog', isAuto: false });
+                         if (textarea) {
+                             textarea.value = this.dataStore.exportData(true);
+                         }
+                         setWebdavStatus(`同步完成 ${new Date().toLocaleString()}`);
+                         alert('WebDAV 同步完成！');
+                         return result;
+                     } catch (err) {
+                         console.error('WebDAV 同步失败', err);
+                         setWebdavStatus(`同步失败: ${err?.message || err}`);
+                         alert(`WebDAV 同步失败: ${err?.message || err}`);
+                     } finally {
+                         setWebdavBusy(false);
+                     }
+                 });
+             }
+
+             if (webdavDownloadBtn) {
+                 webdavDownloadBtn.addEventListener('click', async () => {
+                     if (this.webdavSyncInFlight) {
+                         alert('正在同步中，请稍后再试');
+                         return;
+                     }
+                     if (!confirm('将使用 WebDAV 远端数据覆盖本地数据，是否继续？')) {
+                         return;
+                     }
+                     try {
+                         persistWebdavConfig();
+                         setWebdavBusy(true);
+                         setWebdavStatus('下载中...');
+                         this.webdavSyncInFlight = true;
+                         this.setWebdavSyncVisualState('syncing');
+                         const { payload, etag } = await this.webdavSync.download();
+                         if (!payload) {
+                             setWebdavStatus('远端文件为空/不存在(404)');
+                             this.setWebdavSyncVisualState('failed');
+                             alert('远端文件为空/不存在(404)');
+                             return;
+                         }
+                         this.dataStore.importData(payload, { notify: false, origin: 'webdav-download' });
+                         if (etag) {
+                             this.webdavSync.setState({ etag, lastSyncAt: Date.now() });
+                         }
+                         if (!this.isReaderMode) {
+                             this.applySettingsFromStore();
+                         } else {
+                             this.updateFavoriteButton();
+                             this.syncMenuSettingControls();
+                         }
+                         if (textarea) {
+                             textarea.value = this.dataStore.exportData(true);
+                         }
+                         this.updateWebdavSyncIndicators();
+                         this.setWebdavSyncVisualState('success');
+                         setWebdavStatus(`下载完成 ${new Date().toLocaleString()}`);
+                         alert('WebDAV 下载完成！');
+                     } catch (err) {
+                         console.error('WebDAV 下载失败', err);
+                         setWebdavStatus(`下载失败: ${err?.message || err}`);
+                         this.setWebdavSyncVisualState('failed');
+                         alert(`WebDAV 下载失败: ${err?.message || err}`);
+                     } finally {
+                         this.webdavSyncInFlight = false;
+                         setWebdavBusy(false);
+                     }
+                 });
+             }
+
+             if (webdavUploadBtn) {
+                 webdavUploadBtn.addEventListener('click', async () => {
+                     if (this.webdavSyncInFlight) {
+                         alert('正在同步中，请稍后再试');
+                         return;
+                     }
+                     if (!confirm('将使用本地数据覆盖 WebDAV 远端文件，是否继续？')) {
+                         return;
+                     }
+                     try {
+                         persistWebdavConfig();
+                         setWebdavBusy(true);
+                         setWebdavStatus('上传中...');
+                         this.webdavSyncInFlight = true;
+                         this.dataStore.save({ notify: false, origin: 'webdav-upload' });
+                         const payload = this.dataStore.getExportPayload();
+                         this.setWebdavSyncVisualState('syncing');
+                         const { etag } = await this.webdavSync.upload(payload);
+                         this.webdavSync.setState({ etag: etag || '', lastSyncAt: Date.now() });
+                         this.updateWebdavSyncIndicators();
+                         this.setWebdavSyncVisualState('success');
+                         setWebdavStatus(`上传完成 ${new Date().toLocaleString()}`);
+                         alert('WebDAV 上传完成！');
+                     } catch (err) {
+                         console.error('WebDAV 上传失败', err);
+                         setWebdavStatus(`上传失败: ${err?.message || err}`);
+                         this.setWebdavSyncVisualState('failed');
+                         alert(`WebDAV 上传失败: ${err?.message || err}`);
+                     } finally {
+                         this.webdavSyncInFlight = false;
+                         setWebdavBusy(false);
+                     }
+                 });
+             }
+
+             const registerClose = (element) => {
+                 if (!element) {
+                     return;
+                 }
                 element.addEventListener('click', () => {
                     closeDialog();
                 });
@@ -2364,6 +3181,8 @@
                     this.loadFavorites();
                 }
             }
+
+            this.updateWebdavSyncIndicators();
         }
 
         syncMenuSettingControls() {
@@ -2371,6 +3190,11 @@
             const sliderValue = document.getElementById('menu-preload-value');
             const cacheCountSpan = document.getElementById('menu-cache-count');
             const perPageInput = document.getElementById('menu-search-per-page');
+            const autoWebdavRow = document.getElementById('menu-auto-webdav-row');
+            const autoWebdavCheckbox = document.getElementById('menu-auto-webdav-sync');
+            const autoWebdavIntervalInput = document.getElementById('menu-auto-webdav-interval');
+            const autoWebdavState = document.getElementById('menu-auto-webdav-state');
+            const autoWebdavHint = document.getElementById('menu-auto-webdav-hint');
 
             const currentPreload = this.dataStore.getSetting('preloadCount', CONFIG.PRELOAD_COUNT);
             if (slider) {
@@ -2384,6 +3208,241 @@
             }
             if (perPageInput) {
                 perPageInput.value = this.getSearchResultsPerPage();
+            }
+
+            const config = this.webdavSync ? this.webdavSync.getConfig() : { url: '' };
+            const state = this.webdavSync ? this.webdavSync.getState() : { lastSyncAt: 0 };
+            const configured = !!(config && config.url);
+            const hasHistory = !!(state && Number(state.lastSyncAt) > 0);
+            const eligible = configured && hasHistory;
+            const intervalSec = this.getAutoWebdavSyncIntervalSeconds();
+            if (autoWebdavIntervalInput) {
+                autoWebdavIntervalInput.value = intervalSec;
+            }
+            const autoAllowed = eligible && intervalSec > 0;
+
+            if (autoAllowed && this.dataStore?.data?.settings &&
+                !Object.prototype.hasOwnProperty.call(this.dataStore.data.settings, 'autoWebdavSync')) {
+                this.dataStore.setSetting('autoWebdavSync', true, { notify: false });
+            }
+
+            const autoEnabled = !!this.dataStore.getSetting('autoWebdavSync', false);
+            if (autoWebdavCheckbox) {
+                autoWebdavCheckbox.disabled = !autoAllowed;
+                autoWebdavCheckbox.checked = autoAllowed && autoEnabled;
+            }
+            if (autoWebdavRow) {
+                autoWebdavRow.classList.toggle('disabled', !autoAllowed);
+            }
+            if (autoWebdavState) {
+                if (!configured) {
+                    autoWebdavState.textContent = '未配置';
+                } else if (!hasHistory) {
+                    autoWebdavState.textContent = '需先同步一次';
+                } else if (intervalSec <= 0) {
+                    autoWebdavState.textContent = '间隔为0：关闭';
+                } else {
+                    autoWebdavState.textContent = autoEnabled ? `已开启(${intervalSec}s)` : `已关闭(${intervalSec}s)`;
+                }
+            }
+            if (autoWebdavHint) {
+                if (!configured) {
+                    autoWebdavHint.textContent = '需先配置 WebDAV';
+                } else if (!hasHistory) {
+                    autoWebdavHint.textContent = '需先成功同步一次';
+                } else if (intervalSec <= 0) {
+                    autoWebdavHint.textContent = '间隔为 0：不会自动同步（可手动点云图标）';
+                } else {
+                    autoWebdavHint.textContent = '本地数据变动后将自动触发同步（已节流合并）';
+                }
+            }
+        }
+
+        getWebdavConfigAndState() {
+            const config = this.webdavSync ? this.webdavSync.getConfig() : { url: '' };
+            const state = this.webdavSync ? this.webdavSync.getState() : { lastSyncAt: 0 };
+            return { config, state };
+        }
+
+        isWebdavConfigured() {
+            const { config } = this.getWebdavConfigAndState();
+            return !!(config && config.url);
+        }
+
+        hasWebdavHistory() {
+            const { state } = this.getWebdavConfigAndState();
+            return !!(state && Number(state.lastSyncAt) > 0);
+        }
+
+        getAutoWebdavSyncIntervalSeconds() {
+            const raw = Number(this.dataStore.getSetting('autoWebdavSyncIntervalSec', 60));
+            if (!Number.isFinite(raw) || raw < 0) {
+                return 60;
+            }
+            return Math.min(3600, Math.floor(raw));
+        }
+
+        isWebdavAutoSyncEligible() {
+            return this.isWebdavConfigured() && this.hasWebdavHistory();
+        }
+
+        ensureAutoWebdavSyncPreference() {
+            if (!this.isWebdavAutoSyncEligible()) {
+                return;
+            }
+            if (this.getAutoWebdavSyncIntervalSeconds() <= 0) {
+                return;
+            }
+            const settings = this.dataStore?.data?.settings;
+            if (!settings || typeof settings !== 'object') {
+                return;
+            }
+            if (Object.prototype.hasOwnProperty.call(settings, 'autoWebdavSync')) {
+                return;
+            }
+            this.dataStore.setSetting('autoWebdavSync', true, { notify: false });
+        }
+
+        updateWebdavSyncIndicators() {
+            this.ensureAutoWebdavSyncPreference();
+
+            const configured = this.isWebdavConfigured();
+            const hasHistory = this.hasWebdavHistory();
+
+            if (this.webdavSyncButton) {
+                this.webdavSyncButton.disabled = !configured;
+                this.webdavSyncButton.classList.toggle('webdav-configured', configured);
+                this.webdavSyncButton.classList.toggle('webdav-history', hasHistory);
+                this.webdavSyncButton.title = !configured
+                    ? '未配置 WebDAV，同步不可用'
+                    : (hasHistory ? 'WebDAV 同步（已就绪）' : 'WebDAV 同步（尚无历史记录）');
+            }
+
+            const menu = document.getElementById('view-mode-menu');
+            if (menu && menu.style.display && menu.style.display !== 'none') {
+                this.syncMenuSettingControls();
+            }
+        }
+
+        setWebdavSyncVisualState(state) {
+            const btn = this.webdavSyncButton;
+            if (!btn) {
+                return;
+            }
+            btn.classList.remove('syncing', 'sync-success', 'sync-failed');
+            if (this.webdavSyncStatusTimer) {
+                clearTimeout(this.webdavSyncStatusTimer);
+                this.webdavSyncStatusTimer = null;
+            }
+
+            if (state === 'syncing') {
+                btn.classList.add('syncing');
+                return;
+            }
+            if (state === 'success') {
+                btn.classList.add('sync-success');
+                this.webdavSyncStatusTimer = window.setTimeout(() => {
+                    btn.classList.remove('sync-success');
+                    this.webdavSyncStatusTimer = null;
+                }, 2500);
+                return;
+            }
+            if (state === 'failed') {
+                btn.classList.add('sync-failed');
+                this.webdavSyncStatusTimer = window.setTimeout(() => {
+                    btn.classList.remove('sync-failed');
+                    this.webdavSyncStatusTimer = null;
+                }, 3500);
+            }
+        }
+
+        handleDataStoreChange(event) {
+            const origin = event && typeof event.origin === 'string' ? event.origin : '';
+            if (origin === 'webdav-sync') {
+                return;
+            }
+            this.updateWebdavSyncIndicators();
+            this.scheduleAutoWebdavSync(origin || 'data-change');
+        }
+
+        scheduleAutoWebdavSync(reason) {
+            if (!this.isWebdavAutoSyncEligible()) {
+                return;
+            }
+            const enabled = !!this.dataStore.getSetting('autoWebdavSync', false);
+            if (!enabled) {
+                return;
+            }
+            const intervalSec = this.getAutoWebdavSyncIntervalSeconds();
+            if (intervalSec <= 0) {
+                return;
+            }
+
+            if (this.webdavSyncInFlight) {
+                this.webdavAutoSyncPending = true;
+                return;
+            }
+
+            const DEBOUNCE_MS = 1200;
+            const MIN_INTERVAL_MS = intervalSec * 1000;
+            const now = Date.now();
+            const dueIn = Math.max(0, MIN_INTERVAL_MS - (now - (this.webdavLastAutoSyncStartAt || 0)));
+            const delay = Math.max(DEBOUNCE_MS, dueIn);
+
+            if (this.webdavAutoSyncTimer) {
+                clearTimeout(this.webdavAutoSyncTimer);
+            }
+            this.webdavAutoSyncTimer = window.setTimeout(async () => {
+                this.webdavAutoSyncTimer = null;
+                try {
+                    await this.triggerWebdavSync({ source: `auto:${reason || 'change'}`, isAuto: true });
+                } catch (e) {
+                    // ignore
+                }
+            }, delay);
+        }
+
+        async triggerWebdavSync({ source = 'manual', isAuto = false } = {}) {
+            if (!this.isWebdavConfigured()) {
+                this.updateWebdavSyncIndicators();
+                return null;
+            }
+            if (this.webdavSyncInFlight) {
+                this.webdavSyncQueued = true;
+                return null;
+            }
+
+            this.webdavSyncInFlight = true;
+            if (isAuto) {
+                this.webdavLastAutoSyncStartAt = Date.now();
+            }
+            this.setWebdavSyncVisualState('syncing');
+
+            try {
+                const result = await this.webdavSync.syncBidirectional();
+                if (!this.isReaderMode) {
+                    this.applySettingsFromStore();
+                } else {
+                    this.updateFavoriteButton();
+                    this.syncMenuSettingControls();
+                }
+                this.updateWebdavSyncIndicators();
+                this.setWebdavSyncVisualState('success');
+                return result;
+            } catch (err) {
+                console.error('WebDAV 同步失败', source, err);
+                this.updateWebdavSyncIndicators();
+                this.setWebdavSyncVisualState('failed');
+                throw err;
+            } finally {
+                this.webdavSyncInFlight = false;
+                if (this.webdavAutoSyncPending) {
+                    this.webdavAutoSyncPending = false;
+                    this.scheduleAutoWebdavSync('pending');
+                } else if (this.webdavSyncQueued) {
+                    this.webdavSyncQueued = false;
+                    this.scheduleAutoWebdavSync('queued');
+                }
             }
         }
 
@@ -2455,10 +3514,52 @@
             return normalized;
         }
 
-        searchDirectory() {
+        isSearchRateLimitedHtml(html) {
+            const text = typeof html === 'string' ? html : '';
+            if (!text) {
+                return false;
+            }
+            if (/搜索无结果/.test(text)) {
+                return false;
+            }
+            return (/10\s*秒/.test(text) && /搜索/.test(text)) ||
+                (/操作.*太快/.test(text) && /搜索/.test(text)) ||
+                (/please\s+wait\s+\d+\s+seconds/i.test(text) && /search/i.test(text));
+        }
+
+        shouldRetrySearchResponse(response) {
+            const status = Number(response?.status) || 0;
+            if (status === 0) {
+                return true;
+            }
+            if (status && (status < 200 || status >= 300)) {
+                return true;
+            }
+            const finalUrl = typeof response?.finalUrl === 'string' ? response.finalUrl : '';
+            if (finalUrl && !/searchid=\d+/i.test(finalUrl)) {
+                const html = typeof response?.responseText === 'string' ? response.responseText : '';
+                return this.isSearchRateLimitedHtml(html) || /System Error/i.test(html);
+            }
+            const html = typeof response?.responseText === 'string' ? response.responseText : '';
+            return this.isSearchRateLimitedHtml(html) || /System Error/i.test(html);
+        }
+
+        searchDirectory(options = {}) {
             console.log('[搜索] ===== 开始搜索合集 =====');
             const searchInput = document.getElementById('series-search');
-            const query = searchInput ? searchInput.value.trim() : '';
+            const isRetry = !!options.isRetry;
+
+            if (!isRetry) {
+                if (this.searchRetryTimer) {
+                    clearTimeout(this.searchRetryTimer);
+                    this.searchRetryTimer = null;
+                }
+                this.searchRetryRemaining = CONFIG.SEARCH_RETRY_MAX_ATTEMPTS;
+            }
+
+            const query = typeof options.queryOverride === 'string'
+                ? options.queryOverride.trim()
+                : (isRetry && this.lastSearchQuery ? this.lastSearchQuery : (searchInput ? searchInput.value.trim() : ''));
             console.log('[搜索] 搜索关键词:', query);
 
             if (!query) {
@@ -2467,7 +3568,8 @@
                 return;
             }
 
-            this.updateSeriesName(query, { persistOverride: true });
+            this.lastSearchQuery = query;
+            this.updateSeriesName(query, { persistOverride: !isRetry });
 
             const perPageSetting = this.getSearchResultsPerPage();
             this.setDirectoryLoadingMessage(`搜索中... (每页${perPageSetting}条)`);
@@ -2482,11 +3584,28 @@
                 onload: (response) => {
                     console.log('[搜索] 获取搜索页面成功，状态码:', response.status);
 
+                    const status = Number(response.status) || 0;
+                    if (status < 200 || status >= 300) {
+                        console.log('[搜索] 获取搜索页面返回非成功状态码，准备重试');
+                        this.scheduleRetry(`获取搜索页面失败(HTTP ${status || '0'})`);
+                        return;
+                    }
+
                     // 提取formhash
                     const doc = new DOMParser().parseFromString(response.responseText, 'text/html');
                     const formhashInput = doc.querySelector('input[name="formhash"]');
                     const formhash = formhashInput ? formhashInput.value : '';
                     console.log('[搜索] 提取到formhash:', formhash);
+
+                    if (!formhash) {
+                        if (this.isSearchRateLimitedHtml(response.responseText) || /System Error/i.test(response.responseText || '')) {
+                            console.log('[搜索] 搜索页面可能受限，准备重试');
+                            this.scheduleRetry('搜索受限');
+                            return;
+                        }
+                        this.showDirectoryError('搜索失败，无法获取 formhash');
+                        return;
+                    }
 
                     // 直接使用GET方式搜索（更可靠）
                     const finalSearchUrl = `https://bbs.yamibo.com/search.php?mod=forum&srchtxt=${encodeURIComponent(query)}&formhash=${formhash}&searchsubmit=yes`;
@@ -2502,10 +3621,28 @@
                             console.log('[搜索] 响应内容长度:', searchResponse.responseText.length);
 
                             // 检查是否是错误页面
-                            if (searchResponse.responseText.includes('System Error') ||
-                                searchResponse.responseText.includes('搜索无结果')) {
-                                console.log('[搜索] 错误: 搜索返回错误页面或无结果');
-                                this.showDirectoryError('搜索失败，请稍后重试');
+                            if (searchResponse.responseText.includes('搜索无结果')) {
+                                console.log('[搜索] 搜索无结果');
+                                this.searchRetryRemaining = 0;
+                                this.showDirectoryError('搜索无结果');
+                                return;
+                            }
+
+                            const finalUrl = typeof searchResponse.finalUrl === 'string' ? searchResponse.finalUrl : '';
+                            if (!/searchid=\d+/i.test(finalUrl)) {
+                                if (this.shouldRetrySearchResponse(searchResponse)) {
+                                    console.log('[搜索] 搜索受限/失败，准备重试');
+                                    this.scheduleRetry('搜索间隔限制或请求失败');
+                                } else {
+                                    console.log('[搜索] 搜索失败: 未获取到有效 searchid');
+                                    this.showDirectoryError('搜索失败，请稍后再试');
+                                }
+                                return;
+                            }
+
+                            if (this.shouldRetrySearchResponse(searchResponse)) {
+                                console.log('[搜索] 搜索受限/失败，准备重试');
+                                this.scheduleRetry('搜索间隔限制或请求失败');
                                 return;
                             }
 
@@ -2513,15 +3650,13 @@
                         },
                         onerror: (error) => {
                             console.error('[搜索] 搜索请求失败:', error);
-                            this.showDirectoryError('搜索失败，10秒后自动重试');
-                            this.scheduleRetry();
+                            this.scheduleRetry('搜索请求失败');
                         }
                     });
                 },
                 onerror: (error) => {
                     console.error('[搜索] 获取搜索页面失败:', error);
-                    this.showDirectoryError('搜索失败，10秒后自动重试');
-                    this.scheduleRetry();
+                    this.scheduleRetry('获取搜索页面失败');
                 }
             });
         }
@@ -2759,6 +3894,7 @@
                 return;
             }
 
+            listDiv.classList.remove('is-searching');
             listDiv.innerHTML = '';
             let foundCount = 0;
 
@@ -2793,7 +3929,8 @@
         setDirectoryLoadingMessage(text) {
             const listDiv = document.getElementById('directory-list');
             if (listDiv) {
-                listDiv.innerHTML = `<div class="loading">${text}</div>`;
+                listDiv.classList.add('is-searching');
+                listDiv.innerHTML = `<div class="directory-loading-icon" role="status" aria-label="loading">${ICONS.searchSpinner}</div>`;
             }
             this.currentDirectoryCount = null;
             this.updateFavoriteDirectoryCountDisplay();
@@ -2814,19 +3951,36 @@
 
         showDirectoryError(message) {
             const listDiv = document.getElementById('directory-list');
+            if (!listDiv) {
+                return;
+            }
+            listDiv.classList.remove('is-searching');
             listDiv.innerHTML = `<div class="error">${message}</div>`;
             this.currentDirectoryCount = null;
             this.updateFavoriteDirectoryCountDisplay();
         }
 
-        scheduleRetry() {
+        scheduleRetry(reason) {
             if (this.searchRetryTimer) {
                 clearTimeout(this.searchRetryTimer);
             }
 
+            const remaining = Number(this.searchRetryRemaining) || 0;
+            if (remaining <= 0) {
+                this.showDirectoryError('搜索失败，请稍后再试');
+                return;
+            }
+
+            this.searchRetryRemaining = remaining - 1;
+            const attemptNo = CONFIG.SEARCH_RETRY_MAX_ATTEMPTS - this.searchRetryRemaining;
+            const delayMs = CONFIG.SEARCH_RETRY_INTERVAL_MS;
+            const delaySec = Math.max(1, Math.round(delayMs / 100) / 10);
+            const hint = reason ? `(${reason})` : '';
+            this.setDirectoryLoadingMessage(`搜索受限，${delaySec}s 后重试 ${attemptNo}/${CONFIG.SEARCH_RETRY_MAX_ATTEMPTS} ${hint}`);
+
             this.searchRetryTimer = setTimeout(() => {
-                this.searchDirectory();
-            }, CONFIG.SEARCH_RETRY_DELAY);
+                this.searchDirectory({ isRetry: true, queryOverride: this.lastSearchQuery });
+            }, delayMs);
         }
 
         loadComments() {
@@ -3094,8 +4248,12 @@
         }
 
         #yamibo-reader-btn:hover {
-            transform: translateY(-50%) scale(1.1);
+            transform: scale(1.1);
             box-shadow: 0 12px 24px rgba(76,175,80,0.3);
+        }
+
+        #yamibo-reader-btn.default-position:hover {
+            transform: translateY(-50%) scale(1.1);
         }
 
         #yamibo-reader-btn.edge-left,
@@ -3121,6 +4279,10 @@
             display: none !important;
         }
 
+        body.yamibo-reader-active #yamibo-reader-btn {
+            display: none !important;
+        }
+
         #yamibo-reader-container {
             position: fixed;
             top: 0;
@@ -3133,7 +4295,6 @@
             display: flex;
             --main-width: 70%;
             --sidebar-width: 30%;
-            --content-scale: 1.133;
             --toolbar-height: 44px;
         }
 
@@ -3165,10 +4326,8 @@
 
         .reader-content-wrapper .reader-content {
             flex: 1;
-            width: calc(100% / var(--content-scale));
-            height: calc(100% / var(--content-scale));
-            transform: scale(var(--content-scale));
-            transform-origin: left top;
+            width: 100%;
+            height: 100%;
             min-width: 0;
             min-height: 0;
         }
@@ -3261,6 +4420,83 @@
             height: 18px;
         }
 
+        body.pg_forumdisplay .yamibo-forum-fav-icon {
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+            color: #4caf50;
+        }
+
+        body.pg_forumdisplay .yamibo-forum-fav-icon svg {
+            display: block;
+            width: 1.6em;
+            height: 1.6em;
+        }
+
+        .webdav-sync-btn {
+            position: relative;
+        }
+
+        .webdav-sync-btn svg {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+        .webdav-sync-btn svg path {
+            fill: currentColor !important;
+        }
+
+        .webdav-sync-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .webdav-sync-btn.webdav-configured {
+            opacity: 0.65;
+        }
+
+        .webdav-sync-btn.webdav-history {
+            color: var(--primary-color);
+            opacity: 1;
+        }
+
+        .webdav-sync-btn::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            background: conic-gradient(currentColor 0 240deg, transparent 240deg 360deg);
+            -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+            mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+            pointer-events: none;
+        }
+
+        .webdav-sync-btn.syncing::before {
+            opacity: 1;
+            animation: webdav-sync-spin 0.9s linear infinite;
+        }
+
+        .webdav-sync-btn.sync-success::before {
+            opacity: 1;
+            animation: none;
+            background: conic-gradient(#4caf50 0 360deg);
+        }
+
+        .webdav-sync-btn.sync-failed::before {
+            opacity: 1;
+            animation: none;
+            background: conic-gradient(#f44336 0 360deg);
+        }
+
+        @keyframes webdav-sync-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .icon-btn.favorited {
             color: var(--primary-color);
         }
@@ -3269,7 +4505,9 @@
             flex: none;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 20px;
+            padding: 16px 20px 24px;
+            --content-padding-y: 48px;
+            --reader-safe-height: calc(100vh - var(--toolbar-height) - var(--content-padding-y));
             display: flex;
             gap: 20px;
         }
@@ -3365,7 +4603,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 12px 0;
+            padding: 10px 0 18px;
+            --content-padding-y: 36px;
         }
 
         .reader-content[data-view-mode="flip-left-double"],
@@ -3373,7 +4612,8 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            padding: 12px 16px;
+            padding: 10px 16px 18px;
+            --content-padding-y: 36px;
             gap: 12px;
         }
 
@@ -3397,7 +4637,7 @@
         .reader-content[data-view-mode="scroll-right"] .image-container,
         .reader-content[data-view-mode="scroll-left"] .image-container {
             flex-shrink: 0;
-            height: calc(100vh - 120px);
+            height: var(--reader-safe-height);
             scroll-snap-align: center;
             margin: 0 6px;
         }
@@ -3406,7 +4646,7 @@
         .reader-content[data-view-mode="flip-right-double"] .image-container {
             flex: 1;
             max-width: 49%;
-            height: calc(100vh - 120px);
+            height: var(--reader-safe-height);
         }
 
         .image-container img {
@@ -3416,9 +4656,14 @@
             border-radius: 8px;
         }
 
+        .reader-content[data-view-mode="flip-left-single"] .image-container,
+        .reader-content[data-view-mode="flip-right-single"] .image-container {
+            height: var(--reader-safe-height);
+        }
+
         .reader-content[data-view-mode="flip-left-single"] .image-container img,
         .reader-content[data-view-mode="flip-right-single"] .image-container img {
-            max-height: calc(100vh - 120px);
+            max-height: 100%;
             width: auto;
         }
 
@@ -3631,6 +4876,32 @@
             flex: 1;
             overflow-y: auto;
             padding: 12px;
+        }
+
+        .directory-list.is-searching {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .directory-list .directory-loading-icon {
+            width: 44px;
+            height: 44px;
+            color: var(--text-secondary);
+            animation: yamibo-search-spin 0.9s linear infinite;
+        }
+
+        .directory-list .directory-loading-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @keyframes yamibo-search-spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .directory-item {
@@ -3936,6 +5207,44 @@
             color: var(--text-secondary);
         }
 
+        .menu-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 4px;
+        }
+
+        .menu-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .menu-toggle input[type="checkbox"] {
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .menu-toggle-state {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .menu-toggle-row.disabled {
+            opacity: 0.55;
+        }
+
+        .menu-toggle-row.disabled,
+        .menu-toggle-row.disabled .menu-toggle,
+        .menu-toggle-row.disabled .menu-toggle input[type="checkbox"] {
+            cursor: not-allowed;
+        }
+
         #menu-preload-slider {
             width: 100%;
             height: 6px;
@@ -4007,7 +5316,7 @@
             color: var(--text-primary);
             box-shadow: var(--shadow-3);
             border-radius: 12px;
-            width: min(520px, 100%);
+            width: min(640px, 100%);
             max-width: 90vw;
             display: flex;
             flex-direction: column;
@@ -4081,6 +5390,72 @@
             color: var(--text-secondary);
         }
 
+        .data-transfer-section {
+            border-top: 1px solid var(--divider);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .data-transfer-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .data-transfer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .data-transfer-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .data-transfer-input {
+            width: 100%;
+            border: 1px solid var(--divider);
+            border-radius: 8px;
+            padding: 10px 12px;
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+        .data-transfer-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(76,175,80,0.2);
+        }
+
+        .data-transfer-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .data-transfer-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .data-transfer-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .data-transfer-hint code {
+            font-family: Consolas, 'Courier New', monospace;
+            background: rgba(0,0,0,0.05);
+            padding: 1px 6px;
+            border-radius: 6px;
+        }
+
         .data-transfer-footer {
             display: flex;
             justify-content: flex-end;
@@ -4147,16 +5522,83 @@
         }
     `);
 
+        function yieldToMainThread() {
+            return new Promise(resolve => {
+                if (typeof requestIdleCallback === 'function') {
+                    requestIdleCallback(() => resolve(), { timeout: 200 });
+                } else {
+                    setTimeout(resolve, 0);
+                }
+            });
+        }
+
+        async function initForumFavoriteMarkers(dataStore) {
+            const threadListTable = document.getElementById('threadlisttableid');
+            if (!threadListTable) {
+                return;
+            }
+
+            const favorites = dataStore.getAllFavorites();
+            const favoriteTitles = (favorites || [])
+                .map(fav => (fav && typeof fav.seriesTitle === 'string' ? fav.seriesTitle : ''))
+                .filter(Boolean);
+
+            const matcher = createFavoriteTitleMatcher(favoriteTitles);
+            if (!matcher) {
+                return;
+            }
+
+            const titleLinks = Array.from(threadListTable.querySelectorAll('a.s.xst'));
+            if (titleLinks.length === 0) {
+                return;
+            }
+
+            const markerTemplate = document.createElement('span');
+            markerTemplate.className = 'yamibo-forum-fav-icon';
+            markerTemplate.innerHTML = ICONS.bookmarkFilled;
+
+            const CHUNK_SIZE = 80;
+
+            for (let i = 0; i < titleLinks.length; i++) {
+                const link = titleLinks[i];
+                if (!link || link.dataset.yamiboFavChecked === '1') {
+                    continue;
+                }
+                link.dataset.yamiboFavChecked = '1';
+
+                if (link.previousElementSibling && link.previousElementSibling.classList &&
+                    link.previousElementSibling.classList.contains('yamibo-forum-fav-icon')) {
+                    continue;
+                }
+
+                const rawTitle = typeof link.textContent === 'string' ? link.textContent.trim() : '';
+                if (rawTitle && matcher(rawTitle)) {
+                    const marker = markerTemplate.cloneNode(true);
+                    link.parentNode.insertBefore(marker, link);
+                }
+
+                if ((i + 1) % CHUNK_SIZE === 0) {
+                    await yieldToMainThread();
+                }
+            }
+        }
+
     // =========================
     // 初始化
     // =========================
     function init() {
+        const dataStore = new DataStore();
+
+        if (isForumListPage()) {
+            initForumFavoriteMarkers(dataStore);
+            return;
+        }
+
         const parser = new ContentParser();
         if (!parser.threadId) {
             return;
         }
 
-        const dataStore = new DataStore();
         new ReaderUI(parser, dataStore);
     }
 

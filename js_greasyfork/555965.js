@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SPOG Alert Console
 // @namespace    http://tampermonkey.net/
-// @version      2025-11-30
+// @version      2026-1-15
 // @description  waaaa
 // @author       Stamos
 // @match        https://spog.neonova.net/*
@@ -240,6 +240,7 @@
                         <strong>Type:</strong> ${a.type}<br/>
                         <strong>Start Time:</strong> ${prettifyTime(a.startTime, a.timeZone)}<br/>
                         <strong>ETA:</strong> ${getEndTime(prettifyTime(a.endTime, a.timeZone))}<br/>
+                        <strong>Action:</strong> ${a.ticket}<br/>
                         <strong>Message:</strong><br/>
                         ${a.content}
                     </div>

@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         98堂-预览
-// @version      1.11.3
+// @version      1.11.5
 // @namespace    https://sleazyfork.org/zh-CN/users/1461640-%E6%98%9F%E5%AE%BF%E8%80%81%E9%AD%94
 // @author       星宿老魔
-// @description  98堂[原色花堂]增强：图片预览 · 无缝翻页
+// @description  98堂[原色花堂]增强：图片预览-无缝翻页-搜索页优化
 // @match        https://*.sehuatang.net/*
 // @match        https://*.sehuatang.org/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sehuatang.org
@@ -362,7 +362,7 @@
   _ImageLoader.MAX_CONCURRENT = 8, _ImageLoader.loadingCount = 0, _ImageLoader.queue = [], 
   _ImageLoader.preconnectedHosts = new Set;
   let ImageLoader = _ImageLoader;
-  class UIComponents {
+  const _UIComponents = class {
     static createToggleSwitch(label, options) {
       const container = document.createElement("div");
       container.style.display = "flex", container.style.alignItems = "center";
@@ -379,6 +379,25 @@
         enabled = input.checked, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
         enabled ? options.onEnable() : options.onDisable();
       }), input.checked = enabled, enabled && options.onEnable(), container;
+    }
+    static createButtonSwitch(label, options) {
+      const button = document.createElement("button");
+      button.style.cssText = "\n      padding: 4px 12px;\n      background: #f0f0f0;\n      border: 1px solid #ccc;\n      border-radius: 4px;\n      cursor: pointer;\n      font-size: 13px;\n      color: #333;\n      transition: all 0.2s;\n      display: flex;\n      align-items: center;\n      gap: 4px;\n    ";
+      const storedValue = localStorage.getItem(options.storageKeyEnabled);
+      let enabled = null === storedValue ? options.defaultEnabled ?? !1 : "true" === storedValue;
+      const updateUI = () => {
+        enabled ? (button.style.background = "#e3f2fd", button.style.borderColor = "#2196F3", 
+        button.style.color = "#1976D2", button.innerHTML = `✅ ${label}`) : (button.style.background = "#f0f0f0", 
+        button.style.borderColor = "#ccc", button.style.color = "#333", button.innerHTML = `⚪ ${label}`);
+      };
+      return button.addEventListener("mouseenter", () => {
+        enabled || (button.style.background = "#e0e0e0");
+      }), button.addEventListener("mouseleave", () => {
+        enabled || (button.style.background = "#f0f0f0");
+      }), button.addEventListener("click", e => {
+        e.preventDefault(), enabled = !enabled, localStorage.setItem(options.storageKeyEnabled, String(enabled)), 
+        updateUI(), enabled ? options.onEnable() : options.onDisable();
+      }), updateUI(), enabled && setTimeout(() => options.onEnable(), 0), button;
     }
     static setupSearchTitleContainer() {
       const titleContainer = document.querySelector(".sttl.mbn");
@@ -531,9 +550,43 @@
       const titleContainer = this.setupSearchTitleContainer();
       if (!titleContainer) return;
       const controlsContainer = document.createElement("div");
-      controlsContainer.style.display = "flex", controlsContainer.style.alignItems = "center";
-      const toggleSwitch = this.createToggleSwitch("无缝翻页", infiniteScrollOptions);
-      controlsContainer.appendChild(toggleSwitch), titleContainer.appendChild(controlsContainer);
+      controlsContainer.style.display = "flex", controlsContainer.style.alignItems = "center", 
+      controlsContainer.style.gap = "12px";
+      const filterBtn = document.createElement("button");
+      filterBtn.id = "sht-search-filter-btn", filterBtn.innerHTML = "🔍 搜索过滤", filterBtn.style.cssText = "\n      padding: 4px 12px;\n      background: #f0f0f0;\n      border: 1px solid #ccc;\n      border-radius: 4px;\n      cursor: pointer;\n      font-size: 13px;\n      color: #333;\n      transition: all 0.2s;\n    ", 
+      filterBtn.addEventListener("mouseenter", () => filterBtn.style.background = "#e0e0e0"), 
+      filterBtn.addEventListener("mouseleave", () => filterBtn.style.background = "#f0f0f0"), 
+      filterBtn.addEventListener("click", () => this.showFilterPanel()), controlsContainer.appendChild(filterBtn);
+      const infiniteScrollBtn = this.createButtonSwitch("无缝翻页", infiniteScrollOptions);
+      controlsContainer.appendChild(infiniteScrollBtn), titleContainer.appendChild(controlsContainer);
+    }
+    static showFilterPanel() {
+      const existingPanel = document.getElementById("sht-filter-panel"), existingOverlay = document.getElementById("sht-filter-overlay");
+      if (existingPanel) return existingPanel.remove(), void existingOverlay?.remove();
+      const overlay = document.createElement("div");
+      overlay.id = "sht-filter-overlay", overlay.style.cssText = "position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 99998;";
+      const panel = document.createElement("div");
+      panel.id = "sht-filter-panel", panel.style.cssText = "\n      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);\n      background: #fff; border-radius: 12px; padding: 24px; z-index: 99999;\n      box-shadow: 0 8px 32px rgba(0,0,0,0.3); width: 620px; max-width: 90vw;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      max-height: 85vh; overflow-y: auto;\n    ";
+      const filteredForumsStr = localStorage.getItem("sht-filtered-forums"), filteredForums = filteredForumsStr ? JSON.parse(filteredForumsStr) : [];
+      let html = `\n      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 16px;">\n        <h3 style="margin: 0; font-size: 18px; color: #333;">🔍 搜索结果过滤</h3>\n        <button id="sht-filter-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; line-height: 1;">&times;</button>\n      </div>\n      \n      <div style="margin-bottom: 20px; padding: 12px; background: #fff8e1; border-radius: 8px; border: 1px solid #ffe082;">\n        <label style="display: flex; align-items: center; cursor: pointer; font-weight: 600; color: #795548; font-size: 14px;">\n          <input type="checkbox" id="sht-filter-hide-posts" ${"false" !== localStorage.getItem("sht-hide-posts-enabled") ? "checked" : ""} style="margin-right: 10px; width: 16px; height: 16px;">\n          自动过滤隐藏贴 (含回复可见、权限不足等)\n        </label>\n      </div>\n\n      <div style="font-size: 14px; font-weight: 600; color: #666; margin-bottom: 12px;">勾选以下板块将从搜索结果中隐藏：</div>\n      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">\n    `;
+      this.FORUM_DATA.forEach((group, idx) => {
+        html += `\n        <div style="background: #fcfcfc; border: 1px solid #f0f0f0; border-radius: 8px; padding: 12px;">\n          <div style="font-weight: 600; color: #333; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">\n            <span style="font-size: 13px;">${group.group}</span>\n            <span style="font-size: 11px; color: #2196F3; cursor: pointer; padding: 2px 6px; background: #e3f2fd; border-radius: 4px;" class="sht-group-toggle" data-idx="${idx}">全选</span>\n          </div>\n          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">\n            ${group.items.map(forum => `\n              <label style="font-size: 12px; color: #555; display: flex; align-items: center; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${forum.name}">\n                <input type="checkbox" class="sht-forum-checkbox" value="${forum.id}" ${filteredForums.includes(forum.id) ? "checked" : ""} style="margin-right: 6px; width: 14px; height: 14px;">\n                ${forum.name}\n              </label>\n            `).join("")}\n          </div>\n        </div>\n      `;
+      }), html += '\n      </div>\n      <div style="display: flex; gap: 12px; margin-top: 24px;">\n        <button id="sht-filter-save" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #2196F3, #1976D2); \n          color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;">\n          ✓ 应用设置\n        </button>\n        <button id="sht-filter-cancel" style="padding: 12px 20px; background: #f5f5f5; color: #666; \n          border: 1px solid #ddd; border-radius: 8px; font-size: 15px; cursor: pointer;">\n          取消\n        </button>\n      </div>\n    ', 
+      panel.innerHTML = html, document.body.appendChild(overlay), document.body.appendChild(panel);
+      const close = () => {
+        overlay.remove(), panel.remove();
+      };
+      panel.querySelector("#sht-filter-close")?.addEventListener("click", close), panel.querySelector("#sht-filter-cancel")?.addEventListener("click", close), 
+      overlay.addEventListener("click", close), panel.querySelectorAll(".sht-group-toggle").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const groupDiv = e.target.closest("div")?.parentElement, checkboxes = groupDiv?.querySelectorAll(".sht-forum-checkbox"), allChecked = Array.from(checkboxes).every(cb => cb.checked);
+          checkboxes.forEach(cb => cb.checked = !allChecked), e.target.textContent = allChecked ? "全选" : "取消全选";
+        });
+      }), panel.querySelector("#sht-filter-save")?.addEventListener("click", () => {
+        const selectedForums = Array.from(panel.querySelectorAll(".sht-forum-checkbox:checked")).map(cb => cb.value), isHidePostsEnabled = panel.querySelector("#sht-filter-hide-posts").checked;
+        localStorage.setItem("sht-filtered-forums", JSON.stringify(selectedForums)), localStorage.setItem("sht-hide-posts-enabled", String(isHidePostsEnabled)), 
+        close(), location.reload();
+      });
     }
     static createSearchPageDualToggles(infiniteScrollOptions, removeHiddenOptions) {
       const titleContainer = this.setupSearchTitleContainer();
@@ -603,7 +656,168 @@
         });
       });
     }
-  }
+  };
+  _UIComponents.FORUM_DATA = [ {
+    group: "在线视频区",
+    items: [ {
+      id: "41",
+      name: "国产自拍"
+    }, {
+      id: "109",
+      name: "中文字幕"
+    }, {
+      id: "42",
+      name: "日韩无码"
+    }, {
+      id: "43",
+      name: "日韩有码"
+    }, {
+      id: "44",
+      name: "欧美风情"
+    }, {
+      id: "45",
+      name: "卡通动漫"
+    }, {
+      id: "46",
+      name: "剧情三级"
+    }, {
+      id: "149",
+      name: "鲍鱼视频"
+    } ]
+  }, {
+    group: "原创BT电影",
+    items: [ {
+      id: "2",
+      name: "国产原创"
+    }, {
+      id: "36",
+      name: "亚洲无码原创"
+    }, {
+      id: "37",
+      name: "亚洲有码原创"
+    }, {
+      id: "107",
+      name: "三级写真"
+    }, {
+      id: "103",
+      name: "高清中文字幕"
+    }, {
+      id: "160",
+      name: "VR视频区"
+    }, {
+      id: "104",
+      name: "素人有码系列"
+    }, {
+      id: "38",
+      name: "欧美无码"
+    }, {
+      id: "151",
+      name: "4K原版"
+    }, {
+      id: "152",
+      name: "韩国主播"
+    }, {
+      id: "39",
+      name: "动漫原创"
+    }, {
+      id: "148",
+      name: "鲍鱼直播盒子"
+    } ]
+  }, {
+    group: "原档收藏",
+    items: [ {
+      id: "145",
+      name: "自提字幕区"
+    }, {
+      id: "146",
+      name: "自译字幕区"
+    }, {
+      id: "121",
+      name: "字幕分享区"
+    }, {
+      id: "159",
+      name: "新作区"
+    } ]
+  }, {
+    group: "色花图片",
+    items: [ {
+      id: "155",
+      name: "原创自拍区"
+    }, {
+      id: "125",
+      name: "转贴自拍"
+    }, {
+      id: "50",
+      name: "华人街拍区"
+    }, {
+      id: "48",
+      name: "亚洲性爱"
+    }, {
+      id: "49",
+      name: "欧美性爱"
+    }, {
+      id: "117",
+      name: "卡通动漫"
+    }, {
+      id: "165",
+      name: "套图下载"
+    } ]
+  }, {
+    group: "色花文学",
+    items: [ {
+      id: "154",
+      name: "原创小说"
+    }, {
+      id: "135",
+      name: "乱伦人妻"
+    }, {
+      id: "137",
+      name: "青春校园"
+    }, {
+      id: "138",
+      name: "武侠虚幻"
+    }, {
+      id: "136",
+      name: "激情都市"
+    }, {
+      id: "139",
+      name: "TXT小说下载"
+    } ]
+  }, {
+    group: "综合讨论区",
+    items: [ {
+      id: "95",
+      name: "综合讨论区"
+    }, {
+      id: "166",
+      name: "AI专区"
+    }, {
+      id: "141",
+      name: "网友原创区"
+    }, {
+      id: "170",
+      name: "个人导航"
+    }, {
+      id: "142",
+      name: "转帖交流区"
+    }, {
+      id: "143",
+      name: "求片问答悬赏区"
+    }, {
+      id: "96",
+      name: "投诉建议区"
+    }, {
+      id: "97",
+      name: "资源出售区"
+    }, {
+      id: "167",
+      name: "失效贴回收"
+    }, {
+      id: "157",
+      name: "投稿送邀请码"
+    } ]
+  } ];
+  let UIComponents = _UIComponents;
   function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -1266,12 +1480,15 @@
   }
   class SearchContentProcessor {
     static async processSearchContainer(container, useHighPriorityCache = !1) {
-      return await this.displaySearchPreviews(container, useHighPriorityCache), container.querySelectorAll(".pbw").length;
+      return container.querySelectorAll(".pbw").forEach(pbwContainer => {
+        this.isHiddenPost(pbwContainer) && pbwContainer.remove();
+      }), await this.displaySearchPreviews(container, useHighPriorityCache), container.querySelectorAll(".pbw").length;
     }
     static async displaySearchPreviews(container, useHighPriorityCache = !1) {
       const postLinks = container.querySelectorAll(".xs3 a"), validLinks = Array.from(postLinks).filter(link => {
         const pbwContainer = link.closest(".pbw");
-        return link.href && link.href.includes("thread") && pbwContainer && !pbwContainer.classList.contains("hidden-transparent");
+        return !!pbwContainer && (this.isHiddenPost(pbwContainer) ? (pbwContainer.remove(), 
+        !1) : link.href && link.href.includes("thread") && !pbwContainer.classList.contains("hidden-transparent"));
       }), concurrencyManager = new ConcurrencyManager(CONFIG.get("concurrencyLimit")), processResults = [], fetchPromises = validLinks.map(link => concurrencyManager.addTask(async () => {
         try {
           const threadURL = link.href, pbwContainer = link.closest(".pbw");
@@ -1320,10 +1537,21 @@
     }
     static handleInvalidAndHiddenPosts(processResults) {
       processResults.filter(result => !result.hasContent && !result.processed).forEach(result => {
-        result.isHidden && result.pbwContainer.remove();
+        result.isHidden && result.pbwContainer.parentElement && result.pbwContainer.remove();
       });
     }
     static isHiddenPost(pbwContainer) {
+      try {
+        const filteredForumsStr = localStorage.getItem("sht-filtered-forums"), filteredForums = filteredForumsStr ? JSON.parse(filteredForumsStr) : [];
+        if (filteredForums.length > 0) {
+          const forumLink = pbwContainer.querySelector('a[href^="forum-"]');
+          if (forumLink) {
+            const match = (forumLink.getAttribute("href") || "").match(/forum-(\d+)-/);
+            if (match && filteredForums.includes(match[1])) return !0;
+          }
+        }
+      } catch (e) {}
+      if ("false" === localStorage.getItem("sht-hide-posts-enabled")) return !1;
       const text = pbwContainer.textContent || "", hasHiddenKeywords = [ "该主题需要回复才能浏览", "内容隐藏需要，请点击进去查看", "隐藏内容", "此帖被隐藏", "权限不足", "积分不足", "回复可见", "购买主题", "付费内容", "需要权限", "您无权访问", "内容隐藏需要" ].some(keyword => text.includes(keyword)), hasHiddenElements = !!(pbwContainer.querySelector(".locked") || pbwContainer.querySelector(".permission-denied") || pbwContainer.querySelector(".reply-to-view")), titleText = pbwContainer.querySelector(".xs3 a")?.textContent || "", hasTitleHiddenKeywords = titleText.includes("隐藏") || titleText.includes("权限") || titleText.includes("回复可见") || titleText.includes("积分不足");
       return hasHiddenKeywords || hasHiddenElements || hasTitleHiddenKeywords;
     }

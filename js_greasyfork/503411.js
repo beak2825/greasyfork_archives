@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         种审按钮
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @author       您的名字
 // @match        https://springsunday.net/details.php*
 // @match        https://springsunday.net/edit.php?*
@@ -115,7 +115,7 @@
 
     function getImdbId() {
         const link = document.querySelector('.title .name a[href*="imdb.com/title/tt"]') ||
-                     document.querySelector('a[href*="imdb.com/title/tt"]');
+              document.querySelector('a[href*="imdb.com/title/tt"]');
         return link?.href.match(/(tt\d+)/)?.[1] || null;
     }
 
@@ -243,7 +243,30 @@
             const btn = document.createElement("button");
             btn.textContent = "提交编辑";
             btn.className = "tm-btn tm-green tm-abs";
-            btn.onclick = (e) => { e.preventDefault(); form.submit(); };
+
+            btn.onclick = (e) => {
+                e.preventDefault();
+
+                // ============ 修改重点 ============
+                // 1. 根据你提供的 HTML，优先查找 id="qr" 的按钮
+                // 2. 如果页面结构变动找不到 id，再退而求其次找 type="submit"
+                const originalSubmitBtn = document.getElementById('qr') || form.querySelector("input[type='submit']");
+
+                if (originalSubmitBtn) {
+                    // 视觉反馈
+                    btn.textContent = "提交中...";
+                    btn.className += " tm-disabled";
+
+                    // 模拟点击，触发网站原本的数据同步和提交逻辑
+                    originalSubmitBtn.click();
+                } else {
+                    // 坚决不使用 form.submit() 保底，直接报错提示
+                    alert("错误：未找到原网页的提交按钮（id='qr'），无法安全提交。");
+                    console.error("UserScript Error: Target button #qr or input[type=submit] not found.");
+                }
+            };
+            // ============ 修改结束 ============
+
             form.appendChild(btn);
         }
     }

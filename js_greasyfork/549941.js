@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced property
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.4.1
+// @version      1.4.3
 // @description  Alle öffnen | Alle schließen | Alle speichern | value-editor mit cat-parameter-Links (schnellere Suche) | Bestehende Werte ansehen | Artikelbezeichnungen laden
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel/property*
@@ -180,10 +180,6 @@
 
     // === NEU: Bestehende Werte ansehen Buttons ===
 
-    // Globale Queue für sequentielle Verarbeitung
-    let viewValuesQueue = [];
-    let isProcessingViewValues = false;
-
     function findShareButtonInForm(form) {
         // Finde den Share-Button (mit bi-share-fill Icon) in der Form
         const shareButtons = form.querySelectorAll('button.btn-outline-primary');
@@ -195,25 +191,38 @@
         return null;
     }
 
-    function createViewValuesButton(id) {
-        const link = document.createElement('a');
-        link.href = `https://opus.geizhals.at/kalif/artikel/property/value?id=${id}`;
+    function createViewValuesButton(form) {
+        const link = document.createElement('button');
         link.className = 'btn btn-outline-info btn-sm ms-2';
-        link.setAttribute('role', 'button');
-        link.setAttribute('tabindex', '0');
+        link.setAttribute('type', 'button');
         link.textContent = 'Bestehende Werte ansehen';
         link.setAttribute('data-view-values-btn', 'true');
-        link.target = '_blank';
-        return link;
-    }
 
-    async function extractIdFromShareButtonSequential(shareButton) {
-        // Warte bis Tab fokussiert ist
-        if (!document.hasFocus()) {
-            await waitForTabFocus();
-        }
+        // Event-Handler für Klick - extrahiert ID und öffnet Link
+        link.addEventListener('click', async (e) => {
+            e.preventDefault();
 
-        return new Promise((resolve) => {
+            const originalText = link.textContent;
+            link.textContent = 'Lade...';
+            link.disabled = true;
+
+            // Warte bis Tab fokussiert ist
+            if (!document.hasFocus()) {
+                await waitForTabFocus();
+            }
+
+            const shareButton = findShareButtonInForm(form);
+            if (!shareButton) {
+                link.textContent = 'Fehler';
+                link.className = 'btn btn-danger btn-sm ms-2';
+                setTimeout(() => {
+                    link.textContent = originalText;
+                    link.className = 'btn btn-outline-info btn-sm ms-2';
+                    link.disabled = false;
+                }, 2000);
+                return;
+            }
+
             // Klicke den Share-Button
             const clickEvent = new MouseEvent('click', {
                 bubbles: true,
@@ -223,13 +232,39 @@
             shareButton.dispatchEvent(clickEvent);
 
             // Warte und lese die Zwischenablage
-            setTimeout(() => {
-                navigator.clipboard.readText().then(clipboardText => {
+            setTimeout(async () => {
+                try {
+                    const clipboardText = await navigator.clipboard.readText();
                     const match = clipboardText.match(/[?&]id=(\d+)/);
-                    resolve(match ? match[1] : null);
-                }).catch(() => resolve(null));
+
+                    if (match) {
+                        const id = match[1];
+                        const url = `https://opus.geizhals.at/kalif/artikel/property/value?id=${id}`;
+                        window.open(url, '_blank');
+                        link.textContent = originalText;
+                        link.disabled = false;
+                    } else {
+                        link.textContent = 'ID nicht gefunden';
+                        link.className = 'btn btn-warning btn-sm ms-2';
+                        setTimeout(() => {
+                            link.textContent = originalText;
+                            link.className = 'btn btn-outline-info btn-sm ms-2';
+                            link.disabled = false;
+                        }, 2000);
+                    }
+                } catch (error) {
+                    link.textContent = 'Fehler';
+                    link.className = 'btn btn-danger btn-sm ms-2';
+                    setTimeout(() => {
+                        link.textContent = originalText;
+                        link.className = 'btn btn-outline-info btn-sm ms-2';
+                        link.disabled = false;
+                    }, 2000);
+                }
             }, 150);
         });
+
+        return link;
     }
 
     function waitForTabFocus() {
@@ -245,40 +280,6 @@
             };
             window.addEventListener('focus', focusHandler);
         });
-    }
-
-    async function processViewValuesQueue() {
-        if (isProcessingViewValues) return;
-        if (viewValuesQueue.length === 0) return;
-
-        // Warte bis Tab fokussiert ist bevor Verarbeitung startet
-        if (!document.hasFocus()) {
-            await waitForTabFocus();
-        }
-
-        isProcessingViewValues = true;
-
-        while (viewValuesQueue.length > 0) {
-            const { buttonRow, form } = viewValuesQueue.shift();
-
-            // Prüfe ob Button bereits existiert
-            if (buttonRow.querySelector('[data-view-values-btn]')) continue;
-
-            const shareButton = findShareButtonInForm(form);
-            if (!shareButton) continue;
-
-            const id = await extractIdFromShareButtonSequential(shareButton);
-
-            if (id && !buttonRow.querySelector('[data-view-values-btn]')) {
-                const viewValuesBtn = createViewValuesButton(id);
-                buttonRow.appendChild(viewValuesBtn);
-            }
-
-            // Kurze Pause zwischen den Verarbeitungen
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-
-        isProcessingViewValues = false;
     }
 
     function addViewValuesButtons() {
@@ -307,19 +308,13 @@
 
             if (!buttonRow) continue;
 
-            // Prüfe ob Button bereits existiert oder in Queue
+            // Prüfe ob Button bereits existiert
             if (buttonRow.querySelector('[data-view-values-btn]')) continue;
-            if (buttonRow.hasAttribute('data-view-values-queued')) continue;
 
-            // Markiere als in Queue
-            buttonRow.setAttribute('data-view-values-queued', 'true');
-
-            // Füge zur Queue hinzu
-            viewValuesQueue.push({ buttonRow, form });
+            // Erstelle den Button (ohne ID-Extraktion)
+            const viewValuesBtn = createViewValuesButton(form);
+            buttonRow.appendChild(viewValuesBtn);
         }
-
-        // Starte Verarbeitung
-        processViewValuesQueue();
     }
 
     // === Ende NEU ===
@@ -977,12 +972,65 @@
         }
     }
 
+    function createCopyValuesButton() {
+        const btn = document.createElement('button');
+        btn.id = 'copy-values-btn';
+        btn.className = 'btn btn-outline-light btn-sm ms-2';
+        btn.setAttribute('type', 'button');
+        btn.title = 'Alle Werte kopieren';
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" class="bi bi-clipboard"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg>';
+
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            const rows = getValueTableRows();
+            const values = [];
+
+            for (const row of rows) {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 2) continue;
+
+                const valueCell = cells[1];
+                const valueText = valueCell.textContent.trim();
+
+                if (valueText) {
+                    values.push(valueText);
+                }
+            }
+
+            if (values.length === 0) {
+                btn.title = 'Keine Werte gefunden';
+                return;
+            }
+
+            try {
+                await navigator.clipboard.writeText(values.join('\r\n'));
+
+                // Visuelles Feedback
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="14" height="14" fill="currentColor" class="bi bi-clipboard-check"><path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0z"/><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/></svg>';
+                btn.className = 'btn btn-success btn-sm ms-2';
+                btn.title = `${values.length} Werte kopiert`;
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.className = 'btn btn-outline-light btn-sm ms-2';
+                    btn.title = 'Alle Werte kopieren';
+                }, 1500);
+            } catch (error) {
+                btn.title = 'Fehler beim Kopieren';
+            }
+        });
+
+        return btn;
+    }
+
     async function initPropertyValuePage() {
         if (!isPropertyValuePage) return;
 
-        // Prüfe ob Button oder Status bereits existiert
-        if (document.getElementById('load-article-names-btn')) return;
-        if (document.getElementById('load-article-names-status')) return;
+        // Prüfe ob Buttons bereits existieren
+        if (document.getElementById('copy-values-btn')) return;
 
         // Finde den "Wert" Header
         const wertHeader = findWertHeaderCell();
@@ -992,12 +1040,36 @@
         const headerDiv = wertHeader.querySelector('div.d-flex');
         if (!headerDiv) return;
 
-        // Erstelle Status-Element
+        // Finde das "Wert" span und den Sortierbutton
+        const wertSpan = headerDiv.querySelector('span:first-child');
+        const sortButton = headerDiv.querySelector('span.rotate--90');
+
+        // Erstelle einen linken Wrapper für "Wert" + Kopierbutton (bleiben zusammen)
+        const leftWrapper = document.createElement('div');
+        leftWrapper.className = 'd-flex align-items-center';
+
+        // Verschiebe das Wert-Span in den Wrapper
+        if (wertSpan) {
+            headerDiv.insertBefore(leftWrapper, wertSpan);
+            leftWrapper.appendChild(wertSpan);
+        }
+
+        // Erstelle Kopierbutton (direkt neben "Wert")
+        const copyBtn = createCopyValuesButton();
+        leftWrapper.appendChild(copyBtn);
+
+        // Erstelle Status-Element für Datentyp-Prüfung
         const statusEl = document.createElement('span');
         statusEl.id = 'load-article-names-status';
         statusEl.className = 'badge bg-secondary ms-2';
         statusEl.textContent = 'Prüfe Datentyp...';
-        headerDiv.appendChild(statusEl);
+
+        // Füge Status vor dem Sortierbutton ein
+        if (sortButton) {
+            headerDiv.insertBefore(statusEl, sortButton);
+        } else {
+            headerDiv.appendChild(statusEl);
+        }
 
         // Prüfe ob data_type "Artikel Referenz" ist (async)
         const isArtikelReferenz = await checkIfDataTypeIsArtikelReferenz();
@@ -1007,9 +1079,13 @@
 
         if (!isArtikelReferenz) return;
 
-        // Erstelle und füge Button hinzu
+        // Erstelle und füge "Artikelbezeichnungen laden" Button hinzu
         const btn = createLoadArticleNamesButton();
-        headerDiv.appendChild(btn);
+        if (sortButton) {
+            headerDiv.insertBefore(btn, sortButton);
+        } else {
+            headerDiv.appendChild(btn);
+        }
 
         btn.addEventListener('click', loadArticleNames);
     }

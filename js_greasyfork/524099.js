@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         翱翔教务功能加强
 // @namespace    http://tampermonkey.net/
-// @version      1.6.5
+// @version      1.6.6
 // @description  1.提供GPA分析报告；2. 导出课程成绩与教学班排名；3.更好的“学生画像”显示；4.选课助手；5.课程关注与后台同步；6.一键自动评教；7.人员信息检索
 // @author       47
 // @match        https://jwxt.nwpu.edu.cn/*
@@ -791,8 +791,8 @@ modal.innerHTML = `
                         <li><b>第一步：数据同步与缓存</b><br>
                         点击悬浮球 <span class="gm-tag-hl">存储最新学期课程数据</span>，脚本将同步该学期内已选课程人数，该数据用于辅助判断课程内置情况。此操作是使用选课助手及容量参考功能的前置条件，建议在<b>每轮选课前</b>手动同步。</li>
 
-                        <li><b>第二步：课程关注与排课</b><br>
-                        在“全校开课查询”或“培养方案”页面，点击课程旁的 <span style="color:#dcdfe6;font-size:14px;">❤</span> 图标收藏课程。<br>
+                        <li><b>第二步：课程关注与排课辅助</b><br>
+                        在“全校开课查询”、“培养方案”或“选课”页面，点击课程旁的 <span style="color:#dcdfe6;font-size:14px;">❤</span> 图标收藏课程。<br>
                         通过悬浮球的 <span class="gm-tag-hl">课程关注列表</span> 进入<b>“课表视图”</b>，可直观比对备选课程的时间分布，辅助进行排课规划。</li>
 
                         <li><b>第三步：选课界面增强</b><br>
@@ -824,15 +824,29 @@ modal.innerHTML = `
             </div>
 
             <div class="gm-help-section">
-                <div class="gm-help-title">4. 设置与隐私</div>
+                <div class="gm-help-title">4. 人员信息检索</div>
                 <div class="gm-help-content">
-                    <li>所有数据（关注列表、课程缓存）仅存储在您浏览器的 LocalStorage 中，不会上传至任何服务器。</li>
+                    <li>点击悬浮球中 <span class="gm-tag-hl">人员信息检索</span>功能，输入姓名/学号/工号，可快速查询同名人员、所属学院及学/工号。
+                </div>
+            </div>
+
+            <div class="gm-help-section">
+                <div class="gm-help-title">5. 自动评教</div>
+                <div class="gm-help-content">
+                    <li>点击悬浮球中 <span class="gm-tag-hl">跳转至评教页面</span>功能，在评教页面发布自动评教任务，即可一键评教（功能暂时测试中，敬请期待）。
+                </div>
+            </div>
+
+            <div class="gm-help-section">
+                <div class="gm-help-title">6. 设置与隐私</div>
+                <div class="gm-help-content">
+                    <li>所有数据（关注列表、课程缓存）仅存储在您浏览器的 LocalStorage 中，不会收集您的任何个人信息。</li>
                     <li>若不需要学生画像增强或课程关注功能，可在悬浮球菜单中随时关闭。</li>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; color: #999; font-size: 12px;">
-                祝您学业进步！<br>
+            <div style="text-align: center; margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; color: #aaa; font-size: 12px;">
+                版本: ${GM_info.script.version} &nbsp;|&nbsp; 祝您学业进步，科研顺利！
             </div>
         </div>`
     ;
@@ -3212,40 +3226,106 @@ function initProgramPageEnhancement() {
 
 // =-=-=-=-=-=-=-=-=-=-=-=-= 2.10 选课时间提醒 =-=-=-=-=-=-=-=-=-=-=-=-=
 function initScheduleWidget() {
-    // 1. 配置区域
-    const EXPIRATION_DATE = new Date('2026-03-07T00:00:00').getTime();
-    const STORAGE_KEY = 'jwxt_schedule_table_closed_2026_spring';
-    let hasManuallyClosedThisTime = false;
+    // ================= 配置区域 (维护请修改此处) =================
+    const SCHEDULE_CONFIG = {
+        // 插件整体失效时间 (超过此时间不再显示)
+        EXPIRATION_DATE: '2026-03-07T00:00:00',
+        // 本地存储Key (用于不再提醒)
+        STORAGE_KEY: 'jwxt_schedule_table_closed_2026_spring',
+        // 选课地址
+        COURSE_URL: 'https://jwxt.nwpu.edu.cn/student/for-std/course-select',
+        // 提前N小时提示同步数据
+        PRE_NOTIFY_HOURS: 160,
 
-    // 定义选课时间段数据
-    const PERIODS = [
-        { name: '正选第一轮', start: '2026-01-12T14:00:00', end: '2026-01-15T12:00:00' },
-        { name: '正选第二轮', start: '2026-01-19T14:00:00', end: '2026-01-21T12:00:00' },
-        { name: '正选第三轮', start: '2026-01-23T08:00:00', end: '2026-01-25T12:00:00' },
-        { name: '补选 / 本研共选', start: '2026-03-02T09:00:00', end: '2026-03-06T16:00:00' }
-    ];
+        // 选课阶段配置 (支持自动生成表格)
+        // type: 'positive' (正选) | 'makeup' (补选/其他) -> 用于判断是否触发考前数据同步提示
+        GROUPS: [
+            {
+                groupName: '正选', // 表格第一列名称
+                phases: [
+                    { name: '第一轮', type: 'positive', start: '2026-01-12T14:00:00', end: '2026-01-15T12:00:00', method: '意愿值选课', scope: '主修专业课' },
+                    { name: '第二轮', type: 'positive', start: '2026-01-19T14:00:00', end: '2026-01-21T12:00:00', method: '意愿值选课', scope: '学期教学计划全部课程' },
+                    { name: '第三轮', type: 'positive', start: '2026-01-23T08:00:00', end: '2026-01-25T12:00:00', method: '直选选课', scope: '学期教学计划全部课程' }
+                ]
+            },
+            {
+                groupName: '补选',
+                phases: [
+                    { name: '补选阶段', type: 'makeup', start: '2026-03-02T09:00:00', end: '2026-03-06T16:00:00', method: '系统中申请', scope: '学期开设的全部课程' },
+                    { name: '本研共选', type: 'makeup', start: '2026-03-02T09:00:00', end: '2026-03-06T16:00:00', method: '直选选课', scope: '学期开设的本研共选课程' }
+                ]
+            }
+        ]
+    };
+    // ===========================================================
 
-    // 2. 初始化逻辑
     const showWidget = () => {
-        if (GM_getValue(STORAGE_KEY, false) === true) return;
-        if (hasManuallyClosedThisTime) return;
+        if (GM_getValue(SCHEDULE_CONFIG.STORAGE_KEY, false) === true) return;
+        // 避免单次页面刷新内重复关闭后弹出
+        if (window.gm_schedule_manually_closed) return;
 
         const now = Date.now();
-        if (now > EXPIRATION_DATE) return;
+        const expirationTime = new Date(SCHEDULE_CONFIG.EXPIRATION_DATE).getTime();
+
+        if (now > expirationTime) return;
         if (document.querySelector('.gm-schedule-box')) return;
 
-        // 计算当前状态
+        // --- 1. 计算当前状态 & 构建表格行 ---
         let statusHtml = '<span style="color: #909399;">当前未处于选课时段</span>';
-        for (const period of PERIODS) {
-            const startTime = new Date(period.start).getTime();
-            const endTime = new Date(period.end).getTime();
-            if (now >= startTime && now <= endTime) {
-                statusHtml = `当前处于 <span style="color: #f56c6c; font-weight: bold; border-bottom: 2px solid #f56c6c;">${period.name}</span>`;
-                break;
-            }
-        }
+        let showPreSyncLink = false; // 是否显示同步链接
+        let tableRowsHtml = '';
 
-        // 注入样式
+        // 扁平化遍历所有阶段以检查时间
+        let activePhaseFound = false;
+
+        SCHEDULE_CONFIG.GROUPS.forEach((group, gIndex) => {
+            group.phases.forEach((phase, pIndex) => {
+                const startTime = new Date(phase.start).getTime();
+                const endTime = new Date(phase.end).getTime();
+                const preStartTime = startTime - (SCHEDULE_CONFIG.PRE_NOTIFY_HOURS * 60 * 60 * 1000);
+
+                // A. 检查状态: 进行中
+                if (!activePhaseFound && now >= startTime && now <= endTime) {
+                    statusHtml = `当前处于 <span style="color: #f56c6c; font-weight: bold; border-bottom: 2px solid #f56c6c;">${group.groupName} - ${phase.name}</span>`;
+                    activePhaseFound = true;
+                }
+                // B. 检查状态: 即将开始 (正选前N小时提示)
+                else if (!activePhaseFound && phase.type === 'positive' && now >= preStartTime && now < startTime) {
+                    const hoursLeft = Math.ceil((startTime - now) / 3600000);
+                    statusHtml = `<span style="color: #E65100; font-weight:bold;">${group.groupName}${phase.name}</span> 将于 ${hoursLeft} 小时后开始。` +
+                                 `<span id="gm-sch-pre-sync" style="color:#409EFF; cursor:pointer; text-decoration:underline; font-weight:bold; margin-left:10px;">[建议您点击此处记录课程内置情况]</span>`;
+                    showPreSyncLink = true;
+                    activePhaseFound = true;
+                }
+
+                // C. 构建表格行
+                // 格式化时间显示 (移除年份，保留 月-日 时:分)
+                const formatTime = (isoStr) => {
+                    const d = new Date(isoStr);
+                    return `${d.getMonth() + 1}月${d.getDate()}日 ${d.getHours()}点`;
+                };
+                const timeStr = `${formatTime(phase.start)} 至 ${formatTime(phase.end)}`;
+
+                tableRowsHtml += `<tr>`;
+                // 处理第一列的 Rowspan (合并单元格)
+                if (pIndex === 0) {
+                    const borderStyle = gIndex > 0 ? 'border-top:2px solid #ebeef5;' : '';
+                    tableRowsHtml += `<td rowspan="${group.phases.length}" style="font-weight:bold; ${borderStyle}">${group.groupName}</td>`;
+                }
+
+                // 高亮选课方式
+                const methodClass = phase.method.includes('意愿值') || phase.method.includes('直选') ? 'gm-sch-highlight' : '';
+
+                tableRowsHtml += `
+                    <td>${phase.name}</td>
+                    <td>${timeStr}</td>
+                    <td class="${methodClass}">${phase.method}</td>
+                    <td>${phase.scope}</td>
+                </tr>`;
+            });
+        });
+
+        // --- 2. 注入样式 ---
         if (!document.getElementById('gm-schedule-table-style')) {
             const style = document.createElement('style');
             style.id = 'gm-schedule-table-style';
@@ -3257,16 +3337,12 @@ function initScheduleWidget() {
                     border: 1px solid #dcdfe6;
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                     animation: gmSlideUp 0.5s ease-out;
-                    width: auto; max-width: 650px;
+                    width: auto; max-width: 680px;
                 }
                 .gm-status-bar {
-                    text-align: center;
-                    background: #fdf6ec;
-                    padding: 6px;
-                    border-radius: 4px;
-                    margin-bottom: 10px;
-                    font-size: 13px;
-                    border: 1px inset #faecd8;
+                    text-align: center; background: #fdf6ec; padding: 8px;
+                    border-radius: 4px; margin-bottom: 10px; font-size: 13px;
+                    border: 1px inset #faecd8; line-height: 1.5;
                 }
                 .gm-sch-table {
                     width: 100%; border-collapse: collapse; font-size: 12px; color: #333;
@@ -3275,47 +3351,40 @@ function initScheduleWidget() {
                 .gm-sch-table th, .gm-sch-table td {
                     border: 1px solid #ebeef5; padding: 6px 8px; text-align: center; vertical-align: middle;
                 }
-                .gm-sch-table th {
-                    background-color: #f5f7fa; font-weight: bold; color: #606266;
-                }
-                .gm-sch-highlight {
-                    color: #409EFF; font-weight: bold;
-                }
+                .gm-sch-table th { background-color: #f5f7fa; font-weight: bold; color: #606266; }
+                .gm-sch-highlight { color: #409EFF; font-weight: bold; }
                 .gm-schedule-footer {
                     display: flex; justify-content: space-between; align-items: center;
                     font-size: 12px; color: #909399; margin-top: 8px;
                 }
-                /* 按钮组样式 */
                 .gm-sch-btn-group { display: flex; gap: 10px; }
                 .gm-schedule-btn {
                     border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer;
                     font-size: 12px; transition: opacity 0.2s; color: white;
                 }
                 .gm-btn-close { background: #f56c6c; }
-                .gm-btn-go { background: #409EFF; } /* 蓝色跳转按钮 */
+                .gm-btn-go { background: #409EFF; }
                 .gm-schedule-btn:hover { opacity: 0.8; }
-
+                #gm-sch-pre-sync:hover { color: #66b1ff; }
                 @keyframes gmSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
             `;
             document.head.appendChild(style);
         }
 
-        // 构建表格 HTML
+        // --- 3. 构建容器 HTML ---
         const div = document.createElement('div');
         div.className = 'gm-schedule-box';
         div.innerHTML = `
-            <div style="font-weight:bold; font-size:14px; margin-bottom:8px; color:#303133; text-align:center;">2025-2026学年春季选课安排</div>
+            <div style="font-weight:bold; font-size:14px; margin-bottom:8px; color:#303133; text-align:center;">
+                选课时间安排表
+            </div>
             <div class="gm-status-bar">${statusHtml}</div>
             <table class="gm-sch-table">
                 <thead>
                     <tr><th>选课阶段</th><th>选课轮次</th><th>时间安排</th><th>选课方式</th><th>课程范围</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td rowspan="3" style="font-weight:bold;">正选</td><td>第一轮</td><td>1月12日14点 至 15日12点</td><td class="gm-sch-highlight">意愿值选课</td><td>主修专业课</td></tr>
-                    <tr><td>第二轮</td><td>1月19日14点 至 21日12点</td><td class="gm-sch-highlight">意愿值选课</td><td>学期教学计划全部课程</td></tr>
-                    <tr><td>第三轮</td><td>1月23日8点 至 25日12点</td><td class="gm-sch-highlight">直选选课</td><td>学期教学计划全部课程</td></tr>
-                    <tr><td rowspan="2" style="font-weight:bold; border-top:2px solid #ebeef5;">补选</td><td>补选阶段</td><td>3月2日9点 至 6日16点</td><td class="gm-sch-highlight">系统中申请</td><td>学期开设的全部课程</td></tr>
-                    <tr><td>本研共选</td><td>3月2日9点 至 6日16点</td><td class="gm-sch-highlight">直选选课</td><td>学期开设的本研共选课程</td></tr>
+                    ${tableRowsHtml}
                 </tbody>
             </table>
             <div class="gm-schedule-footer">
@@ -3323,7 +3392,6 @@ function initScheduleWidget() {
                     <input type="checkbox" id="gm-schedule-check" style="margin-right:6px;">
                     不再显示此安排
                 </label>
-                <!-- [修改] 按钮组 -->
                 <div class="gm-sch-btn-group">
                     <button class="gm-schedule-btn gm-btn-go" id="gm-schedule-go-btn">进入选课</button>
                     <button class="gm-schedule-btn gm-btn-close" id="gm-schedule-close-btn">关闭</button>
@@ -3332,18 +3400,33 @@ function initScheduleWidget() {
         `;
         document.body.appendChild(div);
 
-        // 事件绑定
+        // --- 4. 事件绑定 ---
+        // 绑定同步数据的点击事件
+        if (showPreSyncLink) {
+            const syncLink = document.getElementById('gm-sch-pre-sync');
+            if (syncLink) {
+                syncLink.onclick = () => {
+                    // 调用全局定义的同步函数
+                    if (typeof handleSyncCourseClick === 'function') {
+                        handleSyncCourseClick();
+                    } else {
+                        alert("同步功能初始化中，请稍后再试。");
+                    }
+                };
+            }
+        }
+
         // 跳转选课页面
         document.getElementById('gm-schedule-go-btn').onclick = () => {
-            window.location.href = 'https://jwxt.nwpu.edu.cn/student/for-std/course-select';
+            window.location.href = SCHEDULE_CONFIG.COURSE_URL;
         };
 
         // 关闭
         document.getElementById('gm-schedule-close-btn').onclick = () => {
             if (document.getElementById('gm-schedule-check').checked) {
-                GM_setValue(STORAGE_KEY, true);
+                GM_setValue(SCHEDULE_CONFIG.STORAGE_KEY, true);
             }
-            hasManuallyClosedThisTime = true;
+            window.gm_schedule_manually_closed = true;
             div.remove();
         };
     };
@@ -3358,7 +3441,9 @@ function initScheduleWidget() {
         const iframes = document.querySelectorAll('iframe');
         let hasActiveSubPage = false;
         for (let f of iframes) {
-            if (f.id && f.id.startsWith('gm_')) continue;
+            // 忽略插件自己创建的 iframe
+            if (f.id && (f.id.startsWith('gm_') || f.style.visibility === 'hidden')) continue;
+            // 检测是否有可见的大型iframe覆盖
             if (f.offsetParent !== null && f.offsetHeight > 300 && f.offsetWidth > 300) {
                 hasActiveSubPage = true;
                 break;
@@ -3369,8 +3454,9 @@ function initScheduleWidget() {
         } else {
             hideWidget();
         }
-    }, 500);
+    }, 1000); // 稍微放宽检查间隔
 
+    // 首次立即检查
     if (window.location.href.includes('/student/home')) showWidget();
 }
 

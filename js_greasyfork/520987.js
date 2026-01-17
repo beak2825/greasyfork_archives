@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         质量部脚本
 // @namespace    http://tampermonkey.net/
-// @version      202510310
+// @version      202601150
 // @description  Bug分析脚本
 // @author       You
 // @match        http://*/zentao/*.html
@@ -33,7 +33,7 @@
     if(window.location.href.includes('/bug-create-')){
          caseAdjust()
     }
-    if(window.location.href.includes('/bug-view-')||window.location.href.includes('bug-browse-')){
+    if(window.location.href.includes('/bug-view-')||window.location.href.includes('bug-browse-')||window.location.href.includes('project-bug-')){
         loadScript('http://192.168.10.51:51084/bug-review.js')
     }
     if(window.location.href.includes('testcase-view')||window.location.href.includes('testcase-view')){

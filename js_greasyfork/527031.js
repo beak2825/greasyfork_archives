@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SLS Tuesday
 // @namespace    http://tampermonkey.net/
-// @version      2.7.20
+// @version      2.7.21
 // @description  Trailers
 // @author       Ange & Sturm
 // @match        https://video.dmm.co.jp/av/list/*
@@ -2570,7 +2570,7 @@ const ACTRESSES_FULL = [
   { "jpName": "塩見彩", "name": "Aya Shiomi", "threadId": "1399882060063047720" },
   { "jpName": "月乃あや", "name": "Aya Tsukino" },
   { "jpName": "上羽絢", "name": "Aya Ueha", "threadId": "1197562767465529384" },
-  { "jpName": "三雲彩葉", "name": "Ayaha Mikumo" },
+  { "jpName": "三雲彩葉", "name": "Ayaha Mikumo", "threadId": "1461819255262679283" },
   { "jpName": "雨宮あや花", "name": "Ayaka Amamiya" },
   { "jpName": "朝日奈肖", "name": "Ayaka Asahina", "threadId": "1450570198800400642" },
   { "jpName": "双葉あゆか", "name": "Ayaka Futaba" },
@@ -2942,7 +2942,7 @@ const ACTRESSES_FULL = [
   { "jpName": "小宵こなん", "name": "Konan Koyoi", "threadId": "1197502839702954015" },
   { "jpName": "柏木こなつ", "name": "Konatsu Kashiwagi", "threadId": "1308333682573967433" },
   { "jpName": "清水こなつ", "name": "Konatsu Shimizu", "threadId": "1356300845645299932" },
-  { "jpName": "新田好実", "name": "Konomi Nitta" },
+  { "jpName": "新田好実", "name": "Konomi Nitta", "threadId": "1461821875448713278" },
   { "jpName": "綾瀬ことは", "name": "Kotoha Ayase" },
   { "jpName": "姫野ことめ", "name": "Kotome Himeno" },
   { "jpName": "綾瀬ことね", "name": "Kotone Ayase", "threadId": "1434937933508378777" },
@@ -2965,6 +2965,7 @@ const ACTRESSES_FULL = [
   { "jpName": "雛形くるみ", "name": "Kurumi Hinagata" },
   { "jpName": "桃瀬くるみ", "name": "Kurumi Momose" },
   { "jpName": "百田くるみ", "name": "Kurumi Momota", "threadId": "1404854559272206446" },
+  { "jpName": "大和田来望", "name": "Kurumi Oowada" },
   { "jpName": "白森くるみ", "name": "Kurumi Shiramori", "threadId": "1373048670932435057" },
   { "jpName": "瀧本くるみ", "name": "Kurumi Takimoto", "threadId": "1431116050065522789"  },
   { "jpName": "玉木くるみ", "name": "Kurumi Tamaki" },
@@ -3101,7 +3102,7 @@ const ACTRESSES_FULL = [
   { "jpName": "雪代美鳳", "name": "Miho Yukishiro", "threadId": "1252465102758871051" },
   { "jpName": "美雛みい", "name": "Mii Mihina" },
   { "jpName": "若月みいな", "name": "Miina Wakatsuki" },
-  { "jpName": "弥みいさ", "name": "Miisa Amane" },
+  { "jpName": "弥みいさ", "name": "Miisa Amane", "threadId": "1461624195124560116" },
   { "jpName": "東実果", "name": "Mika Azuma", "threadId": "1386126204737818755" },
   { "jpName": "知良みか", "name": "Mika Chira", "threadId": "1386121615535902731" },
   { "jpName": "御子柴美花", "name": "Mika Mikoshiba" },
@@ -3163,7 +3164,7 @@ const ACTRESSES_FULL = [
   { "jpName": "愛上みお", "name": "Mio Aiue" },
   { "jpName": "朝日奈みお", "name": "Mio Asahina" },
   { "jpName": "藤子みお", "name": "Mio Fujiko" },
-  { "jpName": "花咲澪", "name": "Mio Hanasaki" },
+  { "jpName": "花咲澪", "name": "Mio Hanasaki", "threadId": "1461820884682670111" },
   { "jpName": "雛鶴みお", "name": "Mio Hinazuru" },
   { "jpName": "一条みお", "name": "Mio Ichijo", "threadId": "1309531023624765523" },
   { "jpName": "石川澪", "name": "Mio Ishikawa", "threadId": "1197472636113010698" },
@@ -3427,7 +3428,7 @@ const ACTRESSES_FULL = [
   { "jpName": "夏目玲香", "name": "Reika Natsume", "threadId": "1410381501111210177" },
   { "jpName": "重盛れいか", "name": "Reika Shigemori", "threadId": "1457759054670594089" },
   { "jpName": "武田怜香", "name": "Reika Takeda", "threadId": "1247470562016755733" },
-  { "jpName": "豊田怜花", "name": "Reika Toyota" },
+  { "jpName": "豊田怜花", "name": "Reika Toyota", "threadId": "1461820179041484820" },
   { "jpName": "若菜れいか", "name": "Reika Wakana" },
   { "jpName": "小早川怜子", "name": "Reiko Kobayakawa", "threadId": "1211168714183934004" },
   { "jpName": "峰玲子", "name": "Reiko Mine", "threadId": "1340672923433697363" },
@@ -3539,7 +3540,7 @@ const ACTRESSES_FULL = [
   { "jpName": "泉りおん", "name": "Rion Izumi" },
   { "jpName": "桜井リオン", "name": "Rion Sakurai" },
   { "jpName": "白咲璃音", "name": "Rion Shirosaki" },
-  { "jpName": "広瀬りおな", "name": "Riona Hirose" },
+  { "jpName": "広瀬りおな", "name": "Riona Hirose", "threadId": "1461825595959939164"  },
   { "jpName": "真奈りおな", "name": "Riona Mana" },
   { "jpName": "愛葉りり", "name": "Riri Aiba" },
   { "jpName": "愛望莉里", "name": "Riri Aimochi" },
@@ -3671,7 +3672,7 @@ const ACTRESSES_FULL = [
   { "jpName": "新セリナ", "name": "Serina Arata" },
   { "jpName": "堤セリナ", "name": "Serina Tsutsumi" },
   { "jpName": "臼井瀬理奈", "name": "Serina Usui" },
-  { "jpName": "花咲しほ", "name": "Shiho Hanasaki" },
+  { "jpName": "花咲しほ", "name": "Shiho Hanasaki", "threadId": "1461625917683273860" },
   { "jpName": "森下志歩", "name": "Shiho Morishita" },
   { "jpName": "平手志帆梨", "name": "Shihori Hirate" },
   { "jpName": "佐藤しお", "name": "Shio Sato" },

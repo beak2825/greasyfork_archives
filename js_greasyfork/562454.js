@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         CRM Calls Tracker
 // @namespace    http://tampermonkey.net/
-// @version      9
-// @description  Дополнение к ЦРМ в виде статистики + мотивационные уведомления
+// @version      11
+// @description  Дополнение к ЦРМ в виде статистики + мотивационные уведомления + детализация
 // @author       voodoo_lT
 // @match        https://hgh03.mamoth.club/app/*
 // @license MIT
@@ -38,7 +38,9 @@
 
     let managerKey      = 'UNKNOWN_MANAGER';
     let currentStatsKey = 'stats_UNKNOWN_MANAGER';
+    let currentDetailsKey = 'details_UNKNOWN_MANAGER';
     let stats           = {};
+    let statusDetails   = {}; // Детальная информация по каждому статусу
     let currentDayKey   = '';
     let isCollapsed     = GM_getValue('crm_tracker_collapsed', false);
     let animationInProgress = false;
@@ -50,20 +52,26 @@
             if (name && name.length > 0 && name !== managerKey) {
                 managerKey = name;
                 currentStatsKey = 'stats_' + name.replace(/\s+/g, '*');
+                currentDetailsKey = 'details_' + name.replace(/\s+/g, '*');
                 currentDayKey = 'currentDay*' + name;
                 console.log(`Менеджер определён: ${managerKey}`);
 
                 let storedDay = GM_getValue(currentDayKey, '');
                 stats = GM_getValue(currentStatsKey, {});
+                statusDetails = GM_getValue(currentDetailsKey, {});
 
                 const today = getTodayKey();
                 if (storedDay !== today) {
                     stats = {};
-                    STATUS_NAMES.forEach(n => stats[n] = 0);
+                    statusDetails = {};
+                    STATUS_NAMES.forEach(n => {
+                        stats[n] = 0;
+                        statusDetails[n] = [];
+                    });
                     GM_setValue(currentStatsKey, stats);
+                    GM_setValue(currentDetailsKey, statusDetails);
                     GM_setValue(currentDayKey, today);
 
-                    // Сбрасываем счётчики уведомлений при смене дня
                     lastPassportCount = 0;
                     lastCallCheckMilestone = 0;
                 }
@@ -81,31 +89,35 @@
     }
 
     function checkDayChange() {
-    if (!managerKey || managerKey === 'UNKNOWN_MANAGER') return;
+        if (!managerKey || managerKey === 'UNKNOWN_MANAGER') return;
 
-    const today = getTodayKey();
-    const storedDay = GM_getValue(currentDayKey, '');
+        const today = getTodayKey();
+        const storedDay = GM_getValue(currentDayKey, '');
 
-    if (storedDay !== today) {
-        console.log('📅 Наступили новые сутки — сбрасываем статистику');
+        if (storedDay !== today) {
+            console.log('📅 Наступили новые сутки — сбрасываем статистику');
 
-        stats = {};
-        STATUS_NAMES.forEach(name => stats[name] = 0);
+            stats = {};
+            statusDetails = {};
+            STATUS_NAMES.forEach(name => {
+                stats[name] = 0;
+                statusDetails[name] = [];
+            });
 
-        GM_setValue(currentStatsKey, stats);
-        GM_setValue(currentDayKey, today);
+            GM_setValue(currentStatsKey, stats);
+            GM_setValue(currentDetailsKey, statusDetails);
+            GM_setValue(currentDayKey, today);
 
-        // Сброс счётчиков уведомлений
-        lastPassportCount = 0;
-        lastCallCheckMilestone = 0;
-        shownReminders = [];
-        GM_setValue('shown_reminders_today', []);
-        GM_setValue('last_reminder_day', today);
+            lastPassportCount = 0;
+            lastCallCheckMilestone = 0;
+            shownReminders = [];
+            GM_setValue('shown_reminders_today', []);
+            GM_setValue('last_reminder_day', today);
 
-        updateWidget();
+            updateWidget();
+        }
     }
 
-    }
     function getTotal() {
         return Object.values(stats).reduce((a, b) => a + b, 0);
     }
@@ -113,15 +125,33 @@
     function resetTodayStats() {
         if (confirm(`Сбросить статистику за сегодня для ${managerKey}?`)) {
             stats = {};
-            STATUS_NAMES.forEach(name => stats[name] = 0);
+            statusDetails = {};
+            STATUS_NAMES.forEach(name => {
+                stats[name] = 0;
+                statusDetails[name] = [];
+            });
             GM_setValue(currentStatsKey, stats);
+            GM_setValue(currentDetailsKey, statusDetails);
 
-            // Сбрасываем счётчики уведомлений
             lastPassportCount = 0;
             lastCallCheckMilestone = 0;
 
             updateWidget();
         }
+    }
+
+    // Функция для извлечения номера телефона из DOM
+ function getCurrentPhoneNumber() {
+    // 1. Самый точный вариант — ищем именно в форме текущего клиента
+    const mainInput = document.querySelector('input.form-control[type="text"][id^="phone_number-client-"]');
+    if (mainInput && mainInput.value && mainInput.value.trim().startsWith('+')) {
+        return mainInput.value.trim();
+    }
+
+        // Пробуем найти по паттерну номера телефона
+        const bodyText = document.body.innerText;
+        const phoneMatch = bodyText.match(/\+?\d{10,15}/);
+        return phoneMatch ? phoneMatch[0] : 'Неизвестный номер';
     }
 
     let lastUpdateTime = 0;
@@ -133,23 +163,40 @@
         if (STATUS_NAMES.includes(statusName)) {
             const oldValue = stats[statusName] || 0;
             stats[statusName] = oldValue + 1;
+
+            // Сохраняем детальную информацию
+            if (!statusDetails[statusName]) {
+                statusDetails[statusName] = [];
+            }
+
+            const phoneNumber = getCurrentPhoneNumber();
+            const timestamp = new Date().toLocaleString('ru-RU', {
+                timeZone: 'Europe/Kiev',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            statusDetails[statusName].push({
+                phone: phoneNumber,
+                time: timestamp,
+                fullDate: new Date().toISOString()
+            });
+
             GM_setValue(currentStatsKey, stats);
+            GM_setValue(currentDetailsKey, statusDetails);
 
-            // Проверяем мотивационные уведомления
             checkMotivationalNotifications(statusName, oldValue);
-
             setTimeout(updateWidget, 50);
         }
     }
 
-    // Проверка и показ мотивационных уведомлений
     function checkMotivationalNotifications(statusName, oldValue) {
         const total = getTotal();
         const passportCount = stats['Взял паспорт'] || 0;
         const passportCutCount = stats['Срез на паспорте'] || 0;
         const noAnswerCount = stats['Не дозвон'] || 0;
 
-        // 1. Уведомление при увеличении "Взял паспорт"
         if (statusName === 'Взял паспорт' && passportCount > lastPassportCount) {
             setTimeout(() => {
                 alert(getRandomMessage(successMessages));
@@ -157,12 +204,10 @@
             lastPassportCount = passportCount;
         }
 
-        // 2. Проверки после 100 звонков
         if (total >= 100) {
             const passportCutPercent = (passportCutCount / total) * 100;
             const noAnswerPercent = (noAnswerCount / total) * 100;
 
-            // 2a. Проверка на низкую конверсию (каждые 50 звонков)
             if (Math.floor(total / 50) > lastCallCheckMilestone) {
                 lastCallCheckMilestone = Math.floor(total / 50);
 
@@ -173,7 +218,6 @@
                 }
             }
 
-            // 2b. Проверка на высокий процент недозвонов (один раз при достижении)
             const noAnswerCheckKey = 'no_answer_alert_shown_' + getTodayKey();
             if (noAnswerPercent > 55 && !GM_getValue(noAnswerCheckKey, false)) {
                 setTimeout(() => {
@@ -184,7 +228,62 @@
         }
     }
 
-    // ── Создание виджета ────────────────────────────────────────────────
+    // Функция показа детальной информации
+    function showStatusDetails(statusName) {
+        const details = statusDetails[statusName] || [];
+
+        if (details.length === 0) {
+            alert(`По статусу "${statusName}" нет данных`);
+            return;
+        }
+
+        // Создаем модальное окно
+        const modal = document.createElement('div');
+        modal.id = 'status-details-modal';
+
+        const detailsList = details
+            .slice()
+            .reverse() // Показываем последние записи сверху
+            .map((item, index) => `
+                <div class="detail-item">
+                    <span class="detail-number">${index + 1}.</span>
+                    <span class="detail-phone">${item.phone}</span>
+                    <span class="detail-time">${item.time}</span>
+                </div>
+            `)
+            .join('');
+
+        modal.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>${statusName}</h3>
+                        <button class="modal-close">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="details-count">Всего записей: ${details.length}</div>
+                        <div class="details-list">
+                            ${detailsList}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Закрытие модального окна
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay')) {
+                modal.remove();
+            }
+        });
+    }
+
     function createWidget() {
         if (document.getElementById('calls-tracker-small')) return;
 
@@ -251,18 +350,18 @@
             }
             .header-buttons {
                 display: flex;
-                gap: 8px;
+                gap: 6px;
             }
             #toggle-collapse, #reset-btn, #screenshot-reminder {
                 width: 24px;
                 height: 24px;
                 border: none;
-                border-radius: 50%;
+                border-radius: 25%;
                 background: rgba(255,255,255,0.07);
                 color: #aaaaff;
-                font-size: 15px;
+                font-size: 14px;
                 cursor: pointer;
-                opacity: 0.8;
+                opacity: 1;
                 transition: all 0.18s;
             }
             #toggle-collapse:hover, #reset-btn:hover, #screenshot-reminder:hover {
@@ -272,9 +371,10 @@
             }
             #screenshot-reminder {
                 font-size: 13px;
+                display: none !important;
             }
             #reset-btn {
-                display: none;
+                display: none !important;
             }
             .body-content {
                 padding: 12px 14px;
@@ -329,8 +429,8 @@
             .legend {
                 display: flex;
                 flex-direction: column;
-                gap: 6px;
-                margin-bottom: 10px;
+                gap: 0.3px;
+                margin-bottom: 0px;
             }
             .legend-item {
                 display: flex;
@@ -339,6 +439,11 @@
                 transition: opacity 0.45s ease;
                 cursor: pointer;
                 font-size: 11.8px;
+                padding: 4px;
+                border-radius: 4px;
+            }
+            .legend-item:hover {
+                background: rgba(255,255,255,0.05);
             }
             .legend-item.dimmed {
                 opacity: 0.25;
@@ -377,14 +482,106 @@
                 font-weight: 500;
                 margin-top: 6px;
             }
-            /* Скрываем кнопку ручного скриншота */
-            #screenshot-reminder {
-                display: none !important;
-            }
 
-            /* Скрываем кнопку очистки статистики */
-            #reset-btn {
-                display: none !important;
+            /* Модальное окно */
+            #status-details-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 9999999;
+            }
+            .modal-overlay {
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.75);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(4px);
+            }
+            .modal-content {
+                background: rgba(20, 20, 38, 0.98);
+                border-radius: 12px;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+                border: 1px solid rgba(110,130,240,0.3);
+            }
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 16px 20px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+            .modal-header h3 {
+                margin: 0;
+                color: #f0f0ff;
+                font-size: 18px;
+                font-weight: 800;
+            }
+            .modal-close {
+                width: 35px;
+    height: 35px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 32px;          /* равно высоте кнопки */
+    text-align: center;         /* горизонталь */
+    background: rgba(255,255,255,0.1);
+    border-radius: 25%;
+    border: none;
+    color: #fff;
+    padding: 0;
+    transition: all 0.2s;
+
+            }
+            .modal-close:hover {
+                background: rgba(255,255,255,0.2);
+                transform: rotate(90deg);
+            }
+            .modal-body {
+                padding: 20px;
+                overflow-y: auto;
+                color: #f0f0ff;
+            }
+            .details-count {
+                font-size: 14px;
+                margin-bottom: 16px;
+                color: #b0b0ff;
+                font-weight: 500;
+            }
+            .details-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+            .detail-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 10px 12px;
+                background: rgba(255,255,255,0.05);
+                border-radius: 6px;
+                font-size: 13px;
+            }
+            .detail-number {
+                color: #8888ff;
+                font-weight: 600;
+                min-width: 24px;
+            }
+            .detail-phone {
+                flex: 1;
+                font-family: monospace;
+                color: #e0e0ff;
+            }
+            .detail-time {
+                color: #a0a0ff;
+                font-size: 12px;
             }
         `;
         document.head.appendChild(style);
@@ -394,8 +591,6 @@
         document.getElementById('screenshot-reminder').addEventListener('click', showScreenshotReminder);
 
         setTimeout(adjustHeight, 50);
-
-        // Запускаем систему напоминаний
         initScreenshotReminders();
     }
 
@@ -490,6 +685,12 @@
                     <div class="legend-text">${item.name}</div>
                     <div class="legend-count">${item.count} (${percent}%)</div>
                 `;
+
+                // Добавляем обработчик клика для показа деталей
+                div.addEventListener('click', () => {
+                    showStatusDetails(item.name);
+                });
+
                 legend.appendChild(div);
             });
         }
@@ -522,7 +723,6 @@
     let lastPassportCount = 0;
     let lastCallCheckMilestone = 0;
 
-    // Мотивационные сообщения
     const successMessages = [
         "Отлично, продолжай в том же духе!",
         "Так держать, молодцом!",
@@ -536,21 +736,17 @@
         "Раздупляйся!"
     ];
 
-    // Функция получения случайного сообщения
     function getRandomMessage(messages) {
         return messages[Math.floor(Math.random() * messages.length)];
     }
 
-    // Функция показа напоминания о скриншоте
     function showScreenshotReminder() {
         if (confirm('📸 Сделай скриншот и поделись статистикой')) {
             console.log('Пользователь подтвердил напоминание о скриншоте');
         }
     }
 
-    // Инициализация системы напоминаний
     function initScreenshotReminders() {
-        // Проверяем, не новый ли день
         const today = getTodayKey();
         const lastReminderDay = GM_getValue('last_reminder_day', '');
 
@@ -560,21 +756,16 @@
             GM_setValue('last_reminder_day', today);
         }
 
-        // Проверяем время каждую минуту
         checkReminderTime();
-        reminderCheckInterval = setInterval(checkReminderTime, 60000); // каждую минуту
+        reminderCheckInterval = setInterval(checkReminderTime, 60000);
     }
 
-    // Проверка времени для напоминаний
     function checkReminderTime() {
         const now = new Date();
-
-        // Получаем киевское время (UTC+2 зимой, UTC+3 летом)
         const kyivTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Kiev' }));
         const hours = kyivTime.getHours();
         const minutes = kyivTime.getMinutes();
 
-        // Времена напоминаний: 9:59, 11:59, 15:59, 17:59
         const reminderTimes = [
             { hour: 9, minute: 59 },
             { hour: 11, minute: 59 },
@@ -586,7 +777,6 @@
             const timeKey = `${time.hour}:${time.minute}`;
 
             if (hours === time.hour && minutes === time.minute) {
-                // Проверяем, не показывали ли уже это напоминание сегодня
                 if (!shownReminders.includes(timeKey)) {
                     showScreenshotReminder();
                     shownReminders.push(timeKey);
@@ -599,19 +789,15 @@
     function highlightStatus(activeName) {
         if (animationInProgress) return;
 
-        // Отменяем предыдущий таймаут если быстро переключаемся
         if (highlightTimeout) {
             clearTimeout(highlightTimeout);
         }
 
         const pie = document.getElementById('pie-chart');
 
-        // Небольшая задержка для плавности при быстром переключении
         highlightTimeout = setTimeout(() => {
-            // Добавляем класс для анимации увеличения
             pie.classList.add('highlighting');
 
-            // Затемняем все элементы легенды кроме активного
             document.querySelectorAll('.legend-item').forEach(it => {
                 if (it.dataset.status === activeName) {
                     it.classList.add('active');
@@ -631,14 +817,12 @@
             const total = getTotal();
             if (total === 0) return;
 
-            // Строим градиент: активный цвет остается ярким, остальные затемняем
             sorted.forEach(o => {
                 const pct = o.count / total * 100;
                 let c = STATUS_COLORS[o.name] || '#777';
 
-                // Если это НЕ активный статус - затемняем его цвет
                 if (o.name !== activeName) {
-                    c = darkenColor(c, 0.2); // затемняем до 20% от исходной яркости
+                    c = darkenColor(c, 0.2);
                 }
 
                 parts.push(`${c} ${sum}% ${sum + pct}%`);
@@ -646,11 +830,10 @@
             });
 
             pie.style.background = `conic-gradient(${parts.join(', ')})`;
-        }, 50); // Маленькая задержка для сглаживания
+        }, 50);
     }
 
     function darkenColor(color, factor) {
-        // factor: 0.2 = оставляем 20% яркости (затемняем на 80%)
         let R = parseInt(color.substring(1,3),16);
         let G = parseInt(color.substring(3,5),16);
         let B = parseInt(color.substring(5,7),16);
@@ -667,20 +850,16 @@
     }
 
     function resetHighlight() {
-        // Отменяем отложенное выделение если покидаем область
         if (highlightTimeout) {
             clearTimeout(highlightTimeout);
             highlightTimeout = null;
         }
 
-        // Убираем все классы выделения
         document.querySelectorAll('.legend-item').forEach(it => {
             it.classList.remove('dimmed', 'active');
         });
 
         const pie = document.getElementById('pie-chart');
-
-        // Убираем класс увеличения
         pie.classList.remove('highlighting');
 
         if (pie && pie.dataset.originalGradient) {
@@ -689,6 +868,15 @@
     }
 
     document.addEventListener('click', e => {
+        const forbiddenParents = [
+        '#status-details-modal',
+        '#calls-tracker-small',
+        // можно добавить другие селекторы виджетов, если появятся
+    ];
+
+    if (forbiddenParents.some(sel => e.target.closest(sel))) {
+        return;
+    }
         if (document.getElementById('calls-tracker-small')?.contains(e.target)) return;
 
         let text = (e.target.innerText || '').trim();
@@ -721,11 +909,10 @@
         }, 32000);
     }
 
-    // Запуск
     createWidget();
     startManagerObserver();
     updateWidget();
     setInterval(checkDayChange, 60000);
 
-    console.log('CRM Tracker v8 · мотивационные уведомления + контроль эффективности');
+    console.log('CRM Tracker v10 · детализация по категориям + мотивационные уведомления');
 })();

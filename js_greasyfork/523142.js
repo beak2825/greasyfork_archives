@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Group Tools for Mods
 // @namespace    http://tampermonkey.net/
-// @version      v4.1.15
+// @version      v4.1.17
 // @description  Cut out non-essential parts of NFOs. Redact serial numbers and easily fix NFOs. Look up releases on scene tracking sites. Quick check common issues on torrents. Fuck your ASCII art.
 // @author       tesnonwan
 // @match        https://gazellegames.net/torrents.php*
@@ -746,7 +746,7 @@ function isArchive(torrentData) {
     });
 }
 
-const DRM_FREE_REGEX = /gog|itch|patreon|zoom|saikey|fakku|dlsite|jast|manga|kagura|fanza|denpa|humble/i;
+const DRM_FREE_REGEX = /gog|itch|patreon|zoom|saikey|fakku|dlsite|jast|manga|kagura|fanza|denpa|humble|072 project/i;
 
 function isDrmFree(torrentData) {
     return DRM_FREE_REGEX.test(torrentData.edition) && !torrentData.gameDoxType;
@@ -859,7 +859,7 @@ async function checkForIssues(context) {
         } else {
             issues.push('Missing NFO');
         }
-        if (torrentId > 1016800 && !torrentTitleAnchor.querySelector('#trumpable_tag') && (!torrentData.version || torrentData.version === 'Unknown')) {
+        if (torrentData.releaseType !== 'GameDOX' && torrentId > 1016800 && !torrentTitleAnchor.querySelector('#trumpable_tag') && (!torrentData.version || torrentData.version === 'Unknown')) {
             issues.push('Scene release trumpable by known version');
         }
     } else /* Not scene */ {

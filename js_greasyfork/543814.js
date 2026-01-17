@@ -3,7 +3,7 @@
 // @namespace    objection.lol
 // @description  Enhances Objection.lol Courtroom functionality
 // @icon         https://objection.lol/favicon.ico
-// @version      0.38
+// @version      0.39
 // @author       Anonymous
 // @license      CC0
 // @match        https://objection.lol/courtroom
@@ -774,7 +774,7 @@
                         } else if ([".mp3", ".ogg", ".m4a", ".wav", ".flac"].some(ext => url.pathname.endsWith(ext))) {
                             anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "audio", url: anchor.href }));
                             anchor.addEventListener("mouseout", () => previewEmbedHide());
-                        } else if (["youtu.be", "www.youtube.com", "youtube.com"].includes(url.hostname)) {
+                        } else if (["youtu.be", "www.youtube.com", "youtube.com", "m.youtube.com", "yewtu.be", "invidious.nerdvpn.de"].includes(url.hostname)) {
                             anchor.addEventListener("mouseover", () => previewEmbedShow({ type: "youtube", url: anchor.href }));
                             anchor.addEventListener("mouseout", () => previewEmbedHide());
 
@@ -784,6 +784,7 @@
                                 onload: r => {
                                     if (r.status != 200) return;
                                     const anchorContainer = anchor.closest("ul.MuiList-root");
+                                    if (!anchorContainer) return;
                                     const isAtBottom = anchorContainer.scrollTop + anchorContainer.clientHeight >= anchorContainer.scrollHeight - 1;
 
                                     try {

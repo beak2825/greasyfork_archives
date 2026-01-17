@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         元元大王直播间弹幕布局
-// @version      1.3
-// @description  1、自适应弹幕布局；2、弹幕画板可拖移；3、PK视图变化时刷新画面
+// @version      1.4
+// @description  自适应弹幕布局、弹幕画板可拖移。
 // @match        https://live.douyin.com/*
 // @match        https://www.douyin.com/follow/live/*
 // @match        https://www.douyin.com/root/live/*
@@ -89,8 +89,12 @@
         const target = container.querySelector(':scope div.LGzZT73_:not(:has(button[data-e2e="live-followbutton"]))');
 
         // 不是第一个PK窗格
-        if (target && e1 != target)
-            return moveCanvasDanmaku(0, 100);
+        if (target && e1 != target) {
+            moveCanvasDanmaku(0, 100)
+            moveVideo(0, 0)
+            moveLinkMicLayout(0, 0);
+            return
+        }
 
         let leftPercent, widthPercent, heightPercent;
         videoLeft = 0;
@@ -160,20 +164,25 @@
 
     function onLinkMicLayoutChange() {
         evaluateLayout();
-        setTimeout(evaluateLayout, 800);
+        setTimeout(evaluateLayout, 1500);
 
         let count = getLinkMicLayoutContainer().querySelectorAll(':scope div.LGzZT73_').length;
         let now = Date.now();
 
-        if (count != LAST_SEATS_COUNT && now - LAST_REFRESH > 1*60*1000) {
+        if ( count != LAST_SEATS_COUNT && now - LAST_REFRESH > 1*60*1000 ) {
             const button = document.querySelector('div.douyin-player-controls-left > slot[data-index="1"] > div > div:has(svg)')
             if (button) {
-                button.click();
+                setTimeout(button.click,200);
                 LAST_REFRESH = now
-                console.log('DYLIVELAYOUT: refreshed at ', now)
+                console.log('DYLIVELAYOUT: refreshed at ', Date(now))
             }
         }
         LAST_SEATS_COUNT = count;
+
+        let names = ''
+        getLinkMicLayoutContainer().querySelectorAll(':scope div.mkxwziet').forEach((e,i)=>{ if (i>0) names+='、'; names += e.textContent;})
+        if (names != '')
+            console.log('DYLIVELAYOUT: 连线主播 ',names);
     }
 
     function makeDanmakuDraggable() {
@@ -296,6 +305,18 @@
     // danmaku
     waitForElements(['#LinkMicLayout'], registerLayoutObserver);
     waitForElements(['div.CanvasDanmakuPlugin'], makeDanmakuDraggable);
+
+    let danmakuOn = true
+    document.addEventListener('keydown', (event) => {
+        if (event.key.toLowerCase() === 'b') {
+            danmakuOn = !danmakuOn
+            console.log('DYLIVELAYOUT: Danmaku',danmakuOn);
+            moveCanvasDanmaku(0, 0);
+            moveVideo(0, 0);
+            moveLinkMicLayout(0, 0);
+        }
+    });
+
 
     // function loopEvaluateLayout() {
     //     evaluateLayout();

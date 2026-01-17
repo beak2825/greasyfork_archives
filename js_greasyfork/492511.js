@@ -507,4 +507,4 @@
         // GM_deleteValue('qq_storageName_last_code');//测试
     })
 })();
-//#######
+//######

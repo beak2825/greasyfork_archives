@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NHentai Flow
 // @namespace    NEnhanced
-// @version      1.2
+// @version      1.2.1
 // @description  Several Quality of Life features: Quick Preview, Queue System, Smart Scroll, Tag Selector, and more.
 // @author       Testador
 // @match        https://nhentai.net/*
@@ -57,9 +57,10 @@
         .tag-trigger { left: 5px; cursor: help; }
         .queue-trigger { right: 5px; }
         .tag-trigger:hover, .queue-trigger:hover { opacity: 1; background: #ed2553; border-color: #ed2553; }
+        .tag-trigger:hover { width: 190px; }
         .queue-trigger.in-queue { background: #ed2553; border-color: #ed2553; opacity: 1; }
 
-        .tag-popup { display: none; position: absolute; top: 25px; left: 5px; width: 215px; max-height: 250px; overflow-y: auto; background: rgba(15,15,15,0.95); color: #ddd; border: 1px solid #333; border-radius: .3em; padding: 8px; font-size: 11px; z-index: 60; box-shadow: 0 4px 10px rgba(0,0,0,0.5); text-align: left; line-height: 1.4; }
+        .tag-popup { display: none; position: absolute; top: 24px; left: 5px; width: 215px; max-height: 250px; overflow-y: auto; background: rgba(15,15,15,0.95); color: #ddd; border: 1px solid #333; border-radius: .3em; padding: 8px; font-size: 11px; z-index: 60; box-shadow: 0 4px 10px rgba(0,0,0,0.5); text-align: left; line-height: 1.4; }
         .tag-trigger:hover + .tag-popup, .tag-popup:hover { display: block; }
         .tag-category { color: #ed2553; font-weight: bold; margin-bottom: 2px; margin-top: 6px; font-size: 10px; text-transform: uppercase; }
         .tag-category:first-child { margin-top: 0; }
@@ -149,6 +150,14 @@
         .queue-empty { padding: 20px; text-align: center; color: #666; font-size: 12px; font-style: italic; }
 
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- TOGGLE PREVIEW SETTING --- */
+        body.disable-preview-nav .hotzone,
+        body.disable-preview-nav .seek-container { display: none !important; }
+        .sse-settings { margin-top: 15px; padding-top: 10px; border-top: 1px solid #222; }
+        .setting-toggle { display: flex; align-items: center; cursor: pointer; color: #888; font-size: 12px; user-select: none; }
+        .setting-toggle:hover { color: #ccc; }
+        .setting-toggle input { margin-right: 8px; }
     `;
 
     (typeof GM_addStyle !== "undefined") ? GM_addStyle(css) : document.head.appendChild(Object.assign(document.createElement('style'), { textContent: css }));
@@ -826,7 +835,7 @@
     }
 
     // ==========================================================================
-    // SAVED SEARCHES (PRESETS)
+    // SAVED SEARCHES (PRESETS) & SETTINGS
     // ==========================================================================
 
     function initSearchFlow() {
@@ -839,27 +848,34 @@
         const input = form.querySelector('input[name="q"]');
         if (input) input.style.paddingRight = '40px';
 
+        // --- LOAD SETTINGS & SAVED SEARCHES ---
         let searchData = JSON.parse(localStorage.getItem('nhentai_search_flow') || '{"saved":[]}');
+        let settings = JSON.parse(localStorage.getItem('nhentai_flow_settings') || '{"previewNav": true}');
+
+        if (!settings.previewNav) {
+            document.body.classList.add('disable-preview-nav');
+        }
+
         let isDeleteMode = false;
 
-        const save = () => localStorage.setItem('nhentai_search_flow', JSON.stringify(searchData));
+        const saveSearch = () => localStorage.setItem('nhentai_search_flow', JSON.stringify(searchData));
+        const saveSettings = () => localStorage.setItem('nhentai_flow_settings', JSON.stringify(settings));
 
         const toggleSavedItem = (query) => {
             if (!query) return;
             const idx = searchData.saved.indexOf(query);
             if (idx > -1) searchData.saved.splice(idx, 1);
             else searchData.saved.push(query);
-            save();
+            saveSearch();
 
             if (searchData.saved.length === 0) isDeleteMode = false;
-
             renderBar();
         };
 
         const trigger = document.createElement('div');
         trigger.className = 'search-saved-trigger';
         trigger.innerHTML = '<i class="fa fa-bookmark"></i>';
-        trigger.title = "Toggle Saved Searches Panel";
+        trigger.title = "Saved Searches";
         form.appendChild(trigger);
 
         const barContainer = document.createElement('div');
@@ -889,28 +905,44 @@
             `;
 
             if (searchData.saved.length === 0) {
-                html += `<div class="sse-empty">No saved searches yet. Search for something and click "Save Current".</div>`;
+                html += `<div class="sse-empty">No saved searches yet.</div>`;
             } else {
                 searchData.saved.forEach(q => {
                     const isCurrent = q === currentQ ? 'is-current' : '';
                     const safeQ = q.replace(/"/g, '&quot;');
-
                     html += `
                         <div class="ss-pill ${isCurrent}">
-                            <div class="ss-part ss-add" data-q="${safeQ}" title="Add to current input">
-                                <i class="fa fa-plus" style="font-size: 10px;"></i>
-                            </div>
-                            <div class="ss-part ss-text" title="${isDeleteMode ? 'Click to DELETE' : 'Click to Search'}">
-                                ${q}
-                            </div>
+                            <div class="ss-part ss-add" data-q="${safeQ}" title="Add to current input"><i class="fa fa-plus" style="font-size: 10px;"></i></div>
+                            <div class="ss-part ss-text" title="${isDeleteMode ? 'Click to DELETE' : 'Click to Search'}">${q}</div>
                         </div>
                     `;
                 });
             }
-            html += `</div>`;
+
+            // --- SETTINGS SECTION ---
+            html += `</div>
+                <div class="sse-settings">
+                    <label class="setting-toggle">
+                        <input type="checkbox" id="chk-preview-nav" ${settings.previewNav ? 'checked' : ''}>
+                        <span>Enable Hover Preview Navigation</span>
+                    </label>
+                </div>
+            `;
 
             barContainer.innerHTML = html;
 
+            // 1. Settings Toggle
+            const chkPreview = barContainer.querySelector('#chk-preview-nav');
+            if (chkPreview) {
+                chkPreview.onchange = (e) => {
+                    settings.previewNav = e.target.checked;
+                    saveSettings();
+                    if (settings.previewNav) document.body.classList.remove('disable-preview-nav');
+                    else document.body.classList.add('disable-preview-nav');
+                };
+            }
+
+            // 2. Saved Search Logic
             const btnEdit = barContainer.querySelector('#btn-toggle-edit');
             if (btnEdit) {
                 btnEdit.onclick = (e) => {
@@ -931,14 +963,10 @@
             barContainer.querySelectorAll('.ss-text').forEach(el => {
                 const text = el.innerText.trim();
                 const fullQuery = searchData.saved.find(s => s.trim() === text) || text;
-
                 el.onclick = (e) => {
                     e.stopPropagation();
-
-                    if (isDeleteMode) {
-                        toggleSavedItem(fullQuery);
-
-                    } else {
+                    if (isDeleteMode) toggleSavedItem(fullQuery);
+                    else {
                         input.value = fullQuery;
                         form.submit();
                     }
@@ -949,14 +977,9 @@
                 el.onclick = (e) => {
                     e.stopPropagation();
                     if (isDeleteMode) return;
-
                     const queryToAdd = el.dataset.q;
                     const currentVal = input.value.trim();
-                    if (currentVal) {
-                        input.value = currentVal + ' ' + queryToAdd;
-                    } else {
-                        input.value = queryToAdd;
-                    }
+                    input.value = currentVal ? currentVal + ' ' + queryToAdd : queryToAdd;
                     input.focus();
                 };
             });

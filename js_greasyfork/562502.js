@@ -4,7 +4,7 @@
 // @version      6.0
 // @description This allows you to open a new tab from a chat title in Gemini’s history sidebar.
 // @description:ja geminiの履歴サイドバーのチャットタイトルから新規タブを開けるようにします。
-// @author       Your Thought Partner
+// @author       81standard
 // @match        https://gemini.google.com/*
 // @grant        none
 // @run-at       document-start

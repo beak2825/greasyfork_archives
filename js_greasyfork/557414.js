@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME RO Alt Names + Traffic
 // @namespace    https://greasyfork.org/users/1457324
-// @version      1.2
+// @version      1.4
 // @description  Converts Romanian street abbreviations to full names as alternate streets + Google Traffic overlay toggle in WME
 // @author       Honkson
 // @match        https://*.waze.com/editor*
@@ -48,37 +48,69 @@
 
     function initAltButtons() {
         const observer = new MutationObserver((mutations) => {
-            for (let mutation of mutations) {
-                for (let node of mutation.addedNodes) {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        const editSegment = node.querySelector('#segment-edit-general');
-                        if (editSegment && !editSegment.parentNode.querySelector('[data-alt-street-btn="true"]')) {
-                            const parent = editSegment.parentNode;
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType !== Node.ELEMENT_NODE) continue;
 
-                            const altBtn = document.createElement('wz-button');
-                            altBtn.setAttribute('type', 'button');
-                            altBtn.setAttribute('style', 'margin-bottom: 5px; width: 100%');
-                            altBtn.setAttribute('data-alt-street-btn', 'true');
-                            altBtn.textContent = 'Add Alt Name';
-                            parent.insertBefore(altBtn, editSegment);
-                            altBtn.addEventListener('click', () => addAltStreetName());
+                    const addressEdit = node.querySelector('.address-edit');
+                    if (!addressEdit) continue;
 
-                            trafficBtn = document.createElement('wz-button');
-                            trafficBtn.setAttribute('type', 'button');
-                            trafficBtn.setAttribute('style', 'margin-bottom: 5px; width: 100%');
-                            trafficBtn.setAttribute('data-traffic-btn', 'true');
-                            trafficBtn.textContent = 'Google Traffic OFF';
-                            parent.insertBefore(trafficBtn, editSegment);
-                            trafficBtn.addEventListener('click', toggleTrafficLayer);
-
-
-                        }
+                    if (addressEdit.parentNode.querySelector('[data-alt-traffic-container="true"]')) {
+                        continue;
                     }
-                }
+
+                    const btnContainer = document.createElement('div');
+                    btnContainer.setAttribute('data-alt-traffic-container', 'true');
+                    btnContainer.style.display = 'flex';
+                    btnContainer.style.gap = '6px';
+                    btnContainer.style.marginBottom = '6px';
+
+                    const baseStyle = `
+                    padding: 4px 10px;
+                    font-size: 11px;
+                    height: 26px;
+                    border-radius: 6px;
+                    border: none;
+                    cursor: pointer;
+                    font-weight: 600;
+                    letter-spacing: 0.3px;
+                    transition: background 0.15s ease, transform 0.05s ease;
+                `;
+
+
+                const altBtn = document.createElement('button');
+                altBtn.type = 'button';
+                altBtn.textContent = 'ALT NAME';
+                altBtn.style.cssText = baseStyle + `
+                    background: #3b82f6;   /* blue-500 */
+                    color: #ffffff;
+                `;
+                altBtn.addEventListener('click', addAltStreetName);
+
+                trafficBtn = document.createElement('button');
+                trafficBtn.type = 'button';
+                trafficBtn.textContent = 'TRAFFIC OFF';
+                trafficBtn.style.cssText = baseStyle + `
+                    background: #6b7280;   /* gray-500 */
+                    color: #ffffff;
+                `;
+                trafficBtn.addEventListener('click', toggleTrafficLayer);
+
+                btnContainer.appendChild(altBtn);
+                btnContainer.appendChild(trafficBtn);
+
+                addressEdit.parentNode.insertBefore(btnContainer, addressEdit);
             }
-        });
-        observer.observe(document.getElementById('edit-panel'), { childList: true, subtree: true });
-    }
+        }
+    });
+
+       observer.observe(document.getElementById('edit-panel'), {
+           childList: true,
+           subtree: true
+       });
+   }
+
+
 
     function addAltStreetName() {
         const selection = wmeSDK.Editing.getSelection();
@@ -148,7 +180,7 @@
             trafficLayer = new OpenLayers.Layer.XYZ(
                 "Google Traffic",
                 "https://mt1.google.com/vt?lyrs=h@159000000,traffic&hl=en&x=${x}&y=${y}&z=${z}",
-                { isBaseLayer: false, opacity: 0.6, visibility: false }
+                { isBaseLayer: false, opacity: 0.9, visibility: false }
             );
             W.map.addLayer(trafficLayer);
         }
@@ -165,4 +197,3 @@
 
 
 })();
-

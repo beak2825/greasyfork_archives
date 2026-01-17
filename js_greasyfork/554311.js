@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Sites to TMDB Link
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Add "To TMDB" link on websites to search movie title on TMDB
 // @author       DongHaerang
+// @license      CC BY-NC-SA 4.0
 // @match        *://kinolights.com/*
 // @match        *://*.kinolights.com/*
 // @match        *://justwatch.com/*
@@ -11,7 +12,6 @@
 // @match        *://imdb.com/*
 // @match        *://*.imdb.com/*
 // @grant        GM_openInTab
-// @license      MIT
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/554311/Sites%20to%20TMDB%20Link.user.js
 // @updateURL https://update.greasyfork.org/scripts/554311/Sites%20to%20TMDB%20Link.meta.js

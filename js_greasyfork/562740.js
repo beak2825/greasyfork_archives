@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         浏览器字体渲染
-// @namespace    fontrenderning.cmos4k
-// @version      1.3.0
+// @namespace    fontrenderning.script.cmos4k
+// @version      1.3.1
 // @description  解决Windows平台浏览器默认情况下字体渲染偏细的问题。适用于Edge、Chrome、Firefox等。
 // @author       太极
 // @match        *://*/*

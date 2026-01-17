@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         P3 - Flowers & Brook Auto Quest
 // @namespace    http://tampermonkey.net/
-// @version      9.5
+// @version      9.6
 // @description  Auto-quest for NPC 5 & 9 with live timer, random 4–8h runs, working manual buttons, smooth UI, and isolated operation
 // @match        https://pocketpumapets.com/quest_play.php?npc=5
 // @match        https://pocketpumapets.com/quest_play.php?npc=9
@@ -12,135 +12,170 @@
 // @updateURL https://update.greasyfork.org/scripts/555049/P3%20-%20Flowers%20%20Brook%20Auto%20Quest.meta.js
 // ==/UserScript==
 
-(function () {
+(() => {
     'use strict';
 
-    const CHECK_INTERVAL_MS = 5.5 * 60 * 1000;
-    const WIGGLE_MS = 15 * 1000;
+    /* ---------------- CONFIG ---------------- */
 
-    const LS_PREFIX = 'p3_auto_quest_';
-    const LS_KEY_ACTIVE = LS_PREFIX + 'active';
-    const LS_KEY_START = LS_PREFIX + 'start_time';
-    const LS_KEY_COUNTS = LS_PREFIX + 'counts';
-    const LS_KEY_LAST = LS_PREFIX + 'last';
-    const LS_KEY_MAX = LS_PREFIX + 'max_run';
-    const LS_KEY_DURATION = LS_PREFIX + 'duration';
+    const REFRESH_MIN = 30 * 1000;
+    const REFRESH_MAX = 45 * 1000;
+    const FAILSAFE_REFRESH = 3 * 60 * 1000;
+
+    const LS = {
+        active: 'p3_auto_quest_active',
+        start: 'p3_auto_quest_start',
+        max: 'p3_auto_quest_max',
+        counts: 'p3_auto_quest_counts',
+        last: 'p3_auto_quest_last',
+        duration: 'p3_auto_quest_duration'
+    };
 
     let autoActive = false;
-    let startTime = null;
-    let intervalId = null;
-    let liveTimerId = null;
+    let startTime = 0;
     let maxRunMs = 0;
+    let liveTimerId = null;
     let counts = { started: 0, turnedIn: 0 };
     let lastSuccess = 0;
+    let wakeLock = null;
 
-    /* ---------- HELPERS ---------- */
-    function ciIncludes(h, n) {
-        return (h || '').toLowerCase().includes((n || '').toLowerCase());
+    /* ---------------- WAKE LOCK ---------------- */
+
+    async function requestWakeLock() {
+        try {
+            if ('wakeLock' in navigator) {
+                wakeLock = await navigator.wakeLock.request('screen');
+                console.log('[AutoQuest] Wake Lock active');
+            }
+        } catch (e) {
+            console.warn('[AutoQuest] Wake Lock failed', e);
+        }
     }
 
-    function findQuestButton(label) {
+    function releaseWakeLock() {
+        try {
+            if (wakeLock) wakeLock.release();
+        } catch {}
+        wakeLock = null;
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && autoActive) {
+            autoOnce();
+        }
+    });
+
+    /* ---------------- HELPERS ---------------- */
+
+    const rand = (min, max) =>
+        Math.floor(Math.random() * (max - min + 1)) + min;
+
+    function findButton(label) {
         return [...document.querySelectorAll('input[type="submit"], button')]
-            .filter(b => !b.disabled && ciIncludes(b.value || b.textContent, label))[0] || null;
+            .find(b =>
+                !b.disabled &&
+                b.offsetParent !== null &&
+                (b.value || b.textContent || '')
+                    .toLowerCase()
+                    .includes(label.toLowerCase())
+            );
     }
 
-    function formatTime(ms) {
-        const s = Math.max(0, Math.floor(ms / 1000));
-        return `${String(Math.floor(s / 3600)).padStart(2,'0')}:` +
-               `${String(Math.floor((s % 3600) / 60)).padStart(2,'0')}:` +
-               `${String(s % 60).padStart(2,'0')}`;
-    }
-
-    function parseDuration(val) {
-        const m = val.match(/^(\d+):([0-5]\d)$/);
+    function parseDuration(v) {
+        const m = v.match(/^(\d+):([0-5]\d)$/);
         if (!m) return null;
-        return (parseInt(m[1]) * 60 + parseInt(m[2])) * 60000;
+        return (Number(m[1]) * 60 + Number(m[2])) * 60000;
     }
 
-    async function clickQuestButton(btn) {
+    function format(ms) {
+        const s = Math.max(0, Math.floor(ms / 1000));
+        return `${Math.floor(s / 3600)}h ${String(Math.floor((s % 3600) / 60)).padStart(2,'0')}m ${String(s % 60).padStart(2,'0')}s`;
+    }
+
+    async function clickButton(btn) {
         const form = btn.closest('form');
         if (!form) return false;
         try {
-            await fetch(form.action, { method: 'POST', body: new FormData(form), credentials: 'include' });
+            await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                credentials: 'include'
+            });
             return true;
         } catch {
             return false;
         }
     }
 
-    /* ---------- LOAD SAVED ---------- */
-    counts = JSON.parse(localStorage.getItem(LS_KEY_COUNTS) || '{"started":0,"turnedIn":0}');
-    lastSuccess = Number(localStorage.getItem(LS_KEY_LAST) || 0);
+    function save() {
+        localStorage.setItem(LS.counts, JSON.stringify(counts));
+        localStorage.setItem(LS.last, lastSuccess);
+    }
 
-    /* ---------- UI ---------- */
-    const container = document.createElement('div');
-    Object.assign(container.style, {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        background: '#2d3e1f',
-        padding: '10px',
-        display: 'flex',
-        gap: '10px',
-        alignItems: 'center',
-        zIndex: 99999,
-        color: 'white',
-        fontWeight: 600
-    });
+    function load() {
+        counts = JSON.parse(localStorage.getItem(LS.counts) || '{"started":0,"turnedIn":0}');
+        lastSuccess = Number(localStorage.getItem(LS.last) || 0);
+    }
 
-    const startQuestBtn = document.createElement('button');
-    startQuestBtn.textContent = 'Start Quest';
+    /* ---------------- UI ---------------- */
 
-    const turnInBtn = document.createElement('button');
-    turnInBtn.textContent = 'Turn In Quest';
+    const bar = document.createElement('div');
+    bar.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99999;
+        background: #2d3e1f;
+        color: #fff;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+    `;
 
-    const status = document.createElement('span');
-    status.textContent = 'Status: Stopped';
+    const startBtn = document.createElement('button');
+    startBtn.textContent = '▶ Start Auto-Quest';
 
-    const timerDisplay = document.createElement('span');
-    timerDisplay.textContent = 'Time Left: --:--:--';
+    const stopBtn = document.createElement('button');
+    stopBtn.textContent = '⏹ Stop Auto-Quest';
+    stopBtn.disabled = true;
 
     const durationInput = document.createElement('input');
-    durationInput.type = 'text';
     durationInput.placeholder = 'HH:MM';
     durationInput.style.width = '70px';
-    durationInput.value = localStorage.getItem(LS_KEY_DURATION) || '';
-
+    durationInput.value = localStorage.getItem(LS.duration) || '';
     durationInput.oninput = () =>
-        localStorage.setItem(LS_KEY_DURATION, durationInput.value.trim());
+        localStorage.setItem(LS.duration, durationInput.value);
 
-    const startAutoBtn = document.createElement('button');
-    startAutoBtn.textContent = '▶ Start Auto';
+    const status = document.createElement('span');
+    const timer = document.createElement('span');
 
-    const stopAutoBtn = document.createElement('button');
-    stopAutoBtn.textContent = '⏹ Stop Auto';
-    stopAutoBtn.disabled = true;
+    bar.append(startBtn, stopBtn, durationInput, status, timer);
+    document.body.appendChild(bar);
+    document.body.style.marginTop = '55px';
 
-    container.append(
-        startQuestBtn,
-        turnInBtn,
-        status,
-        timerDisplay,
-        durationInput,
-        startAutoBtn,
-        stopAutoBtn
-    );
+    /* ---------------- CORE ---------------- */
 
-    document.body.appendChild(container);
-    document.body.style.marginTop = '60px';
+    function scheduleRefresh() {
+        const delay = rand(REFRESH_MIN, REFRESH_MAX);
+        setTimeout(() => location.reload(), delay);
+    }
 
-    /* ---------- AUTO LOOP ---------- */
-    async function autoLoop() {
+    function scheduleFailsafe() {
+        setTimeout(() => location.reload(), FAILSAFE_REFRESH);
+    }
+
+    async function autoOnce() {
         if (!autoActive) return;
 
         if (Date.now() - startTime >= maxRunMs) {
-            stopAuto('Time expired');
+            stopAuto('Duration reached');
             return;
         }
 
-        const turnIn = findQuestButton('Turn In Quest');
-        if (turnIn && await clickQuestButton(turnIn)) {
+        const turnIn = findButton('Turn In Quest');
+        if (turnIn && await clickButton(turnIn)) {
             counts.turnedIn++;
             lastSuccess = Date.now();
             save();
@@ -148,90 +183,83 @@
             return;
         }
 
-        const startQ = findQuestButton('Start Quest');
-        if (startQ && await clickQuestButton(startQ)) {
+        const startQ = findButton('Start Quest');
+        if (startQ && await clickButton(startQ)) {
             counts.started++;
             lastSuccess = Date.now();
             save();
             setTimeout(() => location.reload(), 1200);
+            return;
         }
+
+        scheduleRefresh();
     }
 
     function updateUI() {
         if (!autoActive) return;
-        const remaining = maxRunMs - (Date.now() - startTime);
-        timerDisplay.textContent = `Time Left: ${formatTime(remaining)}`;
-        status.textContent = `Turned in ${counts.turnedIn} | Started ${counts.started}`;
-    }
-
-    function save() {
-        localStorage.setItem(LS_KEY_COUNTS, JSON.stringify(counts));
-        localStorage.setItem(LS_KEY_LAST, lastSuccess);
+        status.textContent = `Started: ${counts.started} | Turned in: ${counts.turnedIn}`;
+        timer.textContent = `Time Left: ${format(maxRunMs - (Date.now() - startTime))}`;
     }
 
     function startAuto() {
-        if (autoActive) return;
-
         const dur = parseDuration(durationInput.value);
-        if (!dur) return alert('Use HH:MM format (example: 06:30)');
+        if (!dur) return alert('Use HH:MM (example 06:00)');
 
-        maxRunMs = dur;
         startTime = Date.now();
-
-        localStorage.setItem(LS_KEY_DURATION, durationInput.value.trim());
-        localStorage.setItem(LS_KEY_START, startTime);
-        localStorage.setItem(LS_KEY_MAX, maxRunMs);
-        localStorage.setItem(LS_KEY_ACTIVE, '1');
-
+        maxRunMs = dur;
         autoActive = true;
-        startAutoBtn.disabled = true;
-        stopAutoBtn.disabled = false;
 
+        localStorage.setItem(LS.active, '1');
+        localStorage.setItem(LS.start, startTime);
+        localStorage.setItem(LS.max, maxRunMs);
+
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+
+        load();
+        requestWakeLock();
         liveTimerId = setInterval(updateUI, 1000);
-        autoLoop();
-        intervalId = setInterval(() =>
-            setTimeout(autoLoop, Math.random() * WIGGLE_MS * 2 - WIGGLE_MS),
-            CHECK_INTERVAL_MS
-        );
+
+        scheduleFailsafe();
+        autoOnce();
     }
 
-    function stopAuto(reason = '') {
-        clearInterval(intervalId);
-        clearInterval(liveTimerId);
-
+    function stopAuto(reason) {
         autoActive = false;
-        startAutoBtn.disabled = false;
-        stopAutoBtn.disabled = true;
+        clearInterval(liveTimerId);
+        releaseWakeLock();
 
-        localStorage.removeItem(LS_KEY_ACTIVE);
-        localStorage.removeItem(LS_KEY_START);
-        localStorage.removeItem(LS_KEY_MAX);
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
 
-        timerDisplay.textContent = 'Time Left: --:--:--';
-        status.textContent = 'Status: Stopped';
-
-        if (reason) console.log('AutoQuest stopped:', reason);
+        localStorage.removeItem(LS.active);
+        status.textContent = `Stopped (${reason})`;
+        timer.textContent = '';
     }
 
-    /* ---------- RESUME ---------- */
-    if (localStorage.getItem(LS_KEY_ACTIVE) === '1') {
-        startTime = Number(localStorage.getItem(LS_KEY_START));
-        maxRunMs = Number(localStorage.getItem(LS_KEY_MAX));
+    /* ---------------- RESUME ---------------- */
+
+    if (localStorage.getItem(LS.active) === '1') {
+        startTime = Number(localStorage.getItem(LS.start));
+        maxRunMs = Number(localStorage.getItem(LS.max));
+
         if (Date.now() - startTime < maxRunMs) {
             autoActive = true;
-            startAutoBtn.disabled = true;
-            stopAutoBtn.disabled = false;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+
+            load();
+            requestWakeLock();
             liveTimerId = setInterval(updateUI, 1000);
-            autoLoop();
-            intervalId = setInterval(() =>
-                setTimeout(autoLoop, Math.random() * WIGGLE_MS * 2 - WIGGLE_MS),
-                CHECK_INTERVAL_MS
-            );
+
+            scheduleFailsafe();
+            autoOnce();
         } else {
-            stopAuto('Expired while offline');
+            localStorage.removeItem(LS.active);
         }
     }
 
-    startAutoBtn.onclick = startAuto;
-    stopAutoBtn.onclick = () => stopAuto('Stopped by user');
+    startBtn.onclick = startAuto;
+    stopBtn.onclick = () => stopAuto('Manual stop');
+
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Cultivation Terms
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.11
 // @description  Test
 // @author       Your Name
 // @match        *://*.69shuba.cx/*
@@ -23,7 +23,6 @@
 // @match        *://69shuba.tw/read/*
 // @match        *https://www.sudugu.org/*
 // @match file:///C:/Users/*/Desktop/Novels/*.html
-// @exclude      *://*.69shuba.com/txt/51669/*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/559814/Cultivation%20Terms.user.js
 // @updateURL https://update.greasyfork.org/scripts/559814/Cultivation%20Terms.meta.js
@@ -53,7 +52,12 @@
     // Define the terms to replace
     const replacements = {
 
+
+        // ==========================
 		//	----		REALMS		-----
+        // ==========================
+
+
 
 "准仙": "Quasi-Immortal ",
 "虚仙": "False Immortal ",
@@ -369,12 +373,18 @@
         "铸鼎":"Casting Cauldron ",
         "炼法":"Method Refining ",
         "衍真境":"True Derivation Realm ", // Aka True Manifestation? Realm
+        "太苍境":"Primordial Vast Realm ",
         //"":" ",
         //"":" ",
 
 
 
+
+        // ==========================
 		//	----		NAMES OF PEOPLE/MONSTER ETC.		-----
+        // ==========================
+
+
 
 "炎皇": "Yan Emperor",
 "哥哥": "Big Brother ",
@@ -465,7 +475,12 @@
 
 
 
+
+        // ==========================
 		//	----		NAMES OF ITEMS/Herbs ETC.		-----
+        // ==========================
+
+
 
 "力魔战铠": "Power Demon Battle Armor ",
 "金莲": "Golden Lotus ",
@@ -480,7 +495,12 @@
         "先天神宝": "Innate Divine Treasures ",
 
 
+
+        // ==========================
 		//	----		NAMES OF PLACES		-----
+        // ==========================
+
+
 
 "集市": "Bazaar ",
 "交易市场": "Trading Market ",
@@ -592,13 +612,19 @@
         "赤焰宗":"Scarlet Flames Sect ",
         "万剑宗":"Ten Thousands Sword Sect ",
         "青云宗":"Azure Cloud Sect ",
+        "青云塔":"Azure Cloud Pagoda ",
+        "青云":"Azure Cloud ",
+        "灵虚峰":"Spirit Void Peak ",
         //"":" ",
         //"":" ",
 
 
 
-
+        // ==========================
 		//	----		NAMES OF Technique/Method/Artifacts grade etc.		-----
+        // ==========================
+
+
 
 "灵宝": "Spiritual Treasure ",
 "金宝": "Golden Treasure ",
@@ -629,7 +655,12 @@
         "玄宝":"Profound Treasures ",
 
 
+        // ==========================
 		//	----		NAMES OF Stages/Layers etc.		-----
+        // ==========================
+
+
+
 
 "初期": "Early Stage ",
 "中期": "Middle Stage ",
@@ -678,7 +709,12 @@
         //"": " ",
 
 
+
+        // ==========================
 		//	----		NAMES OF TAGS/CATEGORY		-----
+        // ==========================
+
+
 
 "家族": "Family ",
 "重生": "Rebirth ",
@@ -705,7 +741,6 @@
 "其他小说": "Other Novels ",
 "巫师流": "Wizard Flow ",
 "搞笑": "Funny ",
-"仙侠": "Immortal Hero ",
 "系统": "system ",
 "69書吧": "69",
 "完本": "Full",
@@ -715,7 +750,13 @@
 "我的書架": "Shelf",
 "首頁": "1st",
 
+
+
+        // ==========================
 		//	----		Other		-----
+        // ==========================
+
+
 
 "新书": "New Books ",
 "推荐": "Recommended ",
@@ -1309,16 +1350,26 @@
         "与此同时":"At the same time ",
 
 
-
+        // ==========================
         // Games Glossary
+        // ==========================
         "属性":"Attribute ",
         "特性":"Bonuses ",
 
 
-
+        // ==========================
         // Urban?
+        // ==========================
         "“恩”":"Mhm. ",
         "知道了":"I understand ",
+
+        // ==========================
+        // Symbols...
+        // ==========================
+/*
+        "」":"]",
+        "「":"[",
+*/
 
         //	----		KONIEC/END		-----
 //" ": " "
@@ -1334,7 +1385,7 @@
     // ==========================
     const phrasesToRemove = [
         '最⊥新⊥小⊥说⊥在⊥六⊥9⊥⊥书⊥⊥吧⊥⊥首⊥发！','window.pubfuturetag = window.pubfuturetag','var adx_id_10802 =','adx_id_10802.id =','window.pubadxtag','&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp','t̆̈̆̈w̆̈̆̈k̆̈̆̈̆̈ă̈̆̈n̆̈̆̈.c̆̈̆̈ŏ̈̆̈m',
-        '本作品由','记住首发网站域名𝕥𝕨𝕜𝕒𝕟.𝕔𝕠𝕞','𝚝𝚠𝚔𝚊𝚗.𝚌𝚘𝚖',
+        '本作品由','记住首发网站域名𝕥𝕨𝕜𝕒𝕟.𝕔𝕠𝕞','𝚝𝚠𝚔𝚊𝚗.𝚌𝚘𝚖','(AdProvider = window.AdProvider',
         '原文在六',
         '书◇吧',
         '无错版本在',
@@ -1345,7 +1396,6 @@
         '本書首發 找台灣好書上台灣小說網',
         'loadAdv',
     ];
-
 
     // ==========================
     //  STYLE DLA POGRUBIEŃ I GUI
@@ -1415,85 +1465,65 @@
         document.body.appendChild(btn);
     }
 
-    // GŁÓWNA FUNKCJA ZAMIANY (Bezpieczna dla tłumacza)
     function runUniversalReplacement(rootNode) {
+        if (!rootNode) return;
         const sortedKeys = Object.keys(replacements).sort((a, b) => b.length - a.length);
 
         const walker = document.createTreeWalker(rootNode, NodeFilter.SHOW_TEXT, {
-            acceptNode: function(node) {
-                // Nie dotykaj tekstów, które już są wewnątrz spanów z pogrubieniem
-                if (node.parentElement && (node.parentElement.classList.contains('highlighted-term') || /(script|style|textarea)/i.test(node.parentElement.tagName))) {
+            acceptNode: node => {
+                if (node.parentElement && (node.parentElement.classList.contains('highlighted-term') || /(script|style|textarea)/i.test(node.parentElement.tagName)))
                     return NodeFilter.FILTER_REJECT;
-                }
                 return NodeFilter.FILTER_ACCEPT;
             }
         });
 
-        let node;
         const nodesToReplace = [];
+        let node;
         while (node = walker.nextNode()) {
-            for (const key of sortedKeys) {
-                if (node.nodeValue.includes(key)) {
-                    nodesToReplace.push(node);
-                    break;
-                }
-            }
+            if (sortedKeys.some(key => node.nodeValue.includes(key))) nodesToReplace.push(node);
         }
 
         nodesToReplace.forEach(textNode => {
-            let text = textNode.nodeValue;
-            let hasChange = false;
-
-            // Tworzymy tymczasowy kontener, żeby nie niszczyć DOM przy każdej zamianie
-            let html = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let html = textNode.nodeValue.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            let changed = false;
 
             sortedKeys.forEach(key => {
                 if (html.includes(key)) {
                     const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
                     html = html.replace(regex, `<span class="highlighted-term">${replacements[key]}</span>`);
-                    hasChange = true;
+                    changed = true;
                 }
             });
 
-            if (hasChange) {
+            if (changed && textNode.parentNode) {
                 const span = document.createElement('span');
                 span.innerHTML = html;
-                if (textNode.parentNode) textNode.parentNode.replaceChild(span, textNode);
+                textNode.parentNode.replaceChild(span, textNode);
             }
         });
     }
 
-    // FORMATOWANIE SPECJALNE (Poprawiona kolejność dla 69shuba)
     function fix69Shuba() {
         const contentDiv = document.querySelector('.txtnav');
         if (!contentDiv || contentDiv.dataset.processed === 'true') return;
 
-        // 1. Najpierw pobierz czysty tekst (usuń stare śmieci HTML)
         let rawHTML = contentDiv.innerHTML;
-        // Zamień <br> na entery, a potem usuń wszystkie inne tagi
         rawHTML = rawHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]+>/g, '');
 
-        // 2. Podziel na linie i wyczyść z niechcianych fraz
         let lines = rawHTML.split('\n')
             .map(l => l.trim())
-            .filter(l => l.length > 0)
-            .filter(line => !phrasesToRemove.some(phrase => line.includes(phrase)));
+            .filter(l => l.length > 0 && !phrasesToRemove.some(phrase => l.includes(phrase)));
 
-        // 3. Wstaw czyste akapity <p> (bez żadnych spanów jeszcze)
         contentDiv.innerHTML = lines.map(line => `<p>${line}</p>`).join('');
-
-        // 4. Dopiero na tak przygotowanym, czystym tekście uruchom pogrubianie
-        runUniversalReplacement(contentDiv);
-
         contentDiv.dataset.processed = 'true';
+
+        runUniversalReplacement(contentDiv);
         applyStyle(currentStyle);
         injectToggleButton();
     }
 
-    // 4. URUCHAMIANIE
     function main() {
         const is69Shuba = window.location.hostname.includes('69shuba') || !!document.querySelector('.txtnav');
-
         if (is69Shuba) {
             fix69Shuba();
         } else {
@@ -1502,24 +1532,21 @@
         }
     }
 
-    // Obsługa ładowania strony
-    if (document.readyState === 'complete') {
-        main();
-    } else {
-        window.addEventListener('load', main);
-    }
+    // Odpalenie skryptu
+    if (document.readyState === 'complete') main(); else window.addEventListener('load', main);
 
-    // Monitorowanie dynamicznych zmian (dla kolejnych rozdziałów)
-    const observer = new MutationObserver((mutations) => {
-        for (let mutation of mutations) {
-            if (mutation.addedNodes.length) {
-                const nav = document.querySelector('.txtnav:not([data-processed="true"])');
-                if (nav) fix69Shuba();
-            }
-        }
+    // Observer z opóźnieniem, by nie kłócił się z Google Translate
+    let timer;
+    const observer = new MutationObserver(() => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            const nav = document.querySelector('.txtnav:not([data-processed="true"])');
+            if (nav) fix69Shuba();
+        }, 500);
     });
     observer.observe(document.body, { childList: true, subtree: true });
 
 })();
+
 
 

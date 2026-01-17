@@ -2,7 +2,7 @@
 // @name         Bilibili 账号已注销修正
 // @name:zh-CN   Bilibili 账号已注销修正
 // @namespace    http://tampermonkey.net/
-// @version      2.7.0
+// @version      2.7.1
 // @license      MIT
 // @description  修正Bilibili 账户已注销的主页链接，修改为 https://www.bilibili.com/list/$UID
 // @description:zh-CN  修正Bilibili 账户已注销的主页链接，修改为 https://www.bilibili.com/list/$UID
@@ -22,6 +22,9 @@
     const rules = {
       "space.bilibili.com/\\d+/favlist": {
         query: "div.bili-video-card__subtitle a",
+      },
+      "space.bilibili.com/\\d+/relation/*": {
+        query: "a.relation-card-info__uname",
       },
       "www.bilibili.com/(video|list)/": {
         type: "intercept",

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Custom and nearest Torn events
 // @namespace    http://tampermonkey.net/
-// @version      2.0.27
+// @version      2.0.29
 // @description  See the time until next event. Create and follow custom events
 // @author       ljovcheg  [3191064] 
 // @license      MIT
@@ -28,7 +28,7 @@
     let isTornPDA = typeof window.flutter_inappwebview !== 'undefined'; //detect tornPDA
 
 
-    const SCRIPT_VERSION = '2.0.27';
+    const SCRIPT_VERSION = '2.0.29';
     if (typeof GM_info !== 'undefined' &&
         GM_info &&
         GM_info.script &&
@@ -80,6 +80,7 @@
     let isFetching = false;
 
     let timeHandler; // holder for setTimeout to clear
+    let tooltipFindAttempts = 0;
 
     let TOOLTIP_ACTIONS = {
         clear() {
@@ -283,15 +284,25 @@
         }
             */
         if (server_date_time.length === 0 || tc_clock_tooltip.length === 0) {
+            if (tooltipFindAttempts < 5) {
+                tooltipFindAttempts++;
+                message(`Searching for Torn clock. Attempt: ${tooltipFindAttempts}`);
+                setTimeout(() => {
+                    generateTooltip();
+                }, 500);
+                return;
+            }
             message('tc_clock_tooltip or server_date_time missing');
             return;
         }
+
+
 
         tc_clock_tooltip.html('');
 
         let cte_clock_holder = $('<div>', {
             id: 'cte_clock_holder',
-            class: 'cte_clock_holder no-select cte_clock_active',
+            class: 'cte_clock_holder no-select',
         }).appendTo(tc_clock_tooltip).on("click", function () {
             toggleTooltip();
         });
@@ -306,7 +317,7 @@
             class: `fa-solid ${ICONS_DEFAULT.loading} loading-spin`,
         }).prependTo(s);
         let cte_clock = $('<span>', {
-            text: "test"
+            text: ""
         }).appendTo(s);
 
         let cte_clock_events_holder = $('<div>', {
@@ -1297,8 +1308,14 @@
         let currentTimeStamp = Math.round(Date.now() / 1000);
         if (!SETTINGS.log || !Array.isArray(SETTINGS.log)) SETTINGS.log = [];
 
+        let gmData = GM_info || {};
+
+
+
         const logEntry = {
             data: logname,
+            scriptHandler: gmData.scriptHandler || 'unknown',
+            scriptVersion: gmData.version || 'unknown',
             timestamp: new Date().toISOString()
         };
         if (SETTINGS.log.length >= MAX_LOGS) SETTINGS.log.shift();
@@ -1346,6 +1363,8 @@
                 SETTINGS.tornEvents = json.events;
             }
 
+            saveLog('fetch Torn data - success');
+
 
 
             //----- FETCH USER CALENDAR -----------------------------------------
@@ -1363,6 +1382,7 @@
             SETTINGS.lasetUpdate = currentTimeStamp;
             SETTINGS.userStartTime = userData.calendar.start_time;
 
+            saveLog('fetch Torn user data - success');
 
             //----- FETCH CTE  -----------------------------------------
 
@@ -1378,9 +1398,11 @@
                     //message(cteData)
                     SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
                     SETTINGS.watchEvents = cteData.watchEvents ?? [];
+                    saveLog('fetch CTE data - success');
                 } else {
                     TOOLTIP_ACTIONS.error('Error fetching CTE');
                     message(['ERROR in fetchData() for CTE', cteData], true);
+                    saveLog('fetch CTE data - error');
                     return;
                 }
 

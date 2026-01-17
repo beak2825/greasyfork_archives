@@ -2,7 +2,7 @@
 // @name         ✨微信公众号后台快捷工具✨
 // @icon         https://res.wx.qq.com/a/fed_upload/9300e7ac-cec5-4454-b75c-f92260dd5b47/logo-mp.ico
 // @namespace    https://greasyfork.org/zh-CN/users/1299634-weidingyi
-// @version      1.3.0
+// @version      1.3.1
 // @description  在草稿箱文章列表标题后边追加醒目提示,快捷生成草稿文章~
 // @author       weidingyi
 // @match        https://mp.weixin.qq.com/cgi-bin/appmsg*action=list_card*
@@ -23,6 +23,8 @@
 
 
 const window = unsafeWindow;
+
+// document.querySelector("#js_listview").click(); //设置为列表排版
 
 (function () {
     'use strict';
@@ -51,8 +53,8 @@ const window = unsafeWindow;
     };
 
     var filter_special_chars = function (str) {
-        // 匹配空格、!、~ 并替换为空字符串
-        return str.replace(/[\s+! !~]/g, '');
+        return str.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '');
+        // return str.replace(/[\s，。！？；：“”‘’（）《》【】、…—!@#$%^&*()+\-={}|;':",~～]/g, '');
     }
 
     /**
@@ -110,10 +112,10 @@ const window = unsafeWindow;
             // 原始标题
             let title = item.firstElementChild.textContent;
             //去除标题中的特殊字符, 有特殊字符时,搜索不准确, 去之
-            var keywords = item.textContent.replace(/\s+|$$\d+篇$$|\d+篇|\-|、|\~|\!|\！|\－/g, '');
-
+            var keywords = filter_special_chars(item.textContent);
+    
             let check_api_json = "https://mp.weixin.qq.com/cgi-bin/appmsgpublish?sub=search&begin=0&count=10&token=" + TK + "&query=" + keywords + "&f=json";
-            // 调用搜索api, 检查是否发表过
+            // 调用搜索api, 检查是否发表过 (某些情况下原模原样的标题就是搜索不出来, 腾讯的bug)
             fetch(check_api_json)
                 .then(res => res.json())
                 .then(res => {

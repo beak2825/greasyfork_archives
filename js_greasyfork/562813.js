@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn User List Stats
 // @namespace    https://torn.com/
-// @version      2.0
+// @version      2.1
 // @description  Display health and last online status for users in any user list
 // @author       You
 // @match        https://www.torn.com/*
@@ -129,9 +129,9 @@
             font-size: 13px;
         `;
 
-        let isEditing = false;
+        let isEditing = !apiKey;
         apiInput.addEventListener('focus', function() {
-            if (!isEditing && apiKey) {
+            if (!isEditing) {
                 this.value = '';
                 this.placeholder = 'Enter new API key...';
                 isEditing = true;
@@ -140,9 +140,11 @@
 
         apiInput.addEventListener('blur', function() {
             if (isEditing && this.value === '') {
-                this.value = apiKey ? maskApiKey(apiKey) : '';
-                this.placeholder = 'Enter API key...';
-                isEditing = false;
+                if (apiKey) {
+                    this.value = maskApiKey(apiKey);
+                    this.placeholder = 'Enter API key...';
+                    isEditing = false;
+                }
             }
         });
 

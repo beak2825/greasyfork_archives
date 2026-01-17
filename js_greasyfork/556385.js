@@ -4,7 +4,6 @@
 // @version      1.0.19
 // @description  管理聊天按钮的添加、编辑、删除和保存
 // @author       ZeroDream
-// @match        https://fishpi.cn/*
 // @match        https://fishpi.cn/cr
 // @icon         https://fishpi.cn/images/favicon.png
 // @grant        GM_registerMenuCommand

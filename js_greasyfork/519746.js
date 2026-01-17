@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         TMDB 한국 지원 강화
 // @namespace    http://tampermonkey.net/
-// @version      3.1.8
+// @version      3.1.9
 // @description  TMDB 영화/TV 시리즈 페이지에 한국어, 영어, 원어 제목 추가, 개별 클립보드 복사 기능, 한국 시청등급 및 제작국 표시
 // @match        https://www.themoviedb.org/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @author       DongHaerang
+// @license      CC BY-NC-SA 4.0
 // @downloadURL https://update.greasyfork.org/scripts/519746/TMDB%20%ED%95%9C%EA%B5%AD%20%EC%A7%80%EC%9B%90%20%EA%B0%95%ED%99%94.user.js
 // @updateURL https://update.greasyfork.org/scripts/519746/TMDB%20%ED%95%9C%EA%B5%AD%20%EC%A7%80%EC%9B%90%20%EA%B0%95%ED%99%94.meta.js
 // ==/UserScript==

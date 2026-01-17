@@ -4,13 +4,12 @@
 // @description     聚合第三方公开数据，补充FC2PPVDB.com和FD2PPV.cc功能，提供预览图、预览视频、收藏、历史记录、缓存管理等功能。
 // @description:en  Aggregates third-party public data to enhance the functionality of FC2PPVDB.com and FD2PPV.cc. Features include image/video previews, favorites, browsing history, cache management, and more.
 // @namespace       NA
-// @version         1.7
+// @version         1.8
 // @author          Js
 // @license         MIT
 // @icon            https://www.google.com/s2/favicons?sz=64&domain=fc2ppvdb.com
 // @match           https://fc2ppvdb.com/*
 // @match           https://fd2ppv.cc/*
-// @require         https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js
 // @grant           GM_addStyle
 // @grant           GM_xmlhttpRequest
 // @grant           GM_setValue
@@ -19,6 +18,7 @@
 // @grant           GM_setClipboard
 // @grant           GM_registerMenuCommand
 // @grant           GM_unregisterMenuCommand
+// @connect         cdn.jsdelivr.net
 // @connect         sukebei.nyaa.si
 // @connect         wumaobi.com
 // @connect         fourhoi.com
@@ -48,9 +48,6 @@
         SETTINGS_KEY: 'settings_v1',
         HISTORY_KEY: 'history_v1',
         STATS_KEY: 'stats_v1',
-        SETTINGS_KEY: 'settings_v1',
-        HISTORY_KEY: 'history_v1',
-        STATS_KEY: 'stats_v1',
         ACHIEVEMENTS_KEY: 'achievements_v1',
         MAX_HISTORY_SIZE: 200,
         CACHE_EXPIRATION_DAYS: 7,
@@ -66,7 +63,6 @@
         IMAGE_LOAD_TIMEOUT: 8000,
         IMAGE_LOAD_CONCURRENCY: 6,
         IMAGE_CHAIN_TIMEOUT: 30000,
-        PREVIEW_MIN_GAP_MS: 180,
         NO_IMAGE_FLAG: 'CACHE_NO_IMAGE_Marker', // 缓存标记
         // Base64 SVG 加载动画占位图
         LOADING_IMAGE: `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyNSIgdmlld0JveD0iMCAwIDIwMCAxMjUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzFhMWExYSIvPgogIDxjaXJjbGUgY3g9IjEwMCIgY3k9IjUwIiByPSIxNSIgc3Ryb2tlPSIjODliNGZhIiBzdHJva2Utd2lkdGg9IjMiIGZpbGw9Im5vbmUiIHN0cm9rZS1kYXNoYXJyYXk9IjQ3IDQ3IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgPGFuaW1hdGVUcmFuc2Zvcm0gYXR0cmlidXRlTmFtZT0idHJhbnNmb3JtIiB0eXBlPSJyb3RhdGUiIGZyb209IjAgMTAwIDUwIiB0bz0iMzYwIDEwMCA1MCIgZHVyPSIxcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiLz4KICA8L2NpcmNsZT4KICA8dGV4dCB4PSIxMDAiIHk9Ijg1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjYTZhZGM4IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMiI+TG9hZGluZy4uLjwvdGV4dD4KPC9zdmc+`,
@@ -159,6 +155,47 @@
             if (node.querySelector('.icon-mosaic_free')) return 0;
             if (node.querySelector('.icon-face_free')) return 1;
             return 2;
+        },
+    };
+
+    const ExternalScripts = {
+        chartJsPromise: null,
+        loadChartJs() {
+            if (typeof Chart !== 'undefined') return Promise.resolve(Chart);
+            if (this.chartJsPromise) return this.chartJsPromise;
+            const url = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+            this.chartJsPromise = new Promise((resolve, reject) => {
+                if (typeof GM_xmlhttpRequest !== 'function') {
+                    reject(new Error('GM_xmlhttpRequest unavailable'));
+                    return;
+                }
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url,
+                    timeout: Config.NETWORK.API_TIMEOUT,
+                    onload: (res) => {
+                        if (res.status < 200 || res.status >= 300) {
+                            reject(new Error(`Chart.js load failed: ${res.status}`));
+                            return;
+                        }
+                        try {
+                            Function(res.responseText)();
+                        } catch (e) {
+                            reject(e);
+                            return;
+                        }
+                        if (typeof Chart === 'undefined') {
+                            reject(new Error('Chart.js not available'));
+                            return;
+                        }
+                        resolve(Chart);
+                    },
+                    onerror: () => reject(new Error('Chart.js request failed')),
+                    ontimeout: () => reject(new Error('Chart.js request timeout')),
+                });
+            });
+            this.chartJsPromise.catch(() => { this.chartJsPromise = null; });
+            return this.chartJsPromise;
         },
     };
 
@@ -619,9 +656,70 @@
     const AppEvents = new EventEmitter();
 
     class StorageManager {
-        static get(key, def) { return GM_getValue(key, def); }
-        static set(key, val) { GM_setValue(key, val); }
-        static delete(key) { GM_deleteValue(key); }
+        static _pending = new Map();
+        static _flushTimer = null;
+        static _pendingWrites = 0;
+        static FLUSH_DELAY_MS = 600;
+        static FLUSH_THRESHOLD = 25;
+
+        static get(key, def) {
+            const pending = this._pending.get(key);
+            if (pending) {
+                if (pending.type === 'delete') return def;
+                return pending.value;
+            }
+            return GM_getValue(key, def);
+        }
+        static set(key, val, options = {}) {
+            if (options.immediate) {
+                if (this._pending.delete(key)) {
+                    this._pendingWrites = Math.max(0, this._pendingWrites - 1);
+                }
+                GM_setValue(key, val);
+                return;
+            }
+            const hadKey = this._pending.has(key);
+            this._pending.set(key, { type: 'set', value: val });
+            if (!hadKey) this._pendingWrites += 1;
+            this._scheduleFlush();
+        }
+        static delete(key, options = {}) {
+            if (options.immediate) {
+                if (this._pending.delete(key)) {
+                    this._pendingWrites = Math.max(0, this._pendingWrites - 1);
+                }
+                GM_deleteValue(key);
+                return;
+            }
+            const hadKey = this._pending.has(key);
+            this._pending.set(key, { type: 'delete' });
+            if (!hadKey) this._pendingWrites += 1;
+            this._scheduleFlush();
+        }
+        static _scheduleFlush() {
+            if (this._pendingWrites >= this.FLUSH_THRESHOLD) {
+                this.flush();
+                return;
+            }
+            if (this._flushTimer) return;
+            this._flushTimer = setTimeout(() => {
+                this._flushTimer = null;
+                this.flush();
+            }, this.FLUSH_DELAY_MS);
+        }
+        static flush() {
+            if (this._flushTimer) {
+                clearTimeout(this._flushTimer);
+                this._flushTimer = null;
+            }
+            if (this._pending.size === 0) return;
+            for (const [key, op] of this._pending.entries()) {
+                if (op.type === 'set') GM_setValue(key, op.value);
+                else GM_deleteValue(key);
+            }
+            this._pending.clear();
+            this._pendingWrites = 0;
+        }
     }
 
     class StatsTracker {
@@ -647,7 +745,7 @@
             if (!this._dirty) return;
             this._dirty = false;
             this._pendingWrites = 0;
-            StorageManager.set(Config.STATS_KEY, this.stats);
+            StorageManager.set(Config.STATS_KEY, this.stats, { immediate: true });
         }
         static save() { this.flush(); } // 作为别名以兼容现有调用
         static get(key, def = 0) { return this.stats[key] ?? def; }
@@ -852,6 +950,8 @@
         static MASTER_TAG_LIST_KEY = 'master_tags_v1';
         static tags = {};
         static masterTagList = new Set();
+        static _saveTimer = null;
+        static SAVE_DELAY_MS = 600;
         static _emitCollectionChanged(id) {
             AppEvents.emit('collectionChanged', { id, tags: this.getTags(id) });
         }
@@ -864,8 +964,28 @@
             this.masterTagList = new Set(loadedMasterList);
         }
         static save() {
+            this._scheduleSave();
+        }
+
+        static _scheduleSave() {
+            if (this._saveTimer) return;
+            this._saveTimer = setTimeout(() => {
+                this._saveTimer = null;
+                this._doSave();
+            }, this.SAVE_DELAY_MS);
+        }
+
+        static _doSave() {
             StorageManager.set(this.TAGS_KEY, this.tags);
             StorageManager.set(this.MASTER_TAG_LIST_KEY, [...this.masterTagList].sort());
+        }
+
+        static flush() {
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            this._doSave();
         }
 
         static getTags(id) {
@@ -975,6 +1095,8 @@
         static ITEM_DETAILS_KEY = 'item_details_v1';
         static MAX_ITEM_DETAILS_SIZE = 1000;
         static details = new Map();
+        static _saveTimer = null;
+        static SAVE_DELAY_MS = 800;
 
         static load() {
             try {
@@ -986,11 +1108,31 @@
         }
 
         static save() {
+            this._scheduleSave();
+        }
+
+        static _scheduleSave() {
+            if (this._saveTimer) return;
+            this._saveTimer = setTimeout(() => {
+                this._saveTimer = null;
+                this._doSave();
+            }, this.SAVE_DELAY_MS);
+        }
+
+        static _doSave() {
             while (this.details.size > this.MAX_ITEM_DETAILS_SIZE) {
                 const oldestKey = this.details.keys().next().value;
                 this.details.delete(oldestKey);
             }
             StorageManager.set(this.ITEM_DETAILS_KEY, JSON.stringify([...this.details]));
+        }
+
+        static flush() {
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            this._doSave();
         }
 
         static get(id) {
@@ -1000,12 +1142,18 @@
         static set(id, data) {
             if (!id || !data.title || !data.imageUrl) return;
             this.details.set(id, data);
+            if (this.details.size > this.MAX_ITEM_DETAILS_SIZE) {
+                const oldestKey = this.details.keys().next().value;
+                this.details.delete(oldestKey);
+            }
             this.save();
         }
     }
 
     class HistoryManager {
         static history = [];
+        static _saveTimer = null;
+        static SAVE_DELAY_MS = 600;
         static load() {
             if (!SettingsManager.get('enableHistory')) return;
             try {
@@ -1019,15 +1167,39 @@
         }
         static save() {
             if (!SettingsManager.get('enableHistory')) return;
+            this._scheduleSave();
+        }
+
+        static _scheduleSave() {
+            if (this._saveTimer) return;
+            this._saveTimer = setTimeout(() => {
+                this._saveTimer = null;
+                this._doSave();
+            }, this.SAVE_DELAY_MS);
+        }
+
+        static _doSave() {
+            if (!SettingsManager.get('enableHistory')) return;
             if (this.history.length > Config.MAX_HISTORY_SIZE) {
                 this.history.splice(0, this.history.length - Config.MAX_HISTORY_SIZE);
             }
             StorageManager.set(Config.HISTORY_KEY, JSON.stringify(this.history));
         }
+
+        static flush() {
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            this._doSave();
+        }
         static add(id) {
             if (!SettingsManager.get('enableHistory') || !id) return;
             this.history = this.history.filter(item => item.id !== id);
             this.history.push({ id, timestamp: Date.now() });
+            if (this.history.length > Config.MAX_HISTORY_SIZE) {
+                this.history.splice(0, this.history.length - Config.MAX_HISTORY_SIZE);
+            }
             this.save();
         }
         static remove(id) {
@@ -1043,7 +1215,14 @@
             return this.history.some(item => item.id === id);
         }
         static getRawData() { return this.history; }
-        static clear() { this.history = []; StorageManager.delete(Config.HISTORY_KEY); }
+        static clear() {
+            this.history = [];
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            StorageManager.delete(Config.HISTORY_KEY, { immediate: true });
+        }
     }
 
     class SettingsManager {
@@ -1084,6 +1263,7 @@
         };
         static load() { this.settings = { ...this.defaults, ...StorageManager.get(Config.SETTINGS_KEY, {}) }; }
         static get(key) { return this.settings[key]; }
+        static getAll() { return this.settings; }
         static getNumber(key, fallback, min = -Infinity, max = Infinity) {
             const raw = this.get(key);
             const value = parseInt(raw, 10);
@@ -1360,12 +1540,14 @@
     }
 
     class ImageCacheManager {
+        static SAVE_DELAY_MS = 800;
         constructor() {
             this.key = Config.IMAGE_CACHE_KEY;
             this.maxSize = Config.IMAGE_CACHE_MAX_SIZE;
             this.expirationMs = Config.IMAGE_CACHE_EXPIRATION_HOURS * 60 * 60 * 1000;
             this.data = new Map();
             this.load();
+            this._saveTimer = null;
         }
         load() {
             try {
@@ -1407,19 +1589,34 @@
                 }
             }
         }
-        save() {
+        save() { this._scheduleSave(); }
+        _scheduleSave() {
+            if (this._saveTimer) return;
+            this._saveTimer = setTimeout(() => {
+                this._saveTimer = null;
+                this._doSave();
+            }, ImageCacheManager.SAVE_DELAY_MS);
+        }
+        _doSave() {
             const obj = Object.fromEntries(this.data);
             StorageManager.set(this.key, JSON.stringify(obj));
+        }
+        flush() {
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            this._doSave();
         }
         clear(excludeIds) {
             if (!excludeIds || excludeIds.size === 0) {
                 this.data.clear();
-                StorageManager.delete(this.key);
+                StorageManager.delete(this.key, { immediate: true });
             } else {
                 for (const id of this.data.keys()) {
                     if (!excludeIds.has(id)) this.data.delete(id);
                 }
-                this.save();
+                this.flush();
             }
         }
     }
@@ -1430,14 +1627,31 @@
     class CollectionMagnetManager {
         static KEY = 'fc2_turbo_collection_magnets';
         static magnets = null; // 视频来源
+        static _saveTimer = null;
+        static SAVE_DELAY_MS = 600;
 
         static load() {
             if (this.magnets) return;
             this.magnets = StorageManager.get(this.KEY, {});
         }
 
-        static save() {
+        static save() { this._scheduleSave(); }
+        static _scheduleSave() {
+            if (this._saveTimer) return;
+            this._saveTimer = setTimeout(() => {
+                this._saveTimer = null;
+                this._doSave();
+            }, this.SAVE_DELAY_MS);
+        }
+        static _doSave() {
             StorageManager.set(this.KEY, this.magnets);
+        }
+        static flush() {
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            this._doSave();
         }
 
         static get(id) {
@@ -1469,14 +1683,31 @@
     class CollectionImageManager {
         static KEY = 'fc2_turbo_collection_images';
         static images = null;
+        static _saveTimer = null;
+        static SAVE_DELAY_MS = 600;
 
         static load() {
             if (this.images) return;
             this.images = StorageManager.get(this.KEY, {});
         }
 
-        static save() {
+        static save() { this._scheduleSave(); }
+        static _scheduleSave() {
+            if (this._saveTimer) return;
+            this._saveTimer = setTimeout(() => {
+                this._saveTimer = null;
+                this._doSave();
+            }, this.SAVE_DELAY_MS);
+        }
+        static _doSave() {
             StorageManager.set(this.KEY, this.images);
+        }
+        static flush() {
+            if (this._saveTimer) {
+                clearTimeout(this._saveTimer);
+                this._saveTimer = null;
+            }
+            this._doSave();
         }
 
         static get(id) {
@@ -2273,7 +2504,9 @@
                 @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
                 .${C.preservedIconsContainer} { position: absolute; top: 10px; left: 10px; z-index: 10; display: flex; flex-direction: row; gap: 6px; }
                 .preserved-icons-container > div { display: inline-flex; align-items: center; }
-                .${C.cardRebuilt}.${C.hideNoMagnet}, .${C.cardRebuilt}.${C.isCensored}.${C.hideCensored}, .${C.cardRebuilt}.${C.isViewed}.${C.hideViewed} { display: none !important; }
+                body.fc2-turbo-hide-no-magnet .${C.cardRebuilt}[data-has-magnet="0"] { display: none !important; }
+                body.fc2-turbo-hide-censored .${C.cardRebuilt}.${C.isCensored} { display: none !important; }
+                body.fc2-turbo-hide-viewed .${C.cardRebuilt}.${C.isViewed} { display: none !important; }
 
                 /* Toast 通知 */
                 #fc2-turbo-toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
@@ -3014,28 +3247,14 @@
             });
 
             // 3. 自动播放视频逻辑
+            const previewVideoSrc = `https://fourhoi.com/fc2-ppv-${data.fc2Id}/preview.mp4`;
             let previewVideo = null;
             let autoplayTimeout = null;
             let autoplayLoaded = false;
-            if (SettingsManager.get('previewMode') === 'autoplay') {
-                previewVideo = this.createElement('video', {
-                    src: `https://fourhoi.com/fc2-ppv-${data.fc2Id}/preview.mp4`,
-                    className: `${C.staticPreview} ${C.previewElement}`,
-                    muted: true,
-                    loop: true,
-                    playsInline: true
-                });
-                previewVideo.style.position = 'absolute';
-                previewVideo.style.top = '0';
-                previewVideo.style.left = '0';
-                previewVideo.style.zIndex = '3'; // 缩略图来源
-                previewVideo.style.opacity = '0';
-                previewVideo.style.objectFit = 'contain';
-                previewVideo.style.width = '100%';
-                previewVideo.style.height = '100%';
-                previewVideo.style.transition = 'opacity 0.5s ease';
-
+            const startAutoplayTimeout = () => {
+                if (autoplayTimeout || autoplayLoaded) return;
                 autoplayTimeout = setTimeout(() => {
+                    autoplayTimeout = null;
                     if (autoplayLoaded) return;
                     if (previewVideo) {
                         previewVideo.remove();
@@ -3046,10 +3265,34 @@
                     noVideoOverlay.classList.add('is-visible');
                     card.dataset.previewFailed = 'true';
                 }, Config.PREVIEW_VIDEO_TIMEOUT);
+            };
+            const clearAutoplayTimeout = () => {
+                if (!autoplayTimeout) return;
+                clearTimeout(autoplayTimeout);
+                autoplayTimeout = null;
+            };
+            if (SettingsManager.get('previewMode') === 'autoplay') {
+                previewVideo = this.createElement('video', {
+                    className: `${C.staticPreview} ${C.previewElement}`,
+                    muted: true,
+                    loop: true,
+                    playsInline: true,
+                    preload: 'none'
+                });
+                previewVideo.dataset.src = previewVideoSrc;
+                previewVideo.style.position = 'absolute';
+                previewVideo.style.top = '0';
+                previewVideo.style.left = '0';
+                previewVideo.style.zIndex = '3'; // 缩略图来源
+                previewVideo.style.opacity = '0';
+                previewVideo.style.objectFit = 'contain';
+                previewVideo.style.width = '100%';
+                previewVideo.style.height = '100%';
+                previewVideo.style.transition = 'opacity 0.5s ease';
 
                 // 错误处理：视频失败则回退到图片
                 previewVideo.onerror = () => {
-                    if (autoplayTimeout) clearTimeout(autoplayTimeout);
+                    clearAutoplayTimeout();
                     previewVideo.remove();
                     previewVideo = null;
                     // 更新提示：警告会删除缓存
@@ -3060,7 +3303,7 @@
                 };
                 previewVideo.oncanplay = () => {
                     autoplayLoaded = true;
-                    if (autoplayTimeout) clearTimeout(autoplayTimeout);
+                    clearAutoplayTimeout();
                     previewVideo.style.opacity = '1';
                     // 重构：根据收藏状态选择缓存
                     videoIsActive = true;
@@ -3146,6 +3389,10 @@
                     onEnter: () => {
                         startLoadingChain();
                         if (previewVideo) {
+                            if (!previewVideo.src) {
+                                previewVideo.src = previewVideo.dataset.src || '';
+                                if (previewVideo.src) startAutoplayTimeout();
+                            }
                             if (!previewVideo.isConnected) preview.appendChild(previewVideo);
                             previewVideo.play().catch(() => { /* 自动播放被阻止，忽略 */ });
                         }
@@ -3154,6 +3401,7 @@
                         if (previewVideo) {
                             previewVideo.pause();
                             previewVideo.currentTime = 0;
+                            clearAutoplayTimeout();
                         }
                     }
                 },
@@ -3410,7 +3658,8 @@
             else if (!show && loadingButton) loadingButton.remove();
         }
         static addMagnetButton(container, url) {
-            // 缩略图来源
+            const card = container?.closest?.(`.${Config.CLASSES.cardRebuilt}`);
+            if (card) card.dataset.hasMagnet = '1';
             if (!SettingsManager.get('sourceMagnet')) return;
             if (container && !container.querySelector(`.${Config.CLASSES.btnMagnet}`)) {
                 const btn = this.createResourceButton('magnet', t('tooltipCopyMagnet'), Icons.magnet, 'javascript:void(0);');
@@ -3437,37 +3686,41 @@
             }
             card.classList.toggle(Config.CLASSES.isViewed, isViewed);
         }
-        static applyCardVisibility(card, hasMagnet) { card?.classList.toggle(Config.CLASSES.hideNoMagnet, SettingsManager.get('hideNoMagnet') && !hasMagnet); }
-        static applyCensoredFilter(card) { if (card?.classList.contains(Config.CLASSES.isCensored)) card.classList.toggle(Config.CLASSES.hideCensored, SettingsManager.get('hideCensored')); }
-        static applyHistoryVisibility(card) {
+        static applyCardVisibility(card, hasMagnet) {
             if (!card) return;
-            const isViewed = card.classList.contains(Config.CLASSES.isViewed);
-            card.classList.toggle(Config.CLASSES.hideViewed, SettingsManager.get('hideViewed') && isViewed);
+            card.dataset.hasMagnet = hasMagnet ? '1' : '0';
         }
+        static applyCensoredFilter() { }
+        static applyHistoryVisibility() { }
 
     }
 
     class DynamicStyleApplier {
-        static init() { AppEvents.on('settingsChanged', this.handleSettingsChange.bind(this)); }
+        static init() {
+            AppEvents.on('settingsChanged', this.handleSettingsChange.bind(this));
+            this.applyFilterClasses();
+        }
         static handleSettingsChange({ key, newValue }) {
             switch (key) {
-                case 'hideNoMagnet': this.applyAllCardVisibilities(); break;
-                case 'hideCensored': this.applyAllCensoredFilters(); break;
-                case 'hideViewed': this.applyAllHistoryVisibilities(); break;
+                case 'hideNoMagnet':
+                case 'hideCensored':
+                case 'hideViewed':
+                    this.applyFilterClasses();
+                    break;
                 case 'cardLayoutMode':
                     document.body.classList.remove('layout-default', 'layout-compact');
                     document.body.classList.add(`layout-${newValue}`);
                     break;
             }
         }
-        static applyAllCardVisibilities() {
-            document.querySelectorAll(`.${Config.CLASSES.cardRebuilt}`).forEach(card => {
-                const hasMagnet = !!card.querySelector(`.${Config.CLASSES.btnMagnet}`);
-                UIBuilder.applyCardVisibility(card, hasMagnet);
-            });
+        static applyFilterClasses() {
+            document.body.classList.toggle('fc2-turbo-hide-no-magnet', !!SettingsManager.get('hideNoMagnet'));
+            document.body.classList.toggle('fc2-turbo-hide-censored', !!SettingsManager.get('hideCensored'));
+            document.body.classList.toggle('fc2-turbo-hide-viewed', !!SettingsManager.get('hideViewed'));
         }
-        static applyAllCensoredFilters() { document.querySelectorAll(`.${Config.CLASSES.cardRebuilt}`).forEach(card => UIBuilder.applyCensoredFilter(card)); }
-        static applyAllHistoryVisibilities() { document.querySelectorAll(`.${Config.CLASSES.cardRebuilt}`).forEach(card => UIBuilder.applyHistoryVisibility(card)); }
+        static applyAllCardVisibilities() { this.applyFilterClasses(); }
+        static applyAllCensoredFilters() { this.applyFilterClasses(); }
+        static applyAllHistoryVisibilities() { this.applyFilterClasses(); }
     }
 
     // =============================================================================
@@ -3478,22 +3731,61 @@
             this.cardQueue = new Map();
             this.cache = new CacheManager();
             this.processQueueDebounced = Utils.debounce(() => this.processQueue(), Config.DEBOUNCE_DELAY);
+            this.pendingRoots = new Set();
+            this.scanScheduled = false;
+            this.cardSelector = null;
         }
         init() {
             const targetNode = document.querySelector(this.getContainerSelector());
             if (!targetNode) return;
+            this.cardSelector = this.getCardSelector();
             PreviewManager.init(targetNode, `.${Config.CLASSES.processedCard}`);
             this.scanForCards(targetNode);
             new MutationObserver(mutations => {
                 for (const m of mutations) for (const n of m.addedNodes) {
                     if (n.nodeType === 1) {
-                        if (n.matches(this.getCardSelector())) this.processCard(n);
-                        n.querySelectorAll(this.getCardSelector()).forEach(c => this.processCard(c));
+                        this._queueRoot(n);
                     }
                 }
             }).observe(targetNode, { childList: true, subtree: true });
         }
-        scanForCards(root = document) { root.querySelectorAll(this.getCardSelector()).forEach(c => this.processCard(c)); }
+        scanForCards(root = document) {
+            const selector = this.cardSelector || this.getCardSelector();
+            const base = root?.querySelectorAll ? root : document;
+            if (!base?.querySelectorAll) return;
+            base.querySelectorAll(selector).forEach(c => this.processCard(c));
+        }
+        _queueRoot(node) {
+            if (!node) return;
+            this.pendingRoots.add(node);
+            this._scheduleScan();
+        }
+        _scheduleScan() {
+            if (this.scanScheduled) return;
+            this.scanScheduled = true;
+            const run = () => {
+                this.scanScheduled = false;
+                this._processPendingRoots();
+            };
+            if (typeof requestIdleCallback === 'function') {
+                requestIdleCallback(run, { timeout: 200 });
+            } else {
+                requestAnimationFrame(run);
+            }
+        }
+        _processPendingRoots() {
+            if (this.pendingRoots.size === 0) return;
+            const selector = this.cardSelector || this.getCardSelector();
+            const roots = Array.from(this.pendingRoots);
+            this.pendingRoots.clear();
+            const cards = new Set();
+            roots.forEach(root => {
+                if (root.nodeType !== 1) return;
+                if (root.matches && root.matches(selector)) cards.add(root);
+                if (root.querySelectorAll) root.querySelectorAll(selector).forEach(card => cards.add(card));
+            });
+            cards.forEach(card => this.processCard(card));
+        }
         async processQueue() {
             if (this.cardQueue.size === 0) return;
             const queue = new Map(this.cardQueue); this.cardQueue.clear();
@@ -4032,7 +4324,7 @@
             this._renderAchievements(content.querySelector('#achievements-placeholder'), AchievementManager.getAll(), unlockedIds);
 
             try {
-                if (typeof Chart === 'undefined') throw new Error('Chart.js not loaded');
+                await ExternalScripts.loadChartJs();
                 const activityWrapper = content.querySelector('#activity-chart-wrapper');
                 activityWrapper.innerHTML = '<canvas id="activityChart" style="height: 120px; width: 100%;"></canvas>';
                 Chart.defaults.color = '#a6adc8';
@@ -4686,23 +4978,26 @@
 
         static _renderCacheChart(canvas, cacheSize, maxCacheSize) {
             if (!canvas) return;
-            new Chart(canvas.getContext('2d'), { type: 'doughnut', data: { labels: [t('chartCacheUsed'), t('chartCacheFree')], datasets: [{ data: [cacheSize, Math.max(0, maxCacheSize - cacheSize)], backgroundColor: ['#89b4fa', 'rgba(0,0,0,0.3)'], borderColor: 'rgba(30, 30, 46, 0.8)', borderWidth: 4 }] }, options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: '#cdd6f4' } }, title: { display: true, text: t('chartCacheTitle'), color: '#cdd6f4' } } } });
+            ExternalScripts.loadChartJs().then(() => {
+                new Chart(canvas.getContext('2d'), { type: 'doughnut', data: { labels: [t('chartCacheUsed'), t('chartCacheFree')], datasets: [{ data: [cacheSize, Math.max(0, maxCacheSize - cacheSize)], backgroundColor: ['#89b4fa', 'rgba(0,0,0,0.3)'], borderColor: 'rgba(30, 30, 46, 0.8)', borderWidth: 4 }] }, options: { responsive: true, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { color: '#cdd6f4' } }, title: { display: true, text: t('chartCacheTitle'), color: '#cdd6f4' } } } });
+            }).catch(() => { });
         }
 
         static _exportData() {
             try {
+                flushAllData();
                 const exportData = {
                     __id: 'FC2PPVDB_Turbo_Backup',
                     __version: GM_info.script.version,
                     __exportDate: new Date().toISOString(),
-                    settings: StorageManager.get(Config.SETTINGS_KEY, {}),
-                    history: JSON.parse(StorageManager.get(Config.HISTORY_KEY, '[]')),
-                    stats: StorageManager.get(Config.STATS_KEY, {}),
-                    achievements: StorageManager.get(Config.ACHIEVEMENTS_KEY, []),
+                    settings: { ...SettingsManager.getAll() },
+                    history: HistoryManager.getRawData(),
+                    stats: { ...StatsTracker.getAll() },
+                    achievements: [...AchievementManager.getUnlockedIds()],
                     // 视频来源
                     collection: {
-                        tags: TagManager.tags, // 格式：{ fc2Id: [tag1, tag2], ... }
-                        masterTagList: [...TagManager.masterTagList] // 基于时间的节流
+                        tags: TagManager.tags,
+                        masterTagList: [...TagManager.masterTagList]
                     }
                 };
                 const exportString = JSON.stringify(exportData, null, 2);
@@ -4747,19 +5042,34 @@
                 if (importData.__id !== 'FC2PPVDB_Turbo_Backup' || !importData.settings) {
                     throw new Error("Invalid data format.");
                 }
-                if (importData.settings) StorageManager.set(Config.SETTINGS_KEY, importData.settings);
-                if (importData.history && Array.isArray(importData.history)) StorageManager.set(Config.HISTORY_KEY, JSON.stringify(importData.history));
-                if (importData.stats) StorageManager.set(Config.STATS_KEY, importData.stats);
-                if (importData.achievements && Array.isArray(importData.achievements)) StorageManager.set(Config.ACHIEVEMENTS_KEY, importData.achievements);
+                if (importData.settings) {
+                    const mergedSettings = { ...SettingsManager.defaults, ...importData.settings };
+                    SettingsManager.settings = mergedSettings;
+                    StorageManager.set(Config.SETTINGS_KEY, mergedSettings, { immediate: true });
+                }
+                if (importData.history && Array.isArray(importData.history)) {
+                    StorageManager.set(Config.HISTORY_KEY, JSON.stringify(importData.history), { immediate: true });
+                    HistoryManager.history = importData.history;
+                }
+                if (importData.stats) {
+                    StatsTracker.stats = importData.stats;
+                    StatsTracker._dirty = false;
+                    StatsTracker._pendingWrites = 0;
+                    StorageManager.set(Config.STATS_KEY, importData.stats, { immediate: true });
+                }
+                if (importData.achievements && Array.isArray(importData.achievements)) {
+                    AchievementManager.unlockedIds = new Set(importData.achievements);
+                    StorageManager.set(Config.ACHIEVEMENTS_KEY, importData.achievements, { immediate: true });
+                }
 
                 // 视频来源列表
                 if (importData.collection) {
                     if (importData.collection.tags && typeof importData.collection.tags === 'object') {
-                        StorageManager.set(TagManager.TAGS_KEY, importData.collection.tags);
+                        StorageManager.set(TagManager.TAGS_KEY, importData.collection.tags, { immediate: true });
                         TagManager.tags = importData.collection.tags; // 视频来源列表
                     }
                     if (importData.collection.masterTagList && Array.isArray(importData.collection.masterTagList)) {
-                        StorageManager.set(TagManager.MASTER_TAG_LIST_KEY, importData.collection.masterTagList);
+                        StorageManager.set(TagManager.MASTER_TAG_LIST_KEY, importData.collection.masterTagList, { immediate: true });
                         TagManager.masterTagList = new Set(importData.collection.masterTagList); // 视频来源列表
                     }
                     TagManager._emitMasterTagsChanged();
@@ -4828,6 +5138,7 @@
                 newSettings.preferFd2SiteImage = this.panel.querySelector('#setting-preferFd2SiteImage').checked;
             }
             Object.entries(newSettings).forEach(([key, value]) => SettingsManager.set(key, value));
+            flushAllData();
             location.reload();
         }
 
@@ -5128,11 +5439,26 @@
         else document.addEventListener('DOMContentLoaded', showTip, { once: true });
     };
 
+    const flushAllData = () => {
+        TagManager.flush?.();
+        ItemDetailsManager.flush?.();
+        HistoryManager.flush?.();
+        CollectionMagnetManager.flush?.();
+        CollectionImageManager.flush?.();
+        GlobalImageCache?.flush?.();
+        StatsTracker.flush();
+        StorageManager.flush();
+    };
+
     function main() {
         Localization.init();
         StatsTracker.load();
         // 页面卸载前刷新节流统计，避免丢失计数
-        window.addEventListener('beforeunload', () => StatsTracker.flush(), { once: true });
+        window.addEventListener('beforeunload', () => flushAllData(), { once: true });
+        window.addEventListener('pagehide', () => flushAllData(), { once: true });
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') flushAllData();
+        });
         SettingsManager.load();
         HistoryManager.load();
         AchievementManager.load();

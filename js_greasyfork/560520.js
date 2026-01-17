@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         「」モダナイザー
 // @namespace    http://2chan.net/
-// @version      0.0.17
+// @version      0.0.18
 // @description  ふたばちゃんねるのUIをモダン化し、NG機能、設定画面、自動リロード、どこでも投稿機能を追加しちゃう。
 // @author       wamo
 // @match        *://*.2chan.net/*/
@@ -25,10 +25,11 @@
     // ---------------------------------------------------------
     // 1. CSS Injection (Modern UI + Mobile Support)
     // ---------------------------------------------------------
-    const MODERN_UI_KEY = 'futaba_modern_ui_enabled';
+    const THEME_KEY = 'futaba_theme_mode'; // 'classic', 'modern_light', 'modern_dark'
+    const MODERN_UI_KEY_OLD = 'futaba_modern_ui_enabled';
 
     // ---------------------------------------------------------
-    // 1. CSS Injection (Split into Core and Modern)
+    // 1. CSS Injection (Split into Core, Modern, and Dark)
     // ---------------------------------------------------------
 
     // CORE CSS: Functional, Essential Responsive, and Features independent of visual style (FAB, NG, Modals)
@@ -210,7 +211,7 @@
             z-index: 10000;
         }
         .fab-btn {
-            background: rgba(50, 50, 50, 0.8);
+            background-color: rgba(50, 50, 50, 0.8);
             color: white;
             border: none;
             width: 50px;
@@ -228,11 +229,11 @@
             user-select: none;
         }
         .fab-btn:hover {
-            background: rgba(50, 50, 50, 1);
+            background-color: rgba(50, 50, 50, 1);
             transform: scale(1.05);
         }
         .fab-btn.active {
-            background: #007bff;
+            background-color: #007bff !important;
         }
         .auto-reload-status {
             font-size: 0.8rem;
@@ -474,6 +475,11 @@
         }
         img[align="left"], img[align="right"] { float: none !important; }
         .ng-button:hover { background-color: #d9534f; color: #fff; }
+        #id-modal-list a[href*="/b/src/"] {
+            padding: 0 !important;
+            background: none;
+            border-radius: 0;
+        }
 
         /* Media Queries for Modern Layout Adjustments (Overrides) */
         @media (max-width: 600px) {
@@ -641,6 +647,218 @@
             font-size: 0.8rem;
             color: #666;
         }
+
+        /* popup */
+        .pdmm, .slp {
+            border: none;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .pdms {
+            margin: 10px 5px;
+        }
+        .pdms:nth-child(4) {
+            color: #d9534f;
+        }
+        .qtd {
+            background: #fff;
+        }
+    `;
+
+    // DARK MODE OVERRIDES
+    const darkThemeOverrides = `
+        :root {
+            --dark-bg-main: #121212;
+            --dark-bg-panel: #1e1e1e;
+            --dark-bg-input: #2a2a2a;
+            --dark-border: #333333;
+            --dark-text-main: #e0e0e0;
+            --dark-text-sub: #a0a0a0;
+            --dark-link: #8daaff;
+            --dark-link-visited: #b08dff;
+            --dark-link-hover: #ff8d8d;
+            --dark-accent: #d9534f;
+            --dark-quote: #aacc55;
+        }
+
+        body {
+            background-color: var(--dark-bg-main) !important;
+            color: var(--dark-text-main) !important;
+        }
+
+        /* Panels & Containers */
+        .thre, #hdp, table:not(.ftbl):not(.ftb2):not(.menu) {
+            background-color: var(--dark-bg-panel) !important;
+            border: 1px solid var(--dark-border) !important;
+            color: var(--dark-text-main) !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+        }
+
+        /* Headers & Navigation */
+        #tit { color: var(--dark-accent) !important; text-shadow: none !important; }
+
+        #hml input[type="text"], #hml input[type="submit"] {
+            background-color: var(--dark-bg-input) !important;
+            border-color: var(--dark-border) !important;
+            color: var(--dark-text-main) !important;
+        }
+
+        #custom-header-menu a, .psen a, .psen b, a[href*="2chan.net/"], a[href$="futaba.htm"] {
+            background-color: var(--dark-bg-input) !important;
+            border-color: var(--dark-border) !important;
+            color: var(--dark-text-main) !important;
+        }
+        #custom-header-menu a:hover, .psen a:hover {
+            background-color: var(--dark-accent) !important;
+            color: #fff !important;
+        }
+
+        /* Post Content */
+        blockquote { color: #d0d0d0 !important; }
+        font[color="#789922"] { color: var(--dark-quote) !important; }
+        .cnw { color: var(--dark-text-sub) !important; }
+        .cno { color: var(--dark-text-sub) !important; }
+
+        /* Links */
+        a { color: var(--dark-link) !important; }
+        a:visited { color: var(--dark-link-visited) !important; }
+        a:hover { color: var(--dark-link-hover) !important; }
+        #contres a {
+            color: var(--dark-text-main) !important;
+        }
+
+        /* Images */
+        /* Slightly dim images until hovered to reduce eye strain */
+        img:not(:hover) { filter: brightness(0.85); transition: filter 0.2s; }
+
+        /* Catalog */
+        .catalog-item {
+            background-color: var(--dark-bg-panel) !important;
+            border-color: var(--dark-border) !important;
+            color: var(--dark-text-main) !important;
+        }
+        .catalog-item:hover {
+            border-color: var(--dark-accent) !important;
+            background-color: #252525 !important;
+        }
+        .catalog-item a { color: var(--dark-text-main) !important; }
+        .catalog-item font { color: var(--dark-text-sub) !important; }
+
+        /* Forms & Interactive */
+        input[type="text"], textarea, select {
+            background-color: var(--dark-bg-input) !important;
+            border: 1px solid var(--dark-border) !important;
+            color: var(--dark-text-main) !important;
+        }
+        input[type="submit"], button {
+            background-color: #333 !important;
+            color: #eee !important;
+            border: 1px solid #555 !important;
+        }
+        input[type="submit"]:hover, button:hover {
+            background-color: #444 !important;
+        }
+
+        /* Modals */
+        #settings-modal, #post-modal-content, #id-modal-content {
+            background-color: var(--dark-bg-panel) !important;
+            color: var(--dark-text-main) !important;
+            border: 1px solid #444 !important;
+        }
+        .settings-section h4 { border-bottom-color: var(--dark-border) !important; }
+
+        /* NG area */
+        .ng-placeholder {
+            background-color: #222 !important;
+            color: #666 !important;
+        }
+        .ng-list { border-color: var(--dark-border) !important; }
+        .ng-list li { border-bottom-color: var(--dark-border) !important; }
+
+        /* SOD/Delete Buttons */
+        .sod {
+            background-color: var(--dark-bg-input) !important;
+            border-color: var(--dark-border) !important;
+            color: var(--dark-text-sub) !important;
+        }
+        .sod:hover {
+            color: var(--dark-accent) !important;
+        }
+
+        /* Table cleanup */
+        .rtd { background: transparent !important; }
+        .rts { display: none !important; }
+
+        /* Form Specifics */
+        .ftdc {
+            background-color: #ED6724 !important;
+            color: #eee !important;
+            border: none;
+        }
+        th[bgcolor] {
+            color: #eee !important;
+        }
+        th font { color: #eee !important; }
+
+        /* Misc */
+        /* Legacy Popups and Floating Elements */
+        .pdmm, .pdmmc, .pdd, .pddtip, .pddtipc, .slp, .ama {
+            background-color: var(--dark-bg-panel) !important;
+            border: 1px solid var(--dark-border) !important;
+            color: var(--dark-text-main) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+        }
+
+        /* Legacy Text Colors */
+        .delform, .delform2, .chui {
+            color: var(--dark-text-sub) !important;
+        }
+
+        /* Spinner Inputs */
+        .spinnerDiv input {
+            background-color: var(--dark-bg-input) !important;
+            color: var(--dark-text-main) !important;
+            border: 1px solid var(--dark-border) !important;
+        }
+
+        /* Catalog Pagination */
+        #cattable {
+            background-color: transparent !important;
+        }
+
+        /* Restore HR */
+        hr {
+            border: 0;
+            border-top: 1px solid var(--dark-border);
+            height: 1px;
+            background: transparent;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--dark-bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 6px;
+            border: 3px solid var(--dark-bg-main);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #666;
+        }
+
+        /* Popup */
+        .pdmm {
+            background: var(--dark-bg-main);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .qtd {
+            background: var(--dark-bg-main);
+        }
     `;
 
     function addStyle(css) {
@@ -728,11 +946,9 @@
         // Find text node matching ID:xxxx
         if (!el) return null;
         for (const node of el.childNodes) {
-            if (node.nodeType === Node.TEXT_NODE) {
-                const match = node.textContent.match(/ID:([a-zA-Z0-9\.\+\/]+)/);
-                if (match) {
-                    return match[1];
-                }
+            const match = node.textContent.match(/ID:([a-zA-Z0-9\.\+\/]+)/);
+            if (match) {
+                return match[1];
             }
         }
         return null;
@@ -793,6 +1009,38 @@
         return extractId(cnw);
     }
 
+    function getScroll(){
+        var supportPageOffset = window.pageXOffset !== undefined;
+        var isCSS1Compat = ((document.compatMode || "") === "CSS1Compat");
+        var x = supportPageOffset ? window.pageXOffset : isCSS1Compat ? document.documentElement.scrollLeft : document.body.scrollLeft;
+        var y = supportPageOffset ? window.pageYOffset : isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop;
+        return {x: x, y: y};
+    }
+
+    function getPosition(elm) {
+        if(typeof elm.getBoundingClientRect == 'function'){
+            return {x: elm.getBoundingClientRect().left,
+                            y: elm.getBoundingClientRect().top};
+        }else{
+            var xPos = 0, yPos = 0;
+            while(elm) {
+                xPos += (elm.offsetLeft + elm.clientLeft);
+                yPos += (elm.offsetTop  + elm.clientTop);
+                elm = elm.offsetParent;
+            }
+            var isCSS1Compat = ((document.compatMode || "") === "CSS1Compat");
+            xPos -= (isCSS1Compat ? document.documentElement.scrollLeft : document.body.scrollLeft);
+            yPos -= (isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop);
+            return { x: xPos, y: yPos };
+        }
+    }
+
+    function getScrollPosition(elm){
+        var xy=getPosition(elm);
+        var scroll=getScroll();
+        return {x: scroll.x+xy.x, y: scroll.y+xy.y};
+    }
+
     function applyNg() {
         if (getPageType() !== 'thread') return;
         const ids = getNgIds()[threadId] || [];
@@ -831,7 +1079,7 @@
             if (isNg) {
                 placeholder = document.createElement('div');
                 placeholder.className = 'ng-placeholder';
-                placeholder.innerHTML = `<span>NG(${reason})</span> <span class="chk-link" style="text-decoration:underline; cursor:pointer; color:blue;">表示</span>`;
+                placeholder.innerHTML = `<span>NG(${reason})</span> <span class="chk-link" style="text-decoration:underline; cursor:pointer; color:#239DEB;">表示</span>`;
 
                 placeholder.querySelector('.chk-link').onclick = function() {
                     this.parentElement.style.display = 'none';
@@ -851,6 +1099,173 @@
         document.querySelectorAll('table').forEach(tbl => {
             process(tbl, tbl.querySelector('.cnw'));
         });
+    }
+
+    // ---------------------------------------------------------
+    // ID Popup Logic
+    // ---------------------------------------------------------
+    function injectIdLinks() {
+        if (getPageType() !== 'thread') return;
+        const theme = getData(THEME_KEY, 'modern_light');
+
+        // Helper to wrap ID text
+        const processCnw = (container) => {
+            const cnws = container.querySelectorAll('.cnw');
+            cnws.forEach(cnw => {
+                if (cnw.dataset.processedId) return; // Skip if already processed
+                const id = extractId(cnw);
+                if (id) {
+                    // Find the text node containing the ID
+                    for (const node of cnw.childNodes) {
+                        if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('ID:' + id)) {
+                            const parts = node.textContent.split('ID:' + id);
+                            const frag = document.createDocumentFragment();
+
+                            frag.appendChild(document.createTextNode(parts[0]));
+
+                            const span = document.createElement('span');
+                            span.innerHTML = `ID:${id}`;
+                            span.className = 'clickable-id';
+                            span.style.cursor = 'pointer';
+                            // Apply style based on theme (though CSS class handles it mostly)
+                            // if (theme !== 'classic') span.style.color = '#00f'; // Modern css handles colors
+                            span.title = 'このIDの投稿をまとめて表示';
+
+                            span.onclick = (e) => {
+                                e.stopPropagation();
+                                openIdModal(id);
+                            };
+
+                            frag.appendChild(span);
+                            if (parts[1]) frag.appendChild(document.createTextNode(parts[1]));
+
+                            cnw.replaceChild(frag, node);
+                            cnw.dataset.processedId = "true";
+                            break;
+                        }
+                    }
+                }
+            });
+        };
+
+        const thre = document.querySelector('.thre');
+        if (thre) processCnw(thre);
+        document.querySelectorAll('table').forEach(tbl => processCnw(tbl));
+    }
+
+    function openIdModal(targetId) {
+        // Collect posts
+        const posts = [];
+
+        const extractPostData = (root) => {
+            const cnw = root.querySelector('.cnw');
+            const id = extractId(cnw);
+            if (id === targetId) {
+                const numberEl = root.querySelector('.cno');
+                const number = numberEl ? numberEl.textContent : '???';
+                const rscEl = root.querySelector('.rsc');
+                const rsc = rscEl ? rscEl.textContent : '???';
+                const timeMatch = cnw.textContent.match(/(\d{2}\/\d{2}\/\d{2}\(.\)\d{2}:\d{2}:\d{2})/);
+                const time = timeMatch ? timeMatch[1] : '';
+
+                // Content (Image + Body)
+                const body = root.querySelector('blockquote').cloneNode(true);
+                // Fix links in clone if needed
+
+                let imgHTML = '';
+                // Check if thread OP image
+                if (root.classList.contains('thre')) {
+                    const img = root.querySelector('a > img');
+                    if (img && img.parentNode.href) imgHTML = `<a href="${img.parentNode.href}" target="_blank"><img src="${img.src}" style="max-height:100px; max-width:100px;"></a><br>`;
+                } else {
+                    // Check local image
+                    const table = root.closest('table'); // If root is td actually
+                    // In standard structure, root is table or thre
+                    const img = root.querySelector('img[src*="/b/thumb/"]');
+                    if (img && img.parentNode.href) {
+                         imgHTML = `<a href="${img.parentNode.href}" target="_blank"><img src="${img.src}" style="max-height:100px; max-width:100px;"></a><br>`;
+                    }
+                }
+
+                posts.push({ rsc, number, time, body: body.innerHTML, imgHTML });
+            }
+        };
+
+        // Scan OP
+        const thre = document.querySelector('.thre');
+        if (thre) extractPostData(thre);
+        // Scan Replies
+        document.querySelectorAll('table').forEach(tbl => extractPostData(tbl));
+
+        // Create Modal
+        let modal = document.getElementById('id-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'id-modal';
+            modal.style.cssText = `
+                display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+                background:rgba(0,0,0,0.5); z-index:10003; align-items:center; justify-content:center;
+            `;
+            modal.innerHTML = `
+                <div id="id-modal-content" style="
+                    background:#fff; padding:20px; border-radius:8px; width:90%; max-width:600px;
+                    max-height:90dvh; overflow-y:auto; position:relative;
+                ">
+                    <span id="id-modal-close" style="position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer;">&times;</span>
+                    <h3>ID:${targetId} の投稿 (${posts.length}件)</h3>
+                    <div id="id-modal-list"></div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.querySelector('#id-modal-close').onclick = () => modal.style.display = 'none';
+            modal.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
+        } else {
+            modal.innerHTML = `
+                <div id="id-modal-content" style="
+                    background:#fff; padding:20px; border-radius:8px; width:90%; max-width:600px;
+                    max-height:90dvh; overflow-y:auto; position:relative;
+                ">
+                    <span id="id-modal-close" style="position:absolute; top:10px; right:15px; font-size:1.5rem; cursor:pointer;">&times;</span>
+                    <h3>ID:${targetId} の投稿 (${posts.length}件)</h3>
+                    <div id="id-modal-list"></div>
+                </div>
+            `;
+        }
+
+        // Render Posts
+        const list = modal.querySelector('#id-modal-list');
+        list.innerHTML = '';
+        const theme = getData(THEME_KEY, 'modern_light');
+        const isDark = theme === 'modern_dark';
+
+        // Update modal style for theme
+        const content = modal.querySelector('#id-modal-content');
+        if (isDark) {
+            content.style.background = '#2d2d2d';
+            content.style.color = '#fff';
+        } else {
+            content.style.background = '#fff';
+            content.style.color = '#333';
+        }
+
+        posts.forEach(p => {
+            const item = document.createElement('div');
+            item.style.cssText = `border-bottom:1px solid ${isDark?'#444':'#eee'}; padding:10px 0;`;
+            item.innerHTML = `
+                <div style="font-size:0.85em; color:${isDark?'#aaa':'#666'}; margin-bottom:5px;">
+                    <span class="qtjmp">${p.rsc}</span> ${p.number} - ${p.time}
+                </div>
+                <div>${p.imgHTML} ${p.body}</div>
+            `;
+            const qtjmp = item.querySelector(".qtjmp");
+            qtjmp.onclick = (e) => {
+                document.getElementById('id-modal').style.display = 'none';
+                window.scroll(0,getScrollPosition(document.getElementById(`delcheck${p.number.slice(3)}`).parentNode).y);
+            }
+            list.appendChild(item);
+        });
+
+        modal.style.display = 'flex';
     }
 
     function injectNgButtons() {
@@ -947,9 +1362,9 @@
         modal.querySelector('#post-modal-close').onclick = () => {
             modal.style.display = 'none';
 
-            // If Modern UI is disabled, return form to original place so it remains visible on page
-            const useModern = getData(MODERN_UI_KEY, true);
-            if (!useModern && originalFormParent) {
+            // If Modern UI is disabled, return form to original place
+            const theme = getData(THEME_KEY, 'modern_light');
+            if (theme === 'classic' && originalFormParent) {
                 const form = document.getElementById('fm');
                 if(form) {
                     originalFormParent.insertBefore(form, originalFormNextSibling);
@@ -1105,10 +1520,15 @@
 
             <div class="settings-section">
                 <h4>全般</h4>
-                <label style="display:flex; align-items:center; cursor:pointer; margin-bottom:10px;">
-                    <input type="checkbox" id="toggle-modern-ui" style="margin-right:8px;">
-                    モダンUIを有効にする (再読み込みで反映)
+                <label style="display:flex; align-items:center; margin-bottom:10px;">
+                    テーマ選択:
+                    <select id="theme-selector" style="margin-left:10px; padding:5px; border-radius:4px; border:1px solid #ccc;">
+                        <option value="classic">クラシック</option>
+                        <option value="modern_light">モダン (ライト)</option>
+                        <option value="modern_dark">モダン (ダーク)</option>
+                    </select>
                 </label>
+                <div style="font-size:0.85em; color:#888; margin-bottom:10px;">※変更はリロード後に反映されます</div>
 
                 <label style="display:flex; align-items:center;">
                     自動リロード間隔 (秒):
@@ -1162,11 +1582,12 @@
 
         if (!idList) return;
 
-        // Modern UI Checkbox
-        if (modernUiCb) {
-            modernUiCb.checked = getData(MODERN_UI_KEY, true);
-            modernUiCb.onchange = (e) => {
-                setData(MODERN_UI_KEY, e.target.checked);
+        // Theme Selector
+        const themeSel = document.getElementById('theme-selector');
+        if (themeSel) {
+            themeSel.value = getData(THEME_KEY, 'modern_light');
+            themeSel.onchange = (e) => {
+                setData(THEME_KEY, e.target.value);
                 if(confirm('設定を反映するにはリロードが必要です。リロードしますか？')) {
                     location.reload();
                 }
@@ -1255,7 +1676,7 @@
 
         createAnchorLinks: function(node) {
             // Recursively find text nodes and replace patterns
-            const regex = /((?<!<a[^>]*>)(fu?)([0-9]{5,8})\.(jpe?g|png|webp|gif|bmp|mp4)(?![^<]*<\/a>))/g;
+            const regex = /((?<!<a[^>]*>)(fu?)([0-9]{5,8})\.(jpe?g|png|webp|gif|bmp|mp4|webm)(?![^<]*<\/a>))/g;
 
             const walk = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null, false);
             let textNode;
@@ -1296,7 +1717,8 @@
             }
 
             let el;
-            if (ext === 'mp4') {
+            const videoExt = ["mp4", "webm"]
+            if (videoExt.includes(ext)) {
                 el = document.createElement('video');
                 el.controls = true;
                 el.autoplay = true;
@@ -1304,7 +1726,7 @@
                 el.muted = true; // Autoplay usually requires muted
             } else {
                 el = document.createElement('img');
-                el.onclick = () => el.remove();
+                el.onclick = () => window.open(url, '_blank').focus();
             }
 
             el.src = url;
@@ -1485,10 +1907,11 @@
 
             if (shouldUpdate) {
                 injectNgButtons();
+                injectIdLinks(); // New ID links
                 applyNg();
 
-                const useModern = getData(MODERN_UI_KEY, true);
-                if (useModern) {
+                const theme = getData(THEME_KEY, 'modern_light');
+                if (theme !== 'classic') {
                     removeBrackets();
                 }
             }
@@ -1504,6 +1927,10 @@
     // Main Init
     // ---------------------------------------------------------
     function setupViewport() {
+        // Only force viewport on modern themes to respect classic feel if desired,
+        // OR keep it for all. Let's keep for all as it improves mobile regardless of theme.
+        // But the user request implies theme affects "Modern UI".
+        // Let's stick to doing it for all as CORE css needs it.
         let meta = document.querySelector('meta[name="viewport"]');
         if (!meta) {
             meta = document.createElement('meta');
@@ -1515,13 +1942,30 @@
 
     function init() {
         setupViewport(); // Ensure correct scaling on mobile
+
+        // Migration: Old Boolean -> New String
+        if (getData(MODERN_UI_KEY_OLD, null) !== null) {
+            // Migrate only if old key exists
+            const oldVal = getData(MODERN_UI_KEY_OLD, true);
+            setData(THEME_KEY, oldVal ? 'modern_light' : 'classic');
+            // Remove old key (optional, or just ignore)
+            if (typeof GM_deleteValue !== 'undefined') GM_deleteValue(MODERN_UI_KEY_OLD);
+            else localStorage.removeItem(MODERN_UI_KEY_OLD);
+        }
+
+        // Determine Theme
+        const theme = getData(THEME_KEY, 'modern_light'); // Default to modern light
+
         // ALWAYS apply CORE css
         addStyle(coreCSS);
 
-        // CONDITIONALLY apply MODERN css and tweaks
-        const useModern = getData(MODERN_UI_KEY, true);
-        if (useModern) {
+        // CONDITIONALLY apply MODERN / DARK css
+        if (theme === 'modern_light' || theme === 'modern_dark') {
             addStyle(modernCSS);
+
+            if (theme === 'modern_dark') {
+                addStyle(darkThemeOverrides);
+            }
 
             // Modern tweaks that manipulate DOM heavily
             removeBrackets();
@@ -1532,6 +1976,7 @@
         // ALWAYS initialize Functionality
         createFab();
         injectNgButtons();
+        injectIdLinks(); // Initial scan
         applyNg(); // Hiding posts works regardless of UI
         applyAutoReload();
         observeUpdates();

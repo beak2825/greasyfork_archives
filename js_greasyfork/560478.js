@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         bh3helper-enhancer
 // @namespace    4b8b542a-3500-49bd-b857-8d62413434c7
-// @version      0.5.0
-// @description  在bh3helper上提供增强功能
+// @version      0.5.3
+// @description  在bh3helper（《崩坏3》剧情助手）上提供增强功能
 // @author       -
 // @match        https://bh3helper.xrysnow.xyz/*
 // @icon         https://bh3helper.xrysnow.xyz/res/img/favicon.png
@@ -14,10 +14,10 @@
 // @grant        GM_getResourceText
 // @require      https://unpkg.com/vue@3.5.26/dist/vue.global.prod.js#sha256-tAgDTQf3yKkfEX+epicjVa5F9Vy9oaStBwStjXA5gJU=
 // @require      https://unpkg.com/@chcs1013/vue-expose-to-window@1.0.1/index.js#sha256-0zwVsGUKw70iQnySKWxo81tEXaVhqZg7rF2yBH+0wAg=
-// @require      https://unpkg.com/vue-dialog-view@1.7.0/dist/cssless.umd.js#sha256-KPGd4DW5OLrlqgveokzNa9vd17m4Xf62yKv5Aynp4KA=
+// @require      https://unpkg.com/vue-dialog-view@1.7.1/dist/cssless.umd.js#sha256-cH5113wW7G1+ZShZmyVUL1FVmBUEHzCzTO/Qy7+gMDg=
 // @require      https://unpkg.com/fflate@0.8.2/umd/index.js#sha256-w7NPLp9edNTX1k4BysegwBlUxsQGQU1CGFx7U9aHXd8=
 // @require      https://unpkg.com/add-css-constructed@1.1.1/dist/umd.js#sha256-d0FJH11iwMemcFgueP8rpxVl9RdFyd3V8WJXX9SmB5I=
-// @resource     dialog_css https://unpkg.com/vue-dialog-view@1.7.0/dist/vue-dialog-view.css#sha256-/AVEHl21uWBhH5efDxlTPl0SoAnle1EILbvOAdx8O8A=
+// @resource     dialog_css https://unpkg.com/vue-dialog-view@1.7.1/dist/vue-dialog-view.css#sha256-HnPUNAFITfEE27CBFvnXJJBIw7snbNTkexmuZ95u160=
 // @inject-into  page
 // @run-at       document-start
 // @license      GPL-3.0
@@ -28,10 +28,10 @@
 ((async function (window, context) {
     const CONFIG = {
         SHADOW_ROOT_MODE: "closed",
-        CONTENT_WAIT_TIMEOUT: 10000,
+        CONTENT_WAIT_TIMEOUT: 15000,
         PAGE_LOAD_WAIT_TIMEOUT: 20000,
         EXPORT_WAIT_TIMEOUT: 1000 * 60 * 3,
-        DIALOG_SWITCH_CD_TIME: 68,
+        DIALOG_SWITCH_CD_TIME: 80,
     };
 
     // ---------- //
@@ -46,7 +46,7 @@
         setItem: GM_setValue,
         removeItem: GM_deleteValue,
     });
-    const session = createStateStorage(context.sessionStorage);
+    const session = createStateStorage(context.sessionStorage, 'bh3helper-enhancer@');
     const temp = Object.create(null);
 
     // ---------- //
@@ -265,6 +265,10 @@ button.primary:disabled:hover {
                     <input type="checkbox" v-model="dlOptions.includeSynopsis">
                 </label>
                 <label>
+                    <span>包含前情提要:</span>
+                    <input type="checkbox" v-model="dlOptions.includeRecapitulation">
+                </label>
+                <label>
                     <span>包含收藏品:</span>
                     <input type="checkbox" v-model="dlOptions.includeCollections">
                 </label>
@@ -277,7 +281,7 @@ button.primary:disabled:hover {
             </template>
         </dialog-view>
 
-        <dialog-view v-model="showPromptDialog">
+        <dialog-view v-model="showPromptDialog" @closed="promptResolver.reject?.(null)">
             <template #title>{{ promptText }}</template>
             <div class="prompt-input-wrapper">
                 <input type="text" v-model="promptInput" autofocus :placeholder="promptPlaceholder ?? '请输入文本'">
@@ -293,7 +297,8 @@ button.primary:disabled:hover {
         <dialog-view v-model="showCloseOptionDlg">
             <template #title>关闭</template>
             <div class="btn-group btn-group-vertical">
-                <button type="button" @click="showCloseOptionDlg = false; showPanel = false">本次关闭</button>
+                <button type="button" @click="showCloseOptionDlg = false; showPanel = false">关闭一次</button>
+                <button type="button" @click="hidePanelInSession">本次浏览关闭</button>
                 <button type="button" @click="showCloseOptionDlg = false">取消</button>
             </div>
         </dialog-view>
@@ -315,6 +320,7 @@ button.primary:disabled:hover {
                         mode: 'newWindow',
                         format: 'text',
                         includeMainline: true,
+                        includeRecapitulation: true,
                         includeCollections: true,
                         includeSynopsis: true,
                     },
@@ -336,11 +342,24 @@ button.primary:disabled:hover {
                     return this.page === '/pages/search.html';
                 },
                 isPjmsPage() {
-                    return this.isStoryPage && this.commonid >= 101;
+                    return this.isStoryPage && this.commonid >= 101 && this.commonid < 200;
+                },
+            },
+            watch: {
+                dlOptions: {
+                    deep: true,
+                    handler(value) {
+                        state.dlOptions = value;
+                    }
                 },
             },
             components: {
                 DialogView: DialogView.DialogView,
+            },
+            mounted() {
+                const stateDlOpt = state.dlOptions;
+                if (stateDlOpt) this.dlOptions = stateDlOpt;
+                if (session.hidePanel === true) this.showPanel = false;
             },
             methods: {
                 download_current_all() {
@@ -366,11 +385,16 @@ button.primary:disabled:hover {
                 },
                 changePjmsNickname() {
                     this.prompt('请输入新昵称', state.PJMS_NICKNAME ?? '寻梦者', '熵').then(nickname => {
-                        if (nickname) {
-                            state.PJMS_NICKNAME = nickname;
-                            showMessage(`设置已保存，刷新页面才能生效`);
-                        }
+                        if (nickname) state.PJMS_NICKNAME = nickname;
+                        else delete state.PJMS_NICKNAME;
+                        showMessage(`设置已保存，刷新页面才能生效`);
                     }).catch(() => {});
+                },
+                hidePanelInSession() {
+                    session.hidePanel = true;
+                    this.showPanel = false;
+                    this.showCloseOptionDlg = false;
+                    showMessage('已在本次浏览关闭，下次浏览将重新显示')
                 },
             },
         });
@@ -530,6 +554,7 @@ button.primary:disabled:hover {
     async function pgDownloadWorker({
         format = 'text',
         includeMainline = true,
+        includeRecapitulation = true,
         includeCollections = true,
         includeSynopsis = true,
     } = {}, returnData = false) {
@@ -541,10 +566,11 @@ button.primary:disabled:hover {
         try {
             // 1. 获取所有 .external-link
             const main_content = document.getElementById('main-content');
-            const limits = [];
-            if (!includeMainline) limits.push(':not(#text-review-switch)');
-            if (!includeCollections) limits.push(':not(#collection-review-switch)');
-            const selector = `.content-section.level-4${limits.join('')} div.external-link:not(:empty), .content > *${limits.join('')} > div.external-link:not(:empty)`; // 注意必须是div，而不是<a>，<a>是真·外链
+            const constraints = [], otherSelectors = [];
+            if (!includeMainline) constraints.push(':not(#text-review-switch)');
+            if (!includeCollections) constraints.push(':not(#collection-review-switch)');
+            if (includeRecapitulation) otherSelectors.push('.content-section#前情提要 div.external-link:not(:empty)');
+            const selector = `.content-section.level-4${constraints.join('')} div.external-link:not(:empty), .content > *${constraints.join('')} > div.external-link:not(:empty)${otherSelectors.length ? (',' + otherSelectors.join(',')) : ''}`; // 注意必须是div，而不是<a>，<a>是真·外链
             const buttons_to_be_clicked = main_content.querySelectorAll(selector);
             let skipCount = 0;
 
@@ -559,14 +585,21 @@ button.primary:disabled:hover {
                 current++;
                 //if (!button.innerText) continue; //已经通过CSS选择器排除
                 updateProgress(current);
+                await new Promise(resolve => requestAnimationFrame(resolve));
                 button.click();
                 // 3. 等待内容加载完成
-                const contentDialog = await waitForElement('.dialog-viewer-wrapper:not([style*="display: none"])', CONFIG.CONTENT_WAIT_TIMEOUT, main_content).then(element => element).catch(() => null);
+                const loadContent = () => waitForElement('.dialog-viewer-wrapper:not([style*="display: none"])', CONFIG.CONTENT_WAIT_TIMEOUT, main_content).then(element => element).catch(() => null);
+                let contentDialog = await loadContent();
                 if (!contentDialog) {
-                    console.log(`[bh3helper-downloader] W: 点击按钮 "${button.innerText}" 后未加载出内容对话框`);
-                    showMessage(`警告：点击按钮 "${button.innerText}" 后未加载出内容对话框或加载超时`);
-                    skipCount += 1;
-                    continue; // 跳过
+                    // 重试1次
+                    button.click();
+                    contentDialog = await loadContent();
+                    if (!contentDialog) {
+                        console.log(`[bh3helper-downloader] W: 点击按钮 "${button.innerText}" 后未加载出内容对话框`);
+                        showMessage(`警告：点击按钮 "${button.innerText}" 后未加载出内容对话框或加载超时`);
+                        skipCount += 1;
+                        continue; // 跳过
+                    }
                 }
                 if (contentDialog.classList.contains('dialog-embedded')) continue;
                 updateProgress(current, button.innerText);
@@ -602,6 +635,7 @@ button.primary:disabled:hover {
                             //if (!lines || !lines.length) lines = [column2];
                             const lines = column2.childNodes[0]?.childNodes || [column2];
                             for (const line of lines) {
+                                if (!includeSynopsis && line.classList.contains('dialog-synopsis-line')) continue;
                                 for (const cln in PG_DOWNLOAD_STRUCT.contentExtractRules) {
                                     if (!(line.classList.contains(cln)) && cln !== 'default') continue;
                                     let text = FormatValueTemplate(PG_DOWNLOAD_STRUCT.contentExtractRules[cln], { TEXT: extractNodeText(line).join('') });
@@ -632,15 +666,15 @@ button.primary:disabled:hover {
             // 10. 获取页面标题，生成文件名
             const pageTitle = main_content.querySelector('.content-title-wrapper > .main-title')?.innerText || document.title;
             // 11. 下载文件
-            if (returnData) return { blobUrl: URL.createObjectURL(blob), title: pageTitle + '.txt' };
+            if (returnData) return { blobUrl: URL.createObjectURL(blob), title: pageTitle + '.txt', skipCount };
             DownloadFile(URL.createObjectURL(blob), `${pageTitle}.txt`);
-            showMessage(skipCount ? `下载完成（已跳过 ${skipCount} 个，请检查内容完整性！）` : "下载完成！");
+            showMessage(skipCount ? `下载完成（已跳过 ${skipCount} 个，请检查内容完整性！）` : "下载完成！", 'info', false);
             // 12. 清理资源
             setTimeout(() => {
                 URL.revokeObjectURL(blob);
             }, 5000);
         } catch (error) {
-            showMessage("下载失败: " + error, 'error');
+            showMessage("下载失败: " + error, 'error', false);
             console.error('[bh3helper-downloader] download failed:', error);
         } finally {
             ui.loading_indicator.hide();
@@ -696,7 +730,7 @@ button.primary:disabled:hover {
 
             state.rpc_password = context.crypto.randomUUID();
             const zipEntries = Object.create(null);
-            let current = 0;
+            let current = 0, totalSkip = 0;
             for (const url of mainlineDialogs) {
                 const ctx = openPage(url);
                 updateProgress(++current, '正在加载页面');
@@ -740,13 +774,18 @@ button.primary:disabled:hover {
                     continue;
                 }
                 // 等待导出完成
-                const { success, data, title } = await new Promise((resolve, reject) => {
+                const { success, data, title, skipCount } = await new Promise((resolve, reject) => {
                     temp.downloadresolver = resolve;
                     setTimeout(() => reject(new Error('导出超时')), CONFIG.EXPORT_WAIT_TIMEOUT);
                 });
                 if (!success) {
                     showMessage(`导出失败: ${data}`, 'error');
                     continue;
+                }
+                if (skipCount) {
+                    showMessage(`警告：跳过了 ${skipCount} 项`, 'info', false);
+                    console.log('[bh3helper-download]', `警告：跳过了`, skipCount, `项 于`, url);
+                    totalSkip += skipCount;
                 }
                 // 获取资源并添加到 zip 文件
                 updateProgress(current, '正在保存');
@@ -765,11 +804,11 @@ button.primary:disabled:hover {
             DownloadFile(URL.createObjectURL(zipBlob), `${document.title} - ${new Date().toLocaleString()}.zip`);
             setTimeout(() => {
                 URL.revokeObjectURL(zipBlob);
-            }, 60000);
-            showMessage(`下载完成！`);
+            }, 300000);
+            showMessage(totalSkip ? `下载完成（跳过了 ${totalSkip} 项！请检查数据完整性）` : '下载完成！', 'info', false);
         } catch (error) {
             console.error('[bh3helper-downloader] download failed:', error);
-            showMessage("下载失败: " + error, 'error');
+            showMessage("下载失败: " + error, 'error', false);
         } finally {
             if (ifr) ifr.remove();
             if (win && !win.closed) win.close();
@@ -782,7 +821,7 @@ button.primary:disabled:hover {
 
     function findAllMainlineDialogs() {
         // 去重
-        return Array.from(new Set(Array.from(document.querySelectorAll('.catalogue-card.catalogue-card-story > .story-item > a[href]'))
+        return Array.from(new Set(Array.from(document.querySelectorAll('.catalogue-card.catalogue-card-story > .story-item > a[href], .catalogue-card.catalogue-card-story-w > .story-item > a[href]'))
             .map(el => el.href)
             .filter(_ => !!_)));
     }
@@ -799,10 +838,10 @@ button.primary:disabled:hover {
         // 应用昵称补丁
         try {
             const s = /寻梦者/g, r = state.PJMS_NICKNAME;
-            const w = t => console.warn(`[bh3helper-downloader] Patch failed:`, t);
-            patchClassMeth(DialogViewer, '_procMain2Line', s, r) || w('DialogViewer._procMain2Line');
+            const w = (t, e) => console.warn(`[bh3helper-downloader] Patch failed:`, t, e);
+            try { patchClassMeth(DialogViewer, '_procMain2Line', s, r) } catch (e) { w('DialogViewer._procMain2Line', e); }
             // patchClassMeth(EnemyInfo, 'doMake', s, r) || w('EnemyInfo.doMake');//不是static，不好搞
-            patchClassMeth(ChapterDocBase, 'procContent', s, r) || w('ChapterDocBase.procContent');
+            try { patchClassMeth(ChapterDocBase, 'procContent', s, r) } catch (e) { w('ChapterDocBase.procContent', e); }
         } catch (error) {
             console.warn('[bh3helper-downloader] Unable to patch nickname:', error);
         }
@@ -813,105 +852,44 @@ button.primary:disabled:hover {
      * @param {string} p property
      * @param {string|RegExp} s search pattern
      * @param {string} r replace with
-     * @returns {boolean} 是否成功替换
      */
-    function patchClassMeth(c, p, s, r) { 
-        const fn = c[p].toString().match(/^\s*?.*?\s*\((.*?)\)\s*?{(.*)}\s*?$/);
-        if (!fn || fn.length !== 3) {
+    function patchClassMethV1(c, p, s, r) { 
+        if (typeof c[p] !== 'function') {
+            throw new Error('{p} is not a function property');
+        }
+        const [matchedString, funcName, argList, funcBody] = c[p].toString().match(/^\s*?([$_\p{L}][$_\p{L}\d]*?)\s*?\((.*?)\)\s*?\{([\s\S]*)\}\s*?$/u);
+        if (!matchedString) {
             throw new Error(`Unable to parse ${p} function`);
         }
-        const patchedFn = fn[2].replace(s, r);
+        const patchedFn = funcBody.replace(s, r);
         // 解析参数列表
-        const params = fn[1].split(',').map(_ => _.trim());
+        const params = argList.split(',').map(_ => _.trim()).filter(_ => !!_);
         // 构造新函数
-        return Reflect.set(c, p, new unsafeWindow.Function(...params, patchedFn));
+        if (!Reflect.set(c, p, new window.Function(...params, patchedFn))) throw new Error('Unable to patch target property');
     }
-
-    // ---------- //
-
-    // Utils
-
     /**
-     * 等待元素出现
-     * @param {string} selector 元素选择器
-     * @param {number} timeout 超时时间，单位毫秒
-     * @param {Document | Element} on 查找范围，默认是 document
-     * @returns {Promise<Element>} 找到的元素
+     * 替换类方法中的字符串（注意不适用于闭包）
+     * @param {any} c Class
+     * @param {string} p property
+     * @param {string|RegExp} s search pattern
+     * @param {string} r replace with
      */
-    function waitForElement(selector, timeout = 5000, on = document) {
-        const startTime = Date.now();
-        return new Promise((resolve, reject) => {
-            function checkElement() {
-                const element = on.querySelector(selector);
-                if (element) {
-                    resolve(element);
-                } else if (Date.now() - startTime < timeout) {
-                    requestAnimationFrame(checkElement);
-                } else {
-                    reject(new Error("Element not found"));
-                }
-            }
-            requestAnimationFrame(checkElement);
-        });
+    function patchClassMeth(c, p, s, r) { 
+        if (typeof c[p] !== 'function') {
+            throw new Error('{p} is not a function property');
+        }
+        const src = c[p].toString();
+        let patchedFn = src.replace(s, r);
+        if (/^\s*?(async\s+)?([$_\p{L}][$_\p{L}\d]*?)\s*?\((.*?)\)\s*?\{([\s\S]*)\}\s*?$/u.test(src))
+            patchedFn = 'function ' + patchedFn; // 属于类的内部函数定义形式，如 func() {...} 直接构造会报错需要手动补全function
+        if (/^\s*?async\s+$/.test(src))
+            patchedFn = 'async ' + patchedFn; // 补上async，如：async foo() {...}
+        const rand = Math.random().toString().substring(2);
+        const fn = `const __${rand}=(${patchedFn});if(new.target)return Reflect.construct(__${rand},arguments);return __${rand}.apply(this, arguments);`
+        // 构造新函数
+        if (!Reflect.set(c, p, new window.Function(fn))) throw new Error('Unable to patch target property');
     }
-
-    /**
-    * 显示消息
-    * @param {string} message 消息内容
-    * @param {string} type 消息类型，可选值：'info'（默认）、'error'
-    */
-    function showMessage(message, type = 'info') {
-        const messageElement = document.createElement('div');
-        messageElement.textContent = message;
-        messageElement.dataset.type = type;
-        messageElement.className = 'message';
-        ui.root.append(messageElement);
-        setTimeout(() => {
-            messageElement.classList.add('fade-out');
-            setTimeout(() => {
-                messageElement.remove();
-            }, 300);
-        }, 3000);
-    }
-
-    /**
-     * 下载文件
-     * @param {string} url - 文件URL地址
-     * @param {string} [filename] - 可选的自定义文件名
-     */
-    function DownloadFile(url, filename) {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename || url.split('/').pop() || 'download';
-        document.body.append(link);
-        link.click();
-        requestAnimationFrame(() => link.remove());
-    }
-
-    /**
-     * 创建状态存储
-     * @param {Storage} source -  localStorage 或 sessionStorage 或其他实现了 Storage 接口的对象
-     * @returns {Proxy} - 一个代理对象，用于读写状态
-     */
-    function createStateStorage(source) {
-        return new Proxy(Object.create(null), {
-            get(target, property, receiver) {
-                try { return JSON.parse(source.getItem(property) || "null"); } catch { return null }
-            },
-            set(target, property, value, receiver) {
-                source.setItem(property, JSON.stringify(value));
-                return true;
-            },
-            deleteProperty(target, property) {
-                source.removeItem(property);
-                return true;
-            },
-            // ownKeys(target) {
-            //     return source.keys();
-            // },
-        });
-    }
-
+    
     /**
      * 格式化值模板字符串
      * @param {string} template - 包含变量的模板字符串，例如 "{name} 你好"
@@ -995,7 +973,95 @@ button.primary:disabled:hover {
         ];
         return blockValues.includes(window.getComputedStyle(element).display);
     }
-    
+
+    // ---------- //
+
+    // Utils
+
+    /**
+     * 等待元素出现
+     * @param {string} selector 元素选择器
+     * @param {number} timeout 超时时间，单位毫秒
+     * @param {Document | Element} on 查找范围，默认是 document
+     * @returns {Promise<Element>} 找到的元素
+     */
+    function waitForElement(selector, timeout = 5000, on = document) {
+        const startTime = Date.now();
+        return new Promise((resolve, reject) => {
+            function checkElement() {
+                const element = on.querySelector(selector);
+                if (element) {
+                    resolve(element);
+                } else if (Date.now() - startTime < timeout) {
+                    requestAnimationFrame(checkElement);
+                } else {
+                    reject(new Error("Element not found"));
+                }
+            }
+            requestAnimationFrame(checkElement);
+        });
+    }
+
+    /**
+    * 显示消息
+    * @param {string} message 消息内容
+    * @param {string} type 消息类型，可选值：'info'（默认）、'error'
+    */
+    function showMessage(message, type = 'info', autoClose = true) {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = message;
+        messageElement.dataset.type = type;
+        messageElement.className = 'message';
+        ui.root.append(messageElement);
+        if (autoClose) setTimeout(c, 3000);
+        else window.addEventListener('click', c, { once: true });
+        function c() {
+            messageElement.classList.add('fade-out');
+            setTimeout(() => {
+                messageElement.remove();
+            }, 300);
+        }
+    }
+
+    /**
+     * 下载文件
+     * @param {string} url - 文件URL地址
+     * @param {string} [filename] - 可选的自定义文件名
+     */
+    function DownloadFile(url, filename) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename || url.split('/').pop() || 'download';
+        document.body.append(link);
+        link.click();
+        requestAnimationFrame(() => link.remove());
+    }
+
+    /**
+     * 创建状态存储
+     * @param {Storage} source -  localStorage 或 sessionStorage 或其他实现了 Storage 接口的对象
+     * @param {string} prefix - 存储前缀（默认为空）
+     * @returns {Proxy} - 一个代理对象，用于读写状态
+     */
+    function createStateStorage(source, prefix = '') {
+        return new Proxy(Object.create(null), {
+            get(target, property, receiver) {
+                try { return JSON.parse(source.getItem(prefix + property) || "null"); } catch { return null }
+            },
+            set(target, property, value, receiver) {
+                source.setItem(prefix + property, JSON.stringify(value));
+                return true;
+            },
+            deleteProperty(target, property) {
+                source.removeItem(prefix + property);
+                return true;
+            },
+            // ownKeys(target) {
+            //     return source.keys();
+            // },
+        });
+    }
+
 })((typeof unsafeWindow !== "undefined" ? unsafeWindow : window), window))
     .then(() => {
         console.log('[bh3helper-downloader] initialization completed');

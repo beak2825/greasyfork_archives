@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Regalo Diario
 // @namespace    AutoRegaloDiario
-// @version      0.1.0
+// @version      0.1.1
 // @description  Canjea el regalo diario (actualmente solo favor)
 // @author       You
 // @match        https://*.grepolis.com/game/*
@@ -20,7 +20,7 @@
 
     const uw = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
 
-    let autoFavor = GM_getValue('autoFavor', false);
+    let autoFavor = GM_getValue('autoFavor', true);
     let selectedGod = GM_getValue('selected_god', null);;
     let minsToMidnight = GM_getValue('minsToMidnight', 10);
     let secsToMidnight = uw.Timestamp.getSecondsToNextMidnight();
@@ -106,22 +106,27 @@
 
     function buildGodsHtml() {
         const gods = uw.MM.getModels().PlayerGods[uw.Game.player_id].getProductionOverview();
-
-        // orden fijo (como te gusta)
-        const order = ["zeus","poseidon","hera","athena","hades","artemis","ares","aphrodite"];
+        const order = ["zeus","poseidon","hera","athena","hades","artemis","aphrodite","ares"];
 
         const items = order
         .filter(k => gods[k])
         .map(k => {
             const favor = Math.floor(Number(gods[k].current || 0));
-            const prod = Number(gods[k].production || 0).toFixed(1);
+            const prodN = Number(gods[k].production || 0);
+            const prod = prodN.toFixed(1);
+            const disabled = prodN <= 0;
 
             return `
-        <div class="god_box" data-god="${k}" role="button" tabindex="0"
-             style="display:flex; flex-direction:column; align-items:center; gap:2px; min-width:44px; margin-left:auto; margin-right:auto">
-          <div class="god_favor" style="font-weight: bolder; color:blue; font-size:11px; line-height:12px;">${favor}</div>
-          <div class="god_mini ${k}" data-god="${k}"></div>
-          <div class="god_prod" style="font-weight: bolder; font-size:11px; line-height:12px;">+${prod}/h</div>
+        <div class="god_box" style="display:flex; flex-direction:column; align-items:center; gap:2px; min-width:44px; margin-left:auto; margin-right:auto; ${disabled ? 'opacity:.35;' : ''}">
+          <div class="god_favor" style="font-weight:bolder; color:blue; font-size:11px; line-height:12px;">${favor}</div>
+
+          <div class="god_mini ${k} ${disabled ? 'disabled' : ''}"
+               data-god="${k}"
+               ${disabled ? '' : 'role="button" tabindex="0"'}
+               style="${disabled ? 'cursor:not-allowed;' : 'cursor:pointer;'}">
+          </div>
+
+          <div class="god_prod" style="font-weight:bolder; font-size:11px; line-height:12px;">+${prod}/h</div>
         </div>
       `;
         })
@@ -134,6 +139,7 @@
     <hr>
   `;
     }
+
 
 
     function crearVentanaMenu() {
@@ -167,7 +173,6 @@
 
             const right = document.createElement('div');
             right.style.marginLeft = 'auto';
-            right.style.marginRight = '5px';
 
             const botonGuardar = crearBoton('Dios automático' + getEmoji());
             right.appendChild(botonGuardar);
@@ -180,7 +185,9 @@
             ventana.appendContent(buildGodsHtml());
 
             const $container = ventana.getJQElement().find('#gods_container_auto_gift');
+
             $container.on('mouseenter', '.god_mini', function () {
+                if (this.classList.contains('disabled')) return;
                 uw.$(this).addClass('hovered');
             });
 
@@ -189,19 +196,22 @@
             });
 
             $container.on('click', '.god_mini', function () {
+                if (this.classList.contains('disabled')) return;
+
                 const godKey = this.dataset.god;
                 selectedGod = godKey;
 
                 $container.find('.god_mini').removeClass('selected');
                 uw.$(this).addClass('selected');
+
                 GM_setValue('selected_god', selectedGod);
 
                 autoFavor = false;
                 GM_setValue('autoFavor', autoFavor);
 
                 botonGuardar.querySelector('.middle').innerText = 'Dios automático' + getEmoji();
-
             });
+
 
             botonGuardar.addEventListener('click', function(){
                 autoFavor = !autoFavor;
@@ -278,11 +288,12 @@
 
         if (autoFavor){
             for (let god in gods){
-                if (gods[god].current < targetGod.current){
+                if (gods[god].current < targetGod.current && gods[god].production > 0){
                     targetGod = gods[god]
                 }
             }
         }
+        return targetGod;
     }
 
 
@@ -310,6 +321,7 @@
         if (autoFavor){
             targetGod = getTargetGod();
         }
+
         const townId = getTownWithGod(targetGod);
 
         return townId;
@@ -331,6 +343,7 @@
                 nl_init: "true"
             },
         );
+
     }
     uw.$('head').append(`
   <style>

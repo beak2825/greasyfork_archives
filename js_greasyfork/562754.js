@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Rousi Pro 一键转种
 // @author       xiaoQQya
-// @version      0.1.0
-// @description  将老站点 Rousi 的种子一键转种到新站点 Rousi Pro
+// @version      0.1.1
+// @description  将站点 Rousi 的种子一键转种到新站点 Rousi Pro
 // @namespace    form.transfer
 // @match        https://rousi.zip/details.php*
+// @match        https://zmpt.cc/details.php*
 // @match        https://rousi.pro/upload
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -31,9 +32,11 @@
     const table = document.querySelector('table[width="97%"]');
     if (!table) return;
 
+    const title = document.querySelector('h1').innerText.split('[免费]')[0].trim();
     const tds = table.querySelectorAll('td');
     const url = tds[1].querySelector('a').href;
-    const title = tds[1].innerText.split("torrent")[0].replace(/\[Rousi\]\./g, "").trim() + "torrent";
+    const torrent = tds[1].innerText.split("torrent")[0].replace(/\[Rousi\]\./g, "").trim() + "torrent";
+
     const subtitle = tds[3].innerText.trim();
 
     const typeDict = {
@@ -72,8 +75,9 @@
     const tmdb = desc.match(/◎TMDB链接\s*(https?:\/\/\S+)/)?.[1] || "";
     const douban = desc.match(/◎豆瓣链接\s*(https?:\/\/\S+)/)?.[1] || "";
 
-    console.log("url:", url);
     console.log("title:", title);
+    console.log("url:", url);
+    console.log("torrent:", torrent);
     console.log("subtitle:", subtitle);
     console.log("type:", type);
     console.log("labels:", JSON.stringify(labels));
@@ -93,7 +97,7 @@
     table.prepend(btn)
 
     btn.addEventListener('click', () => {
-      const data = { url, title, subtitle, type, labels, country, imdb, tmdb, douban, imgUrl, desc, mediainfo }
+      const data = { title, url, torrent, subtitle, type, labels, country, imdb, tmdb, douban, imgUrl, desc, mediainfo }
       GM_setValue(STORE_KEY, data)
       window.open('https://rousi.pro/upload', '_blank')
     })
@@ -119,27 +123,22 @@
   }
 
   function setInputValue(input, value) {
-    // 1️⃣ 拿到原生 setter
     const prototype = Object.getPrototypeOf(input)
     const descriptor = Object.getOwnPropertyDescriptor(prototype, 'value')
     const nativeSetter = descriptor.set
 
-    // 2️⃣ 用原生 setter 赋值（关键）
     nativeSetter.call(input, value)
 
-    // 3️⃣ 触发 input 事件（让框架更新 state）
     input.dispatchEvent(new Event('input', { bubbles: true }))
   }
 
   function setSelectValue(select, value) {
-    // 1️⃣ 用原生 setter
     const proto = Object.getPrototypeOf(select)
     const desc = Object.getOwnPropertyDescriptor(proto, 'value')
     const nativeSetter = desc.set
 
     nativeSetter.call(select, value)
 
-    // 2️⃣ 触发 change，让框架更新 state
     select.dispatchEvent(new Event('change', { bubbles: true }))
   }
 
@@ -199,7 +198,7 @@
 
       const inputs = document.querySelectorAll("input");
       console.log(inputs);
-      fillFileInputFromUrl(inputs[0], data.url, data.title);
+      fillFileInputFromUrl(inputs[0], data.url, data.torrent);
       const imgInput = document.querySelectorAll('input[type="file"]')[1];
       console.log(imgInput)
       if (data.imgUrl != "") {
@@ -207,7 +206,7 @@
         fillFileInputFromUrl(imgInput, data.imgUrl, segments[segments.length - 1]);
       }
 
-      setInputValue(inputs[1], data.title.replace(/\.torrent/, ""));
+      setInputValue(inputs[1], data.title);
       setInputValue(inputs[2], data.subtitle);
       const imdbInput = document.querySelector('input[placeholder="填入 IMDb 链接"]');
       console.log(imdbInput);

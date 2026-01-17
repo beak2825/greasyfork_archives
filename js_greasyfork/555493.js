@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         深圳税务申报征期提醒
 // @namespace    http://tampermonkey.net/
-// @version      18.0
+// @version      19.0
 // @description  官方征期+最后5天醒目提醒+Alt+T切换自动提醒+Alt+L手动触发+悬停3秒/不悬停3分钟关闭/鼠标点击关闭
 // @author       Yuehua
 // @icon         https://shenzhen.chinatax.gov.cn/favicon.ico
@@ -66,7 +66,7 @@
                 background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
                 color: #fff; padding: 25px 30px; border-radius: 20px;
                 box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
-                z-index: 2147483647; width: 320px; cursor: pointer;
+                z-index: 2147483647; width: 400px; cursor: pointer;
                 font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
                 border: 2px solid rgba(255,255,255,0.1);
             }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ticket Template Helper
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-11
+// @version      2026-01-16
 // @description  Generate a ticket template for members who don't have it built in
 // @author       Stamos
 // @match        https://spog.neonova.net/*
@@ -167,8 +167,7 @@ Reason for call:
 
 Call notes:
 
-
-				`;
+`;
 
 				navigator.clipboard.writeText(finishedTemplate);
 		}

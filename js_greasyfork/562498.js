@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         小红书全能AI助手
 // @namespace    http://tampermonkey.net/
-// @version      2.1
-// @description  采用API拦截技术，支持自动滚动获取全部笔记，生成带xsec_token的永久有效链接，支持导出Excel/CSV/JSON,支持创作者平台一键生成推文，支持自定义设置推文模版。
+// @version      2.2
+// @description  采用API拦截技术，支持自动滚动获取全部笔记，生成带xsec_token的永久有效链接，支持导出Excel/CSV/JSON。新增AI创作模块，内置多种写作模版，支持自定义模版和AI生成人设。提升创作效率，助力内容变现！新增excel带图片导出模式，方便直观查看封面图。
 // @author       Coriander
 // @match        https://creator.xiaohongshu.com/publish/*
 // @match        https://www.xiaohongshu.com/*
@@ -158,6 +158,12 @@
         note.liked_count ||
         (note.interact_info ? note.interact_info.liked_count : 0);
 
+      // 获取封面图
+      const coverUrl =
+        (note.cover && note.cover.url_default) ||
+        (note.images_list && note.images_list[0] && note.images_list[0].url) ||
+        "";
+
       // 存入 Map
       if (!GLOBAL_DATA.has(id)) {
         GLOBAL_DATA.set(id, {
@@ -166,6 +172,7 @@
           链接: link,
           作者: authorName,
           点赞数: likes,
+          封面图: coverUrl,
           类型: type,
           xsec_token: token, // 仅作为参考，导出时不一定需要
         });
@@ -319,7 +326,8 @@
 
                         <div style="display:flex;gap:5px;">
                             <select id="export-format" class="ai-select" style="margin-bottom:0;">
-                                <option value="csv">Excel / CSV (推荐)</option>
+                                <option value="csv">CSV / Excel (纯文本)</option>
+                                <option value="xls">Excel (含图片预览)</option>
                                 <option value="json">JSON (开发用)</option>
                             </select>
                             <button id="clean-data-btn" class="ai-btn secondary" style="width:auto;margin-top:0;">清空</button>
@@ -522,36 +530,70 @@
     const cards = document.querySelectorAll("section.note-item, .feed-card");
     let count = 0;
     cards.forEach((card) => {
-      // 尝试获取ID
+      // 尝试获取ID和链接
+      // fix: 优先找 a.cover，因为它通常包含带 xsec_token 的完整链接，且覆盖在卡片上
+      // 其次才是普通的 explore 链接
+      let linkEl =
+        card.querySelector("a.cover") ||
+        card.querySelector('a[href*="/explore/"]') ||
+        card.querySelector('a[href*="/user/profile/"]');
+
       let href = "";
-      const linkEl = card.querySelector('a[href*="/explore/"]');
-      if (linkEl) href = linkEl.href;
+      if (linkEl) href = linkEl.href; // .href 获取的是绝对路径
 
       if (href) {
-        const match = href.match(/\/explore\/(\w+)/);
-        if (match && match[1]) {
-          const id = match[1];
-          if (!GLOBAL_DATA.has(id)) {
-            // DOM获取的数据可能缺 token，这是妥协
-            // 但如果有 API 拦截，API 数据会覆盖这个
-            const title =
-              (
-                card.querySelector(".title span") ||
-                card.querySelector(".title") ||
-                {}
-              ).innerText || "未获取";
-            const author =
-              (card.querySelector(".author") || {}).innerText || "未获取";
-            GLOBAL_DATA.set(id, {
-              笔记ID: id,
-              标题: title,
-              链接: href, // 此时href可能带xsec_token也可能不带
-              作者: author,
-              点赞数: (card.querySelector(".count") || {}).innerText || "0",
-              类型: "dom_scan",
-            });
-            count++;
+        // 提取 ID
+        // 匹配逻辑：获取 URL path 的最后一段作为 ID
+        // 例如: /explore/66... 或 /user/profile/xxx/66...
+        let id = "";
+        try {
+          const urlObj = new URL(href);
+          const pathParts = urlObj.pathname.split("/").filter((p) => p);
+          // 假设最后一部分是ID (通常是24位ObjectId)
+          const lastPart = pathParts[pathParts.length - 1];
+          // 简单的校验：ID通常由字母数字组成，长度24位左右
+          if (lastPart && /^[a-fA-F0-9]{24}$/.test(lastPart)) {
+            id = lastPart;
+          } else if (href.includes("/explore/")) {
+            // 兼容旧的 explore 提取方式
+            const m = href.match(/\/explore\/(\w+)/);
+            if (m) id = m[1];
           }
+        } catch (e) {}
+
+        if (id && !GLOBAL_DATA.has(id)) {
+          const title =
+            (
+              card.querySelector(".title span") ||
+              card.querySelector(".title") ||
+              {}
+            ).innerText || "未获取";
+          const author =
+            (card.querySelector(".author") || {}).innerText || "未获取";
+
+          // 尝试获取封面
+          let coverUrl = "";
+          const coverDiv = card.querySelector(".cover");
+          if (coverDiv) {
+            const style = coverDiv.getAttribute("style");
+            const bgMatch = style && style.match(/url\("?(.+?)"?\)/);
+            if (bgMatch) coverUrl = bgMatch[1];
+          }
+          if (!coverUrl) {
+            const img = card.querySelector("img");
+            if (img) coverUrl = img.src;
+          }
+
+          GLOBAL_DATA.set(id, {
+            笔记ID: id,
+            标题: title,
+            链接: href, // 使用从 DOM 获取的完整 href（包含 token）
+            作者: author,
+            点赞数: (card.querySelector(".count") || {}).innerText || "0",
+            封面图: coverUrl,
+            类型: "dom_scan",
+          });
+          count++;
         }
       }
     });
@@ -617,6 +659,64 @@
         "xhs_data_full.json",
         "application/json"
       );
+    } else if (format === "xls") {
+      // Excel (HTML Table 伪装)
+      const headers = Object.keys(dataList[0]);
+      let html = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" 
+              xmlns:x="urn:schemas-microsoft-com:office:excel" 
+              xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+           <meta charset="utf-8">
+           <!--[if gte mso 9]>
+           <xml>
+            <x:ExcelWorkbook>
+             <x:ExcelWorksheets>
+              <x:ExcelWorksheet>
+               <x:Name>Sheet1</x:Name>
+               <x:WorksheetOptions>
+                <x:DisplayGridlines/>
+               </x:WorksheetOptions>
+              </x:ExcelWorksheet>
+             </x:ExcelWorksheets>
+            </x:ExcelWorkbook>
+           </xml>
+           <![endif]-->
+           <style>
+             td { vertical-align: middle; text-align: center; font-size: 11pt; }
+             .text { mso-number-format:"\@"; }
+           </style>
+        </head>
+        <body>
+        <table border="1" style="border-collapse: collapse; width: 100%;">`;
+
+      // 表头
+      html += "<thead><tr style='background-color:#f2f2f2; height:40px;'>";
+      headers.forEach(
+        (h) =>
+          (html += `<th style="padding:10px; border:1px solid #ccc;">${h}</th>`)
+      );
+      html += "</tr></thead><tbody>";
+
+      // 内容
+      dataList.forEach((row) => {
+        // 关键：给 tr 设置高度，确保能容纳图片
+        html += "<tr style='height:110px;'>";
+        headers.forEach((h) => {
+          const val = row[h] || "";
+          if (h === "封面图" && val) {
+            html += `<td style="width:120px; text-align:center;"><img src="${val}" width="100" height="100" /></td>`;
+          } else if (h === "链接" && val) {
+            html += `<td><a href="${val}" target="_blank">点击跳转</a></td>`;
+          } else {
+            html += `<td class="text" style="max-width:300px; overflow:hidden;">${val}</td>`; // 强制文本格式
+          }
+        });
+        html += "</tr>";
+      });
+      html += "</tbody></table></body></html>";
+
+      download(html, "xhs_data_images.xls", "application/vnd.ms-excel");
     } else {
       // CSV
       const headers = Object.keys(dataList[0]);

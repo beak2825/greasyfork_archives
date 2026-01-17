@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name          Bazaar Listing Age Tracker v3
+// @name          Bazaar Listing Age Tracker v3 (Randomized)
 // @namespace     http://torn.com/
-// @version       3.0
-// @description   Tracks bazaar listing ages using API (now with correct log parsing!)
+// @version       3.2
+// @description   Tracks bazaar listing ages using API with randomized timing
 // @author        srsbsns
 // @match         *://www.torn.com/*
 // @grant         GM_setValue
@@ -12,8 +12,8 @@
 // @grant         GM_xmlhttpRequest
 // @connect       api.torn.com
 // @license       MIT
-// @downloadURL https://update.greasyfork.org/scripts/562692/Bazaar%20Listing%20Age%20Tracker%20v3.user.js
-// @updateURL https://update.greasyfork.org/scripts/562692/Bazaar%20Listing%20Age%20Tracker%20v3.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/562692/Bazaar%20Listing%20Age%20Tracker%20v3%20%28Randomized%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/562692/Bazaar%20Listing%20Age%20Tracker%20v3%20%28Randomized%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -44,18 +44,28 @@
     };
 
     const INTERVALS = {
-        UPDATE_BADGES: 5000,   // Update badges every 5 seconds
-        API_SYNC: 60000        // Sync with API every 60 seconds
+        UPDATE_BADGES: 5000,      // Update badges every 5 seconds (UI only, no API)
+        API_SYNC_MIN: 50000,      // Minimum 50 seconds between API calls
+        API_SYNC_MAX: 70000       // Maximum 70 seconds between API calls (averages 60s)
     };
 
     const API_BASE = 'https://api.torn.com';
     const CATALOG_CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
     // ============================================================================
+    // RANDOM INTERVAL HELPER
+    // ============================================================================
+    function getRandomSyncInterval() {
+        const min = INTERVALS.API_SYNC_MIN;
+        const max = INTERVALS.API_SYNC_MAX;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // ============================================================================
     // STATE
     // ============================================================================
     const state = {
-        syncInterval: null,
+        syncTimeout: null,        // Changed from interval to timeout
         updateInterval: null,
         itemCatalog: null,
         processedItems: new Set() // Track which items already have badges
@@ -191,7 +201,7 @@
         // Fetch fresh catalog
         try {
             console.log('[Age Tracker] Fetching item catalog...');
-            const data = await apiCall('/torn/?selections=items');
+            const data = await apiCall('/user/?selections=log&log=1222,1223');
             const items = data.items || {};
 
             const catalog = {};
@@ -452,7 +462,7 @@
             .sort((a, b) => b.age - a.age);
 
         if (items.length === 0) {
-            alert('No items tracked.\n\nWait for sync (60s) or use "Sync Now".');
+            alert('No items tracked.\n\nWait for sync (~60s) or use "Sync Now".');
         } else {
             const output = items.map(item =>
                 `${item.name}: ${formatAge(item.age)}`
@@ -537,8 +547,25 @@
     }
 
     // ============================================================================
-    // AUTOMATIC SYNC
+    // AUTOMATIC SYNC (WITH RANDOMIZATION)
     // ============================================================================
+    function scheduleNextSync() {
+        // Clear any existing timeout
+        if (state.syncTimeout) {
+            clearTimeout(state.syncTimeout);
+        }
+
+        // Schedule next sync with random interval
+        const nextInterval = getRandomSyncInterval();
+        console.log(`[Age Tracker] Next sync in ${Math.round(nextInterval / 1000)}s`);
+
+        state.syncTimeout = setTimeout(async () => {
+            await autoSync();
+            // Schedule the next one
+            scheduleNextSync();
+        }, nextInterval);
+    }
+
     async function autoSync() {
         try {
             const result = await fetchAndProcessLogs();
@@ -604,7 +631,7 @@
     // CLEANUP
     // ============================================================================
     window.addEventListener('beforeunload', () => {
-        if (state.syncInterval) clearInterval(state.syncInterval);
+        if (state.syncTimeout) clearTimeout(state.syncTimeout);
         if (state.updateInterval) clearInterval(state.updateInterval);
         observer.disconnect();
     });
@@ -613,23 +640,27 @@
     // INITIALIZATION
     // ============================================================================
     async function init() {
-        console.log('[Age Tracker] Initialized v3.0');
+        console.log('[Age Tracker] Initialized v3.1 (Randomized)');
 
         try {
             // Load item catalog
             await fetchItemCatalog();
 
-            // Initial sync
-            setTimeout(autoSync, 2000);
+            // Initial sync after random delay (2-5 seconds)
+            const initialDelay = Math.floor(Math.random() * 3000) + 2000;
+            setTimeout(async () => {
+                await autoSync();
+                // Start the randomized sync cycle
+                scheduleNextSync();
+            }, initialDelay);
 
-            // Setup automatic sync
-            state.syncInterval = setInterval(autoSync, INTERVALS.API_SYNC);
-
-            // Setup badge updates
+            // Setup badge updates (UI only, no API calls)
             if (onManage()) {
                 annotateBazaar();
                 state.updateInterval = setInterval(updateAgeBadges, INTERVALS.UPDATE_BADGES);
             }
+
+            console.log('[Age Tracker] Random sync intervals: 50-70s (avg 60s)');
         } catch (error) {
             console.error('[Age Tracker] Initialization failed:', error);
             updateSyncStatus(`Init failed: ${error.message}`, true);

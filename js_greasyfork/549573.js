@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Logo 换成 DeepSeek
 // @namespace    https://gist.doracoin.cc/doracoin/39fd3ec77d3044fc95b408bdf6c0ac13
-// @version      2025.09.12
+// @version      2026.01.15
 // @license      MIT
 // @description  替换 ChatGPT 左上角 sidebar-header 的 SVG logo 为 DeepSeek logo，并实现 #page-header 向上收缩（垂直折叠），支持 SPA 重绘、状态记忆，并增加可配置项与主题适配按钮。
 // @author       Doracoin
@@ -103,7 +103,7 @@
             img.setAttribute('src', CONFIG.deepseekLogoUrl);
             img.setAttribute('alt', 'DeepSeek');
             img.setAttribute('data-deepseek-logo', '1');
-            img.style.height = '56px'; // 用户修改的高度
+            img.style.height = '28px'; // 用户修改的高度
             img.style.width = 'auto';
             img.style.objectFit = 'contain';
             img.style.verticalAlign = 'middle';

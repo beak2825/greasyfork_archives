@@ -2,7 +2,7 @@
 // @name         Galgame 跨站搜索跳转助手
 // @description  主要在 Galgame 数据库之间实现搜索跳转。
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.5
 // @author       Orchids
 // @match        https://vndb.org/*
 // @match        https://www.moyu.moe/*
@@ -18,6 +18,7 @@
 // @match        https://exhentai.org/*
 // @match        https://seiya-saiga.com/*
 // @match        https://galge.seiya-saiga.com/*
+// @match        https://sagaoz.net/*
 // @match        https://hitomi.la/*
 // @match        https://ggbases.dlgal.com/*
 // @match        https://erogamescape.org/*
@@ -85,6 +86,7 @@
         "vndb": { keep: "×", replaceWith: " " },
         "seiya": { keep: "×", replaceWith: " " },
         "seiyasave": { keep: "×", replaceWith: " " },
+        "sagaoz": { keep: "×", replaceWith: " " },
         "bgm": { keep: "×", replaceWith: " " },
         "moyu": { keep: "×", replaceWith: " " },
         "2dfan": { keep: "×", replaceWith: " " },
@@ -139,19 +141,13 @@
         
         kw = kw.replace(/[&?]_(?:gl|ga).*$/gi, '');
         kw = kw.replace(/[?&]utm_.*?=.*?(&|$)/gi, '');
-        
         kw = kw.replace(/【.*?】|\[.*?\]|\(.*?\)|「.*?」|『.*?』/g, ' ');
         
-        kw = kw.replace(/\s+for\s+(?:Win|Windows|PC|Mac|OS|XP|Vista)\s*\d*/gi, ' ');
-        kw = kw.replace(/(?:\s|^)(?:Win|Windows|PC版|Mac版)\s*\d*(?:\s|$)/gi, ' ');
-        kw = kw.replace(/(?:^|\s)(?:DL版|対応版|限定版|特典付き?|通常版|期間限定|DMM特典|.*?アワード|.*?賞|受?賞|周年記念|完整版|本体|汉化版)(?:\s|$)/gi, ' ');
-        kw = kw.replace(/\s+for\s*$/gi, ' ');
-
-        kw = kw.replace(/\[(?:gemini|gpt|claude|deepseek|qwen|kimi|llama|flux|sdxl|sd|o1|o3|o4).*?\]/gi, '');
-        kw = kw.replace(/\[(?:内嵌|汉化|补丁|分卷|合集|站内存储|修正|本体|首发|ADV|GAL|纯爱|含本体|tg直链下载).*?\]/gi, '');
+        kw = kw.replace(/(?:\s+for\s+)?(?:Windows|Win|PC|Mac|OS|XP|Vista)(?:\s*\d+)?(?:\s*対応)?版?/gi, ' ');
+        kw = kw.replace(/(?:DL|対応|限定|特典付き?|通常|期間限定|新装|廉価|完整|本体|汉化|日本語)版/gi, ' ');
+        kw = kw.replace(/(?:期間限定|特典付き?|DMM特典|周年記念|完整版|普及版|本体|修正版?)/gi, ' ');
         
         const rule = ENGINE_SPECIFIC_RULES[engineType] || { keep: "", replaceWith: " " };
- 
         if (rule.keep !== "ALL") {
             const keepChars = rule.keep || "";
             SYMBOL_GROUPS.forEach(group => {
@@ -173,6 +169,7 @@
         "vndb":     { name: "VNDB",   bg: "#513535", url: "https://vndb.org/v?sq=" },
         "seiya":    { name: "Seiya攻略", bg: "#2196F3", url: "https://seiya-saiga.com/game/kouryaku.html?cgsearch=" },
         "seiyasave":{ name: "Seiya存档", bg: "#673AB7", url: "https://seiya-saiga.com/save.html?cgsearch=" },
+        "sagaoz":   { name: "Sagaoz攻略", bg: "#1B5E20", url: "https://sagaoz.net/foolmaker/game.html?cgsearch=" },
         "bgm":      { name: "BGM",    bg: "#F09199", url: "https://bgm.tv/subject_search/" },
         "moyu":     { name: "Moyu",   bg: "#00BCD4", url: "https://www.moyu.moe/search?q=" },
         "2dfan":    { name: "2DFan",  bg: "#4CAF50", url: "https://2dfan.com/subjects/search?keyword=" },
@@ -216,7 +213,7 @@
     }
  
     function handleSeiyaLogic() {
-        if (!location.hostname.includes('seiya-saiga.com')) return;
+        if (!location.hostname.includes('seiya-saiga.com') && !location.hostname.includes('sagaoz.net')) return;
         const params = new URLSearchParams(location.search);
         const searchRaw = params.get('cgsearch');
         if (!searchRaw) return;
@@ -248,7 +245,7 @@
             return;
         }
  
-        if (location.pathname.includes('kouryaku.html') || location.pathname.includes('galge.html')) {
+        if (location.pathname.includes('kouryaku.html') || location.pathname.includes('galge.html') || location.pathname.endsWith('game.html')) {
             const links = document.querySelectorAll('a[href*=".html"]');
             let bestLink = null, bestScore = -1;
             links.forEach(link => {
@@ -260,7 +257,9 @@
             });
             if (bestLink) {
                 const t = new URL(bestLink.href); t.searchParams.set('cgsearch', searchRaw); location.href = t.href;
-            } else { location.href = 'https://www.google.com/search?q=site:seiya-saiga.com+' + encodeURIComponent(searchRaw); }
+            } else if (!location.hostname.includes('sagaoz.net')) { 
+                location.href = 'https://www.google.com/search?q=site:seiya-saiga.com+' + encodeURIComponent(searchRaw); 
+            }
         } else {
             const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
             let node;
@@ -354,12 +353,23 @@
             const h1 = document.querySelector('h1');
             if (!h1) return null;
             return { target: h1, keyword: h1.textContent.trim() };
+        }},
+        { name: "Sagaoz", check: () => location.hostname.includes('sagaoz.net') && !location.pathname.endsWith('game.html'), run: () => {
+            const target = document.querySelector('h1') || document.querySelector('caption') || document.querySelector('td[bgcolor="#ccffcc"] b') || document.querySelector('div[align="center"] b font[size="5"]');
+            if (!target) return null;
+            let kw = target.textContent.trim().replace(/攻略|全CG|Save|セーブ/gi, '').split('\n')[0].split('（')[0].split('(')[0].trim();
+            if (kw.length < 2) return null;
+            return { target: target.closest('table') || target, keyword: kw };
         }}
     ];
  
     function main() {
-        if (location.hostname.includes('google.com') && location.search.includes('site:seiya-saiga.com')) {
-            const q = new URLSearchParams(location.search).get('q').replace('site:seiya-saiga.com', '').trim();
+        const curH = location.hostname;
+        const curP = location.pathname;
+
+        if (curH.includes('google.com') && (location.search.includes('site:seiya-saiga.com') || location.search.includes('site:sagaoz.net'))) {
+            const siteTag = location.search.includes('site:seiya-saiga.com') ? 'site:seiya-saiga.com' : 'site:sagaoz.net';
+            const q = new URLSearchParams(location.search).get('q').replace(siteTag, '').trim();
             const finger = normalizeForMatch(q);
             document.querySelectorAll('div.g a').forEach(res => {
                 if (normalizeForMatch(res.innerText).includes(finger)) {
@@ -380,9 +390,7 @@
         
         if (site.name === "Bangumi") cont.style.marginLeft = "250px";
         
-        const curH = location.hostname;
-        const curP = location.pathname;
-        const targets = ['hitomi', 'eh', 'moepedia', 'vndb', 'bgm', 'erogame', 'koko', 'seiya', 'seiyasave', 'moyu', 'ai2', '2dfan', 'dlsite', 'dmm', 'fanza', 'ggbase', 'sukebei'];
+        const targets = ['hitomi', 'eh', 'moepedia', 'vndb', 'bgm', 'erogame', 'koko', 'seiya', 'seiyasave', 'sagaoz', 'moyu', 'ai2', '2dfan', 'dlsite', 'dmm', 'fanza', 'ggbase', 'sukebei'];
         
         targets.forEach(t => {
             const engine = ENGINES[t];
@@ -390,7 +398,8 @@
             if (t === 'fanza' && (curH === 'dlsoft.dmm.co.jp' || curH === 'dlsoft.dmm.com')) return;
             if (t === 'seiya' && curH.includes('seiya-saiga.com') && (curP.includes('kouryaku.html') || curP.includes('galge.html'))) return;
             if (t === 'seiyasave' && curH.includes('seiya-saiga.com') && curP.includes('save.html')) return;
-            if (t !== 'seiya' && t !== 'seiyasave' && curH.includes(engine.name.toLowerCase())) return;
+            if (t === 'sagaoz' && curH.includes('sagaoz.net')) return;
+            if (t !== 'seiya' && t !== 'seiyasave' && t !== 'sagaoz' && curH.includes(engine.name.toLowerCase())) return;
             if (t === 'eh' && /e-hentai|exhentai/.test(curH)) return;
             if (t === '2dfan' && /2dfan|2dfdf|2dfmax|fan2d|galge/.test(curH)) return;
             if ((t === 'erogame' || t === 'koko') && /erogamescape|kyara\.top/.test(curH)) return;

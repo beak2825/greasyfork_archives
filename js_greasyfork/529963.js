@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Curator 40 by L.Cortez
 // @namespace    http://tampermonkey.net/
-// @version      1.10
+// @version      1.12
 // @description  Скрипт для Руководства сервера
 // @author       Андрей Романов
 // @match        https://forum.blackrussia.online/threads/*
@@ -36,7 +36,7 @@ const buttons = [
         "[CENTER][FONT=georgia][I][B]Приветствую.[/FONT][/I][/B][/CENTER]<br><br> " +
         "[CENTER][FONT=georgia][I][B]Ваша жалоба взята на рассмотрение, убедительная просьба не создавать идентичных жалоб и ожидать ответа в данной теме.[/FONT][/I][/B][/CENTER]<br><br> " +
         "[CENTER][B][COLOR=rgb(255, 255, 0)][SIZE=4][FONT=times new roman]✿❯────「На рассмотрении」────❮✿ [/FONT][/SIZE][/COLOR][/B][/CENTER]",
-      prefix: PINN_PREFIX,
+      prefix: NARASSMOTRENIIBIO_PREFIX,
       status: true,
     },
     {
@@ -291,7 +291,7 @@ const buttons = [
         "[CENTER]Игрок будет наказан по пункту правил[/CENTER]<br><br>" +
         "[CENTER][QUOTE][COLOR=rgb(255, 0, 0)]2.08.[/color] Запрещено оскорбление или косвенное упоминание родных вне зависимости от чата (IC или OOC)[COLOR=rgb(255, 0, 0)] | Mute 120 минут + Выговор[/COLOR][/QUOTE][/CENTER]<br><br>" +
         "[CENTER][B][COLOR=rgb(0, 255, 0)][SIZE=4][FONT=times new roman]✿❯────「Одобрено ❖ Закрыто」────❮✿ [/FONT][/SIZE][/COLOR][/B][/CENTER]",
-      prefix: RESHENO_PREFIX,
+      prefix: ODOBRENOBIO_PREFIX,
       status: false,
     },
     {

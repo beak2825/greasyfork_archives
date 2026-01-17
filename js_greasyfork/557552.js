@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.29
+// @version      1.32
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -50,19 +50,19 @@
 // ==/UserScript==
 
 async function runMainScript() {
-    // ПРАВКА: Проверка авторизации. Если гость - скрипт не запускается.
-    const currentUserForInit = (function() {
-        let el = document.querySelector('.lgn__name span');
-        if (el && el.textContent) return el.textContent.trim();
-        let img = document.querySelector('.header__ava.js-show-login img');
-        if (img) return img.getAttribute('title') || img.getAttribute('alt');
-        return null;
-    })();
+	const version = GM_info?.script?.version || 'dev';
+	console.log(`%c[ACM] Запуск скрипта версии ${version}`, "color: #888; font-weight: bold;");
 
-    if (!currentUserForInit) {
-        console.log("%c[ACM] Пользователь не авторизован (Гость). Скрипт остановлен.", "color: #ff9800; font-weight: bold;");
-        return; 
-    }
+	const currentUser = getCurrentes();
+	if (!currentUser) {
+		console.log("%c[ACM] Пользователь не авторизован (Гость). Скрипт остановлен.", "color: #ff9800; font-weight: bold;");
+		return; 
+	}
+
+	const tabSession = initTabSession();
+	const tabIdWatch = tabSession.id;
+	const tabTimestamp = tabSession.ts;
+	unsafeWindow.tabIdWatch = tabIdWatch;
 
 // ##################################################
 // БЛОК ГЛОБАЛЬНЫХ ПЕРЕМЕННЫХ И НАСТРОЕК СКРИПТА!
@@ -131,17 +131,15 @@ async function runMainScript() {
     const CRYSTAL_VERIFICATION_INTERVAL = 180000; // 180000 мс = 3 минуты
 
     // -------------------- ОПРЕДЕЛЕНИЕ СТРАНИЦ --------------------
-    const isTradeCreationPage = () => /^\/cards\/\d+\/trade\/?$/.test(window.location.pathname);
-    const isTradeOfferPage = () => window.location.pathname.startsWith('/trades/');
-    const ANIME_PLAYER_BUTTON_SELECTOR = '.anime-player__fullscreen-btn';
-    const ANIME_PAGE_PATH_IDENTIFIER = '/aniserials/';
-    const isAnimePage = () => document.getElementById('anime-data') !== null;
-    const isRemeltPage = () => window.location.pathname.startsWith('/cards_remelt/');
-    const isCardBasePage = () => /^\/cards\/?($|page\/)/.test(window.location.pathname);
-    const isCardPage = () => {
-        const path = window.location.pathname;
-        return path.startsWith('/user/cards/') || path.startsWith('/trades/') || path.startsWith('/cards/') || path.startsWith('/history/');
-    };
+	const isSpecificTradeOfferPage = () => /^\/cards\/\d+\/trade\/?$/i.test(window.location.pathname); // Проверка страницы предложения обмена конкретной карты
+	const isTradeCreationPage = () => /^\/cards\/\d+\/trade\/?$/.test(window.location.pathname); // Проверка страницы создания трейда
+	const isTradeOfferPage = () => window.location.pathname.startsWith('/trades/'); // Проверка страницы активного предложения обмена
+	const ANIME_PLAYER_BUTTON_SELECTOR = '.anime-player__fullscreen-btn'; // CSS-селектор кнопки полноэкранного режима в плеере
+	const ANIME_PAGE_PATH_IDENTIFIER = '/aniserials/'; // Строковый идентификатор пути для страниц аниме-сериалов
+	const isAnimePage = () => document.getElementById('anime-data') !== null; // Проверка наличия контейнера данных аниме на странице
+	const isRemeltPage = () => window.location.pathname.startsWith('/cards_remelt/'); // Проверка нахождения в разделе переплавки карт
+	const isCardBasePage = () => /^\/cards\/?($|page\/)/.test(window.location.pathname); // Проверка страницы общего списка базы карт
+	const isCardPage = () => { const p = window.location.pathname; return p.startsWith('/user/cards/') || p.startsWith('/trades/') || p.startsWith('/cards/') || p.startsWith('/history/'); }; // Проверка любой страницы, связанной с функционалом карт
 
     // -------------------- КОНСТАНТЫ КЭША И ХРАНИЛИЩА --------------------
     const OWNER_TO_TYPE_CACHE_KEY = 'ownerToTypeMapCache_GM'; // Ключ для хранения в GM_storage кэша, связывающего ID экземпляра карты (ownerId) с ID её типа (typeId).
@@ -246,8 +244,8 @@ async function runMainScript() {
     let lastCardCountCheckTime = 0; // Время последней проверки счетчика карт.
     let hasLoggedPauseMessage = false;
     const CARD_COUNT_UPDATE_INTERVAL = 30 * 60 * 1000; // 30 минут для фоновой проверки.
-    const STORAGE_KEY_WATCH = 'scriptEnabled'; // Ключ в localStorage для состояния вкл/выкл модуля.
-    const LEADER_KEY_WATCH = 'scriptLeader_avw'; // Ключ в localStorage для определения "лидера" среди вкладок.
+    const STORAGE_KEY_WATCH = 'scriptEnabled'; // Ключ в GM_storage для состояния вкл/выкл модуля (зеркальность)
+	const LEADER_KEY_WATCH = 'scriptLeader_avw'; // Ключ в GM_storage для определения "лидера" среди вкладок (зеркальность)
     const HEARTBEAT_INTERVAL_WATCH = 5000; // Интервал проверки "пульса" для не-лидеров.
     const LEADER_HEARTBEAT_INTERVAL_WATCH = 2500; // Интервал обновления "пульса" для лидера.
     const LEADER_TIMEOUT_WATCH = LEADER_HEARTBEAT_INTERVAL_WATCH * 4; // Лидер "мертв", если пропустил 4 пульса (20 секунд)
@@ -314,7 +312,7 @@ async function runMainScript() {
 	const ACM_INFO_BTN_TRIGGER_KEY = 'acm_infoBtnTrigger_v1'; // click / hover
 	const ACM_INFO_BTN_S_COUNT_ENABLED_KEY = 'acm_infoBtnSCountEnabled_v1';
 	const ACM_INFO_BTN_COLORING_ENABLED_KEY = 'acm_infoBtnColoringEnabled_v1';
-    let areActionButtonsHidden = localStorage.getItem('actionButtonsHiddenState') === 'true'; // Состояние (скрыты/показаны) боковых кнопок управления.
+    let areActionButtonsHidden = GM_getValue('actionButtonsHiddenState', false);
     const managedButtonSelectors = ['#turboBoosterBtn','#processCards', '#processAllPagesBtn', '#clearPageCacheBtn', '#readyToCharge', '#toggleScriptButton',
                                     '#promoButton', '#check-all-duplicates-btn', '#autoPackCheckButton', '#autoDemandCheckButton','#toggleCrystalScript', '#maxWidthSliderContainer', '#leaderLockButton', '#card-aggregator-toggle-btn', '#checkFreshnessBtn',];
     let toggleButtonElement = null; // Ссылка на DOM-элемент самой кнопки-переключателя видимости.
@@ -329,14 +327,14 @@ async function runMainScript() {
     // -------------------- МОДУЛЬ: СЛАЙДЕР ШИРИНЫ СТРАНИЦЫ --------------------
     const MAX_WIDTH_SLIDER_ENABLED_KEY = 'acm_maxWidthSliderEnabled';
     const DEFAULT_MAX_WIDTH_SLIDER = 1285; // Значение ширины страницы по умолчанию в пикселях.
-    const MAX_WIDTH_STORAGE_KEY_SLIDER = 'pageMaxWidthSettingSlider'; // Ключ для хранения в localStorage выбранной ширины страницы.
+    const MAX_WIDTH_STORAGE_KEY_SLIDER = 'pageMaxWidthSettingSlider'; // Ключ в GM_storage для хранения выбранной ширины страницы (зеркальность)
     let maxWidthSliderElement = null; // Ссылка на DOM-элемент самого ползунка (input type="range").
     let maxWidthValueDisplayElement = null; // Ссылка на DOM-элемент, где отображается текущее значение ширины (e.g., "1285px").
     let dynamicPageStylesElement = null; // Ссылка на DOM-элемент <style>, куда динамически добавляются CSS-правила для изменения ширины.
 
     // -------------------- МОДУЛЬ: КАСТОМНЫЙ ФОН --------------------
     let bgSettings = null; // Объект настроек фона (активный, список источников). Инициализируется позже.
-    let stylesEnabled = localStorage.getItem('stylesEnabled') !== 'false'; // Состояние (вкл/выкл) кастомного фона.
+    let stylesEnabled = GM_getValue('stylesEnabled', true);
 
     // -------------------- МОДУЛЬ: ЗАЩИТА КАРТ В ПАКАХ --------------------
     const PROTECTOR_SETTINGS_KEY = 'cardPackProtectorSettings_v3'; // Ключ для хранения в GM_storage настроек защиты карт.
@@ -437,95 +435,2546 @@ async function runMainScript() {
     // КОНЕЦ БЛОКА ГЛОБАЛЬНЫХ ПЕРЕМЕННЫХ И НАСТРОЕК СКРИПТА!
     // ##################################################
 
-// ##################################################
-// # БЛОК ЕДИНОЕ ЛОГИРОВАНИЕ
-// ##################################################
-// ФункцияSCC Log: Консоль + Пуш (дублирует всё в логи браузера)
-async function sccLog(message, type = 'info', forceConsole = false) {
-    const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-    // Если включена полная отладка (3), пишем всё в консоль безусловно
-    if (forceConsole || sets.logLevel >= 2 || (sets.logLevel == 3)) {
-        const colors = { success: '#43b581', error: '#ff4d4d', warning: '#faa61a', info: '#00ffff', debug: '#bb86fc' };
-        console.log(`%c[ACM Log] ${message}`, `color: ${colors[type] || '#fff'}; font-weight: bold;`);
-    }
-    // В пуши (уведомления на экране) дебаг-логи не шлем, чтобы не спамить
-    if (type !== 'debug') safeDLEPushCall(type === 'warning' ? 'warn' : type, message);
-}
 
-// ##################################################
-// # БЛОК ОПОВЕЩЕНИЯ ОБ ОБНОВЛЕНИИ ВЕРСИИ
-// ##################################################
-    function setGlos(name, value) {
-        document.cookie = `${name}=${value}; path=/`;
-    }
-    function getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for(let i=0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-    function getCurrentes() {
-        const el = document.querySelector('.lgn__name span');
-        return el ? el.textContent.trim() : null;
-    }
-    const SCRIPT_VERSION_KEY = 'ascm_script_version_v2';
-    const currentVersion = (typeof GM_info !== 'undefined' ? GM_info.script.version : 'dev');
-    const lastRunVersion = await GM_getValue(SCRIPT_VERSION_KEY, null);
-    if (currentVersion !== lastRunVersion) {
-        const notificationEl = document.createElement('div');
-        Object.assign(notificationEl.style, {
-            position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
-            padding: '12px 28px', color: 'white', borderRadius: '10px',
-            background: 'linear-gradient(145deg, #007bff, #0056b3)',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.5)', zIndex: '2147483639',
-            fontSize: '15px', fontWeight: 'bold', textAlign: 'center',
-            transition: 'opacity 0.5s ease',
-            whiteSpace: 'pre-line'
-        });
-        notificationEl.textContent = 'AnimeStars Card Master\nСкрипт обновлен до версии ' + currentVersion + '!';
-        document.body.appendChild(notificationEl);
-        setTimeout(() => {
-            notificationEl.style.opacity = '0';
-            setTimeout(() => notificationEl.remove(), 500);
-        }, 10000);
-        console.log(`[ACM] Обнаружено обновление скрипта с версии ${lastRunVersion || 'N/A'} до ${currentVersion}.`);
-        await GM_setValue(SCRIPT_VERSION_KEY, currentVersion);
-    }
-// ##################################################
-// # КОНЕЦ БЛОКА ОПОВЕЩЕНИЯ ОБ ОБНОВЛЕНИИ ВЕРСИИ
-// ##################################################
 
-// Получает текущее время МСК (день.месяц.год часы:мин:сек)
-    function getMoscowTime(includeSeconds = true) {
-        const date = new Date(Date.now() + (3 * 60 * 60 * 1000));
-        const pad = (n) => String(n).padStart(2, '0');
-        let res = `${pad(date.getUTCDate())}.${pad(date.getUTCMonth() + 1)}.${date.getUTCFullYear()} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
-        if (includeSeconds) res += `:${pad(date.getUTCSeconds())}`;
-        return res;
-    }
 
-    // Совмещает время из чата (HH:mm) с правильной датой МСК
-    function formatChatTimeWithMskDate(chatHHmm) {
-        if (!chatHHmm) return null;
-        const nowMsk = new Date(Date.now() + (3 * 60 * 60 * 1000));
-        const [h, m] = chatHHmm.split(':').map(Number);
+	// ##################################################################################
+	// ############################# КАРТА ПРОЕКТА. НАЧАЛО ##############################
+	// ##################################################################################
+	
+// ==UserScript==
+// @name         AnimeStars Card Master (fork)
+// ... (остальные метаданные)
+// ==/UserScript==
 
-        const d = new Date(nowMsk);
-        d.setUTCHours(h, m, 0, 0);
+// async function runMainScript() {
 
-        // Если время из чата больше текущего (например, в чате 23:50, а сейчас 00:10), значит это вчерашнее сообщение
-        if (d > nowMsk) {
-            d.setUTCDate(d.getUTCDate() - 1);
-        }
+	// ##################################################################################
+	// # 1. [SECTION] CONSTANTS & GLOBAL STATE (Настройки и переменные состояния)
+	// ##################################################################################
 
-        const pad = (n) => String(n).padStart(2, '0');
-        return `${pad(d.getUTCDate())}.${pad(d.getUTCMonth() + 1)}.${d.getUTCFullYear()} ${pad(h)}:${pad(m)}`;
-    }
+	// Здесь располагаются все константы (URL, Ключи хранилищ, TTL)
+	// и глобальные переменные (флаги состояния, ссылки на DOM-элементы).
 
+
+	// ##################################################################################
+	// # 2. [SECTION] AUTHENTICATION & VERSION CONTROL (Проверки входа и обновлений)
+	// ##################################################################################
+
+	/**
+	 * Извлекает никнейм текущего авторизованного пользователя из нескольких возможных источников в DOM (текстовые блоки или атрибуты аватара). 
+	 * Служит основным индикатором авторизации: если никнейм не найден, скрипт расценивает пользователя как гостя и прекращает работу.
+	 * [нет аргументов]
+	 */
+	function getCurrentes() {
+		let el = document.querySelector('.lgn__name span');
+		if (el && el.textContent) return el.textContent.trim();
+		let img = document.querySelector('.header__ava.js-show-login img, .lgn__ava.usn__ava img');
+		if (img) return img.getAttribute('title') || img.getAttribute('alt');
+		return null;
+	}
+
+	/**
+	 * Инициализирует процедуру проверки версии скрипта и оповещения пользователя об обновлениях.
+	 */
+	(async () => {
+		const SCRIPT_VERSION_KEY = 'ascm_script_version_v2';
+		const currentVersion = (typeof GM_info !== 'undefined' ? GM_info.script.version : 'dev');
+		const lastRunVersion = await GM_getValue(SCRIPT_VERSION_KEY, null);
+
+		if (currentVersion !== lastRunVersion) {
+			const notificationEl = document.createElement('div');
+			Object.assign(notificationEl.style, {
+				position: 'fixed', top: '20px', left: '50%', transform: 'translateX(-50%)',
+				padding: '12px 28px', color: 'white', borderRadius: '10px',
+				background: 'linear-gradient(145deg, #007bff, #0056b3)',
+				boxShadow: '0 8px 20px rgba(0,0,0,0.5)', zIndex: '2147483639',
+				fontSize: '15px', fontWeight: 'bold', textAlign: 'center',
+				transition: 'opacity 0.5s ease',
+				whiteSpace: 'pre-line'
+			});
+			notificationEl.textContent = 'AnimeStars Card Master\nСкрипт обновлен до версии ' + currentVersion + '!';
+			document.body.appendChild(notificationEl);
+
+			setTimeout(() => {
+				notificationEl.style.opacity = '0';
+				setTimeout(() => notificationEl.remove(), 500);
+			}, 10000);
+
+			console.log(`[ACM] Обнаружено обновление скрипта с версии ${lastRunVersion || 'N/A'} до ${currentVersion}.`);
+			await GM_setValue(SCRIPT_VERSION_KEY, currentVersion);
+		}
+	})();
+
+
+	// ##################################################################################
+	// # 3. [SECTION] HELPERS (Универсальные утилиты: время, форматирование, логи)
+	// ##################################################################################
+
+	// --- [Sub-Module] Логирование и Уведомления ---
+	
+	/**
+	 * Вспомогательный маппер для методов DLEPush.
+	 * Связывает текстовые команды с функцией отрисовки уведомлений.
+	 */
+	function getEffectiveDLEPush() {
+		return {
+			info: (message) => showNotification(String(message), 'info'),
+			success: (message) => showNotification(String(message), 'success'),
+			stickySuccess: (message) => showNotification(String(message), 'success', true),
+			error: (message) => showNotification(String(message), 'error'),
+			warning: (message) => showNotification(String(message), 'warning'),
+			warn: (message) => showNotification(String(message), 'warning'),
+			custom: (message) => showNotification(String(message), 'custom')
+		};
+	}
+	
+	/**
+	 * Безопасная обертка для вызова уведомлений сайта (DLEPush).
+	 * [methodName] - тип уведомления (info, success, etc.),
+	 * [message] - текст сообщения.
+	 * Умная логика: автоматически исправляет положение аргументов, если они перепутаны.
+	 */
+	function safeDLEPushCall(methodName, message) {
+		const DLEPushAPI = getEffectiveDLEPush();
+		const knownMethods = ['info', 'success', 'stickySuccess', 'error', 'warning', 'warn', 'custom'];
+
+		// [Умный фикс] Если methodName — это текст сообщения, а message — это тип (напр. 'success')
+		if (!knownMethods.includes(methodName) && knownMethods.includes(message)) {
+			let temp = methodName;
+			methodName = message;
+			message = temp;
+		}
+
+		const messageString = (message === undefined || message === null) ? `(Сообщение не определено)` : String(message);
+
+		if (typeof DLEPushAPI[methodName] === 'function') {
+			DLEPushAPI[methodName](messageString);
+		} else {
+			// Если тип всё еще не определен, выводим как info, чтобы юзер видел текст
+			console.warn(`[ACM] Неизвестный тип уведомления "${methodName}". Вывод через info. Текст: ${messageString}`);
+			DLEPushAPI.info(messageString);
+		}
+	}
+	unsafeWindow.safeDLEPushCall = safeDLEPushCall;
+
+	/**
+	 * Единое логирование: выводит цветное сообщение в консоль и дублирует в пуш-уведомление.
+	 * [message] - текст сообщения, 
+	 * [type] - тип (success, error, warning, info, debug),
+	 * [forceConsole] - принудительный вывод в консоль игнорируя настройки уровня логов.
+	 */
+	async function sccLog(message, type = 'info', forceConsole = false) {
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		if (forceConsole || sets.logLevel >= 2 || (sets.logLevel == 3)) {
+			const colors = { success: '#43b581', error: '#ff4d4d', warning: '#faa61a', info: '#00ffff', debug: '#bb86fc' };
+			console.log(`%c[ACM Log] ${message}`, `color: ${colors[type] || '#fff'}; font-weight: bold;`);
+		}
+		if (type !== 'debug') safeDLEPushCall(type === 'warning' ? 'warn' : type, message);
+	}
+
+	// --- [Sub-Module] Работа со временем и задержками ---
+
+	/**
+	 * Возвращает текущую дату и время по московскому времени (UTC+3).
+	 * [includeSeconds] - флаг отображения секунд (true - по умолчанию).
+	 */
+	function getMoscowTime(includeSeconds = true) {
+		const date = new Date(Date.now() + (3 * 60 * 60 * 1000));
+		const pad = (n) => String(n).padStart(2, '0');
+		let res = `${pad(date.getUTCDate())}.${pad(date.getUTCMonth() + 1)}.${date.getUTCFullYear()} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}`;
+		if (includeSeconds) res += `:${pad(date.getUTCSeconds())}`;
+		return res;
+	}
+	unsafeWindow.getMoscowTime = getMoscowTime;
+
+	/**
+	 * Совмещает "сырое" время из чата (HH:mm) с актуальной датой МСК.
+	 * Обрабатывает переход через полночь (сообщения в 23:59 при текущем времени 00:01).
+	 * [chatHHmm] - строка времени из чата.
+	 */
+	function formatChatTimeWithMskDate(chatHHmm) {
+		if (!chatHHmm) return null;
+		const nowMsk = new Date(Date.now() + (3 * 60 * 60 * 1000));
+		const [h, m] = chatHHmm.split(':').map(Number);
+		const d = new Date(nowMsk);
+		d.setUTCHours(h, m, 0, 0);
+		if (d > nowMsk) d.setUTCDate(d.getUTCDate() - 1);
+		const pad = (n) => String(n).padStart(2, '0');
+		return `${pad(d.getUTCDate())}.${pad(d.getUTCMonth() + 1)}.${d.getUTCFullYear()} ${pad(h)}:${pad(m)}`;
+	}
+	unsafeWindow.formatChatTimeWithMskDate = formatChatTimeWithMskDate;
+
+	/**
+	 * Приостанавливает выполнение кода на указанное время (асинхронная пауза).
+	 * [ms] - задержка в миллисекундах.
+	 */
+	const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+	unsafeWindow.sleep = sleep;
+
+	/**
+	 * Превращает timestamp в строку относительного времени (напр. "5 мин. назад").
+	 * [timestamp] - метка времени в мс.
+	 */
+	function getRelativeTimeString(timestamp) {
+		if (!timestamp) return "никогда";
+		const diff = Date.now() - timestamp;
+		const mins = Math.floor(diff / 60000);
+		if (mins < 1) return "только что";
+		if (mins < 60) return `${mins} мин. назад`;
+		const hours = Math.floor(mins / 60);
+		if (hours < 24) return `${hours} ч. ${mins % 60} мин. назад`;
+		const days = Math.floor(hours / 24);
+		return `${days} д. ${hours % 24} ч. назад`;
+	}
+	unsafeWindow.getRelativeTimeString = getRelativeTimeString;
+	
+	// --- [Sub-Module] Парсеры данных сайта (DOM, Строки, URL) ---
+
+	/**
+	 * Получает никнейм текущего авторизованного пользователя.
+	 * Проверяет 4 различных источника в DOM (шапка, аватар, ссылки).
+	 */
+	function asbm_getUsername() {
+		let userEl = document.querySelector('.lgn__name span');
+		if (userEl && userEl.textContent) return userEl.textContent.trim();
+		userEl = document.querySelector('.header__ava.js-show-login img, .lgn__ava.usn__ava img');
+		if (userEl) {
+			const username = userEl.getAttribute('title') || userEl.getAttribute('alt');
+			if (username) return username.trim();
+		}
+		userEl = document.querySelector('.lgn__name a[href*="/user/"]');
+		if (userEl && userEl.href) {
+			const match = userEl.href.match(/\/user\/([^/]+)\/?/);
+			if (match && match[1]) return decodeURIComponent(match[1]);
+		}
+		userEl = document.querySelector('#vm-custom-buttons-container a[href*="/user/"]');
+		if (userEl && userEl.href) {
+			const match = userEl.href.match(/\/user\/cards\/\?name=([^&]+)/);
+			if (match && match[1]) return decodeURIComponent(match[1]);
+		}
+		return null;
+	}
+	unsafeWindow.asbm_getUsername = asbm_getUsername;
+
+	/**
+	 * Очищает название аниме от приписок сезонов, фильмов, OVA и номеров.
+	 */
+	function getBaseAnimeName(animeName) {
+		if (!animeName) return 'Без названия';
+		return animeName
+			.replace(/((\s+)?(\d+)(\s+)?(сезон|saison|season))$/i, '')
+			.replace(/((\s+)?(фильм|movie|film|ova|ona|спешл|special))$/i, '')
+			.replace(/(\s+\d+)$/, '')
+			.trim();
+	}
+	unsafeWindow.getBaseAnimeName = getBaseAnimeName;
+
+	/**
+	 * Создает чистый путь картинки, убирая динамические хвосты (cache-busting).
+	 * Используется как ключ для поиска карты в локальной базе данных.
+	 * [imageUrl] - полная ссылка на картинку карты.
+	 */
+	function normalizeImagePath(imageUrl) {
+		if (!imageUrl || imageUrl.startsWith('data:')) return null;
+		try {
+			const path = new URL(imageUrl, location.origin).pathname;
+			const match = path.match(/\/cards_image\/(\d+)\/([a-z]+)\/([a-z0-9-.]+?)(?:-\d+.*)?\.webp/);
+			if (match && match[1] && match[2] && match[3]) {
+				return `${match[1]}/${match[2]}/${match[3]}`;
+			}
+			return path;
+		} catch (e) { return imageUrl; }
+	}
+	unsafeWindow.normalizeImagePath = normalizeImagePath;
+	
+	/**
+	 * Читает значение Cookie по имени.
+	 * [name] - имя куки.
+	 */
+	function getCookie(name) {
+		const nameEQ = name + "=";
+		const ca = document.cookie.split(';');
+		for(let i=0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+	}
+	unsafeWindow.getCookie = getCookie;
+
+	/**
+	 * Устанавливает значение Cookie.
+	 * [name] - имя, [value] - значение.
+	 */
+	function setGlos(name, value) {
+		document.cookie = `${name}=${value}; path=/`;
+	}
+	unsafeWindow.setGlos = setGlos;
+	
+	// --- [Sub-Module] Форматирование и Генерация ---
+
+	/**
+	 * Возвращает правильную форму существительного в зависимости от числительного.
+	 * [number] - число, [one] - форма для 1, [two] - для 2, [five] - для 5.
+	 */
+	function getPlural(number, one, two, five) {
+		let n = Math.abs(number);
+		n %= 100;
+		if (n >= 5 && n <= 20) return five;
+		n %= 10;
+		if (n === 1) return one;
+		if (n >= 2 && n <= 4) return two;
+		return five;
+	}
+	unsafeWindow.getPlural = getPlural;
+	
+	/**
+	 * Генерирует случайный уникальный идентификатор (ID).
+	 * Используется для создания ключей новых профилей, фонов и элементов UI.
+	 */
+	function generateUniqueId() {
+		return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
+	}
+	unsafeWindow.generateUniqueId = generateUniqueId;
+	
+	/**
+	 * Конвертирует количество часов в человекочитаемую строку (дни + часы).
+	 * [totalHours] - целое число часов.
+	 * Пример: 26 -> "1 день и 2 часа".
+	 */
+	function convertHoursToReadableString(totalHours) {
+		if (totalHours === 0) return "0 часов (без кэша)";
+		const days = Math.floor(totalHours / 24);
+		const remainingHours = totalHours % 24;
+		let parts = [];
+		if (days > 0) {
+			parts.push(`${days} ${getPlural(days, 'день', 'дня', 'дней')}`);
+		}
+		if (remainingHours > 0) {
+			parts.push(`${remainingHours} ${getPlural(remainingHours, 'час', 'часа', 'часов')}`);
+		}
+		return parts.join(' и ');
+	}
+	unsafeWindow.convertHoursToReadableString = convertHoursToReadableString;
+	
+	// --- [Sub-Module] Интерфейс и Взаимодействие ---
+
+	/**
+	 * Отображает кастомное модальное окно с кнопками Да/Нет.
+	 * Возвращает Promise (true при нажатии "Да", false при "Нет" или клике мимо).
+	 * [message] - текст вопроса (поддерживает HTML).
+	 */
+	function protector_customConfirm(message) {
+		return new Promise(resolve => {
+			const wrapper = document.createElement('div');
+			wrapper.innerHTML = `
+				<div class="acm-modal-backdrop protector_backdrop" style="z-index: 2147483647 !important;"></div>
+				<div class="acm-modal" id="protector_confirm_modal" style="z-index: 2147483648 !important;">
+					<div class="modal-header"><h2>Подтверждение</h2></div>
+					<div class="modal-body"><p>${message}</p></div>
+					<div class="modal-footer">
+						<button class="action-btn protector_confirm_yes">Да</button>
+						<button class="action-btn protector_confirm_no">Нет</button>
+					</div>
+				</div>`;
+			document.body.appendChild(wrapper);
+			const cleanup = () => wrapper.remove();
+			wrapper.querySelector('.protector_confirm_yes').onclick = () => { cleanup(); resolve(true); };
+			wrapper.querySelector('.protector_confirm_no').onclick = () => { cleanup(); resolve(false); };
+			wrapper.querySelector('.protector_backdrop').onclick = () => { cleanup(); resolve(false); };
+		});
+	}
+	unsafeWindow.protector_customConfirm = protector_customConfirm;
+
+	/**
+	 * Показывает всплывающую подсказку над указанным элементом.
+	 * [text] - текст подсказки, [targetElement] - элемент, над которым показать.
+	 */
+	function showInfoTooltip(text, targetElement) {
+		const closeTooltip = () => {
+			document.querySelector('.info-tooltip-backdrop')?.remove();
+			document.querySelector('.info-tooltip')?.remove();
+		};
+		closeTooltip();
+		const backdrop = document.createElement('div');
+		backdrop.className = 'info-tooltip-backdrop';
+		const tooltip = document.createElement('div');
+		tooltip.className = 'info-tooltip';
+		tooltip.innerHTML = text;
+		document.body.appendChild(backdrop);
+		document.body.appendChild(tooltip);
+		const targetRect = targetElement.getBoundingClientRect();
+		const tooltipRect = tooltip.getBoundingClientRect();
+		let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+		let top = targetRect.top - tooltipRect.height - 10;
+		if (left < 10) left = 10;
+		if (left + tooltipRect.width > window.innerWidth - 10) left = window.innerWidth - tooltipRect.width - 10;
+		tooltip.style.left = `${left}px`;
+		tooltip.style.top = `${top}px`;
+		backdrop.addEventListener('click', closeTooltip);
+	}
+	unsafeWindow.showInfoTooltip = showInfoTooltip;
+
+
+	// ##################################################################################
+	// # 4. [SECTION] DATABASE & CACHE (Управление IndexedDB и кешем спроса)
+	// ##################################################################################
+
+	// --- [Sub-Module] Конфигурация и Инициализация БД ---
+
+	const DB_NAME = 'ASCM_CardDatabase';
+	const DB_VERSION = 16;
+	const GIST_DB_STORE_NAME = 'cards';
+	const DEMAND_CACHE_STORE_NAME = 'demand_cache';
+	const OWNER_MAP_STORE_NAME = 'owner_to_type_map';
+	let dbPromise = null; // Переменная для хранения активного соединения
+
+	/**
+	 * Инициализирует соединение с IndexedDB.
+	 * Создает таблицы (stores) и обрабатывает миграции версий.
+	 */
+	function openDb() {
+		if (dbPromise) return dbPromise;
+		dbPromise = new Promise((resolve, reject) => {
+			const request = indexedDB.open(DB_NAME, DB_VERSION);
+			request.onerror = (event) => {
+				console.error("Критическая ошибка открытия IndexedDB:", event.target.error);
+				reject("Ошибка открытия IndexedDB");
+			};
+			request.onsuccess = () => {
+				const db = request.result;
+				db.onversionchange = () => { db.close(); };
+				resolve(db);
+			};
+			request.onupgradeneeded = (event) => {
+				const db = event.target.result;
+				const stores = [
+					{ name: GIST_DB_STORE_NAME, params: { keyPath: 'id' } },
+					{ name: DEMAND_CACHE_STORE_NAME },
+					{ name: OWNER_MAP_STORE_NAME, params: { keyPath: 'ownerId' } },
+					{ name: 'scc_settings' },
+					{ name: 'scc_profiles' },
+					{ name: 'scc_card_cache' },
+					{ name: WISHLIST_DB_STORE_NAME },
+					{ name: 'anime_history', params: { keyPath: 'animeId' } },
+					{ name: 'card_receipts', params: { keyPath: 'receivedAt' } }
+				];
+				stores.forEach(s => {
+					if (!db.objectStoreNames.contains(s.name)) {
+						db.createObjectStore(s.name, s.params || {});
+					}
+				});
+			};
+		});
+		return dbPromise;
+	}
+
+	// --- [Sub-Module] Универсальные CRUD-методы IndexedDB ---
+
+	/**
+	 * Записывает данные в указанное хранилище IndexedDB.
+	 */
+	async function dbSet(storeName, key, value) {
+		const db = await openDb();
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(storeName, 'readwrite');
+			const store = transaction.objectStore(storeName);
+			const request = store.put(value, key);
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = (event) => reject(`Ошибка записи в ${storeName}: ${event.target.error}`);
+		});
+	}
+	unsafeWindow.dbSet = dbSet;
+
+	/**
+	 * Читает данные из указанного хранилища IndexedDB по ключу.
+	 */
+	async function dbGet(storeName, key) {
+		const db = await openDb();
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(storeName, 'readonly');
+			const store = transaction.objectStore(storeName);
+			const request = store.get(key);
+			request.onsuccess = () => resolve(request.result);
+			request.onerror = (event) => reject(`Ошибка чтения из ${storeName}: ${event.target.error}`);
+		});
+	}
+	unsafeWindow.dbGet = dbGet;
+
+	/**
+	 * Удаляет запись из указанного хранилища IndexedDB по ключу.
+	 */
+	async function dbDelete(storeName, key) {
+		const db = await openDb();
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(storeName, 'readwrite');
+			const store = transaction.objectStore(storeName);
+			const request = store.delete(key);
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = (event) => reject(`Ошибка удаления из ${storeName}: ${event.target.error}`);
+		});
+	}
+	
+	// --- [Sub-Module] Логика кеширования спроса (Demand Cache) ---
+
+	/**
+	 * Сохраняет данные в кеш с меткой времени истечения.
+	 * [key] - уникальный ключ, [data] - объект данных, [ttlInSeconds] - время жизни.
+	 */
+	async function setCache(key, data, ttlInSeconds) {
+		const db = await openDb();
+		return new Promise((resolve, reject) => {
+			const expires = Date.now() + (ttlInSeconds * 1000);
+			const cacheData = { data, expires };
+			const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+			const store = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
+			const request = store.put(cacheData, key);
+			transaction.oncomplete = () => resolve();
+			transaction.onerror = (event) => reject(`Ошибка кеширования "${key}": ${event.target.error}`);
+		});
+	}
+
+	/**
+	 * Извлекает данные из кеша, проверяя их актуальность (TTL).
+	 * [key] - уникальный ключ.
+	 */
+	async function getCache(key) {
+		const db = await openDb();
+		return new Promise((resolve, reject) => {
+			const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readonly');
+			const store = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
+			const request = store.get(key);
+			request.onsuccess = () => {
+				const cacheData = request.result;
+				if (!cacheData) {
+					resolve(null);
+				} else if (Date.now() > cacheData.expires) {
+					// Данные устарели — удаляем их в фоновом режиме
+					dbDelete(DEMAND_CACHE_STORE_NAME, key);
+					resolve(null);
+				} else {
+					resolve(cacheData.data);
+				}
+			};
+			request.onerror = () => resolve(null);
+		});
+	}
+	unsafeWindow.getCache = getCache;
+
+	/**
+	 * Специализированная обертка для кеширования спроса карты.
+	 * Автоматически берет время жизни (TTL) из настроек скрипта.
+	 */
+	async function cacheCard(key, data) {
+		if (data) {
+			const ttlInHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
+			const ttlInSeconds = ttlInHours * 3600;
+			await setCache(key, data, ttlInSeconds);
+		}
+	}
+
+	/**
+	 * Получает данные о спросе карты из кеша (упрощенный вызов).
+	 */
+	async function getCard(key) {
+		return await getCache(key);
+	}
+
+	/**
+	 * Полная очистка кеша спроса и связей ID в базе данных.
+	 */
+	async function clearCardCache() {
+		const db = await openDb();
+		const transaction = db.transaction([DEMAND_CACHE_STORE_NAME, OWNER_MAP_STORE_NAME], 'readwrite');
+		const req1 = transaction.objectStore(DEMAND_CACHE_STORE_NAME).clear();
+		const req2 = transaction.objectStore(OWNER_MAP_STORE_NAME).clear();
+		
+		return new Promise(resolve => {
+			transaction.oncomplete = () => {
+				safeDLEPushCall('success', 'Глобальный кеш спроса и ID очищен.');
+				resolve(true);
+			};
+			transaction.onerror = () => {
+				safeDLEPushCall('error', 'Ошибка при очистке кеша.');
+				resolve(false);
+			};
+		});
+	}
+
+	/**
+	 * Очищает кеш только для тех карт, которые видны на текущей странице.
+	 */
+	async function clearPageCache() {
+		const cardsOnPage = getCardsOnPage();
+		if (cardsOnPage.length === 0) return;
+
+		const uniqueIds = new Set();
+		for (const el of cardsOnPage) {
+			const id = await getCardId(el, 'type', true);
+			if (id) uniqueIds.add(id);
+		}
+
+		if (uniqueIds.size === 0) return;
+
+		const db = await openDb();
+		const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+		const store = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
+		
+		for (const id of uniqueIds) {
+			store.delete('cardId: ' + id);
+		}
+
+		transaction.oncomplete = () => {
+			safeDLEPushCall('success', `Кеш для ${uniqueIds.size} карт на странице сброшен.`);
+			// Обновляем визуальную часть: удаляем старые блоки статистики
+			document.querySelectorAll('.acm-stats-wrapper, .acm-card-stats').forEach(el => el.remove());
+			addDemandCheckButtonsToCards();
+		};
+	}
+
+
+	// ##################################################################################
+	// # 5. [SECTION] MULTI-TAB COORDINATION (Система Лидерства и связи вкладок)
+	// ##################################################################################
+
+	// --- [Sub-Module] Инициализация и Выборы ---
+	
+	/**
+	 * Генерирует или восстанавливает уникальный идентификатор текущей вкладки и фиксирует время её создания. 
+	 * Данные сохраняются в рамках текущей сессии вкладки (sessionStorage), что позволяет системе 
+	 * координации корректно определять приоритет лидерства при наличии нескольких открытых окон сайта.
+	 * [нет аргументов]
+	 */
+	function initTabSession() {
+		let id = sessionStorage.getItem('ascm_tabId');
+		if (!id) {
+			id = Date.now().toString() + "_" + Math.random().toString(36).substr(2, 5);
+			sessionStorage.setItem('ascm_tabId', id);
+		}
+		return {
+			id: id,
+			ts: parseInt(id.split('_')[0], 10)
+		};
+	}
+	
+	/**
+	 * Выполняет первичную проверку статуса Лидера при загрузке или смене настроек.
+	 * Обеспечивает корректный запуск циклов Heartbeat.
+	 */
+	unsafeWindow.initializeLeadership = async function() {
+		const lockedLeaderId = await GM_getValue(LEADER_LOCK_KEY, null);
+		if (lockedLeaderId && lockedLeaderId === tabIdWatch) {
+			if (unsafeWindow.isElectionInProgress) return;
+			unsafeWindow.isElectionInProgress = true;
+			await becomeLeader();
+			unsafeWindow.isElectionInProgress = false;
+		} else {
+			await tryToBecomeLeaderWatch();
+		}
+		startHeartbeatWatch();
+	};
+	
+	/**
+	 * Реализует алгоритм определения активной вкладки-лидера для выполнения фоновых задач. 
+	 * Учитывает ручную фиксацию лидерства (Leader Lock), приоритет активного окна (visibilityState) 
+	 * и состояние «Турбо-вклада» в шахте; использует кросс-доменное хранилище для координации 
+	 * между разными зеркалами сайта и предотвращения конфликтов одновременного сбора.
+	 * [нет аргументов]
+	 */
+	async function tryToBecomeLeaderWatch() {
+		if (unsafeWindow.isElectionInProgress) return;
+		unsafeWindow.isElectionInProgress = true;
+
+		const now = Date.now();
+		const currentLeaderJSON = await GM_getValue(LEADER_KEY_WATCH, null);
+		
+		const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
+		if (shahtaLock) {
+			if (shahtaLock.id !== tabIdWatch && (now - shahtaLock.ts < 25000)) {
+				isLeaderWatch = false;
+				unsafeWindow.isElectionInProgress = false;
+				updateLeaderLockButtonView();
+				return; 
+			}
+		}
+
+		let currentLeader = null;
+		try {
+			currentLeader = currentLeaderJSON ? JSON.parse(currentLeaderJSON) : null;
+		} catch (e) {
+			currentLeader = null;
+		}
+
+		const isLeaderAlive = currentLeader && (now - currentLeader.time <= 15000);
+		const iAmVisible = document.visibilityState === 'visible';
+
+		if (isLeaderAlive && currentLeader.id !== tabIdWatch && currentLeader.isBoosting === true) {
+			isLeaderWatch = false;
+			unsafeWindow.isElectionInProgress = false;
+			updateLeaderLockButtonView();
+			return; 
+		}
+		
+		const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
+
+		if (lockedId) {
+			if (lockedId === tabIdWatch) {
+				becomeLeader();
+				updateLeaderLockButtonView();
+				unsafeWindow.isElectionInProgress = false;
+				return;
+			} else if (isLeaderAlive) {
+				if (isLeaderWatch) stopBeingLeader();
+				updateLeaderLockButtonView();
+				unsafeWindow.isElectionInProgress = false;
+				return;
+			} else {
+				await GM_deleteValue(LEADER_LOCK_KEY);
+			}
+		}
+
+		if (iAmVisible && (!isLeaderAlive || currentLeader.id !== tabIdWatch)) {
+			becomeLeader();
+			updateLeaderLockButtonView();
+			unsafeWindow.isElectionInProgress = false;
+			return;
+		}
+
+		if (currentLeader && currentLeader.id === tabIdWatch) {
+			becomeLeader();
+		} else if (!isLeaderAlive) {
+			const electionDelay = Math.random() * 500 + 100;
+			setTimeout(async () => {
+				const check = await GM_getValue(LEADER_KEY_WATCH, null);
+				let leaderAgain = null;
+				try {
+					leaderAgain = check ? JSON.parse(check) : null;
+				} catch (e) {
+					leaderAgain = null;
+				}
+
+				if (!leaderAgain || (Date.now() - leaderAgain.time > 15000) || (tabTimestamp < leaderAgain.timestamp)) {
+					becomeLeader();
+				} else if (isLeaderWatch) {
+					stopBeingLeader();
+				}
+				updateLeaderLockButtonView();
+				unsafeWindow.isElectionInProgress = false;
+			}, electionDelay);
+			return;
+		} else if (isLeaderWatch) {
+			stopBeingLeader();
+		}
+
+		updateLeaderLockButtonView();
+		unsafeWindow.isElectionInProgress = false;
+	}
+	unsafeWindow.tryToBecomeLeaderWatch = tryToBecomeLeaderWatch;
+	
+	/**
+	 * Назначает текущую вкладку Лидером системы во всех доменах-зеркалах, обновляя глобальный идентификатор 
+	 * и статус активности в хранилище. Собирает метаданные страницы (URL, заголовок) и состояние 
+	 * автоматизации (пауза лимита, режим бустера), после чего инициирует запуск основных циклов 
+	 * проверки карт и механизмов предотвращения сна браузера.
+	 * [нет аргументов]
+	 */
+	async function becomeLeader() {
+		const isTurboOn = await GM_getValue('boosterState', false) === true;
+		const iAmInBoostPage = window.location.href.includes('/clubs/boost/');
+		const actuallyBoosting = isTurboOn || iAmInBoostPage;
+
+		if (isLeaderWatch) {
+			try {
+				const leaderDataJSON = await GM_getValue(LEADER_KEY_WATCH, '{}');
+				const leaderData = JSON.parse(leaderDataJSON);
+				if (leaderData.id === tabIdWatch) {
+					leaderData.time = Date.now();
+					leaderData.isBoosting = actuallyBoosting;
+					await GM_setValue(LEADER_KEY_WATCH, JSON.stringify(leaderData));
+					return;
+				}
+			} catch(e) {}
+		}
+
+		const payload = JSON.stringify({
+			id: tabIdWatch,
+			time: Date.now(),
+			timestamp: tabTimestamp,
+			isPaused: isCollectionPaused,
+			isBoosting: actuallyBoosting,
+			url: window.location.href,
+			title: document.title.replace("(AnimeStars)", "").trim()
+		});
+
+		await GM_setValue(LEADER_KEY_WATCH, payload);
+		await GM_deleteValue(LEADER_CHALLENGE_KEY);
+
+		isLeaderWatch = true;
+		console.log(`%c[Лидерство] Я стал лидером ${actuallyBoosting ? '(ШАХТА/ТУРБО)' : ''}`, "color: #00ff00; font-weight: bold;");
+
+		if (typeof updateFullToggleButtonState === 'function') updateFullToggleButtonState();
+		if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
+
+		ensureMainLogicIsRunning();
+		startKeepAwake();
+	}
+	unsafeWindow.becomeLeader = becomeLeader;
+	
+	/**
+	 * Проверяет условия и запускает основной цикл проверки карт/кристаллов.
+	 * Вызывается автоматически при успешном получении статуса Лидера.
+	 */
+	function ensureMainLogicIsRunning() {
+		if (isLeaderWatch && (scriptEnabledWatch || crystalScriptEnabled) && !checkNewCardTimeoutId) {
+			setTimeout(mainCardCheckLogic, 500);
+		}
+	}
+
+	// --- [Sub-Module] Поддержание статуса (Пульс) ---
+	
+	/**
+	 * Запускает цикл поддержания статуса Лидера (Heartbeat) и мониторинга Клубного менеджера.
+	 * Синхронизирует активность вкладки через кросс-доменное хранилище Tampermonkey.
+	 */
+	function startHeartbeatWatch() {
+		if (heartbeatIntervalId) clearInterval(heartbeatIntervalId);
+		if (!scriptEnabledWatch && !crystalScriptEnabled) return;
+
+		heartbeatIntervalId = setInterval(async () => {
+			if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
+			
+			if (isLeaderWatch && window.location.href.includes('/clubs/boost/')) {
+				const fixPayload = JSON.stringify({ id: tabIdWatch, ts: Date.now() });
+				await GM_setValue('ascm_reload_fix_lock', fixPayload);
+			}
+
+			const nowTs = Date.now();
+			const msk = new Date(nowTs + (3 * 60 * 60 * 1000));
+			const curH = msk.getUTCHours();
+			const curM = msk.getUTCMinutes();
+			const today = msk.toISOString().split('T')[0];
+
+			const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			const clubId = getMyClubIdFromMenu();
+			const lastTrig = await GM_getValue('ascm_lastTurboTriggerDate', '');
+			const isDoneToday = lastTrig === today;
+
+			if (sets.enabled && clubId && !isDoneToday) {
+				const [sH, sM] = sets.startTime.split(':').map(Number);
+				const [eH, eM] = sets.endTime.split(':').map(Number);
+				const boostUrl = `/clubs/boost/?id=${clubId}`;
+				const isBoostPage = window.location.href.includes(boostUrl);
+
+				const nowUTC = new Date();
+				const mskH = (nowUTC.getUTCHours() + 3) % 24;
+				const mskM = nowUTC.getUTCMinutes();
+				const mskS = nowUTC.getUTCSeconds();
+
+				const startTimeInSeconds = (sH * 3600) + (sM * 60);
+				const endTimeInSeconds = (eH * 3600) + (eM * 60);
+				const currentTimeInSeconds = (mskH * 3600) + (mskM * 60) + mskS;
+
+				if (isBoostPage && isLeaderWatch) {
+					if (unsafeWindow.ascm_reload_timer_running) return;
+					await performShahtaHunterSearch(sets, currentTimeInSeconds, startTimeInSeconds, endTimeInSeconds, today);
+				}
+				
+				if (!isBoostPage) {
+					const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
+					const isShahtaBusy = shahtaLock && (Date.now() - shahtaLock.ts < 25000);
+
+					if (!(isShahtaBusy && shahtaLock.id !== tabIdWatch)) {
+						const diff = startTimeInSeconds - currentTimeInSeconds;
+
+						if (diff > 0 && diff <= (sets.reminderMinutes * 60)) {
+							await GM_setValue('ascm_global_countdown', { 
+								endTs: Date.now() + (diff * 1000), 
+								boostUrl, 
+								forceUpdate: Math.random() 
+							});
+						} 
+						else if (diff <= 0 && currentTimeInSeconds <= (eH * 3600 + eM * 60)) {
+							if (isLeaderWatch || document.visibilityState === 'visible') {
+								await GM_setValue('ascm_redirect_signal', { ts: Date.now(), url: boostUrl, force: true });
+							}
+						}
+					}
+				}
+			}
+
+			const isBoostTime = sets.enabled && curH === parseInt(sets.startTime.split(':')[0]) && curM >= parseInt(sets.startTime.split(':')[1]) && curM <= (parseInt(sets.endTime.split(':')[1]) + 5);
+			const isTurboActive = GM_getValue('boosterState', false) === true;
+			unsafeWindow.isSccInBoostWindow = isBoostTime || isTurboActive;
+
+			if (isLeaderWatch) {
+				if (typeof checkAndTriggerNewDay === 'function') checkAndTriggerNewDay();
+				if (scriptEnabledWatch) updateCardCounter(false);
+				
+				const leaderJSON = GM_getValue(LEADER_KEY_WATCH, null);
+				try {
+					const leaderData = leaderJSON ? JSON.parse(leaderJSON) : {};
+					if (leaderData.id === tabIdWatch) { 
+						leaderData.time = Date.now(); 
+						leaderData.isBoosting = isTurboActive || window.location.href.includes('/clubs/boost/');
+						await GM_setValue(LEADER_KEY_WATCH, JSON.stringify(leaderData)); 
+					} else {
+						stopBeingLeader(); 
+					}
+				} catch (e) {}
+			} else {
+				const leaderJSON = GM_getValue(LEADER_KEY_WATCH, null);
+				if (!leaderJSON) {
+					tryToBecomeLeaderWatch();
+				} else {
+					try {
+						const leaderData = JSON.parse(leaderJSON);
+						if (Date.now() - leaderData.time > LEADER_TIMEOUT_WATCH) {
+							tryToBecomeLeaderWatch();
+						}
+					} catch(e) { tryToBecomeLeaderWatch(); }
+				}
+			}
+		}, HEARTBEAT_INTERVAL_WATCH);
+	}
+
+	/**
+	 * Безопасно снимает полномочия Лидера с текущей вкладки.
+	 * Останавливает таймеры, аудио-будильник и обновляет интерфейс.
+	 */
+	function stopBeingLeader() {
+		isLeaderWatch = false;
+		stopMainCardCheckLogic();
+		if (typeof stopActiveCrystalOperations === 'function') {
+			stopActiveCrystalOperations();
+		}
+		updateFullToggleButtonState();
+		stopKeepAwake();
+	}
+	
+	/**
+	 * Запускает воспроизведение тишины через AudioContext для предотвращения
+	 * перевода вкладки Лидера в спящий режим браузером.
+	 */
+	async function startKeepAwake() {
+		if (keepAwakeInterval) return;
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		
+		const playSilence = () => {
+			if (!isLeaderWatch) {
+				stopKeepAwake();
+				return;
+			}
+			try {
+				if (!audioContext) {
+					audioContext = new (window.AudioContext || window.webkitAudioContext)();
+				}
+				if (audioContext.state !== 'running') return;
+				
+				const buffer = audioContext.createBuffer(1, 1, 22050);
+				const source = audioContext.createBufferSource();
+				source.buffer = buffer;
+				source.connect(audioContext.destination);
+				source.start();
+			} catch (e) {
+				stopKeepAwake();
+			}
+		};
+		
+		if (sets.logLevel >= 2) console.log("%c[ACM] 🔊 Будильник от зависания — активирован.", "color: #bb86fc;");
+		keepAwakeInterval = setInterval(playSilence, 20000);
+	}
+
+	/**
+	 * Останавливает "аудио-будильник" и освобождает ресурсы AudioContext.
+	 */
+	async function stopKeepAwake() {
+		if (keepAwakeInterval) {
+			const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			clearInterval(keepAwakeInterval);
+			keepAwakeInterval = null;
+			if (sets.logLevel >= 2) console.log("%c[ACM] 🔇 Будильник деактивирован.", "color: #72767d;");
+		}
+		if (audioContext && audioContext.state !== 'closed') {
+			audioContext.close();
+			audioContext = null;
+		}
+		window.removeEventListener('click', universalAudioUnlock, { capture: true });
+		window.removeEventListener('keydown', universalAudioUnlock, { capture: true });
+	}
+
+	/**
+	 * Разблокирует аудио-возможности браузера после первого взаимодействия пользователя с сайтом.
+	 */
+	async function universalAudioUnlock(event) {
+		const isUserGesture = event && event.isTrusted;
+		if (!isUserGesture) return;
+		
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		
+		if (audioContext && audioContext.state === 'suspended') {
+			audioContext.resume().then(() => {
+				if (sets.logLevel >= 3) console.log("[ACM Debug] AudioContext разблокирован.");
+			}).catch(() => {});
+		}
+		
+		if (typeof notificationSound !== 'undefined' && notificationSound && !notificationSound.dataset.unlocked) {
+			notificationSound.load();
+			notificationSound.dataset.unlocked = "true";
+			if (sets.logLevel >= 3) console.log("[ACM Debug] Звук уведомлений разблокирован.");
+		}
+		
+		window.removeEventListener('click', universalAudioUnlock, { capture: true });
+		window.removeEventListener('keydown', universalAudioUnlock, { capture: true });
+	}
+	
+	// --- [Sub-Module] Остановка фоновых процессов ---
+
+	/**
+	 * Принудительно останавливает цикл проверки/получения карт (очищает таймер).
+	 * Позволяет системе Лидерства корректно завершать задачи при перевыборах.
+	 */
+	function stopMainCardCheckLogic() {
+		if (checkNewCardTimeoutId) {
+			clearTimeout(checkNewCardTimeoutId);
+			checkNewCardTimeoutId = null;
+		}
+		console.log("%c[AutoWatch] Цикл проверки карт остановлен.", "color: #72767d; font-style: italic;");
+	}
+	unsafeWindow.stopMainCardCheckLogic = stopMainCardCheckLogic;
+
+	// --- [Sub-Module] Визуализация и Сигналы ---
+	
+	/**
+	 * Инициализирует и внедряет в интерфейс блок управления лидерством, включая стили и обработчики событий. 
+	 * Создает группу кнопок, состоящую из «Радара» для поиска активного лидера и «Замка» для ручной фиксации 
+	 * роли лидера за текущей вкладкой, обеспечивая стабильность работы фоновых процессов.
+	 * [нет аргументов]
+	 */
+	async function createLeaderLockButton() {
+		const isEnabled = await GM_getValue(LEADER_LOCK_BTN_ENABLED_KEY, true);
+		if (!isEnabled || document.getElementById('leader-group-container')) return;
+
+		GM_addStyle(`
+			#leader-group-container { position: fixed; bottom: 166px; right: 12px; z-index: 101; width: 130px; height: 40px; display: flex; align-items: center; justify-content: flex-end; pointer-events: none; }
+			#leaderRadarButton, #leaderLockButton { pointer-events: auto; }
+			#leaderRadarButton { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(145deg, #5865f2, #4752c4); color: white; border: 1px solid #4f545c; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); margin-right: 12px; opacity: 0; transform: translateX(30px) scale(0.5); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; transition-delay: 0.3s; visibility: hidden; }
+			#leader-group-container:hover #leaderRadarButton { opacity: 1; transform: translateX(0) scale(1); visibility: visible; transition-delay: 0s; }
+			#leaderLockButton { width: 40px; height: 20px; background: #4f545c; border: none; border-radius: 0 0 20px 20px; color: white; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; mask: radial-gradient(circle at 50% -75%, transparent 24px, black 0px); -webkit-mask: radial-gradient(circle at 50% -75%, transparent 24px, black 0px); flex-shrink: 0; margin-bottom: -10px; }
+			@keyframes beacon-pulse { 0% { box-shadow: 0 0 0 0px rgba(244, 67, 54, 0.7); } 100% { box-shadow: 0 0 0 15px rgba(244, 67, 54, 0); } }
+			.beacon-active { animation: beacon-pulse 1s infinite; }
+		`);
+
+		const container = document.createElement('div');
+		container.id = 'leader-group-container';
+
+		const radarBtn = document.createElement('button');
+		radarBtn.id = 'leaderRadarButton';
+		radarBtn.innerHTML = '<i class="fas fa-satellite-dish"></i>';
+		radarBtn.title = 'Найти вкладку лидера (сигнал)';
+		
+		radarBtn.onclick = () => {
+			const data = GM_getValue(LEADER_KEY_WATCH, null);
+			if (data) {
+				try {
+					const leader = JSON.parse(data);
+					GM_setValue('ascm_find_leader_signal', { targetId: leader.id, ts: Date.now() });
+					safeDLEPushCall('custom', 'Сигнал "Маяка" отправлен!\nИщите вкладку с мигающим заголовком.');
+				} catch (e) {
+					console.error('[Radar Error]', e);
+				}
+			}
+		};
+
+		const lockBtn = document.createElement('button');
+		lockBtn.id = 'leaderLockButton';
+		const icon = document.createElement('i');
+		icon.style.fontSize = '12px'; icon.style.marginBottom = '-10px';
+		lockBtn.appendChild(icon);
+
+		lockBtn.onclick = async () => {
+			const currentlyLockedId = await GM_getValue(LEADER_LOCK_KEY, null);
+			if (!currentlyLockedId) {
+				await GM_setValue(LEADER_LOCK_KEY, tabIdWatch);
+				safeDLEPushCall('success', 'Лидерство зафиксировано!');
+			} else if (currentlyLockedId === tabIdWatch) {
+				await GM_deleteValue(LEADER_LOCK_KEY);
+				safeDLEPushCall('info', 'Фиксация снята.');
+			}
+			await GM_deleteValue(LEADER_KEY_WATCH);
+			tryToBecomeLeaderWatch();
+		};
+
+		container.appendChild(radarBtn);
+		container.appendChild(lockBtn);
+		document.body.appendChild(container);
+		updateLeaderLockButtonView();
+	}
+	
+	/**
+	 * Синхронизирует визуальное состояние кнопки фиксации лидера и кнопки радара с данными из глобального хранилища. 
+	 * Определяет текущий статус вкладки (Фиксированный лидер, Авто-лидер или Ожидание) и динамически обновляет иконки, 
+	 * цвета фона и всплывающие подсказки для информирования пользователя.
+	 * [нет аргументов]
+	 */
+	async function updateLeaderLockButtonView() {
+		const btn = document.getElementById('leaderLockButton');
+		const radar = document.getElementById('leaderRadarButton');
+		if (!btn) return;
+		const icon = btn.querySelector('i');
+
+		const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
+		const currentLeaderJSON = GM_getValue(LEADER_KEY_WATCH, null);
+		let leaderData = null;
+		try { 
+			leaderData = currentLeaderJSON ? JSON.parse(currentLeaderJSON) : null; 
+		} catch(e) {}
+
+		const now = Date.now();
+		const isLeaderAlive = leaderData && (now - leaderData.time <= LEADER_TIMEOUT_WATCH);
+		const isThisTab = tabIdWatch;
+
+		btn.style.animation = '';
+
+		if (radar) {
+			radar.style.display = (leaderData && leaderData.id !== isThisTab) ? 'flex' : 'none';
+		}
+
+		if (lockedId === isThisTab) {
+			btn.style.background = 'linear-gradient(145deg, #43b581, #2e7d32)';
+			icon.className = 'fas fa-lock';
+			btn.title = 'ВЫ — ФИКСИРОВАННЫЙ ЛИДЕР';
+		} else if (lockedId && isLeaderAlive) {
+			btn.style.background = 'linear-gradient(145deg, #faa61a, #f57c00)';
+			icon.className = 'fas fa-lock';
+			btn.title = `ЗАФИКСИРОВАНО ДРУГИМ\nСтраница: ${leaderData.title || '??'}\nURL: ${leaderData.url || '??'}`;
+		} else if (isLeaderWatch && !lockedId) {
+			btn.style.background = 'linear-gradient(145deg, #00bcd4, #0097a7)';
+			icon.className = 'fas fa-lock-open';
+			btn.title = 'ВЫ — АВТОЛИДЕР (Скрипт выбрал эту вкладку)';
+		} else if (leaderData && isLeaderAlive && !lockedId) {
+			btn.style.background = 'linear-gradient(145deg, #607d8b, #455a64)';
+			icon.className = 'fas fa-lock-open';
+			btn.title = `АВТОЛИДЕР В ДРУГОЙ ВКЛАДКЕ\nСтраница: ${leaderData.title || '??'}\nURL: ${leaderData.url || '??'}`;
+		} else {
+			btn.style.background = 'linear-gradient(145deg, #f44336, #c62828)';
+			icon.className = 'fas fa-exclamation-triangle';
+			btn.title = 'ЛИДЕР НЕ ОПРЕДЕЛЕН (Перевыборы...)';
+			btn.style.animation = 'acm-spin 2s infinite linear';
+		}
+	}
+	unsafeWindow.updateLeaderLockButtonView = updateLeaderLockButtonView;
+
+	/**
+	 * Активирует визуальный и звуковой сигнал «Маяка» для текущей вкладки-лидера. 
+	 * Включает циклическое мигание заголовока страницы и воспроизводит системный звук уведомления, 
+	 * позволяя пользователю быстро найти активную вкладку среди множества открытых окон; 
+	 * автоматически отключается через 10 секунд.
+	 * [нет аргументов]
+	 */
+	function startLeaderBeacon() {
+		if (beaconInterval) return;
+		const originalTitle = document.title;
+		let toggle = false;
+		const btn = document.getElementById('leaderLockButton');
+		if (btn) btn.classList.add('beacon-active');
+
+		beaconInterval = setInterval(() => {
+			document.title = toggle ? "!!! ЛИДЕР ЗДЕСЬ !!!" : ">>> " + originalTitle + " <<<";
+			toggle = !toggle;
+		}, 500);
+
+		if (typeof notificationSound !== 'undefined') notificationSound.play().catch(() => {});
+
+		setTimeout(() => {
+			clearInterval(beaconInterval);
+			beaconInterval = null;
+			document.title = originalTitle;
+			if (btn) btn.classList.remove('beacon-active');
+		}, 10000);
+	}
+	unsafeWindow.startLeaderBeacon = startLeaderBeacon;
+
+	// --- [Sub-Module] Слушатели синхронизации (Sync Observers) ---
+
+	/**
+	 * Отслеживает изменения глобальной настройки включения автосбора карт в хранилище. 
+	 * При активации инициирует процедуру выборов лидера, а при деактивации — принудительно 
+	 * останавливает все фоновые процессы, очищает идентификатор лидера в памяти и 
+	 * сбрасывает интервалы поддержания активности.
+	 * [name] - имя ключа в хранилище
+	 * [oldVal] - предыдущее состояние (true/false)
+	 * [newVal] - новое состояние (true/false)
+	 * [remote] - флаг внешнего изменения из другой вкладки
+	 */
+	GM_addValueChangeListener(STORAGE_KEY_WATCH, (name, oldVal, newVal, remote) => {
+		if (!remote) return;
+		scriptEnabledWatch = newVal;
+		updateFullToggleButtonState();
+		if (scriptEnabledWatch) {
+			tryToBecomeLeaderWatch();
+		} else {
+			stopMainCardCheckLogic();
+			if (isLeaderWatch) {
+				const currentLeaderJSON = GM_getValue(LEADER_KEY_WATCH, null);
+				try {
+					const leader = currentLeaderJSON ? JSON.parse(currentLeaderJSON) : null;
+					if (leader && leader.id === tabIdWatch) {
+						GM_deleteValue(LEADER_KEY_WATCH);
+					}
+				} catch (e) {}
+				isLeaderWatch = false;
+			}
+			if (heartbeatIntervalId) {
+				clearInterval(heartbeatIntervalId);
+				heartbeatIntervalId = null;
+			}
+		}
+	});
+
+	/**
+	 * Реализует основной механизм координации вкладок, отслеживая «пульс» текущего лидера. 
+	 * Обрабатывает ситуации смены приоритета (например, переход другой вкладки в режим буста), 
+	 * обеспечивает автоматическую передачу полномочий при закрытии вкладки-лидера или 
+	 * потере её активности, поддерживая бесперебойную работу фоновых задач.
+	 * [name] - имя ключа (LEADER_KEY_WATCH)
+	 * [oldVal] - старые данные лидера в JSON
+	 * [newVal] - новые данные лидера в JSON
+	 * [remote] - флаг внешнего изменения
+	 */
+	GM_addValueChangeListener(LEADER_KEY_WATCH, (name, oldVal, newVal, remote) => {
+		if (!remote) return;
+		const currentIsLeaderBefore = isLeaderWatch;
+		const iAmBoosting = GM_getValue('boosterState', false) === true;
+
+		if (iAmBoosting && currentIsLeaderBefore) return;
+
+		if (newVal) {
+			try {
+				const newLeaderData = JSON.parse(newVal);
+				if (newLeaderData.id !== tabIdWatch) {
+					if (newLeaderData.isBoosting === true) {
+						if (isLeaderWatch) stopBeingLeader();
+						return;
+					}
+					if (currentIsLeaderBefore) {
+						isLeaderWatch = false;
+						stopMainCardCheckLogic();
+						updateFullToggleButtonState();
+						startHeartbeatWatch();
+					}
+					updateFullToggleButtonState(null, newLeaderData.isPaused === true);
+				} else {
+					if (!currentIsLeaderBefore) {
+						isLeaderWatch = true;
+						updateFullToggleButtonState();
+						startHeartbeatWatch();
+						if (scriptEnabledWatch && !checkNewCardTimeoutId) mainCardCheckLogic();
+					}
+				}
+			} catch (e) {}
+		} else {
+			if (currentIsLeaderBefore) {
+				isLeaderWatch = false;
+				stopMainCardCheckLogic();
+				updateFullToggleButtonState();
+			}
+			setTimeout(tryToBecomeLeaderWatch, Math.random() * 200 + 100);
+		}
+	});
+
+	/**
+	 * Обрабатывает протокол «Вызова лидера» (Leader Challenge) для предотвращения конфликтов. 
+	 * Если вкладка является активным лидером и получает сигнал вызова от другой страницы, 
+	 * она обязана немедленно перезаписать свои данные в хранилище, подтверждая легитимность 
+	 * своего статуса и пресекая попытки двойного лидерства.
+	 * [name] - ключ LEADER_CHALLENGE_KEY
+	 * [oldVal] - не используется
+	 * [newVal] - данные вызывающей стороны
+	 * [remote] - флаг внешнего вызова
+	 */
+	GM_addValueChangeListener(LEADER_CHALLENGE_KEY, (name, oldVal, newVal, remote) => {
+		if (remote && newVal && isLeaderWatch) {
+			try {
+				const challenge = JSON.parse(newVal);
+				if (challenge.id !== tabIdWatch) {
+					const payload = JSON.stringify({
+						id: tabIdWatch,
+						time: Date.now(),
+						timestamp: tabTimestamp,
+						isPaused: isCollectionPaused,
+						isBoosting: (GM_getValue('boosterState', false) === true) || window.location.href.includes('/clubs/boost/')
+					});
+					GM_setValue(LEADER_KEY_WATCH, payload);
+				}
+			} catch (e) {}
+		}
+	});
+
+	/**
+	 * Слушает сигнал активации визуального поиска лидера (Маяка). 
+	 * Проверяет, совпадает ли целевой идентификатор в сигнале с ID текущей вкладки, 
+	 * и при совпадении запускает процедуру визуального и звукового оповещения (Beacon).
+	 * [key] - ключ FIND_LEADER_SIGNAL_KEY
+	 * [oldVal] - не используется
+	 * [newVal] - объект с targetId и меткой времени
+	 * [remote] - флаг сигнала из другой вкладки
+	 */
+	GM_addValueChangeListener(FIND_LEADER_SIGNAL_KEY, (key, oldVal, newVal, remote) => {
+		if (remote && newVal && newVal.targetId === tabIdWatch) {
+			startLeaderBeacon();
+		}
+	});
+
+
+	// ##################################################################################
+	// # 6. [SECTION] CORE CARD LOGIC (Анализ ID и инъекция статистики)
+	// ##################################################################################
+
+	// --- [Sub-Module] Идентификация карт ---
+	// function getCardId()
+	// function getBothCardIds()
+	// function saveOwnerToTypeMapping()
+	// function getTypeIdFromOwnerCache()
+
+	// --- [Sub-Module] Загрузка и отрисовка спроса ---
+	// function loadCard()
+	// function updateCardInfo()
+	// function addDemandCheckButtonsToCards()
+	// function createDemandCheckButton()
+
+
+	// ##################################################################################
+	// # 7. [SECTION] SCANNER & ANALYSIS (Индикаторы новизны и дубликатов)
+	// ##################################################################################
+
+	// --- [Sub-Module] Модуль Новизны (Freshness) ---
+	
+	/**
+	 * Подготавливает данные для определения новизны карт, анализируя локальную базу данных и рассчитывая 
+	 * порядковые номера для последних добавленных экземпляров. Устанавливает специфические ID-пороги 
+	 * (Red Zones) для каждого ранга карт и сохраняет результат в IndexedDB, используя кросс-доменную 
+	 * блокировку для предотвращения одновременных расчетов в разных вкладках.
+	 * [нет аргументов]
+	 */
+	async function prepareFreshnessData() {
+		if (!freshnessOverlayEnabled || freshnessData) return;
+		
+		try {
+			const cached = await dbGet(DEMAND_CACHE_STORE_NAME, FRESHNESS_DATA_LOCAL_KEY);
+			if (cached && cached.sessionID === sessionID) {
+				freshnessData = new Map(Object.entries(cached.data));
+				return;
+			}
+		} catch (e) {
+			console.error('[Freshness] Ошибка чтения кеша из DB:', e);
+		}
+
+		const isLocked = await GM_getValue(FRESHNESS_LOCK_KEY, false);
+		if (isLocked) {
+			await waitForFreshnessData();
+			return;
+		}
+
+		await GM_setValue(FRESHNESS_LOCK_KEY, true);
+		
+		try {
+			await ensureDbLoaded();
+			if (!cardDatabaseMap || cardDatabaseMap.size === 0) throw new Error('База данных карт не загружена.');
+			
+			const allCards = Array.from(cardDatabaseMap.values()).filter(card => card.rank.toLowerCase() !== 'sss');
+			allCards.sort((a, b) => b.id - a.id);
+			
+			const absoluteMaxId = allCards.length > 0 ? allCards[0].id : 0;
+			const latestCards1260 = allCards.slice(0, 1260);
+			
+			if (latestCards1260.length === 0) {
+				await GM_deleteValue(FRESHNESS_LOCK_KEY);
+				return;
+			}
+
+			const idToOrdinalMap = new Map();
+			idToOrdinalMap.set('_absoluteMinId', latestCards1260[latestCards1260.length - 1].id);
+			idToOrdinalMap.set('_absoluteMaxId', absoluteMaxId);
+			idToOrdinalMap.set('_redZoneThresholdId_ass', allCards.length > 10000 ? allCards[9999].id : 0);
+			idToOrdinalMap.set('_redZoneThresholdId_s', allCards.length > 5000 ? allCards[4999].id : 0);
+			idToOrdinalMap.set('_redZoneThresholdId_a', allCards.length > 3000 ? allCards[2999].id : 0);
+			idToOrdinalMap.set('_redZoneThresholdId_b', allCards.length > 1600 ? allCards[1599].id : 0);
+			idToOrdinalMap.set('_redZoneThresholdId_c', allCards.length > 1850 ? allCards[1849].id : 0);
+			idToOrdinalMap.set('_redZoneThresholdId_d', allCards.length > 1800 ? allCards[1799].id : 0);
+			idToOrdinalMap.set('_redZoneThresholdId_e', allCards.length > 2300 ? allCards[2299].id : 0);
+
+			latestCards1260.forEach((card, index) => {
+				idToOrdinalMap.set(card.id.toString(), index + 1);
+			});
+
+			freshnessData = idToOrdinalMap;
+			
+			const dataToStore = {
+				sessionID: sessionID,
+				data: Object.fromEntries(idToOrdinalMap)
+			};
+			
+			await dbSet(DEMAND_CACHE_STORE_NAME, FRESHNESS_DATA_LOCAL_KEY, dataToStore);
+
+		} catch (error) {
+			console.error('[Freshness] Ошибка при расчете данных:', error);
+		} finally {
+			await GM_deleteValue(FRESHNESS_LOCK_KEY);
+		}
+	}
+	
+	/**
+	 * Ожидает завершения процесса подготовки данных новизны, запущенного в другой вкладке, путем 
+	 * циклического опроса хранилища IndexedDB. При обнаружении актуального кеша для текущей сессии 
+	 * восстанавливает индекс новизны; в случае превышения времени ожидания (20 секунд) 
+	 * принудительно снимает глобальную блокировку в хранилище для предотвращения тупиковых ситуаций.
+	 * [нет аргументов]
+	 */
+	async function waitForFreshnessData() {
+		return new Promise(resolve => {
+			let attempts = 0;
+			const maxAttempts = 20;
+			const interval = setInterval(async () => {
+				const cached = await dbGet(DEMAND_CACHE_STORE_NAME, FRESHNESS_DATA_LOCAL_KEY);
+				if (cached && cached.sessionID === sessionID) {
+					freshnessData = new Map(Object.entries(cached.data));
+					clearInterval(interval);
+					resolve();
+					return;
+				}
+				attempts++;
+				if (attempts > maxAttempts) {
+					await GM_deleteValue(FRESHNESS_LOCK_KEY);
+					clearInterval(interval);
+					resolve();
+				}
+			}, 1000);
+		});
+	}
+	
+	/**
+	 * Рассчитывает цветовой стиль и процентную величину новизны карты на основе её идентификатора и ранга. 
+	 * Сравнивает ID карты с динамическими порогами «красной зоны», рассчитанными в prepareFreshnessData, 
+	 * и возвращает объект с цветом в формате HSL (от красного к зеленому) и числовым значением свежести.
+	 * [id] - числовой или строковый идентификатор типа карты
+	 * [rank] - буквенный ранг карты (e, d, c, b, a, s, ass) для определения порога зоны
+	 */
+	function idToFreshnessStyle(id, rank) {
+		const numericId = parseInt(id, 10);
+		if (isNaN(numericId)) {
+			return { color: 'hsl(0, 100%, 45%)', freshnessPercent: 0 };
+		}
+		if (!freshnessOverlayEnabled || !freshnessData || freshnessData.size === 0) {
+			return { color: 'hsl(0, 100%, 45%)', freshnessPercent: 0 };
+		}
+		const absoluteMaxId = freshnessData.get('_absoluteMaxId');
+		const absoluteMinId = freshnessData.get('_absoluteMinId');
+		const isCardInDatabase = freshnessData.has(id.toString());
+		if ((typeof absoluteMaxId !== 'undefined' && numericId > absoluteMaxId) ||
+			(!isCardInDatabase && typeof absoluteMinId !== 'undefined' && numericId > absoluteMinId))
+		{
+			return { color: '#00ffee', freshnessPercent: 100 };
+		}
+		const ordinal = freshnessData.get(id.toString());
+		const freshnessPercent = ordinal ? ((1260 - ordinal) / 1260) * 100 : 0;
+
+		let redZoneThresholdId;
+		if (rank === 'ass') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_ass');
+		} else if (rank === 's') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_s');
+		} else if (rank === 'a') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_a');
+		} else if (rank === 'b') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_b');
+		} else if (rank === 'c') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_c');
+		} else if (rank === 'd') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_d');
+		} else if (rank === 'e') {
+			redZoneThresholdId = freshnessData.get('_redZoneThresholdId_e');
+		}
+		if (typeof redZoneThresholdId === 'undefined' || numericId < redZoneThresholdId) {
+			return { color: 'hsl(0, 100%, 10%)', freshnessPercent: 0 };
+		}
+		let hue;
+		const gradientZoneStart = redZoneThresholdId;
+		const gradientZoneEnd = absoluteMaxId;
+		const gradientZoneSize = gradientZoneEnd - gradientZoneStart;
+		const GRADIENT_CURVE_FACTOR = 2;
+		if (gradientZoneSize <= 0) {
+			hue = 120;
+		} else {
+			const positionInGradient = numericId - gradientZoneStart;
+			const ratio = Math.min(1, Math.max(0, positionInGradient / gradientZoneSize));
+			const curvedRatio = Math.pow(ratio, GRADIENT_CURVE_FACTOR);
+			hue = curvedRatio * 120;
+		}
+		return {
+			color: `hsl(${Math.round(hue)}, 100%, 45%)`,
+			freshnessPercent: freshnessPercent
+		};
+	}
+
+	/**
+	 * Создает или обновляет визуальный индикатор (уголок) на DOM-элементе карточки. 
+	 * Инъецирует элемент с градиентной заливкой, цвет которой соответствует степени новизны карты, 
+	 * и добавляет всплывающую подсказку с подробной информацией об ID и позиции в базе последних поступлений.
+	 * [cardEl] - DOM-элемент карточки, в который будет добавлен индикатор
+	 * [id] - идентификатор карты для расчета стиля
+	 * [rank] - ранг карты для применения правил фильтрации (пропускает SSS-ранг)
+	 */
+	function setFreshnessBadge(cardEl, id, rank) {
+		if (rank === 'sss') {
+			const existingBadge = cardEl.querySelector('.acm-freshness-badge');
+			if (existingBadge) {
+				existingBadge.remove();
+			}
+			return;
+		}
+		const BADGE_CLASS = 'acm-freshness-badge';
+		let badge = cardEl.querySelector(`.${BADGE_CLASS}`);
+		const { color, freshnessPercent } = idToFreshnessStyle(id, rank);
+		if (!badge) {
+			const size = '35px';
+			badge = document.createElement('div');
+			badge.className = BADGE_CLASS;
+			Object.assign(badge.style, {
+				position: 'absolute',
+				top: '0',
+				right: '0',
+				width: size,
+				height: size,
+				zIndex: '1',
+				background: `radial-gradient(circle at 0 100%, transparent ${size}, ${color} ${size})`,
+				borderRadius: '0 10px 0 0'
+			});
+			const container = cardEl.querySelector('.anime-cards__image') || cardEl;
+			if (getComputedStyle(container).position === 'static') {
+				container.style.position = 'relative';
+			}
+			container.appendChild(badge);
+		}
+		const size = badge.style.width;
+		badge.style.background = `radial-gradient(circle at 0 100%, transparent ${size}, ${color} calc(${size} + 0.5px))`;
+		badge.title = `ID:${id}\nНовизна первых\n20стр базы: ${freshnessPercent.toFixed(1)}%`;
+	}
+
+	/**
+	 * Осуществляет массовое обновление индикаторов новизны для всех подходящих элементов на текущей странице. 
+	 * Проверяет настройки видимости, состояние активности модуля для страниц обмена или переплавки, 
+	 * автоматически инициирует загрузку данных новизны и находит идентификаторы для каждой видимой карты.
+	 * [forceUpdate] - если true, игнорирует наличие уже созданных индикаторов и перерисовывает их
+	 */
+	async function updateFreshnessOverlays(forceUpdate = false) {
+		if (!freshnessOverlayEnabled) return;
+		if ((isSpecificTradeOfferPage() || isRemeltPage()) && !isFreshnessCheckActive) {
+			removeFreshnessOverlays();
+			return;
+		}
+		if (!freshnessData) {
+			await prepareFreshnessData();
+		}
+		if (!freshnessData) {
+			return;
+		}
+		const cards = document.querySelectorAll('.lootbox__card, .anime-cards__item, a.trade__main-item[href*="id="], .trade__inventory-item, .stone__inventory-item, .remelt__inventory-item');
+		for (const el of cards) {
+			if (!forceUpdate && el.querySelector('.acm-freshness-badge')) continue;
+			let rank = el.dataset.rank ? el.dataset.rank.toLowerCase() : null;
+			if (!rank) {
+				const img = el.querySelector('img');
+				if (img) {
+					const imageUrl = img.dataset.src || img.src;
+					if (imageUrl) {
+						const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
+						if (match && match[1]) {
+							rank = match[1];
+						}
+					}
+				}
+			}
+			const typeId = await getCardId(el, 'type', true);
+			if (typeId > 0 && rank) {
+				setFreshnessBadge(el, typeId, rank);
+			}
+		}
+	}
+	
+	/**
+	 * Удаляет все визуальные индикаторы (бейджи) новизны со всех карт на текущей странице. 
+	 * Используется для мгновенной очистки интерфейса при отключении модуля новизны пользователем 
+	 * или при переключении режимов отображения на страницах обмена и переплавки.
+	 * [нет аргументов]
+	 */
+	function removeFreshnessOverlays() {
+		document.querySelectorAll('.acm-freshness-badge').forEach(badge => badge.remove());
+	}
+
+	// --- [Sub-Module] Модуль Дубликатов ---
+
+	/**
+	 * Инициализирует логику поиска дубликатов, создавая необходимые кэши и регистрируя наблюдатели за DOM. 
+	 * Настраивает внутренние функции для парсинга имен персонажей и ссылок на аниме, а также 
+	 * инициализирует главную кнопку массовой проверки и индивидуальные маркеры на карточках.
+	 * [нет аргументов]
+	 */
+	async function initDuplicateChecker() {
+		const ALL_CARD_SELECTORS_ARRAY = ['.anime-cards__item', '.card-item', '.card', 'a.trade__main-item[href^="/cards/"]', '.history__body-item a[href^="/cards/"]', '.lootbox__card'];
+		const getLoggedUserName = () => document.querySelector('.lgn__name span')?.textContent.trim() || null; // Получение никнейма текущего пользователя
+
+		const createDupBtn = () => {
+			const btn = document.createElement('div');
+			btn.textContent = '🔍';
+			btn.className = 'check-duplicates-btn';
+			if (window.location.pathname.startsWith('/pm/')) btn.setAttribute('data-mce-bogus', '1');
+			btn.style.cssText = 'position:absolute;z-index:10;background:rgba(211,211,211,0.6);border:1px solid #ccc;border-radius:15px;cursor:pointer;transition:all 0.2s ease;font-weight:bold;color:black;text-align:center;line-height:1.3;display:flex;align-items:center;justify-content:center;box-sizing:border-box;';
+			return btn;
+		};
+
+		const fetchCharacterNameFromNeedPage = async (cardId) => {
+			const cacheKey = `name_${cardId}`;
+			if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
+			try {
+				const res = await fetch(`${location.origin}/cards/users/need/?id=${cardId}`, { credentials: 'include' });
+				if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
+				const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+				const titleEl = doc.querySelector('.ncard__main-title.as-center a[href^="/cards/"]');
+				if (titleEl?.textContent) { const name = titleEl.textContent.trim(); cardInfoCache.set(cacheKey, name); return name; }
+				cardInfoCache.set(cacheKey, null); return null;
+			} catch (err) { cardInfoCache.set(cacheKey, null); return null; }
+		};
+
+		const fetchAnimeLinkFromUsersPage = async (cardId) => {
+			const cacheKey = `animeLink_${cardId}`;
+			if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
+			try {
+				const res = await fetch(`${location.origin}/cards/users/?id=${cardId}`, { credentials: 'include' });
+				if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
+				const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+				const animeLinkEl = doc.querySelector('a.ncard__img');
+				if (animeLinkEl?.hasAttribute('href')) { const link = new URL(animeLinkEl.getAttribute('href'), location.origin).href; cardInfoCache.set(cacheKey, link); return link; }
+				cardInfoCache.set(cacheKey, null); return null;
+			} catch (err) { cardInfoCache.set(cacheKey, null); return null; }
+		};
+
+		const fetchAnimeNameFromAnimePage = async (animePageUrl, cardId) => {
+			const cacheKey = `animeName_${animePageUrl}`;
+			if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
+			try {
+				const res = await fetch(animePageUrl, { credentials: 'include' });
+				if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
+				const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+				const titleH1 = doc.querySelector('h1[itemprop="name"]');
+				const origTitleDiv = doc.querySelector('.pmovie__original-title');
+				let animeName = titleH1?.textContent ? titleH1.textContent.replace(/(Аниме)$/i, '').trim() : (origTitleDiv?.textContent ? origTitleDiv.textContent.trim() : null);
+				if (animeName) { cardInfoCache.set(cacheKey, animeName); return animeName; }
+				cardInfoCache.set(cacheKey, null); return null;
+			} catch (err) { cardInfoCache.set(cacheKey, null); return null; }
+		};
+
+		const fetchAllPagesUniversal = async (searchUrl, targetCardId) => {
+			try {
+				const response = await fetch(searchUrl, { credentials: 'include' });
+				if (!response.ok) return 0;
+				const htmlText = await response.text();
+				const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+				const titleElement = doc.querySelector('.ncard__main-title-2.as-center span');
+				if (titleElement?.textContent) {
+					const match = titleElement.textContent.match(/\((\d+)\s+шт\.\)/);
+					if (match) return parseInt(match[1], 10);
+				}
+				return doc.querySelectorAll(`.anime-cards__item[data-id="${targetCardId}"], .lootbox__card[data-id="${targetCardId}"]`).length;
+			} catch (err) { return 0; }
+		};
+
+		async function checkCardDuplicates(cardElement, triggeredByMassCheck = false) {
+			const cardId = await getCardId(cardElement, 'type', true);
+			if (isRemeltPage() && cardId && unsafeWindow.remeltActiveInfo) unsafeWindow.remeltActiveInfo.add(cardId.toString());
+			let btn = cardElement.querySelector('.check-duplicates-btn');
+			const loggedInUserName = getLoggedUserName();
+			if (!btn && triggeredByMassCheck) {
+				btn = createDupBtn();
+				btn.style.opacity = '0';
+				btn.style.pointerEvents = 'none';
+				if (window.getComputedStyle(cardElement).position === 'static') cardElement.style.position = 'relative';
+				cardElement.appendChild(btn);
+			}
+			if (!btn) return;
+			if (!cardId || !loggedInUserName) { updateButtonContent(btn, '❓'); btn.classList.add('checked'); return; }
+			if (isCardPackPage() && !cardElement.classList.contains('anime-cards__owned-by-user')) { updateButtonContent(btn, 0); btn.classList.add('checked'); return; }
+			const cacheKeyForDuplicates = `${loggedInUserName}_${cardId}`;
+			if (triggeredByMassCheck && duplicatesCache.has(cacheKeyForDuplicates)) { updateButtonContent(btn, duplicatesCache.get(cacheKeyForDuplicates)); btn.classList.add('checked'); return; }
+			updateButtonContent(btn, '⏳');
+			btn.style.pointerEvents = 'none';
+			try {
+				const searchUrlObject = new URL(`${location.origin}/user/cards/`);
+				searchUrlObject.searchParams.set('name', loggedInUserName);
+				searchUrlObject.searchParams.set('card_id', cardId);
+				const duplicateCount = await fetchAllPagesUniversal(searchUrlObject.toString(), cardId);
+				duplicatesCache.set(cacheKeyForDuplicates, duplicateCount);
+				updateButtonContent(btn, duplicateCount);
+				btn.classList.add('checked');
+			} catch (err) { updateButtonContent(btn, '❌'); btn.classList.add('checked'); } finally { if (btn.style.pointerEvents !== 'none' || !triggeredByMassCheck) btn.style.pointerEvents = 'auto'; }
+		}
+		unsafeWindow.checkCardDuplicates = checkCardDuplicates;
+
+		function updateButtonContent(btn, content) {
+			btn.textContent = '';
+			btn.className = 'check-duplicates-btn';
+			if (['🔒', '❓', '❌', '⏳', '...'].includes(content)) {
+				btn.textContent = content;
+				btn.style.background = (content === '⏳' || content === '...') ? 'LightGray' : 'rgba(255, 100, 110, 0.8)';
+				btn.style.color = (content === '⏳' || content === '...') ? 'black' : 'white';
+			} else {
+				const count = Number(content);
+				btn.textContent = `×${count}`;
+				btn.style.background = count > 1 ? 'rgba(255, 0, 0, 0.7)' : (count === 1 ? 'rgba(0, 150, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)');
+				btn.style.color = 'white';
+			}
+			btn.style.opacity = '1'; btn.style.visibility = 'visible'; btn.style.transform = 'translateY(0)';
+		}
+
+		async function addCheckButtons() {
+			const isEnabled = await GM_getValue(INDIVIDUAL_DUP_BTN_ENABLED_KEY, true);
+			const userId = getLoggedUserName();
+			const cards = getCardsOnPage();
+			for (const cardEl of cards) {
+				if (cardEl.querySelector('.check-duplicates-btn') || cardEl.classList.contains('card-show__placeholder')) continue;
+				const newBtn = createDupBtn();
+				const cardWidth = cardEl.offsetWidth;
+				if (cardWidth === 0) continue;
+				const baseScaleFactor = await GM_getValue('acm_dupButtonSizeFactor', 0.13);
+				let scale = baseScaleFactor;
+				if (cardEl.classList.contains('lootbox__card')) scale *= cardEl.closest('.lootbox__row')?.offsetWidth > 600 ? 0.8 : 1.3;
+				else if (cardWidth < 140) scale *= 1.3;
+				const buttonSize = Math.max(16, Math.min(50, cardWidth * scale));
+				Object.assign(newBtn.style, { width: `${buttonSize}px`, height: `${buttonSize}px`, fontSize: `${buttonSize * 0.5}px`, bottom: `${buttonSize * 1.5}px`, right: `${Math.max(2, Math.min(5, cardWidth * 0.02))}px` });
+				if (!isEnabled) { newBtn.style.opacity = '0'; newBtn.style.visibility = 'hidden'; newBtn.style.pointerEvents = 'none'; }
+				newBtn.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); if (!userId) { updateButtonContent(newBtn, '🔒'); newBtn.classList.add('checked'); return; } checkCardDuplicates(cardEl); });
+				cardEl.classList.add('acm-card-container');
+				if (window.getComputedStyle(cardEl).position === 'static') cardEl.style.position = 'relative';
+				cardEl.appendChild(newBtn);
+			}
+		}
+		unsafeWindow.addCheckButtons = addCheckButtons;
+
+		function createMainCheckButton() {
+			if (document.getElementById('check-all-duplicates-btn')) return;
+			const mainButton = document.createElement('button');
+			mainButton.id = 'check-all-duplicates-btn';
+			mainButton.title = "Проверить дубликаты карт";
+			const duplicatesIcon = document.createElement('span');
+			mainButton.appendChild(duplicatesIcon);
+			Object.assign(mainButton.style, { position:'fixed', right:'12px', bottom:'180px', zIndex:'102', width:'40px', height:'40px', border:'none', borderRadius:'50%', transition:'all 0.3s ease', color:'white', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', padding:'0' });
+
+			const updateMainButtonUI = () => {
+				mainButton.disabled = false;
+				if (массоваяПроверкаДублейНаПаузе) { duplicatesIcon.className = 'fal fa-play'; mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))'; }
+				else if (массоваяПроверкаДублейЗапущена) { duplicatesIcon.className = 'fal fa-spinner fa-spin'; mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))'; }
+				else { duplicatesIcon.className = 'fal fa-search'; mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))'; }
+				duplicatesIcon.style.fontSize = '18px';
+			};
+
+			async function processNextBatch() {
+				if (idТаймаутаСледующегоБатча) clearTimeout(idТаймаутаСледующегоБатча);
+				idТаймаутаСледующегоБатча = null;
+				if (isCardInPackSelected || массоваяПроверкаДублейНаПаузе || !массоваяПроверкаДублейЗапущена) { updateMainButtonUI(); return; }
+				updateMainButtonUI();
+				if (isProcessingAutoPackCheck) {
+					await checkCardDuplicates(массивКартДляПроверки[индексПоследнейПровереннойКарты], true);
+					индексПоследнейПровереннойКарты++;
+					if (индексПоследнейПровереннойКарты < массивКартДляПроверки.length) idТаймаутаСледующегоБатча = setTimeout(processNextBatch, GM_getValue('autoDup_delay_ms', 150));
+					else { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); }
+				} else {
+					const batchSize = 1;
+					const batch = массивКартДляПроверки.slice(индексПоследнейПровереннойКарты, индексПоследнейПровереннойКарты + batchSize);
+					if (batch.length === 0) { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); return; }
+					await Promise.all(batch.map(card => checkCardDuplicates(card, true)));
+					индексПоследнейПровереннойКарты += batch.length;
+					if (индексПоследнейПровереннойКарты < массивКартДляПроверки.length) idТаймаутаСледующегоБатча = setTimeout(processNextBatch, 1000);
+					else { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); }
+				}
+			}
+
+			mainButton.addEventListener('click', async (event) => {
+				const wasAuto = unsafeWindow.isAutoDuplicateCheckTriggered === true;
+				if (wasAuto) unsafeWindow.isAutoDuplicateCheckTriggered = false;
+				isCardInPackSelected = false;
+				showDuplicateCheckNotifications = event.isTrusted;
+				if (!getLoggedUserName()) return;
+				if (массоваяПроверкаДублейЗапущена) {
+					if (массоваяПроверкаДублейНаПаузе) { массоваяПроверкаДублейНаПаузе = false; processNextBatch(); }
+					else { массоваяПроверкаДублейНаПаузе = true; updateMainButtonUI(); }
+				} else {
+					duplicatesCache.clear(); массоваяПроверкаДублейЗапущена = true; массоваяПроверкаДублейНаПаузе = false; индексПоследнейПровереннойКарты = 0; массивКартДляПроверки = getCardsOnPage().filter(el => !el.closest('#cards-carousel') && !el.classList.contains('card-show__placeholder'));
+					if (массивКартДляПроверки.length === 0) { массоваяПроверкаДублейЗапущена = false; updateMainButtonUI(); return; }
+					processNextBatch();
+				}
+			});
+			document.body.appendChild(mainButton);
+			updateMainButtonUI();
+		}
+		createMainCheckButton();
+		await addCheckButtons();
+	}
+
+
+	// ##################################################################################
+	// # 8. [SECTION] AUTOMATED TASKS (Автосбор карт, кристаллов и паков)
+	// ##################################################################################
+
+	// --- [Sub-Module] Автосбор с видео (Auto-Watch) ---
+	
+	/**
+	 * Основной цикл автоматического сбора карт. 
+	 * Контролирует таймеры, проверяет лимиты и выполняет сетевые запросы к серверу.
+	 */
+	async function mainCardCheckLogic() {
+		if (!isLeaderWatch) {
+			stopMainCardCheckLogic();
+			return;
+		}
+
+		checkWishlistAutoUpdate();
+
+		if (crystalScriptEnabled) {
+			const pendingCheckTimestamp = await GM_getValue(CRYSTAL_PENDING_CHECK_KEY, 0);
+			if (pendingCheckTimestamp > 0 && (Date.now() - pendingCheckTimestamp < 120000)) {
+				await GM_deleteValue(CRYSTAL_PENDING_CHECK_KEY);
+				scheduleVerificationByLeader();
+			}
+		}
+
+		if (!scriptEnabledWatch) {
+			if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
+			checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, 10000);
+			return;
+		}
+
+		updateFullToggleButtonState();
+		isCollectionPaused = await GM_getValue(COLLECTION_PAUSED_KEY, false);
+		const pauseOnLimit = await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
+
+		if (isCollectionPaused && pauseOnLimit) {
+			console.log("[AutoWatch] Сбор на паузе (лимит). Ожидаю нового дня.");
+			return;
+		}
+
+		const userHash = typeof unsafeWindow !== 'undefined' ? unsafeWindow.dle_login_hash : window.dle_login_hash;
+		if (!userHash) {
+			checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, 5000);
+			return;
+		}
+
+		const now = Date.now();
+		const globalLastRequestTime = await GM_getValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, 0);
+		const timeSinceLast = now - globalLastRequestTime;
+
+		if (timeSinceLast < CHECK_NEW_CARD_INTERVAL) {
+			const timeLeftMs = CHECK_NEW_CARD_INTERVAL - timeSinceLast;
+			const timeLeftSec = Math.ceil(timeLeftMs / 1000);
+			
+			sccLog(`[AutoWatch] Слишком рано. Глобальный откат: еще ${timeLeftSec} сек. (Обновление страницы не поможет)`, 'debug', true);
+
+			if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
+			checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, timeLeftMs + 1000);
+			return;
+		}
+
+		try {
+			await GM_setValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, Date.now());
+
+			const state = await updateSmartTarget();
+			if (!state || state.index === -1) {
+				safeDLEPushCall('error', "[AutoWatch] Пул пуст или цель не найдена.");
+				return;
+			}
+
+			const cur = GLOBAL_ANIME_POOL[state.index];
+			const targetEp = parseInt(cur.min_ep) + state.ep_offset;
+			const rawBody = `news_id=${cur.anime_id}&kodik_data[episode]=${targetEp}&kodik_data[season]=${cur.s}&kodik_data[translation][id]=${cur.t_id}&kodik_data[translation][title]=${encodeURIComponent(cur.t_title)}&user_hash=${userHash}`;
+			const h = { 'Accept': 'application/json, text/javascript, */*; q=0.01', 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' };
+
+			await fetch(`/ajax/calculate_series_watch/`, { method: 'POST', headers: h, body: rawBody });
+			await fetch(`/ajax/calculate_time_watch/`, { method: 'POST', headers: h, body: rawBody });
+			const response = await fetch(`/ajax/card_for_watch/`, { method: 'POST', headers: h, body: rawBody });
+			const data = await response.json();
+
+			if (data.cards) {
+				state.failed_attempts = 0;
+				await GM_setValue('ascm_smart_progression_v1', state);
+				processCardReward(data, rawBody, 'auto');
+			} else {
+				if (data.reason === 'no') {
+					state.failed_attempts = (state.failed_attempts || 0) + 1;
+					if (state.failed_attempts >= 2) {
+						state.ep_offset++;
+						state.cards_collected = 0;
+						state.failed_attempts = 0;
+					}
+					await GM_setValue('ascm_smart_progression_v1', state);
+				} else if (pauseOnLimit && /получил свои \d+ карт/.test(data.reason)) {
+					await GM_setValue(COLLECTION_PAUSED_KEY, true);
+					updateFullToggleButtonState();
+				}
+				handleCardError(data.reason, 'auto');
+			}
+		} catch (e) {
+			console.error('[AutoWatch] Ошибка цикла:', e);
+		}
+
+		if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
+		checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, CHECK_NEW_CARD_INTERVAL + 10000);
+	}
+	unsafeWindow.mainCardCheckLogic = mainCardCheckLogic;
+	
+	// function processCardReward()
+	// function updateSmartTarget()
+	
+	/**
+	 * Осуществляет мониторинг смены календарных суток по московскому времени (UTC+3) и 
+	 * инициирует процедуру сброса дневных лимитов. Синхронизирует время с сервером сайта, 
+	 * автоматически запрашивает ежедневный бонус и, при достижении полночи, снимает флаг 
+	 * паузы автосбора, позволяя системе продолжить работу в новом дне без ручного вмешательства.
+	 * [нет аргументов]
+	 */
+	async function checkAndTriggerNewDay() {
+		const isEnabled = await GM_getValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, true);
+		if (!isEnabled) return;
+
+		const now = Date.now();
+		const mskNow = new Date(now + (3 * 60 * 60 * 1000));
+		const localDay = mskNow.toISOString().split('T')[0];
+		const lastProcessedDate = await GM_getValue(NEW_DAY_CHECK_KEY, '');
+
+		if (lastProcessedDate === localDay) return;
+
+		const waitLimit = unsafeWindow.ascm_new_day_wait_until || 0;
+		if (now < waitLimit) return;
+
+		const isAutoWatchEnabled = await GM_getValue(STORAGE_KEY_WATCH, true);
+		const isPausedByLimit = await GM_getValue(COLLECTION_PAUSED_KEY, false);
+
+		if (isAutoWatchEnabled && !isPausedByLimit) {
+			return; 
+		}
+
+		const result = await triggerDailyBonusCheck();
+		if (!result) return;
+
+		if (result.serverDay && result.serverDay !== localDay) {
+			const serverTimeMsk = result.serverTs + (3 * 3600 * 1000);
+			const serverMidnight = new Date(serverTimeMsk);
+			serverMidnight.setUTCHours(24, 0, 0, 0); 
+			
+			const msToWait = serverMidnight.getTime() - serverTimeMsk;
+			unsafeWindow.ascm_new_day_wait_until = now + msToWait + 15000;
+			
+			console.warn(`[New Day] Локальное время спешит. Ожидание серверной полночи: ${Math.round(msToWait/1000)} сек.`);
+			return;
+		}
+
+		if (result.success) {
+			console.log(`%c[New Day] Смена дня подтверждена сервером: ${result.serverDay}`, "color: #00ff00; font-weight: bold;");
+			
+			await GM_setValue(NEW_DAY_CHECK_KEY, result.serverDay);
+			await GM_setValue(COLLECTION_PAUSED_KEY, false);
+			await GM_deleteValue(PAUSE_DATE_KEY);
+			
+			if (isAutoWatchEnabled) {
+				safeDLEPushCall('success', `Новый день! Лимит обнулен, сбор карт продолжается.`);
+				if (typeof updateCardCounter === 'function') {
+					await updateCardCounter(true);
+				}
+				await GM_setValue(KICK_LEADER_TO_CHECK_KEY, Date.now());
+			} else {
+				safeDLEPushCall('info', `Новый день настал. Бонус получен, лимиты сброшены.`);
+			}
+
+			unsafeWindow.ascm_new_day_wait_until = 0;
+		}
+	}
+	
+	/**
+	 * Выполняет запрос к серверу для проверки статуса ежедневного входа и получения бонуса. 
+	 * Извлекает точное серверное время из HTTP-заголовка Date для синхронизации локального 
+	 * календаря скрипта с временем сайта, что критично для корректного сброса лимитов 
+	 * в полночь по московскому времени (UTC+3).
+	 * [нет аргументов]
+	 */
+	async function triggerDailyBonusCheck() {
+		try {
+			const userHash = typeof unsafeWindow !== 'undefined' ? unsafeWindow.dle_login_hash : window.dle_login_hash;
+			if (!userHash) return null;
+
+			const response = await fetch(`${getCurrentDomain()}/engine/ajax/controller.php?mod=check_login_days`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+				body: new URLSearchParams({ 'mod': 'check_login_days', 'user_hash': userHash })
+			});
+
+			const serverDateHeader = response.headers.get('Date');
+			let serverTs = Date.now();
+			let serverDay = '';
+
+			if (serverDateHeader) {
+				const sDate = new Date(serverDateHeader);
+				serverTs = sDate.getTime();
+				const sMsk = new Date(serverTs + (3 * 60 * 60 * 1000));
+				serverDay = sMsk.toISOString().split('T')[0];
+				unsafeWindow.ascm_actual_server_date = serverDay;
+			}
+
+			if (!response.ok) return { success: false, serverDay, serverTs };
+
+			const text = (await response.text()).toLowerCase();
+			const isOk = text.includes('бонус') || text.includes('получили') || text.includes('начислено') || text.trim() === 'no';
+			
+			return { success: isOk, serverDay: serverDay, serverTs: serverTs };
+		} catch (e) {
+			return null;
+		}
+	}
+
+	// --- [Sub-Module] Сборщик Кристаллов (ACC) ---
+	// function startAutoClickCrystalScript()
+	// function analyzeChatHtml()
+	// function sendDiamondCollectRequest()
+	// function fetchChatManually()
+	// function verifyAndCountCrystal()
+
+	// --- [Sub-Module] Автофарм и Защита паков ---
+	// function autoFarmLoop()
+	// function selectBestCard()
+	// function handleCardClick()
+
+
+	// ##################################################################################
+	// # 9. [SECTION] USER INTERFACE (Главное меню и специализированные окна)
+	// ##################################################################################
+
+	// --- [Sub-Module] Мастер-настройки ---
+	// function openMasterSettingsModal()
+
+	// --- [Sub-Module] Окна управления данными ---
+	// function openDatabaseSettingsModal()
+	// function openCacheSettingsModal()
+
+	// --- [Sub-Module] Окна настройки функций ---
+	// function openCardButtonSettingsModal()
+	// function openWishlistSettingsModal()
+	// function openFreshnessSettingsModal()
+
+
+	// ##################################################################################
+	// # 10. [SECTION] REMELTING & CLUB (Переплавка и Клубные функции)
+	// ##################################################################################
+
+	// --- [Sub-Module] Продвинутая переплавка ---
+	// function initRemeltAdvancedDashboard()
+	// function scanRemeltInventoryForRank()
+	// function renderRemeltGrid()
+	// function startRemeltLoop()
+
+	// --- [Sub-Module] Клубный менеджер ---
+	
+	/**
+	 * Инициализирует и внедряет компактную панель управления скоростью Турбо-вклада непосредственно 
+	 * на страницу шахты клуба. Позволяет пользователю в реальном времени изменять интервал кликов, 
+	 * сбрасывать настройки к значениям по умолчанию и управлять видимостью панели, сохраняя 
+	 * выбранное состояние в глобальном хранилище.
+	 * [нет аргументов]
+	 */
+	async function initShahtaDashboard() {
+		const isShahta = window.location.href.includes('/clubs/boost/');
+		if (!isShahta) return;
+		const anchor = document.querySelector('.club-boost__inner-align-left');
+		if (!anchor || document.getElementById('ascm-shahta-dash')) return;
+
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		const isVisible = await GM_getValue('ascm_shahta_dash_visible', true);
+
+		const dash = document.createElement('div');
+		dash.id = 'ascm-shahta-dash';
+		dash.className = 'ascm-shahta-dash';
+		dash.style.display = isVisible ? 'flex' : 'none';
+
+		dash.innerHTML = `
+			<div style="text-align: center; margin-bottom: 5px;">
+				<span style="font-size: 11px; color: #aaa; font-weight: 800; text-transform: uppercase;">Скорость ТУРБО: <b id="shahta-val-display" style="color: #bc95ff;">${sets.clickInterval} мс</b></span>
+			</div>
+			<div style="display: flex; gap: 10px; align-items: center;">
+				<input type="range" id="shahta-speed-slider" min="15" max="100" step="5" value="${sets.clickInterval}" style="flex: 1;">
+				<button id="shahta-default-btn" class="ascm-remelt-small-btn" style="height: 22px; background: #4e5058;">ДЕФОЛТ</button>
+			</div>
+		`;
+		
+		anchor.before(dash);
+
+		const flameBtn = document.createElement('button');
+		flameBtn.id = 'ascm-shahta-toggle-flame';
+		flameBtn.innerHTML = isVisible ? '<i class="fas fa-fire" style="color:#ff5722;"></i>' : '<i class="fal fa-fire" style="color:#888;"></i>';
+		
+		dash.before(flameBtn);
+
+		const slider = document.getElementById('shahta-speed-slider');
+		const display = document.getElementById('shahta-val-display');
+
+		slider.oninput = () => { display.textContent = slider.value + ' мс'; };
+		
+		slider.onchange = async () => {
+			const s = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			s.clickInterval = parseInt(slider.value);
+			await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, s);
+			sccLog(`Скорость вклада обновлена: ${s.clickInterval} мс`, 'success', true);
+		};
+
+		document.getElementById('shahta-default-btn').onclick = async () => {
+			const defaultVal = CLUB_MANAGER_DEFAULT.clickInterval;
+			slider.value = defaultVal;
+			display.textContent = defaultVal + ' мс';
+			slider.onchange();
+		};
+
+		flameBtn.onclick = async () => {
+			const nowVis = dash.style.display !== 'none';
+			dash.style.display = nowVis ? 'none' : 'flex';
+			flameBtn.innerHTML = !nowVis ? '<i class="fas fa-fire" style="color:#ff5722;"></i>' : '<i class="fal fa-fire" style="color:#888;"></i>';
+			await GM_setValue('ascm_shahta_dash_visible', !nowVis);
+		};
+		
+		if (isLeaderWatch) {
+			const nowUTC = new Date();
+			const mskH = (nowUTC.getUTCHours() + 3) % 24;
+			const mskM = nowUTC.getUTCMinutes();
+			const mskS = nowUTC.getUTCSeconds();
+			const currentTime = (mskH * 3600) + (mskM * 60) + mskS;
+			const [sH, sM] = sets.startTime.split(':').map(Number);
+			const [eH, eM] = sets.endTime.split(':').map(Number);
+			
+			performShahtaHunterSearch(sets, currentTime, (sH * 3600 + sM * 60), (eH * 3600 + eM * 60), 
+				new Date(Date.now() + 3*3600*1000).toISOString().split('T')[0]);
+		}
+		
+		GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
+			const syncSlider = document.getElementById('shahta-speed-slider');
+			const syncDisplay = document.getElementById('shahta-val-display');
+			if (syncSlider && syncSlider.value != newV.clickInterval) {
+				syncSlider.value = newV.clickInterval;
+			}
+			if (syncDisplay) {
+				syncDisplay.textContent = newV.clickInterval + ' мс';
+			}
+		});
+	}
+	
+	/**
+	 * Реализует логику автоматического поиска кнопки вноса в шахту клуба в заданный временной интервал. 
+	 * При обнаружении кнопки инициирует активацию «Турбо-вклада», а в случае отсутствия элемента 
+	 * запускает таймер обратного отсчета до принудительной перезагрузки страницы, уведомляя 
+	 * пользователя через визуальный пуш-интерфейс и рассчитывая период форс-режима.
+	 * [sets] - объект настроек клубного менеджера
+	 * [currentTimeInSeconds] - текущее время в секундах от начала суток (МСК)
+	 * [startTimeInSeconds] - время начала окна поиска (секунды)
+	 * [endTimeInSeconds] - время завершения окна поиска (секунды)
+	 * [today] - текущая дата в формате ГГГГ-ММ-ДД
+	 */
+	async function performShahtaHunterSearch(sets, currentTimeInSeconds, startTimeInSeconds, endTimeInSeconds, today) {
+		if (unsafeWindow.ascm_reload_timer_running || unsafeWindow.ascm_is_searching) return;
+		
+		const isInsideBoostTime = currentTimeInSeconds >= startTimeInSeconds && currentTimeInSeconds <= endTimeInSeconds;
+		if (!isInsideBoostTime) return;
+
+		unsafeWindow.ascm_is_searching = true;
+		const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
+		const isAlreadyOn = await GM_getValue('boosterState', false);
+		const lastAction = parseInt(sessionStorage.getItem('ascm_last_hunter_ts') || '0');
+
+		if (btn && btn.offsetParent !== null) {
+			sccLog("Кнопка вноса НАЙДЕНА.", 'success', true);
+			unsafeWindow.ascm_is_searching = false;
+			const limitEl = document.querySelector('.boost-limit');
+			let limitReached = false;
+			if (limitEl && limitEl.parentElement) {
+				const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+				if (m && parseInt(m[1]) >= parseInt(m[2])) limitReached = true;
+			}
+
+			const forcedEndSeconds = startTimeInSeconds + ((sets.retryDuration || 2) * 60);
+			const isInForcedWindow = currentTimeInSeconds <= forcedEndSeconds;
+
+			if (limitReached && !isInForcedWindow) {
+				sccLog("Лимит 600/600 достигнут. Завершение дня.", 'success', true);
+				await GM_setValue('ascm_lastTurboTriggerDate', today);
+				await GM_deleteValue('ascm_shahta_occupied_lock');
+				return;
+			}
+
+			if (!isAlreadyOn) {
+				sccLog("Активирую Турбо-вклад...", 'success', true);
+				sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
+				const turboBtn = document.getElementById('turboBoosterBtn');
+				if (turboBtn) turboBtn.click(); else btn.click();
+			}
+		} else {
+			unsafeWindow.ascm_is_searching = false;
+			if (Date.now() - lastAction >= (sets.reloadInterval || 10) * 1000) {
+				unsafeWindow.ascm_reload_timer_running = true;
+				let secondsLeft = 10;
+
+				const [sH, sM] = sets.startTime.split(':').map(Number);
+				const endMins = sH * 60 + sM + (sets.retryDuration || 2);
+				const fEndStr = `${String(Math.floor(endMins / 60) % 24).padStart(2, '0')}:${String(endMins % 60).padStart(2, '0')}`;
+				const forceRange = `${sets.startTime} — ${fEndStr}`;
+
+				const updateReloadUI = () => {
+					const counterEl = document.getElementById('ascm-reload-counter-val');
+					if (counterEl) {
+						counterEl.textContent = secondsLeft + 'с';
+						return;
+					}
+					const html = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px;width:100%;"><div style="font-size:13px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:6px;"><i class="fas fa-spinner fa-spin" style="color:#ffd700;font-size:14px;"></i> ПОИСК КНОПКИ...</div><div style="background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:6px;margin:2px 0;"><div style="font-size:11px;color:#fff;opacity:0.9;">Активен до: <b style="color:#00ff00;font-size:12px;">${sets.endTime} (МСК)</b></div></div><div style="font-size:10px;font-weight:bold;color:#ddd;text-transform:uppercase;margin-top:5px;">Перезагрузка страницы через:</div><div id="ascm-reload-counter-val" style="font-size:56px;font-weight:900;color:#fff;font-family:'Consolas',monospace;line-height:1;margin:0;text-shadow:0 0 20px rgba(255,255,255,0.5);">${secondsLeft}с</div><div style="font-size:9px;color:#fff;opacity:0.6;font-style:italic;margin-top:4px;">Окно форс-режима: ${forceRange}</div></div>`;
+					isStickyNotificationActive = false;
+					showNotification(html, 'error', true);
+					if (currentNotificationElement) {
+						currentNotificationElement.style.padding = '12px 15px';
+						currentNotificationElement.style.minWidth = '220px';
+						currentNotificationElement.style.width = 'auto';
+					}
+				};
+
+				console.log(`[ACM Hunter] Кнопка не найдена. Релоад через ${secondsLeft}с. Окно вкладов до ${sets.endTime}`);
+
+				const countdownId = setInterval(async () => {
+					secondsLeft--;
+					if (secondsLeft > 0) updateReloadUI();
+					else {
+						clearInterval(countdownId);
+						sccLog("Время поиска: кнопка не появилась, перезагрузка...", 'warning', true);
+						await GM_setValue('ascm_shahta_occupied_lock', { id: tabIdWatch, ts: Date.now() });
+						sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
+						location.reload();
+					}
+				}, 1000);
+				updateReloadUI();
+			}
+		}
+	}
+	
+	/**
+	 * Выполняет автоматическую имитацию нажатия на кнопку вклада в шахту клуба с учетом установленных 
+	 * лимитов и временных интервалов. Проверяет статус лидера через кросс-доменное хранилище для 
+	 * предотвращения одновременной работы в нескольких вкладках, анализирует достижение суточного 
+	 * лимита 600/600 и управляет «Форс-режимом» для принудительного вноса в момент старта.
+	 * [нет аргументов]
+	 */
+	async function performClick() {
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		
+		if (document.visibilityState !== 'visible') {
+			const leaderDataJSON = await GM_getValue(LEADER_KEY_WATCH, null);
+			let leaderData = null;
+			try {
+				leaderData = leaderDataJSON ? JSON.parse(leaderDataJSON) : {};
+			} catch (e) {
+				leaderData = {};
+			}
+			if (leaderData && leaderData.id !== tabIdWatch && leaderData.time > (Date.now() - 5000)) {
+				 return; 
+			}
+		}
+		
+		const globalActiveId = await GM_getValue('ascm_active_booster_tab');
+		if (globalActiveId && globalActiveId !== tabIdWatch) {
+			sccLog("Турбо: обнаружена активность в другом окне. Выключаюсь.", 'warning', true);
+			stopClicker(); 
+			await GM_setValue('boosterState', false); 
+			updateButtonState();
+			return;
+		}
+
+		const msk = new Date(Date.now() + (3 * 60 * 60 * 1000));
+		const curTimeInSec = (msk.getUTCHours() * 3600) + (msk.getUTCMinutes() * 60) + msk.getUTCSeconds();
+		const [sH, sM] = sets.startTime.split(':').map(Number);
+		const startTimeInSec = (sH * 3600) + (sM * 60);
+		
+		const isInForcedWindow = curTimeInSec >= startTimeInSec && curTimeInSec <= (startTimeInSec + (sets.retryDuration * 60));
+
+		const limitEl = document.querySelector('.boost-limit');
+		if (limitEl && limitEl.parentElement && !isInForcedWindow) {
+			const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+			if (m && parseInt(m[1]) >= parseInt(m[2])) {
+				sccLog("Турбо: Лимит достигнут. Остановка.", 'success', true);
+				const todayStr = msk.toISOString().split('T')[0];
+				await GM_setValue('ascm_lastTurboTriggerDate', todayStr); 
+				stopClicker(); 
+				await GM_setValue('boosterState', false); 
+				updateButtonState();
+				return;
+			}
+		}
+
+		const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
+		if (btn && btn.offsetParent !== null) btn.click();
+	}
+	
+	/**
+	 * Создает и отображает модальное окно настроек Клубного менеджера. Реализует комплексный интерфейс 
+	 * для управления временем автоматического вноса, параметрами «Форс-режима» и интенсивностью 
+	 * логирования; включает систему живой синхронизации данных между вкладками и визуальные часы 
+	 * по московскому времени для контроля лимитов.
+	 * [нет аргументов]
+	 */
+	unsafeWindow.openClubManagerModal = async function() {
+		const updateUIHeaders = async () => {
+			const settings = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			const foundId = getMyClubIdFromMenu();
+			const mskNow = new Date(Date.now() + (3 * 60 * 60 * 1000));
+			const today = mskNow.toISOString().split('T')[0];
+			const isDone = (await GM_getValue('ascm_lastTurboTriggerDate', '')).includes(today);
+			const info = document.getElementById('cm-info-box');
+			if (info) {
+				const clock = `${String(mskNow.getUTCHours()).padStart(2,'0')}:${String(mskNow.getUTCMinutes()).padStart(2,'0')}:${String(mskNow.getUTCSeconds()).padStart(2,'0')}`;
+				info.innerHTML = `
+					<div style="font-size: 13px; color: #999;">Ваш клуб: <b style="color: #43b581;">${foundId ? '№' + foundId : 'Не найден'}</b></div>
+					<div style="font-size: 13px; color: #999; display: flex; align-items: center; justify-content: center;">
+						Статус дня: <b style="color: ${isDone ? '#43b581' : '#faa61a'}; margin-left: 5px;">${isDone ? 'ВЫПОЛНЕНО' : 'ОЖИДАНИЕ'}</b>
+						<i class="fas fa-sync-alt cm-reset-icon" id="cm-inline-reset" title="Сбросить статус дня"></i>
+					</div>
+					<div id="cm-live-clock" style="font-family: monospace; font-size: 20px; color: #fff; margin-top: 5px;">${clock}</div>
+				`;
+				const resetIcon = document.getElementById('cm-inline-reset');
+				if (resetIcon) {
+					resetIcon.onclick = async () => {
+						await GM_deleteValue('ascm_lastTurboTriggerDate');
+						sccLog("Статус дня сброшен вручную", 'warning', true);
+						updateUIHeaders();
+					};
+				}
+			}
+		};
+		const saveLive = async (prop, val, label) => {
+			const s = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			s[prop] = val;
+			await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, s);
+			sccLog(`Настройка "${label}" сохранена: ${val}`, 'success', true);
+		};
+		let sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		const wrapper = document.createElement('div');
+		wrapper.id = 'acm_modal_wrapper';
+		wrapper.innerHTML = `
+			<div class="acm-modal-backdrop"></div>
+			<div class="acm-modal" style="width: 520px; border-top: 4px solid #9e294f; user-select: none;">
+				<div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
+					<h2 style="margin: 0; font-size: 1.1em;">Клубный менеджер (Автовклад)</h2>
+					<span id="cm-close-x" style="cursor:pointer; font-size: 24px; color: #888;" title="Закрыть">&times;</span>
+				</div>
+				<div class="modal-body" style="padding: 15px;">
+					<div id="cm-info-box" style="text-align: center; margin-bottom: 15px; padding: 12px; background: #1e1f22; border-radius: 8px; border: 1px solid #333;"></div>
+					<div class="setting-row">
+						<span style="font-weight: bold; color: #43b581;">АВТОМАТИКА (Переход + Турбо)</span>
+						<label class="protector-toggle-switch">
+							<input type="checkbox" id="cm-enabled" ${sets.enabled ? 'checked' : ''}>
+							<span class="protector-toggle-slider"></span>
+						</label>
+					</div>
+					<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+						<span style="font-size: 13px; color: #ccc;">СТАРТ / КОНЕЦ (МСК):</span>
+						<div style="display: flex; align-items: center; gap: 8px;">
+							${createTimeBox("start", sets.startTime)}
+							<span style="color: #444;">—</span>
+							${createTimeBox("end", sets.endTime)}
+						</div>
+					</div>
+					<div style="border-top: 1px solid #333; margin-top: 10px; padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+						<div class="setting-row" title="Первые минуты вноса скрипт будет игнорировать '600/600' и всё равно жать кнопку.">
+							<span>Форс-режим (мин)</span>
+							<input type="number" id="cm-retry-dur" min="1" max="60" value="${sets.retryDuration || 2}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
+						</div>
+						<div class="setting-row" title="Интервал кликов в Форс-режиме (сек).">
+							<span>Клик раз в (сек)</span>
+							<input type="number" id="cm-retry-int" min="1" max="60" value="${sets.retryInterval || 5}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
+						</div>
+						<div class="setting-row" title="Релоад если кнопки вноса нет вообще (сек).">
+							<span>Релоад раз в (сек)</span>
+							<input type="number" id="cm-reload-int" min="1" max="60" value="${sets.reloadInterval || 10}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
+						</div>
+						<div class="setting-row">
+							<span>Напомнить за (мин)</span>
+							<input type="number" id="cm-reminder" min="1" max="60" value="${sets.reminderMinutes}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
+						</div>
+					</div>
+					<div style="margin-top: 15px;">
+						<div style="display:flex; justify-content: space-between; align-items: center;">
+							<span>Логирование:</span>
+							<select id="cm-log-level" style="background:#111; color:#fff; border:1px solid #444; font-size:12px; padding:4px; border-radius:4px; width: 150px;">
+								<option value="1" ${sets.logLevel == 1 ? 'selected' : ''}>1: Только ошибки</option>
+								<option value="2" ${sets.logLevel == 2 ? 'selected' : ''}>2: Важные действия</option>
+								<option value="3" ${sets.logLevel == 3 ? 'selected' : ''}>3: Полная отладка</option>
+							</select>
+						</div>
+					</div>
+					<div style="margin-top: 15px;">
+						<div style="display:flex; justify-content: space-between;">
+							<span>Скорость ТУРБО: <b id="cm-interval-val" style="color: #bc95ff;">${sets.clickInterval} мс</b></span>
+						</div>
+						<input type="range" id="cm-interval" min="15" max="100" step="5" value="${sets.clickInterval}" style="width: 100%; margin-top: 10px;">
+					</div>
+				</div>
+				<div class="modal-footer" style="display: flex; gap: 5px;">
+					<button id="cm-default" class="action-btn" style="background: #4e5058; flex: 1;">ДЕФОЛТ</button>
+					<button id="cm-back" class="action-btn back-btn" style="background: #2f3136; flex: 1.2;">НАЗАД В МЕНЮ</button>
+				</div>
+			</div>
+			<style>
+				.cm-t-box { display: flex; align-items: center; background: #111; border: 1px solid #444; border-radius: 4px; padding: 0 4px; }
+				.cm-u-wrp { position: relative; display: flex; align-items: center; width: 60px; height: 32px; }
+				.cm-u-in { width: 100%; height: 100%; background: none; border: none; color: #fff; text-align: left; padding-left: 10px; font-size: 15px; font-weight: bold; outline: none; }
+				.cm-u-ars { position: absolute; right: 2px; top: 2px; bottom: 2px; display: flex; flex-direction: column; gap: 1px; opacity: 0; transition: opacity 0.2s; background: #111; padding-left: 2px; }
+				.cm-u-wrp:hover .cm-u-ars { opacity: 1; }
+				.cm-u-b { background: #333; border: none; color: #fff; font-size: 7px; padding: 0 5px; cursor: pointer; border-radius: 2px; flex: 1; display: flex; align-items: center; }
+				.cm-u-b:hover { background: #555; }
+			</style>`;
+		
+		document.body.appendChild(wrapper);
+		updateUIHeaders();
+		const clockInt = setInterval(updateUIHeaders, 1000);
+		function createTimeBox(label, val) {
+			const [h, m] = val.split(':');
+			const id = label.toLowerCase();
+			return `<div class="cm-t-box">${createUnit(id + "-h", h)}<span style="color:#444;font-weight:bold;margin:0 2px;">:</span>${createUnit(id + "-m", m)}</div>`;
+		}
+		function createUnit(id, val) {
+			return `<div class="cm-u-wrp"><input type="text" id="cm-${id}" class="cm-u-in" value="${val}" maxlength="2"><div class="cm-u-ars"><button class="cm-u-b" data-id="${id}" data-dir="1">▲</button><button class="cm-u-b" data-id="${id}" data-dir="-1">▼</button></div></div>`;
+		}
+		const saveTime = (p) => {
+			const h = wrapper.querySelector(`#cm-${p}-h`).value.padStart(2, '0');
+			const m = wrapper.querySelector(`#cm-${p}-m`).value.padStart(2, '0');
+			saveLive(p === 'start' ? 'startTime' : 'endTime', `${h}:${m}`, p === 'start' ? 'Начало' : 'Конец');
+		};
+		wrapper.addEventListener('click', (e) => {
+			const b = e.target.closest('.cm-u-b');
+			if (!b) return;
+			const input = document.getElementById(`cm-${b.dataset.id}`);
+			let v = parseInt(input.value) + parseInt(b.dataset.dir);
+			if (b.dataset.id.includes('-h')) { if(v>23) v=0; if(v<0) v=23; } else { if(v>59) v=0; if(v<0) v=59; }
+			input.value = String(v).padStart(2, '0');
+			saveTime(b.dataset.id.split('-')[0]);
+		});
+		wrapper.querySelectorAll('.cm-u-in').forEach(el => {
+			el.oninput = () => { if(el.value.length >= 1) saveTime(el.id.split('-')[1]); };
+		});
+		wrapper.querySelector('#cm-enabled').onchange = (e) => saveLive('enabled', e.target.checked, 'Автоматика');
+		wrapper.querySelector('#cm-reminder').onchange = (e) => saveLive('reminderMinutes', parseInt(e.target.value), 'Напоминание');
+		wrapper.querySelector('#cm-log-level').onchange = (e) => saveLive('logLevel', parseInt(e.target.value), 'Логирование');
+		wrapper.querySelector('#cm-retry-dur').onchange = (e) => saveLive('retryDuration', parseInt(e.target.value), 'Форс-режим');
+		wrapper.querySelector('#cm-retry-int').onchange = (e) => saveLive('retryInterval', parseInt(e.target.value), 'Интервал клика');
+		wrapper.querySelector('#cm-reload-int').onchange = (e) => saveLive('reloadInterval', parseInt(e.target.value), 'Интервал релоада');
+		wrapper.querySelector('#cm-interval').oninput = (e) => { wrapper.querySelector('#cm-interval-val').textContent = e.target.value + ' мс'; };
+		wrapper.querySelector('#cm-interval').onchange = (e) => saveLive('clickInterval', parseInt(e.target.value), 'Скорость вклада');
+		
+		const modalIntervalSlider = wrapper.querySelector('#cm-interval');
+		const modalIntervalValue = wrapper.querySelector('#cm-interval-val');
+
+		modalIntervalSlider.oninput = (e) => { 
+			modalIntervalValue.textContent = e.target.value + ' мс'; 
+		};
+		modalIntervalSlider.onchange = (e) => {
+			saveLive('clickInterval', parseInt(e.target.value), 'Скорость вклада');
+		};
+		
+		wrapper.querySelector('#cm-default').onclick = async () => {
+			await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			await GM_deleteValue('ascm_lastTurboTriggerDate');
+			const d = CLUB_MANAGER_DEFAULT;
+			wrapper.querySelector('#cm-enabled').checked = d.enabled;
+			wrapper.querySelector('#cm-start-h').value = d.startTime.split(':')[0];
+			wrapper.querySelector('#cm-start-m').value = d.startTime.split(':')[1];
+			wrapper.querySelector('#cm-end-h').value = d.endTime.split(':')[0];
+			wrapper.querySelector('#cm-end-m').value = d.endTime.split(':')[1];
+			wrapper.querySelector('#cm-retry-dur').value = d.retryDuration;
+			wrapper.querySelector('#cm-retry-int').value = d.retryInterval;
+			wrapper.querySelector('#cm-reload-int').value = d.reloadInterval;
+			wrapper.querySelector('#cm-reminder').value = d.reminderMinutes;
+			wrapper.querySelector('#cm-log-level').value = d.logLevel;
+			wrapper.querySelector('#cm-interval').value = d.clickInterval;
+			wrapper.querySelector('#cm-interval-val').textContent = d.clickInterval + ' мс';
+			sccLog('Настройки сброшены!', 'warning'); updateUIHeaders();
+		};
+		
+		const modalSyncId = GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
+				const mSlider = wrapper.querySelector('#cm-interval');
+				const mDisplay = wrapper.querySelector('#cm-interval-val');
+				if (mSlider) mSlider.value = newV.clickInterval;
+				if (mDisplay) mDisplay.textContent = newV.clickInterval + ' мс';
+		});
+		
+		const close = () => { 
+			clearInterval(clockInt); 
+			GM_removeValueChangeListener(modalSyncId);
+			wrapper.remove(); 
+		};
+		wrapper.querySelector('#cm-close-x').onclick = close;
+		wrapper.querySelector('#cm-back').onclick = () => { close(); unsafeWindow.openMasterSettingsModal(); };
+		wrapper.querySelector('.acm-modal-backdrop').onclick = close;
+	};
+
+
+	// ##################################################################################
+	// # 11. [SECTION] VISUAL ENHANCEMENTS (Фон, Закладки, Слайдеры)
+	// ##################################################################################
+
+	// --- [Sub-Module] Кастомный фон ---
+	// function applyStyles()
+	// function initializeBackgroundFeatures()
+
+	// --- [Sub-Module] Панель закладок (ASBM) ---
+	// function asbm_initializeModule()
+	// function asbm_renderOrUpdateElements()
+
+	// --- [Sub-Module] Коррекция отображения ---
+	// function createMaxWidthControlSlider()
+	// function applyPageSpecificCardSizes()
+
+
+	// ##################################################################################
+	// # 12. [SECTION] SYSTEM OBSERVERS (Наблюдатели за изменениями страниц)
+	// ##################################################################################
+
+	// --- [Sub-Module] Глобальные наблюдатели ---
+	// function initializeSmartCardObserver()
+	// function setupUnifiedXhrInterceptor()
+	// function setupSiteNotificationInterceptor()
+
+
+	// ##################################################################################
+	// # 15. [SECTION] INITIALIZATION (Запуск процессов и команд)
+	// ##################################################################################
+
+	// Здесь располагаются команды запуска, регистрации меню и установки слушателей.
+
+// }
+
+// runMainScript();
+
+	// ##################################################################################
+	// ############################# КАРТА ПРОЕКТА. КОНЕЦ ##############################
+	// ##################################################################################
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// ==================================================
     // ГЛОБАЛЬНЫЕ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ КАРТ И СИНХРОНИЗАЦИИ
     // ==================================================
@@ -1152,35 +3601,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         }
         showNotification(message, 'custom_bg', false, bgColor);
     }
-
-    // ##################################################
-    // # API для вызова уведомлений ИЗНУТРИ СКРИПТА.
-    // ##################################################
-    function getEffectiveDLEPush() {
-        return {
-            info: (message) => showNotification(String(message), 'info'),
-            success: (message) => showNotification(String(message), 'success'),
-            stickySuccess: (message) => showNotification(String(message), 'success', true),
-            error: (message) => showNotification(String(message), 'error'),
-            warning: (message) => showNotification(String(message), 'warning'),
-            warn: (message) => showNotification(String(message), 'warning'),
-            custom: (message) => showNotification(String(message), 'custom')
-        };
-    }
-
-    // ##################################################
-    // # Безопасная функция-обертка для вызова уведомлений ИЗНУТРИ СКРИПТА.
-    // ##################################################
-    function safeDLEPushCall(methodName, message) {
-        const DLEPushAPI = getEffectiveDLEPush();
-        const messageString = (message === undefined || message === null) ? `(Сообщение не определено)` : String(message);
-        if (typeof DLEPushAPI[methodName] === 'function') {
-            DLEPushAPI[methodName](messageString);
-        } else {
-            console.error(`[ACM] Критическая ошибка: DLEPushAPI.${methodName} не является функцией. Сообщение: ${messageString}`);
-        }
-    }
-    unsafeWindow.safeDLEPushCall = safeDLEPushCall;
 
     // ##################################################
     // # КОМПЛЕКСНЫЙ ПЕРЕХВАТЧИК УВЕДОМЛЕНИЙ САЙТА (2 уровня защиты)
@@ -2039,648 +4459,448 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         return null;
     }
 	
-	// ##################################################
-    // # МОДАЛЬНОЕ ОКНО: КЛУБНЫЙ МЕНЕДЖЕР (АВТОВКЛАД)
-    // ##################################################
-    unsafeWindow.openClubManagerModal = async function() {
-        const updateUIHeaders = async () => {
-            const settings = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-            const foundId = getMyClubIdFromMenu();
-            const mskNow = new Date(Date.now() + (3 * 60 * 60 * 1000));
-            const today = mskNow.toISOString().split('T')[0];
-            const isDone = (await GM_getValue('ascm_lastTurboTriggerDate', '')).includes(today);
-            const info = document.getElementById('cm-info-box');
-            if (info) {
-                const clock = `${String(mskNow.getUTCHours()).padStart(2,'0')}:${String(mskNow.getUTCMinutes()).padStart(2,'0')}:${String(mskNow.getUTCSeconds()).padStart(2,'0')}`;
-                info.innerHTML = `
-                    <div style="font-size: 13px; color: #999;">Ваш клуб: <b style="color: #43b581;">${foundId ? '№' + foundId : 'Не найден'}</b></div>
-                    <div style="font-size: 13px; color: #999; display: flex; align-items: center; justify-content: center;">
-                        Статус дня: <b style="color: ${isDone ? '#43b581' : '#faa61a'}; margin-left: 5px;">${isDone ? 'ВЫПОЛНЕНО' : 'ОЖИДАНИЕ'}</b>
-                        <i class="fas fa-sync-alt cm-reset-icon" id="cm-inline-reset" title="Сбросить статус дня"></i>
-                    </div>
-                    <div id="cm-live-clock" style="font-family: monospace; font-size: 20px; color: #fff; margin-top: 5px;">${clock}</div>
-                `;
-                // Навешиваем событие на иконку
-                const resetIcon = document.getElementById('cm-inline-reset');
-                if (resetIcon) {
-                    resetIcon.onclick = async () => {
-                        await GM_deleteValue('ascm_lastTurboTriggerDate');
-                        sccLog("Статус дня сброшен вручную", 'warning', true);
-                        updateUIHeaders();
-                    };
-                }
-            }
-        };
-        const saveLive = async (prop, val, label) => {
-            const s = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-            s[prop] = val;
-            await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, s);
-            sccLog(`Настройка "${label}" сохранена: ${val}`, 'success', true);
-        };
-        let sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-        const wrapper = document.createElement('div');
-        wrapper.id = 'acm_modal_wrapper';
-        wrapper.innerHTML = `
-            <div class="acm-modal-backdrop"></div>
-            <div class="acm-modal" style="width: 520px; border-top: 4px solid #9e294f; user-select: none;">
-                <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px;">
-                    <h2 style="margin: 0; font-size: 1.1em;">Клубный менеджер (Автовклад)</h2>
-                    <span id="cm-close-x" style="cursor:pointer; font-size: 24px; color: #888;" title="Закрыть">&times;</span>
-                </div>
-                <div class="modal-body" style="padding: 15px;">
-                    <div id="cm-info-box" style="text-align: center; margin-bottom: 15px; padding: 12px; background: #1e1f22; border-radius: 8px; border: 1px solid #333;"></div>
-                    <div class="setting-row">
-                        <span style="font-weight: bold; color: #43b581;">АВТОМАТИКА (Переход + Турбо)</span>
-                        <label class="protector-toggle-switch">
-                            <input type="checkbox" id="cm-enabled" ${sets.enabled ? 'checked' : ''}>
-                            <span class="protector-toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <span style="font-size: 13px; color: #ccc;">СТАРТ / КОНЕЦ (МСК):</span>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            ${createTimeBox("start", sets.startTime)}
-                            <span style="color: #444;">—</span>
-                            ${createTimeBox("end", sets.endTime)}
-                        </div>
-                    </div>
-                    <div style="border-top: 1px solid #333; margin-top: 10px; padding-top: 15px; display: flex; flex-direction: column; gap: 10px;">
-                        <div class="setting-row" title="Первые минуты вноса скрипт будет игнорировать '600/600' и всё равно жать кнопку.">
-                            <span>Форс-режим (мин)</span>
-                            <input type="number" id="cm-retry-dur" min="1" max="60" value="${sets.retryDuration || 2}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
-                        </div>
-                        <div class="setting-row" title="Интервал кликов в Форс-режиме (сек).">
-                            <span>Клик раз в (сек)</span>
-                            <input type="number" id="cm-retry-int" min="1" max="60" value="${sets.retryInterval || 5}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
-                        </div>
-                        <div class="setting-row" title="Релоад если кнопки вноса нет вообще (сек).">
-                            <span>Релоад раз в (сек)</span>
-                            <input type="number" id="cm-reload-int" min="1" max="60" value="${sets.reloadInterval || 10}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
-                        </div>
-                        <div class="setting-row">
-                            <span>Напомнить за (мин)</span>
-                            <input type="number" id="cm-reminder" min="1" max="60" value="${sets.reminderMinutes}" style="width: 50px; background:#111; color:#fff; border:1px solid #444; text-align:center; padding: 6px; border-radius: 4px;">
-                        </div>
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <div style="display:flex; justify-content: space-between; align-items: center;">
-                            <span>Логирование:</span>
-                            <select id="cm-log-level" style="background:#111; color:#fff; border:1px solid #444; font-size:12px; padding:4px; border-radius:4px; width: 150px;">
-                                <option value="1" ${sets.logLevel == 1 ? 'selected' : ''}>1: Только ошибки</option>
-                                <option value="2" ${sets.logLevel == 2 ? 'selected' : ''}>2: Важные действия</option>
-                                <option value="3" ${sets.logLevel == 3 ? 'selected' : ''}>3: Полная отладка</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <div style="display:flex; justify-content: space-between;">
-                            <span>Скорость ТУРБО: <b id="cm-interval-val" style="color: #bc95ff;">${sets.clickInterval} мс</b></span>
-                        </div>
-                        <input type="range" id="cm-interval" min="15" max="100" step="5" value="${sets.clickInterval}" style="width: 100%; margin-top: 10px;">
-                    </div>
-                </div>
-                <div class="modal-footer" style="display: flex; gap: 5px;">
-                    <button id="cm-default" class="action-btn" style="background: #4e5058; flex: 1;">ДЕФОЛТ</button>
-                    <button id="cm-back" class="action-btn back-btn" style="background: #2f3136; flex: 1.2;">НАЗАД В МЕНЮ</button>
-                </div>
-            </div>
-            <style>
-                .cm-t-box { display: flex; align-items: center; background: #111; border: 1px solid #444; border-radius: 4px; padding: 0 4px; }
-                .cm-u-wrp { position: relative; display: flex; align-items: center; width: 60px; height: 32px; }
-                .cm-u-in { width: 100%; height: 100%; background: none; border: none; color: #fff; text-align: left; padding-left: 10px; font-size: 15px; font-weight: bold; outline: none; }
-                .cm-u-ars { position: absolute; right: 2px; top: 2px; bottom: 2px; display: flex; flex-direction: column; gap: 1px; opacity: 0; transition: opacity 0.2s; background: #111; padding-left: 2px; }
-                .cm-u-wrp:hover .cm-u-ars { opacity: 1; }
-                .cm-u-b { background: #333; border: none; color: #fff; font-size: 7px; padding: 0 5px; cursor: pointer; border-radius: 2px; flex: 1; display: flex; align-items: center; }
-                .cm-u-b:hover { background: #555; }
-            </style>`;
-        
-        document.body.appendChild(wrapper);
-        updateUIHeaders();
-        const clockInt = setInterval(updateUIHeaders, 1000);
-        function createTimeBox(label, val) {
-            const [h, m] = val.split(':');
-            const id = label.toLowerCase();
-            return `<div class="cm-t-box">${createUnit(id + "-h", h)}<span style="color:#444;font-weight:bold;margin:0 2px;">:</span>${createUnit(id + "-m", m)}</div>`;
-        }
-        function createUnit(id, val) {
-            return `<div class="cm-u-wrp"><input type="text" id="cm-${id}" class="cm-u-in" value="${val}" maxlength="2"><div class="cm-u-ars"><button class="cm-u-b" data-id="${id}" data-dir="1">▲</button><button class="cm-u-b" data-id="${id}" data-dir="-1">▼</button></div></div>`;
-        }
-        const saveTime = (p) => {
-            const h = wrapper.querySelector(`#cm-${p}-h`).value.padStart(2, '0');
-            const m = wrapper.querySelector(`#cm-${p}-m`).value.padStart(2, '0');
-            saveLive(p === 'start' ? 'startTime' : 'endTime', `${h}:${m}`, p === 'start' ? 'Начало' : 'Конец');
-        };
-        wrapper.addEventListener('click', (e) => {
-            const b = e.target.closest('.cm-u-b');
-            if (!b) return;
-            const input = document.getElementById(`cm-${b.dataset.id}`);
-            let v = parseInt(input.value) + parseInt(b.dataset.dir);
-            if (b.dataset.id.includes('-h')) { if(v>23) v=0; if(v<0) v=23; } else { if(v>59) v=0; if(v<0) v=59; }
-            input.value = String(v).padStart(2, '0');
-            saveTime(b.dataset.id.split('-')[0]);
-        });
-        wrapper.querySelectorAll('.cm-u-in').forEach(el => {
-            el.oninput = () => { if(el.value.length >= 1) saveTime(el.id.split('-')[1]); };
-        });
-        wrapper.querySelector('#cm-enabled').onchange = (e) => saveLive('enabled', e.target.checked, 'Автоматика');
-        wrapper.querySelector('#cm-reminder').onchange = (e) => saveLive('reminderMinutes', parseInt(e.target.value), 'Напоминание');
-        wrapper.querySelector('#cm-log-level').onchange = (e) => saveLive('logLevel', parseInt(e.target.value), 'Логирование');
-        wrapper.querySelector('#cm-retry-dur').onchange = (e) => saveLive('retryDuration', parseInt(e.target.value), 'Форс-режим');
-        wrapper.querySelector('#cm-retry-int').onchange = (e) => saveLive('retryInterval', parseInt(e.target.value), 'Интервал клика');
-        wrapper.querySelector('#cm-reload-int').onchange = (e) => saveLive('reloadInterval', parseInt(e.target.value), 'Интервал релоада');
-        wrapper.querySelector('#cm-interval').oninput = (e) => { wrapper.querySelector('#cm-interval-val').textContent = e.target.value + ' мс'; };
-        wrapper.querySelector('#cm-interval').onchange = (e) => saveLive('clickInterval', parseInt(e.target.value), 'Скорость вклада');
-		
-		const modalIntervalSlider = wrapper.querySelector('#cm-interval');
-        const modalIntervalValue = wrapper.querySelector('#cm-interval-val');
-
-        // Живое обновление текста при движении ползунка в модалке
-        modalIntervalSlider.oninput = (e) => { 
-            modalIntervalValue.textContent = e.target.value + ' мс'; 
-        };
-        // Сохранение и старт синхронизации при отпускании ползунка
-        modalIntervalSlider.onchange = (e) => {
-            saveLive('clickInterval', parseInt(e.target.value), 'Скорость вклада');
-        };
-		
-        wrapper.querySelector('#cm-default').onclick = async () => {
-            await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-            await GM_deleteValue('ascm_lastTurboTriggerDate');
-            const d = CLUB_MANAGER_DEFAULT;
-            wrapper.querySelector('#cm-enabled').checked = d.enabled;
-            wrapper.querySelector('#cm-start-h').value = d.startTime.split(':')[0];
-            wrapper.querySelector('#cm-start-m').value = d.startTime.split(':')[1];
-            wrapper.querySelector('#cm-end-h').value = d.endTime.split(':')[0];
-            wrapper.querySelector('#cm-end-m').value = d.endTime.split(':')[1];
-            wrapper.querySelector('#cm-retry-dur').value = d.retryDuration;
-            wrapper.querySelector('#cm-retry-int').value = d.retryInterval;
-            wrapper.querySelector('#cm-reload-int').value = d.reloadInterval;
-            wrapper.querySelector('#cm-reminder').value = d.reminderMinutes;
-            wrapper.querySelector('#cm-log-level').value = d.logLevel;
-            wrapper.querySelector('#cm-interval').value = d.clickInterval;
-            wrapper.querySelector('#cm-interval-val').textContent = d.clickInterval + ' мс';
-            sccLog('Настройки сброшены!', 'warning'); updateUIHeaders();
-        };
-		
-		// ПРАВКА: Слушатель для синхронизации слайдера внутри открытого модального окна
-        const modalSyncId = GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
-                const mSlider = wrapper.querySelector('#cm-interval');
-                const mDisplay = wrapper.querySelector('#cm-interval-val');
-                if (mSlider) mSlider.value = newV.clickInterval;
-                if (mDisplay) mDisplay.textContent = newV.clickInterval + ' мс';
-        });
-		
-        const close = () => { 
-            clearInterval(clockInt); 
-            GM_removeValueChangeListener(modalSyncId); // Удаляем слушатель при закрытии
-            wrapper.remove(); 
-        };
-        wrapper.querySelector('#cm-close-x').onclick = close;
-        wrapper.querySelector('#cm-back').onclick = () => { close(); unsafeWindow.openMasterSettingsModal(); };
-        wrapper.querySelector('.acm-modal-backdrop').onclick = close;
-    };
 	
-    // ##################################################
-    // БЛОК ОБЩЕГО ОКНА НАСТРОЕК
-    // ##################################################
-    unsafeWindow.openMasterSettingsModal = async function(updatedSettings = {}) {
-        const MODAL_WRAPPER_ID = 'acm_modal_wrapper';
-        const existingWrapper = document.getElementById(MODAL_WRAPPER_ID);
-        if (existingWrapper) existingWrapper.remove();
-        const wrapper = document.createElement('div');
-        wrapper.id = MODAL_WRAPPER_ID;
-        wrapper.innerHTML = `
-            <div class="acm-modal-backdrop"></div>
-            <div class="acm-modal" id="master_settings_modal">
-            <div class="modal-header">
-            <h2>AnimeStars Card Master - Настройки</h2>
-            </div>
-            <div class="modal-body" id="master_settings_body">
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_bg">ФОН</button>
-            <span class="info-icon" data-info="Настройка фона для страниц профиля, инвентаря, трейдов и т.д.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_bookmarks">ЗАКЛАДКИ</button>
-            <span class="info-icon" data-info="Добавляет панель с быстрыми ссылками под шапкой сайта.">i</span>
-            </div>
-            <div class="master-setting-row">
-                 <button class="master-settings-button" id="master_open_wishlist_settings">
-                    <span>ПОДСВЕТКА КАРТ</span>
-                 </button>
-                 <span class="info-icon" data-info="Настройки подсветки и защиты карт из вашего и чужого списка желаний в паках, инвентарях и обменах.">i</span>
-            </div>
-            <div class="master-setting-row">
-                <button class="master-settings-button" id="master_open_freshness_settings">
-                    <span>НОВИЗНА КАРТ (ID)</span>
-                </button>
-                <span class="info-icon" data-info="Настройки отображения индикатора новизны и защиты новых карт в паках.">i</span>
-            </div>
-			<div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_club_manager" style="background: linear-gradient(145deg, #4D2D79, #2C1E4A); border: 1px solid #6A4A9C;">
-                <span>КЛУБНЫЙ МЕНЕДЖЕР (АВТО)</span>
-            </button>
-            <span class="info-icon" data-info="Автопереход в шахту и автовключение Турбо-вклада в 21:00 МСК.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_protector">ЗАЩИТА КАРТ (ПАКИ)</button>
-            <span class="info-icon" data-info="Предотвращает случайный выбор дешевой карты из пака, если в нем есть более ценная.">i</span>
-            </div>
-            <div class="master-setting-row">
-                <button class="master-settings-button" id="master_toggle_anti_blur">
-                    <span>УБРАТЬ РАЗМЫТИЕ В ПАКАХ</span>
-                    <span class="btn-state"></span>
-                </button>
-                <span class="info-icon" data-info="Убирает эффект 'размытия' (blur) с карт во время анимации их прокрутки в паке.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_autodup">АВТОДУБЛИ (ПАКИ)</button>
-            <span class="info-icon" data-info="Автоматическая проверка на дубликаты карт определенных рангов сразу после открытия пака.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_autodemand_pack">АВТОСПРОС (ПАКИ)</button>
-            <span class="info-icon" data-info="Настройка автопроверки спроса для карт, выпадающих из паков.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_autodemand_trade">АВТОСПРОС (ОБМЕНЫ)</button>
-            <span class="info-icon" data-info="Настройка автопроверки спроса для карт на страницах обменов.">i</span>
-            </div>
-            <div class="master-setting-row">
-                <button class="master-settings-button" id="master_toggle_auto_select">
-                    <span>АВТОФАРМ ПАКОВ</span>
-                    <span class="btn-state"></span>
-                </button>
-                <span class="info-icon" data-info="Автоматически покупает паки (x20) и выбирает карту по приоритетам. Работает в режиме переключателя.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_cache">КЭШ КАРТ</button>
-            <span class="info-icon" data-info="Настройка времени хранения данных о спросе на карты.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_db_settings">НАСТРОЙКИ БАЗЫ КАРТ</button>
-            <span class="info-icon" data-info="Управление локальной базой данных: сканирование, импорт, экспорт и очистка.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_display">ЦВЕТ И РАЗМЕР ШРИФТА (СПРОС)</button>
-            <span class="info-icon" data-info="Настройка размера шрифта и иконок в блоке статистики на карточках.">i</span>
-            </div>
-            <div class="master-setting-row">
-                <button class="master-settings-button" id="master_open_card_buttons_settings">
-                    <span>Размеры кнопок на картах</span>
-                </button>
-                <span class="info-icon" data-info="Настройка видимости и размера кнопок информации (i), дубликатов и спроса на карточках.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_open_ready_to_charge">
-            <span>ГОТОВ ПОМЕНЯТЬ</span>
-            <span class="btn-state" id="rdy_to_charge_mode_display"></span>
-            </button>
-            <span class="info-icon" data-info="Настройка режима для массовой отправки карт в 'Не нужное'.">i</span>
-            </div>
-            <div class="master-setting-row">
-                <button class="master-settings-button" id="master_toggle_demand_sorting">
-                    <span>СОРТИРОВКА ПО СПРОСУ</span>
-                    <span class="btn-state"></span>
-                </button>
-                <span class="info-icon" data-info="Добавляет опцию 'По спросу' в сортировку на странице инвентаря и кнопку на странице обмена.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_pause">
-            <span>ПАУЗА СБОРА КАРТ</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Автоматически ставит на паузу сбор карт с видео, когда достигнут дневной лимит.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_new_day_reset">
-            <span>АВТОЗАПУСК НОВОГО ДНЯ</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Если автосбор карт стоит на паузе из-за дневного лимита, эта функция автоматически сбросит его в 00:01 по МСК. И возобновляет сбор карт.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_slider">
-            <span>СЛАЙДЕР ШИРИНЫ</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Добавляет ползунок для ручной регулировки ширины контента на страницах инвентаря, профиля и т.д.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_leader_lock_btn">
-            <span>ЗАМОК ЛИДЕРА</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Кнопка которая фиксирует лидера на определенной вкладке (только лидер может автоматически собирать карты/кристаллы).">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_lock_btn">
-            <span>КНОПКА ФИКСАЦИИ КОЛОДЫ</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Добавляет кнопку-замок в окно информации о карте для быстрой фиксации/разфиксации всей колоды.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_star_btn">
-            <span>КНОПКА ПЕРЕХОДА К ЗВЕЗДАМ</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Добавляет кнопку-звезду в окно информации о карте для быстрого перехода на страницу звезд этого персонажа.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_clubs_btn">
-            <span>КНОПКА КЛУБА</span>
-            <span class="btn-state"></span>
-            </button>
-            <span class="info-icon" data-info="Добавляет кнопку-логотип клуба 'Legendary Immortal Order' для быстрого перехода.">i</span>
-            </div>
-            <div class="master-setting-row">
-            <button class="master-settings-button" id="master_toggle_scc_feature">
-            <span>СБОРЩИК КАРТ</span>
-            <span class="btn-state"></span>
-            </button>
-			<span class="info-icon" data-info="Собирает карты с нескольких аккаунтов и отображает в удобном интерфейсе.">i</span>
-            </div>
-			<div class="master-setting-row">
-                <button class="master-settings-button" id="master_open_remelt_settings" style="background: linear-gradient(145deg, #9e294f, #6e1d37); border: 1px solid #c83a54;">
-                    <span>ПЕРЕПЛАВКА</span>
-                </button>
-                <span class="info-icon" data-info="Настройки продвинутой панели переплавки и фильтров.">i</span>
-            </div>
-            <div class="master-setting-row">
-                <button class="master-settings-button" id="master_toggle_premium_feature">
-                    <span>ПРЕМИУМ ФУНКЦИИ (АКТИВАЦИЯ)</span>
-                    <span class="btn-state"></span>
-                </button>
-                <span class="info-icon" data-info="Эмулирует наличие премиум-аккаунта. Позволяет автоматически собирать карты при просмотре аниме.">i</span>
-            </div>
-
-            <button class="action-btn close-btn" id="master_settings_close_btn" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 1em; display: block;">
-            Закрыть
-            </button>
-            </div>
-            </div>`;
-        document.body.appendChild(wrapper);
-        const READY_TO_TRADE_MODE_KEY = 'readyToTradeMode_v2';
-        const SCC_FEATURE_ENABLED_KEY = 'scc_feature_enabled';
-        document.getElementById('master_open_card_buttons_settings').onclick = () => {
-                closeModal();
-                unsafeWindow.openCardButtonSettingsModal();
-            };
-        const sccEnabled = await GM_getValue(SCC_FEATURE_ENABLED_KEY, false);
-        const sccBtnState = wrapper.querySelector('#master_toggle_scc_feature .btn-state');
-        sccBtnState.textContent = sccEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        sccBtnState.className = `btn-state ${sccEnabled ? 'enabled' : 'disabled'}`;
-        document.getElementById('master_toggle_scc_feature').onclick = async () => {
-            const newState = !(await GM_getValue(SCC_FEATURE_ENABLED_KEY, false));
-            await GM_setValue(SCC_FEATURE_ENABLED_KEY, newState);
-            sccBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            sccBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Сборщик карт ${newState ? 'включен' : 'выключен'}. Перезагрузка...`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
+    /**
+	 * Главное модальное окно настроек AnimeStars Card Master.
+	 * Управляет отображением всех модулей и их состоянием.
+	 */
+	unsafeWindow.openMasterSettingsModal = async function(updatedSettings = {}) {
+		const MODAL_WRAPPER_ID = 'acm_modal_wrapper';
+		const existingWrapper = document.getElementById(MODAL_WRAPPER_ID);
+		if (existingWrapper) existingWrapper.remove();
 		
-		// ПРАВКА: Логика переключателя Премиум функций (использует глобальную переменную)
-        premiumEnabled = await GM_getValue(PREMIUM_FEATURE_ENABLED_KEY, true);
-        const premiumBtnState = wrapper.querySelector('#master_toggle_premium_feature .btn-state');
-        premiumBtnState.textContent = premiumEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        premiumBtnState.className = `btn-state ${premiumEnabled ? 'enabled' : 'disabled'}`;
+		const wrapper = document.createElement('div');
+		wrapper.id = MODAL_WRAPPER_ID;
+		wrapper.innerHTML = `
+			<div class="acm-modal-backdrop"></div>
+			<div class="acm-modal" id="master_settings_modal">
+				<div class="modal-header">
+					<h2>AnimeStars Card Master - Настройки</h2>
+				</div>
+				<div class="modal-body" id="master_settings_body">
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_bg">ФОН</button>
+						<span class="info-icon" data-info="Установка живых обоев (картинка, GIF или видео) для страниц профиля, инвентаря и обменов. Можно добавить свои ссылки или загрузить файл.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_bookmarks">ЗАКЛАДКИ</button>
+						<span class="info-icon" data-info="Добавляет панель быстрых ссылок под шапкой сайта. Позволяет мгновенно переходить в Базу, Трейды, Паки или Промо-коды из любого места.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_wishlist_settings">
+							<span>ПОДСВЕТКА КАРТ</span>
+						</button>
+						<span class="info-icon" data-info="Настройка подсветки (рамки и значки) для карт из вашего списка желаний или списка твина. Включает защиту от пропуска нужных карт в паках.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_freshness_settings">
+							<span>НОВИЗНА КАРТ (ID)</span>
+						</button>
+						<span class="info-icon" data-info="Индикатор новизны на картах. Показывает, как давно карта была добавлена в базу сайта. Помогает находить и защищать 'свежие' карты от переплавки.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_club_manager" style="background: linear-gradient(145deg, #4D2D79, #2C1E4A); border: 1px solid #6A4A9C;">
+							<span>КЛУБНЫЙ МЕНЕДЖЕР (АВТО)</span>
+						</button>
+						<span class="info-icon" data-info="Автоматизация взносов: скрипт сам перейдет на страницу шахты и включит Турбо-вклад точно в 21:00 МСК, чтобы вы не пропустили время лимитов.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_protector">ЗАЩИТА КАРТ (ПАКИ)</button>
+						<span class="info-icon" data-info="Предотвращает случайный выбор дешевой карты из пака (например, ранга E), если в нем выпала ценная карта (ранга S или ASS).">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_anti_blur">
+							<span>УБРАТЬ РАЗМЫТИЕ В ПАКАХ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Отключает эффект размытия (Blur) при анимации открытия паков. Вы будете сразу четко видеть все выпавшие карты без ожидания.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_autodup">АВТОДУБЛИ (ПАКИ)</button>
+						<span class="info-icon" data-info="Автоматически ищет дубликаты каждой выпавшей в паке карты в вашем инвентаре. Сразу показывает, есть ли у вас уже такая карта или она новая.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_auto_select">
+							<span>АВТОФАРМ ПАКОВ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Полная автоматизация: скрипт сам покупает по 20 паков и выбирает лучшую карту по приоритетам (редкость > новизна > список желаний).">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_autodemand_pack">АВТОСПРОС (ПАКИ)</button>
+						<span class="info-icon" data-info="Автоматически запрашивает статистику спроса (сколько человек хотят карту) сразу после открытия пака для выбранных рангов.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_autodemand_trade">АВТОСПРОС (ОБМЕНЫ)</button>
+						<span class="info-icon" data-info="Автоматически показывает статистику спроса для всех карт на страницах обмена и предложений. Экономит время при анализе трейдов.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_cache">КЭШ КАРТ</button>
+						<span class="info-icon" data-info="Настройка времени хранения данных о спросе. Чем больше срок, тем меньше запросов к сайту, но данные могут быть менее актуальными.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_db_settings">НАСТРОЙКИ БАЗЫ КАРТ</button>
+						<span class="info-icon" data-info="Управление локальной базой всех 35к+ карт: обновление с GitHub, ручной скан страниц сайта, импорт и экспорт данных в файл.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_display">ЦВЕТ И РАЗМЕР ШРИФТА (СПРОС)</button>
+						<span class="info-icon" data-info="Тонкая настройка внешнего вида блока статистики под картами: размеры иконок, текста и индивидуальные цвета для каждого ранга.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_card_buttons_settings">
+							<span>Размеры кнопок на картах</span>
+						</button>
+						<span class="info-icon" data-info="Настройка видимости и масштаба кнопок информации (i), поиска дубликатов и спроса, которые появляются при наведении на карту.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_ready_to_charge">
+							<span>ГОТОВ ПОМЕНЯТЬ</span>
+							<span class="btn-state" id="rdy_to_charge_mode_display"></span>
+						</button>
+						<span class="info-icon" data-info="Настройка кнопки массовой отправки карт в список 'Не нужное'. Позволяет быстро выставить весь инвентарь на обмен.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_demand_sorting">
+							<span>СОРТИРОВКА ПО СПРОСУ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Добавляет в инвентарь и обмены возможность сортировать карты по их популярности (кто больше всего нужен рынку).">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_pause">
+							<span>ПАУЗА СБОРА КАРТ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Если включено, скрипт автоматически остановит сбор карт с видео, как только будет достигнут дневной лимит (36/36), чтобы не тратить ресурсы.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_new_day_reset">
+							<span>АВТОЗАПУСК НОВОГО ДНЯ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Автоматически снимает паузу лимита в 00:01 по МСК и возобновляет сбор карт без вашего участия.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_slider">
+							<span>СЛАЙДЕР ШИРИНЫ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Добавляет ползунок для ручного изменения ширины контента сайта. Позволяет уместить больше карт в один ряд на больших мониторах.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_leader_lock_btn">
+							<span>ЗАМОК ЛИДЕРА</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Кнопка для жесткой фиксации роли 'Лидера' за текущей вкладкой. Гарантирует, что автосбор не перепрыгнет на другую страницу.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_lock_btn">
+							<span>КНОПКА ФИКСАЦИИ КОЛОДЫ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Добавляет иконку замка в окно карты. Позволяет одним кликом зафиксировать всю колоду этого аниме, чтобы не блокировать каждую карту вручную.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_star_btn">
+							<span>КНОПКА ПЕРЕХОДА К ЗВЕЗДАМ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Добавляет иконку звезды в окно карты. Быстрый переход на страницу улучшения звездного уровня для этого персонажа.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_clubs_btn">
+							<span>КНОПКА КЛУБА</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Добавляет кнопку-логотип вашего клуба для быстрого перехода на главную страницу гильдии.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_scc_feature">
+							<span>СБОРЩИК КАРТ</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Мощный модуль для коллекционеров. Позволяет сканировать инвентари нескольких аккаунтов и видеть все свои карты в одной таблице с фильтрами.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_open_remelt_settings" style="background: linear-gradient(145deg, #9e294f, #6e1d37); border: 1px solid #c83a54;">
+							<span>ПЕРЕПЛАВКА</span>
+						</button>
+						<span class="info-icon" data-info="Настройки продвинутой панели переплавки: фильтры по спросу, количеству владельцев и автоматизация выполнения квеста.">i</span>
+					</div>
+					<div class="master-setting-row">
+						<button class="master-settings-button" id="master_toggle_premium_feature">
+							<span>ПРЕМИУМ ФУНКЦИИ (АКТИВАЦИЯ)</span>
+							<span class="btn-state"></span>
+						</button>
+						<span class="info-icon" data-info="Эмулирует наличие премиум-аккаунта. Разблокирует возможность автоматического получения карт при просмотре видео.">i</span>
+					</div>
 
-        document.getElementById('master_toggle_premium_feature').onclick = async () => {
-            newState = !(await GM_getValue(PREMIUM_FEATURE_ENABLED_KEY, true));
-            await GM_setValue(PREMIUM_FEATURE_ENABLED_KEY, newState);
-            premiumBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            premiumBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Настройка премиум-функций сохранена. Перезагрузка...`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
+					<button class="action-btn close-btn" id="master_settings_close_btn" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 1em; display: block;">
+						Закрыть
+					</button>
+				</div>
+			</div>`;
+		document.body.appendChild(wrapper);
+
+		const closeModal = () => wrapper.remove();
+
+		document.getElementById('master_open_card_buttons_settings').onclick = () => {
+			closeModal();
+			unsafeWindow.openCardButtonSettingsModal();
+		};
+
+		const sccEnabled = GM_getValue('scc_feature_enabled', false);
+		const sccBtnState = wrapper.querySelector('#master_toggle_scc_feature .btn-state');
+		sccBtnState.textContent = sccEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		sccBtnState.className = `btn-state ${sccEnabled ? 'enabled' : 'disabled'}`;
 		
-		// Обработчик открытия под-меню настроек переплавки
-        document.getElementById('master_open_remelt_settings').onclick = () => {
-            closeModal();
-            unsafeWindow.openRemeltSettingsSubModal();
-        };
-        document.getElementById('master_open_wishlist_settings').onclick = () => {
-            closeModal();
-            openWishlistSettingsModal(unsafeWindow.highlightNoSRankDecks);
-        };
-        const rdyToChargeMode = updatedSettings.rdyToChargeMode ?? await GM_getValue(READY_TO_TRADE_MODE_KEY, 'add_only');
-        const rdyToChargeDisplay = wrapper.querySelector('#rdy_to_charge_mode_display');
-        rdyToChargeDisplay.textContent = rdyToChargeMode === 'add_only' ? 'ДОБАВЛЕНИЕ' : 'С УДАЛЕНИЕМ';
-        rdyToChargeDisplay.className = `btn-state enabled`;
-        document.getElementById('master_open_ready_to_charge').onclick = () => {
-            closeModal();
-            unsafeWindow.openReadyToChargeSubModal();
-        };
-        const DEMAND_SORTING_ENABLED_KEY = 'acm_demandSortingEnabled';
-        const demandSortingEnabled = await GM_getValue(DEMAND_SORTING_ENABLED_KEY, true);
-        const demandSortingBtnState = wrapper.querySelector('#master_toggle_demand_sorting .btn-state');
-        demandSortingBtnState.textContent = demandSortingEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        demandSortingBtnState.className = `btn-state ${demandSortingEnabled ? 'enabled' : 'disabled'}`;
+		document.getElementById('master_toggle_scc_feature').onclick = async () => {
+			const newState = !GM_getValue('scc_feature_enabled', false);
+			await GM_setValue('scc_feature_enabled', newState);
+			sccBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			sccBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Сборщик карт ${newState ? 'включен' : 'выключен'}. Перезагрузка...`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
 
-        document.getElementById('master_toggle_demand_sorting').onclick = async () => {
-            const newState = !(await GM_getValue(DEMAND_SORTING_ENABLED_KEY, true));
-            await GM_setValue(DEMAND_SORTING_ENABLED_KEY, newState);
-            demandSortingBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            demandSortingBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Сортировка по спросу ${newState ? 'включена' : 'выключена'}. Перезагрузка...`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
-        const pauseEnabled = await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
-        const pauseBtnState = wrapper.querySelector('#master_toggle_pause .btn-state');
-        pauseBtnState.textContent = pauseEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        pauseBtnState.className = `btn-state ${pauseEnabled ? 'enabled' : 'disabled'}`;
-        const clubsBtnEnabled = await GM_getValue(GO_TO_CLUBS_BTN_ENABLED_KEY, false);
-        const clubsBtnState = wrapper.querySelector('#master_toggle_clubs_btn .btn-state');
-        clubsBtnState.textContent = clubsBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        clubsBtnState.className = `btn-state ${clubsBtnEnabled ? 'enabled' : 'disabled'}`;
-        const sliderEnabled = await GM_getValue(MAX_WIDTH_SLIDER_ENABLED_KEY, true);
-        const sliderBtnState = wrapper.querySelector('#master_toggle_slider .btn-state');
-        sliderBtnState.textContent = sliderEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        sliderBtnState.className = `btn-state ${sliderEnabled ? 'enabled' : 'disabled'}`;
-        const ANTI_BLUR_ENABLED_KEY = 'ascm_antiBlurInPacksEnabled';
-        const antiBlurEnabled = await GM_getValue(ANTI_BLUR_ENABLED_KEY, true);
-        const antiBlurBtnState = wrapper.querySelector('#master_toggle_anti_blur .btn-state');
-        antiBlurBtnState.textContent = antiBlurEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        antiBlurBtnState.className = `btn-state ${antiBlurEnabled ? 'enabled' : 'disabled'}`;
-        document.getElementById('master_toggle_anti_blur').onclick = async () => {
-            const newState = !(await GM_getValue(ANTI_BLUR_ENABLED_KEY, true));
-            await GM_setValue(ANTI_BLUR_ENABLED_KEY, newState);
-            antiBlurBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            antiBlurBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Отключение размытия в паках ${newState ? 'включено' : 'выключено'}. Перезагрузка...`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
-        const closeModal = () => wrapper.remove();
-        wrapper.querySelector('#master_settings_close_btn').onclick = closeModal;
-        wrapper.querySelector('.acm-modal-backdrop').onclick = closeModal;
-        document.getElementById('master_open_bg').onclick = () => { closeModal(); if (typeof unsafeWindow.toggleControlPanel === 'function') unsafeWindow.toggleControlPanel(); };
-        document.getElementById('master_open_bookmarks').onclick = () => { closeModal(); if (typeof unsafeWindow.asbm_openSettingsModal === 'function') unsafeWindow.asbm_openSettingsModal(); };
-        document.getElementById('master_open_cache').onclick = () => { closeModal(); if (typeof unsafeWindow.openCacheSettingsModal === 'function') unsafeWindow.openCacheSettingsModal(); };
-        document.getElementById('master_open_autodup').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDup_openSettingsModal === 'function') unsafeWindow.autoDup_openSettingsModal(); };
-        document.getElementById('master_open_protector').onclick = () => { closeModal(); if (typeof unsafeWindow.protector_openSettingsModal === 'function') unsafeWindow.protector_openSettingsModal(); };
-        document.getElementById('master_open_autodemand_pack').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDemand_openSettingsModal === 'function') unsafeWindow.autoDemand_openSettingsModal(); };
-        document.getElementById('master_open_autodemand_trade').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDemandTrade_openSettingsModal === 'function') unsafeWindow.autoDemandTrade_openSettingsModal(); };
-        document.getElementById('master_open_display').onclick = () => { closeModal(); if (typeof unsafeWindow.openDisplaySettingsModal === 'function') unsafeWindow.openDisplaySettingsModal(); };
-		document.getElementById('master_open_remelt_settings').onclick = () => { 
-            closeModal(); 
-            unsafeWindow.openRemeltSettingsSubModal(); 
-        };
-        document.getElementById('master_toggle_clubs_btn').onclick = async () => {
-            const newState = !(await GM_getValue(GO_TO_CLUBS_BTN_ENABLED_KEY, false));
-            await GM_setValue(GO_TO_CLUBS_BTN_ENABLED_KEY, newState);
-            clubsBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            clubsBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Кнопка клуба ${newState ? 'включена' : 'выключена'}. Перезагрузка...`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
-        const lockBtnEnabled = await GM_getValue(LOCK_BUTTON_ENABLED_KEY, false);
-        const lockBtnState = wrapper.querySelector('#master_toggle_lock_btn .btn-state');
-        lockBtnState.textContent = lockBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        lockBtnState.className = `btn-state ${lockBtnEnabled ? 'enabled' : 'disabled'}`;
-        document.getElementById('master_toggle_lock_btn').onclick = async () => {
-            const newState = !(await GM_getValue(LOCK_BUTTON_ENABLED_KEY, false));
-            await GM_setValue(LOCK_BUTTON_ENABLED_KEY, newState);
-            lockBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            lockBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Кнопка блокировки колоды ${newState ? 'включена' : 'выключена'}.`);
-            }
-        };
-        const starBtnEnabled = await GM_getValue(STAR_BUTTON_ENABLED_KEY, false);
-        const starBtnState = wrapper.querySelector('#master_toggle_star_btn .btn-state');
-        starBtnState.textContent = starBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        starBtnState.className = `btn-state ${starBtnEnabled ? 'enabled' : 'disabled'}`;
+		const premiumEnabled = GM_getValue(PREMIUM_FEATURE_ENABLED_KEY, true);
+		const premiumBtnState = wrapper.querySelector('#master_toggle_premium_feature .btn-state');
+		premiumBtnState.textContent = premiumEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		premiumBtnState.className = `btn-state ${premiumEnabled ? 'enabled' : 'disabled'}`;
 
-        document.getElementById('master_toggle_star_btn').onclick = async () => {
-            const newState = !(await GM_getValue(STAR_BUTTON_ENABLED_KEY, false));
-            await GM_setValue(STAR_BUTTON_ENABLED_KEY, newState);
-            starBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            starBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Кнопка-звезда ${newState ? 'включена' : 'выключена'}.`);
-            }
-        };
-        document.getElementById('master_toggle_pause').onclick = async () => {
-            const newState = !(await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true));
-            await GM_setValue(PAUSE_ON_LIMIT_ENABLED_KEY, newState);
-            if (newState === false) {
-                console.log('Отправляю "пинок" лидеру для возобновления сбора.');
-                await GM_setValue(KICK_LEADER_TO_CHECK_KEY, Date.now());
-                if (isLeaderWatch) {
-                    if (typeof unsafeWindow.triggerImmediateCardCheck === 'function') {
-                        console.log('Запускаю проверку.');
-                        unsafeWindow.triggerImmediateCardCheck();
-                    }
-                }
-            }
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Настройка паузы обновлена.`);
-            }
-            pauseBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            pauseBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-        };
-        document.getElementById('master_toggle_slider').onclick = async () => {
-            const newState = !(await GM_getValue(MAX_WIDTH_SLIDER_ENABLED_KEY, true));
-            await GM_setValue(MAX_WIDTH_SLIDER_ENABLED_KEY, newState);
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Слайдер ширины ${newState ? 'включен' : 'выключен'}. Перезагрузка...`);
-            }
-            sliderBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            sliderBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            setTimeout(() => window.location.reload(), 1500);
-        };
-        const leaderLockBtnEnabled = await GM_getValue(LEADER_LOCK_BTN_ENABLED_KEY, true);
-        const leaderLockBtnState = wrapper.querySelector('#master_toggle_leader_lock_btn .btn-state');
-        leaderLockBtnState.textContent = leaderLockBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        leaderLockBtnState.className = `btn-state ${leaderLockBtnEnabled ? 'enabled' : 'disabled'}`;
-        document.getElementById('master_toggle_leader_lock_btn').onclick = async () => {
-            const newState = !(await GM_getValue(LEADER_LOCK_BTN_ENABLED_KEY, true));
-            await GM_setValue(LEADER_LOCK_BTN_ENABLED_KEY, newState);
-            leaderLockBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            leaderLockBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Кнопка замка лидера ${newState ? 'включена' : 'выключена'}. Перезагрузка...`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
-        wrapper.querySelector('#master_settings_body').addEventListener('click', (event) => {
-            if (event.target.classList.contains('info-icon')) {
-                const icon = event.target;
-                if (icon.dataset.info && typeof showInfoTooltip === 'function') {
-                    showInfoTooltip(icon.dataset.info, icon);
-                }
-            }
-        });
-        const newDayResetEnabled = await GM_getValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, true);
-        const newDayResetBtnState = wrapper.querySelector('#master_toggle_new_day_reset .btn-state');
-        newDayResetBtnState.textContent = newDayResetEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        newDayResetBtnState.className = `btn-state ${newDayResetEnabled ? 'enabled' : 'disabled'}`;
-        document.getElementById('master_toggle_new_day_reset').onclick = async () => {
-            const newState = !(await GM_getValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, true));
-            await GM_setValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, newState);
-            newDayResetBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            newDayResetBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Автосброс лимита ${newState ? 'включен' : 'выключен'}.`);
-            }
-        };
-        document.getElementById('master_open_db_settings').onclick = () => {
-            closeModal();
-            unsafeWindow.openDatabaseSettingsModal();
-        };
-        startDbUpdateTimer();
-        const originalCloseModal = closeModal;
-        const closeModalWithCleanup = () => {
-            if (dbUpdateIntervalId) clearInterval(dbUpdateIntervalId);
-            dbUpdateIntervalId = null;
-            originalCloseModal();
-        };
-        wrapper.querySelector('#master_settings_close_btn').onclick = closeModalWithCleanup;
-        wrapper.querySelector('.acm-modal-backdrop').onclick = closeModalWithCleanup;
-        document.getElementById('master_open_freshness_settings').onclick = () => {
-            closeModal();
-            openFreshnessSettingsModal();
-        };
-		document.getElementById('master_open_club_manager').onclick = () => {
-            closeModal();
-            unsafeWindow.openClubManagerModal();
-        };
-        const autoSelectEnabled = await GM_getValue(AUTO_CARD_SELECTION_ENABLED_KEY, false);
-        const autoSelectBtnState = wrapper.querySelector('#master_toggle_auto_select .btn-state');
-        autoSelectBtnState.textContent = autoSelectEnabled ? 'ВКЛ' : 'ВЫКЛ';
-        autoSelectBtnState.className = `btn-state ${autoSelectEnabled ? 'enabled' : 'disabled'}`;
+		document.getElementById('master_toggle_premium_feature').onclick = async () => {
+			const newState = !GM_getValue(PREMIUM_FEATURE_ENABLED_KEY, true);
+			await GM_setValue(PREMIUM_FEATURE_ENABLED_KEY, newState);
+			premiumBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			premiumBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Настройка премиум-функций сохранена. Перезагрузка...`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
 
-        document.getElementById('master_toggle_auto_select').onclick = async () => {
-            const newState = !(await GM_getValue(AUTO_CARD_SELECTION_ENABLED_KEY, false));
-            await GM_setValue(AUTO_CARD_SELECTION_ENABLED_KEY, newState);
-            autoSelectBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
-            autoSelectBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
-            if (typeof unsafeWindow.safeDLEPushCall === 'function') {
-                unsafeWindow.safeDLEPushCall('info', `Автофарм паков ${newState ? 'включен' : 'выключен'}. Перезагрузите страницу с паками.`);
-            }
-            setTimeout(() => window.location.reload(), 1500);
-        };
-    }
+		document.getElementById('master_open_remelt_settings').onclick = () => {
+			closeModal();
+			unsafeWindow.openRemeltSettingsSubModal();
+		};
+
+		document.getElementById('master_open_wishlist_settings').onclick = () => {
+			closeModal();
+			openWishlistSettingsModal(unsafeWindow.highlightNoSRankDecks);
+		};
+
+		const rdyToChargeMode = updatedSettings.rdyToChargeMode ?? GM_getValue('readyToTradeMode_v2', 'add_only');
+		const rdyToChargeDisplay = wrapper.querySelector('#rdy_to_charge_mode_display');
+		rdyToChargeDisplay.textContent = rdyToChargeMode === 'add_only' ? 'ДОБАВЛЕНИЕ' : 'С УДАЛЕНИЕМ';
+		rdyToChargeDisplay.className = `btn-state enabled`;
+		
+		document.getElementById('master_open_ready_to_charge').onclick = () => {
+			closeModal();
+			unsafeWindow.openReadyToChargeSubModal();
+		};
+
+		const demandSortingEnabled = GM_getValue('acm_demandSortingEnabled', true);
+		const demandSortingBtnState = wrapper.querySelector('#master_toggle_demand_sorting .btn-state');
+		demandSortingBtnState.textContent = demandSortingEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		demandSortingBtnState.className = `btn-state ${demandSortingEnabled ? 'enabled' : 'disabled'}`;
+
+		document.getElementById('master_toggle_demand_sorting').onclick = async () => {
+			const newState = !GM_getValue('acm_demandSortingEnabled', true);
+			await GM_setValue('acm_demandSortingEnabled', newState);
+			demandSortingBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			demandSortingBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Сортировка по спросу ${newState ? 'включена' : 'выключена'}. Перезагрузка...`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
+
+		const pauseEnabled = GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
+		const pauseBtnState = wrapper.querySelector('#master_toggle_pause .btn-state');
+		pauseBtnState.textContent = pauseEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		pauseBtnState.className = `btn-state ${pauseEnabled ? 'enabled' : 'disabled'}`;
+
+		document.getElementById('master_toggle_pause').onclick = async () => {
+			const newState = !GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
+			await GM_setValue(PAUSE_ON_LIMIT_ENABLED_KEY, newState);
+			if (newState === false) {
+				await GM_setValue(KICK_LEADER_TO_CHECK_KEY, Date.now());
+				if (isLeaderWatch && typeof unsafeWindow.triggerImmediateCardCheck === 'function') {
+					unsafeWindow.triggerImmediateCardCheck();
+				}
+			}
+			safeDLEPushCall('info', `Настройка паузы обновлена.`);
+			pauseBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			pauseBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+		};
+
+		const clubsBtnEnabled = GM_getValue(GO_TO_CLUBS_BTN_ENABLED_KEY, false);
+		const clubsBtnState = wrapper.querySelector('#master_toggle_clubs_btn .btn-state');
+		clubsBtnState.textContent = clubsBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		clubsBtnState.className = `btn-state ${clubsBtnEnabled ? 'enabled' : 'disabled'}`;
+
+		document.getElementById('master_toggle_clubs_btn').onclick = async () => {
+			const newState = !GM_getValue(GO_TO_CLUBS_BTN_ENABLED_KEY, false);
+			await GM_setValue(GO_TO_CLUBS_BTN_ENABLED_KEY, newState);
+			clubsBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			clubsBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Кнопка клуба ${newState ? 'включена' : 'выключена'}. Перезагрузка...`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
+
+		const lockBtnEnabled = GM_getValue(LOCK_BUTTON_ENABLED_KEY, false);
+		const lockBtnState = wrapper.querySelector('#master_toggle_lock_btn .btn-state');
+		lockBtnState.textContent = lockBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		lockBtnState.className = `btn-state ${lockBtnEnabled ? 'enabled' : 'disabled'}`;
+		
+		document.getElementById('master_toggle_lock_btn').onclick = async () => {
+			const newState = !GM_getValue(LOCK_BUTTON_ENABLED_KEY, false);
+			await GM_setValue(LOCK_BUTTON_ENABLED_KEY, newState);
+			lockBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			lockBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Кнопка блокировки колоды ${newState ? 'включена' : 'выключена'}.`);
+		};
+
+		const starBtnEnabled = GM_getValue(STAR_BUTTON_ENABLED_KEY, false);
+		const starBtnState = wrapper.querySelector('#master_toggle_star_btn .btn-state');
+		starBtnState.textContent = starBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		starBtnState.className = `btn-state ${starBtnEnabled ? 'enabled' : 'disabled'}`;
+
+		document.getElementById('master_toggle_star_btn').onclick = async () => {
+			const newState = !GM_getValue(STAR_BUTTON_ENABLED_KEY, false);
+			await GM_setValue(STAR_BUTTON_ENABLED_KEY, newState);
+			starBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			starBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Кнопка-звезда ${newState ? 'включена' : 'выключена'}.`);
+		};
+
+		const sliderEnabled = GM_getValue(MAX_WIDTH_SLIDER_ENABLED_KEY, true);
+		const sliderBtnState = wrapper.querySelector('#master_toggle_slider .btn-state');
+		sliderBtnState.textContent = sliderEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		sliderBtnState.className = `btn-state ${sliderEnabled ? 'enabled' : 'disabled'}`;
+		
+		document.getElementById('master_toggle_slider').onclick = async () => {
+			const newState = !GM_getValue(MAX_WIDTH_SLIDER_ENABLED_KEY, true);
+			await GM_setValue(MAX_WIDTH_SLIDER_ENABLED_KEY, newState);
+			safeDLEPushCall('info', `Слайдер ширины ${newState ? 'включен' : 'выключен'}. Перезагрузка...`);
+			sliderBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			sliderBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			setTimeout(() => window.location.reload(), 1500);
+		};
+
+		const leaderLockBtnEnabled = GM_getValue(LEADER_LOCK_BTN_ENABLED_KEY, true);
+		const leaderLockBtnState = wrapper.querySelector('#master_toggle_leader_lock_btn .btn-state');
+		leaderLockBtnState.textContent = leaderLockBtnEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		leaderLockBtnState.className = `btn-state ${leaderLockBtnEnabled ? 'enabled' : 'disabled'}`;
+		
+		document.getElementById('master_toggle_leader_lock_btn').onclick = async () => {
+			const newState = !GM_getValue(LEADER_LOCK_BTN_ENABLED_KEY, true);
+			await GM_setValue(LEADER_LOCK_BTN_ENABLED_KEY, newState);
+			leaderLockBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			leaderLockBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Кнопка замка лидера ${newState ? 'включена' : 'выключена'}. Перезагрузка...`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
+
+		const autoSelectEnabled = GM_getValue(AUTO_CARD_SELECTION_ENABLED_KEY, false);
+		const autoSelectBtnState = wrapper.querySelector('#master_toggle_auto_select .btn-state');
+		autoSelectBtnState.textContent = autoSelectEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		autoSelectBtnState.className = `btn-state ${autoSelectEnabled ? 'enabled' : 'disabled'}`;
+
+		document.getElementById('master_toggle_auto_select').onclick = async () => {
+			const newState = !GM_getValue(AUTO_CARD_SELECTION_ENABLED_KEY, false);
+			await GM_setValue(AUTO_CARD_SELECTION_ENABLED_KEY, newState);
+			autoSelectBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			autoSelectBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Автофарм паков ${newState ? 'включен' : 'выключен'}.`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
+
+		const antiBlurEnabled = GM_getValue('ascm_antiBlurInPacksEnabled', true);
+		const antiBlurBtnState = wrapper.querySelector('#master_toggle_anti_blur .btn-state');
+		antiBlurBtnState.textContent = antiBlurEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		antiBlurBtnState.className = `btn-state ${antiBlurEnabled ? 'enabled' : 'disabled'}`;
+		
+		document.getElementById('master_toggle_anti_blur').onclick = async () => {
+			const newState = !GM_getValue('ascm_antiBlurInPacksEnabled', true);
+			await GM_setValue('ascm_antiBlurInPacksEnabled', newState);
+			antiBlurBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			antiBlurBtnState.className = `btn-state ${newState ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Отключение размытия в паках ${newState ? 'включено' : 'выключено'}. Перезагрузка...`);
+			setTimeout(() => window.location.reload(), 1500);
+		};
+
+		const newDayResetEnabled = GM_getValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, true);
+		const newDayResetBtnState = wrapper.querySelector('#master_toggle_new_day_reset .btn-state');
+		newDayResetBtnState.textContent = newDayResetEnabled ? 'ВКЛ' : 'ВЫКЛ';
+		newDayResetBtnState.className = `btn-state ${newDayResetEnabled ? 'enabled' : 'disabled'}`;
+		
+		document.getElementById('master_toggle_new_day_reset').onclick = async () => {
+			const newState = !GM_getValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, true);
+			await GM_setValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, newState);
+			newDayResetBtnState.textContent = newState ? 'ВКЛ' : 'ВЫКЛ';
+			newDayResetBtnState.className = `btn-state ${newDayResetEnabled ? 'enabled' : 'disabled'}`;
+			safeDLEPushCall('info', `Автосброс лимита ${newState ? 'включен' : 'выключен'}.`);
+		};
+
+		wrapper.querySelector('#master_settings_body').addEventListener('click', (event) => {
+			if (event.target.classList.contains('info-icon')) {
+				const icon = event.target;
+				if (icon.dataset.info) showInfoTooltip(icon.dataset.info, icon);
+			}
+		});
+
+		document.getElementById('master_open_bg').onclick = () => { closeModal(); if (typeof unsafeWindow.toggleControlPanel === 'function') unsafeWindow.toggleControlPanel(); };
+		document.getElementById('master_open_bookmarks').onclick = () => { closeModal(); if (typeof unsafeWindow.asbm_openSettingsModal === 'function') unsafeWindow.asbm_openSettingsModal(); };
+		document.getElementById('master_open_cache').onclick = () => { closeModal(); if (typeof unsafeWindow.openCacheSettingsModal === 'function') unsafeWindow.openCacheSettingsModal(); };
+		document.getElementById('master_open_autodup').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDup_openSettingsModal === 'function') unsafeWindow.autoDup_openSettingsModal(); };
+		document.getElementById('master_open_protector').onclick = () => { closeModal(); if (typeof unsafeWindow.protector_openSettingsModal === 'function') unsafeWindow.protector_openSettingsModal(); };
+		document.getElementById('master_open_autodemand_pack').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDemand_openSettingsModal === 'function') unsafeWindow.autoDemand_openSettingsModal(); };
+		document.getElementById('master_open_autodemand_trade').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDemandTrade_openSettingsModal === 'function') unsafeWindow.autoDemandTrade_openSettingsModal(); };
+		document.getElementById('master_open_display').onclick = () => { closeModal(); if (typeof unsafeWindow.openDisplaySettingsModal === 'function') unsafeWindow.openDisplaySettingsModal(); };
+		document.getElementById('master_open_db_settings').onclick = () => { closeModal(); unsafeWindow.openDatabaseSettingsModal(); };
+		document.getElementById('master_open_freshness_settings').onclick = () => { closeModal(); openFreshnessSettingsModal(); };
+		document.getElementById('master_open_club_manager').onclick = () => { closeModal(); unsafeWindow.openClubManagerModal(); };
+
+		startDbUpdateTimer();
+		
+		const originalClose = closeModal;
+		const closeModalWithCleanup = () => {
+			if (dbUpdateIntervalId) clearInterval(dbUpdateIntervalId);
+			dbUpdateIntervalId = null;
+			originalClose();
+		};
+		wrapper.querySelector('#master_settings_close_btn').onclick = closeModalWithCleanup;
+		wrapper.querySelector('.acm-modal-backdrop').onclick = closeModalWithCleanup;
+	};
 
     // ##################################################
     // # КОНЕЦ БЛОКА ОКНА НАСТРОЕК
     // ##################################################
 
-    // Открывает модальное окно настроек отображения и поведения кнопок на карточках
+    /**
+	 * Модальное окно настроек отображения кнопок на карточках.
+	 * Позволяет регулировать размеры и поведение маркеров (i), дублей и спроса.
+	 */
 	unsafeWindow.openCardButtonSettingsModal = async function() {
-		const MODAL_WRAPPER_ID = 'acm_modal_wrapper'; if (document.getElementById(MODAL_WRAPPER_ID)) return;
-		const INFO_SIZE_KEY = 'acm_infoButtonSizeFactor', DEMAND_SIZE_KEY = 'acm_demandButtonSizeFactor', DUP_SIZE_KEY = 'acm_dupButtonSizeFactor', S_BADGE_SIZE_KEY = 'acm_sBadgeSizeFactor_v1';
-		const DEFAULTS = { [ACM_ANIME_INFO_BTN_ENABLED_KEY]: true, [ACM_INFO_BTN_VISIBILITY_KEY]: 'always', [ACM_INFO_BTN_TRIGGER_KEY]: 'click', [ACM_INFO_BTN_COLORING_ENABLED_KEY]: true, [ACM_INFO_BTN_S_COUNT_ENABLED_KEY]: true, [INFO_SIZE_KEY]: 0.15, [S_BADGE_SIZE_KEY]: 0.65, [INDIVIDUAL_DEMAND_BTN_ENABLED_KEY]: true, [DEMAND_SIZE_KEY]: 0.13, [INDIVIDUAL_DUP_BTN_ENABLED_KEY]: true, [DUP_SIZE_KEY]: 0.13 };
+		const MODAL_WRAPPER_ID = 'acm_modal_wrapper'; 
+		if (document.getElementById(MODAL_WRAPPER_ID)) return;
+
+		const INFO_SIZE_KEY = 'acm_infoButtonSizeFactor';
+		const DEMAND_SIZE_KEY = 'acm_demandButtonSizeFactor';
+		const DUP_SIZE_KEY = 'acm_dupButtonSizeFactor';
+		const S_BADGE_SIZE_KEY = 'acm_sBadgeSizeFactor_v1';
+
+		const DEFAULTS = { 
+			[ACM_ANIME_INFO_BTN_ENABLED_KEY]: true, 
+			[ACM_INFO_BTN_VISIBILITY_KEY]: 'always', 
+			[ACM_INFO_BTN_TRIGGER_KEY]: 'click', 
+			[ACM_INFO_BTN_COLORING_ENABLED_KEY]: true, 
+			[ACM_INFO_BTN_S_COUNT_ENABLED_KEY]: true, 
+			[INFO_SIZE_KEY]: 0.15, 
+			[S_BADGE_SIZE_KEY]: 0.70,
+			[INDIVIDUAL_DEMAND_BTN_ENABLED_KEY]: true, 
+			[DEMAND_SIZE_KEY]: 0.13, 
+			[INDIVIDUAL_DUP_BTN_ENABLED_KEY]: true, 
+			[DEMAND_SIZE_KEY]: 0.13 
+		};
 
 		const refreshAllButtons = () => {
 			document.querySelectorAll('.show-card-info-btn, .check-demand-btn, .check-duplicates-btn, .acm-s-count-badge').forEach(el => el.remove());
@@ -2768,25 +4988,28 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 		wrapper.querySelector('.acm-modal-backdrop').onclick = cl;
 	};
 
-    // ##################################################
-    // # Гарантированное удаление флага обновления при закрытии/перезагрузке вкладки
-    // ##################################################
-    window.addEventListener('beforeunload', async () => {
-        // 1. Очистка флага обновления базы данных
-        const UPDATE_FLAG_KEY = 'ascm_db_update_in_progress';
-        const updateInfo = await GM_getValue(UPDATE_FLAG_KEY, null);
-        if (updateInfo && updateInfo.tabId === unsafeWindow.tabIdWatch) {
-            await GM_deleteValue(UPDATE_FLAG_KEY);
-        }
+    /**
+	 * Обеспечивает корректное завершение работы вкладки.
+	 * Снимает блокировки базы данных и статуса Лидера в глобальном хранилище.
+	 */
+	window.addEventListener('beforeunload', () => {
+		const UPDATE_FLAG_KEY = 'ascm_db_update_in_progress';
+		const updateInfo = GM_getValue(UPDATE_FLAG_KEY, null);
+		if (updateInfo && updateInfo.tabId === tabIdWatch) {
+			GM_deleteValue(UPDATE_FLAG_KEY);
+		}
 
-        // 2. СНЯТИЕ ЗАМКА, если эта вкладка была лидером
-        const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
-        if (lockedId === unsafeWindow.tabIdWatch) {
-            await GM_deleteValue(LEADER_LOCK_KEY);
-            // Удаляем пульс из localStorage, чтобы другие вкладки мгновенно это увидели
-            localStorage.removeItem(LEADER_KEY_WATCH);
-        }
-    });
+		const leaderJSON = GM_getValue(LEADER_KEY_WATCH, null);
+		if (leaderJSON) {
+			try {
+				const leader = JSON.parse(leaderJSON);
+				if (leader.id === tabIdWatch) {
+					GM_deleteValue(LEADER_KEY_WATCH);
+					GM_deleteValue(LEADER_LOCK_KEY);
+				}
+			} catch (e) {}
+		}
+	});
 
     // ##################################################
     // # БЛОК ТАЙМЕРА ОБНОВЛЕНИЯ БАЗЫ ДАННЫХ
@@ -2867,33 +5090,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
     // ##################################################
     // Показывает кастомную подсказку над элементом.
     // ##################################################
-    function showInfoTooltip(text, targetElement) {
-        const closeTooltip = () => {
-            document.querySelector('.info-tooltip-backdrop')?.remove();
-            document.querySelector('.info-tooltip')?.remove();
-        };
-        closeTooltip();
-        const backdrop = document.createElement('div');
-        backdrop.className = 'info-tooltip-backdrop';
-        const tooltip = document.createElement('div');
-        tooltip.className = 'info-tooltip';
-        tooltip.innerHTML = text;
-        document.body.appendChild(backdrop);
-        document.body.appendChild(tooltip);
-        const targetRect = targetElement.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
-        let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
-        let top = targetRect.top - tooltipRect.height - 10;
-        if (left < 10) {
-            left = 10;
-        }
-        if (left + tooltipRect.width > window.innerWidth - 10) {
-            left = window.innerWidth - tooltipRect.width - 10;
-        }
-        tooltip.style.left = `${left}px`;
-        tooltip.style.top = `${top}px`;
-        backdrop.addEventListener('click', closeTooltip);
-    }
+
     GM_registerMenuCommand("Настройки скрипта ⚙️", unsafeWindow.openMasterSettingsModal);
 
     // ##################################################
@@ -3191,51 +5388,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             });
         }
 
-		// ##################################################
-        // --- Утилиты для работы с IndexedDB ---
-        // ##################################################
-        const DB_NAME = 'ASCM_CardDatabase';
-        const DB_VERSION = 16; // ПОДНЯЛИ ДО 16
-        const GIST_DB_STORE_NAME = 'cards';
-        const DEMAND_CACHE_STORE_NAME = 'demand_cache';
-        const OWNER_MAP_STORE_NAME = 'owner_to_type_map';
-        let dbPromise = null;
-
-        function openDb() {
-            if (dbPromise) return dbPromise;
-            dbPromise = new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                request.onerror = (event) => {
-                    console.error("Критическая ошибка открытия IndexedDB:", event.target.error);
-                    reject("Ошибка открытия IndexedDB");
-                };
-                request.onsuccess = () => {
-                    const db = request.result;
-                    db.onversionchange = () => { db.close(); };
-                    resolve(db);
-                };
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    // Существующие
-                    if (!db.objectStoreNames.contains(GIST_DB_STORE_NAME)) db.createObjectStore(GIST_DB_STORE_NAME, { keyPath: 'id' });
-                    if (!db.objectStoreNames.contains(DEMAND_CACHE_STORE_NAME)) db.createObjectStore(DEMAND_CACHE_STORE_NAME);
-                    if (!db.objectStoreNames.contains(OWNER_MAP_STORE_NAME)) db.createObjectStore(OWNER_MAP_STORE_NAME, { keyPath: 'ownerId' });
-                    if (!db.objectStoreNames.contains('scc_settings')) db.createObjectStore('scc_settings');
-                    if (!db.objectStoreNames.contains('scc_profiles')) db.createObjectStore('scc_profiles');
-                    if (!db.objectStoreNames.contains('scc_card_cache')) db.createObjectStore('scc_card_cache');
-                    if (!db.objectStoreNames.contains(WISHLIST_DB_STORE_NAME)) db.createObjectStore(WISHLIST_DB_STORE_NAME);
-                    if (!db.objectStoreNames.contains('anime_history')) db.createObjectStore('anime_history', { keyPath: 'animeId' });
-
-                    // НОВОЕ: ХРАНИЛИЩЕ ПОЛУЧЕННЫХ КАРТ
-                    if (!db.objectStoreNames.contains('card_receipts')) {
-                        db.createObjectStore('card_receipts', { keyPath: 'receivedAt' });
-                        console.log('Создано хранилище для логов карт: "card_receipts"');
-                    }
-                };
-            });
-            return dbPromise;
-        }
-
         // ##################################################
         // ##################################################
         async function populateDb(cards) {
@@ -3264,48 +5416,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             });
         }
 
-        // ##################################################
-        // --- Универсальные хелперы для IndexedDB ---
-        // ##################################################
-        async function dbSet(storeName, key, value) {
-            const db = await openDb();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, 'readwrite');
-                const store = transaction.objectStore(storeName);
-                const request = store.put(value, key);
-                transaction.oncomplete = () => resolve();
-                transaction.onerror = (event) => reject(`Ошибка записи в ${storeName}: ${event.target.error}`);
-            });
-        }
-        unsafeWindow.dbSet = dbSet;
-
-        // ##################################################
-        // ##################################################
-        async function dbGet(storeName, key) {
-            const db = await openDb();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, 'readonly');
-                const store = transaction.objectStore(storeName);
-                const request = store.get(key);
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = (event) => reject(`Ошибка чтения из ${storeName}: ${event.target.error}`);
-            });
-        }
-        unsafeWindow.dbGet = dbGet;
-
-        // ##################################################
-        // ##################################################
-        async function dbDelete(storeName, key) {
-            const db = await openDb();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, 'readwrite');
-                const store = transaction.objectStore(storeName);
-                const request = store.delete(key);
-                transaction.oncomplete = () => resolve();
-                transaction.onerror = (event) => reject(`Ошибка удаления из ${storeName}: ${event.target.error}`);
-            });
-        }
-
+        
         // ##################################################
         // # БЛОК: МОДАЛЬНОЕ ОКНО НАСТРОЕК БАЗЫ ДАННЫХ
         // ##################################################
@@ -3908,246 +6019,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             sessionID = id;
         }
 
-        // ##################################################
-        // # Подготовка данных для новых карт
-        // ##################################################
-        async function prepareFreshnessData() {
-            if (!freshnessOverlayEnabled || freshnessData) return;
-            try {
-                const cached = localStorage.getItem(FRESHNESS_DATA_LOCAL_KEY);
-                if (cached) {
-                    const parsed = JSON.parse(cached);
-                    if (parsed.sessionID === sessionID) {
-                        freshnessData = new Map(Object.entries(parsed.data));
-                        return;
-                    }
-                }
-            } catch (e) { console.error('[Freshness] Ошибка чтения общего кэша:', e); }
-            if (localStorage.getItem(FRESHNESS_LOCK_KEY)) {
-                await waitForFreshnessData();
-                return;
-            }
-            localStorage.setItem(FRESHNESS_LOCK_KEY, 'true');
-            try {
-                await ensureDbLoaded();
-                if (!cardDatabaseMap || cardDatabaseMap.size === 0) throw new Error('База данных карт не загружена.');
-                const allCards = Array.from(cardDatabaseMap.values()).filter(card => card.rank.toLowerCase() !== 'sss');
-                allCards.sort((a, b) => b.id - a.id);
-                const absoluteMaxId = allCards.length > 0 ? allCards[0].id : 0;
-                const latestCards1260 = allCards.slice(0, 1260);
-                const redZoneThresholdId_ass = allCards.length > 10000 ? allCards[9999].id : 0;
-                const redZoneThresholdId_s = allCards.length > 5000 ? allCards[4999].id : 0;
-                const redZoneThresholdId_a = allCards.length > 3000 ? allCards[2999].id : 0;
-                const redZoneThresholdId_b = allCards.length > 1600 ? allCards[1599].id : 0;
-                const redZoneThresholdId_c = allCards.length > 1850 ? allCards[1849].id : 0;
-                const redZoneThresholdId_d = allCards.length > 1800 ? allCards[1799].id : 0;
-                const redZoneThresholdId_e = allCards.length > 2300 ? allCards[2299].id : 0;
-                const redZoneThresholdId_default = redZoneThresholdId_c;
-                if (latestCards1260.length === 0) {
-                    localStorage.removeItem(FRESHNESS_LOCK_KEY);
-                    return;
-                }
-                const idToOrdinalMap = new Map();
-                idToOrdinalMap.set('_absoluteMinId', latestCards1260[latestCards1260.length - 1].id);
-                idToOrdinalMap.set('_absoluteMaxId', absoluteMaxId);
-                idToOrdinalMap.set('_redZoneThresholdId_ass', redZoneThresholdId_ass);
-                idToOrdinalMap.set('_redZoneThresholdId_s', redZoneThresholdId_s);
-                idToOrdinalMap.set('_redZoneThresholdId_a', redZoneThresholdId_a);
-                idToOrdinalMap.set('_redZoneThresholdId_b', redZoneThresholdId_b);
-                idToOrdinalMap.set('_redZoneThresholdId_c', redZoneThresholdId_c);
-                idToOrdinalMap.set('_redZoneThresholdId_d', redZoneThresholdId_d);
-                idToOrdinalMap.set('_redZoneThresholdId_e', redZoneThresholdId_e);
-                idToOrdinalMap.set('_redZoneThresholdId_default', redZoneThresholdId_default);
-                latestCards1260.forEach((card, index) => {
-                    idToOrdinalMap.set(card.id.toString(), index + 1);
-                });
-                freshnessData = idToOrdinalMap;
-                const dataToStore = {
-                    sessionID: sessionID,
-                    data: Object.fromEntries(idToOrdinalMap)
-                };
-                localStorage.setItem(FRESHNESS_DATA_LOCAL_KEY, JSON.stringify(dataToStore));
-
-            } catch (error) {
-                console.error('[Freshness] Ошибка при подготовке данных:', error);
-            } finally {
-                localStorage.removeItem(FRESHNESS_LOCK_KEY);
-            }
-        }
-
-        // ##################################################
-        // # Вспомогательная функция для ожидания данных, если их генерирует другая вкладка.
-        // ##################################################
-        async function waitForFreshnessData() {
-            return new Promise(resolve => {
-                let attempts = 0;
-                const maxAttempts = 20;
-                const interval = setInterval(() => {
-                    const cached = localStorage.getItem(FRESHNESS_DATA_LOCAL_KEY);
-                    if (cached) {
-                        const parsed = JSON.parse(cached);
-                        if (parsed.sessionID === sessionID) {
-                            freshnessData = new Map(Object.entries(parsed.data));
-                            clearInterval(interval);
-                            resolve();
-                            return;
-                        }
-                    }
-                    attempts++;
-                    if (attempts > maxAttempts) {
-                        localStorage.removeItem(FRESHNESS_LOCK_KEY);
-                        clearInterval(interval);
-                        resolve();
-                    }
-                }, 1000);
-            });
-        }
-
-        // ##################################################
-        // # Рассчитывает цвет с глобальным порогом новизны в 5000 карт.
-        // ##################################################
-        function idToFreshnessStyle(id, rank) {
-            const numericId = parseInt(id, 10);
-            if (isNaN(numericId)) {
-                return { color: 'hsl(0, 100%, 45%)', freshnessPercent: 0 };
-            }
-            if (!freshnessOverlayEnabled || !freshnessData || freshnessData.size === 0) {
-                return { color: 'hsl(0, 100%, 45%)', freshnessPercent: 0 };
-            }
-            const absoluteMaxId = freshnessData.get('_absoluteMaxId');
-            const absoluteMinId = freshnessData.get('_absoluteMinId');
-            const isCardInDatabase = freshnessData.has(id.toString());
-            if ((typeof absoluteMaxId !== 'undefined' && numericId > absoluteMaxId) ||
-                (!isCardInDatabase && typeof absoluteMinId !== 'undefined' && numericId > absoluteMinId))
-            {
-                return { color: '#00ffee', freshnessPercent: 100 };
-            }
-            const ordinal = freshnessData.get(id.toString());
-            const freshnessPercent = ordinal ? ((1260 - ordinal) / 1260) * 100 : 0;
-
-            let redZoneThresholdId;
-            if (rank === 'ass') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_ass');
-            } else if (rank === 's') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_s');
-            } else if (rank === 'a') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_a');
-            } else if (rank === 'b') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_b');
-            } else if (rank === 'c') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_c');
-            } else if (rank === 'd') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_d');
-            } else if (rank === 'e') {
-                redZoneThresholdId = freshnessData.get('_redZoneThresholdId_e');
-            }
-            if (typeof redZoneThresholdId === 'undefined' || numericId < redZoneThresholdId) {
-                return { color: 'hsl(0, 100%, 10%)', freshnessPercent: 0 };
-            }
-            let hue;
-            const gradientZoneStart = redZoneThresholdId;
-            const gradientZoneEnd = absoluteMaxId;
-            const gradientZoneSize = gradientZoneEnd - gradientZoneStart;
-            const GRADIENT_CURVE_FACTOR = 2;
-            if (gradientZoneSize <= 0) {
-                hue = 120;
-            } else {
-                const positionInGradient = numericId - gradientZoneStart;
-                const ratio = Math.min(1, Math.max(0, positionInGradient / gradientZoneSize));
-                const curvedRatio = Math.pow(ratio, GRADIENT_CURVE_FACTOR);
-                hue = curvedRatio * 120;
-            }
-            return {
-                color: `hsl(${Math.round(hue)}, 100%, 45%)`,
-                freshnessPercent: freshnessPercent
-            };
-        }
-
-        // ##################################################
-        // # Создает или обновляет значок (badge) на элементе карты.
-        // ##################################################
-        function setFreshnessBadge(cardEl, id, rank) {
-            if (rank === 'sss') {
-                const existingBadge = cardEl.querySelector('.acm-freshness-badge');
-                if (existingBadge) {
-                    existingBadge.remove();
-                }
-                return;
-            }
-            const BADGE_CLASS = 'acm-freshness-badge';
-            let badge = cardEl.querySelector(`.${BADGE_CLASS}`);
-            const { color, freshnessPercent } = idToFreshnessStyle(id, rank);
-            if (!badge) {
-                const size = '35px';
-                badge = document.createElement('div');
-                badge.className = BADGE_CLASS;
-                Object.assign(badge.style, {
-                    position: 'absolute',
-                    top: '0',
-                    right: '0',
-                    width: size,
-                    height: size,
-                    zIndex: '1',
-                    background: `radial-gradient(circle at 0 100%, transparent ${size}, ${color} ${size})`,
-                    borderRadius: '0 10px 0 0'
-                });
-                const container = cardEl.querySelector('.anime-cards__image') || cardEl;
-                if (getComputedStyle(container).position === 'static') {
-                    container.style.position = 'relative';
-                }
-                container.appendChild(badge);
-            }
-            const size = badge.style.width;
-            badge.style.background = `radial-gradient(circle at 0 100%, transparent ${size}, ${color} calc(${size} + 0.5px))`;
-            badge.title = `ID:${id}\nНовизна первых\n20стр базы: ${freshnessPercent.toFixed(1)}%`;
-        }
-
-
-        // ##################################################
-        // # Запускает обновление оверлеев для всех карт на странице.
-        // ##################################################
-        async function updateFreshnessOverlays(forceUpdate = false) {
-            if (!freshnessOverlayEnabled) return;
-            if ((isSpecificTradeOfferPage() || isRemeltPage()) && !isFreshnessCheckActive) {
-                removeFreshnessOverlays();
-                return;
-            }
-            if (!freshnessData) {
-                await prepareFreshnessData();
-            }
-            if (!freshnessData) {
-                console.warn('[Freshness] Данные о новинках недоступны, обновление оверлеев пропущено.');
-                return;
-            }
-            const cards = document.querySelectorAll('.lootbox__card, .anime-cards__item, a.trade__main-item[href*="id="], .trade__inventory-item, .stone__inventory-item, .remelt__inventory-item');
-            for (const el of cards) {
-                if (!forceUpdate && el.querySelector('.acm-freshness-badge')) continue;
-                let rank = el.dataset.rank ? el.dataset.rank.toLowerCase() : null;
-                if (!rank) {
-                    const img = el.querySelector('img');
-                    if (img) {
-                        const imageUrl = img.dataset.src || img.src;
-                        if (imageUrl) {
-                            const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
-                            if (match && match[1]) {
-                                rank = match[1];
-                            }
-                        }
-                    }
-                }
-                const typeId = await getCardId(el, 'type', true);
-                if (typeId > 0 && rank) {
-                    setFreshnessBadge(el, typeId, rank);
-                }
-            };
-        }
-
-        // ##################################################
-        // # Удаляет все оверлеи новизны с карточек на странице.
-        // ##################################################
-        function removeFreshnessOverlays() {
-            document.querySelectorAll('.acm-freshness-badge').forEach(badge => badge.remove());
-        }
 
         // ##################################################
         // # Обновляет UI кнопки проверки новизны (цвет, иконка, подсказка).
@@ -4870,14 +6741,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         }
 
         // ##################################################
-        // # Приостанавливает выполнение кода на указанное количество миллисекунд (асинхронная пауза).
-        // ##################################################
-        const sleep = ms => {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        };
-        unsafeWindow.sleep = sleep;
-
-        // ##################################################
         // # Извлекает имя пользователя из URL, если текущая страница является инвентарем карт другого пользователя.
         // ##################################################
         function getCurrentInventoryUsernameFromUrl() {
@@ -4945,161 +6808,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 };
                 request.onerror = () => resolve(null);
             });
-        }
-
-
-        // ##################################################
-        // # Сохраняет данные в кеш GM с указанным временем жизни (TTL).
-        // ##################################################
-        async function setCache(key, data, ttlInSeconds) {
-            const db = await openDb();
-            return new Promise((resolve, reject) => {
-                const expires = Date.now() + ttlInSeconds * 1000;
-                const cacheData = { data, expires };
-                const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-                const store = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
-                const request = store.put(cacheData, key);
-                transaction.oncomplete = () => resolve();
-                transaction.onerror = (event) => {
-                    console.error(`Ошибка IndexedDB при записи ключа "${key}":`, event.target.error);
-                    reject(event.target.error);
-                };
-            });
-        }
-
-        // ##################################################
-        // # Извлекает данные из кеша GM, если срок их жизни еще не истек.
-        // ##################################################
-        async function getCache(key) {
-            const db = await openDb();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-                const store = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
-                const request = store.get(key);
-                request.onsuccess = () => {
-                    const cacheData = request.result;
-                    if (!cacheData) {
-                        resolve(null);
-                        return;
-                    }
-                    if (Date.now() > cacheData.expires) {
-                        store.delete(key);
-                        resolve(null);
-                    } else {
-                        resolve(cacheData.data);
-                    }
-                };
-                request.onerror = (event) => {
-                    console.error(`Ошибка IndexedDB при чтении ключа "${key}":`, event.target.error);
-                    resolve(null);
-                };
-            });
-        }
-        unsafeWindow.getCache = getCache;
-        // ##################################################
-        // # Кэширует данные о статистике карты с использованием глобальных настроек времени жизни кэша.
-        // ##################################################
-        async function cacheCard(key, data) {
-            if (data) {
-                const ttlInHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
-                const ttlInSeconds = ttlInHours * 3600;
-                await setCache(key, data, ttlInSeconds);
-            }
-        }
-
-        // ##################################################
-        // # Получает данные о статистике карты из кеша.
-        // ##################################################
-        async function getCard(key) {
-            return await getCache(key);
-        }
-
-        // ##################################################
-        // # Полностью очищает кэш статистики карт и связей ID, хранящийся в Greasemonkey.
-        // ##################################################
-        async function clearCardCache() {
-            const db = await openDb();
-            const transaction = db.transaction([DEMAND_CACHE_STORE_NAME, OWNER_MAP_STORE_NAME], 'readwrite');
-            const demandStore = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
-            const ownerMapStore = transaction.objectStore(OWNER_MAP_STORE_NAME);
-            let clearedCount = 0;
-            await new Promise(resolve => {
-                const req1 = demandStore.clear();
-                const req2 = ownerMapStore.clear();
-                let completed = 0;
-                const checkCompletion = () => {
-                    completed++;
-                    if (completed === 2) resolve();
-                };
-                req1.onsuccess = () => { clearedCount++; checkCompletion(); };
-                req2.onsuccess = () => { clearedCount++; checkCompletion(); };
-                req1.onerror = checkCompletion;
-                req2.onerror = checkCompletion;
-            });
-            if (clearedCount > 0) {
-                safeDLEPushCall('success', `Кэш очищен: кэш спроса, кэш связей ID.`);
-            } else {
-                safeDLEPushCall('info', 'Нет данных для очистки в кэше.');
-            }
-        }
-
-        // ##################################################
-        // # Очищает кэш только для тех карт, которые в данный момент отображаются на странице.
-        // ##################################################
-        async function clearPageCache() {
-            const cardsOnPage = getCardsOnPage();
-            if (cardsOnPage.length === 0) {
-                safeDLEPushCall('info', 'На странице не найдено карт для очистки кэша.');
-                return;
-            }
-            const uniqueCardIds = new Set();
-            for (const cardElement of cardsOnPage) {
-                const typeId = await getCardId(cardElement, 'type', true);
-                if (typeId) {
-                    uniqueCardIds.add(typeId);
-                }
-            }
-            if (uniqueCardIds.size === 0) {
-                safeDLEPushCall('info', 'Не удалось определить ID карт для очистки кэша.');
-                return;
-            }
-            console.log(`Очистка кэша спроса для карт:`, Array.from(uniqueCardIds));
-            const db = await openDb();
-            const transaction = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-            const store = transaction.objectStore(DEMAND_CACHE_STORE_NAME);
-            let clearedCount = 0;
-            const deletePromises = Array.from(uniqueCardIds).map(cardId => {
-                return new Promise(resolve => {
-                    const cacheKey = 'cardId: ' + cardId;
-                    const request = store.delete(cacheKey);
-                    request.onsuccess = () => {
-                        const checkReq = store.get(cacheKey);
-                        checkReq.onsuccess = () => {
-                            if (checkReq.result === undefined) {
-                                clearedCount++;
-                            }
-                            resolve();
-                        };
-                        checkReq.onerror = resolve;
-                    };
-                    request.onerror = resolve;
-                });
-            });
-            await Promise.all(deletePromises);
-            if (clearedCount > 0) {
-                safeDLEPushCall('success', `Кэш для ${clearedCount} уникальных карт на странице очищен.`);
-                for (const cardEl of cardsOnPage) {
-                    const typeId = await getCardId(cardEl, 'type', true);
-                    if (typeId && uniqueCardIds.has(typeId)) {
-                        cardEl.querySelector('.acm-stats-wrapper')?.remove();
-                        cardEl.querySelector('.acm-card-stats')?.remove();
-                        removeCheckMarkOrDemandButton(cardEl);
-                    }
-                }
-                await addDemandCheckButtonsToCards();
-            } else {
-                safeDLEPushCall('info', 'В кэше не найдено записей для карт на этой странице.');
-            }
         }
 
         // ##################################################
@@ -5227,302 +6935,308 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             return requestPromise;
         };
 
-		// ##################################################
-        // # Обновляет DOM-элемент карты, добавляя в него блок со статистикой.
-        // ##################################################
-        async function updateCardInfo(cardId, element, triggeredByIndividualButton = false) {
-            if (!cardId || !element) return;
-            // ПРАВКА: Если мы в переплавке, запоминаем, что для этой карты нужно показывать инфо
-            if (isRemeltPage() && unsafeWindow.remeltActiveInfo) {
-                unsafeWindow.remeltActiveInfo.add(cardId.toString());
-            }
+	/**
+	 * Обновляет визуальное состояние и метаданные DOM-элемента карточки, внедряя блок статистики спроса. 
+	 * Функция проверяет актуальность данных в IndexedDB, при необходимости инициирует асинхронную загрузку, 
+	 * рассчитывает размеры шрифтов и иконок в зависимости от ширины карты и настраивает интерактивный 
+	 * многофункциональный tooltip с поддержкой обновления данных по клику.
+	 * [cardId] - уникальный идентификатор типа карты (string/number)
+	 * [element] - DOM-элемент карточки, в который производится инъекция
+	 * [triggeredByIndividualButton] - флаг, указывающий на запуск процесса через кнопку (включает анимацию загрузки)
+	 */
+	async function updateCardInfo(cardId, element, triggeredByIndividualButton = false) {
+		if (!cardId || !element) return;
+																											  
+		if (isRemeltPage() && unsafeWindow.remeltActiveInfo) {
+			unsafeWindow.remeltActiveInfo.add(cardId.toString());
+		}
 
-            // --- БЛОК ИНИЦИАЛИЗАЦИИ ТУЛТИПОВ (Запускается 1 раз) ---
-            if (!document.getElementById('acm-custom-tooltip')) {
-                GM_addStyle(`
-                    #acm-custom-tooltip {
-                        position: fixed; background: rgba(25, 27, 30, 0.98); border: 1px solid #555;
-                        box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #e0e0e0; padding: 10px 14px;
-                        border-radius: 8px; font-size: 13px; line-height: 1.5; z-index: 1000000;
-                        pointer-events: none; opacity: 0; transition: opacity 0.1s ease;
-                        transform: translate(0, 0); max-width: 260px; backdrop-filter: blur(4px);
-                    }
-                    #acm-custom-tooltip b { color: white; font-weight: 600; }
-                    .acm-tooltip-header { font-size: 14px; font-weight: 700; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px; display: block; }
-                    .acm-tooltip-time { color: #bbb; font-size: 12px; margin-top: 6px; display: block; }
-                    .acm-tooltip-hint { color: #43b581; font-size: 11px; margin-top: 3px; display: block; font-style: italic; }
-                `);
-                const tooltip = document.createElement('div');
-                tooltip.id = 'acm-custom-tooltip';
-                document.body.appendChild(tooltip);
+													   
+		if (!document.getElementById('acm-custom-tooltip')) {
+			GM_addStyle(`
+				#acm-custom-tooltip {
+					position: fixed; background: rgba(25, 27, 30, 0.98); border: 1px solid #555;
+					box-shadow: 0 4px 15px rgba(0,0,0,0.8); color: #e0e0e0; padding: 10px 14px;
+					border-radius: 8px; font-size: 13px; line-height: 1.5; z-index: 1000000;
+					pointer-events: none; opacity: 0; transition: opacity 0.1s ease;
+					transform: translate(0, 0); max-width: 260px; backdrop-filter: blur(4px);
+				}
+				#acm-custom-tooltip b { color: white; font-weight: 600; }
+				.acm-tooltip-header { font-size: 14px; font-weight: 700; margin-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px; display: block; }
+				.acm-tooltip-time { color: #bbb; font-size: 12px; margin-top: 6px; display: block; }
+				.acm-tooltip-hint { color: #43b581; font-size: 11px; margin-top: 3px; display: block; font-style: italic; }
+			`);
+			const tooltip = document.createElement('div');
+			tooltip.id = 'acm-custom-tooltip';
+			document.body.appendChild(tooltip);
 
-                unsafeWindow.acm_moveTooltip = (e) => {
-                    const x = e.clientX, y = e.clientY;
-                    const rect = tooltip.getBoundingClientRect();
-                    let top = y + 12, left = x + 12;
-                    if (left + rect.width > window.innerWidth) left = x - rect.width - 5;
-                    if (top + rect.height > window.innerHeight) top = y - rect.height - 5;
-                    tooltip.style.top = top + 'px'; tooltip.style.left = left + 'px';
-                };
-                unsafeWindow.acm_showTooltip = (e, content) => {
-                    tooltip.innerHTML = content;
-                    tooltip.style.opacity = '1';
-                    unsafeWindow.acm_moveTooltip(e);
-                };
-                unsafeWindow.acm_hideTooltip = () => {
-                    tooltip.style.opacity = '0';
-                    tooltip.dataset.activeContent = '';
-                };
-            }
-            if (!unsafeWindow.zeroStatsVerifiedSet) {
-                unsafeWindow.zeroStatsVerifiedSet = new Set();
-            }
-            // -------------------------------------------------------
+			unsafeWindow.acm_moveTooltip = (e) => {
+				const x = e.clientX, y = e.clientY;
+				const rect = tooltip.getBoundingClientRect();
+				let top = y + 12, left = x + 12;
+				if (left + rect.width > window.innerWidth) left = x - rect.width - 5;
+				if (top + rect.height > window.innerHeight) top = y - rect.height - 5;
+				tooltip.style.top = top + 'px'; tooltip.style.left = left + 'px';
+			};
+			unsafeWindow.acm_showTooltip = (e, content) => {
+				tooltip.innerHTML = content;
+				tooltip.style.opacity = '1';
+				unsafeWindow.acm_moveTooltip(e);
+			};
+			unsafeWindow.acm_hideTooltip = () => {
+				tooltip.style.opacity = '0';
+				tooltip.dataset.activeContent = '';
+			};
+		}
+		if (!unsafeWindow.zeroStatsVerifiedSet) {
+			unsafeWindow.zeroStatsVerifiedSet = new Set();
+		}
+																	  
 
-            const cardWidth = element.offsetWidth;
-            const baseIconSize = await GM_getValue('ascm_statsIconSize', 11);
-            const baseFontSize = await GM_getValue('ascm_statsFontSize', 12);
-            const standardCardWidth = 150;
-            const scaleFactor = cardWidth / standardCardWidth;
-            let finalFontSize = Math.round(Math.max(9, Math.min(20, baseFontSize * scaleFactor)));
-            let finalIconSize = Math.round(Math.max(8, Math.min(19, baseIconSize * scaleFactor)));
-            const isCollectorCard = element.classList.contains('ca-card-item');
-            const demandButton = element.querySelector(isCollectorCard ? '.ca-check-demand-btn' : '.check-demand-btn');
+		const cardWidth = element.offsetWidth;
+		const baseIconSize = await GM_getValue('ascm_statsIconSize', 11);
+		const baseFontSize = await GM_getValue('ascm_statsFontSize', 12);
+		const standardCardWidth = 150;
+		const scaleFactor = cardWidth / standardCardWidth;
+		let finalFontSize = Math.round(Math.max(9, Math.min(20, baseFontSize * scaleFactor)));
+		let finalIconSize = Math.round(Math.max(8, Math.min(19, baseIconSize * scaleFactor)));
+		const isCollectorCard = element.classList.contains('ca-card-item');
+		const demandButton = element.querySelector(isCollectorCard ? '.ca-check-demand-btn' : '.check-demand-btn');
 
-            if (demandButton && triggeredByIndividualButton) {
-                demandButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                demandButton.style.pointerEvents = 'none';
-            }
+		if (demandButton && triggeredByIndividualButton) {
+			demandButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+			demandButton.style.pointerEvents = 'none';
+		}
 
-            try {
-                // === АВТОКОРРЕКЦИЯ НУЛЕЙ ===
-                if (!unsafeWindow.zeroStatsVerifiedSet.has(cardId)) {
-                    const existingCache = await unsafeWindow.getCache('cardId: ' + cardId);
-                    if (existingCache) {
-                        if (existingCache.needCount === 0 && existingCache.tradeCount === 0 && existingCache.popularityCount === 0) {
-                            const db = await openDb();
-                            const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-                            const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
-                            store.delete('cardId: ' + cardId);
-                            await new Promise(r => tx.oncomplete = r);
-                            unsafeWindow.zeroStatsVerifiedSet.add(cardId);
-                        }
-                    }
-                }
-                // =====================================
+		try {
+																
+			if (!unsafeWindow.zeroStatsVerifiedSet.has(cardId)) {
+				const existingCache = await unsafeWindow.getCache('cardId: ' + cardId);
+				if (existingCache) {
+					if (existingCache.needCount === 0 && existingCache.tradeCount === 0 && existingCache.popularityCount === 0) {
+						const db = await openDb();
+						const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+						const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
+						store.delete('cardId: ' + cardId);
+						await new Promise(r => tx.oncomplete = r);
+						unsafeWindow.zeroStatsVerifiedSet.add(cardId);
+					}
+				}
+			}
+														
 
-                const card = await unsafeWindow.loadCard(cardId);
-                if (card && typeof card.needCount !== 'undefined') {
-                    element.dataset.needCount = card.needCount;
-                }
-                const DEFAULT_RANK_COLORS = { e: 'rgb(156, 111, 81)', d: 'rgb(160, 155, 145)', c: 'rgb(1, 145, 69)', b: 'rgb(32, 148, 228)', a: 'rgb(217, 49, 52)', s: 'rgb(167, 76, 207)', ass: 'rgb(119, 44, 232)', sss: 'rgb(207, 207, 207)' };
-                const DEFAULT_ICON_COLORS = { need: '#43b581', trade: '#faa61a', owners: '#54a8ee' };
+			const card = await unsafeWindow.loadCard(cardId);
+			if (card && typeof card.needCount !== 'undefined') {
+				element.dataset.needCount = card.needCount;
+			}
+			const DEFAULT_RANK_COLORS = { e: 'rgb(156, 111, 81)', d: 'rgb(160, 155, 145)', c: 'rgb(1, 145, 69)', b: 'rgb(32, 148, 228)', a: 'rgb(217, 49, 52)', s: 'rgb(167, 76, 207)', ass: 'rgb(119, 44, 232)', sss: 'rgb(207, 207, 207)' };
+			const DEFAULT_ICON_COLORS = { need: '#43b581', trade: '#faa61a', owners: '#54a8ee' };
 
-                const [rankColors, iconColors] = await Promise.all([
-                    (async () => {
-                        const colors = {};
-                        for (const rankKey of Object.keys(DEFAULT_RANK_COLORS)) colors[rankKey] = await GM_getValue(`ascm_rankColor_${rankKey}`, DEFAULT_RANK_COLORS[rankKey]);
-                        return colors;
-                    })(),
-                    (async () => {
-                        const colors = {};
-                        for (const iconKey of Object.keys(DEFAULT_ICON_COLORS)) colors[iconKey] = await GM_getValue(`ascm_iconColor_${iconKey}`, DEFAULT_ICON_COLORS[iconKey]);
-                        return colors;
-                    })()
-                ]);
+			const [rankColors, iconColors] = await Promise.all([
+				(async () => {
+					const colors = {};
+					for (const rankKey of Object.keys(DEFAULT_RANK_COLORS)) colors[rankKey] = await GM_getValue(`ascm_rankColor_${rankKey}`, DEFAULT_RANK_COLORS[rankKey]);
+					return colors;
+				})(),
+				(async () => {
+					const colors = {};
+					for (const iconKey of Object.keys(DEFAULT_ICON_COLORS)) colors[iconKey] = await GM_getValue(`ascm_iconColor_${iconKey}`, DEFAULT_ICON_COLORS[iconKey]);
+					return colors;
+				})()
+			]);
 
-                let rank = element.dataset.rank?.toLowerCase();
-                if (!rank) {
-                    const imgElement = element.querySelector('img');
-                    if (imgElement) {
-                        const imageUrl = imgElement.dataset.src || imgElement.src;
-                        if (imageUrl) {
-                            const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
-                            if (match && match[1]) rank = match[1];
-                        }
-                    }
-                }
-                
-				// ПРАВКА: Динамический выбор цвета в зависимости от темы сайта (isDark)
-				const isDark = document.body.classList.contains('dle_theme_dark');
-				const isInsideModal = element.closest('#card-modal, #modal-gift-card') || isCollectorCard || element.classList.contains('noffer');
+			let rank = element.dataset.rank?.toLowerCase();
+			if (!rank) {
+				const imgElement = element.querySelector('img');
+				if (imgElement) {
+					const imageUrl = imgElement.dataset.src || imgElement.src;
+					if (imageUrl) {
+						const match = imageUrl.match(/\/cards_image\/\d+\/([a-z]+)\//);
+						if (match && match[1]) rank = match[1];
+					}
+				}
+			}
+			
+																															   
+			const isDark = document.body.classList.contains('dle_theme_dark');
+			const isInsideModal = element.closest('#card-modal, #modal-gift-card') || isCollectorCard || element.classList.contains('noffer');
 
-				// Числа: Принудительно белые только в СВЕТЛОЙ теме внутри модалок. 
-				// В ТЕМНОЙ теме или в инвентаре оставляем цвет ранга (красный, зеленый и т.д.)
-				const color = (isInsideModal && !isDark) ? '#ffffff' : (rankColors[rank] || 'inherit');
-				
-				// Иконки: Всегда возвращаем оригинальные цвета (зеленый, оранжевый, голубой)
-				const finalIconColors = {
-					need: iconColors.need,
-					trade: iconColors.trade,
-					owners: iconColors.owners
+																															  
+																																			  
+			const color = (isInsideModal && !isDark) ? '#ffffff' : (rankColors[rank] || 'inherit');
+			
+																																			   
+			const finalIconColors = {
+				need: iconColors.need,
+				trade: iconColors.trade,
+				owners: iconColors.owners
+			};
+
+			element.querySelector('.acm-stats-wrapper')?.remove();
+			element.closest('.ca-card-wrapper')?.querySelector('.ca-card-demand-stats')?.remove();
+
+																	  
+			const cacheKey = 'cardId: ' + cardId;
+			let timeString = "Только что";
+			let fetchedTime = Date.now();
+
+			try {
+				const db = await openDb();
+				const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readonly');
+				const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
+				const cacheResult = await new Promise(resolve => {
+					const req = store.get(cacheKey);
+					req.onsuccess = () => resolve(req.result);
+					req.onerror = () => resolve(null);
+				});
+
+				if (cacheResult && cacheResult.expires) {
+																
+					if (cacheResult.data && cacheResult.data.updatedAt) {
+						fetchedTime = cacheResult.data.updatedAt;
+					} else {
+											   
+						const ttlHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
+						fetchedTime = cacheResult.expires - (ttlHours * 3600 * 1000);
+					}
+
+					const diffMs = Date.now() - fetchedTime;
+																																				 
+					const diffMins = Math.max(0, Math.floor(diffMs / 60000));
+
+					if (diffMins > 0) {
+						const h = Math.floor(diffMins / 60);
+						const m = diffMins % 60;
+						if (h > 0) timeString = `${h}ч ${m}м назад`;
+						else timeString = `${m} мин. назад`;
+					}
+				}
+			} catch(e) {}
+
+													   
+			const timeHtml = `<span class="acm-tooltip-time"><i class="fas fa-clock" style="color: #dcddde !important; margin-right: 5px; display: inline-block !important; vertical-align: middle;"></i>Актуальность: <b>${timeString}</b></span>`;
+			const hintHtml = `<span class="acm-tooltip-hint"><i class="fas fa-sync-alt"></i> Нажмите, чтобы обновить</span>`;
+
+			const getTooltipHtml = (title, count, titleColor) => {
+				return `<span class="acm-tooltip-header" style="color:${titleColor}">${title}: <b>${count}</b></span>${timeHtml}${hintHtml}`;
+			};
+			const mainTooltipHtml = `<span class="acm-tooltip-header">Спрос на карту</span>${timeHtml}${hintHtml}`;
+
+			const statsHTML = `
+				<span class="acm-stat-item" data-type="need"><i class="fas fa-shopping-cart" style="color: ${finalIconColors.need}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.needCount}</span></span>
+				<span class="acm-stat-item" data-type="trade"><i class="fas fa-sync-alt" style="color: ${finalIconColors.trade}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.tradeCount}</span></span>
+				<span class="acm-stat-item" data-type="owners"><i class="fas fa-users" style="color: ${finalIconColors.owners}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.popularityCount}</span></span>
+			`;
+
+			const attachEvents = (container) => {
+				const tooltipEl = document.getElementById('acm-custom-tooltip');
+
+				container.onmousemove = (e) => {
+					unsafeWindow.acm_moveTooltip(e);
+
+					const item = e.target.closest('.acm-stat-item');
+					let content = mainTooltipHtml;
+
+					if (item) {
+						const type = item.dataset.type;
+						if (type === 'need') content = getTooltipHtml('Хотят получить', card.needCount, iconColors.need);
+						else if (type === 'trade') content = getTooltipHtml('Готовы обменять', card.tradeCount, iconColors.trade);
+						else if (type === 'owners') content = getTooltipHtml('Владельцев', card.popularityCount, iconColors.owners);
+					}
+
+					if (tooltipEl.dataset.activeContent !== content) {
+						tooltipEl.innerHTML = content;
+						tooltipEl.dataset.activeContent = content;
+						tooltipEl.style.opacity = '1';
+					}
 				};
 
-				element.querySelector('.acm-stats-wrapper')?.remove();
-				element.closest('.ca-card-wrapper')?.querySelector('.ca-card-demand-stats')?.remove();
+				container.onmouseleave = (e) => { unsafeWindow.acm_hideTooltip(); };
 
-                // === Вычисляем актуальность ===
-                const cacheKey = 'cardId: ' + cardId;
-                let timeString = "Только что";
-                let fetchedTime = Date.now();
-
-                try {
-                    const db = await openDb();
-                    const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readonly');
-                    const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
-                    const cacheResult = await new Promise(resolve => {
-                        const req = store.get(cacheKey);
-                        req.onsuccess = () => resolve(req.result);
-                        req.onerror = () => resolve(null);
-                    });
-
-                    if (cacheResult && cacheResult.expires) {
-                        // НОВАЯ ЛОГИКА: Если есть явная дата обновления, берем её
-                        if (cacheResult.data && cacheResult.data.updatedAt) {
-                            fetchedTime = cacheResult.data.updatedAt;
-                        } else {
-                            // ИНАЧЕ: Считаем по старому (expires - TTL)
-                            const ttlHours = await GM_getValue(CACHE_TTL_STORAGE_KEY, DEFAULT_CACHE_TTL_HOURS);
-                            fetchedTime = cacheResult.expires - (ttlHours * 3600 * 1000);
-                        }
-
-                        const diffMs = Date.now() - fetchedTime;
-                        // Если diffMs отрицательный (дата в будущем), считаем как 0 (Только что)
-                        const diffMins = Math.max(0, Math.floor(diffMs / 60000));
-
-                        if (diffMins > 0) {
-                            const h = Math.floor(diffMins / 60);
-                            const m = diffMins % 60;
-                            if (h > 0) timeString = `${h}ч ${m}м назад`;
-                            else timeString = `${m} мин. назад`;
-                        }
-                    }
-                } catch(e) {}
-
-                // Контент для тултипа
-                const timeHtml = `<span class="acm-tooltip-time"><i class="far fa-clock"></i> Актуальность: <b>${timeString}</b></span>`;
-                const hintHtml = `<span class="acm-tooltip-hint"><i class="fas fa-sync-alt"></i> Нажмите, чтобы обновить</span>`;
-
-                const getTooltipHtml = (title, count, titleColor) => {
-                    return `<span class="acm-tooltip-header" style="color:${titleColor}">${title}</span>Количество: <b>${count}</b>${timeHtml}${hintHtml}`;
-                };
-                const mainTooltipHtml = `<span class="acm-tooltip-header">Спрос на карту</span>${timeHtml}${hintHtml}`;
-
-                const statsHTML = `
-                    <span class="acm-stat-item" data-type="need"><i class="fas fa-shopping-cart" style="color: ${finalIconColors.need}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.needCount}</span></span>
-                    <span class="acm-stat-item" data-type="trade"><i class="fas fa-sync-alt" style="color: ${finalIconColors.trade}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.tradeCount}</span></span>
-                    <span class="acm-stat-item" data-type="owners"><i class="fas fa-users" style="color: ${finalIconColors.owners}; font-size: ${finalIconSize}px !important; line-height: 0;"></i> <span style="position: relative; z-index: 2; color: ${color} !important; text-shadow: 1.5px 0 0 #1b1b1b, -1px 0 0 #1b1b1b, 0 1px 0 #1b1b1b, 0 -1px 0 #1b1b1b, 0 0 4px #1b1b1b !important; font-size: ${finalFontSize}px !important; line-height: 0;">${card.popularityCount}</span></span>
-                `;
-
-                const attachEvents = (container) => {
-                    const tooltipEl = document.getElementById('acm-custom-tooltip');
-
-                    container.onmousemove = (e) => {
-                        unsafeWindow.acm_moveTooltip(e);
-
-                        const item = e.target.closest('.acm-stat-item');
-                        let content = mainTooltipHtml;
-
-                        if (item) {
-                            const type = item.dataset.type;
-                            if (type === 'need') content = getTooltipHtml('Хотят получить', card.needCount, iconColors.need);
-                            else if (type === 'trade') content = getTooltipHtml('Готовы обменять', card.tradeCount, iconColors.trade);
-                            else if (type === 'owners') content = getTooltipHtml('Владельцев', card.popularityCount, iconColors.owners);
-                        }
-
-                        if (tooltipEl.dataset.activeContent !== content) {
-                            tooltipEl.innerHTML = content;
-                            tooltipEl.dataset.activeContent = content;
-                            tooltipEl.style.opacity = '1';
-                        }
-                    };
-
-                    container.onmouseleave = (e) => { unsafeWindow.acm_hideTooltip(); };
-
-                    container.onclick = async (e) => {
-                        e.preventDefault(); e.stopPropagation();
-                        container.style.opacity = '0.5';
-                        container.style.cursor = 'wait';
-                        unsafeWindow.acm_hideTooltip();
-                        try {
-                            const db = await openDb();
-                            const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
-                            const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
-                            store.delete(cacheKey);
-                            await new Promise(r => tx.oncomplete = r);
-                            if (typeof pendingDemandRequests !== 'undefined') pendingDemandRequests.delete(cardId);
-                            await updateCardInfo(cardId, element, false);
-                            safeDLEPushCall('info', `Спрос обновлен!`);
-                        } catch(err) {
-                            console.error(err);
-                            container.style.opacity = '1';
-                            container.style.cursor = 'pointer';
-                        }
-                    };
-
-                    container.style.cursor = 'pointer';
-                };
-
-                if (isCollectorCard) {
-					const wrapper = element.closest('.ca-card-wrapper');
-					if (wrapper) {
-						const ownerDiv = wrapper.querySelector('.ca-card-owner');
-						if (ownerDiv) {
-							const statsDiv = document.createElement('div');
-							statsDiv.className = 'ca-card-demand-stats'; statsDiv.innerHTML = statsHTML;
-							attachEvents(statsDiv); wrapper.insertBefore(statsDiv, ownerDiv);
-						}
+				container.onclick = async (e) => {
+					e.preventDefault(); e.stopPropagation();
+					container.style.opacity = '0.5';
+					container.style.cursor = 'wait';
+					unsafeWindow.acm_hideTooltip();
+					try {
+						const db = await openDb();
+						const tx = db.transaction(DEMAND_CACHE_STORE_NAME, 'readwrite');
+						const store = tx.objectStore(DEMAND_CACHE_STORE_NAME);
+						store.delete(cacheKey);
+						await new Promise(r => tx.oncomplete = r);
+						if (typeof pendingDemandRequests !== 'undefined') pendingDemandRequests.delete(cardId);
+						await updateCardInfo(cardId, element, false);
+						safeDLEPushCall('info', `Спрос обновлен!`);
+					} catch(err) {
+											   
+						container.style.opacity = '1';
+						container.style.cursor = 'pointer';
 					}
-					if (demandButton) demandButton.remove();
-				} else if (element.matches('.ncard__img')) {
-					let statsWrapper = element.parentNode.querySelector('.acm-stats-wrapper');
-					if (!statsWrapper) {
-						statsWrapper = document.createElement('div');
-						statsWrapper.className = 'acm-stats-wrapper'; element.after(statsWrapper);
-					}
-					statsWrapper.style.cssText = "width:100%;max-width:288px;margin:-7px auto 10px auto!important;border-radius:0 0 10px 10px;background:#252525!important;display:block!important;opacity:1!important;";
-					statsWrapper.innerHTML = `<div class="acm-card-stats" style="padding:5px 0;">${statsHTML}</div>`;
-					attachEvents(statsWrapper);
-					if (demandButton) demandButton.remove();
-				} else if (element.classList.contains('noffer')) {
-                    const stats = document.createElement('div');
-                    stats.className = 'acm-card-stats';
-                    stats.innerHTML = statsHTML;
-                    attachEvents(stats);
-                    const nofferLeft = element.querySelector('.noffer__left');
-                    const nofferMain = nofferLeft ? nofferLeft.querySelector('.noffer__main') : null;
-                    if (nofferMain) {
-                        nofferMain.insertAdjacentElement('afterend', stats);
-                    } else if (nofferLeft) {
-                        nofferLeft.appendChild(stats);
-                    } else {
-                        element.appendChild(stats);
-                    }
-                    if (demandButton) demandButton.remove();
-                } else {
-                    const statsWrapper = document.createElement('div');
-                    statsWrapper.className = 'acm-stats-wrapper';
-                    const stats = document.createElement('div');
-                    stats.className = 'acm-card-stats';
-                    stats.innerHTML = statsHTML;
-                    attachEvents(statsWrapper);
-                    statsWrapper.appendChild(stats);
-                    element.appendChild(statsWrapper);
-                    if (card.needCount !== undefined) {
-                        removeCheckMarkOrDemandButton(element);
-                    }
-                }
+				};
 
-            } catch (error) {
-                console.error(`Ошибка обновления информации о карте ${cardId}:`, error);
-                if (demandButton && triggeredByIndividualButton) {
-                    demandButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-                    demandButton.style.pointerEvents = 'auto';
-                    safeDLEPushCall('error', `Не удалось загрузить спрос для карты ID ${cardId}`);
-                }
-            }
-        }
-        unsafeWindow.updateCardInfo = updateCardInfo;
+				container.style.cursor = 'pointer';
+			};
+
+			if (isCollectorCard) {
+				const wrapper = element.closest('.ca-card-wrapper');
+				if (wrapper) {
+					const ownerDiv = wrapper.querySelector('.ca-card-owner');
+					if (ownerDiv) {
+						const statsDiv = document.createElement('div');
+						statsDiv.className = 'ca-card-demand-stats'; statsDiv.innerHTML = statsHTML;
+						attachEvents(statsDiv); wrapper.insertBefore(statsDiv, ownerDiv);
+					}
+				}
+				if (demandButton) demandButton.remove();
+			} else if (element.matches('.ncard__img')) {
+				let statsWrapper = element.parentNode.querySelector('.acm-stats-wrapper');
+				if (!statsWrapper) {
+					statsWrapper = document.createElement('div');
+					statsWrapper.className = 'acm-stats-wrapper'; element.after(statsWrapper);
+				}
+				statsWrapper.style.cssText = "width:100%;max-width:288px;margin:-7px auto 10px auto!important;border-radius:0 0 10px 10px;background:#252525!important;display:block!important;opacity:1!important;";
+				statsWrapper.innerHTML = `<div class="acm-card-stats" style="padding:5px 0;">${statsHTML}</div>`;
+				attachEvents(statsWrapper);
+				if (demandButton) demandButton.remove();
+			} else if (element.classList.contains('noffer')) {
+				const stats = document.createElement('div');
+				stats.className = 'acm-card-stats';
+				stats.innerHTML = statsHTML;
+				attachEvents(stats);
+				const nofferLeft = element.querySelector('.noffer__left');
+				const nofferMain = nofferLeft ? nofferLeft.querySelector('.noffer__main') : null;
+				if (nofferMain) {
+					nofferMain.insertAdjacentElement('afterend', stats);
+				} else if (nofferLeft) {
+					nofferLeft.appendChild(stats);
+				} else {
+					element.appendChild(stats);
+				}
+				if (demandButton) demandButton.remove();
+			} else {
+				const statsWrapper = document.createElement('div');
+				statsWrapper.className = 'acm-stats-wrapper';
+				const stats = document.createElement('div');
+				stats.className = 'acm-card-stats';
+				stats.innerHTML = statsHTML;
+				attachEvents(statsWrapper);
+				statsWrapper.appendChild(stats);
+				element.appendChild(statsWrapper);
+				if (card.needCount !== undefined) {
+					removeCheckMarkOrDemandButton(element);
+				}
+			}
+
+		} catch (error) {
+                console.error(`Ошибка обновления информации о карте ${cardId}:`, error);						
+			if (demandButton && triggeredByIndividualButton) {
+				demandButton.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+				demandButton.style.pointerEvents = 'auto';
+				safeDLEPushCall('error', `Не удалось загрузить спрос для карты ID ${cardId}`);
+			}
+		}
+	}
+	unsafeWindow.updateCardInfo = updateCardInfo;
 
         // ##################################################
         // # Удаляет все визуальные отметки (элементы с классом 'div-marked') с карточек.
@@ -6080,58 +7794,64 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             if (c) { c.style.display = counter > 0 ? 'flex' : 'none'; c.textContent = counter; }
         }
 
-        // ##################################################
-        // # Применяет текущее состояние видимости (скрыты/показаны) ко всем управляемым кнопкам скрипта.
-        // ##################################################
-        function applyManagedButtonsVisibility(isInitialLoad = false) {
-            const buttonsExistOnPage = managedButtonSelectors.some(selector => document.querySelector(selector));
-            if (toggleButtonElement) {
-                toggleButtonElement.style.display = buttonsExistOnPage ? 'flex' : 'none';
-            }
-            managedButtonSelectors.forEach(selector => {
-                const btn = document.querySelector(selector);
-                if (btn) {
-                    const isHidden = areActionButtonsHidden;
-                    const activeTransition = 'opacity 0.3s ease, transform 0.3s ease';
+        /**
+		 * Применяет текущее состояние видимости к управляемым кнопкам.
+		 * Управляет анимацией перемещения и прозрачностью элементов.
+		 * [isInitialLoad] - флаг первого запуска для отключения анимации при загрузке.
+		 */
+		function applyManagedButtonsVisibility(isInitialLoad = false) {
+			const buttonsExistOnPage = managedButtonSelectors.some(selector => document.querySelector(selector));
+			if (toggleButtonElement) {
+				toggleButtonElement.style.display = buttonsExistOnPage ? 'flex' : 'none';
+			}
 
-                    if (isInitialLoad && isHidden) {
-                        btn.style.transition = 'none';
-                    } else {
-                        btn.style.transition = activeTransition;
-                    }
-                    if (isHidden) {
-                        btn.style.opacity = '0';
-                        btn.style.transform = 'translateX(calc(100% + 20px))';
-                        btn.style.pointerEvents = 'none';
-                    } else {
-                        btn.style.opacity = '1';
-                        btn.style.transform = 'translateX(0)';
-                        btn.style.pointerEvents = 'auto';
-                    }
+			managedButtonSelectors.forEach(selector => {
+				const btn = document.querySelector(selector);
+				if (btn) {
+					const isHidden = areActionButtonsHidden;
+					const activeTransition = 'opacity 0.3s ease, transform 0.3s ease';
 
-                    if (isInitialLoad && isHidden) {
-                        setTimeout(() => {
-                            if (btn) btn.style.transition = activeTransition;
-                        }, 50);
-                    }
-                }
-            });
-        }
-        unsafeWindow.applyManagedButtonsVisibility = applyManagedButtonsVisibility;
+					if (isInitialLoad && isHidden) {
+						btn.style.transition = 'none';
+					} else {
+						btn.style.transition = activeTransition;
+					}
 
-        // ##################################################
-        // # Переключает видимость боковых кнопок и сохраняет состояние в localStorage.
-        // ##################################################
-        function toggleManagedButtonsVisibility() {
-            areActionButtonsHidden = !areActionButtonsHidden;
-            localStorage.setItem('actionButtonsHiddenState', areActionButtonsHidden);
-            if (toggleButtonElement) {
-                const icon = toggleButtonElement.querySelector('i');
-                icon.className = areActionButtonsHidden ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
-                toggleButtonElement.title = areActionButtonsHidden ? 'Показать боковые кнопки' : 'Скрыть боковые кнопки';
-            }
-            applyManagedButtonsVisibility();
-        }
+					if (isHidden) {
+						btn.style.opacity = '0';
+						btn.style.transform = 'translateX(calc(100% + 20px))';
+						btn.style.pointerEvents = 'none';
+					} else {
+						btn.style.opacity = '1';
+						btn.style.transform = 'translateX(0)';
+						btn.style.pointerEvents = 'auto';
+					}
+
+					if (isInitialLoad && isHidden) {
+						setTimeout(() => {
+							if (btn) btn.style.transition = activeTransition;
+						}, 50);
+					}
+				}
+			});
+		}
+		unsafeWindow.applyManagedButtonsVisibility = applyManagedButtonsVisibility;
+
+        /**
+		 * Переключает видимость боковых кнопок управления.
+		 * Сохраняет выбранное состояние в кросс-доменное хранилище.
+		 */
+		function toggleManagedButtonsVisibility() {
+			areActionButtonsHidden = !areActionButtonsHidden;
+			GM_setValue('actionButtonsHiddenState', areActionButtonsHidden);
+			
+			if (toggleButtonElement) {
+				const icon = toggleButtonElement.querySelector('i');
+				icon.className = areActionButtonsHidden ? 'fas fa-chevron-left' : 'fas fa-chevron-right';
+				toggleButtonElement.title = areActionButtonsHidden ? 'Показать боковые кнопки' : 'Скрыть боковые кнопки';
+			}
+			applyManagedButtonsVisibility();
+		}
 
         // ##################################################
         // # Создает и добавляет кнопку-переключатель для скрытия/отображения панели с основными кнопками.
@@ -6219,67 +7939,70 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             console.log('[Anti-Blur] Функция отключения размытия в паках активна.');
         }
 
-        // ##################################################
-        // # Проверяет, является ли текущая страница страницей конкретного Аниме.
-        // ##################################################
-        function isAnimePage() { return document.getElementById('anime-data') !== null; }
-
-        // ##################################################
-        // # Создает уникальный составной ключ из URL изображения, устойчивый к cache-busting.
-        // ##################################################
-        function normalizeImagePath(imageUrl) {
-            if (!imageUrl || imageUrl.startsWith('data:')) return null;
-            try {
-                const path = new URL(imageUrl, location.origin).pathname;
-                // Регулярка должна отсекать всё после расширения .webp
-                const match = path.match(/\/cards_image\/(\d+)\/([a-z]+)\/([a-z0-9-.]+?)(?:-\d+.*)?\.webp/);
-                if (match && match[1] && match[2] && match[3]) {
-                    const animeId = match[1];
-                    const rank = match[2];
-                    const charNameSlug = match[3];
-                    return `${animeId}/${rank}/${charNameSlug}`;
-                }
-                return path;
-            } catch (e) { return imageUrl; }
-        }
-
-        // Извлекает ID типа или копии карты из DOM-элемента или URL с логированием
+        /**
+		 * Извлекает ID карты (тип или экземпляр) из DOM-элемента или URL.
+		 * Приоритет: 1. data-атрибуты, 2. Ссылка href (id=), 3. Поиск по картинке (резерв).
+		 * [cardElement] - DOM-элемент карты, [targetIdType] - 'type' или 'owner', [isSilent] - скрыть логи.
+		 */
 		async function getCardId(cardElement, targetIdType = 'type', isSilent = false) {
 			if (!cardElement) return null;
-			let typeId, ownerId; const href = cardElement.getAttribute('href') || '', isTrade = isTradeCreationPage() || isTradeOfferPage();
-			if (cardElement.matches('.trade__main-item, .history__body-item')) {
+
+			let typeId = null;
+			let ownerId = null;
+			const href = cardElement.getAttribute('href') || '';
+
+			typeId = cardElement.dataset.cardId;
+			ownerId = cardElement.dataset.id || cardElement.dataset.ownerId;
+
+			if (!typeId && href.includes('id=')) {
 				const match = href.match(/[?&]id=(\d+)/);
-				if (match) { if (isTrade) ownerId = match[1]; else typeId = match[1]; }
+				if (match) {
+					const idFromLink = match[1];
+					if (window.location.pathname.includes('/trades/') || window.location.pathname.includes('/cards/')) {
+						typeId = idFromLink;
+					} else {
+						if (!ownerId) ownerId = idFromLink;
+					}
+				}
 			}
-			if (cardElement.matches('.trade__main-items .trade__main-item')) ownerId = cardElement.dataset.id;
-			if (cardElement.matches('.trade__inventory-item')) { typeId = cardElement.dataset.cardId; ownerId = cardElement.dataset.id; }
-			if (!typeId) {
-				const isInstanceClass = cardElement.matches('.trade__inventory-item, .ascm-remelt-card, .remelt__inventory-item');
-				if (isTrade || isInstanceClass) { typeId = cardElement.dataset.cardId; ownerId = ownerId || cardElement.dataset.id; }
-				else typeId = cardElement.dataset.cardId || ((cardElement.matches('.anime-cards__item, .lootbox__card')) ? cardElement.dataset.id : null);
-				if (typeId && parseInt(typeId) > 5000000 && isTrade) typeId = null;
-			}
-			if (!typeId && (cardElement.matches('.ncard__img, .ncard-owner, .ncard__main'))) typeId = new URLSearchParams(window.location.search).get('id');
-			if (!ownerId) ownerId = cardElement.dataset.ownerId || ((cardElement.matches('.remelt__inventory-item, .stone__inventory-item, .card-awakening-list__card, .card-awakening-list__card__s')) ? cardElement.dataset.id : null);
-			if (!isSilent) console.log(`[ACM ID Trace] Element: ${cardElement.className.split(' ')[0]} | typeId: ${typeId} | ownerId: ${ownerId}`);
+
 			if (targetIdType === 'owner') return ownerId || null;
-			if (typeId) { if (ownerId) await saveOwnerToTypeMapping(ownerId, typeId); return typeId; }
-			if (ownerId) { const cached = await getTypeIdFromOwnerCache(ownerId); if (cached) return cached; }
-			let img = cardElement.dataset.image; if (!img) { const el = cardElement.querySelector('img'); if (el) img = el.dataset.src || el.getAttribute('src'); }
-			if (!img || img.includes('empty-card.png')) return null;
-			if (img && (isTradeOfferPage() || isSpecificTradeOfferPage() || isTradeHistoryPage() || isRemeltPage() || isTradeCreationPage() || (ownerId && !typeId))) {
-				try {
-					await ensureDbLoaded(); if (!isDatabaseReady || !cardDatabaseMap) return null;
+
+			if (typeId) {
+				await ensureDbLoaded();
+				if (ownerId) await saveOwnerToTypeMapping(ownerId, typeId);
+				return typeId;
+			}
+
+			if (ownerId) {
+				const cachedTypeId = await getTypeIdFromOwnerCache(ownerId);
+				if (cachedTypeId) {
+					await ensureDbLoaded();
+					return cachedTypeId;
+				}
+			}
+
+			let img = cardElement.dataset.image;
+			if (!img) {
+				const imgEl = cardElement.querySelector('img');
+				if (imgEl) img = imgEl.dataset.src || imgEl.getAttribute('src');
+			}
+
+			if (img && !img.includes('empty-card.png')) {
+				await ensureDbLoaded();
+				if (isDatabaseReady && cardImageIndex) {
 					const key = normalizeImagePath(img);
 					if (key && cardImageIndex.has(key)) {
-						const tid = cardImageIndex.get(key); if (!isSilent) console.log(`[ACM ID Trace] Found by image: ${tid}`);
-						if (ownerId) await saveOwnerToTypeMapping(ownerId, tid); return tid;
+						const foundId = cardImageIndex.get(key);
+						if (ownerId) await saveOwnerToTypeMapping(ownerId, foundId);
+						return foundId;
 					}
-				} catch (e) {}
+				}
 			}
+
 			return null;
 		}
-        unsafeWindow.getCardId = getCardId;
+		unsafeWindow.getCardId = getCardId;
 
         // ##################################################
         // # Находит и осуществляет переход на следующую страницу пагинации (для массовой отправки в "Не нужное").
@@ -6867,17 +8590,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 // БЛОК: ИНФОРМАЦИОННЫЙ TOOLTIP ПО КЛИКУ
 // ##################################################
         let currentInfoTooltip = null;
-        // ##################################################
-        // Получает "базовое" название аниме, убирая номера сезонов, фильмы и т.д.
-        // ##################################################
-        function getBaseAnimeName(animeName) {
-            if (!animeName) return 'Без названия';
-            return animeName
-                .replace(/((\s+)?(\d+)(\s+)?(сезон|saison|season))$/i, '')
-                .replace(/((\s+)?(фильм|movie|film|ova|ona|спешл|special))$/i, '')
-                .replace(/(\s+\d+)$/, '')
-                .trim();
-        }
 
 	// Отображает всплывающее окно с информацией об аниме и колоде персонажа
 	unsafeWindow.toggleAnimeInfoTooltip = async function(event) {
@@ -7037,31 +8749,62 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 		positionTooltip();
 	};
 
-	// Создает кнопку информации (i) с поддержкой динамического масштабирования и цветовой индикации сложности
+	/**
+	 * Создает DOM-элемент информационной кнопки (i).
+	 * Рассчитывает цвет фона и максимально возможный масштаб шрифта для цифр.
+	 */
 	unsafeWindow.createInfoButton = function(typeId) {
-		const btn = document.createElement('div'), isHover = GM_getValue(ACM_INFO_BTN_TRIGGER_KEY, 'click') === 'hover';
-		btn.innerHTML = 'i'; btn.className = 'show-card-info-btn';
-		if (GM_getValue(ACM_INFO_BTN_VISIBILITY_KEY, 'hover') === 'always') btn.classList.add('always-visible');
-		btn.title = isHover ? '' : 'Информация о картах этого аниме';
+		const btn = document.createElement('div');
+		const triggerType = GM_getValue(ACM_INFO_BTN_TRIGGER_KEY, 'click');
+		const isHoverTrigger = triggerType === 'hover';
+		
+		btn.innerHTML = 'i';
+		btn.className = 'show-card-info-btn';
+		
+		if (GM_getValue(ACM_INFO_BTN_VISIBILITY_KEY, 'hover') === 'always') {
+			btn.classList.add('always-visible');
+		}
+
+		btn.title = isHoverTrigger ? '' : 'Информация о картах этого аниме';
 		btn.style.cssText = 'position:absolute;top:4px;left:30%;transform:translateX(-50%);z-index:9;background:rgba(90,90,255,0.6);border:1px solid #888;border-radius:50%;cursor:pointer;transition:all .2s ease;font-weight:bold;color:#fff;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-style:italic;box-sizing:border-box;';
+
 		if (typeId && cardDatabaseMap && unsafeWindow.acmDeckComplexityMap) {
-			const cardData = cardDatabaseMap.get(typeId.toString()), stats = cardData ? unsafeWindow.acmDeckComplexityMap.get((cardData.animeName || '').trim()) : null;
+			let cardData = cardDatabaseMap.get(typeId.toString()) || cardDatabaseMap.get(Number(typeId));
+			const animeName = cardData ? (cardData.animeName || '').trim() : null;
+			const stats = animeName ? unsafeWindow.acmDeckComplexityMap.get(animeName) : null;
+
 			if (stats) {
 				if (GM_getValue(ACM_INFO_BTN_COLORING_ENABLED_KEY, true)) {
-					if (stats.total < 10) btn.style.background = 'rgba(150,150,150,0.8)';
-					else if (stats.sCount === 0) btn.style.background = 'rgba(67,181,129,0.8)';
-					else if (stats.sCount === 1) btn.style.background = 'rgba(250,166,26,0.8)';
-					else btn.style.background = 'rgba(240,71,71,0.8)';
+					if (stats.total < 10) {
+						btn.style.background = 'rgba(150,150,150,0.8)';
+					} else if (stats.sCount === 0) {
+						btn.style.background = 'rgba(67,181,129,0.8)';
+					} else if (stats.sCount === 1) {
+						btn.style.background = 'rgba(250,166,26,0.8)';
+					} else {
+						btn.style.background = 'rgba(240,71,71,0.8)';
+					}
 				}
+
 				if (GM_getValue(ACM_INFO_BTN_S_COUNT_ENABLED_KEY, true) && stats.sCount > 0 && stats.total >= 10) {
-					const badge = document.createElement('div'), bSize = (GM_getValue(ACM_S_BADGE_SIZE_FACTOR_KEY, 0.65) * 100).toFixed(0) + '%';
-					badge.className = 'acm-s-count-badge'; badge.style.cssText = `width:${bSize};height:${bSize};font-size:85%;line-height:1;display:flex;align-items:center;justify-content:center;font-style:normal;z-index:10;`;
-					badge.textContent = stats.sCount; btn.appendChild(badge);
+					const badge = document.createElement('div');
+					const bSizeFactor = GM_getValue(ACM_S_BADGE_SIZE_FACTOR_KEY, 0.65);
+					const bSize = (bSizeFactor * 100).toFixed(0) + '%';
+					const sCountStr = stats.sCount.toString();
+
+					badge.className = 'acm-s-count-badge';
+
+					// Ультра-масштаб: 95% для одной цифры, 75% для двух
+					const dynamicFontSize = sCountStr.length > 1 ? '75%' : '95%';
+					
+					badge.style.cssText = `width:${bSize};height:${bSize};font-size:${dynamicFontSize};line-height:1;display:flex;align-items:center;justify-content:center;font-style:normal;z-index:10;`;
+					badge.textContent = sCountStr;
+					btn.appendChild(badge);
 				}
 			}
 		}
 		return btn;
-	}
+	};
 
 	// Инициализирует маркеры информации на всех доступных картах страницы с логикой автоматического скрытия
 	async function addInfoButtonsToCards() {
@@ -7268,22 +9011,23 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             });
         });
 
-        // ##################################################
-        // # Сохраняет выбранное значение ширины страницы в localStorage.
-        // ##################################################
-        function saveMaxWidthPreferenceSlider(widthValue) {
-            localStorage.setItem(MAX_WIDTH_STORAGE_KEY_SLIDER, String(widthValue));
-        }
+        /**
+		 * Сохраняет выбранное значение ширины страницы в кросс-доменное хранилище.
+		 * [widthValue] - значение ширины в пикселях.
+		 */
+		function saveMaxWidthPreferenceSlider(widthValue) {
+			GM_setValue(MAX_WIDTH_STORAGE_KEY_SLIDER, widthValue);
+		}
 
-        // ##################################################
-        // # Загружает сохраненное значение ширины страницы и применяет его при инициализации.
-        // ##################################################
-        function loadAndApplyMaxWidthPreferenceSlider() {
-            let storedWidth = localStorage.getItem(MAX_WIDTH_STORAGE_KEY_SLIDER);
-            let initialWidth = storedWidth ? parseInt(storedWidth, 10) : DEFAULT_MAX_WIDTH_SLIDER;
-            if (maxWidthSliderElement) maxWidthSliderElement.value = initialWidth;
-            applyMaxWidthToPageViaSlider(initialWidth);
-        }
+		/**
+		 * Загружает сохраненное значение ширины страницы и применяет его.
+		 * Синхронизирует ширину между всеми зеркалами сайта.
+		 */
+		function loadAndApplyMaxWidthPreferenceSlider() {
+			const initialWidth = GM_getValue(MAX_WIDTH_STORAGE_KEY_SLIDER, DEFAULT_MAX_WIDTH_SLIDER);
+			if (maxWidthSliderElement) maxWidthSliderElement.value = initialWidth;
+			applyMaxWidthToPageViaSlider(initialWidth);
+		}
 
         // ##################################################
         // # Создает и инициализирует UI-компонент (слайдер) для управления максимальной шириной страницы.
@@ -7389,496 +9133,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
         }
 
-        // ##################################################
-        // # Инициализирует всю логику проверки дубликатов карт: добавление индивидуальных и массовой кнопок, обработчики, наблюдатели.
-        // ##################################################
-        async function initDuplicateChecker() {
-            const ALL_CARD_SELECTORS_ARRAY = ['.anime-cards__item', '.card-item', '.card','a.trade__main-item[href^="/cards/"]','.history__body-item a[href^="/cards/"]','.lootbox__card'];
-            const CARD_SELECTORS_FOR_QUERY = ALL_CARD_SELECTORS_ARRAY.join(', ');
-
-            // ##################################################
-            // # Получает имя залогиненного пользователя со страницы.
-            // ##################################################
-            function getLoggedUserName() {
-                const el = document.querySelector('.lgn__name span');
-                return el ? el.textContent.trim() : null;
-            }
-
-            // ##################################################
-            // # Создает и стилизует HTML-элемент кнопки для проверки одной карты.
-            // ##################################################
-            function createDupBtn() {
-                const btn = document.createElement('div');
-                btn.textContent = '🔍';
-                btn.className = 'check-duplicates-btn';
-                if (window.location.pathname.startsWith('/pm/')) {
-                    btn.setAttribute('data-mce-bogus', '1');
-                }
-                btn.title = 'Проверить дубликаты по ID';
-                btn.style.cssText = `
-                    position: absolute; z-index: 10;
-                    background: rgba(211, 211, 211, 0.6);
-                    border: 1px solid #ccc; border-radius: 15px;
-                    cursor: pointer;
-                    transition: all 0.2s ease; font-weight: bold; color: black;
-                    text-align: center; line-height: 1.3;
-                    display: flex; align-items: center; justify-content: center;
-                    box-sizing: border-box;`;
-                return btn;
-            }
-
-            // ##################################################
-            // # Запрашивает имя персонажа со страницы /need/ по ID карты (с кэшированием).
-            // ##################################################
-            async function fetchCharacterNameFromNeedPage(cardId) {
-                const cacheKey = `name_${cardId}`;
-                if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
-                try {
-                    const res = await fetch(`${location.origin}/cards/users/need/?id=${cardId}`, { credentials: 'include' });
-                    if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
-                    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-                    const titleEl = doc.querySelector('.ncard__main-title.as-center a[href^="/cards/"]');
-                    if (titleEl?.textContent) {
-                        const name = titleEl.textContent.trim();
-                        cardInfoCache.set(cacheKey, name);
-                        return name;
-                    }
-                    cardInfoCache.set(cacheKey, null); return null;
-                } catch (err) { cardInfoCache.set(cacheKey, null); return null; }
-            }
-
-            // ##################################################
-            // # Запрашивает ссылку на Аниме со страницы /users/ по ID карты (с кэшированием).
-            // ##################################################
-            async function fetchAnimeLinkFromUsersPage(cardId) {
-                const cacheKey = `animeLink_${cardId}`;
-                if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
-                try {
-                    const res = await fetch(`${location.origin}/cards/users/?id=${cardId}`, { credentials: 'include' });
-                    if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
-                    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-                    const animeLinkEl = doc.querySelector('a.ncard__img');
-                    if (animeLinkEl?.hasAttribute('href')) {
-                        const hrefVal = animeLinkEl.getAttribute('href');
-                        if (hrefVal.includes('/aniserials/')) {
-                            const link = new URL(hrefVal, location.origin).href;
-                            cardInfoCache.set(cacheKey, link);
-                            return link;
-                        }
-                    }
-                    cardInfoCache.set(cacheKey, null); return null;
-                } catch (err) { cardInfoCache.set(cacheKey, null); return null; }
-            }
-
-            // ##################################################
-            // # Запрашивает название Аниме с его страницы по URL (с кэшированием).
-            // ##################################################
-            async function fetchAnimeNameFromAnimePage(animePageUrl, cardId) {
-                const cacheKey = `animeName_${animePageUrl}`;
-                if (cardInfoCache.has(cacheKey)) return cardInfoCache.get(cacheKey);
-                try {
-                    const res = await fetch(animePageUrl, { credentials: 'include' });
-                    if (!res.ok) { cardInfoCache.set(cacheKey, null); return null; }
-                    const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
-                    const titleH1 = doc.querySelector('h1[itemprop="name"]');
-                    const origTitleDiv = doc.querySelector('.pmovie__original-title');
-                    let animeName = null;
-                    if (titleH1?.textContent) {
-                        animeName = titleH1.textContent.replace(/(Аниме)$/i, '').trim();
-                    } else if (origTitleDiv?.textContent) {
-                        animeName = origTitleDiv.textContent.trim();
-                    }
-                    if (animeName) {
-                        cardInfoCache.set(cacheKey, animeName);
-                        return animeName;
-                    }
-                    cardInfoCache.set(cacheKey, null); return null;
-                } catch (err) { cardInfoCache.set(cacheKey, null); return null; }
-            }
-
-            // ##################################################
-            // # Запрашивает страницу поиска по URL и находит на ней все дубликаты указанной карты.
-            // ##################################################
-            async function fetchAllPagesUniversal(searchUrl, targetCardId) {
-                try {
-                    const response = await fetch(searchUrl, { credentials: 'include' });
-                    if (!response.ok) {
-                        console.error(`[Dups Fetch] Ошибка HTTP ${response.status} при запросе дубликатов: ${searchUrl}`);
-                        safeDLEPushCall('error', `Ошибка ${response.status} при поиске дубликатов для card_id ${targetCardId}`);
-                        return 0;
-                    }
-                    const htmlText = await response.text();
-                    const doc = new DOMParser().parseFromString(htmlText, 'text/html');
-                    const titleElement = doc.querySelector('.ncard__main-title-2.as-center span');
-                    if (titleElement && titleElement.textContent) {
-                        const match = titleElement.textContent.match(/\((\d+)\s+шт\.\)/);
-                        if (match && match[1]) {
-                            return parseInt(match[1], 10);
-                        }
-                    }
-                    const foundOnPage = doc.querySelectorAll(`.anime-cards__item[data-id="${targetCardId}"], .lootbox__card[data-id="${targetCardId}"]`);
-                    return foundOnPage.length;
-                } catch (err) {
-                    console.error(`[Dups Fetch] Ошибка сети при запросе дубликатов (${targetCardId}): ${searchUrl}`, err);
-                    safeDLEPushCall('error', `Сетевая ошибка при поиске дубликатов для card_id ${targetCardId}`);
-                    return 0;
-                }
-            }
-
-            // ##################################################
-            // # Проверяет наличие дубликатов для одной конкретной карты и обновляет ее кнопку.
-            // ##################################################
-            function checkCardDuplicates(cardElement, triggeredByMassCheck = false) {
-                return new Promise(async (resolve) => {
-                    const cardId = await getCardId(cardElement, 'type', true);
-                    // ПРАВКА: Запоминаем ID для сессии переплавки
-                    if (isRemeltPage() && cardId && unsafeWindow.remeltActiveInfo) {
-                        unsafeWindow.remeltActiveInfo.add(cardId.toString());
-                    }
-                    let btn = cardElement.querySelector('.check-duplicates-btn');
-                    const loggedInUserName = getLoggedUserName();
-                    if (!btn && triggeredByMassCheck) {
-                        btn = document.createElement('div');
-                        btn.className = 'check-duplicates-btn';
-                        btn.style.opacity = '0';
-                        btn.style.pointerEvents = 'none';
-                        if (window.getComputedStyle(cardElement).position === 'static') {
-                            cardElement.style.position = 'relative';
-                        }
-                        cardElement.appendChild(btn);
-                    }
-                    if (!btn) {
-                        resolve();
-                        return;
-                    }
-                    if (!cardId || !loggedInUserName) {
-                        await updateButtonContent(btn, '❓');
-                        btn.classList.add('checked');
-                        resolve();
-                        return;
-                    }
-                    if (isCardPackPage() && !cardElement.classList.contains('anime-cards__owned-by-user')) {
-                        await updateButtonContent(btn, 0);
-                        btn.classList.add('checked');
-                        resolve();
-                        return;
-                    }
-                    const cacheKeyForDuplicates = `${loggedInUserName}_${cardId}`;
-                    if (triggeredByMassCheck && duplicatesCache.has(cacheKeyForDuplicates)) {
-                        const duplicateCount = duplicatesCache.get(cacheKeyForDuplicates);
-                        await updateButtonContent(btn, duplicateCount);
-                        btn.classList.add('checked');
-                        resolve();
-                        return;
-                    }
-                    await updateButtonContent(btn, '⏳');
-                    btn.style.pointerEvents = 'none';
-                    btn.classList.remove('checked');
-                    try {
-                        const searchUrlObject = new URL(`${location.origin}/user/cards/`);
-                        searchUrlObject.searchParams.set('name', loggedInUserName);
-                        searchUrlObject.searchParams.set('card_id', cardId);
-                        const duplicateCount = await fetchAllPagesUniversal(searchUrlObject.toString(), cardId);
-                        duplicatesCache.set(cacheKeyForDuplicates, duplicateCount);
-                        await updateButtonContent(btn, duplicateCount);
-                        btn.classList.add('checked');
-                    } catch (err) {
-                        console.error(`[Dups Check] Ошибка при проверке дубликатов для card_id ${cardId}:`, err);
-                        await updateButtonContent(btn, '❌');
-                        btn.classList.add('checked');
-                    } finally {
-                        if (btn.style.pointerEvents !== 'none' || !triggeredByMassCheck) {
-                           btn.style.pointerEvents = 'auto';
-                        }
-                        resolve();
-                    }
-                });
-            }
-
-            // ##################################################
-            // # Обновляет вид и содержимое индивидуальной кнопки (счетчик, иконку, цвет).
-            // ##################################################
-            function updateButtonContent(btn, content) {
-                btn.textContent = '';
-                btn.className = 'check-duplicates-btn';
-                if (content === '🔒' || content === '❓' || content === '❌' || content === '⏳' || content === '...') {
-                    btn.textContent = content;
-                    btn.style.background = (content === '⏳' || content === '...') ? 'LightGray' : 'rgba(255, 100, 100, 0.8)';
-                    btn.style.color = (content === '⏳' || content === '...') ? 'black' : 'white';
-                } else {
-                    const count = Number(content);
-                    btn.textContent = `×${count}`;
-                    btn.style.background = count > 1 ? 'rgba(255, 0, 0, 0.7)' :
-                    (count === 1 ? 'rgba(0, 150, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)');
-                    btn.style.color = 'white';
-                }
-                btn.style.opacity = '1';
-                btn.style.visibility = 'visible';
-                btn.style.transform = 'translateY(0)';
-            }
-
-            // ##################################################
-            // # Находит все карточки на странице и добавляет на них кнопки для проверки.
-            // ##################################################
-            async function addCheckButtons() {
-                const isEnabled = await GM_getValue(INDIVIDUAL_DUP_BTN_ENABLED_KEY, true);
-                const userId = getLoggedUserName();
-                const cards = getCardsOnPage();
-                for (const cardEl of cards) {
-                    if (cardEl.querySelector('.check-duplicates-btn') || cardEl.classList.contains('card-show__placeholder')) {
-                        continue;
-                    }
-                    const newBtn = createDupBtn();
-                    const cardWidth = cardEl.offsetWidth;
-                    if (cardWidth === 0) continue;
-                    const smallCardThreshold = 140;
-                    const verySmallCardThreshold = 100;
-                    const baseScaleFactor = await GM_getValue('acm_dupButtonSizeFactor', 0.13);
-                    let buttonSize;
-                    if (cardWidth < verySmallCardThreshold) {
-                        buttonSize = 18;
-                    } else {
-                        let scaleFactor = baseScaleFactor;
-                        if (cardEl.classList.contains('lootbox__card')) {
-                            const lootboxRow = cardEl.closest('.lootbox__row');
-                            if (lootboxRow && lootboxRow.offsetWidth > 600) {
-                                scaleFactor *= 0.8;
-                            } else {
-                                scaleFactor *= 1.3;
-                            }
-                        } else if (cardWidth < smallCardThreshold) {
-                            scaleFactor *= 1.3;
-                        }
-                        buttonSize = Math.max(16, Math.min(50, cardWidth * scaleFactor));
-                    }
-                    const fontSize = buttonSize * 0.5;
-                    const positionOffsetY = buttonSize * 1.5;
-                    const positionOffsetX = Math.max(2, Math.min(5, cardWidth * 0.02));
-                    Object.assign(newBtn.style, {
-                        width: `${buttonSize}px`,
-                        height: `${buttonSize}px`,
-                        fontSize: `${fontSize}px`,
-                        borderRadius: '50%',
-                        padding: '0',
-                        bottom: `${positionOffsetY}px`,
-                        right: `${positionOffsetX}px`
-                    });
-                    if (!isEnabled) {
-                        newBtn.style.opacity = '0';
-                        newBtn.style.visibility = 'hidden';
-                        newBtn.style.pointerEvents = 'none';
-                    }
-                    newBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); e.preventDefault();
-                        if (!userId) {
-                            updateButtonContent(newBtn, '🔒');
-                            newBtn.classList.add('checked');
-                            return;
-                        }
-                        checkCardDuplicates(cardEl);
-                    });
-                    cardEl.classList.add('acm-card-container');
-                    if (window.getComputedStyle(cardEl).position === 'static') {
-                        cardEl.style.position = 'relative';
-                    }
-                    cardEl.appendChild(newBtn);
-                }
-            }
-
-            // ##################################################
-            // ##################################################
-            function createMainCheckButton() {
-                if (document.getElementById('check-all-duplicates-btn')) return;
-                const mainButton = document.getElementById('check-all-duplicates-btn') || document.createElement('button');
-                if (!mainButton.id) mainButton.id = 'check-all-duplicates-btn';
-                mainButton.title = "Проверить дубликаты карт";
-                let duplicatesIcon = mainButton.querySelector('span');
-                if (!duplicatesIcon) {
-                    duplicatesIcon = document.createElement('span');
-                    mainButton.appendChild(duplicatesIcon);
-                }
-                Object.assign(mainButton.style, {
-                    position:'fixed', right:'12px', bottom:'180px', zIndex:'102',
-                    width:'40px', height:'40px', border:'none', borderRadius:'50%',
-                    transition:'transform 0.1s ease, box-shadow 0.1s ease, background 0.3s ease, opacity 0.3s ease, visibility 0s linear 0s',
-                    color:'white', cursor:'pointer',
-                    display:'flex', alignItems:'center', justifyContent:'center', padding:'0'
-                });
-
-                // ##################################################
-                // # (внутри createMainCheckButton) Обновляет иконку и состояние главной кнопки (старт, пауза, загрузка).
-                // ##################################################
-                function updateMainButtonUI() {
-                    mainButton.disabled = false;
-                    if (массоваяПроверкаДублейНаПаузе) {
-                        duplicatesIcon.className = 'fal fa-play';
-                        mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))';
-                        mainButton.title = "Возобновить проверку дубликатов";
-                    } else if (массоваяПроверкаДублейЗапущена) {
-                        duplicatesIcon.className = 'fal fa-spinner fa-spin';
-                        mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))';
-                        mainButton.title = "Поставить проверку дубликатов на паузу";
-                    } else {
-                        duplicatesIcon.className = 'fal fa-search';
-                        mainButton.style.background = 'linear-gradient(145deg, rgb(100, 50, 50), rgb(50, 50, 50))';
-                        mainButton.title = "Проверить дубликаты карт";
-                    }
-                    duplicatesIcon.style.fontSize = '18px';
-                }
-
-                // ##################################################
-                // # (внутри createMainCheckButton) Обрабатывает следующую порцию (batch) карт при массовой проверке.
-                // ##################################################
-                async function processNextBatch() {
-                    if (idТаймаутаСледующегоБатча) clearTimeout(idТаймаутаСледующегоБатча);
-                    idТаймаутаСледующегоБатча = null;
-                    if (isCardInPackSelected) {
-                        console.log('[AutoPackCheck] Выбор сделан, проверка дубликатов прервана.');
-                        массоваяПроверкаДублейЗапущена = false;
-                        isProcessingAutoPackCheck = false;
-                        индексПоследнейПровереннойКарты = 0;
-                        массивКартДляПроверки = [];
-                        updateMainButtonUI();
-                        return;
-                    }
-                    if (массоваяПроверкаДублейНаПаузе) {
-                        safeDLEPushCall('info', "Проверка дубликатов поставлена на паузу.");
-                        updateMainButtonUI();
-                        return;
-                    }
-                    if (!массоваяПроверкаДублейЗапущена) {
-                        updateMainButtonUI();
-                        return;
-                    }
-                    updateMainButtonUI();
-                    if (isProcessingAutoPackCheck) {
-                        const cardToProcess = массивКартДляПроверки[индексПоследнейПровереннойКарты];
-                        checkCardDuplicates(cardToProcess, true);
-                        индексПоследнейПровереннойКарты++;
-                        if (индексПоследнейПровереннойКарты < массивКартДляПроверки.length) {
-                            const delay = GM_getValue('autoDup_delay_ms', 150);
-                            if (массоваяПроверкаДублейЗапущена && !массоваяПроверкаДублейНаПаузе) {
-                                idТаймаутаСледующегоБатча = setTimeout(processNextBatch, delay);
-                            } else {
-                                updateMainButtonUI();
-                            }
-                        } else {
-                            if (массоваяПроверкаДублейЗапущена && showDuplicateCheckNotifications) {
-                                safeDLEPushCall('success', "Массовая проверка дубликатов завершена.");
-                            }
-                            массоваяПроверкаДублейЗапущена = false;
-                            isProcessingAutoPackCheck = false;
-                            индексПоследнейПровереннойКарты = 0;
-                            массивКартДляПроверки = [];
-                            updateMainButtonUI();
-                        }
-                    } else {
-                        const batchSize = 1;
-                        const batch = массивКартДляПроверки.slice(индексПоследнейПровереннойКарты, индексПоследнейПровереннойКарты + batchSize);
-                        if (batch.length === 0) {
-                            if (массоваяПроверкаДублейЗапущена && showDuplicateCheckNotifications) {
-                                safeDLEPushCall('success', "Массовая проверка дубликатов завершена.");
-                            }
-                            массоваяПроверкаДублейЗапущена = false;
-                            isProcessingAutoPackCheck = false;
-                            индексПоследнейПровереннойКарты = 0;
-                            массивКартДляПроверки = [];
-                            updateMainButtonUI();
-                            return;
-                        }
-                        await Promise.all(batch.map(card => checkCardDuplicates(card, true)));
-                        индексПоследнейПровереннойКарты += batch.length;
-                        if (индексПоследнейПровереннойКарты < массивКартДляПроверки.length) {
-                            const delay = 1000;
-                            if (массоваяПроверкаДублейЗапущена && !массоваяПроверкаДублейНаПаузе) {
-                                idТаймаутаСледующегоБатча = setTimeout(processNextBatch, delay);
-                            } else {
-                                updateMainButtonUI();
-                            }
-                        } else {
-                            if (массоваяПроверкаДублейЗапущена && showDuplicateCheckNotifications) {
-                                safeDLEPushCall('success', "Массовая проверка дубликатов завершена.");
-                            }
-                            массоваяПроверкаДублейЗапущена = false;
-                            isProcessingAutoPackCheck = false;
-                            индексПоследнейПровереннойКарты = 0;
-                            массивКартДляПроверки = [];
-                            updateMainButtonUI();
-                        }
-                    }
-                }
-                mainButton.addEventListener('click', async (event) => {
-                    const wasAutoTriggered = unsafeWindow.isAutoDuplicateCheckTriggered === true;
-                    if (wasAutoTriggered) unsafeWindow.isAutoDuplicateCheckTriggered = false;
-                    isCardInPackSelected = false;
-                    showDuplicateCheckNotifications = event.isTrusted;
-                    const userId = getLoggedUserName();
-                    if (!userId) {
-                        safeDLEPushCall('info', "Для массовой проверки дубликатов необходимо войти в систему.");
-                        return;
-                    }
-                    if (массоваяПроверкаДублейЗапущена) {
-                        if (массоваяПроверкаДублейНаПаузе) {
-                            массоваяПроверкаДублейНаПаузе = false;
-                            safeDLEPushCall('info', "Проверка дубликатов возобновлена.");
-                            processNextBatch();
-                        } else {
-                            массоваяПроверкаДублейНаПаузе = true;
-                            if (idТаймаутаСледующегоБатча) {
-                                clearTimeout(idТаймаутаСледующегоБатча);
-                                idТаймаутаСледующегоБатча = null;
-                            }
-                            safeDLEPushCall('info', "Запрос на паузу проверки...");
-                            updateMainButtonUI();
-                        }
-                    } else {
-                        duplicatesCache.clear();
-                        массоваяПроверкаДублейЗапущена = true;
-                        массоваяПроверкаДублейНаПаузе = false;
-                        индексПоследнейПровереннойКарты = 0;
-                        if (showDuplicateCheckNotifications) {
-                            safeDLEPushCall('info', "Начата массовая проверка дубликатов...");
-                        }
-                        массивКартДляПроверки = [];
-                        const allVisibleCards = getCardsOnPage();
-                        for (const element of allVisibleCards) {
-                            if (element.closest('#cards-carousel') || element.closest('.owl-item') || element.classList.contains('card-show__placeholder')) {
-                                continue;
-                            }
-                            if (wasAutoTriggered && isCardPackPage()) {
-                                const settings = unsafeWindow.autoDup_loadSettings();
-                                const rank = element.dataset.rank?.toLowerCase();
-                                if (!rank || settings[rank] !== true) {
-                                    continue;
-                                }
-                            }
-                            if (element.dataset.id || element.dataset.cardId || element.getAttribute('href')) {
-                                массивКартДляПроверки.push(element);
-                            }
-                        }
-                        if (массивКартДляПроверки.length === 0) {
-                            массоваяПроверкаДублейЗапущена = false;
-                            if (showDuplicateCheckNotifications) {
-                                safeDLEPushCall('info', "Нет карт для проверки.");
-                            }
-                            updateMainButtonUI();
-                            return;
-                        }
-                        processNextBatch();
-                    }
-                });
-                mainButton.addEventListener('mousedown', () => { if (!mainButton.disabled) { mainButton.style.transform = 'translateY(2px) scale(0.95)'; mainButton.style.boxShadow = '0 0 5px rgba(0,0,0,0.3)'; }});
-                mainButton.addEventListener('mouseup', () => { if (!mainButton.disabled) { mainButton.style.transform = 'translateY(0) scale(1)'; mainButton.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.7)'; }});
-                mainButton.addEventListener('mouseleave', () => { if (!mainButton.disabled) { mainButton.style.transform = 'translateY(0) scale(1)'; mainButton.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.7)'; }});
-                if (!document.getElementById('check-all-duplicates-btn')) {
-					document.body.appendChild(mainButton);
-				}
-				updateMainButtonUI();
-			}
-			createMainCheckButton();
-			unsafeWindow.addCheckButtons = addCheckButtons;
-			unsafeWindow.checkCardDuplicates = checkCardDuplicates; // ПРАВКА: экспорт функции для работы модуля переплавки
-		}
 
         // ##################################################
         // НАЧАЛО БЛОКА: АВТОПРОВЕРКИ СПРОСА ПАКОВ
@@ -8106,7 +9360,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 return false;
             };
             const setEnabled = (val) => {
-				// ПРАВКА: Замена localStorage на GM_setValue для междоменной синхронизации
                 if (isPacks) GM_setValue('autoPackCheckEnabledState', autoPackCheckEnabled = val);
                 else if (isTradeCreation) GM_setValue('autoDuplicateTradeEnabledState', autoDuplicateTradeEnabled = val);
                 else if (isTradeOffer) GM_setValue('autoDuplicateOffersEnabledState', autoDuplicateOffersEnabled = val);
@@ -8299,112 +9552,95 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
         }
 
-        // ##################################################
-        // # Создает кнопку и MutationObserver для автоматической проверки спроса на A/S карты на странице паков.
-        // ##################################################
-        async function createAutoDemandCheckFeature() {
-            if (!isCardPackPage()) return;
-            const settings = await unsafeWindow.autoDemand_loadSettings();
-            const isAnyRankEnabled = Object.values(settings).some(isEnabled => isEnabled);
-            if (!isAnyRankEnabled) {
-                return;
-            }
-            const button = document.createElement('button');
-            button.id = 'autoDemandCheckButton';
-            Object.assign(button.style, {
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                position: 'fixed',
-                bottom: '390px',
-                right: '27px',
-                mask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
-                '-webkit-mask': 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
-                justifyContent: 'flex-start',
-                padding: '0 0 0 1px',
-                zIndex: '100',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 0 10px rgba(0,0,0,0.7)',
-                display: 'flex',
-                alignItems: 'center',
-                transition: 'all 0.3s ease',
-                color: 'black'
-            });
-            const icon = document.createElement('span');
-            icon.className = 'fal fa-rocket';
-            icon.style.fontSize = '10px';
-            button.appendChild(icon);
+        /**
+		 * Создает кнопку и инициализирует логику автоматической проверки спроса в паках.
+		 * Синхронизирует состояние активации модуля между всеми зеркалами сайта.
+		 */
+		async function createAutoDemandCheckFeature() {
+			if (!isCardPackPage()) return;
+			const settings = await unsafeWindow.autoDemand_loadSettings();
+			const isAnyRankEnabled = Object.values(settings).some(isEnabled => isEnabled);
+			if (!isAnyRankEnabled) return;
 
-            // ##################################################
-            // # Обновляет вид кнопки автопроверки спроса (цвет, подсказку, анимацию) в зависимости от её состояния (вкл/выкл).
-            // ##################################################
-            function updateButtonStateVisuals() {
+			const button = document.createElement('button');
+			button.id = 'autoDemandCheckButton';
+			Object.assign(button.style, {
+				width: '40px', height: '40px', borderRadius: '50%', position: 'fixed',
+				bottom: '390px', right: '27px', zIndex: '100', border: 'none', cursor: 'pointer',
+				boxShadow: '0 0 10px rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center',
+				transition: 'all 0.3s ease', color: 'black',
+				mask: 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
+				'-webkit-mask': 'radial-gradient(circle at 80% 50%, transparent 20px, black 0px)',
+				justifyContent: 'flex-start', padding: '0 0 0 1px'
+			});
+
+			const icon = document.createElement('span');
+			icon.className = 'fal fa-rocket';
+			icon.style.fontSize = '10px';
+			button.appendChild(icon);
+
+			function updateButtonStateVisuals() {
 				const en = autoDemandCheckEnabled;
-				// ПРАВКА: Компактная запись и исправление цветов для мгновенного применения
 				button.style.background = en ? 'linear-gradient(145deg, #28a745, #1e7e34)' : 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
 				button.title = `Автоспрос (Паки): ${en ? 'ВКЛ' : 'ВЫКЛ'}`;
 				icon.style.animation = en ? 'packCheckSpin 2s linear infinite' : 'none';
 			}
-            updateButtonStateVisuals();
-            button.addEventListener('click', () => {
-                autoDemandCheckEnabled = !autoDemandCheckEnabled;
-                localStorage.setItem('autoDemandCheckEnabledState', autoDemandCheckEnabled.toString());
-                updateButtonStateVisuals();
-                safeDLEPushCall('info', `Автопроверка спроса (для A/S) ${autoDemandCheckEnabled ? 'включена' : 'выключена'}.`);
-                if (autoDemandCheckEnabled) {
-                    const lootboxRow = document.querySelector('.lootbox__row');
-                    if (lootboxRow && lootboxRow.offsetParent !== null) {
-                        const currentPackId = lootboxRow.dataset.packId;
-                        if (currentPackId && currentPackId !== lastProcessedPackIdForDemandCheck) {
-                            console.log('[AutoDemandCheck] Запуск проверки при включении для видимого пака ID:', currentPackId);
-                            triggerMassDemandCheckForPackPage(currentPackId);
-                        }
-                    }
-                }
-            });
-            document.body.appendChild(button);
-            if (!managedButtonSelectors.includes('#autoDemandCheckButton')) {
-                managedButtonSelectors.push('#autoDemandCheckButton');
-            }
-            const observerTargetNode = document.querySelector('.ncard-pack.lootbox');
-            if (!observerTargetNode) return;
-            let isCheckingDemand = false;
-            const demandObserver = new MutationObserver(() => {
-                if (isProcessingBuyClick) return;
-                if (!autoDemandCheckEnabled || isCheckingDemand) {
-                    return;
-                }
-                const lootboxRow = document.querySelector('.lootbox__row');
-                if (!lootboxRow) return;
-                const currentPackId = lootboxRow.dataset.packId;
-                if (currentPackId && currentPackId !== lastProcessedPackIdForDemandCheck && lootboxRow.offsetParent !== null) {
-                    isCheckingDemand = true;
-                    const cardsToClean = lootboxRow.querySelectorAll('.lootbox__card');
-                    cardsToClean.forEach(card => {
-                        card.classList.remove('div-checked');
-                        const checkMark = card.querySelector('.div-marked.fa-check');
-                        if (checkMark) checkMark.remove();
-                    });
-                    lastProcessedPackIdForDemandCheck = currentPackId;
-                    setTimeout(() => {
-                        const finalCheckRow = document.querySelector('.lootbox__row');
-                        if (finalCheckRow && finalCheckRow.dataset.packId === currentPackId) {
-                            triggerMassDemandCheckForPackPage(currentPackId);
-                        } else {
-                        }
 
-                        isCheckingDemand = false;
-                    }, 50);
-                }
-            });
-            demandObserver.observe(observerTargetNode, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                attributeFilter: ['style', 'data-pack-id', 'class']
-            });
-        }
+			updateButtonStateVisuals();
+
+			button.addEventListener('click', () => {
+				autoDemandCheckEnabled = !autoDemandCheckEnabled;
+				GM_setValue('autoDemandCheckEnabledState', autoDemandCheckEnabled);
+				updateButtonStateVisuals();
+				safeDLEPushCall('info', `Автопроверка спроса (для A/S) ${autoDemandCheckEnabled ? 'включена' : 'выключена'}.`);
+				
+				if (autoDemandCheckEnabled) {
+					const lootboxRow = document.querySelector('.lootbox__row');
+					if (lootboxRow && lootboxRow.offsetParent !== null) {
+						const currentPackId = lootboxRow.dataset.packId;
+						if (currentPackId && currentPackId !== lastProcessedPackIdForDemandCheck) {
+							triggerMassDemandCheckForPackPage(currentPackId);
+						}
+					}
+				}
+			});
+
+			document.body.appendChild(button);
+			if (!managedButtonSelectors.includes('#autoDemandCheckButton')) {
+				managedButtonSelectors.push('#autoDemandCheckButton');
+			}
+
+			const observerTargetNode = document.querySelector('.ncard-pack.lootbox');
+			if (!observerTargetNode) return;
+			let isCheckingDemand = false;
+			const demandObserver = new MutationObserver(() => {
+				if (isProcessingBuyClick) return;
+				if (!autoDemandCheckEnabled || isCheckingDemand) return;
+				const lootboxRow = document.querySelector('.lootbox__row');
+				if (!lootboxRow) return;
+				const currentPackId = lootboxRow.dataset.packId;
+				if (currentPackId && currentPackId !== lastProcessedPackIdForDemandCheck && lootboxRow.offsetParent !== null) {
+					isCheckingDemand = true;
+					const cardsToClean = lootboxRow.querySelectorAll('.lootbox__card');
+					cardsToClean.forEach(card => {
+						card.classList.remove('div-checked');
+						const checkMark = card.querySelector('.div-marked.fa-check');
+						if (checkMark) checkMark.remove();
+					});
+					lastProcessedPackIdForDemandCheck = currentPackId;
+					setTimeout(() => {
+						const finalCheckRow = document.querySelector('.lootbox__row');
+						if (finalCheckRow && finalCheckRow.dataset.packId === currentPackId) {
+							triggerMassDemandCheckForPackPage(currentPackId);
+						}
+						isCheckingDemand = false;
+					}, 50);
+				}
+			});
+			demandObserver.observe(observerTargetNode, {
+				childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'data-pack-id', 'class']
+			});
+		}
         // ##################################################
         // КОНЕЦ БЛОКА: АВТОПРОВЕРКА СПРОСА ПАКОВ
         // ##################################################
@@ -8639,37 +9875,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
         }
 	
-
-        // ##################################################
-        // # Получает имя текущего залогиненного пользователя из разных мест на странице.
-        // ##################################################
-        function asbm_getUsername() {
-            let userEl = document.querySelector('.lgn__name span');
-            if (userEl && userEl.textContent) {
-                return userEl.textContent.trim();
-            }
-            userEl = document.querySelector('.header__ava.js-show-login img, .lgn__ava.usn__ava img');
-            if (userEl) {
-                const username = userEl.getAttribute('title') || userEl.getAttribute('alt');
-                if (username) return username.trim();
-            }
-            userEl = document.querySelector('.lgn__name a[href*="/user/"]');
-            if (userEl && userEl.href) {
-                const match = userEl.href.match(/\/user\/([^/]+)\/?/);
-                if (match && match[1]) {
-                    return decodeURIComponent(match[1]);
-                }
-            }
-            userEl = document.querySelector('#vm-custom-buttons-container a[href*="/user/"]');
-            if (userEl && userEl.href) {
-                const match = userEl.href.match(/\/user\/cards\/\?name=([^&]+)/);
-                if (match && match[1]) {
-                    return decodeURIComponent(match[1]);
-                }
-            }
-            return null;
-        }
-
         // ##################################################
         // # Обновляет все визуальные элементы счетчиков.
         // ##################################################
@@ -9062,36 +10267,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         // ##################################################
         // КОНЕЦ БЛОКА: Кастомных закладок
         // ##################################################
-
-        // ##################################################
-        // # Возвращает правильное склонение слова (час, часа, часов) в зависимости от числа.
-        // ##################################################
-        function getPlural(number, one, two, five) {
-            let n = Math.abs(number);
-            n %= 100;
-            if (n >= 5 && n <= 20) return five;
-            n %= 10;
-            if (n === 1) return one;
-            if (n >= 2 && n <= 4) return two;
-            return five;
-        }
-
-        // ##################################################
-        // # Конвертирует часы в удобочитаемый формат (например, "1 день и 5 часов").
-        // ##################################################
-        function convertHoursToReadableString(totalHours) {
-            if (totalHours === 0) return "0 часов (без кэша)";
-            const days = Math.floor(totalHours / 24);
-            const remainingHours = totalHours % 24;
-            let parts = [];
-            if (days > 0) {
-                parts.push(`${days} ${getPlural(days, 'день', 'дня', 'дней')}`);
-            }
-            if (remainingHours > 0) {
-                parts.push(`${remainingHours} ${getPlural(remainingHours, 'час', 'часа', 'часов')}`);
-            }
-            return parts.join(' и ');
-        }
 
         // ##################################################
         // # Открывает модальное окно для настройки времени жизни кэша спроса карт.
@@ -9715,166 +10890,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         }
 		unsafeWindow.renderCrystalHistory = renderCrystalHistory;
 
-	// Универсальная функция обновления визуального состояния кнопки Замка
-	async function updateLeaderLockButtonView() {
-        const btn = document.getElementById('leaderLockButton');
-        const radar = document.getElementById('leaderRadarButton');
-        if (!btn) return;
-        const icon = btn.querySelector('i');
-
-        const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
-        const currentLeaderJSON = localStorage.getItem(LEADER_KEY_WATCH);
-        let leaderData = null;
-        try { leaderData = JSON.parse(currentLeaderJSON); } catch(e) {}
-
-        const now = Date.now();
-        const isLeaderAlive = leaderData && (now - leaderData.time <= LEADER_TIMEOUT_WATCH);
-        const isThisTab = (tabIdWatch);
-
-        btn.style.animation = '';
-
-        // Показываем радар, только если лидер — не мы
-        if (radar) radar.style.display = (leaderData && leaderData.id !== isThisTab) ? 'flex' : 'none';
-
-        if (lockedId === isThisTab) {
-            btn.style.background = 'linear-gradient(145deg, #43b581, #2e7d32)';
-            icon.className = 'fas fa-lock';
-            btn.title = 'ВЫ — ФИКСИРОВАННЫЙ ЛИДЕР';
-        } else if (lockedId && isLeaderAlive) {
-            btn.style.background = 'linear-gradient(145deg, #faa61a, #f57c00)';
-            icon.className = 'fas fa-lock';
-            // ВЫВОДИМ URL И ЗАГОЛОВОК
-            btn.title = `ЗАФИКСИРОВАНО ДРУГИМ\nСтраница: ${leaderData.title || '??'}\nURL: ${leaderData.url || '??'}`;
-        } else if (isLeaderWatch && !lockedId) {
-            btn.style.background = 'linear-gradient(145deg, #00bcd4, #0097a7)';
-            icon.className = 'fas fa-lock-open';
-            btn.title = 'ВЫ — АВТОЛИДЕР (Скрипт выбрал эту вкладку)';
-        } else if (leaderData && isLeaderAlive && !lockedId) {
-            btn.style.background = 'linear-gradient(145deg, #607d8b, #455a64)';
-            icon.className = 'fas fa-lock-open';
-            btn.title = `АВТОЛИДЕР В ДРУГОЙ ВКЛАДКЕ\nСтраница: ${leaderData.title || '??'}\nURL: ${leaderData.url || '??'}`;
-        } else {
-            btn.style.background = 'linear-gradient(145deg, #f44336, #c62828)';
-            icon.className = 'fas fa-exclamation-triangle';
-            btn.title = 'ЛИДЕР НЕ ОПРЕДЕЛЕН (Перевыборы...)';
-            btn.style.animation = 'acm-spin 2s infinite linear';
-        }
-    }
-    unsafeWindow.updateLeaderLockButtonView = updateLeaderLockButtonView;
-
-        // ##################################################
-        // # Создает и инициализирует UI-компонент (кнопку-замок) для управления блокировкой лидера.
-        // ##################################################
-		async function createLeaderLockButton() {
-			const isEnabled = await GM_getValue(LEADER_LOCK_BTN_ENABLED_KEY, true);
-			if (!isEnabled || document.getElementById('leader-group-container')) return;
-
-			// ВСТРАИВАЕМ СТИЛИ (из Шага 1)
-			GM_addStyle(`
-				#leader-group-container {
-					position: fixed;
-					bottom: 166px; /* Вернули замок на его законное место */
-					right: 12px;
-					z-index: 101; /* Ниже лупы (102), но выше остального */
-					width: 130px; /* Широкая зона влево для радара */
-					height: 40px; /* Высота ровно под кнопку, чтобы не жать на слайдер */
-					display: flex;
-					align-items: center;
-					justify-content: flex-end;
-					pointer-events: none;
-					/* background: rgba(255,0,0,0.1); */ /* Раскомментируйте для отладки зоны */
-				}
-				#leaderRadarButton, #leaderLockButton {
-					pointer-events: auto;
-				}
-				#leaderRadarButton {
-					width: 36px; height: 36px; border-radius: 50%;
-					background: linear-gradient(145deg, #5865f2, #4752c4);
-					color: white; border: 1px solid #4f545c; cursor: pointer;
-					display: flex; align-items: center; justify-content: center;
-					box-shadow: 0 0 10px rgba(0,0,0,0.5);
-					margin-right: 12px;
-
-					opacity: 0;
-					transform: translateX(30px) scale(0.5);
-					transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-					transition-delay: 0.3s; /* Задержка перед скрытием */
-					visibility: hidden;
-				}
-				#leader-group-container:hover #leaderRadarButton {
-					opacity: 1;
-					transform: translateX(0) scale(1);
-					visibility: visible;
-					transition-delay: 0s;
-				}
-				#leaderLockButton {
-					width: 40px; height: 20px;
-					background: #4f545c; border: none;
-					border-radius: 0 0 20px 20px; color: white;
-					cursor: pointer; boxShadow: 0 0 10px rgba(0,0,0,0.7);
-					display: flex; align-items: center; justify-content: center;
-					mask: radial-gradient(circle at 50% -75%, transparent 24px, black 0px);
-					-webkit-mask: radial-gradient(circle at 50% -75%, transparent 24px, black 0px);
-					flex-shrink: 0; /* Чтобы не сжимался в flex-контейнере */
-					margin-bottom: -10px; /* Смещаем сам замок чуть вниз внутри контейнера для эффекта подлезания */
-				}
-				@keyframes beacon-pulse {
-					0% { box-shadow: 0 0 0 0px rgba(244, 67, 54, 0.7); }
-					100% { box-shadow: 0 0 0 15px rgba(244, 67, 54, 0); }
-				}
-				.beacon-active { animation: beacon-pulse 1s infinite; }
-			`);
-
-			const container = document.createElement('div');
-			container.id = 'leader-group-container';
-
-			// Кнопка Радара
-			const radarBtn = document.createElement('button');
-			radarBtn.id = 'leaderRadarButton';
-			radarBtn.innerHTML = '<i class="fas fa-satellite-dish"></i>';
-			radarBtn.title = 'Найти вкладку лидера (сигнал)';
-			radarBtn.onclick = () => {
-				const data = localStorage.getItem(LEADER_KEY_WATCH);
-				if (data) {
-					const leader = JSON.parse(data);
-					GM_setValue('ascm_find_leader_signal', { targetId: leader.id, ts: Date.now() });
-					safeDLEPushCall('custom', 'Сигнал "Маяка" отправлен!\nИщите вкладку с мигающим заголовком.');
-				}
-			};
-
-			// Кнопка Замка
-			const lockBtn = document.createElement('button');
-			lockBtn.id = 'leaderLockButton';
-			Object.assign(lockBtn.style, {
-				width: '40px', height: '20px', background: '#4f545c',
-				border: 'none', borderRadius: '0 0 20px 20px', color: 'white',
-				cursor: 'pointer', boxShadow: '0 0 10px rgba(0,0,0,0.7)',
-				display: 'flex', alignItems: 'center', justifyContent: 'center',
-				mask: 'radial-gradient(circle at 50% -75%, transparent 24px, black 0px)',
-				'-webkit-mask': 'radial-gradient(circle at 50% -75%, transparent 24px, black 0px)',
-			});
-			const icon = document.createElement('i');
-			icon.style.fontSize = '12px'; icon.style.marginBottom = '-10px';
-			lockBtn.appendChild(icon);
-
-			lockBtn.onclick = async () => {
-				const currentlyLockedId = await GM_getValue(LEADER_LOCK_KEY, null);
-				if (!currentlyLockedId) {
-					await GM_setValue(LEADER_LOCK_KEY, tabIdWatch);
-					safeDLEPushCall('success', 'Лидерство зафиксировано!');
-				} else if (currentlyLockedId === tabIdWatch) {
-					await GM_deleteValue(LEADER_LOCK_KEY);
-					safeDLEPushCall('info', 'Фиксация снята.');
-				}
-				localStorage.removeItem(LEADER_KEY_WATCH);
-				tryToBecomeLeaderWatch();
-			};
-
-			container.appendChild(radarBtn);
-			container.appendChild(lockBtn);
-			document.body.appendChild(container);
-			updateLeaderLockButtonView();
-		}
 
 // ##################################################
 // НАЧАЛО БЛОКА СОРТИРОВКИ ПО СПРОСУ (ИНВЕНТАРЬ/ТРЕЙДЫ)
@@ -10851,17 +11866,17 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                             }
                         }
                     }
-                    if (typeof highlightTargetUserWishlist === 'function') {
-                        highlightTargetUserWishlist();
-                        if (typeof unsafeWindow.highlightNoSRankDecks === 'function') {
-                            unsafeWindow.highlightNoSRankDecks();
-                        }
-                        // Безопасный вызов нашей новой функции
-                        if (typeof highlightReadyToStarCards === 'function') {
-                            highlightReadyToStarCards(); 
-                        }
-                    }
-                };
+                    // Принудительный запуск всех визуальных модулей при загрузке
+					(async () => {
+						await highlightTargetUserWishlist();
+						if (typeof unsafeWindow.highlightNoSRankDecks === 'function') {
+							await unsafeWindow.highlightNoSRankDecks();
+						}
+						if (typeof highlightReadyToStarCards === 'function') {
+							await highlightReadyToStarCards(); 
+						}
+					})();
+				};
                 setTimeout(processCardChanges);
                 const targetSelectors = [
                     '#ascm-remelt-grid', 
@@ -11037,13 +12052,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             const defaultVideoURL = 'https://v1.pinimg.com/videos/mc/720p/01/95/b7/0195b75a59c8fc7f0f0abe1d69ea062a.mp4';
 
             // ##################################################
-            // # Генерирует уникальный ID на основе времени и случайного числа.
-            // ##################################################
-            function generateUniqueId() {
-                return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
-            }
-
-            // ##################################################
             // # Гарантирует, что защищенный фон по умолчанию присутствует в списке источников.
             // ##################################################
             function ensureProtectedBackgroundExists(settings) {
@@ -11110,12 +12118,12 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
             saveBgSettingsToLocalStorage();
 
-            // ##################################################
-            // # ПРАВКА: Сохраняет настройки фона в GM_setValue для всех зеркал.
-            // ##################################################
-            function saveBgSettingsToLocalStorage() {
-                GM_setValue('bgSettings', bgSettings);
-            }
+            /**
+			 * Сохраняет объект настроек фона (источники и активный ID) в кросс-доменное хранилище.
+			 */
+			function saveBgSettingsToLocalStorage() {
+				GM_setValue('bgSettings', bgSettings);
+			}
 
             // ##################################################
             // # Отрисовывает (перерисовывает) список сохраненных фонов в панели управления.
@@ -11486,19 +12494,25 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
             unsafeWindow.toggleControlPanel = toggleControlPanel;
 
-            // ##################################################
-            // # Включает или отключает отображение кастомного фона и сохраняет состояние.
-            // ##################################################
-            function toggleStyles() {
-                stylesEnabled = !stylesEnabled;
-                localStorage.setItem('stylesEnabled', stylesEnabled.toString());
-                if (stylesEnabled) applyStyles();
-                else resetStyles();
-                const toggleCheckbox = document.getElementById('bg-styles-enabled-toggle');
-                if (toggleCheckbox) {
-                    toggleCheckbox.checked = stylesEnabled;
-                }
-            }
+            /**
+			 * Включает или отключает отображение кастомного фона.
+			 * Синхронизирует состояние (вкл/выкл) между всеми зеркалами сайта.
+			 */
+			function toggleStyles() {
+				stylesEnabled = !stylesEnabled;
+				GM_setValue('stylesEnabled', stylesEnabled);
+				
+				if (stylesEnabled) {
+					applyStyles();
+				} else {
+					resetStyles();
+				}
+
+				const toggleCheckbox = document.getElementById('bg-styles-enabled-toggle');
+				if (toggleCheckbox) {
+					toggleCheckbox.checked = stylesEnabled;
+				}
+			}
 
             // ##################################################
             // # Инициализирует всю функциональность кастомного фона: UI, стили и обработчики.
@@ -11616,49 +12630,55 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             });
             await initializeCrystalState();
 
-            // ##################################################
-            // # Асинхронная самовызывающаяся функция для инициализации состояния сбора кристаллов при загрузке.
-            // ##################################################
-            async function initializeCrystalState() {
-                scriptEnabledWatch = localStorage.getItem(STORAGE_KEY_WATCH) === 'true';
-                crystalScriptEnabled = await GM_getValue(CRYSTAL_SCRIPT_ENABLED_KEY, false);
-                updateCrystalButtonStyle();
-                clickedCrystals = await GM_getValue('gm_clickedCrystals', 0);
-                collectedStones = await GM_getValue('gm_collectedStones', 0);
-                soundEnabled = await GM_getValue('gm_crystalSoundEnabled', false);
-                if (typeof unsafeWindow.updateCrystalButtonCounter === 'function') {
-                    unsafeWindow.updateCrystalButtonCounter();
-                }
-				if (crystalScriptEnabled) {
-                    await startAutoClickCrystalScript();
-                } else {
-                    stopActiveCrystalOperations();
-                }
-                if (scriptEnabledWatch || crystalScriptEnabled) {
-                    if (typeof unsafeWindow.tryToBecomeLeaderWatch === 'function') {
-                        unsafeWindow.tryToBecomeLeaderWatch();
-                    }
-                } else {
-                    if (typeof unsafeWindow.stopMainCardCheckLogic === 'function') {
-                        unsafeWindow.stopMainCardCheckLogic();
-                    }
-                    const leaderDataJSON = localStorage.getItem(LEADER_KEY_WATCH);
-                    if (leaderDataJSON) {
-                        try {
-                            const leader = JSON.parse(leaderDataJSON);
-                            if (unsafeWindow.tabIdWatch && leader.id === unsafeWindow.tabIdWatch) {
-                                localStorage.removeItem(LEADER_KEY_WATCH);
-                                console.log("[Лидерство] Освобождено при инициализации (оба модуля выключены).");
-                            }
-                        } catch (e) { /* молчим */ }
-                    }
-                    isLeaderWatch = false;
-                    if (heartbeatIntervalId) {
-                        clearInterval(heartbeatIntervalId);
-                        heartbeatIntervalId = null;
-                    }
-                }
-            }
+	/**
+	 * Инициализирует состояние модулей Автосбора и Кристаллов при загрузке страницы.
+	 * Обеспечивает синхронизацию настроек между всеми зеркалами сайта.
+	 */
+	async function initializeCrystalState() {
+		scriptEnabledWatch = GM_getValue(STORAGE_KEY_WATCH, true);
+		
+		crystalScriptEnabled = await GM_getValue(CRYSTAL_SCRIPT_ENABLED_KEY, false);
+		updateCrystalButtonStyle();
+		
+		clickedCrystals = await GM_getValue('gm_clickedCrystals', 0);
+		collectedStones = await GM_getValue('gm_collectedStones', 0);
+		soundEnabled = await GM_getValue('gm_crystalSoundEnabled', false);
+
+		if (typeof unsafeWindow.updateCrystalButtonCounter === 'function') {
+			unsafeWindow.updateCrystalButtonCounter();
+		}
+
+		if (crystalScriptEnabled) {
+			await startAutoClickCrystalScript();
+		} else {
+			stopActiveCrystalOperations();
+		}
+
+		if (scriptEnabledWatch || crystalScriptEnabled) {
+			if (typeof unsafeWindow.tryToBecomeLeaderWatch === 'function') {
+				unsafeWindow.tryToBecomeLeaderWatch();
+			}
+		} else {
+			if (typeof unsafeWindow.stopMainCardCheckLogic === 'function') {
+				unsafeWindow.stopMainCardCheckLogic();
+			}
+			
+			const leaderDataJSON = GM_getValue(LEADER_KEY_WATCH, null);
+			if (leaderDataJSON) {
+				try {
+					const leader = JSON.parse(leaderDataJSON);
+					if (leader.id === tabIdWatch) {
+						GM_deleteValue(LEADER_KEY_WATCH);
+					}
+				} catch (e) {}
+			}
+			isLeaderWatch = false;
+			if (heartbeatIntervalId) {
+				clearInterval(heartbeatIntervalId);
+				heartbeatIntervalId = null;
+			}
+		}
+	}
             if (!window.location.pathname.includes('/clubs/boost/')) {
                 await initDuplicateChecker();
             }
@@ -12948,19 +13968,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         // # Скрипт для автоматического просмотра (Аниме) и сбора карт с него.
         // ##################################################
         (function() {
-            'use strict';
-            if (window.self !== window.top) {
-                return;
-            }
-            let tabIdWatch = sessionStorage.getItem('ascm_tabId');
-            if (!tabIdWatch) {
-                const tabTimestamp = Date.now();
-                tabIdWatch = tabTimestamp.toString() + "_" + Math.random().toString(36).substr(2, 5);
-                sessionStorage.setItem('ascm_tabId', tabIdWatch);
-            } else {
-            }
-            const tabTimestamp = parseInt(tabIdWatch.split('_')[0], 10);
-            unsafeWindow.tabIdWatch = tabIdWatch;
+		'use strict';
+		if (window.self !== window.top) return;
+
+		// (Переменные tabIdWatch и tabTimestamp теперь берутся из глобальной области)
             let dleHashCheckAttemptsWatch = 0;
             const MAX_DLE_HASH_CHECK_ATTEMPTS_WATCH = 5;
             const DLE_HASH_CHECK_INTERVAL_WATCH = 20000;
@@ -13012,524 +14023,23 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 			unsafeWindow.updateFullToggleButtonState = updateFullToggleButtonState;
 
 
-            // ##################################################
-            // Запускает "аудио-будильник", чтобы предотвратить засыпание вкладки.
-            // ##################################################
-            function startKeepAwake() {
-                if (keepAwakeInterval) return;
-                console.log("🔊 Будильник от зависания - активирован.");
-                const playSilence = () => {
-                    if (!isLeaderWatch) {
-                        stopKeepAwake();
-                        return;
-                    }
-                    try {
-                        if (!audioContext) {
-                            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        }
-                        if (audioContext.state !== 'running') {
-                            return;
-                        }
-                        const buffer = audioContext.createBuffer(1, 1, 22050);
-                        const source = audioContext.createBufferSource();
-                        source.buffer = buffer;
-                        source.connect(audioContext.destination);
-                        source.start();
 
-                    } catch (e) {
-                        console.warn("Ошибка воспроизведения тишины.", e.message);
-                        stopKeepAwake();
-                    }
-                };
-
-                keepAwakeInterval = setInterval(playSilence, 20000);
-            }
-
-            // ##################################################
-            // Останавливает "аудио-будильник".
-            // ##################################################
-            function stopKeepAwake() {
-                if (keepAwakeInterval) {
-                    clearInterval(keepAwakeInterval);
-                    keepAwakeInterval = null;
-                    console.log("🔇 [Будильник] Деактивирован.");
-                }
-                if (audioContext && audioContext.state !== 'closed') {
-                    audioContext.close();
-                    audioContext = null;
-                }
-                window.removeEventListener('click', universalAudioUnlock, { capture: true });
-                window.removeEventListener('keydown', universalAudioUnlock, { capture: true });
-            }
-
-            // ##################################################
-            // Эта функция будет вызвана один раз при первом клике/нажатии клавиши на странице.
-            // Она "разблокирует" и AudioContext для будильника, и тег <audio> для уведомлений.
-            // ##################################################
-            function universalAudioUnlock(event) {
-                const isUserGesture = event && event.isTrusted;
-                if (!isUserGesture) return;
-                if (audioContext && audioContext.state === 'suspended') {
-                    audioContext.resume().then(() => {
-                        console.log("🔊 AudioContext для будильника - разблокирован.");
-                    }).catch(e => console.warn("Не удалось разблокировать AudioContext:", e.message));
-                }
-                if (typeof notificationSound !== 'undefined' && notificationSound) {
-                    if (!notificationSound.dataset.unlocked) {
-                        notificationSound.load();
-                        notificationSound.dataset.unlocked = "true";
-                        console.log("🔔 Звук уведомлений - разблокирован.");
-                    }
-                }
-                window.removeEventListener('click', universalAudioUnlock, { capture: true });
-                window.removeEventListener('keydown', universalAudioUnlock, { capture: true });
-            }
-            window.addEventListener('click', universalAudioUnlock, { capture: true });
-            window.addEventListener('keydown', universalAudioUnlock, { capture: true });
-
-			// ##################################################
-			// Реализует логику "выборов" лидера. Добавлена защита от перехвата при перезагрузке (Reload Lock).
-			// ##################################################
-			async function tryToBecomeLeaderWatch() {
-				if (unsafeWindow.isElectionInProgress) return;
-				unsafeWindow.isElectionInProgress = true;
-
-				const now = Date.now();
-				const currentLeaderJSON = localStorage.getItem(LEADER_KEY_WATCH);
-				
-				// ПРАВКА: Проверяем ГЛОБАЛЬНЫЙ замок шахты в GM_storage
-				const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
-                if (shahtaLock) {
-                    // Если замок стоит на ДРУГОЙ вкладке и он свежий (менее 25 сек)
-                    if (shahtaLock.id !== tabIdWatch && (now - shahtaLock.ts < 25000)) {
-                        // Мы НЕ ПЫТАЕМСЯ стать лидером и НЕ ПЕРЕХОДИМ в шахту
-                        isLeaderWatch = false;
-                        unsafeWindow.isElectionInProgress = false;
-                        updateLeaderLockButtonView();
-                        return; 
-                    }
-                }
-
-				let currentLeader = null;
-				try { currentLeader = JSON.parse(currentLeaderJSON); } catch(e) {}
-
-				const isLeaderAlive = currentLeader && (now - currentLeader.time <= 15000);
-				const iAmVisible = document.visibilityState === 'visible';
-				const iAmInBoost = window.location.href.includes('/clubs/boost/');
-
-				// Если кто-то уже реально вносит вклад — не перехватываем
-				if (isLeaderAlive && currentLeader.id !== tabIdWatch && currentLeader.isBoosting === true) {
-					isLeaderWatch = false;
-					unsafeWindow.isElectionInProgress = false;
-					updateLeaderLockButtonView();
-					return; 
-				}
-				
-				const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
-
-				// Приоритет 1: Жесткий замок (Leader Lock)
-				if (lockedId) {
-					if (lockedId === tabIdWatch) {
-						becomeLeader();
-						updateLeaderLockButtonView();
-						unsafeWindow.isElectionInProgress = false;
-						return;
-					} else if (isLeaderAlive) {
-						if (isLeaderWatch) stopBeingLeader();
-						updateLeaderLockButtonView();
-						unsafeWindow.isElectionInProgress = false;
-						return;
-					} else {
-						await GM_deleteValue(LEADER_LOCK_KEY);
-					}
-				}
-
-				// Приоритет 2: Активное окно (если лидер мертв или не я)
-				if (iAmVisible && (!isLeaderAlive || currentLeader.id !== tabIdWatch)) {
-					becomeLeader();
-					updateLeaderLockButtonView();
-					unsafeWindow.isElectionInProgress = false;
-					return;
-				}
-
-				// Приоритет 3: Стандартная очередь по "возрасту" вкладки
-				if (currentLeader && currentLeader.id === tabIdWatch) {
-					becomeLeader();
-				} else if (!isLeaderAlive) {
-					const electionDelay = Math.random() * 500 + 100;
-					setTimeout(() => {
-						const check = localStorage.getItem(LEADER_KEY_WATCH);
-						let leaderAgain = null;
-						try { leaderAgain = JSON.parse(check); } catch(e) {}
-
-						if (!leaderAgain || (Date.now() - leaderAgain.time > 15000) || (tabTimestamp < leaderAgain.timestamp)) {
-							becomeLeader();
-						} else if (isLeaderWatch) {
-							 stopBeingLeader();
-						}
-						updateLeaderLockButtonView();
-						unsafeWindow.isElectionInProgress = false;
-					}, electionDelay);
-					return;
-				} else if (isLeaderWatch) {
-					stopBeingLeader();
-				}
-
-				updateLeaderLockButtonView();
-				unsafeWindow.isElectionInProgress = false;
+	/**
+	 * Слушатель уведомлений о полученных картах.
+	 * Обеспечивает отображение пуш-уведомления во всех открытых вкладках.
+	 */
+	let lastNotificationTimestamp = 0;
+	GM_addValueChangeListener(NOTIFY_NEW_CARD_KEY_WATCH, (key, oldValue, newValue, remote) => {
+		if (newValue && newValue.timestamp > lastNotificationTimestamp) {
+			lastNotificationTimestamp = newValue.timestamp;
+			if (typeof showCardReceivedNotification === 'function' && newValue.card) {
+				showCardReceivedNotification(newValue.card);
+			} else if (newValue.message) {
+				safeDLEPushCall('success', newValue.message);
 			}
-			unsafeWindow.tryToBecomeLeaderWatch = tryToBecomeLeaderWatch;
+		}
+	});
 
-            // ##################################################
-            // # Новая функция для правильной и приоритетной инициализации лидерства (v2)
-            // ##################################################
-            unsafeWindow.initializeLeadership = async function() {
-                const lockedLeaderId = await GM_getValue(LEADER_LOCK_KEY, null);
-                if (lockedLeaderId && lockedLeaderId === unsafeWindow.tabIdWatch) {
-                    console.log("Лидерство заблокировано этой вкладкой.");
-                    if (unsafeWindow.isElectionInProgress) return;
-                    unsafeWindow.isElectionInProgress = true;
-                    becomeLeader();
-                    unsafeWindow.isElectionInProgress = false;
-                } else {
-                    console.log("Другая вкладка заблокировала лидерство.");
-                    if (typeof unsafeWindow.tryToBecomeLeaderWatch === 'function') {
-                        await unsafeWindow.tryToBecomeLeaderWatch();
-                    }
-                }
-                if (typeof unsafeWindow.startHeartbeatWatch === 'function') {
-                    unsafeWindow.startHeartbeatWatch();
-                }
-            }
-
-			// ##################################################
-            // Вспомогательная функция для атомарного захвата лидерства (УБРАН ПРИОРИТЕТ isVideo)
-            // ##################################################
-			function becomeLeader() {
-				const isTurboOn = GM_getValue('boosterState', false) === true;
-				const iAmInBoostPage = window.location.href.includes('/clubs/boost/');
-
-				// Проверяем реальный статус буста: либо включена кнопка ТУРБО, либо мы на странице шахты
-				const actuallyBoosting = isTurboOn || iAmInBoostPage;
-
-				if (isLeaderWatch) {
-					try {
-						const leaderData = JSON.parse(localStorage.getItem(LEADER_KEY_WATCH) || '{}');
-						if (leaderData.id === tabIdWatch) {
-							leaderData.time = Date.now();
-							leaderData.isBoosting = actuallyBoosting;
-							localStorage.setItem(LEADER_KEY_WATCH, JSON.stringify(leaderData));
-							return;
-						}
-					} catch(e) {}
-				}
-
-				const payload = JSON.stringify({
-					id: tabIdWatch,
-					time: Date.now(),
-					timestamp: tabTimestamp,
-					isPaused: isCollectionPaused,
-					isBoosting: actuallyBoosting,
-					url: window.location.href,
-					title: document.title.replace("(AnimeStars)", "").trim()
-				});
-				localStorage.setItem(LEADER_KEY_WATCH, payload);
-				localStorage.removeItem(LEADER_CHALLENGE_KEY);
-
-				isLeaderWatch = true;
-				console.log(`%c[Лидерство] Я стал лидером ${actuallyBoosting ? '(ШАХТА/ТУРБО)' : ''}`, "color: #00ff00; font-weight: bold;");
-
-				if (typeof updateFullToggleButtonState === 'function') updateFullToggleButtonState();
-				if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
-
-				ensureMainLogicIsRunning();
-				startKeepAwake();
-			}
-
-            function ensureMainLogicIsRunning() {
-                if (isLeaderWatch && (scriptEnabledWatch || crystalScriptEnabled) && !checkNewCardTimeoutId) {
-                    setTimeout(mainCardCheckLogic, 500);
-                }
-            }
-
-            // ##################################################
-            // Вспомогательная функция для прекращения лидерства.
-            // ##################################################
-            function stopBeingLeader() {
-                isLeaderWatch = false;
-                stopMainCardCheckLogic();
-                updateFullToggleButtonState();
-                stopKeepAwake();
-            }
-
-            // ##################################################
-            // # УМНЫЙ ПУЛЬС: ВЕРСИЯ 4.0 (ПЛАВНЫЙ ТАЙМЕР + ГАРАНТИЯ КЛИКА)
-            // ##################################################
-            function startHeartbeatWatch() {
-                if (heartbeatIntervalId) clearInterval(heartbeatIntervalId);
-                if (!scriptEnabledWatch && !crystalScriptEnabled) return;
-
-                heartbeatIntervalId = setInterval(async () => {
-                    if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
-                    if (isLeaderWatch && window.location.href.includes('/clubs/boost/')) {
-						// Каждые 2.5 сек подтверждаем, что шахта под нашим контролем, на случай релоада
-						localStorage.setItem('ascm_reload_fix_lock', JSON.stringify({id: tabIdWatch, ts: Date.now()}));
-					}
-                    const nowTs = Date.now();
-                    const msk = new Date(nowTs + (3 * 60 * 60 * 1000));
-                    const curH = msk.getUTCHours(), curM = msk.getUTCMinutes(), curS = msk.getUTCSeconds();
-                    const today = msk.toISOString().split('T')[0];
-
-                    const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-                    const clubId = getMyClubIdFromMenu();
-                    const lastTrig = await GM_getValue('ascm_lastTurboTriggerDate', '');
-                    const isDoneToday = lastTrig === today;
-
-                    if (sets.enabled && clubId && !isDoneToday) {
-                        const [sH, sM] = sets.startTime.split(':').map(Number);
-                        const [eH, eM] = sets.endTime.split(':').map(Number);
-                        const boostUrl = `/clubs/boost/?id=${clubId}`;
-                        const isBoostPage = window.location.href.includes(boostUrl);
-
-                        // СТРОГИЙ РАСЧЕТ МСК (UTC+3)
-                        const nowUTC = new Date();
-                        const mskH = (nowUTC.getUTCHours() + 3) % 24;
-                        const mskM = nowUTC.getUTCMinutes();
-                        const mskS = nowUTC.getUTCSeconds();
-
-                        const startTimeInSeconds = (sH * 3600) + (sM * 60);
-                        const endTimeInSeconds = (eH * 3600) + (eM * 60);
-                        const currentTimeInSeconds = (mskH * 3600) + (mskM * 60) + mskS;
-
-                        if (isBoostPage && isLeaderWatch) {
-							if (unsafeWindow.ascm_reload_timer_running) return;
-                            await performShahtaHunterSearch(sets, currentTimeInSeconds, startTimeInSeconds, endTimeInSeconds, today);
-                        }
-                        
-                        // 2. ПРОВЕРКА ВРЕМЕНИ ДЛЯ РЕДИРЕКТА (ИСПРАВЛЕНО)
-                        if (!isBoostPage) {
-                            const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
-                            const isShahtaBusy = shahtaLock && (Date.now() - shahtaLock.ts < 25000);
-
-                            // Если шахта уже занята кем-то другим — мы вообще не шлем сигналы перехода
-                            if (isShahtaBusy && shahtaLock.id !== tabIdWatch) {
-                                if (sets.logLevel == 3) sccLog(`DEBUG: Переход заблокирован. Шахта под контролем: ${shahtaLock.id}`, 'debug');
-                                return; 
-                            }
-
-                            const diff = startTimeInSeconds - currentTimeInSeconds;
-
-                            if (diff > 0 && diff <= (sets.reminderMinutes * 60)) {
-                                await GM_setValue('ascm_global_countdown', { 
-                                    endTs: Date.now() + (diff * 1000), 
-                                    boostUrl, 
-                                    forceUpdate: Math.random() 
-                                });
-                            } 
-                            else if (diff <= 0 && currentTimeInSeconds <= (eH * 3600 + eM * 60)) {
-                                if (isLeaderWatch || isVisible) {
-                                    sccLog("Время пришло. Генерирую сигнал перехода.", 'success', true);
-                                    await GM_setValue('ascm_redirect_signal', { ts: Date.now(), url: boostUrl, force: true });
-                                }
-                            }
-                        }
-                    }
-
-                    // --- ТИХИЙ РЕЖИМ ЧАТА ---
-                    const isBoostTime = sets.enabled && curH === parseInt(sets.startTime.split(':')[0]) && curM >= parseInt(sets.startTime.split(':')[1]) && curM <= (parseInt(sets.endTime.split(':')[1]) + 5);
-					// Если время вкладов ИЛИ если прямо сейчас КНОПКА Турбо активна
-					const isTurboActive = GM_getValue('boosterState', false) === true;
-					unsafeWindow.isSccInBoostWindow = isBoostTime || isTurboActive;
-
-                    if (isLeaderWatch) {
-                        if (typeof checkAndTriggerNewDay === 'function') checkAndTriggerNewDay();
-						if (scriptEnabledWatch) updateCardCounter(false); // Запрос профиля идет только если включен автосбор карт
-                        const ld = localStorage.getItem(LEADER_KEY_WATCH);
-                        try {
-                            const d = JSON.parse(ld || '{}');
-                            // Если в хранилище всё еще я — обновляю время
-                            if (d.id === tabIdWatch) { 
-                                d.time = Date.now(); 
-                                d.isBoosting = (GM_getValue('boosterState', false) === true) || window.location.href.includes('/clubs/boost/');
-                                localStorage.setItem(LEADER_KEY_WATCH, JSON.stringify(d)); 
-                            }
-                            // Если там уже кто-то другой — я больше не лидер
-                            else {
-                                console.warn("[Лидерство] Обнаружена смена лидера в хранилище. Уступаю.");
-                                stopBeingLeader(); 
-                            }
-                        } catch (e) { }
-                    } else {
-                        // Если я не лидер, проверяю: жив ли текущий лидер?
-                        const ld = localStorage.getItem(LEADER_KEY_WATCH);
-                        if (!ld) {
-                            tryToBecomeLeaderWatch();
-                        } else {
-                            try {
-                                const d = JSON.parse(ld);
-                                if (Date.now() - d.time > LEADER_TIMEOUT_WATCH) {
-                                    console.log("[Лидерство] Лидер не отвечает. Запускаю перевыборы.");
-                                    tryToBecomeLeaderWatch();
-                                }
-                            } catch(e) { tryToBecomeLeaderWatch(); }
-                        }
-                    }
-                }, HEARTBEAT_INTERVAL_WATCH);
-            }
-			
-            // ##################################################
-            // # Слушатель события storage для синхронизации состояния (вкл/выкл, смена лидера) между вкладками.
-            // ##################################################
-            function checkLeaderStorageEventWatch(e) {
-                if (e.key === LEADER_CHALLENGE_KEY && isLeaderWatch) {
-                    if (e.newValue) {
-                        try {
-                            const challenge = JSON.parse(e.newValue);
-                            if (challenge.id !== tabIdWatch) {
-                                console.log(`Получен "пинок" от вкладки-кандидата ${challenge.id}.\nНемедленно обновляю свой пульс!`);
-                                const currentTabIsVideo = isAnimePage();
-                                const payload = JSON.stringify({
-                                    id: tabIdWatch,
-                                    time: Date.now(),
-                                    timestamp: tabTimestamp,
-                                    isVideo: currentTabIsVideo,
-                                    isPaused: isCollectionPaused
-                                });
-                                localStorage.setItem(LEADER_KEY_WATCH, payload);
-                            }
-                        } catch(err) {}
-                    }
-                }
-                if (e.key === STORAGE_KEY_WATCH) {
-                    const newState = e.newValue === 'true';
-                    if (scriptEnabledWatch !== newState) {
-                        scriptEnabledWatch = newState;
-                        console.log(`Состояние автосбора изменено из другой вкладки: ${scriptEnabledWatch ? 'ВКЛ' : 'ВЫКЛ'}`);
-                        updateFullToggleButtonState();
-                        if (scriptEnabledWatch) {
-                            tryToBecomeLeaderWatch();
-                        } else {
-                            stopMainCardCheckLogic();
-                            dleHashCheckAttemptsWatch = 0;
-                            if (isLeaderWatch) {
-                                const currentLeaderData = localStorage.getItem(LEADER_KEY_WATCH);
-                                if (currentLeaderData) {
-                                    try {
-                                        if (JSON.parse(currentLeaderData).id === tabIdWatch) {
-                                            localStorage.removeItem(LEADER_KEY_WATCH);
-                                        }
-                                    } catch (err) { /* молчим */ }
-                                }
-                                isLeaderWatch = false;
-                            }
-                            if (heartbeatIntervalId) {
-                                clearInterval(heartbeatIntervalId);
-                                heartbeatIntervalId = null;
-                            }
-                        }
-                    }
-                }
-                if (!scriptEnabledWatch && !crystalScriptEnabled) {
-                    return;
-                }
-                if (e.key === LEADER_KEY_WATCH) {
-					const currentIsLeaderBeforeCheck = isLeaderWatch;
-					const I_Am_Boosting = GM_getValue('boosterState', false) === true;
-
-					// --- НОВОЕ: Если я бущу, я ВООБЩЕ ИГНОРИРУЮ любые новости о смене лидера ---
-					if (I_Am_Boosting && currentIsLeaderBeforeCheck) {
-						return; 
-					}
-					
-					// Если я НЕ бущу, но вижу, что КТО-ТО ДРУГОЙ бустит — я не пытаюсь стать лидером
-					if (e.newValue) {
-						try {
-							const newLeader = JSON.parse(e.newValue);
-							if (newLeader.id !== tabIdWatch && newLeader.isBoosting === true) {
-								if (isLeaderWatch) stopBeingLeader();
-								return;
-							}
-						} catch(err) {}
-					}
-					
-					if (!e.newValue) {
-                        if (currentIsLeaderBeforeCheck) {
-                            console.log(`Ключ лидера удален.\nЭта вкладка перестает быть лидером.`);
-                            isLeaderWatch = false; stopMainCardCheckLogic(); updateFullToggleButtonState();
-                        }
-                        setTimeout(tryToBecomeLeaderWatch, Math.random() * 200 + 100); return;
-                    }
-                    try {
-                        const newLeaderOnStorage = JSON.parse(e.newValue);
-                        if (newLeaderOnStorage && newLeaderOnStorage.id) {
-                            if (newLeaderOnStorage.id === tabIdWatch) {
-                                if (!currentIsLeaderBeforeCheck) {
-                                    console.log(`Вкладка ${tabIdWatch} (${isVideoPageWatchInternal() ? '(Аниме)' : '(НЕ Аниме)'})\nподтверждает/восстанавливает лидерство.`);
-                                    isLeaderWatch = true; updateFullToggleButtonState(); startHeartbeatWatch(true);
-                                    if (scriptEnabledWatch && !checkNewCardTimeoutId) { mainCardCheckLogic(); }
-                                }
-                            } else {
-                                if (currentIsLeaderBeforeCheck) {
-                                    console.log(`Лидерство перехвачено вкладкой:${newLeaderOnStorage.isVideo ? '(Аниме)' : '(НЕ Аниме)'}.\nЭта вкладка перестает быть лидером.`);
-                                    isLeaderWatch = false; stopMainCardCheckLogic(); updateFullToggleButtonState(); startHeartbeatWatch(false);
-                                }
-                            }
-                            if (newLeaderOnStorage.id !== tabIdWatch) {
-                                const leaderIsPaused = newLeaderOnStorage.isPaused === true;
-                                updateFullToggleButtonState(null, leaderIsPaused);
-                            }
-                        }
-                    } catch (err) {
-                        console.error("Ошибка парсинга нового лидера:", err);
-                        if (currentIsLeaderBeforeCheck) {
-                            isLeaderWatch = false; stopMainCardCheckLogic(); updateFullToggleButtonState();
-                        }
-                        setTimeout(tryToBecomeLeaderWatch, Math.random() * 200 + 150);
-                    }
-                }
-            }
-            window.addEventListener('storage', checkLeaderStorageEventWatch);
-            let lastNotificationTimestamp = 0;
-            GM_addValueChangeListener(NOTIFY_NEW_CARD_KEY_WATCH, (key, oldValue, newValue, remote) => {
-                if (newValue && newValue.timestamp > lastNotificationTimestamp) {
-                    lastNotificationTimestamp = newValue.timestamp;
-                    if (typeof showCardReceivedNotification === 'function' && newValue.card) {
-                        showCardReceivedNotification(newValue.card);
-                    } else if (newValue.message) {
-                        safeDLEPushCall('success', newValue.message);
-                    }
-                }
-            });
-
-    // Лидер начинает мигать и пищать, когда его ищут
-    function startLeaderBeacon() {
-        if (beaconInterval) return;
-        const originalTitle = document.title;
-        let toggle = false;
-        const btn = document.getElementById('leaderLockButton');
-        if (btn) btn.classList.add('beacon-active');
-
-        beaconInterval = setInterval(() => {
-            document.title = toggle ? "!!! ЛИДЕР ЗДЕСЬ !!!" : ">>> " + originalTitle + " <<<";
-            toggle = !toggle;
-        }, 500);
-
-        if (typeof notificationSound !== 'undefined') notificationSound.play().catch(() => {});
-
-        setTimeout(() => {
-            clearInterval(beaconInterval);
-            beaconInterval = null;
-            document.title = originalTitle;
-            if (btn) btn.classList.remove('beacon-active');
-        }, 10000);
-    }
-
-    // Слушатель сигнала "Найди меня"
-    GM_addValueChangeListener(FIND_LEADER_SIGNAL_KEY, (key, oldVal, newVal, remote) => {
-        if (remote && newVal && newVal.targetId === tabIdWatch) {
-            startLeaderBeacon();
-        }
-    });
 
             // ##################################################
             // ===== ТРИГГЕР ДЛЯ НЕМЕДЛЕННОГО ЗАПУСКА ПРОВЕРКИ =====
@@ -13547,87 +14057,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
             unsafeWindow.triggerImmediateCardCheck = triggerImmediateCheck;
 
-
-            // ##################################################
-            // # МОДУЛЬ: ДЕТЕКТОР НОВОГО ДНЯ (UTC+3 / МСК)
-            // ##################################################
-            // Монитор Нового Дня v3.1 (С приоритетом досбора и сохранением состояния ВКЛ/ВЫКЛ)
-            async function checkAndTriggerNewDay() {
-                const isEnabled = await GM_getValue(AUTO_NEW_DAY_RESET_ENABLED_KEY, true);
-                if (!isEnabled) return;
-
-                const now = Date.now();
-                const mskNow = new Date(now + (3 * 60 * 60 * 1000));
-                const localDay = mskNow.toISOString().split('T')[0];
-                const lastProcessedDate = await GM_getValue(NEW_DAY_CHECK_KEY, '');
-
-                // 1. Если этот день уже был успешно обработан — выходим
-                if (lastProcessedDate === localDay) return;
-
-                // 2. Если мы в режиме ожидания серверной полночи (рассинхрон) — выходим
-                const waitLimit = unsafeWindow.ascm_new_day_wait_until || 0;
-                if (now < waitLimit) return;
-
-                const isAutoWatchEnabled = localStorage.getItem(STORAGE_KEY_WATCH) === 'true';
-                const isPausedByLimit = await GM_getValue(COLLECTION_PAUSED_KEY, false);
-
-                // --- ЛОГИКА ПРИОРИТЕТА ДОСБОРА ---
-                // Если автосбор ВКЛЮЧЕН, но лимит еще НЕ забит (мы не на паузе) —
-                // значит мы еще можем собирать карты за "вчера". Не мешаем процессу.
-                if (isAutoWatchEnabled && !isPausedByLimit) {
-                    // Пишем в консоль редко, чтобы не спамить
-                    if (Math.random() < 0.01) console.log("[New Day] Ожидание: наступил новый день, но лимит вчерашних карт еще не исчерпан. Дособираю...");
-                    return; 
-                }
-
-                // 3. ЗАПРОС №1: Проверка времени сервера и получение бонуса
-                const result = await triggerDailyBonusCheck();
-                if (!result) return;
-
-                // 4. ОБРАБОТКА РАССИНХРОНА
-                if (result.serverDay && result.serverDay !== localDay) {
-                    const serverTimeMsk = result.serverTs + (3 * 3600 * 1000);
-                    const serverMidnight = new Date(serverTimeMsk);
-                    serverMidnight.setUTCHours(24, 0, 0, 0); 
-                    
-                    const msToWait = serverMidnight.getTime() - serverTimeMsk;
-                    // Затихаем до полуночи сервера + 15 сек запаса
-                    unsafeWindow.ascm_new_day_wait_until = now + msToWait + 15000;
-                    
-                    console.warn(`[New Day] ПК спешит. Серверу до полуночи еще ${Math.round(msToWait/1000)}с. Ожидаю...`);
-                    return;
-                }
-
-                // 5. ФИНАЛИЗАЦИЯ НОВОГО ДНЯ (Сервер подтвердил смену суток)
-                if (result.success) {
-                    console.log(`%c[New Day] Смена дня подтверждена сервером: ${result.serverDay}`, "color: #00ff00; font-weight: bold;");
-                    
-                    // Сохраняем дату сброса
-                    await GM_setValue(NEW_DAY_CHECK_KEY, result.serverDay);
-                    
-                    // Снимаем флаг паузы (теперь лимит снова 0/36)
-                    await GM_setValue(COLLECTION_PAUSED_KEY, false);
-                    await GM_deleteValue(PAUSE_DATE_KEY);
-                    
-                    if (isAutoWatchEnabled) {
-                        safeDLEPushCall('success', `Новый день! Лимит обнулен, сбор карт продолжается.`);
-                        
-                        // Мгновенно обновляем счетчик в профиле (Запрос №2)
-                        if (typeof updateCardCounter === 'function') {
-                            await updateCardCounter(true);
-                        }
-                        
-                        // "Пинок" лидеру для немедленного запуска цикла сбора
-                        await GM_setValue(KICK_LEADER_TO_CHECK_KEY, Date.now());
-                    } else {
-                        // Если автосбор был выключен — просто уведомляем о бонусе
-                        safeDLEPushCall('info', `Новый день настал. Бонус получен, лимиты сброшены.`);
-                    }
-
-                    // Очищаем временный таймер ожидания
-                    unsafeWindow.ascm_new_day_wait_until = 0;
-                }
-            }
 
             // Функция запрашивает бонус и извлекает точный timestamp сервера из заголовков
             async function triggerDailyBonusCheck() {
@@ -13665,132 +14094,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 }
             }
 
-			// ##################################################
-            // # Исправленная логика: Строгий контроль времени между запросами
-            // ##################################################
-            async function mainCardCheckLogic() {
-                if (!isLeaderWatch) {
-                    stopMainCardCheckLogic();
-                    return;
-                }
-
-				// ПРАВКА: Проверка автообновления списка желаний
-				checkWishlistAutoUpdate();
-
-                // --- 1. СИНХРОНИЗАЦИЯ КРИСТАЛЛОВ ---
-                if (crystalScriptEnabled) {
-                    const pendingCheckTimestamp = await GM_getValue(CRYSTAL_PENDING_CHECK_KEY, 0);
-                    if (pendingCheckTimestamp > 0 && (Date.now() - pendingCheckTimestamp < 120000)) {
-                        await GM_deleteValue(CRYSTAL_PENDING_CHECK_KEY);
-                        scheduleVerificationByLeader();
-                    }
-                }
-
-                // --- 2. БАЗОВЫЕ ПРОВЕРКИ ---
-                if (!scriptEnabledWatch) {
-                    if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
-                    checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, 10000);
-                    return;
-                }
-
-                updateFullToggleButtonState();
-                isCollectionPaused = await GM_getValue(COLLECTION_PAUSED_KEY, false);
-                pauseOnLimitEnabled = await GM_getValue(PAUSE_ON_LIMIT_ENABLED_KEY, true);
-
-                if (isCollectionPaused && pauseOnLimitEnabled) {
-                    console.log("[AutoWatch] Сбор на паузе (лимит). Ожидаю нового дня.");
-                    return;
-                }
-
-                const userHash = typeof unsafeWindow !== 'undefined' ? unsafeWindow.dle_login_hash : window.dle_login_hash;
-                if (!userHash) {
-                    checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, 5000);
-                    return;
-                }
-
-                // --- 3. ГЛОБАЛЬНЫЙ КОНТРОЛЬ ТАЙМЕРА ---
-                const now = Date.now();
-                const globalLastRequestTime = await GM_getValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, 0);
-                const timeSinceLast = now - globalLastRequestTime;
-                const MIN_WAIT = CHECK_NEW_CARD_INTERVAL; 
-
-                if (timeSinceLast < MIN_WAIT) {
-                    const timeLeftMs = MIN_WAIT - timeSinceLast;
-                    const timeLeftSec = Math.ceil(timeLeftMs / 1000);
-                    
-                    console.log(`[AutoWatch] Слишком рано. Глобальный откат: еще ${timeLeftSec} сек. (Обновление страницы не поможет)`);
-                    
-                    if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
-                    checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, timeLeftMs + 1000);
-                    return;
-                }
-
-                // --- 4. НАЧАЛО ПРОЦЕССА ПОЛУЧЕНИЯ ---
-                try {
-                    await GM_setValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, Date.now());
-
-                    // 1. ВЫЗОВ НАВИГАТОРА (он сам найдет нужную серию и обновит state)
-                    const state = await updateSmartTarget();
-                    
-                    // 2. Проверка, нашлась ли вообще цель (если пул пуст)
-                    if (!state || state.index === -1) { // добавим проверку на конец пула
-                         safeDLEPushCall('error', "[AutoWatch] Чистых серий больше нет.");
-                         return;
-                    }
-
-                    const cur = GLOBAL_ANIME_POOL[state.index];
-                    const targetEp = parseInt(cur.min_ep) + state.ep_offset;
-
-                    console.log(`%c[AutoWatch] Выполняю запрос: ID ${cur.anime_id} | S${cur.s}E${targetEp}`, "color: #5865f2; font-weight: bold;");
-
-                    const rawBody = `news_id=${cur.anime_id}&kodik_data[episode]=${targetEp}&kodik_data[season]=${cur.s}&kodik_data[translation][id]=${cur.t_id}&kodik_data[translation][title]=${encodeURIComponent(cur.t_title)}&user_hash=${userHash}`;
-                    const h = { 'Accept': 'application/json, text/javascript, */*; q=0.01', 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' };
-
-                    await fetch(`/ajax/calculate_series_watch/`, { method: 'POST', headers: h, body: rawBody });
-                    await fetch(`/ajax/calculate_time_watch/`, { method: 'POST', headers: h, body: rawBody });
-                    const response = await fetch(`/ajax/card_for_watch/`, { method: 'POST', headers: h, body: rawBody });
-                    
-                    const data = await response.json();
-
-                    // Обработка ответа (УСПЕХ / NO / ЛИМИТ)
-                    if (data.cards) {
-                        state.failed_attempts = 0;
-                        await GM_setValue('ascm_smart_progression_v1', state);
-                        processCardReward(data, rawBody, 'auto');
-                    } else {
-                        if (data.reason === 'no') {
-                            state.failed_attempts = (state.failed_attempts || 0) + 1;
-                            if (state.failed_attempts >= 2) {
-                                state.ep_offset++;
-                                state.cards_collected = 0;
-                                state.failed_attempts = 0;
-                            }
-                            await GM_setValue('ascm_smart_progression_v1', state);
-                        } else if (pauseOnLimitEnabled && /получил свои \d+ карт/.test(data.reason)) {
-                            await GM_setValue(COLLECTION_PAUSED_KEY, true);
-                            updateFullToggleButtonState();
-                        }
-                        handleCardError(data.reason, 'auto');
-                    }
-
-                } catch (e) {
-                    console.error('[AutoWatch] Ошибка цикла:', e);
-                }
-
-                if (checkNewCardTimeoutId) clearTimeout(checkNewCardTimeoutId);
-                checkNewCardTimeoutId = setTimeout(mainCardCheckLogic, CHECK_NEW_CARD_INTERVAL + 10000);
-            }
-			
-            // ##################################################
-            // # Останавливает цикл проверки/получения карт (очищает таймер).
-            // ##################################################
-            function stopMainCardCheckLogic() {
-                if (checkNewCardTimeoutId) {
-                    clearTimeout(checkNewCardTimeoutId);
-                    checkNewCardTimeoutId = null;
-                }
-            }
-
+		
 			// ##################################################
             // # ФУНКЦИЯ СКАНЕРА ИСТОРИИ ПРОСМОТРА
             // ##################################################
@@ -14401,82 +14705,83 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 }, 1000);
             };
 
-			// ##################################################
-            // # Создает и настраивает 'плавающую' кнопку для включения/выключения автосбора карт.
-            // ##################################################
-            function createToggleButtonWatch() {
-                const button = document.createElement('button');
-                button.id = 'toggleScriptButton';
-                Object.assign(button.style, {
-                    position: 'fixed', bottom: '280px', right: '12px', zIndex: '100',
-                    fontSize: '15px', width: '40px', height: '40px',
-                    border: 'none', borderRadius: '50%', cursor: 'pointer',
-                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.7)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0'
-                });
-                button.textContent = '🎥';
-                autoCollectButtonCounter = document.createElement('span');
-                autoCollectButtonCounter.id = 'toggleScriptButton_counter';
-                Object.assign(autoCollectButtonCounter.style, {
-                    display: 'none', position: 'absolute', top: '-1px', right: '-1px', background: 'red',
-                    color: 'white', borderRadius: '50%', padding: '2px 5px', fontSize: '10px',
-                    lineHeight: '1', minWidth: '16px', textAlign: 'center'
-                });
-                button.appendChild(autoCollectButtonCounter);
-                if (window.location.pathname.startsWith('/pm/')) {
-                    button.setAttribute('data-mce-bogus', '1');
-                }
-                unsafeWindow.updateFullToggleButtonState(button);
-                // === НОВЫЙ КОД: Принудительное обновление счетчика при загрузке ===
-                if (typeof unsafeWindow.updateCardCounter === 'function') {
-                    console.log('[ACM Initial Load] Принудительно обновляю счетчик карт после инициализации состояния кнопки.');
-                    (async () => { // <--- Оборачиваем await в асинхронную самовызывающуюся функцию
-                        await unsafeWindow.updateCardCounter(false);
-                    })();
-                }
-                button.style.transition = 'opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s';
+			/**
+			 * Создает и настраивает кнопку включения/выключения автосбора карт.
+			 * Обрабатывает переключение состояния и сохранение настройки в кросс-доменное хранилище.
+			 */
+			function createToggleButtonWatch() {
+				const button = document.createElement('button');
+				button.id = 'toggleScriptButton';
+				Object.assign(button.style, {
+					position: 'fixed', bottom: '280px', right: '12px', zIndex: '100',
+					fontSize: '15px', width: '40px', height: '40px',
+					border: 'none', borderRadius: '50%', cursor: 'pointer',
+					boxShadow: '0 0 10px rgba(0, 0, 0, 0.7)',
+					display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0'
+				});
+				button.textContent = '🎥';
+				autoCollectButtonCounter = document.createElement('span');
+				autoCollectButtonCounter.id = 'toggleScriptButton_counter';
+				Object.assign(autoCollectButtonCounter.style, {
+					display: 'none', position: 'absolute', top: '-1px', right: '-1px', background: 'red',
+					color: 'white', borderRadius: '50%', padding: '2px 5px', fontSize: '10px',
+					lineHeight: '1', minWidth: '16px', textAlign: 'center'
+				});
+				button.appendChild(autoCollectButtonCounter);
+				if (window.location.pathname.startsWith('/pm/')) {
+					button.setAttribute('data-mce-bogus', '1');
+				}
+				unsafeWindow.updateFullToggleButtonState(button);
 
-                button.addEventListener('click', async function() {
-                    scriptEnabledWatch = !scriptEnabledWatch;
-					// ПРАВКА: Сохранение в GM_setValue для поддержки всех зеркал
-                    await GM_setValue(STORAGE_KEY_WATCH, scriptEnabledWatch);
-                    updateFullToggleButtonState(button);
+				if (typeof unsafeWindow.updateCardCounter === 'function') {
+					(async () => {
+						await unsafeWindow.updateCardCounter(false);
+					})();
+				}
+				button.style.transition = 'opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0s';
 
-                    if (scriptEnabledWatch) {
-                        safeDLEPushCall('info', 'Автосбор карт включен.');
-                        const cachedData = await GM_getValue(CARD_COUNT_CACHE_KEY, null);
-                        if (cachedData && cachedData.text) {
-                            updateAllCardCountDisplays(cachedData.text, cachedData.className);
-                        }
-                    } else {
-                        safeDLEPushCall('info', "Автосбор карт выключен.");
-                    }
-                    unsafeWindow.tryToBecomeLeaderWatch();
-                });
-                autoCollectButtonCounter.addEventListener('click', async function(event) {
-                    event.stopPropagation();
-                    if (typeof unsafeWindow.openAutoFarmMenu === 'function') {
-                        unsafeWindow.openAutoFarmMenu();
-                    }
-                });
-                ['mousedown', 'mouseup', 'mouseleave'].forEach(eventType => {
-                    button.addEventListener(eventType, () => {
-                        let currentTransformValue = 'translateX(0px)';
-                        if (typeof areActionButtonsHidden !== 'undefined' && areActionButtonsHidden &&
-                            typeof managedButtonSelectors !== 'undefined' && managedButtonSelectors.includes('#' + button.id)) {
-                            currentTransformValue = 'translateX(calc(100% + 20px))';
-                        }
-                        if (eventType === 'mousedown') {
-                            button.style.transform = `${currentTransformValue} translateY(2px) scale(0.95)`;
-                            button.style.boxShadow = '0 0 5px rgba(0, 0, 0, 0.5)';
-                        } else {
-                            button.style.transform = `${currentTransformValue} translateY(0) scale(1)`;
-                            button.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.7)';
-                        }
-                    });
-                });
-                document.body.appendChild(button);
-            }
+				button.addEventListener('click', async function() {
+					scriptEnabledWatch = !scriptEnabledWatch;
+					await GM_setValue(STORAGE_KEY_WATCH, scriptEnabledWatch);
+					updateFullToggleButtonState(button);
+
+					if (scriptEnabledWatch) {
+						safeDLEPushCall('info', 'Автосбор карт включен.');
+						const cachedData = await GM_getValue(CARD_COUNT_CACHE_KEY, null);
+						if (cachedData && cachedData.text) {
+							updateAllCardCountDisplays(cachedData.text, cachedData.className);
+						}
+					} else {
+						safeDLEPushCall('info', "Автосбор карт выключен.");
+					}
+					unsafeWindow.tryToBecomeLeaderWatch();
+				});
+
+				autoCollectButtonCounter.addEventListener('click', async function(event) {
+					event.stopPropagation();
+					if (typeof unsafeWindow.openAutoFarmMenu === 'function') {
+						unsafeWindow.openAutoFarmMenu();
+					}
+				});
+
+				['mousedown', 'mouseup', 'mouseleave'].forEach(eventType => {
+					button.addEventListener(eventType, () => {
+						let currentTransformValue = 'translateX(0px)';
+						if (typeof areActionButtonsHidden !== 'undefined' && areActionButtonsHidden &&
+							typeof managedButtonSelectors !== 'undefined' && managedButtonSelectors.includes('#' + button.id)) {
+							currentTransformValue = 'translateX(calc(100% + 20px))';
+						}
+						if (eventType === 'mousedown') {
+							button.style.transform = `${currentTransformValue} translateY(2px) scale(0.95)`;
+							button.style.boxShadow = '0 0 5px rgba(0, 0, 0, 0.5)';
+						} else {
+							button.style.transform = `${currentTransformValue} translateY(0) scale(1)`;
+							button.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.7)';
+						}
+					});
+				});
+				document.body.appendChild(button);
+			}
             createToggleButtonWatch();
             unsafeWindow.tryToBecomeLeaderWatch = tryToBecomeLeaderWatch;
             unsafeWindow.startHeartbeatWatch = startHeartbeatWatch;
@@ -15614,32 +15919,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
     }
 
     // ##################################################
-    // # Создает и отображает кастомное модальное окно подтверждения.
-    // ##################################################
-    function protector_customConfirm(message) {
-        return new Promise(resolve => {
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = `
-                <div class="acm-modal-backdrop protector_backdrop" style="z-index: 2147483647 !important;"></div>
-                <div class="acm-modal" id="protector_confirm_modal" style="z-index: 2147483648 !important;">
-                <div class="modal-header"><h2>Подтверждение</h2></div>
-                <div class="modal-body"><p>${message}</p></div>
-                <div class="modal-footer">
-                <button class="action-btn protector_confirm_yes">Да</button>
-                <button class="action-btn protector_confirm_no">Нет</button>
-                </div>
-                </div>`;
-            document.body.appendChild(wrapper);
-            const cleanup = () => wrapper.remove();
-            wrapper.querySelector('.protector_confirm_yes').onclick = () => { cleanup(); resolve(true); };
-            wrapper.querySelector('.protector_confirm_no').onclick = () => { cleanup(); resolve(false); };
-            wrapper.querySelector('.protector_backdrop').onclick = () => { cleanup(); resolve(false); };
-        });
-    }
-    window.protector_customConfirm = protector_customConfirm;
-
-
-    // ##################################################
     // # Создает HTML-структуру для модального окна настроек защиты.
     // ##################################################
     function protector_createSettingsModal() {
@@ -15761,56 +16040,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 startClicker(); // Перезапуск с новым интервалом
             }
         });
-
-        async function performClick() {
-            const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-            
-            // Если вкладка в фоне И при этом есть другая вкладка, которая ВИДИМА (Visible),
-            // то фоновая вкладка не должна кликать.
-            if (document.visibilityState !== 'visible') {
-                // Если мы в фоне, проверяем, нет ли живого лидера, который сейчас активен
-                const leaderData = JSON.parse(localStorage.getItem(LEADER_KEY_WATCH) || '{}');
-                if (leaderData.id !== tabIdWatch && leaderData.time > (Date.now() - 5000)) {
-                     return; // Уступаем активной вкладке
-                }
-            }
-			
-            // ПРОВЕРКА 1: Защита от работы в двух окнах
-            const globalActiveId = await GM_getValue('ascm_active_booster_tab');
-            if (globalActiveId && globalActiveId !== tabIdWatch) {
-                sccLog("Турбо: обнаружена активность в другом окне. Выключаюсь.", 'warning', true);
-                stopClicker(); 
-                GM_setValue('boosterState', false); 
-                updateButtonState();
-                return;
-            }
-
-            const msk = new Date(Date.now() + (3 * 60 * 60 * 1000));
-            const curTimeInSec = (msk.getUTCHours() * 3600) + (msk.getUTCMinutes() * 60) + msk.getUTCSeconds();
-            const [sH, sM] = sets.startTime.split(':').map(Number);
-            const startTimeInSec = (sH * 3600) + (sM * 60);
-            
-            // Проверка форс-окна (используем retryDuration из настроек)
-            const isInForcedWindow = curTimeInSec >= startTimeInSec && curTimeInSec <= (startTimeInSec + (sets.retryDuration * 60));
-
-            const limitEl = document.querySelector('.boost-limit');
-            // ПРОВЕРКА 2: Лимит 600/600 (игнорируем его, если мы в Форс-режиме)
-            if (limitEl && limitEl.parentElement && !isInForcedWindow) {
-                const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
-                if (m && parseInt(m[1]) >= parseInt(m[2])) {
-                    sccLog("Турбо: Лимит достигнут. Остановка.", 'success', true);
-                    const todayStr = msk.toISOString().split('T')[0];
-                    GM_setValue('ascm_lastTurboTriggerDate', todayStr); // Помечаем день как выполненный
-                    stopClicker(); 
-                    GM_setValue('boosterState', false); 
-                    updateButtonState();
-                    return;
-                }
-            }
-
-            const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
-            if (btn && btn.offsetParent !== null) btn.click();
-        }
 
         // ИСПРАВЛЕННЫЙ СЛУШАТЕЛЬ
         GM_addValueChangeListener('ascm_active_booster_tab', async (key, oldVal, newValue, remote) => {
@@ -18240,119 +18469,122 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         };
 
         const setIdleState = async () => {
-            const targetUser = await GM_getValue(WISHLIST_TARGET_USER_KEY, '');
-            const wishlistData = targetUser ? await unsafeWindow.dbGet(WISHLIST_DB_STORE_NAME, targetUser) : null;
-            const autoUpdateEn = await GM_getValue(WISHLIST_AUTO_UPDATE_ENABLED_KEY, false);
-            const bgUpdateEn = await GM_getValue(WISHLIST_BG_UPDATE_ENABLED_KEY, false);
-            const ttlHours = await GM_getValue(WISHLIST_UPDATE_TTL_KEY, 24);
+			const targetUser = await GM_getValue(WISHLIST_TARGET_USER_KEY, '');
+			const wishlistData = targetUser ? await unsafeWindow.dbGet(WISHLIST_DB_STORE_NAME, targetUser) : null;
+			const autoUpdateEn = await GM_getValue(WISHLIST_AUTO_UPDATE_ENABLED_KEY, false);
+			const bgUpdateEn = await GM_getValue(WISHLIST_BG_UPDATE_ENABLED_KEY, false);
+			const ttlHours = await GM_getValue(WISHLIST_UPDATE_TTL_KEY, 24);
 
-            if (document.activeElement !== usernameInput) {
-                usernameInput.value = targetUser;
-            }
-            usernameInput.disabled = false;
+			if (document.activeElement !== usernameInput) {
+				usernameInput.value = targetUser;
+			}
+			usernameInput.disabled = false;
 
-            // ПРАВКА: Добавляем новый блок автоматизации в HTML
-            let statusHTML = `
-                <div style="margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 8px;">
-                    Текущая цель: <b>${targetUser || 'не задана'}</b><br>
-                    Отслеживается карт: <b>${wishlistData?.cardIds?.length || 0}</b>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div class="setting-row" title="Автоматически запускать повторное сканирование списка желаний пользователя по таймеру.">
-                        <span style="font-size: 0.85em;">Автообновление цели:</span>
-                        <label class="protector-toggle-switch">
-                            <input type="checkbox" id="wishlist-auto-update-toggle" ${autoUpdateEn ? 'checked' : ''}>
-                            <span class="protector-toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div class="setting-row" title="Разрешить Лидеру запускать сканирование в фоновом режиме сразу по истечении времени, не дожидаясь перезагрузки страницы.">
-                        <span style="font-size: 0.85em;">Фоновое обновление (без релоада):</span>
-                        <label class="protector-toggle-switch">
-                            <input type="checkbox" id="wishlist-bg-update-toggle" ${bgUpdateEn ? 'checked' : ''}>
-                            <span class="protector-toggle-slider"></span>
-                        </label>
-                    </div>
-                    <div style="margin-top: 5px;" title="Как часто проверять список желаний пользователя (от 1 часа до 5 дней).">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.85em; margin-bottom: 4px;">
-                            <span>Частота:</span> <b id="wishlist-ttl-display" style="color: #43b581;">${ttlHours} ч.</b>
-                        </div>
-                        <input type="range" id="wishlist-ttl-slider" min="1" max="120" step="1" value="${ttlHours}" style="width: 100%;">
-                    </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; margin-top: 5px; border-top: 1px dashed #444; padding-top: 5px;">
-                        <span>До обновления:</span>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                            <b id="wishlist-timer-display" style="font-family: monospace;">--:--:--</b>
-                            <i class="fas fa-sync-alt" id="wishlist-reset-timer-btn" style="cursor: pointer; font-size: 11px; color: #888;" title="Сбросить таймер и отложить обновление на заданный срок."></i>
-                        </div>
-                    </div>
-                </div>
-            `;
-            statusEl.innerHTML = statusHTML;
+			let statusHTML = `
+				<div style="margin-bottom: 10px; border-bottom: 1px dashed #444; padding-bottom: 8px;">
+					Текущая цель: <b>${targetUser || 'не задана'}</b><br>
+					Отслеживается карт: <b>${wishlistData?.cardIds?.length || 0}</b>
+				</div>
+				<div style="display: flex; flex-direction: column; gap: 8px;">
+					<div class="setting-row" title="Автоматически запускать повторное сканирование списка желаний пользователя по таймеру.">
+						<span style="font-size: 13px;">Автообновление цели:</span>
+						<label class="protector-toggle-switch">
+							<input type="checkbox" id="wishlist-auto-update-toggle" ${autoUpdateEn ? 'checked' : ''}>
+							<span class="protector-toggle-slider"></span>
+						</label>
+					</div>
+					<div class="setting-row" title="Разрешить Лидеру запускать сканирование в фоновом режиме сразу по истечении времени, не дожидаясь перезагрузки страницы.">
+						<span style="font-size: 13px;">Фоновое обновление (без релоада):</span>
+						<label class="protector-toggle-switch">
+							<input type="checkbox" id="wishlist-bg-update-toggle" ${bgUpdateEn ? 'checked' : ''}>
+							<span class="protector-toggle-slider"></span>
+						</label>
+					</div>
+					<div style="margin-top: 5px;" title="Как часто проверять список желаний пользователя (от 1 часа до 5 дней).">
+						<div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+							<span>Частота:</span> <b id="wishlist-ttl-display" style="color: #43b581;">${ttlHours} ч.</b>
+						</div>
+						<input type="range" id="wishlist-ttl-slider" min="1" max="120" step="1" value="${ttlHours}" style="width: 100%;">
+					</div>
+					<div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin-top: 5px; border-top: 1px dashed #444; padding-top: 5px;">
+						<span>До обновления:</span>
+						<div style="display: flex; align-items: center; gap: 6px;">
+							<b id="wishlist-timer-display" style="font-family: monospace;">--:--:--</b>
+							<i class="fas fa-sync-alt" id="wishlist-reset-timer-btn" style="cursor: pointer; font-size: 11px; color: #888;" title="Сбросить таймер и отложить обновление на заданный срок."></i>
+						</div>
+					</div>
+				</div>
+			`;
+			statusEl.innerHTML = statusHTML;
 
-            // Обработчики новых элементов
-            const setupWishToggle = (id, key, label) => {
-                const el = wrapper.querySelector('#' + id);
-                el.onchange = async () => {
-                    await GM_setValue(key, el.checked);
-                    const m = `[Wishlist] ${label}: ${el.checked ? 'ВКЛ' : 'ВЫКЛ'}`;
-                    console.log('%c' + m, "color: #43b581; font-weight: bold;");
-                    safeDLEPushCall('success', m);
-                };
-            };
-            setupWishToggle('wishlist-auto-update-toggle', WISHLIST_AUTO_UPDATE_ENABLED_KEY, 'Автообновление твина');
-            setupWishToggle('wishlist-bg-update-toggle', WISHLIST_BG_UPDATE_ENABLED_KEY, 'Фоновый скан твина');
+			const setupWishToggle = (id, key, label) => {
+				const el = wrapper.querySelector('#' + id);
+				el.onchange = async () => {
+					await GM_setValue(key, el.checked);
+					const m = `[Wishlist] ${label}: ${el.checked ? 'ВКЛ' : 'ВЫКЛ'}`;
+					safeDLEPushCall('success', m);
+				};
+			};
+			setupWishToggle('wishlist-auto-update-toggle', WISHLIST_AUTO_UPDATE_ENABLED_KEY, 'Автообновление твина');
+			setupWishToggle('wishlist-bg-update-toggle', WISHLIST_BG_UPDATE_ENABLED_KEY, 'Фоновый скан твина');
 
-            const ttlSld = wrapper.querySelector('#wishlist-ttl-slider');
-            const ttlDisp = wrapper.querySelector('#wishlist-ttl-display');
-            ttlSld.oninput = () => {
-                let v = ttlSld.value;
-                ttlDisp.textContent = v >= 24 ? `${Math.floor(v/24)} д. ${v%24} ч.` : `${v} ч.`;
-            };
-            ttlSld.onchange = async () => {
-                const v = parseInt(ttlSld.value);
-                await GM_setValue(WISHLIST_UPDATE_TTL_KEY, v);
-                const m = `[Wishlist] Частота обновления: ${ttlDisp.textContent}`;
-                console.log('%c' + m, "color: #43b581; font-weight: bold;");
-                safeDLEPushCall('success', m);
-                updateWishlistTimerUI();
-            };
+			const ttlSld = wrapper.querySelector('#wishlist-ttl-slider');
+			const ttlDisp = wrapper.querySelector('#wishlist-ttl-display');
+			ttlSld.oninput = () => {
+				let v = ttlSld.value;
+				ttlDisp.textContent = v >= 24 ? `${Math.floor(v/24)} д. ${v%24} ч.` : `${v} ч.`;
+			};
+			ttlSld.onchange = async () => {
+				const v = parseInt(ttlSld.value);
+				await GM_setValue(WISHLIST_UPDATE_TTL_KEY, v);
+				const m = `[Wishlist] Частота обновления: ${ttlDisp.textContent}`;
+				safeDLEPushCall('success', m);
+				updateWishlistTimerUI();
+			};
 
-            wrapper.querySelector('#wishlist-reset-timer-btn').onclick = async (e) => {
-                await GM_setValue(WISHLIST_LAST_UPDATE_TS_KEY, Date.now());
-                e.target.classList.add('fa-spin');
-                console.log('%c[Wishlist] Таймер сброшен пользователем.', "color: #faa61a;");
-                safeDLEPushCall('info', 'Таймер обновления твина сброшен.');
-                setTimeout(() => e.target.classList.remove('fa-spin'), 1000);
-                updateWishlistTimerUI();
-            };
+			wrapper.querySelector('#wishlist-reset-timer-btn').onclick = async (e) => {
+				await GM_setValue(WISHLIST_LAST_UPDATE_TS_KEY, Date.now());
+				e.target.classList.add('fa-spin');
+				safeDLEPushCall('info', 'Таймер обновления твина сброшен.');
+				setTimeout(() => e.target.classList.remove('fa-spin'), 1000);
+				updateWishlistTimerUI();
+			};
 
-            // Синхронизация между вкладками
-            const syncId = GM_addValueChangeListener('', (key, old, newVal, remote) => {
-                if (!remote) return;
-                if (key === WISHLIST_AUTO_UPDATE_ENABLED_KEY) wrapper.querySelector('#wishlist-auto-update-toggle').checked = newVal;
-                if (key === WISHLIST_BG_UPDATE_ENABLED_KEY) wrapper.querySelector('#wishlist-bg-update-toggle').checked = newVal;
-                if (key === WISHLIST_UPDATE_TTL_KEY) { ttlSld.value = newVal; ttlSld.oninput(); }
-            });
-            
-            // Сохраняем ID для удаления при закрытии (уже есть в closeModal)
+			const syncId = GM_addValueChangeListener('', (key, old, newVal, remote) => {
+				if (!remote) return;
+				if (key === WISHLIST_AUTO_UPDATE_ENABLED_KEY) {
+					const cb = wrapper.querySelector('#wishlist-auto-update-toggle');
+					if (cb) cb.checked = newVal;
+				}
+				if (key === WISHLIST_BG_UPDATE_ENABLED_KEY) {
+					const cb = wrapper.querySelector('#wishlist-bg-update-toggle');
+					if (cb) cb.checked = newVal;
+				}
+				if (key === WISHLIST_UPDATE_TTL_KEY) {
+					if (ttlSld) {
+						ttlSld.value = newVal;
+						ttlDisp.textContent = newVal >= 24 ? `${Math.floor(newVal/24)} д. ${newVal%24} ч.` : `${newVal} ч.`;
+					}
+				}
+			});
 
-            scanButton.textContent = 'Сканировать и Установить';
-            scanButton.style.background = '';
-            scanButton.disabled = false;
-            scanButton.onclick = async () => {
-                if (isWishlistScanning) return;
-                const userInput = usernameInput.value.trim();
-                if (!userInput) { safeDLEPushCall('error', 'Введите имя пользователя.'); return; }
-                scanButton.disabled = true;
-                scanButton.textContent = 'Запуск...';
-                scanButton.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
-                await GM_setValue(WISHLIST_LAST_UPDATE_TS_KEY, Date.now()); // Помечаем как обновленный
-                await scanWishlist(userInput);
-                await setIdleState(); 
-            };
-            clearButton.disabled = false;
-            updateWishlistTimerUI();
-        };
+			scanButton.textContent = 'Сканировать и Установить';
+			scanButton.style.background = '';
+			scanButton.disabled = false;
+			scanButton.onclick = async () => {
+				if (isWishlistScanning) return;
+				const userInput = usernameInput.value.trim();
+				if (!userInput) { safeDLEPushCall('error', 'Введите имя пользователя.'); return; }
+				scanButton.disabled = true;
+				scanButton.textContent = 'Запуск...';
+				scanButton.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
+				await GM_setValue(WISHLIST_LAST_UPDATE_TS_KEY, Date.now());
+				await scanWishlist(userInput);
+				await setIdleState(); 
+			};
+			clearButton.disabled = false;
+			updateWishlistTimerUI();
+		};
         const updateScanProgress = (scanState) => {
             usernameInput.value = scanState.username;
             usernameInput.disabled = true;
@@ -18746,75 +18978,93 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         }
     }
 
-    // ##################################################
-    // ##################################################
-    async function highlightTargetUserWishlist() {
-        if (isHighlightingWishlist) return;
-        if (!activeWishlistSet || activeWishlistSet.size === 0) {
-            return;
-        }
-        isHighlightingWishlist = true;
-        try {
-            let cardsToScan = [];
-            let classToApply = '';
-            const isTradePage = () => window.location.pathname.startsWith('/trades/') || /^\/cards\/\d+\/trade\/?$/.test(window.location.pathname);
-            if (unsafeWindow.isCardPackPage()) {
-                const isPackHighlightEnabled = await GM_getValue(WISHLIST_HIGHLIGHT_PACKS_ENABLED_KEY, false);
-                if (isPackHighlightEnabled) {
-                    cardsToScan = document.querySelectorAll('.lootbox__row .lootbox__card');
-                    classToApply = 'wishlist-highlight-pack';
-                }
-            } else if (isTradePage()) {
-                const isTradeHighlightEnabled = await GM_getValue(WISHLIST_HIGHLIGHT_TRADES_ENABLED_KEY, false);
-                if (isTradeHighlightEnabled) {
-                    cardsToScan = document.querySelectorAll('.trade__inventory-item, .trade__main-item');
-                    classToApply = 'wishlist-highlight-inventory';
-                }
-            } else if (unsafeWindow.isMyCardPage()) {
-                const isInventoryHighlightEnabled = await GM_getValue(WISHLIST_HIGHLIGHT_INVENTORY_ENABLED_KEY, false);
-                if (isInventoryHighlightEnabled) {
-                    const mainContainer = document.querySelector('.anime-cards--full-page');
-                    if (mainContainer) {
-                        cardsToScan = mainContainer.querySelectorAll('.anime-cards__item');
-                    }
-                    classToApply = 'wishlist-highlight-inventory';
-                }
-            }
-            if (!classToApply) {
-                document.querySelectorAll('.wishlist-highlight-pack, .wishlist-highlight-inventory').forEach(card => {
-                    card.classList.remove('wishlist-highlight-pack', 'wishlist-highlight-inventory');
-                    card.querySelector('.wishlist-indicator-icon')?.remove();
-                });
-                return;
-            }
-            if (cardsToScan.length === 0) {
-                return;
-            }
-            for (const card of cardsToScan) {
-                const cardId = await unsafeWindow.getCardId(card, 'type', true);
-                const cardIsInWishlist = cardId && activeWishlistSet.has(cardId);
-                card.classList.remove('wishlist-highlight-pack', 'wishlist-highlight-inventory');
-                if (cardIsInWishlist) {
-                    card.classList.add(classToApply);
-                    if (!card.querySelector('.wishlist-indicator-icon')) {
-                        const indicator = document.createElement('div');
-                        indicator.className = 'wishlist-indicator-icon';
-                        indicator.innerHTML = '<i class="fas fa-heart" style="color: #ffeb3b; text-shadow: 0 0 5px black;"></i>';
-                        indicator.title = 'Эта карта в отслеживаемом списке желаний!';
-                        Object.assign(indicator.style, {
-                            position: 'absolute', top: '5px', left: '5px',
-                            zIndex: '15', fontSize: '16px'
-                        });
-                        card.appendChild(indicator);
-                    }
-                } else {
-                    card.querySelector('.wishlist-indicator-icon')?.remove();
-                }
-            }
-        } finally {
-            isHighlightingWishlist = false;
-        }
-    }
+    /**
+	 * Подсвечивает карты из списка желаний целевого пользователя (сканера).
+	 * Автоматически восстанавливает данные из IndexedDB при перезагрузке страницы.
+	 */
+	async function highlightTargetUserWishlist() {
+		if (isHighlightingWishlist) return;
+		isHighlightingWishlist = true;
+
+		try {
+			// Восстановление данных из базы, если память пуста
+			if (!activeWishlistSet || activeWishlistSet.size === 0) {
+				const targetUser = await GM_getValue(WISHLIST_TARGET_USER_KEY, null);
+				if (targetUser) {
+					const wishlistData = await dbGet(WISHLIST_DB_STORE_NAME, targetUser);
+					if (wishlistData?.cardIds) {
+						activeWishlistSet = new Set(wishlistData.cardIds.map(String));
+					}
+				}
+			}
+
+			if (!activeWishlistSet || activeWishlistSet.size === 0) return;
+
+			let cardsToScan = [];
+			let classToApply = '';
+			const isTradePage = () => window.location.pathname.startsWith('/trades/') || /^\/cards\/\d+\/trade\/?$/.test(window.location.pathname);
+
+			if (unsafeWindow.isCardPackPage()) {
+				const isPackHighlightEnabled = await GM_getValue(WISHLIST_HIGHLIGHT_PACKS_ENABLED_KEY, false);
+				if (isPackHighlightEnabled) {
+					cardsToScan = document.querySelectorAll('.lootbox__row .lootbox__card');
+					classToApply = 'wishlist-highlight-pack';
+				}
+			} else if (isTradePage()) {
+				const isTradeHighlightEnabled = await GM_getValue(WISHLIST_HIGHLIGHT_TRADES_ENABLED_KEY, false);
+				if (isTradeHighlightEnabled) {
+					cardsToScan = document.querySelectorAll('.trade__inventory-item, .trade__main-item');
+					classToApply = 'wishlist-highlight-inventory';
+				}
+			} else if (unsafeWindow.isMyCardPage()) {
+				const isInventoryHighlightEnabled = await GM_getValue(WISHLIST_HIGHLIGHT_INVENTORY_ENABLED_KEY, false);
+				if (isInventoryHighlightEnabled) {
+					const mainContainer = document.querySelector('.anime-cards--full-page');
+					if (mainContainer) {
+						cardsToScan = mainContainer.querySelectorAll('.anime-cards__item');
+					}
+					classToApply = 'wishlist-highlight-inventory';
+				}
+			}
+
+			if (!classToApply) {
+				document.querySelectorAll('.wishlist-highlight-pack, .wishlist-highlight-inventory').forEach(card => {
+					card.classList.remove('wishlist-highlight-pack', 'wishlist-highlight-inventory');
+					card.querySelector('.wishlist-indicator-icon')?.remove();
+				});
+				return;
+			}
+
+			if (cardsToScan.length === 0) return;
+
+			for (const card of cardsToScan) {
+				const cardId = await getCardId(card, 'type', true);
+				const cardIsInWishlist = cardId && activeWishlistSet.has(cardId.toString());
+				
+				if (cardIsInWishlist) {
+					card.classList.add(classToApply);
+					if (!card.querySelector('.wishlist-indicator-icon')) {
+						const indicator = document.createElement('div');
+						indicator.className = 'wishlist-indicator-icon';
+						indicator.innerHTML = '<i class="fas fa-heart" style="color: #ffeb3b; text-shadow: 0 0 5px black;"></i>';
+						indicator.title = 'Эта карта в отслеживаемом списке желаний!';
+						Object.assign(indicator.style, {
+							position: 'absolute', top: '5px', left: '5px',
+							zIndex: '15', fontSize: '16px'
+						});
+						card.appendChild(indicator);
+					}
+				} else {
+					card.classList.remove(classToApply);
+					card.querySelector('.wishlist-indicator-icon')?.remove();
+				}
+			}
+		} catch (e) {
+			console.error('[Wishlist Highlight Error]', e);
+		} finally {
+			isHighlightingWishlist = false;
+		}
+	}
 
     // ##################################################
     // ##################################################
@@ -20587,226 +20837,14 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         }
     } // Конец функции initRemeltAdvancedDashboard
 
-	// Функция выполняет поиск кнопки вноса, логирует процесс и планирует перезагрузку при неудаче
-	async function performShahtaHunterSearch(sets, currentTimeInSeconds, startTimeInSeconds, endTimeInSeconds, today) {
-		// ПРАВКА: Сразу ставим флаг поиска, чтобы heartbeat не мешал
-		if (unsafeWindow.ascm_reload_timer_running || unsafeWindow.ascm_is_searching) return;
-		
-		const isInsideBoostTime = currentTimeInSeconds >= startTimeInSeconds && currentTimeInSeconds <= endTimeInSeconds;
-		if (!isInsideBoostTime) return;
 
-		unsafeWindow.ascm_is_searching = true;
-		const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
-		const isAlreadyOn = await GM_getValue('boosterState', false);
-		const lastAction = parseInt(sessionStorage.getItem('ascm_last_hunter_ts') || '0');
 
-		if (btn && btn.offsetParent !== null) {
-			sccLog("Кнопка вноса НАЙДЕНА.", 'success', true);
-			unsafeWindow.ascm_is_searching = false;
-			
-			const limitEl = document.querySelector('.boost-limit');
-			let limitReached = false;
-			if (limitEl && limitEl.parentElement) {
-				const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
-				if (m && parseInt(m[1]) >= parseInt(m[2])) limitReached = true;
-			}
+	// ##################################################################################
+	// # 15. [SECTION] INITIALIZATION (Запуск процессов и команд)
+	// ##################################################################################
 
-			const forcedEndSeconds = startTimeInSeconds + ((sets.retryDuration || 2) * 60);
-			const isInForcedWindow = currentTimeInSeconds <= forcedEndSeconds;
-
-			if (limitReached && !isInForcedWindow) {
-				sccLog("Лимит 600/600 достигнут. Завершение дня.", 'success', true);
-				await GM_setValue('ascm_lastTurboTriggerDate', today);
-				await GM_deleteValue('ascm_shahta_occupied_lock');
-				return;
-			}
-
-			if (!isAlreadyOn) {
-				sccLog("Активирую Турбо-вклад...", 'success', true);
-				sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
-				const turboBtn = document.getElementById('turboBoosterBtn');
-				if (turboBtn) turboBtn.click(); else btn.click();
-			}
-		} else {
-			// КНОПКА НЕ НАЙДЕНА - ЛОГИКА РЕЛОАДА
-			unsafeWindow.ascm_is_searching = false;
-
-			if (Date.now() - lastAction >= (sets.reloadInterval || 10) * 1000) {
-				unsafeWindow.ascm_reload_timer_running = true;
-				let secondsLeft = 10; // Фиксируем 10 секунд на пуш
-
-				// Расчет диапазона Форс-режима для пуша
-				const [sH, sM] = sets.startTime.split(':').map(Number);
-				const endMins = sH * 60 + sM + (sets.retryDuration || 2);
-				const fEndStr = `${String(Math.floor(endMins / 60) % 24).padStart(2, '0')}:${String(endMins % 60).padStart(2, '0')}`;
-				const forceRange = `${sets.startTime} — ${fEndStr}`;
-
-				const updateReloadUI = () => {
-                const counterEl = document.getElementById('ascm-reload-counter-val');
-                
-                // Если элемент уже создан, обновляем только цифру
-                if (counterEl) {
-                    counterEl.textContent = secondsLeft + 'с';
-                    return;
-                }
-
-                // Изящная, центрированная и компактная разметка
-                const html = `
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 5px; width: 100%;">
-                        <div style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
-                            <i class="fas fa-spinner fa-spin" style="color: #ffd700; font-size: 14px;"></i> ПОИСК КНОПКИ...
-                        </div>
-                        
-                        <div style="background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 6px; margin: 2px 0;">
-                            <div style="font-size: 11px; color: #fff; opacity: 0.9;">Активен до: <b style="color: #00ff00; font-size: 12px;">${sets.endTime} (МСК)</b></div>
-                        </div>
-
-                        <div style="font-size: 10px; font-weight: bold; color: #ddd; text-transform: uppercase; margin-top: 5px;">
-                            Перезагрузка страницы через:
-                        </div>
-                        
-                        <div id="ascm-reload-counter-val" style="font-size: 56px; font-weight: 900; color: #fff; font-family: 'Consolas', monospace; line-height: 1; margin: 0; text-shadow: 0 0 20px rgba(255,255,255,0.5);">${secondsLeft}с</div>
-                        
-                        <div style="font-size: 9px; color: #fff; opacity: 0.6; font-style: italic; margin-top: 4px;">
-                            Период поиска: ${sets.startTime} — ${sets.endTime}
-                        </div>
-                    </div>
-                `;
-
-                isStickyNotificationActive = false;
-                showNotification(html, 'error', true);
-
-                // ПРАВКА: Убираем лишние поля внешнего контейнера, чтобы он "облепил" наш компактный текст
-                if (currentNotificationElement) {
-                    currentNotificationElement.style.padding = '12px 15px';
-                    currentNotificationElement.style.minWidth = '220px';
-                    currentNotificationElement.style.width = 'auto';
-                }
-            };
-
-            console.log(`[ACM Hunter] Кнопка не найдена. Релоад через ${secondsLeft}с. Окно вкладов до ${sets.endTime}`);
-            
-            const countdownId = setInterval(async () => {
-                secondsLeft--;
-                if (secondsLeft > 0) {
-                    updateReloadUI();
-                } else {
-                    clearInterval(countdownId);
-                    sccLog("Время поиска: кнопка не появилась, перезагрузка...", 'warning', true);
-                    
-                    await GM_setValue('ascm_shahta_occupied_lock', { id: tabIdWatch, ts: Date.now() });
-                    sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
-                    location.reload();
-                }
-            }, 1000);
-
-            updateReloadUI(); // Первый запуск
-			}
-		}
-	}
-
-	// Функция создает в интерфейсе шахты (вклад в клуб) компактную панель управления скоростью Турбо-вклада
-	async function initShahtaDashboard() {
-		const isShahta = window.location.href.includes('/clubs/boost/');
-		if (!isShahta) return;
-		// Находим блок с правилами (rules), чтобы вставиться НАД ним
-		const anchor = document.querySelector('.club-boost__inner-align-left');
-		if (!anchor || document.getElementById('ascm-shahta-dash')) return;
-
-		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-		const isVisible = await GM_getValue('ascm_shahta_dash_visible', true);
-
-		const dash = document.createElement('div');
-		dash.id = 'ascm-shahta-dash';
-		dash.className = 'ascm-shahta-dash';
-		dash.style.display = isVisible ? 'flex' : 'none';
-
-		// Вспомогательная функция для генерации HTML-содержимого панели
-        const renderInputs = () => {
-            return `
-                <div style="text-align: center; margin-bottom: 5px;">
-                    <span style="font-size: 11px; color: #aaa; font-weight: 800; text-transform: uppercase;">Скорость ТУРБО: <b id="shahta-val-display" style="color: #bc95ff;">${sets.clickInterval} мс</b></span>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="range" id="shahta-speed-slider" min="15" max="100" step="5" value="${sets.clickInterval}" style="flex: 1;">
-                    <button id="shahta-default-btn" class="ascm-remelt-small-btn" style="height: 22px; background: #4e5058;">ДЕФОЛТ</button>
-                </div>
-            `;
-        };
-
-        dash.innerHTML = renderInputs();
-        
-        // ПРАВКА: Вставляем панель ПЕРЕД (before) блоком правил, чтобы она была выше
-        anchor.before(dash);
-
-        // Кнопка-пламя для сворачивания
-        const flameBtn = document.createElement('button');
-        flameBtn.id = 'ascm-shahta-toggle-flame';
-        flameBtn.innerHTML = isVisible ? '<i class="fas fa-fire" style="color:#ff5722;"></i>' : '<i class="fal fa-fire" style="color:#888;"></i>';
-        
-        // Вставляем кнопку-огонек ПЕРЕД панелью (самый верхний элемент)
-        dash.before(flameBtn);
-
-		const slider = document.getElementById('shahta-speed-slider');
-		const display = document.getElementById('shahta-val-display');
-
-		// Живое обновление текста при движении ползунка
-		slider.oninput = () => { display.textContent = slider.value + ' мс'; };
-		
-		// Сохранение настроек при отпускании ползунка
-		slider.onchange = async () => {
-			const s = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-			s.clickInterval = parseInt(slider.value);
-			await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, s);
-			sccLog(`Скорость вклада обновлена: ${s.clickInterval} мс`, 'success', true);
-		};
-
-		// Кнопка возврата к настройкам по умолчанию из констант скрипта
-		document.getElementById('shahta-default-btn').onclick = async () => {
-			const defaultVal = CLUB_MANAGER_DEFAULT.clickInterval;
-			slider.value = defaultVal;
-			display.textContent = defaultVal + ' мс';
-			// Вызываем сохранение
-			slider.onchange();
-		};
-
-		// Логика сворачивания панели по клику на пламя
-		flameBtn.onclick = async () => {
-			const nowVis = dash.style.display !== 'none';
-			dash.style.display = nowVis ? 'none' : 'flex';
-			flameBtn.innerHTML = !nowVis ? '<i class="fas fa-fire" style="color:#ff5722;"></i>' : '<i class="fal fa-fire" style="color:#888;"></i>';
-			await GM_setValue('ascm_shahta_dash_visible', !nowVis);
-		};
-		
-		// ПРАВКА: Запуск поиска кнопки сразу после инициализации, если вкладка - Лидер
-		if (isLeaderWatch) {
-			const nowUTC = new Date();
-			const mskH = (nowUTC.getUTCHours() + 3) % 24;
-			const mskM = nowUTC.getUTCMinutes();
-			const mskS = nowUTC.getUTCSeconds();
-			const currentTime = (mskH * 3600) + (mskM * 60) + mskS;
-			const [sH, sM] = sets.startTime.split(':').map(Number);
-			const [eH, eM] = sets.endTime.split(':').map(Number);
-			
-			performShahtaHunterSearch(sets, currentTime, (sH * 3600 + sM * 60), (eH * 3600 + eM * 60), 
-				new Date(Date.now() + 3*3600*1000).toISOString().split('T')[0]);
-		}
-		
-		// Обновляет слайдер на странице в реальном времени, даже если изменения внесены в модальном окне или другой вкладке.
-		GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
-			const syncSlider = document.getElementById('shahta-speed-slider');
-			const syncDisplay = document.getElementById('shahta-val-display');
-			
-			// Обновляем значение ползунка
-			if (syncSlider && syncSlider.value != newV.clickInterval) {
-				syncSlider.value = newV.clickInterval;
-			}
-			// Обновляем текстовое отображение "мс"
-			if (syncDisplay) {
-				syncDisplay.textContent = newV.clickInterval + ' мс';
-			}
-		});
-	}
-
+	// Регистрация кнопки настроек в меню Tampermonkey
+	GM_registerMenuCommand("Настройки скрипта ⚙️", unsafeWindow.openMasterSettingsModal);
+	
 } // Конец функции runMainScript
 runMainScript();
