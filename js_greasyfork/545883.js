@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      8.0
+// @version      8.1
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Quillbot, Canva, Genspark, Character, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -82,13 +82,17 @@
             domain: 'chatgpt.com',
             includePath: ['chatgpt.com/c/', 'chatgpt.com/g/'],
             userMessage: 'div[data-message-author-role="user"]',
-            shiftTarget: 'div[data-scroll-root="true"]'
+            shiftTarget: 'div[data-scroll-root="true"]',
+            shiftHeader: '.flex.items-center.justify-end.gap-2.overflow-x-hidden',
+            collapsedTop: '0'
         },
         gemini: {
             domain: 'gemini.google.com',
             includePath: ['gemini.google.com/app/','gemini.google.com/gem/'],
             userMessage: '.query-text',
-            shiftTarget: 'chat-app, .boqOnegoogleliteOgbOneGoogleBar, top-bar-actions'
+            shiftTarget: 'chat-app, .boqOnegoogleliteOgbOneGoogleBar, top-bar-actions',
+            shiftHeader: '.boqOnegoogleliteOgbOneGoogleBar, top-bar-actions',
+            collapsedTop: '13px'
         },
         aistudio: {
             domain: 'aistudio.google.com',
@@ -98,25 +102,31 @@
             shiftTarget: '.layout-wrapper',
             alwaysShow: true,
             fastUpdate: true,
-            debounceTime: AISTUDIO_DEBOUNCE_TIME
+            debounceTime: AISTUDIO_DEBOUNCE_TIME,
+            shiftHeader: '.toolbar-container',
+            collapsedTop: '14px'
         },
         notebooklm: {
             domain: 'notebooklm.google.com',
             includePath: 'notebooklm.google.com/notebook/',
             userMessage: 'chat-message .from-user-container',
-            shiftTarget: 'notebook, .boqOnegoogleliteOgbOneGoogleBar'
+            shiftTarget: 'mat-tab-group, .panel-container, .notebook-header-container, .boqOnegoogleliteOgbOneGoogleBa',
+            shiftHeader: '.notebook-header-container, .boqOnegoogleliteOgbOneGoogleBar',
+            collapsedTop: '11px'
         },
         grok: {
             domain: 'grok.com',
             includePath: 'grok.com/c/',
             userMessage: '.relative.group.flex.flex-col.justify-center.items-end',
-            shiftTarget: 'main'
+            shiftTarget: 'main',
         },
         claude: {
             domain: 'claude.ai',
             includePath: 'claude.ai/chat/',
             userMessage: 'div.group.relative.inline-flex',
-            shiftTarget: '.flex.flex-1.h-full.w-full.overflow-hidden.relative'
+            shiftTarget: '.flex.flex-1.h-full.w-full.overflow-hidden.relative',
+            shiftHeader: '[data-testid="wiggle-controls-actions"]',
+            collapsedTop: '0'
         },
         mistral: {
             domain: 'chat.mistral.ai',
@@ -157,8 +167,10 @@
         deepseek: {
             domain: 'chat.deepseek.com',
             includePath: 'chat.deepseek.com/a/chat/',
-            userMessage: '#root > div > div > div:nth-child(2) > div:nth-child(3) > div > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > div:nth-child(odd)',
-            shiftTarget: '#root > div > div > div:nth-child(2) > div:nth-child(3) > div > div:nth-child(2) > div'
+            userMessage: '._9663006 .fbb737a4',
+            shiftTarget: '._8f60047, ._189b4a0',
+            shiftHeader: '._2be88ba',
+            collapsedTop: '10px'
         },
         kimi: {
             domain: 'www.kimi.com',
@@ -347,7 +359,7 @@
             100% { opacity: 1; }
         }
         .nav-blink-active {
-            animation: nav-blink-animation 0.5s ease-in-out 3;
+            animation: nav-blink-animation 0.5s ease-in-out 4;
         }
     `);
     const allUserSelectors = Object.values(SITE_CONFIGS)
@@ -364,7 +376,19 @@
     }
 
     const currentWidth = CURRENT_SITE.width || NAV_WIDTH;
-    GM_addStyle(getShiftStyle(currentWidth, CURRENT_SITE.shiftTarget || ''));
+    if (CURRENT_SITE.shiftTarget) {
+        GM_addStyle(getShiftStyle(currentWidth, CURRENT_SITE.shiftTarget));
+    }
+
+    if (CURRENT_SITE.shiftHeader) {
+        GM_addStyle(getShiftStyle(currentWidth, CURRENT_SITE.shiftHeader));
+        GM_addStyle(`
+            body.navigator-collapsed ${CURRENT_SITE.shiftHeader} {
+                margin-right: ${NAV_COLLAPSED_WIDTH}px !important;
+                transition: margin-right 0.3s ease;
+            }
+        `);
+    }
 
     let conversationObserver = null;
     let isCollapsed = false;
@@ -375,8 +399,10 @@
         const content = document.getElementById('message-nav-content');
         if (container && content && content.style.display !== 'none') {
             document.body.classList.add('navigator-expanded');
+            document.body.classList.remove('navigator-collapsed');
         } else {
             document.body.classList.remove('navigator-expanded');
+            document.body.classList.add('navigator-collapsed');
         }
     }
 
@@ -391,14 +417,14 @@
             Object.assign(header.style, {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', fontWeight: 'bold',
-                position: 'sticky', top: '0', zIndex: '10', padding: '10px 0', backgroundColor: 'Canvas',
+                position: 'sticky', top: '0', zIndex: '10', padding: '15px 0', backgroundColor: 'Canvas',
                 borderBottom : '1px solid color-mix(in srgb, CanvasText 15%, transparent)'
             });
 
             const toggleBtn = document.createElement('button');
             Object.assign(toggleBtn.style, {
                 background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: '18px', color: 'inherit'
+                fontSize: '20px', color: 'inherit'
             });
             toggleBtn.textContent = 'Close';
             header.appendChild(toggleBtn);
@@ -418,19 +444,28 @@
                     content.style.display = 'block';
                     container.style.width = `${currentWidth}px`;
                     toggleBtn.textContent = 'Close';
+                    container.style.bottom = '0px';
+                    container.style.height = 'auto';
                     header.style.backgroundColor = 'Canvas';
                     header.style.borderBottom = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
                     container.style.borderLeft = '1px solid color-mix(in srgb, CanvasText 15%, transparent)';
-                    container.style.top = '0px'
+                    container.style.top = '0px';
+                    container.style.right = '0px'
+                    header.style.padding = '15px 0';
                 } else {
                     content.style.display = 'none';
                     container.style.borderLeft = 'none';
                     container.style.width = `${NAV_COLLAPSED_WIDTH}px`;
                     toggleBtn.textContent = 'Open';
+                    container.style.bottom = 'auto';
+                    container.style.height = 'min-content';
                     header.style.backgroundColor = 'transparent';
+                    container.style.right = '10px'
                     header.style.borderBottom = 'none';
-                    container.style.top = '55px'
+                    header.style.padding = '10px 0';
+                    container.style.top = CURRENT_SITE.collapsedTop || '55px';
                 }
+
                 updateBodyClassForLayout();
             };
 
@@ -515,7 +550,7 @@
                 if (cachedPrompts[index - 1] && cachedPrompts[index - 1].element) {
                     const el = cachedPrompts[index - 1].element;
                     el.classList.add('nav-blink-active');
-                    setTimeout(() => el.classList.remove('nav-blink-active'), 1500);
+                    setTimeout(() => el.classList.remove('nav-blink-active'), 2000);
                     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }

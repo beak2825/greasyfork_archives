@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Busan MiliPass Refreshing
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.1.2
 // @description  Toggleable auto-click script for a specific button with countdown and additional logic for data comparison
 // @author       조해준
 // @match        *://admin.milipass.kr/*
@@ -258,7 +258,7 @@
         { label: '소속 불명', content: '작성하신 부대 명칭으로는 부대 주둔지가 특정되지 않아, 발권 제한 처리하였습니다. 적어도 부대가 속한 기초자치단체를 추정할 수 있을 만큼, 부대 명칭을  작성하여 재신청 해주시기 바랍니다.' },
         { label: '중복 신청', content: '2회 이상 중복신청으로 최초 신청건을 제외하고 발권제한 처리 하였습니다. 최초로 신청하신 건에 대해서는 담당자가 확인 후 처리 예정입니다.' },
         { label: '휴가 조회 불가', content: '국방수송정보체계 상, 해당되는 휴가 정보를 확인할 수 없어 발권제한 처리하였습니다. 2~3일 후에 다시 신청해주시거나, 탑승 희망 일 당일에 휴가증을 지참하여 TMO 창구에 방문해주시면 발권 도와드리겠습니다. (사전에 이용하실 기차표를 미리 구매해 오시면 빠르게 도와드릴 수 있습니다.)' },
-        { label: 'SRT', content: 'SRT는 밀리패스 지원이 불가합니다. 열차 출발 전 TMO 현장 발매 바랍니다.' },
+        { label: 'SRT 회원번호', content: 'SRT로 지원받으시길 희망하신다면 SRT 회원번호를 기입해주시면 바로 도와드리겠습니다.' },
         { label: '함정 위치', content: '열차 탑승 당일 복무중이신 함정의 위치를 구두로 확인하여야 합니다. 이용 희망하시는 열차 예매 후 TMO 창구에 방문해주시면 후급 지원 도와드리겠습니다.' },
         { label: '행선지 전국', content: '휴가증 상의 행선지를 전국으로 설정할 경우, 지원범위를 특정할 수 없어 철도 후급을 받으실 수 없습니다. 휴가증의 행선지를 다시 설정하시고 재신청 해주시기 바랍니다.' },
         { label: '행선지 제주', content: '휴가증 행선지가 제주/국외인 경우 최기 터미널 또는 공항까지만 지원 가능합니다. 이용하시는 항공권 또는 승선권 지참 후 인근 TMO 현장 방문 부탁드립니다.' }

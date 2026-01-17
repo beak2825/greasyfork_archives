@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         URL Visit Tracker (Improved)
 // @namespace    https://github.com/hongmd/userscript-improved
-// @version      2.5.4
+// @version      2.7.0
 // @description  Track visits per URL, show corner badge history & link hover info - Massive Capacity (10K URLs) - ES2020+ & Smooth Tooltips. Advanced URL normalization and performance optimizations.
 // @author       hongmd
 // @contributor  Original idea by Chewy
@@ -42,14 +42,24 @@
       ENABLED: false,               // Set to true to enable multi-tab cache coordination
       SYNC_INTERVAL: 10000          // How often to sync cache across tabs (ms)
     },
+    // Debounce settings for database writes
+    DEBOUNCE: {
+      ENABLED: true,                // Enable debounced writes for better performance
+      DELAY: 1000                   // Delay in ms before writing to storage
+    },
+    // Web Worker for heavy operations
+    WEB_WORKER: {
+      ENABLED: true,                // Use Web Worker for cleanup operations
+      TIMEOUT: 15000                // Timeout for worker operations (ms)
+    },
     // URL normalization options
     NORMALIZE_URL: {
       REMOVE_QUERY: false,          // Set to true to ignore query params (?key=value)
-                                    // false: tracks "site.com?q=A" and "site.com?q=B" separately
-                                    // true:  groups them as "site.com" (same page)
+      // false: tracks "site.com?q=A" and "site.com?q=B" separately
+      // true:  groups them as "site.com" (same page)
       REMOVE_HASH: true,            // Set to true to ignore hash fragments (#section)
-                                    // true:  treats "page.html#top" and "page.html#bottom" as same
-                                    // false: tracks different sections separately
+      // true:  treats "page.html#top" and "page.html#bottom" as same
+      // false: tracks different sections separately
       REMOVE_WWW: true,             // Set to true to remove www. prefix
       REMOVE_PROTOCOL: true,        // Set to true to remove http/https
       REMOVE_TRAILING_SLASH: true,  // Set to true to remove trailing /
@@ -92,10 +102,10 @@
       console.warn('Invalid URL provided to normalizeUrl:', url);
       return location.href;
     }
-    
+
     // Configurable URL normalization for flexible tracking granularity
     let normalized = url.trim();
-    
+
     // Handle malformed URLs
     try {
       // Test if URL is valid by creating URL object
@@ -106,50 +116,50 @@
       }
       return normalizeUrl(location.href);
     }
-    
+
     // Clean search URLs before other normalizations (must be done first)
     if (CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS) {
       normalized = cleanSearchUrl(normalized);
     }
-    
+
     // Remove protocol if configured
     if (CONFIG.NORMALIZE_URL.REMOVE_PROTOCOL) {
       normalized = normalized.replace(/^https?:\/\//, '');
     }
-    
+
     // Remove www prefix if configured
     if (CONFIG.NORMALIZE_URL.REMOVE_WWW) {
       normalized = normalized.replace(/^www\./, '');
     }
-    
+
     // Remove trailing slash if configured
     if (CONFIG.NORMALIZE_URL.REMOVE_TRAILING_SLASH) {
       normalized = normalized.replace(/\/$/, '');
     }
-    
+
     // Remove hash fragments if configured
     if (CONFIG.NORMALIZE_URL.REMOVE_HASH) {
       normalized = normalized.split('#')[0];
     }
-    
+
     // Remove query parameters if configured (after search cleaning)
     if (CONFIG.NORMALIZE_URL.REMOVE_QUERY) {
       normalized = normalized.split('?')[0];
     }
-    
+
     if (CONFIG.DEBUG) {
       console.log(`🔗 URL normalized: "${url}" → "${normalized}"`);
     }
-    
+
     return normalized;
   }
 
   // Check if URL should be skipped from tracking
   function shouldSkipUrl(url) {
     if (!CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES) return false;
-    
+
     const urlLower = url.toLowerCase();
-    
+
     // Check against skip patterns
     for (const pattern of CONFIG.URL_FILTERS.SKIP_PATTERNS) {
       if (urlLower.includes(pattern.toLowerCase())) {
@@ -159,20 +169,20 @@
         return true;
       }
     }
-    
+
     return false;
   }
 
   // Clean search engine URLs to group similar searches
   function cleanSearchUrl(url) {
     if (!CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS) return url;
-    
+
     try {
       const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
       const hostname = urlObj.hostname.toLowerCase();
       const pathname = urlObj.pathname;
       const searchParams = new URLSearchParams(urlObj.search);
-      
+
       // Google Search
       if ((hostname.includes('google.') || hostname === 'google.com') && pathname.includes('/search')) {
         const query = searchParams.get('q');
@@ -185,7 +195,7 @@
           return cleanUrl;
         }
       }
-      
+
       // Bing Search
       else if (hostname.includes('bing.com') && pathname.includes('/search')) {
         const query = searchParams.get('q');
@@ -197,7 +207,7 @@
           return cleanUrl;
         }
       }
-      
+
       // DuckDuckGo Search
       else if (hostname.includes('duckduckgo.com')) {
         const query = searchParams.get('q');
@@ -209,7 +219,7 @@
           return cleanUrl;
         }
       }
-      
+
       // YouTube Search
       else if (hostname.includes('youtube.com') && pathname.includes('/results')) {
         const query = searchParams.get('search_query');
@@ -226,7 +236,7 @@
         console.warn('Failed to clean search URL:', error);
       }
     }
-    
+
     return url; // Return original if not a search URL or parsing failed
   }
 
@@ -234,12 +244,12 @@
   function safeClosest(target, selector) {
     // Handle null/undefined
     if (!target) return null;
-    
+
     // If target is a Text node, use its parent element
     if (target.nodeType === Node.TEXT_NODE) {
       target = target.parentElement;
     }
-    
+
     // If target doesn't have closest method (SVG elements in old browsers), fallback
     if (!target || typeof target.closest !== 'function') {
       // Traverse up manually
@@ -252,7 +262,7 @@
       }
       return null;
     }
-    
+
     // Use native closest if available
     return target.closest(selector);
   }
@@ -266,10 +276,10 @@
       }
       return;
     }
-    
+
     const currentHref = location.href;
     const now = Date.now();
-    
+
     // Check if we should process pending URL change
     if (pendingUrlChange && !pendingTimeout && (now - lastUrlChangeTime) >= URL_CHANGE_MIN_INTERVAL) {
       if (CONFIG.DEBUG) {
@@ -284,7 +294,7 @@
         updateVisit();
       }
     }
-    
+
     // Only process if URL actually changed and enough time has passed
     if (currentHref !== lastHref && (now - lastCheck) >= 1000) {
       if (CONFIG.DEBUG) {
@@ -298,10 +308,10 @@
       lastHref = currentHref;
     }
   }
-  
+
   function startPolling() {
     if (pollTimer) clearInterval(pollTimer);
-    
+
     // Adaptive polling interval based on activity
     let interval = CONFIG.POLL_INTERVAL;
     if (CONFIG.POLLING.ADAPTIVE) {
@@ -310,10 +320,10 @@
       // Decay activity count over time
       activityCount = Math.max(0, activityCount - 1);
     }
-    
+
     pollTimer = setInterval(directPoll, interval);
   }
-  
+
   function stopPolling() {
     if (pollTimer) {
       clearInterval(pollTimer);
@@ -347,7 +357,8 @@
   }
 
   // Smart cleanup to maintain database size with performance optimization
-  function cleanupOldUrls(db) {
+  // Uses Web Worker for heavy computation to avoid blocking UI
+  async function cleanupOldUrls(db) {
     const urls = Object.keys(db);
     if (urls.length <= CONFIG.MAX_URLS_STORED) return db;
 
@@ -355,41 +366,120 @@
       console.log(`🧹 Large database cleanup: ${urls.length} → ${CONFIG.MAX_URLS_STORED} URLs`);
     }
 
-    // Use requestIdleCallback for non-blocking cleanup if available
-    const performCleanup = () => {
+    // Cleanup logic - can run in main thread or Web Worker
+    const performCleanup = (dbData, maxUrls) => {
+      const urlKeys = Object.keys(dbData);
       // Calculate score for each URL (visits * recency)
-      const scored = urls.map(url => {
-        const data = db[url];
-        const recentVisit = data.visits?.[0] ?? 0;  // Optional chaining + nullish coalescing
+      const scored = urlKeys.map(url => {
+        const data = dbData[url];
+        const recentVisit = data.visits?.[0] ?? 0;
         const daysSinceVisit = (Date.now() - recentVisit) / (1000 * 60 * 60 * 24);
-        const recencyScore = Math.max(0, 30 - daysSinceVisit) / 30; // 0-1 based on last 30 days
-        const score = data.count * (1 + recencyScore); // Visits weighted by recency
-
-        return { url, score, count: data.count, lastVisit: recentVisit };
+        const recencyScore = Math.max(0, 30 - daysSinceVisit) / 30;
+        const score = data.count * (1 + recencyScore);
+        return { url, score };
       });
 
-      // Keep top 10,000 URLs by score - massive capacity
+      // Keep top URLs by score
       scored.sort((a, b) => b.score - a.score);
-      const keepUrls = scored.slice(0, CONFIG.MAX_URLS_STORED);
+      const keepUrls = scored.slice(0, maxUrls);
 
-      // Use Object.fromEntries for more modern approach (ES2019)
-      const cleanDb = Object.fromEntries(
-        keepUrls.map(({ url }) => [url, db[url]])
-      );
-
+      // Build clean database
+      const cleanDb = {};
+      for (const { url } of keepUrls) {
+        cleanDb[url] = dbData[url];
+      }
       return cleanDb;
     };
 
-    // Use requestIdleCallback for non-blocking cleanup if available
-    if (window.requestIdleCallback && urls.length > 5000) {
+    // Try Web Worker for large databases
+    if (CONFIG.WEB_WORKER.ENABLED && urls.length > 5000 && typeof Worker !== 'undefined') {
+      try {
+        return await runCleanupInWorker(db, CONFIG.MAX_URLS_STORED);
+      } catch (error) {
+        if (CONFIG.DEBUG) {
+          console.warn('🔧 Web Worker cleanup failed, falling back to main thread:', error);
+        }
+        // Fallback to main thread
+      }
+    }
+
+    // Use requestIdleCallback for medium databases, or run directly for small ones
+    if (window.requestIdleCallback && urls.length > 3000) {
       return new Promise(resolve => {
         requestIdleCallback(() => {
-          resolve(performCleanup());
-        }, { timeout: 10000 }); // 10s timeout fallback
+          resolve(performCleanup(db, CONFIG.MAX_URLS_STORED));
+        }, { timeout: 10000 });
       });
-    } else {
-      return performCleanup();
     }
+
+    return performCleanup(db, CONFIG.MAX_URLS_STORED);
+  }
+
+  // Web Worker implementation for cleanup (runs in separate thread)
+  function runCleanupInWorker(db, maxUrls) {
+    return new Promise((resolve, reject) => {
+      // Create worker code as a Blob (works in userscript context)
+      const workerCode = `
+        self.onmessage = function(e) {
+          const { db, maxUrls } = e.data;
+          const urls = Object.keys(db);
+          
+          // Calculate scores
+          const scored = urls.map(url => {
+            const data = db[url];
+            const recentVisit = data.visits?.[0] ?? 0;
+            const daysSinceVisit = (Date.now() - recentVisit) / (1000 * 60 * 60 * 24);
+            const recencyScore = Math.max(0, 30 - daysSinceVisit) / 30;
+            const score = data.count * (1 + recencyScore);
+            return { url, score };
+          });
+          
+          // Sort and keep top URLs
+          scored.sort((a, b) => b.score - a.score);
+          const keepUrls = scored.slice(0, maxUrls);
+          
+          // Build clean database
+          const cleanDb = {};
+          for (const { url } of keepUrls) {
+            cleanDb[url] = db[url];
+          }
+          
+          self.postMessage(cleanDb);
+        };
+      `;
+
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      const workerUrl = URL.createObjectURL(blob);
+      const worker = new Worker(workerUrl);
+
+      // Timeout handler
+      const timeoutId = setTimeout(() => {
+        worker.terminate();
+        URL.revokeObjectURL(workerUrl);
+        reject(new Error('Worker timeout'));
+      }, CONFIG.WEB_WORKER.TIMEOUT);
+
+      worker.onmessage = (e) => {
+        clearTimeout(timeoutId);
+        worker.terminate();
+        URL.revokeObjectURL(workerUrl);
+
+        if (CONFIG.DEBUG) {
+          console.log('🔧 Web Worker cleanup completed successfully');
+        }
+        resolve(e.data);
+      };
+
+      worker.onerror = (error) => {
+        clearTimeout(timeoutId);
+        worker.terminate();
+        URL.revokeObjectURL(workerUrl);
+        reject(error);
+      };
+
+      // Send data to worker
+      worker.postMessage({ db, maxUrls });
+    });
   }
 
   function shortenNumber(num) {
@@ -397,10 +487,10 @@
     if (!Number.isFinite(num)) return '0'; // Handle NaN, Infinity, -Infinity
     if (num < 0) return '0'; // Visits can't be negative
     if (num === 0) return '0';
-    
+
     // Convert to absolute value and round to avoid floating point issues
     const absNum = Math.abs(Math.floor(num));
-    
+
     // Handle very large numbers with appropriate suffixes
     if (absNum >= 1_000_000_000) {
       return (Math.round(absNum / 100_000_000) / 10) + 'B'; // Billions
@@ -411,7 +501,7 @@
     if (absNum >= 1_000) {
       return (Math.round(absNum / 100) / 10) + 'K'; // Thousands
     }
-    
+
     return String(absNum);
   }
 
@@ -420,7 +510,7 @@
     if (cacheValid && dbCache !== null) {
       return dbCache;
     }
-    
+
     try {
       dbCache = GM_getValue('visitDB', {});
       cacheValid = true;
@@ -441,23 +531,80 @@
     return getDB(); // Fallback to full load
   }
 
-  function setDB(db) {
+  // Debounce state for setDB
+  let pendingDbWrite = null;
+  let debounceTimer = null;
+
+  // Internal function to actually write to storage
+  async function _persistDB(db) {
     try {
       // Auto cleanup if database is getting too large
       if (Object.keys(db).length > CONFIG.CLEANUP_THRESHOLD) {
-        db = cleanupOldUrls(db);
+        db = await cleanupOldUrls(db);
+        // Update cache with cleaned data
+        dbCache = db;
       }
-      
-      // Update cache first
-      dbCache = db;
-      cacheValid = true;
-      
-      // Then persist to storage
+
+      // Persist to storage
       GM_setValue('visitDB', db);
+
+      if (CONFIG.DEBUG) {
+        console.log('💾 Database persisted to storage');
+      }
     } catch (error) {
       console.warn('Failed to save visit database:', error);
       // Invalidate cache on save failure
       cacheValid = false;
+    }
+  }
+
+  // Debounced setDB - batches rapid writes
+  async function setDB(db) {
+    // Always update cache immediately for fast reads
+    dbCache = db;
+    cacheValid = true;
+
+    if (CONFIG.DEBOUNCE.ENABLED) {
+      // Store pending write
+      pendingDbWrite = db;
+
+      // Clear existing timer
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+
+      // Schedule debounced write
+      debounceTimer = setTimeout(async () => {
+        if (pendingDbWrite) {
+          const dataToWrite = pendingDbWrite;
+          pendingDbWrite = null;
+          debounceTimer = null;
+          await _persistDB(dataToWrite);
+        }
+      }, CONFIG.DEBOUNCE.DELAY);
+    } else {
+      // No debounce - write immediately
+      await _persistDB(db);
+    }
+  }
+
+  // Force flush pending writes (call before page unload)
+  function flushPendingWrites() {
+    if (pendingDbWrite) {
+      if (CONFIG.DEBUG) {
+        console.log('💾 Flushing pending database writes');
+      }
+      // Clear timer and write synchronously
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+        debounceTimer = null;
+      }
+      try {
+        GM_setValue('visitDB', pendingDbWrite);
+      } catch (error) {
+        console.warn('Failed to flush pending writes:', error);
+      }
+      pendingDbWrite = null;
     }
   }
 
@@ -470,7 +617,9 @@
     setTimeout(() => {
       dbCache = null;
     }, 0);
-  }  let currentUrl = normalizeUrl(location.href);
+  }
+
+  let currentUrl = normalizeUrl(location.href);
 
   function updateVisit() {
     // Skip tracking if current URL matches filter patterns
@@ -480,7 +629,7 @@
       }
       return;
     }
-    
+
     const db = getDB();
     const now = new Date();
     const timestamp = createTimestamp(now);
@@ -517,13 +666,12 @@
 
   function registerMenu() {
     // Register static menu items once to prevent duplicates
+    GM_registerMenuCommand('⚙️ Settings', openSettingsPanel);
     GM_registerMenuCommand('👁️ Toggle Badge', toggleBadgeVisibility);
     GM_registerMenuCommand('📊 Export Data', exportData);
     GM_registerMenuCommand('📈 Show Statistics', showStatistics);
     GM_registerMenuCommand('🗑️ Clear Current Page', clearCurrentPage);
     GM_registerMenuCommand('💥 Clear All Data', clearAllData);
-    GM_registerMenuCommand('🚫 Toggle URL Filtering', toggleUrlFiltering);
-    GM_registerMenuCommand('🔍 Toggle Search URL Cleaning', toggleSearchCleaning);
     GM_registerMenuCommand('🐛 Toggle Debug Mode', toggleDebugMode);
   }
 
@@ -802,6 +950,635 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     }
   }
 
+  // ============================================
+  // SETTINGS PANEL UI
+  // ============================================
+
+  let settingsPanel = null;
+  let settingsPanelOpen = false;
+
+  function getSettingsPanelStyles() {
+    return `
+      .vt-settings-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 2147483646;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .vt-settings-overlay.visible {
+        opacity: 1;
+      }
+      .vt-settings-panel {
+        background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 16px;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        width: 480px;
+        max-width: 95vw;
+        max-height: 85vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transform: scale(0.9) translateY(20px);
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      .vt-settings-overlay.visible .vt-settings-panel {
+        transform: scale(1) translateY(0);
+      }
+      .vt-settings-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .vt-settings-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .vt-settings-title::before {
+        content: '⚙️';
+        font-size: 20px;
+      }
+      .vt-settings-close {
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .vt-settings-close:hover {
+        background: rgba(239, 68, 68, 0.8);
+        transform: scale(1.05);
+      }
+      .vt-settings-body {
+        padding: 16px 24px;
+        overflow-y: auto;
+        flex: 1;
+      }
+      .vt-settings-section {
+        margin-bottom: 20px;
+      }
+      .vt-settings-section:last-child {
+        margin-bottom: 0;
+      }
+      .vt-section-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #818cf8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .vt-setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 10px;
+        margin-bottom: 8px;
+        transition: background 0.15s ease;
+      }
+      .vt-setting-row:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .vt-setting-label {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .vt-setting-name {
+        font-size: 14px;
+        color: #e2e8f0;
+        font-weight: 500;
+      }
+      .vt-setting-desc {
+        font-size: 11px;
+        color: #64748b;
+      }
+      .vt-toggle {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+      .vt-toggle.active {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      }
+      .vt-toggle::after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 18px;
+        height: 18px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      .vt-toggle.active::after {
+        transform: translateX(20px);
+      }
+      .vt-input-number {
+        width: 80px;
+        padding: 6px 10px;
+        background: rgba(30, 30, 50, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 6px;
+        color: #ffffff !important;
+        font-size: 13px;
+        font-weight: 500;
+        text-align: center;
+        transition: all 0.15s ease;
+        -webkit-appearance: textfield;
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+      .vt-input-number::-webkit-outer-spin-button,
+      .vt-input-number::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .vt-input-number:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: rgba(99, 102, 241, 0.2) !important;
+        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+      }
+      .vt-settings-footer {
+        padding: 16px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .vt-btn {
+        flex: 1;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .vt-btn-primary {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: #fff;
+      }
+      .vt-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      }
+      .vt-btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+      }
+      .vt-btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+      .vt-toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(100px);
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        z-index: 2147483647;
+        opacity: 0;
+        transition: all 0.3s ease;
+      }
+      .vt-toast.visible {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    `;
+  }
+
+  function createSettingsPanel() {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'vt-settings-overlay';
+    overlay.id = 'vt-settings-overlay';
+
+    // Create panel HTML
+    overlay.innerHTML = `
+      <div class="vt-settings-panel">
+        <div class="vt-settings-header">
+          <div class="vt-settings-title">URL Visit Tracker Settings</div>
+          <button class="vt-settings-close" id="vt-close-settings">✕</button>
+        </div>
+        <div class="vt-settings-body">
+          <!-- General Section -->
+          <div class="vt-settings-section">
+            <div class="vt-section-title">🎯 General</div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Show Badge</span>
+                <span class="vt-setting-desc">Display visit counter badge on screen</span>
+              </div>
+              <div class="vt-toggle ${badgeVisible ? 'active' : ''}" data-setting="badgeVisible"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Debug Mode</span>
+                <span class="vt-setting-desc">Enable console logging for debugging</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.DEBUG ? 'active' : ''}" data-setting="debug"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Hover Delay</span>
+                <span class="vt-setting-desc">Delay before showing tooltip (ms)</span>
+              </div>
+              <input type="number" class="vt-input-number" value="${CONFIG.HOVER_DELAY}" data-setting="hoverDelay" min="0" max="5000" step="100">
+            </div>
+          </div>
+
+          <!-- URL Normalization Section -->
+          <div class="vt-settings-section">
+            <div class="vt-section-title">🔗 URL Normalization</div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Remove Query Params</span>
+                <span class="vt-setting-desc">Ignore ?key=value in URLs</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.NORMALIZE_URL.REMOVE_QUERY ? 'active' : ''}" data-setting="removeQuery"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Remove Hash</span>
+                <span class="vt-setting-desc">Ignore #section in URLs</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.NORMALIZE_URL.REMOVE_HASH ? 'active' : ''}" data-setting="removeHash"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Clean Search URLs</span>
+                <span class="vt-setting-desc">Group search results by query</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS ? 'active' : ''}" data-setting="cleanSearchUrls"></div>
+            </div>
+          </div>
+
+          <!-- URL Filtering Section -->
+          <div class="vt-settings-section">
+            <div class="vt-section-title">🚫 URL Filtering</div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Skip Utility Pages</span>
+                <span class="vt-setting-desc">Don't track login, cookie pages, etc.</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES ? 'active' : ''}" data-setting="skipUtilityPages"></div>
+            </div>
+          </div>
+
+          <!-- Performance Section -->
+          <div class="vt-settings-section">
+            <div class="vt-section-title">⚡ Performance</div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Debounce Writes</span>
+                <span class="vt-setting-desc">Batch database writes for better performance</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.DEBOUNCE.ENABLED ? 'active' : ''}" data-setting="debounceEnabled"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Debounce Delay</span>
+                <span class="vt-setting-desc">Delay before writing to storage (ms)</span>
+              </div>
+              <input type="number" class="vt-input-number" value="${CONFIG.DEBOUNCE.DELAY}" data-setting="debounceDelay" min="100" max="5000" step="100">
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Use Web Worker</span>
+                <span class="vt-setting-desc">Run cleanup in background thread</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.WEB_WORKER.ENABLED ? 'active' : ''}" data-setting="webWorkerEnabled"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Pause When Hidden</span>
+                <span class="vt-setting-desc">Stop polling when tab is not visible</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.POLLING.PAUSE_WHEN_HIDDEN ? 'active' : ''}" data-setting="pauseWhenHidden"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Adaptive Polling</span>
+                <span class="vt-setting-desc">Adjust polling frequency based on activity</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.POLLING.ADAPTIVE ? 'active' : ''}" data-setting="adaptivePolling"></div>
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Poll Interval</span>
+                <span class="vt-setting-desc">URL change check interval (ms)</span>
+              </div>
+              <input type="number" class="vt-input-number" value="${CONFIG.POLL_INTERVAL}" data-setting="pollInterval" min="1000" max="30000" step="1000">
+            </div>
+          </div>
+
+          <!-- Storage Section -->
+          <div class="vt-settings-section">
+            <div class="vt-section-title">💾 Storage</div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Max URLs Stored</span>
+                <span class="vt-setting-desc">Maximum number of URLs to track</span>
+              </div>
+              <input type="number" class="vt-input-number" value="${CONFIG.MAX_URLS_STORED}" data-setting="maxUrlsStored" min="1000" max="50000" step="1000">
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Max Visits per URL</span>
+                <span class="vt-setting-desc">Visit timestamps to keep per URL</span>
+              </div>
+              <input type="number" class="vt-input-number" value="${CONFIG.MAX_VISITS_STORED}" data-setting="maxVisitsStored" min="5" max="100" step="5">
+            </div>
+            <div class="vt-setting-row">
+              <div class="vt-setting-label">
+                <span class="vt-setting-name">Multi-Tab Sync</span>
+                <span class="vt-setting-desc">Sync data across browser tabs</span>
+              </div>
+              <div class="vt-toggle ${CONFIG.MULTI_TAB.ENABLED ? 'active' : ''}" data-setting="multiTabEnabled"></div>
+            </div>
+          </div>
+        </div>
+        <div class="vt-settings-footer">
+          <button class="vt-btn vt-btn-secondary" id="vt-reset-settings">Reset to Defaults</button>
+          <button class="vt-btn vt-btn-primary" id="vt-save-settings">Save Settings</button>
+        </div>
+      </div>
+    `;
+
+    return overlay;
+  }
+
+  function openSettingsPanel() {
+    if (settingsPanelOpen) return;
+
+    // Add styles if not already added
+    if (!document.getElementById('vt-settings-styles')) {
+      const style = document.createElement('style');
+      style.id = 'vt-settings-styles';
+      style.textContent = getSettingsPanelStyles();
+      document.head.appendChild(style);
+    }
+
+    // Create and add panel
+    settingsPanel = createSettingsPanel();
+    document.body.appendChild(settingsPanel);
+    settingsPanelOpen = true;
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      settingsPanel.classList.add('visible');
+    });
+
+    // Add event listeners
+    setupSettingsEventListeners();
+  }
+
+  // ESC key handler for settings panel (moved outside for proper cleanup)
+  let settingsEscHandler = null;
+
+  function closeSettingsPanel() {
+    if (!settingsPanel || !settingsPanelOpen) return;
+
+    // Remove ESC handler to prevent memory leak
+    if (settingsEscHandler) {
+      document.removeEventListener('keydown', settingsEscHandler);
+      settingsEscHandler = null;
+    }
+
+    settingsPanel.classList.remove('visible');
+
+    setTimeout(() => {
+      if (settingsPanel && settingsPanel.parentNode) {
+        settingsPanel.parentNode.removeChild(settingsPanel);
+      }
+      settingsPanel = null;
+      settingsPanelOpen = false;
+    }, 200);
+  }
+
+  function setupSettingsEventListeners() {
+    // Close button
+    document.getElementById('vt-close-settings').addEventListener('click', closeSettingsPanel);
+
+    // Click outside to close
+    settingsPanel.addEventListener('click', (e) => {
+      if (e.target === settingsPanel) {
+        closeSettingsPanel();
+      }
+    });
+
+    // ESC key to close - use the outer variable for proper cleanup
+    settingsEscHandler = (e) => {
+      if (e.key === 'Escape' && settingsPanelOpen) {
+        closeSettingsPanel();
+      }
+    };
+    document.addEventListener('keydown', settingsEscHandler);
+
+    // Toggle switches
+    settingsPanel.querySelectorAll('.vt-toggle').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('active');
+      });
+    });
+
+    // Save button
+    document.getElementById('vt-save-settings').addEventListener('click', saveSettings);
+
+    // Reset button
+    document.getElementById('vt-reset-settings').addEventListener('click', resetSettings);
+  }
+
+  function saveSettings() {
+    try {
+      // Read all settings from UI
+      const getToggle = (name) => settingsPanel.querySelector(`[data-setting="${name}"]`).classList.contains('active');
+      const getNumber = (name) => parseInt(settingsPanel.querySelector(`[data-setting="${name}"]`).value, 10);
+
+      // Update CONFIG
+      badgeVisible = getToggle('badgeVisible');
+      CONFIG.DEBUG = getToggle('debug');
+      CONFIG.HOVER_DELAY = getNumber('hoverDelay');
+      CONFIG.NORMALIZE_URL.REMOVE_QUERY = getToggle('removeQuery');
+      CONFIG.NORMALIZE_URL.REMOVE_HASH = getToggle('removeHash');
+      CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS = getToggle('cleanSearchUrls');
+      CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES = getToggle('skipUtilityPages');
+      CONFIG.DEBOUNCE.ENABLED = getToggle('debounceEnabled');
+      CONFIG.DEBOUNCE.DELAY = getNumber('debounceDelay');
+      CONFIG.WEB_WORKER.ENABLED = getToggle('webWorkerEnabled');
+      CONFIG.POLLING.PAUSE_WHEN_HIDDEN = getToggle('pauseWhenHidden');
+      CONFIG.POLLING.ADAPTIVE = getToggle('adaptivePolling');
+      CONFIG.POLL_INTERVAL = getNumber('pollInterval');
+      CONFIG.MAX_URLS_STORED = getNumber('maxUrlsStored');
+      CONFIG.MAX_VISITS_STORED = getNumber('maxVisitsStored');
+      CONFIG.MULTI_TAB.ENABLED = getToggle('multiTabEnabled');
+
+      // Persist to GM storage
+      GM_setValue('badgeVisible', badgeVisible);
+      GM_setValue('debugMode', CONFIG.DEBUG);
+      GM_setValue('hoverDelay', CONFIG.HOVER_DELAY);
+      GM_setValue('removeQuery', CONFIG.NORMALIZE_URL.REMOVE_QUERY);
+      GM_setValue('removeHash', CONFIG.NORMALIZE_URL.REMOVE_HASH);
+      GM_setValue('searchCleaning', CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS);
+      GM_setValue('urlFiltering', CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES);
+      GM_setValue('debounceEnabled', CONFIG.DEBOUNCE.ENABLED);
+      GM_setValue('debounceDelay', CONFIG.DEBOUNCE.DELAY);
+      GM_setValue('webWorkerEnabled', CONFIG.WEB_WORKER.ENABLED);
+      GM_setValue('pauseWhenHidden', CONFIG.POLLING.PAUSE_WHEN_HIDDEN);
+      GM_setValue('adaptivePolling', CONFIG.POLLING.ADAPTIVE);
+      GM_setValue('pollInterval', CONFIG.POLL_INTERVAL);
+      GM_setValue('maxUrlsStored', CONFIG.MAX_URLS_STORED);
+      GM_setValue('maxVisitsStored', CONFIG.MAX_VISITS_STORED);
+      GM_setValue('multiTabEnabled', CONFIG.MULTI_TAB.ENABLED);
+
+      // Update badge visibility
+      const badge = document.getElementById('vt-hover-badge');
+      if (badge) {
+        badge.classList.toggle('hidden', !badgeVisible);
+      }
+
+      // Restart polling with new settings
+      stopPolling();
+      startPolling();
+
+      // Show success toast
+      showToast('✅ Settings saved successfully!');
+
+      // Close panel
+      closeSettingsPanel();
+
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      showToast('❌ Failed to save settings');
+    }
+  }
+
+  function resetSettings() {
+    if (!confirm('Reset all settings to default values?')) return;
+
+    // Default values
+    const defaults = {
+      badgeVisible: true,
+      debug: false,
+      hoverDelay: 1000,
+      removeQuery: false,
+      removeHash: true,
+      cleanSearchUrls: true,
+      skipUtilityPages: true,
+      debounceEnabled: true,
+      debounceDelay: 1000,
+      webWorkerEnabled: true,
+      pauseWhenHidden: true,
+      adaptivePolling: true,
+      pollInterval: 5000,
+      maxUrlsStored: 10000,
+      maxVisitsStored: 20,
+      multiTabEnabled: false
+    };
+
+    // Update UI
+    Object.entries(defaults).forEach(([key, value]) => {
+      const element = settingsPanel.querySelector(`[data-setting="${key}"]`);
+      if (element) {
+        if (element.classList.contains('vt-toggle')) {
+          element.classList.toggle('active', value);
+        } else {
+          element.value = value;
+        }
+      }
+    });
+
+    showToast('🔄 Settings reset to defaults');
+  }
+
+  function showToast(message) {
+    // Remove existing toast
+    const existingToast = document.querySelector('.vt-toast');
+    if (existingToast) {
+      existingToast.remove();
+    }
+
+    const toast = document.createElement('div');
+    toast.className = 'vt-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.add('visible');
+    });
+
+    setTimeout(() => {
+      toast.classList.remove('visible');
+      setTimeout(() => toast.remove(), 300);
+    }, 2500);
+  }
+
+  // Load all saved settings on initialization
+  function loadSavedSettings() {
+    try {
+      badgeVisible = GM_getValue('badgeVisible', CONFIG.BADGE_VISIBLE);
+      CONFIG.DEBUG = GM_getValue('debugMode', CONFIG.DEBUG);
+      CONFIG.HOVER_DELAY = GM_getValue('hoverDelay', CONFIG.HOVER_DELAY);
+      CONFIG.NORMALIZE_URL.REMOVE_QUERY = GM_getValue('removeQuery', CONFIG.NORMALIZE_URL.REMOVE_QUERY);
+      CONFIG.NORMALIZE_URL.REMOVE_HASH = GM_getValue('removeHash', CONFIG.NORMALIZE_URL.REMOVE_HASH);
+      CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS = GM_getValue('searchCleaning', CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS);
+      CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES = GM_getValue('urlFiltering', CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES);
+      CONFIG.DEBOUNCE.ENABLED = GM_getValue('debounceEnabled', CONFIG.DEBOUNCE.ENABLED);
+      CONFIG.DEBOUNCE.DELAY = GM_getValue('debounceDelay', CONFIG.DEBOUNCE.DELAY);
+      CONFIG.WEB_WORKER.ENABLED = GM_getValue('webWorkerEnabled', CONFIG.WEB_WORKER.ENABLED);
+      CONFIG.POLLING.PAUSE_WHEN_HIDDEN = GM_getValue('pauseWhenHidden', CONFIG.POLLING.PAUSE_WHEN_HIDDEN);
+      CONFIG.POLLING.ADAPTIVE = GM_getValue('adaptivePolling', CONFIG.POLLING.ADAPTIVE);
+      CONFIG.POLL_INTERVAL = GM_getValue('pollInterval', CONFIG.POLL_INTERVAL);
+      CONFIG.MAX_URLS_STORED = GM_getValue('maxUrlsStored', CONFIG.MAX_URLS_STORED);
+      CONFIG.MAX_VISITS_STORED = GM_getValue('maxVisitsStored', CONFIG.MAX_VISITS_STORED);
+      CONFIG.MULTI_TAB.ENABLED = GM_getValue('multiTabEnabled', CONFIG.MULTI_TAB.ENABLED);
+    } catch (error) {
+      console.warn('Failed to load saved settings:', error);
+    }
+  }
+
   // Rate limiting for URL changes with pending mechanism
   let lastUrlChangeTime = 0;
   let pendingUrlChange = null;
@@ -811,7 +1588,7 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
   function onUrlChange() {
     const newUrl = normalizeUrl(location.href);
     if (newUrl === currentUrl) return;
-    
+
     // Skip tracking if URL matches filter patterns
     if (shouldSkipUrl(location.href)) {
       if (CONFIG.DEBUG) {
@@ -819,28 +1596,28 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
       }
       return;
     }
-    
+
     // Increment activity counter for adaptive polling
     if (CONFIG.POLLING.ADAPTIVE) {
       activityCount = Math.min(10, activityCount + 2); // Cap at 10, add 2 for URL change
     }
-    
+
     const now = Date.now();
     const timeSinceLastChange = now - lastUrlChangeTime;
-    
+
     if (timeSinceLastChange < URL_CHANGE_MIN_INTERVAL) {
       if (CONFIG.DEBUG) {
         console.log(`⏰ URL change rate limited, scheduling: ${currentUrl} → ${newUrl}`);
       }
-      
+
       // Store the pending change without updating currentUrl yet
       pendingUrlChange = newUrl;
-      
+
       // Clear any existing pending timeout
       if (pendingTimeout) {
         clearTimeout(pendingTimeout);
       }
-      
+
       // Schedule the change for when rate limit expires
       const remainingTime = URL_CHANGE_MIN_INTERVAL - timeSinceLastChange;
       pendingTimeout = setTimeout(() => {
@@ -851,14 +1628,14 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
           const savedPendingUrl = pendingUrlChange;
           pendingUrlChange = null;
           pendingTimeout = null;
-          
+
           // Process the pending change
           currentUrl = savedPendingUrl;
           lastUrlChangeTime = Date.now();
           updateVisit();
         }
       }, remainingTime + 10); // +10ms buffer
-      
+
       return;
     }
 
@@ -882,20 +1659,20 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     // Enhanced history hooks with rate limiting
     const _pushState = history.pushState;
     const _replaceState = history.replaceState;
-    
+
     history.pushState = function (...args) {
       const result = _pushState.apply(this, args);
       // Use setTimeout to avoid immediate execution conflicts
       setTimeout(onUrlChange, 50);
       return result;
     };
-    
+
     history.replaceState = function (...args) {
       const result = _replaceState.apply(this, args);
       setTimeout(onUrlChange, 50);
       return result;
     };
-    
+
     // Standard event listeners
     window.addEventListener('popstate', onUrlChange);
     window.addEventListener('hashchange', onUrlChange);
@@ -905,22 +1682,22 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     const mo = new MutationObserver((mutations) => {
       // Throttle mutation processing to avoid spam
       if (mutationTimeout) return;
-      
+
       mutationTimeout = setTimeout(() => {
         mutationTimeout = null;
         let titleChanged = false;
-        
+
         for (const mutation of mutations) {
           // Only check mutations that could affect title
           if (mutation.type === 'childList') {
             // Case 1: Title element added/removed from head
-            const titleInAdded = Array.from(mutation.addedNodes).some(node => 
+            const titleInAdded = Array.from(mutation.addedNodes).some(node =>
               node.nodeName === 'TITLE'
             );
-            const titleInRemoved = Array.from(mutation.removedNodes).some(node => 
+            const titleInRemoved = Array.from(mutation.removedNodes).some(node =>
               node.nodeName === 'TITLE'
             );
-            
+
             // Case 2: Direct title element changes
             if (mutation.target.nodeName === 'TITLE') {
               titleChanged = true;
@@ -929,7 +1706,7 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
               }
               break;
             }
-            
+
             if (titleInAdded || titleInRemoved) {
               titleChanged = true;
               if (CONFIG.DEBUG) {
@@ -937,11 +1714,11 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
               }
               break;
             }
-          } 
-          
+          }
+
           // Case 3: Character data changed in title's text nodes (more targeted)
-          else if (mutation.type === 'characterData' && 
-                   mutation.target.parentNode?.nodeName === 'TITLE') {
+          else if (mutation.type === 'characterData' &&
+            mutation.target.parentNode?.nodeName === 'TITLE') {
             titleChanged = true;
             if (CONFIG.DEBUG) {
               console.log('📝 Title characterData mutation detected:', mutation);
@@ -949,7 +1726,7 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
             break;
           }
         }
-        
+
         if (titleChanged) {
           if (CONFIG.DEBUG) {
             console.log('📝 Title change detected, triggering URL change check');
@@ -961,12 +1738,12 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
 
     // Safely observe document.head with focused title tracking
     if (document.head) {
-      mo.observe(document.head, { 
+      mo.observe(document.head, {
         childList: true,      // Detect title element addition/removal
         subtree: false,       // Only direct children for better performance
         characterData: false  // Handle characterData separately for title only
       });
-      
+
       // Separate observer for title content changes
       const titleEl = document.querySelector('title');
       if (titleEl) {
@@ -978,8 +1755,8 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
       }
     } else {
       // Fallback: observe document for head creation (minimal scope)
-      mo.observe(document, { 
-        childList: true, 
+      mo.observe(document, {
+        childList: true,
         subtree: false
       });
     }
@@ -988,70 +1765,97 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     startPolling();
   }
 
-  const tooltip = document.createElement('div');
-  // Apply styles using individual properties for better compatibility
-  Object.assign(tooltip.style, {
-    position: 'fixed',
-    padding: '6px 8px',
-    fontSize: '12px',
-    fontFamily: 'system-ui, sans-serif',
-    background: 'rgba(20, 20, 20, 0.9)',
-    color: 'white',
-    borderRadius: '6px',
-    pointerEvents: 'none',
-    whiteSpace: 'nowrap',
-    zIndex: '999999',
-    opacity: '0',
-    transition: 'opacity 0.15s ease'
-  });
+  // Lazy tooltip initialization - only create when first needed
+  let tooltip = null;
+  let tooltipInitialized = false;
 
-  // Safely append tooltip to DOM
-  function appendTooltipSafely() {
+  // Create and initialize tooltip element (called lazily on first hover)
+  function initializeTooltip() {
+    if (tooltipInitialized) return tooltip;
+
+    tooltip = document.createElement('div');
+    // Apply styles using individual properties for better compatibility
+    Object.assign(tooltip.style, {
+      position: 'fixed',
+      padding: '6px 8px',
+      fontSize: '12px',
+      fontFamily: 'system-ui, sans-serif',
+      background: 'rgba(20, 20, 20, 0.9)',
+      color: 'white',
+      borderRadius: '6px',
+      pointerEvents: 'none',
+      whiteSpace: 'nowrap',
+      zIndex: '999999',
+      opacity: '0',
+      transition: 'opacity 0.15s ease'
+    });
+
+    // Append to DOM
     if (document.body) {
       try {
         document.body.appendChild(tooltip);
-        return true;
+        tooltipInitialized = true;
+        if (CONFIG.DEBUG) {
+          console.log('📋 Tooltip initialized lazily on first hover');
+        }
       } catch (error) {
         console.warn('Failed to append tooltip to body:', error);
-        return false;
       }
     } else {
-      // Fallback for early DOM state
+      // Fallback for early DOM state (shouldn't happen with lazy init)
       document.addEventListener('DOMContentLoaded', () => {
         try {
           if (document.body && !document.body.contains(tooltip)) {
             document.body.appendChild(tooltip);
+            tooltipInitialized = true;
           }
         } catch (error) {
           console.warn('Failed to append tooltip on DOMContentLoaded:', error);
         }
       }, { passive: true, once: true });
-      return false;
     }
+
+    return tooltip;
   }
 
-  if (!appendTooltipSafely()) {
-    if (CONFIG.DEBUG) {
-      console.log('📋 Tooltip will be appended when DOM is ready');
+  // Get tooltip element, initializing if needed
+  function getTooltip() {
+    if (!tooltipInitialized) {
+      initializeTooltip();
     }
+    return tooltip;
   }
 
   let hoverTimer;
   let currentHoveredLink = null;
   let rafId = null; // RequestAnimationFrame ID for smooth tooltip movement
   let pendingTooltipPosition = null; // Store pending position updates
+  let tooltipAutoHideTimer = null; // Auto-hide timer to prevent stuck tooltips
+  let tooltipValidationTimer = null; // Timer to validate tooltip state
+  let lastMousePosition = { x: 0, y: 0 }; // Track last mouse position
+
+  // Configuration for tooltip anti-stick measures
+  const TOOLTIP_CONFIG = {
+    AUTO_HIDE_DELAY: 10000,   // Auto-hide after 10 seconds
+    VALIDATION_INTERVAL: 500, // Check every 500ms if tooltip should still be visible
+    STALE_THRESHOLD: 2000     // Consider tooltip stale if no mouse movement for 2s
+  };
 
   function showTooltip(e, linkUrl) {
+    // Initialize tooltip lazily on first use
+    const tip = getTooltip();
+    if (!tip) return; // Safety check
+
     const key = normalizeUrl(linkUrl);
     // Use cached DB for hot path performance - no storage I/O!
     const db = getDBCached();
     const data = db[key];
 
     // Clear previous content safely
-    tooltip.textContent = '';
+    tip.textContent = '';
 
     if (!data) {
-      tooltip.textContent = 'No visits recorded';
+      tip.textContent = 'No visits recorded';
     } else {
       // Create elements safely instead of using innerHTML
       const visitLine = document.createElement('div');
@@ -1062,13 +1866,87 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
       const lastVisit = data.visits?.[0] ? formatTimestamp(data.visits[0]) : 'Never';
       lastLine.textContent = `Last: ${lastVisit}`;
 
-      tooltip.appendChild(visitLine);
-      tooltip.appendChild(lastLine);
+      tip.appendChild(visitLine);
+      tip.appendChild(lastLine);
     }
 
     // Set initial position
     updateTooltipPosition(e.clientX, e.clientY);
-    tooltip.style.opacity = 1;
+    tip.style.opacity = 1;
+
+    // Start auto-hide timer as safety net
+    startAutoHideTimer();
+
+    // Start validation timer to check if tooltip should still be visible
+    startValidationTimer();
+  }
+
+  // Auto-hide timer - safety net to prevent stuck tooltips
+  function startAutoHideTimer() {
+    clearAutoHideTimer();
+    tooltipAutoHideTimer = setTimeout(() => {
+      if (CONFIG.DEBUG) {
+        console.log('⏰ Tooltip auto-hide triggered after timeout');
+      }
+      hideTooltip();
+    }, TOOLTIP_CONFIG.AUTO_HIDE_DELAY);
+  }
+
+  function clearAutoHideTimer() {
+    if (tooltipAutoHideTimer) {
+      clearTimeout(tooltipAutoHideTimer);
+      tooltipAutoHideTimer = null;
+    }
+  }
+
+  // Validation timer - periodically check if tooltip should still be visible
+  function startValidationTimer() {
+    clearValidationTimer();
+    tooltipValidationTimer = setInterval(() => {
+      if (!validateTooltipState()) {
+        if (CONFIG.DEBUG) {
+          console.log('🔍 Tooltip validation failed, hiding tooltip');
+        }
+        hideTooltip();
+      }
+    }, TOOLTIP_CONFIG.VALIDATION_INTERVAL);
+  }
+
+  function clearValidationTimer() {
+    if (tooltipValidationTimer) {
+      clearInterval(tooltipValidationTimer);
+      tooltipValidationTimer = null;
+    }
+  }
+
+  // Validate if tooltip should still be visible
+  function validateTooltipState() {
+    // No link being tracked - tooltip shouldn't be visible
+    if (!currentHoveredLink) {
+      return false;
+    }
+
+    // Link was removed from DOM
+    if (!document.body.contains(currentHoveredLink)) {
+      if (CONFIG.DEBUG) {
+        console.log('🔗 Link removed from DOM, invalidating tooltip');
+      }
+      return false;
+    }
+
+    // Check if mouse is still over the link using elementFromPoint
+    const elementAtMouse = document.elementFromPoint(lastMousePosition.x, lastMousePosition.y);
+    if (elementAtMouse) {
+      const linkAtMouse = safeClosest(elementAtMouse, 'a[href]');
+      if (linkAtMouse !== currentHoveredLink) {
+        if (CONFIG.DEBUG) {
+          console.log('🔗 Mouse no longer over tracked link');
+        }
+        return false;
+      }
+    }
+
+    return true;
   }
 
   function updateTooltipPosition(x, y) {
@@ -1083,8 +1961,11 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     // Schedule position update for next frame
     rafId = requestAnimationFrame(() => {
       if (pendingTooltipPosition) {
-        tooltip.style.left = pendingTooltipPosition.x + 'px';
-        tooltip.style.top = pendingTooltipPosition.y + 'px';
+        const tip = getTooltip();
+        if (tip) {
+          tip.style.left = pendingTooltipPosition.x + 'px';
+          tip.style.top = pendingTooltipPosition.y + 'px';
+        }
         pendingTooltipPosition = null;
       }
       rafId = null;
@@ -1092,7 +1973,10 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
   }
 
   function hideTooltip() {
-    tooltip.style.opacity = 0;
+    const tip = getTooltip();
+    if (tip) {
+      tip.style.opacity = 0;
+    }
     currentHoveredLink = null;
 
     // Cancel any pending animation frame
@@ -1102,11 +1986,22 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     }
     pendingTooltipPosition = null;
 
+    // Clear all timers
+    clearAutoHideTimer();
+    clearValidationTimer();
+
     // Ensure mousemove listener is properly removed
     document.removeEventListener('mousemove', moveTooltip);
   }
 
   function moveTooltip(e) {
+    // Track mouse position for validation
+    lastMousePosition.x = e.clientX;
+    lastMousePosition.y = e.clientY;
+
+    // Reset auto-hide timer on mouse movement (user is still active)
+    startAutoHideTimer();
+
     // Use requestAnimationFrame for smooth movement
     updateTooltipPosition(e.clientX, e.clientY);
   }
@@ -1121,14 +2016,18 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
 
     // Prevent duplicate listeners for same link
     if (currentHoveredLink === a) return;
-    
+
     // Clean up previous link if any
     if (currentHoveredLink) {
       clearTimeout(hoverTimer);
       hideTooltip();
     }
-    
+
     currentHoveredLink = a;
+
+    // Track initial mouse position
+    lastMousePosition.x = e.clientX;
+    lastMousePosition.y = e.clientY;
 
     clearTimeout(hoverTimer);
     hoverTimer = setTimeout(() => showTooltip(e, href), CONFIG.HOVER_DELAY);
@@ -1139,7 +2038,7 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
   document.addEventListener('mouseout', e => {
     const a = safeClosest(e.target, 'a[href]');
     if (!a || a !== currentHoveredLink) return;
-    
+
     // Check if we're moving to a child element of the same link
     const relatedTarget = e.relatedTarget;
     if (relatedTarget && a.contains(relatedTarget)) {
@@ -1148,7 +2047,7 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
       }
       return; // Still within the same link, don't hide tooltip
     }
-    
+
     // Also check if we're moving from child to parent within same link
     const relatedLink = safeClosest(relatedTarget, 'a[href]');
     if (relatedLink === a) {
@@ -1166,39 +2065,26 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     hideTooltip();
   }, { passive: true });
 
+  // Additional safety: hide tooltip when clicking anywhere
+  document.addEventListener('click', () => {
+    if (currentHoveredLink) {
+      clearTimeout(hoverTimer);
+      hideTooltip();
+    }
+  }, { passive: true });
+
+  // Additional safety: hide tooltip when scrolling
+  document.addEventListener('scroll', () => {
+    if (currentHoveredLink) {
+      clearTimeout(hoverTimer);
+      hideTooltip();
+    }
+  }, { passive: true, capture: true });
+
   // Initialize the tracker
   function initializeTracker() {
-    // Load saved badge visibility state
-    try {
-      badgeVisible = GM_getValue('badgeVisible', CONFIG.BADGE_VISIBLE);
-    } catch (error) {
-      console.warn('Failed to load badge visibility state:', error);
-      badgeVisible = CONFIG.BADGE_VISIBLE;
-    }
-
-    // Load saved debug mode state
-    try {
-      CONFIG.DEBUG = GM_getValue('debugMode', CONFIG.DEBUG);
-    } catch (error) {
-      console.warn('Failed to load debug mode state:', error);
-      CONFIG.DEBUG = false;
-    }
-
-    // Load saved URL filtering state
-    try {
-      CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES = GM_getValue('urlFiltering', CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES);
-    } catch (error) {
-      console.warn('Failed to load URL filtering state:', error);
-      CONFIG.URL_FILTERS.SKIP_UTILITY_PAGES = true;
-    }
-
-    // Load saved search cleaning state
-    try {
-      CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS = GM_getValue('searchCleaning', CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS);
-    } catch (error) {
-      console.warn('Failed to load search cleaning state:', error);
-      CONFIG.NORMALIZE_URL.CLEAN_SEARCH_URLS = true;
-    }
+    // Load all saved settings
+    loadSavedSettings();
 
     if (CONFIG.DEBUG) {
       console.log('🐛 Visit Tracker Debug Mode: ENABLED');
@@ -1207,13 +2093,18 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
     // Don't register menu for initial empty state - let updateVisit() handle it
     updateVisit();
     installUrlObservers();
-    
+
     // Handle polling optimization and cache invalidation for multi-tab scenarios
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         // Tab became hidden - pause polling if configured
         if (CONFIG.POLLING.PAUSE_WHEN_HIDDEN) {
           stopPolling();
+        }
+        // Hide tooltip when tab is hidden to prevent stuck tooltips
+        if (currentHoveredLink) {
+          clearTimeout(hoverTimer);
+          hideTooltip();
         }
       } else {
         // Tab became visible - resume polling if it was paused
@@ -1243,12 +2134,17 @@ Database size: ${Math.round(getActualDataSize(db) / 1024)} KB (UTF-8)
 
   // Cleanup pending operations on page unload
   window.addEventListener('beforeunload', () => {
+    // Flush any pending debounced database writes
+    flushPendingWrites();
+
     if (pendingTimeout) {
       clearTimeout(pendingTimeout);
       // Process any pending URL change immediately before unload
       if (pendingUrlChange && pendingUrlChange !== currentUrl) {
         currentUrl = pendingUrlChange;
         updateVisit();
+        // Flush the new write as well
+        flushPendingWrites();
       }
     }
   });
